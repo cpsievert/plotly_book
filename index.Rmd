@@ -1,0 +1,88 @@
+--- 
+title: "A plotly tutoRial"
+author: "Carson Sievert"
+knit: "bookdown::render_book"
+documentclass: book
+bibliography: [book.bib, packages.bib]
+biblio-style: apalike
+link-citations: yes
+site: bookdown::bookdown_site
+description: "An overview of the R package plotly"
+url: 'http://ropensci.github.io/plotly/'
+github-repo: ropensci/plotly
+cover-image: images/plotly.png
+---
+
+# Overview {-}
+
+```{r setup, include=FALSE}
+options(htmltools.dir.version = FALSE, formatR.indent = 2)
+if (packageVersion('plotly') < '4.0.1') {
+  devtools::install_github('ropensci/plotly')
+}
+knitr::opts_chunk$set(
+  message = FALSE, 
+  warning = FALSE, 
+  fig.width = 7, 
+  fig.height = 3
+)
+```
+
+```{r fig.align='center', echo=FALSE, include=identical(knitr:::pandoc_to(), 'html')}
+knitr::include_graphics('images/plotly.png')
+```
+
+This website explains and partially documents the R package **plotly**, a high-level interface to the open source JavaScript graphing library [plotly.js](https://github.com/plotly/plotly.js) (which powers [plot.ly](https://plot.ly/)). The R package already has numerous examples and documentation on <https://plot.ly/r> and <https://plot.ly/ggplot2>, but this website provides more of a cohesive narrative to help explain fundamental concepts and recent developments. By reading from start to finish, readers new to R and plotly should be able to get up and running fairly quickly. That being said, advanced R and plotly users should still find the majority of this material useful and informative. I highly recommend copying/pasting examples into your R console, and modifying them as you read along, to aid the learning process.
+
+This work is licensed under the [Creative Commons Attribution-NonCommercial-NoDerivs 3.0](http://creativecommons.org/licenses/by-nc-nd/3.0/us/) United States License. 
+
+## Installation {-}
+
+If you have [R](https://cran.r-project.org/) installed, you can install the stable release of **plotly** by typing this in your R console:
+
+```{r, eval = FALSE}
+install.packages("plotly")
+```
+
+Or you can install the development release via the devtools package:
+
+```{r, eval = FALSE}
+if (!require("devtools")) install.packages("devtools")
+devtools::install_github("ropensci/plotly")
+```
+
+## Get started {-}
+
+To ensure plotly is installed correctly, try loading the package and creating this example by pasting the code inside your R console.
+
+```{r}
+library(plotly)
+plot_ly(z = ~volcano)
+```
+
+```{block, type='rmdtip'}
+**plotly** uses the [htmlwidget](http://www.htmlwidgets.org/) framework, which allows plots to work seamlessly and consistently in various contexts (e.g., R Markdown documents, shiny apps, inside RStudio, or any other R command prompt) without an internet connection. IPython/Jupyter notebook users should wrap plots with the `embed_notebook()` function to embed them inline inside a notebook.
+```
+
+## plot.ly for collaboration (optional) {-}
+
+[plot.ly](https://plot.ly/) subscribers can use `plotly_POST()` to host graphs on a plotly account. This is mainly useful for sharing plots, and allowing your collaborators to view/fork/modify them using a friendly user-interface. 
+
+```r
+p <- plot_ly(z = ~volcano, type = "surface")
+plotly_POST(p, filename = "Volcano surface")
+```
+
+```{r, fig.align='center', echo = FALSE}
+knitr::include_graphics("http://i.imgur.com/T2g1pQB.gif")
+```
+
+```{block, type='rmdtip'}
+As long as you can view a plot hosted on <http://plot.ly>, you can obtain the data behind with plot via the `get_figure()` function. This makes it easy to access and modify plots created with _any_ plotly.js interface (e.g., Python, MATLAB, Julia, Scala, etc) from your R console.
+```
+
+With a free account (use the `signup()` function to get one), you can create and share public plots. If you need privacy or customer support, have a look at the [pricing options](https://plot.ly/products/cloud/). If you're account has support for private graphs, it's simple to make them private with `plotly_POST()`
+
+```r
+plotly_POST(p, sharing = "private")
+```

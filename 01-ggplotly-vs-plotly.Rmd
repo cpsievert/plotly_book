@@ -1,0 +1,104 @@
+# Creating plotly objects
+
+There are two main ways to create a plotly object (i.e., visualization) in R. The `plot_ly()` function transforms _data_ into a plotly object, while the `ggplotly()` function transforms a _ggplot2_ object into a plotly object. No matter which approach you use, the result is an interactive web-based visualization with tooltips, zooming, and panning. In many cases, the code to create a given plot looks very similar, but there are some subtle differences which are discussed in [Choosing between `ggplotly()` and `plot_ly()`](#choosing). To point out some obvious similarities and differences, we'll start by creating the same example with both interfaces.
+
+## A case study of housing sales in Texas
+
+### The `ggplotly()` interface
+
+The plotly package depends on ggplot2 which bundles a data set on monthly housing sales in Texan cities acquired from the [TAMU real estate center](http://recenter.tamu.edu/).
+
+```{r}
+library(plotly)
+txhousing
+```
+
+To gain some insight into median house prices over time, we can plot `date` on x, `median` on y, and group the lines connecting these x/y pairs by `city`.
+
+```{r}
+library(plotly)
+p <- ggplot(data = txhousing, aes(x = date, y = median, group = city)) +
+  geom_line(alpha = 0.3)
+p
+```
+
+This plot doesn't tell us much (other than prices seems to be increasing overall) since it's hard to see what's happening in individual cities. We could highlight a particular series by subsetting the data 
+
+```{r}
+```
+
+To compare the monthly median house price across cities
+
+If you use ggplot2, `ggplotly()` adds interactivity (specifically, tooltips, zoom, and pan) to your plots with minimal effort. 
+
+
+
+
+
+
+
+### The `plot_ly()` interface
+
+The `plot_ly()` function draws inspiration from ggplot2's implementation of the grammar of graphics, but provides a more flexible and direct interface to [plotly.js](https://github.com/plotly/plotly.js). The interface is also functional, and designed to work with dplyr's generic data manipulation functions, so visualizations can be described as a sequence of data manipulations and visual components via the pipe operator (`%>%`) from the magrittr package.
+
+```{r}
+txhousing %>%
+  group_by(city) %>%
+  plot_ly(x = ~date, y = ~median) %>%
+  add_lines(color = I("black"), alpha = 0.3)
+```
+
+
+```{r}
+txhousing %>%
+  group_by(city) %>%
+  plot_ly(x = ~date, y = ~median) %>%
+  add_lines(alpha = 0.3, color = I("black"), name = "Texan Cities") %>%
+  filter(city == "Houston") %>%
+  add_lines(color = I("red"), name = "Houston")
+```
+
+
+### Adding layers
+
+The `ggplotly()` function translates [ggplot2](https://cran.r-project.org/web/packages/ggplot2/index.html) graphics to a plotly equivalent, for example:
+
+```{r}
+library(plotly)
+p <- qplot(data = txhousing, x = date, y = median, group = city, alpha = I(0.3), geom = "line")
+
+p <- p + geom_line(data = subset(txhousing, city == "Houston"), color = "red")
+
+
+ggplotly(p) %>%
+  filter(city == "Houston") %>%
+  add_lines(color = I("red"), name = "Houston")
+```
+
+## Combining the two
+
+```{r}
+p <- ggplot(txhousing, aes(x = date, y = median)) +
+  geom_line(aes(group = city), alpha = 0.3) +
+  geom_smooth()
+
+ggplotly(p) %>%
+  filter(city == "Houston") %>%
+  add_lines(color = I("red"), name = "Houston")
+```
+
+* Expose the pre-statistics data. 
+
+
+## TODO: Section on controlling tooltips and creating custom tooltip via `text`
+
+
+## Choosing between `ggplotly()` and `plot_ly()` {sec: choosing}
+
+
+That's great, but there are a few reasons why this approach is limited:
+
+1. ggplot2's interface wasn't designed for interactive graphics. Directly extending the grammar to support more advanced types of interaction (e.g., linked brushing) is a risky endeavor.
+2. ggplot2 requires data frame(s) and can be inefficient (especially for time series).
+3. ggplot2 does not have a functional interface (making it awkward to combine with modern functional interfaces such as dplyr), and does not satisfy [referential transparency](https://en.wikipedia.org/wiki/Referential_transparency) (making it easier to program with -- for more details, see )
+4. `ggplotly()` tries to replicate _exactly_ what you see in the corresponding static ggplot2 graph. To do so, it sends axis tick information to plotly as [tickvals](https://plot.ly/r/reference/#layout-xaxis-tickvals)/[ticktext](https://plot.ly/r/reference/#layout-xaxis-ticktext) properties, and consequently, axis ticks do not update on zoom events.

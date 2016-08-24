@@ -1,0 +1,24 @@
+bookdown::gitbook:
+  css: css/style.css
+  split_by: section
+  config:
+    toc:
+      collapse: subsection
+      before: |
+        <li><a href="./">A plotly tutoRial</a></li>
+      after: |
+        <li><a href="https://bookdown.org" target="blank">Published with bookdown</a></li>
+    download: [pdf, epub, mobi]
+    edit:
+      link: https://github.com/ropensci/plotly/edit/master/inst/bookdown/%s
+      text: "Edit"
+bookdown::html_chapters:
+  css: [css/style.css, css/toc.css]
+bookdown::pdf_book:
+  includes:
+    in_header: preamble.tex
+  keep_tex: yes
+  latex_engine: xelatex
+  citation_package: natbib
+bookdown::epub_book:
+  stylesheet: css/style.css

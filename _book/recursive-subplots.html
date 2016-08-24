@@ -1,0 +1,248 @@
+<!DOCTYPE html>
+<html >
+
+<head>
+
+  <meta charset="UTF-8">
+  <meta http-equiv="X-UA-Compatible" content="IE=edge">
+  <title>A plotly tutoRial</title>
+  <meta content="text/html; charset=UTF-8" http-equiv="Content-Type">
+  <meta name="description" content="An overview of the R package plotly">
+  <meta name="generator" content="bookdown 0.1 and GitBook 2.6.7">
+
+  <meta property="og:title" content="A plotly tutoRial" />
+  <meta property="og:type" content="book" />
+  <meta property="og:url" content="<a href="http://ropensci.github.io/plotly/" class="uri">http://ropensci.github.io/plotly/</a>" />
+  <meta property="og:image" content="<a href="http://ropensci.github.io/plotly/" class="uri">http://ropensci.github.io/plotly/</a>images/plotly.png" />
+  <meta property="og:description" content="An overview of the R package plotly" />
+  <meta name="github-repo" content="ropensci/plotly" />
+
+  <meta name="twitter:card" content="summary" />
+  <meta name="twitter:title" content="A plotly tutoRial" />
+  
+  <meta name="twitter:description" content="An overview of the R package plotly" />
+  <meta name="twitter:image" content="<a href="http://ropensci.github.io/plotly/" class="uri">http://ropensci.github.io/plotly/</a>images/plotly.png" />
+
+<meta name="author" content="Carson Sievert">
+
+
+
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <meta name="apple-mobile-web-app-capable" content="yes">
+  <meta name="apple-mobile-web-app-status-bar-style" content="black">
+  
+  
+<link rel="prev" href="the-subplot-function.html">
+<link rel="next" href="ggplot2-subplots.html">
+
+<script src="libs/jquery/jquery.min.js"></script>
+<link href="libs/gitbook/css/style.css" rel="stylesheet" />
+<link href="libs/gitbook/css/plugin-bookdown.css" rel="stylesheet" />
+<link href="libs/gitbook/css/plugin-highlight.css" rel="stylesheet" />
+<link href="libs/gitbook/css/plugin-search.css" rel="stylesheet" />
+<link href="libs/gitbook/css/plugin-fontsettings.css" rel="stylesheet" />
+
+
+
+
+
+
+
+<script src="libs/htmlwidgets/htmlwidgets.js"></script>
+<link href="libs/plotlyjs/plotly-htmlwidgets.css" rel="stylesheet" />
+<script src="libs/plotlyjs/plotly-latest.min.js"></script>
+<script src="libs/plotly-binding/plotly.js"></script>
+<script src="libs/crosstalk/js/crosstalk.js"></script>
+
+
+<style type="text/css">
+div.sourceCode { overflow-x: auto; }
+table.sourceCode, tr.sourceCode, td.lineNumbers, td.sourceCode {
+  margin: 0; padding: 0; vertical-align: baseline; border: none; }
+table.sourceCode { width: 100%; line-height: 100%; }
+td.lineNumbers { text-align: right; padding-right: 4px; padding-left: 4px; color: #aaaaaa; border-right: 1px solid #aaaaaa; }
+td.sourceCode { padding-left: 5px; }
+code > span.kw { color: #007020; font-weight: bold; } /* Keyword */
+code > span.dt { color: #902000; } /* DataType */
+code > span.dv { color: #40a070; } /* DecVal */
+code > span.bn { color: #40a070; } /* BaseN */
+code > span.fl { color: #40a070; } /* Float */
+code > span.ch { color: #4070a0; } /* Char */
+code > span.st { color: #4070a0; } /* String */
+code > span.co { color: #60a0b0; font-style: italic; } /* Comment */
+code > span.ot { color: #007020; } /* Other */
+code > span.al { color: #ff0000; font-weight: bold; } /* Alert */
+code > span.fu { color: #06287e; } /* Function */
+code > span.er { color: #ff0000; font-weight: bold; } /* Error */
+code > span.wa { color: #60a0b0; font-weight: bold; font-style: italic; } /* Warning */
+code > span.cn { color: #880000; } /* Constant */
+code > span.sc { color: #4070a0; } /* SpecialChar */
+code > span.vs { color: #4070a0; } /* VerbatimString */
+code > span.ss { color: #bb6688; } /* SpecialString */
+code > span.im { } /* Import */
+code > span.va { color: #19177c; } /* Variable */
+code > span.cf { color: #007020; font-weight: bold; } /* ControlFlow */
+code > span.op { color: #666666; } /* Operator */
+code > span.bu { } /* BuiltIn */
+code > span.ex { } /* Extension */
+code > span.pp { color: #bc7a00; } /* Preprocessor */
+code > span.at { color: #7d9029; } /* Attribute */
+code > span.do { color: #ba2121; font-style: italic; } /* Documentation */
+code > span.an { color: #60a0b0; font-weight: bold; font-style: italic; } /* Annotation */
+code > span.cv { color: #60a0b0; font-weight: bold; font-style: italic; } /* CommentVar */
+code > span.in { color: #60a0b0; font-weight: bold; font-style: italic; } /* Information */
+</style>
+
+<link rel="stylesheet" href="css/style.css" type="text/css" />
+</head>
+
+<body>
+
+
+  <div class="book without-animation with-summary font-size-2 font-family-1" data-basepath=".">
+
+    <div class="book-summary">
+      <nav role="navigation">
+
+<ul class="summary">
+<li><a href="./">A plotly tutoRial</a></li>
+
+<li class="divider"></li>
+<li class="chapter" data-level="" data-path="index.html"><a href="index.html"><i class="fa fa-check"></i>Overview</a><ul>
+<li class="chapter" data-level="" data-path="installation.html"><a href="installation.html"><i class="fa fa-check"></i>Installation</a></li>
+<li class="chapter" data-level="" data-path="get-started.html"><a href="get-started.html"><i class="fa fa-check"></i>Get started</a></li>
+<li class="chapter" data-level="" data-path="plot-ly-for-collaboration-optional.html"><a href="plot-ly-for-collaboration-optional.html"><i class="fa fa-check"></i>plot.ly for collaboration (optional)</a></li>
+</ul></li>
+<li class="chapter" data-level="1" data-path="creating-plotly-objects.html"><a href="creating-plotly-objects.html"><i class="fa fa-check"></i><b>1</b> Creating plotly objects</a><ul>
+<li class="chapter" data-level="1.1" data-path="a-case-study-of-housing-sales-in-texas.html"><a href="a-case-study-of-housing-sales-in-texas.html"><i class="fa fa-check"></i><b>1.1</b> A case study of housing sales in Texas</a><ul>
+<li class="chapter" data-level="1.1.1" data-path="a-case-study-of-housing-sales-in-texas.html"><a href="a-case-study-of-housing-sales-in-texas.html#the-ggplotly-interface"><i class="fa fa-check"></i><b>1.1.1</b> The <code>ggplotly()</code> interface</a></li>
+<li class="chapter" data-level="1.1.2" data-path="a-case-study-of-housing-sales-in-texas.html"><a href="a-case-study-of-housing-sales-in-texas.html#the-plot_ly-interface"><i class="fa fa-check"></i><b>1.1.2</b> The <code>plot_ly()</code> interface</a></li>
+<li class="chapter" data-level="1.1.3" data-path="a-case-study-of-housing-sales-in-texas.html"><a href="a-case-study-of-housing-sales-in-texas.html#adding-layers"><i class="fa fa-check"></i><b>1.1.3</b> Adding layers</a></li>
+</ul></li>
+<li class="chapter" data-level="1.2" data-path="combining-the-two.html"><a href="combining-the-two.html"><i class="fa fa-check"></i><b>1.2</b> Combining the two</a></li>
+<li class="chapter" data-level="1.3" data-path="todo-section-on-controlling-tooltips-and-creating-custom-tooltip-via-text.html"><a href="todo-section-on-controlling-tooltips-and-creating-custom-tooltip-via-text.html"><i class="fa fa-check"></i><b>1.3</b> TODO: Section on controlling tooltips and creating custom tooltip via <code>text</code></a></li>
+<li class="chapter" data-level="1.4" data-path="choosing-between-ggplotly-and-plot-ly-sec-choosing.html"><a href="choosing-between-ggplotly-and-plot-ly-sec-choosing.html"><i class="fa fa-check"></i><b>1.4</b> Choosing between <code>ggplotly()</code> and <code>plot_ly()</code> {sec: choosing}</a></li>
+</ul></li>
+<li class="chapter" data-level="2" data-path="an-intro-to-plot-ly.html"><a href="an-intro-to-plot-ly.html"><i class="fa fa-check"></i><b>2</b> An intro to plot_ly()</a><ul>
+<li class="chapter" data-level="2.1" data-path="smart-defaults-messages-warnings-errors.html"><a href="smart-defaults-messages-warnings-errors.html"><i class="fa fa-check"></i><b>2.1</b> Smart defaults, messages, warnings, errors</a></li>
+<li class="chapter" data-level="2.2" data-path="functional-interface.html"><a href="functional-interface.html"><i class="fa fa-check"></i><b>2.2</b> Functional interface</a></li>
+<li class="chapter" data-level="2.3" data-path="special-arguments.html"><a href="special-arguments.html"><i class="fa fa-check"></i><b>2.3</b> Special arguments</a><ul>
+<li class="chapter" data-level="2.3.1" data-path="special-arguments.html"><a href="special-arguments.html#the-color-argument"><i class="fa fa-check"></i><b>2.3.1</b> The color argument</a></li>
+<li class="chapter" data-level="2.3.2" data-path="special-arguments.html"><a href="special-arguments.html#the-symbol-argument"><i class="fa fa-check"></i><b>2.3.2</b> The symbol argument</a></li>
+</ul></li>
+</ul></li>
+<li class="chapter" data-level="3" data-path="the-subplot-function.html"><a href="the-subplot-function.html"><i class="fa fa-check"></i><b>3</b> The subplot() function</a><ul>
+<li class="chapter" data-level="3.1" data-path="recursive-subplots.html"><a href="recursive-subplots.html"><i class="fa fa-check"></i><b>3.1</b> Recursive subplots</a></li>
+<li class="chapter" data-level="3.2" data-path="ggplot2-subplots.html"><a href="ggplot2-subplots.html"><i class="fa fa-check"></i><b>3.2</b> ggplot2 subplots</a></li>
+</ul></li>
+<li class="divider"></li>
+<li><a href="https://bookdown.org" target="blank">Published with bookdown</a></li>
+
+</ul>
+
+      </nav>
+    </div>
+
+    <div class="book-body">
+      <div class="body-inner">
+        <div class="book-header" role="navigation">
+          <h1>
+            <i class="fa fa-circle-o-notch fa-spin"></i><a href="./">A plotly tutoRial</a>
+          </h1>
+        </div>
+
+        <div class="page-wrapper" tabindex="-1" role="main">
+          <div class="page-inner">
+
+            <section class="normal" id="section-">
+<div id="recursive-subplots" class="section level2">
+<h2><span class="header-section-number">3.1</span> Recursive subplots</h2>
+<p>The <code>subplot()</code> function is designed to work recursively so that you can have subplots of subplots. This idea is useful when your desired layout doesn’t conform to the table structure described in the previous section. In fact, you can think of a subplot of subplots like a spreadsheet with merged cells.</p>
+<div align="center">
+<p><img src = "subplot.svg" width="200" height="300" /></p>
+</div>
+<div class="sourceCode"><pre class="sourceCode r"><code class="sourceCode r">plotList &lt;-<span class="st"> </span>function(nplots) {
+  <span class="co"># TODO: use new images infrastructure to overlay an R image on each plot</span>
+  <span class="kw">lapply</span>(<span class="kw">seq_len</span>(nplots), function(x) <span class="kw">plot_ly</span>())
+}
+s1 &lt;-<span class="st"> </span><span class="kw">subplot</span>(<span class="kw">plotList</span>(<span class="dv">6</span>), <span class="dt">nrows =</span> <span class="dv">2</span>, <span class="dt">shareX =</span> <span class="ot">TRUE</span>, <span class="dt">shareY =</span> <span class="ot">TRUE</span>)
+s2 &lt;-<span class="st"> </span><span class="kw">subplot</span>(<span class="kw">plotList</span>(<span class="dv">2</span>), <span class="dt">shareY =</span> <span class="ot">TRUE</span>)
+<span class="kw">subplot</span>(s1, s2, <span class="kw">plot_ly</span>(), <span class="dt">nrows =</span> <span class="dv">3</span>, <span class="dt">margin =</span> <span class="fl">0.04</span>, <span class="dt">heights =</span> <span class="kw">c</span>(<span class="fl">0.6</span>, <span class="fl">0.3</span>, <span class="fl">0.1</span>))</code></pre></div>
+<div id="htmlwidget-3610" style="width:672px;height:480px;" class="plotly html-widget"></div>
+<script type="application/json" data-for="htmlwidget-3610">{"x":{"data":[{"crosstalk":{"on":["plotly_selected"],"off":["plotly_deselect"],"color":[],"dynamic":false,"persitant":false,"opacityDim":0.2,"showInLegend":false},"type":"scatter","mode":"markers","xaxis":"x","yaxis":"y2"},{"crosstalk":{"on":["plotly_selected"],"off":["plotly_deselect"],"color":[],"dynamic":false,"persitant":false,"opacityDim":0.2,"showInLegend":false},"type":"scatter","mode":"markers","xaxis":"x2","yaxis":"y2"},{"crosstalk":{"on":["plotly_selected"],"off":["plotly_deselect"],"color":[],"dynamic":false,"persitant":false,"opacityDim":0.2,"showInLegend":false},"type":"scatter","mode":"markers","xaxis":"x3","yaxis":"y2"},{"crosstalk":{"on":["plotly_selected"],"off":["plotly_deselect"],"color":[],"dynamic":false,"persitant":false,"opacityDim":0.2,"showInLegend":false},"type":"scatter","mode":"markers","xaxis":"x","yaxis":"y"},{"crosstalk":{"on":["plotly_selected"],"off":["plotly_deselect"],"color":[],"dynamic":false,"persitant":false,"opacityDim":0.2,"showInLegend":false},"type":"scatter","mode":"markers","xaxis":"x2","yaxis":"y"},{"crosstalk":{"on":["plotly_selected"],"off":["plotly_deselect"],"color":[],"dynamic":false,"persitant":false,"opacityDim":0.2,"showInLegend":false},"type":"scatter","mode":"markers","xaxis":"x3","yaxis":"y"},{"crosstalk":{"on":["plotly_selected"],"off":["plotly_deselect"],"color":[],"dynamic":false,"persitant":false,"opacityDim":0.2,"showInLegend":false},"type":"scatter","mode":"markers","xaxis":"x4","yaxis":"y3"},{"crosstalk":{"on":["plotly_selected"],"off":["plotly_deselect"],"color":[],"dynamic":false,"persitant":false,"opacityDim":0.2,"showInLegend":false},"type":"scatter","mode":"markers","xaxis":"x5","yaxis":"y3"},{"crosstalk":{"on":["plotly_selected"],"off":["plotly_deselect"],"color":[],"dynamic":false,"persitant":false,"opacityDim":0.2,"showInLegend":false},"type":"scatter","mode":"markers","xaxis":"x6","yaxis":"y4"}],"layout":{"xaxis":{"domain":[0,0.313333333333333],"anchor":"y"},"xaxis2":{"domain":[0.353333333333333,0.646666666666667],"anchor":"y"},"xaxis3":{"domain":[0.686666666666667,1],"anchor":"y"},"xaxis4":{"domain":[0,0.48],"anchor":"y3"},"xaxis5":{"domain":[0.52,1],"anchor":"y3"},"xaxis6":{"domain":[0,1],"anchor":"y4"},"yaxis4":{"domain":[0,0.0600000000000001],"anchor":"x6"},"yaxis3":{"domain":[0.14,0.36],"anchor":"x4"},"yaxis":{"domain":[0.44,0.7088],"anchor":"x"},"yaxis2":{"domain":[0.7312,1],"anchor":"x"},"margin":{"b":40,"l":60,"t":25,"r":10},"hovermode":"closest"}},"evals":[],"jsHooks":[]}</script>
+<p>The concept is particularly useful when you want plot(s) in a given row to have different widths from plot(s) in another row.</p>
+<div class="sourceCode"><pre class="sourceCode r"><code class="sourceCode r"><span class="co"># specify some map projection/options</span>
+g &lt;-<span class="st"> </span><span class="kw">list</span>(
+  <span class="dt">scope =</span> <span class="st">&#39;usa&#39;</span>,
+  <span class="dt">projection =</span> <span class="kw">list</span>(<span class="dt">type =</span> <span class="st">&#39;albers usa&#39;</span>),
+  <span class="dt">lakecolor =</span> <span class="kw">toRGB</span>(<span class="st">&#39;white&#39;</span>)
+)
+<span class="co"># create a map of population density</span>
+density &lt;-<span class="st"> </span>state.x77[, <span class="st">&quot;Population&quot;</span>] /<span class="st"> </span>state.x77[, <span class="st">&quot;Area&quot;</span>]
+map &lt;-<span class="st"> </span><span class="kw">plot_ly</span>(
+  <span class="dt">z =</span> ~density, 
+  <span class="dt">text =</span> state.name, <span class="dt">locations =</span> state.abb,
+  <span class="dt">type =</span> <span class="st">&#39;choropleth&#39;</span>, <span class="dt">locationmode =</span> <span class="st">&#39;USA-states&#39;</span>, <span class="dt">geo =</span> <span class="st">&quot;geo&quot;</span>
+) %&gt;%<span class="st"> </span><span class="kw">layout</span>(<span class="dt">geo =</span> g)
+<span class="co"># create a bunch of horizontal bar charts </span>
+vars &lt;-<span class="st"> </span><span class="kw">colnames</span>(state.x77)
+barcharts &lt;-<span class="st"> </span><span class="kw">lapply</span>(vars, function(var) {
+  <span class="kw">plot_ly</span>(<span class="dt">x =</span> state.x77[, var], <span class="dt">y =</span> state.name, <span class="dt">type =</span> <span class="st">&quot;bar&quot;</span>, 
+          <span class="dt">orientation =</span> <span class="st">&quot;h&quot;</span>, <span class="dt">name =</span> var) %&gt;%
+<span class="st">    </span><span class="kw">layout</span>(<span class="dt">showlegend =</span> <span class="ot">FALSE</span>, <span class="dt">hovermode =</span> <span class="st">&quot;y&quot;</span>,
+           <span class="dt">yaxis =</span> <span class="kw">list</span>(<span class="dt">showticklabels =</span> <span class="ot">FALSE</span>))
+})
+<span class="kw">subplot</span>(
+  <span class="kw">subplot</span>(barcharts, <span class="dt">margin =</span> <span class="fl">0.01</span>), map, 
+  <span class="dt">nrows =</span> <span class="dv">2</span>, <span class="dt">heights =</span> <span class="kw">c</span>(<span class="fl">0.3</span>, <span class="fl">0.7</span>)
+)</code></pre></div>
+<div id="htmlwidget-1217" style="width:672px;height:576px;" class="plotly html-widget"></div>
+<script type="application/json" data-for="htmlwidget-1217">{"x":{"data":[{"x":[3615,365,2212,2110,21198,2541,3100,579,8277,4931,868,813,11197,5313,2861,2280,3387,3806,1058,4122,5814,9111,3921,2341,4767,746,1544,590,812,7333,1144,18076,5441,637,10735,2715,2284,11860,931,2816,681,4173,12237,1203,472,4981,3559,1799,4589,376],"y":["Alabama","Alaska","Arizona","Arkansas","California","Colorado","Connecticut","Delaware","Florida","Georgia","Hawaii","Idaho","Illinois","Indiana","Iowa","Kansas","Kentucky","Louisiana","Maine","Maryland","Massachusetts","Michigan","Minnesota","Mississippi","Missouri","Montana","Nebraska","Nevada","New Hampshire","New Jersey","New Mexico","New York","North Carolina","North Dakota","Ohio","Oklahoma","Oregon","Pennsylvania","Rhode Island","South Carolina","South Dakota","Tennessee","Texas","Utah","Vermont","Virginia","Washington","West Virginia","Wisconsin","Wyoming"],"orientation":"h","name":"Population","type":"bar","crosstalk":{"on":["plotly_selected"],"off":["plotly_deselect"],"color":[],"dynamic":false,"persitant":false,"opacityDim":0.2,"showInLegend":false},"xaxis":"x","yaxis":"y8"},{"x":[3624,6315,4530,3378,5114,4884,5348,4809,4815,4091,4963,4119,5107,4458,4628,4669,3712,3545,3694,5299,4755,4751,4675,3098,4254,4347,4508,5149,4281,5237,3601,4903,3875,5087,4561,3983,4660,4449,4558,3635,4167,3821,4188,4022,3907,4701,4864,3617,4468,4566],"y":["Alabama","Alaska","Arizona","Arkansas","California","Colorado","Connecticut","Delaware","Florida","Georgia","Hawaii","Idaho","Illinois","Indiana","Iowa","Kansas","Kentucky","Louisiana","Maine","Maryland","Massachusetts","Michigan","Minnesota","Mississippi","Missouri","Montana","Nebraska","Nevada","New Hampshire","New Jersey","New Mexico","New York","North Carolina","North Dakota","Ohio","Oklahoma","Oregon","Pennsylvania","Rhode Island","South Carolina","South Dakota","Tennessee","Texas","Utah","Vermont","Virginia","Washington","West Virginia","Wisconsin","Wyoming"],"orientation":"h","name":"Income","type":"bar","crosstalk":{"on":["plotly_selected"],"off":["plotly_deselect"],"color":[],"dynamic":false,"persitant":false,"opacityDim":0.2,"showInLegend":false},"xaxis":"x2","yaxis":"y7"},{"x":[2.1,1.5,1.8,1.9,1.1,0.7,1.1,0.9,1.3,2,1.9,0.6,0.9,0.7,0.5,0.6,1.6,2.8,0.7,0.9,1.1,0.9,0.6,2.4,0.8,0.6,0.6,0.5,0.7,1.1,2.2,1.4,1.8,0.8,0.8,1.1,0.6,1,1.3,2.3,0.5,1.7,2.2,0.6,0.6,1.4,0.6,1.4,0.7,0.6],"y":["Alabama","Alaska","Arizona","Arkansas","California","Colorado","Connecticut","Delaware","Florida","Georgia","Hawaii","Idaho","Illinois","Indiana","Iowa","Kansas","Kentucky","Louisiana","Maine","Maryland","Massachusetts","Michigan","Minnesota","Mississippi","Missouri","Montana","Nebraska","Nevada","New Hampshire","New Jersey","New Mexico","New York","North Carolina","North Dakota","Ohio","Oklahoma","Oregon","Pennsylvania","Rhode Island","South Carolina","South Dakota","Tennessee","Texas","Utah","Vermont","Virginia","Washington","West Virginia","Wisconsin","Wyoming"],"orientation":"h","name":"Illiteracy","type":"bar","crosstalk":{"on":["plotly_selected"],"off":["plotly_deselect"],"color":[],"dynamic":false,"persitant":false,"opacityDim":0.2,"showInLegend":false},"xaxis":"x3","yaxis":"y6"},{"x":[69.05,69.31,70.55,70.66,71.71,72.06,72.48,70.06,70.66,68.54,73.6,71.87,70.14,70.88,72.56,72.58,70.1,68.76,70.39,70.22,71.83,70.63,72.96,68.09,70.69,70.56,72.6,69.03,71.23,70.93,70.32,70.55,69.21,72.78,70.82,71.42,72.13,70.43,71.9,67.96,72.08,70.11,70.9,72.9,71.64,70.08,71.72,69.48,72.48,70.29],"y":["Alabama","Alaska","Arizona","Arkansas","California","Colorado","Connecticut","Delaware","Florida","Georgia","Hawaii","Idaho","Illinois","Indiana","Iowa","Kansas","Kentucky","Louisiana","Maine","Maryland","Massachusetts","Michigan","Minnesota","Mississippi","Missouri","Montana","Nebraska","Nevada","New Hampshire","New Jersey","New Mexico","New York","North Carolina","North Dakota","Ohio","Oklahoma","Oregon","Pennsylvania","Rhode Island","South Carolina","South Dakota","Tennessee","Texas","Utah","Vermont","Virginia","Washington","West Virginia","Wisconsin","Wyoming"],"orientation":"h","name":"Life Exp","type":"bar","crosstalk":{"on":["plotly_selected"],"off":["plotly_deselect"],"color":[],"dynamic":false,"persitant":false,"opacityDim":0.2,"showInLegend":false},"xaxis":"x4","yaxis":"y5"},{"x":[15.1,11.3,7.8,10.1,10.3,6.8,3.1,6.2,10.7,13.9,6.2,5.3,10.3,7.1,2.3,4.5,10.6,13.2,2.7,8.5,3.3,11.1,2.3,12.5,9.3,5,2.9,11.5,3.3,5.2,9.7,10.9,11.1,1.4,7.4,6.4,4.2,6.1,2.4,11.6,1.7,11,12.2,4.5,5.5,9.5,4.3,6.7,3,6.9],"y":["Alabama","Alaska","Arizona","Arkansas","California","Colorado","Connecticut","Delaware","Florida","Georgia","Hawaii","Idaho","Illinois","Indiana","Iowa","Kansas","Kentucky","Louisiana","Maine","Maryland","Massachusetts","Michigan","Minnesota","Mississippi","Missouri","Montana","Nebraska","Nevada","New Hampshire","New Jersey","New Mexico","New York","North Carolina","North Dakota","Ohio","Oklahoma","Oregon","Pennsylvania","Rhode Island","South Carolina","South Dakota","Tennessee","Texas","Utah","Vermont","Virginia","Washington","West Virginia","Wisconsin","Wyoming"],"orientation":"h","name":"Murder","type":"bar","crosstalk":{"on":["plotly_selected"],"off":["plotly_deselect"],"color":[],"dynamic":false,"persitant":false,"opacityDim":0.2,"showInLegend":false},"xaxis":"x5","yaxis":"y4"},{"x":[41.3,66.7,58.1,39.9,62.6,63.9,56,54.6,52.6,40.6,61.9,59.5,52.6,52.9,59,59.9,38.5,42.2,54.7,52.3,58.5,52.8,57.6,41,48.8,59.2,59.3,65.2,57.6,52.5,55.2,52.7,38.5,50.3,53.2,51.6,60,50.2,46.4,37.8,53.3,41.8,47.4,67.3,57.1,47.8,63.5,41.6,54.5,62.9],"y":["Alabama","Alaska","Arizona","Arkansas","California","Colorado","Connecticut","Delaware","Florida","Georgia","Hawaii","Idaho","Illinois","Indiana","Iowa","Kansas","Kentucky","Louisiana","Maine","Maryland","Massachusetts","Michigan","Minnesota","Mississippi","Missouri","Montana","Nebraska","Nevada","New Hampshire","New Jersey","New Mexico","New York","North Carolina","North Dakota","Ohio","Oklahoma","Oregon","Pennsylvania","Rhode Island","South Carolina","South Dakota","Tennessee","Texas","Utah","Vermont","Virginia","Washington","West Virginia","Wisconsin","Wyoming"],"orientation":"h","name":"HS Grad","type":"bar","crosstalk":{"on":["plotly_selected"],"off":["plotly_deselect"],"color":[],"dynamic":false,"persitant":false,"opacityDim":0.2,"showInLegend":false},"xaxis":"x6","yaxis":"y3"},{"x":[20,152,15,65,20,166,139,103,11,60,0,126,127,122,140,114,95,12,161,101,103,125,160,50,108,155,139,188,174,115,120,82,80,186,124,82,44,126,127,65,172,70,35,137,168,85,32,100,149,173],"y":["Alabama","Alaska","Arizona","Arkansas","California","Colorado","Connecticut","Delaware","Florida","Georgia","Hawaii","Idaho","Illinois","Indiana","Iowa","Kansas","Kentucky","Louisiana","Maine","Maryland","Massachusetts","Michigan","Minnesota","Mississippi","Missouri","Montana","Nebraska","Nevada","New Hampshire","New Jersey","New Mexico","New York","North Carolina","North Dakota","Ohio","Oklahoma","Oregon","Pennsylvania","Rhode Island","South Carolina","South Dakota","Tennessee","Texas","Utah","Vermont","Virginia","Washington","West Virginia","Wisconsin","Wyoming"],"orientation":"h","name":"Frost","type":"bar","crosstalk":{"on":["plotly_selected"],"off":["plotly_deselect"],"color":[],"dynamic":false,"persitant":false,"opacityDim":0.2,"showInLegend":false},"xaxis":"x7","yaxis":"y2"},{"x":[50708,566432,113417,51945,156361,103766,4862,1982,54090,58073,6425,82677,55748,36097,55941,81787,39650,44930,30920,9891,7826,56817,79289,47296,68995,145587,76483,109889,9027,7521,121412,47831,48798,69273,40975,68782,96184,44966,1049,30225,75955,41328,262134,82096,9267,39780,66570,24070,54464,97203],"y":["Alabama","Alaska","Arizona","Arkansas","California","Colorado","Connecticut","Delaware","Florida","Georgia","Hawaii","Idaho","Illinois","Indiana","Iowa","Kansas","Kentucky","Louisiana","Maine","Maryland","Massachusetts","Michigan","Minnesota","Mississippi","Missouri","Montana","Nebraska","Nevada","New Hampshire","New Jersey","New Mexico","New York","North Carolina","North Dakota","Ohio","Oklahoma","Oregon","Pennsylvania","Rhode Island","South Carolina","South Dakota","Tennessee","Texas","Utah","Vermont","Virginia","Washington","West Virginia","Wisconsin","Wyoming"],"orientation":"h","name":"Area","type":"bar","crosstalk":{"on":["plotly_selected"],"off":["plotly_deselect"],"color":[],"dynamic":false,"persitant":false,"opacityDim":0.2,"showInLegend":false},"xaxis":"x8","yaxis":"y"},{"colorbar":{"title":"density","ticklen":2},"colorscale":[["0","rgba(68,1,84,1)"],["0.00460806207926167","rgba(68,3,85,1)"],["0.00856007893933571","rgba(69,5,87,1)"],["0.00906180539652019","rgba(69,5,87,1)"],["0.0152074045784656","rgba(69,7,89,1)"],["0.0208182990285489","rgba(69,10,91,1)"],["0.0253405389219601","rgba(69,12,92,1)"],["0.036029553586127","rgba(70,16,95,1)"],["0.0431014504192137","rgba(70,19,98,1)"],["0.0501092680301139","rgba(71,22,100,1)"],["0.0517021279842995","rgba(71,22,100,1)"],["0.0615600968152789","rgba(71,25,104,1)"],["0.0742755528556908","rgba(71,29,108,1)"],["0.0860647626811174","rgba(72,33,112,1)"],["0.0867900872087451","rgba(72,33,112,1)"],["0.0937207951000684","rgba(72,35,114,1)"],["0.110171752338368","rgba(72,40,120,1)"],["0.13503255264132","rgba(71,48,124,1)"],["0.147418361345549","rgba(70,52,126,1)"],["0.162347351785327","rgba(69,56,128,1)"],["0.257764186458826","rgba(59,84,139,1)"],["0.295515313298518","rgba(55,94,140,1)"],["0.423727207976953","rgba(41,125,142,1)"],["0.757293744822714","rgba(101,201,96,1)"],["1","rgba(253,231,37,1)"]],"showscale":true,"z":[0.07129052614972,0.000644384498050958,0.0195032490720086,0.0406198864183271,0.135570890439432,0.0244877898348207,0.637597696421226,0.292129162462159,0.153022739877981,0.0849103714290634,0.135097276264591,0.00983344823832505,0.200850254717658,0.147186746821065,0.05114316869559,0.027877291012019,0.085422446406053,0.0847095481860672,0.0342173350582147,0.416742493175614,0.742908254536161,0.160356935424257,0.0494520046916975,0.0494967861975643,0.0690919631857381,0.00512408388111576,0.0201874926454245,0.0053690542274477,0.0899523651268417,0.97500332402606,0.00942246235956907,0.37791390520792,0.111500471330792,0.00919550185497957,0.261989017693716,0.0394725364194121,0.0237461532063545,0.263754836987946,0.887511916110582,0.0931679073614557,0.00896583503390165,0.100972706155633,0.0466822312252512,0.014653576300916,0.0509334196611633,0.125213675213675,0.0534625206549497,0.074740340673037,0.084257491186839,0.00386819336851743],"text":["Alabama","Alaska","Arizona","Arkansas","California","Colorado","Connecticut","Delaware","Florida","Georgia","Hawaii","Idaho","Illinois","Indiana","Iowa","Kansas","Kentucky","Louisiana","Maine","Maryland","Massachusetts","Michigan","Minnesota","Mississippi","Missouri","Montana","Nebraska","Nevada","New Hampshire","New Jersey","New Mexico","New York","North Carolina","North Dakota","Ohio","Oklahoma","Oregon","Pennsylvania","Rhode Island","South Carolina","South Dakota","Tennessee","Texas","Utah","Vermont","Virginia","Washington","West Virginia","Wisconsin","Wyoming"],"locations":["AL","AK","AZ","AR","CA","CO","CT","DE","FL","GA","HI","ID","IL","IN","IA","KS","KY","LA","ME","MD","MA","MI","MN","MS","MO","MT","NE","NV","NH","NJ","NM","NY","NC","ND","OH","OK","OR","PA","RI","SC","SD","TN","TX","UT","VT","VA","WA","WV","WI","WY"],"locationmode":"USA-states","geo":"geo9","type":"choropleth","crosstalk":{"on":["plotly_selected"],"off":["plotly_deselect"],"color":[],"dynamic":false,"persitant":false,"opacityDim":0.2,"showInLegend":false}}],"layout":{"xaxis":{"domain":[0,0.115],"anchor":"y8"},"xaxis2":{"domain":[0.135,0.24],"anchor":"y7"},"xaxis3":{"domain":[0.26,0.365],"anchor":"y6"},"xaxis4":{"domain":[0.385,0.49],"anchor":"y5"},"xaxis5":{"domain":[0.51,0.615],"anchor":"y4"},"xaxis6":{"domain":[0.635,0.74],"anchor":"y3"},"xaxis7":{"domain":[0.76,0.865],"anchor":"y2"},"xaxis8":{"domain":[0.885,1],"anchor":"y"},"geo9":{"scope":"usa","projection":{"type":"albers usa"},"lakecolor":"rgba(255,255,255,1)","domain":{"x":[0,1],"y":[0,0.68]}},"yaxis":{"showticklabels":false,"domain":[0.72,1],"anchor":"x8"},"yaxis2":{"showticklabels":false,"domain":[0.72,1],"anchor":"x7"},"yaxis3":{"showticklabels":false,"domain":[0.72,1],"anchor":"x6"},"yaxis4":{"showticklabels":false,"domain":[0.72,1],"anchor":"x5"},"yaxis5":{"showticklabels":false,"domain":[0.72,1],"anchor":"x4"},"yaxis6":{"showticklabels":false,"domain":[0.72,1],"anchor":"x3"},"yaxis7":{"showticklabels":false,"domain":[0.72,1],"anchor":"x2"},"yaxis8":{"showticklabels":false,"domain":[0.72,1],"anchor":"x"},"margin":{"b":40,"l":60,"t":25,"r":10},"showlegend":false,"hovermode":"y","scene":{"zaxis":{"title":"density"}}}},"evals":[],"jsHooks":[]}</script>
+</div>
+            </section>
+
+          </div>
+        </div>
+      </div>
+<a href="the-subplot-function.html" class="navigation navigation-prev " aria-label="Previous page"><i class="fa fa-angle-left"></i></a>
+<a href="ggplot2-subplots.html" class="navigation navigation-next " aria-label="Next page""><i class="fa fa-angle-right"></i></a>
+
+<script src="libs/gitbook/js/app.min.js"></script>
+<script src="libs/gitbook/js/lunr.js"></script>
+<script src="libs/gitbook/js/plugin-search.js"></script>
+<script src="libs/gitbook/js/plugin-sharing.js"></script>
+<script src="libs/gitbook/js/plugin-fontsettings.js"></script>
+<script src="libs/gitbook/js/plugin-bookdown.js"></script>
+<script src="libs/gitbook/js/jquery.highlight.js"></script>
+<script>
+require(["gitbook"], function(gitbook) {
+gitbook.start({
+"sharing": {
+"facebook": true,
+"twitter": true,
+"google": false,
+"weibo": false,
+"instapper": false,
+"vk": false,
+"all": ["facebook", "google", "twitter", "weibo", "instapaper"]
+},
+"fontsettings": {
+"theme": "white",
+"family": "sans",
+"size": 2
+},
+"edit": {
+"link": "https://github.com/ropensci/plotly/edit/master/inst/bookdown/03-subplot.Rmd",
+"text": "Edit"
+},
+"download": ["bookdown.pdf", "bookdown.epub", "bookdown.mobi"],
+"toc": {
+"collapse": "subsection"
+}
+});
+});
+</script>
+
+</body>
+
+</html>
