@@ -1,0 +1,21 @@
+
+language: r
+sudo: false
+cache:
+  packages: yes
+  directories:
+    - $HOME/bin
+    - $TRAVIS_BUILD_DIR/_bookdown_files
+
+env:
+  global:
+    - PATH=$HOME/bin:$PATH
+
+before_install:
+  - git config --global user.email "cpsievert1@gmail.com"
+  - git config --global user.name "cpsievert"
+  - Rscript -e "update.packages(.libPaths()[1], ask = FALSE)"
+
+script:
+  - make
+
