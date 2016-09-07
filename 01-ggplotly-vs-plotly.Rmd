@@ -1,41 +1,58 @@
 # Two interfaces, one central object
 
-There are two main ways to create a **plotly** object (i.e., visualization) in R. The `plot_ly()` function transforms _data_ into a **plotly** object, while the `ggplotly()` function transforms a **ggplot2** object into a **plotly** object [@ggplot2]; [@plotly]. No matter which interface you use, printing a **plotly** object results in an interactive web-based visualization with tooltips, zooming, and panning. Furthermore, once you have a **plotly** object, any **plotly** function can be used to modify that **plotly** object. As a result, we can effectively modify **ggplot2** plots, and leverage features exclusive to plotly (see section XXX for some compelling examples showing the power of this idea).
+There are two main ways to create a **plotly** object (i.e., visualization) in R. The `plot_ly()` function transforms _data_ into a **plotly** object, while the `ggplotly()` function transforms a ggplot object into a plotly object [@ggplot2]; [@plotly]. No matter which interface you use, printing a plotly object results in an interactive web-based visualization with tooltips, zooming, and panning. Furthermore, once you have a plotly object, any **plotly** function can be used to modify that plotly object. As a result, we can effectively modify or post-process **ggplot2** plots to leverage features exclusive to plotly (see section XXX for some compelling examples showing the power of this idea).
 
-A good question to ask now would be: "Why the need for two interfaces"? The quick and easy answer is that **ggplot2** can be quite slow; but has an elegant interface with many useful abstractions (e.g., a consistent interface for altering scales), smart defaults, and a very extensive set of features. On the other hand, `plot_ly()` can be much faster, mostly because it does less magic. Furthermore, **ggplot2** is focused on 2D graphics, whereas plotly.js has awesome 3D scientific visualization capabilities -- the inspiration having `plot_ly()` in the first place. Even though **ggplot2** does a lot of things right (which `plot_ly()` strives to adopt), one could argue it has a number of design flaws (which `plot_ly()` strives to avoid).
+A good question to ask now would be: "Why the need for two interfaces"? The quick and easy answer is that **ggplot2** can be quite slow; but has an elegant interface with many useful abstractions (e.g., a consistent interface for altering scales), smart defaults, very extensive set of features, and a huge community of users and developers. On the other hand, `plot_ly()` can be much faster, mostly because it does less magic. Furthermore, **ggplot2** is focused on 2D graphics, whereas plotly.js has awesome 3D scientific visualization capabilities -- the inspiration having `plot_ly()` in the first place. Even though **ggplot2** does a lot of things right (which `plot_ly()` strives to adopt), one could argue it has a number of design flaws which will probably never be fixed (which `plot_ly()` strives to avoid).
 
 As shown explicitly in the next section, the design of the `plot_ly()` interface is heavily inspired by **ggplot2**, and it's implementation of the Grammar of Graphics [@Wilkinson:2005]. In its layered approach to the grammar of graphics [@Wickham:2010hya], it defines a _layer_ as the combination of five elements: (1) data (2) aesthetic mapping (3) geometry (4) statistical summary (5) positional adjustment. The fact that these elements are easily understood in isolation, but can be combined in many ways to produce complex visualizations, is a huge reason for ggplot2's success (not to mention its support for a bunch of different useful geometries and statistics). 
 
-One could argue, however, that embedding data transformations (e.g., statistical summaries and positional adjustments) inside the plot building step was a mistake since other packages can't leverage that functionality. We're already seeing [glimpses](https://channel9.msdn.com/Events/useR-international-R-User-conference/useR2016/Towards-a-grammar-of-interactive-graphics) of Hadley's vision for the future where statistical computations and data transformations are decoupled from the actual rendering stage [@ggvis]; [@ggstat]. One could also argue that **ggplot2**'s overriding of the `+` operator to combine components is a design flaw -- layers should instead be described as a sequence of pure functions which perform data transformation(s) and mapping(s) to visuals.
+One could argue, however, that embedding data transformations (e.g., statistical summaries and positional adjustments) inside the plot building step was a mistake since other packages can't leverage that functionality. We're already seeing [glimpses](https://channel9.msdn.com/Events/useR-international-R-User-conference/useR2016/Towards-a-grammar-of-interactive-graphics) of Hadley's vision for the future where statistical computations and data transformations are decoupled from the actual rendering stage [@ggvis]; [@ggstat]. One could also argue that **ggplot2**'s overriding of the `+` operator to combine components is another design flaw -- layers should instead be described as a sequence of pure functions which perform data transformation(s) and mapping(s) to visuals.
 
-As always, the devil is in the detail, so I've provided a list at the end of this chapter that lay out more of the limitations behind each interface which may be helpful for [Choosing an interface](#sec:choosing). For now, to help point out some obvious similarities and differences, we'll start by creating the same example with both interfaces.
+As always, the devil is in the detail, so I've provided a list at the end of this chapter that provides more details about the limitations behind each interface which may be helpful for [Choosing an interface](#sec:choosing). For now, we'll point out some obvious similarities and differences with a few examples.
 
 ## A case study of housing sales in Texas
 
-The plotly package depends on ggplot2 which bundles a data set on monthly housing sales in Texan cities acquired from the [TAMU real estate center](http://recenter.tamu.edu/).
+The **plotly** package depends on **ggplot2** which bundles a data set on monthly housing sales in Texan cities acquired from the [TAMU real estate center](http://recenter.tamu.edu/).
 
 ```{r}
 library(plotly)
 txhousing
 ```
 
-In attempt to understand house price behavior over time, we could plot `date` on x, `median` on y, and group the lines connecting these x/y pairs by `city`. 
-
-### The `ggplotly()` interface
-
-```{r}
-txhousing %>%
-  group_by(city) %>%
-  plot_ly(x = ~date, y = ~median) %>%
-  add_lines(alpha = 0.3)
-```
+In attempt to understand house price behavior over time, we could plot `date` on x, `median` on y, and group the lines connecting these x/y pairs by `city`. Using **ggplot2**, we can _initiate_ a ggplot object with the `ggplot()` function which accepts a data frame and a mapping from data variables to visual aesthetics. By just initiating the object, **ggplot2** won't know how to geometrically represent the data until we add an appropriate `geom_*()` function (in this case, we want `geom_line()`). In this case, it is also a good idea to specify alpha transparency so that 5 lines plotted on top of each other appear as solid black, to help avoid overplotting.
 
 ```{r}
 library(plotly)
 p <- ggplot(txhousing, aes(date, median, group = city)) +
-  geom_line(alpha = 0.3)
-ggplotly(p)
+  geom_line(alpha = 0.2)
 ```
+
+Now that we have a valid **ggplot2** object, `p`, the **plotly** package provides the `ggplotly()` function which converts a ggplot object to a plotly object. By default, it supplies the entire aesthetic mapping to the tooltip, but the `tooltip` argument provides a way to restrict tooltip info to a subset of that mapping. Furthermore, in cases where the statistic of a layer is something than the identity function (e.g., `geom_bin2d()` and `geom_hex()`), relevant "intermediate" variables generated in the process are also supplied to the tooltip. This provides a nice mechanism for decoding visual aesthetics (e.g., color) used to represent a measure of interest (e.g, count/value). In Figure \@ref(fig:ggsubplot), the `subplot()` function from the **plotly** package (discussed in more detail in [subplots](#subplot)), which accepts a collection of ggplot and/or plotly objects, helps to concisely display tooltips for a number of scenarios, and how to suppress them.
+
+```{r ggsubplot, fig.cap = "By default all aesthetic mappings are displayed upon hover. The tooltip argument provides a way to display a subset of the mapping."}
+subplot(
+  p, ggplotly(p, tooltip = "city"), 
+  ggplot(txhousing, aes(date, median)) + geom_bin2d(),
+  ggplot(txhousing, aes(date, median)) + geom_hex(),
+  nrows = 2, shareX = TRUE, shareY = TRUE,
+  titleY = FALSE, titleX = FALSE
+)
+```
+
+```{block, type='rmdtip'}
+Although **ggplot2** does not have a `text` aesthetic, the `ggplotly()` function recognizes this aesthetic and displays it in the tooltip by default. In addition to providing a way to supply "meta" information, it also provides a way to customize your tooltips (do this by restricting the tooltip to the text aesthetic -- `ggplotly(p, tooltip = "text")`)
+```
+
+
+
+```{r}
+txhousing %>%
+  plot_ly(x = ~date, y = ~median) %>%
+  group_by(city) %>%
+  add_lines(alpha = 0.3)
+```
+
+
 
 This plot doesn't tell us much (other than prices seems to be increasing overall) since it's hard to see what's happening in individual cities. We could highlight a particular series by subsetting the data 
 
@@ -99,8 +116,6 @@ ggplotly(p) %>%
 
 * Expose the pre-statistics data. 
 
-
-## TODO: Section on controlling tooltips and creating custom tooltip via `text`
 
 
 ## Choosing an interface {sec: choosing}
