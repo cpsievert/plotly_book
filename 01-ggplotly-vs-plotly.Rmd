@@ -12,17 +12,16 @@ As always, the devil is in the detail, so I've provided a list at the end of thi
 
 ## A case study of housing sales in Texas
 
-The **plotly** package depends on **ggplot2** which bundles a data set on monthly housing sales in Texan cities acquired from the [TAMU real estate center](http://recenter.tamu.edu/).
+The **plotly** package depends on **ggplot2** which bundles a data set on monthly housing sales in Texan cities acquired from the [TAMU real estate center](http://recenter.tamu.edu/). After the loading the package, the data is "lazily loaded" into your session, so you may reference it by name:
 
 ```{r}
 library(plotly)
 txhousing
 ```
 
-In attempt to understand house price behavior over time, we could plot `date` on x, `median` on y, and group the lines connecting these x/y pairs by `city`. Using **ggplot2**, we can _initiate_ a ggplot object with the `ggplot()` function which accepts a data frame and a mapping from data variables to visual aesthetics. By just initiating the object, **ggplot2** won't know how to geometrically represent the data until we add an appropriate `geom_*()` function (in this case, we want `geom_line()`). In this case, it is also a good idea to specify alpha transparency so that 5 lines plotted on top of each other appear as solid black, to help avoid overplotting.
+In attempt to understand house price behavior over time, we could plot `date` on x, `median` on y, and group the lines connecting these x/y pairs by `city`. Using **ggplot2**, we can _initiate_ a ggplot object with the `ggplot()` function which accepts a data frame and a mapping from data variables to visual aesthetics. By just initiating the object, **ggplot2** won't know how to geometrically represent the mapping until we add a layer to the plot via one of `geom_*()` (or `stat_*()`) functions (in this case, we want `geom_line()`). In this case, it is also a good idea to specify alpha transparency so that 5 lines plotted on top of each other appear as solid black, to help avoid overplotting.
 
 ```{r}
-library(plotly)
 p <- ggplot(txhousing, aes(date, median, group = city)) +
   geom_line(alpha = 0.2)
 ```
@@ -43,47 +42,35 @@ subplot(
 Although **ggplot2** does not have a `text` aesthetic, the `ggplotly()` function recognizes this aesthetic and displays it in the tooltip by default. In addition to providing a way to supply "meta" information, it also provides a way to customize your tooltips (do this by restricting the tooltip to the text aesthetic -- `ggplotly(p, tooltip = "text")`)
 ```
 
+### The `plot_ly()` interface
 
+The `plot_ly()` function draws inspiration from ggplot2's implementation of the grammar of graphics, but provides a more flexible and direct interface to [plotly.js](https://github.com/plotly/plotly.js). The interface is also functional, and designed to work with dplyr's generic data manipulation functions, so visualizations can be described as a sequence of data manipulations and visual components via the pipe operator (`%>%`) from the **magrittr** package. Note that, similar to `ggplot()`, `plot_ly()` only initiatizes the plot with "global" visual attributes
 
 ```{r}
-txhousing %>%
+p <- txhousing %>%
   plot_ly(x = ~date, y = ~median) %>%
   group_by(city) %>%
-  add_lines(alpha = 0.3)
+  add_lines(alpha = 0.3, name = "Texan Cities", hoverinfo = "none")
+
+p %>%
+  filter(city == "Houston") %>%
+  add_lines(color = I("red"), name = "Houston")
 ```
-
-
 
 This plot doesn't tell us much (other than prices seems to be increasing overall) since it's hard to see what's happening in individual cities. We could highlight a particular series by subsetting the data 
 
 ```{r}
+p %>%
+  group_by(date) %>% 
+  summarise(
+    q1 = quantile(median, 0.25, na.rm = TRUE),
+    m = median(median, na.rm = TRUE),
+    q3 = quantile(median, 0.75, na.rm = TRUE)
+  ) %>%
+  add_lines(y = ~m, color = I("red"), name = "median") %>%
+  add_ribbons(ymin = ~q1, ymax = ~q3, color = I("red"), name = "IQR")
 ```
 
-To compare the monthly median house price across cities
-
-If you use ggplot2, `ggplotly()` adds interactivity (specifically, tooltips, zoom, and pan) to your plots with minimal effort. 
-
-
-### The `plot_ly()` interface
-
-The `plot_ly()` function draws inspiration from ggplot2's implementation of the grammar of graphics, but provides a more flexible and direct interface to [plotly.js](https://github.com/plotly/plotly.js). The interface is also functional, and designed to work with dplyr's generic data manipulation functions, so visualizations can be described as a sequence of data manipulations and visual components via the pipe operator (`%>%`) from the magrittr package.
-
-```{r}
-txhousing %>%
-  group_by(city) %>%
-  plot_ly(x = ~date, y = ~median) %>%
-  add_lines(color = I("black"), alpha = 0.3)
-```
-
-
-```{r}
-txhousing %>%
-  group_by(city) %>%
-  plot_ly(x = ~date, y = ~median) %>%
-  add_lines(alpha = 0.3, color = I("black"), name = "Texan Cities") %>%
-  filter(city == "Houston") %>%
-  add_lines(color = I("red"), name = "Houston")
-```
 
 
 ### Adding layers
