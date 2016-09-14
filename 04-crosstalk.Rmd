@@ -1,0 +1,42 @@
+# Advanced interactive techniques
+
+```{block, type='rmdwarning'}
+The code is this section is still under development and is likely to change.
+To run any of the code you see in this section, you'll need this developmental version of the package:
+`devtools::install_github("ropensci/plotly#554")`
+```
+
+As discussed in previous chapters, **plotly** graphs have zoom, pan, and identification type interactions enabled by default. This chapter will discuss ways we can enable other types of useful interactions listed in Table \@ref(tab:techniques).
+
+```{r techniques, echo = FALSE}
+knitr::kable(
+  readr::read_csv2("interactions.txt"), booktabs = TRUE,
+  caption = "A taxonomy of interaction types"
+)
+```
+
+## Highlighting
+
+TODO: talk about how this improves the example in the first chapter
+
+```{r, eval = FALSE}
+library(plotly)
+library(crosstalk)
+d <- SharedData$new(txhousing, ~city)
+p <- ggplot(d, aes(date, median, group = city)) +
+  geom_line(geom = "line")
+ggplotly(p, tooltip = "city") %>%
+  highlight(on = "plotly_hover", color = "red")
+```
+
+TODO: Talk about the convenience of having "standard" events generated across chart types. When working with something like D3, you typically have to bind to DOM elements when attaching listeners, which does not generalize well.
+
+## Linked highlighting
+
+TODO: show 06-plotly-pipeline.R example. Explain the importance of the pipeline.
+
+## Current limitations
+
+* Currently not working with filled polygons (TODO: is this still true?) -- https://github.com/plotly/plotly.js/issues/884
+* Currently not working with gl2d -- https://github.com/plotly/plotly.js/issues/886
+* Currently leaflet is the only htmlwidget, with crosstalk support, that will respect non-default arguments in plotly's highlight() function.

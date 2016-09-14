@@ -1,0 +1,18 @@
+# plotly interface internals
+
+This chapter describes some of the internals of the **plotly** package -- specifically how it interfaces with the plotly.js graphing library. The plotly.js library (as with many other JavaScript graphing libraries) strives to describe any plot through a plot specification defined via JavaScript Object Notation (JSON). JSON is a language independent data-interchange format that was originally designed for JavaScript, but parsers for many different languages now exist, including R [@RJSONIO]; [@jsonlite]. JSON is a recursive key-value data structure (similar to a list in R), and essentially any valid JavaScript value has a natural R equivalent (e.g., `NULL`/`null`). As a result, any JSON object can be created from an appropriate R list, meaning that theoretically any plotly.js plot can be described via an R list. 
+
+The idea of interfacing R with JavaScript libraries via JSON data transfer has been popular way for quite some time [@rCharts]; [@LDAvis]; [@animint]. The R package **htmlwidgets** standardized this bridge, and provides some additional infrastructure for making sure the HTML output works as expected in multiple contexts (in the R console or RStudio, within **rmarkdown** documents, and embedded inside **shiny** apps). The **htmlwidgets** also provides ways for both widget authors and users to extend the functionality of the underlying JavaScript library. In fact, the **plotly** package uses this mechanism to extend the plotly.js graphing library and enable all the material in [Advanced interactive techniques](advanced-interactive-techniques). 
+
+## Ensuring type safety in data transfer
+
+TODO: talk about using plotly.js plot schema for ensuring type safety, and throwing informative messages...
+
+## plotly object representation
+
+* Inherits from an htmlwidget object
+* Lazy evaluation of arguments
+
+## Miscellanous
+
+* Importance of generic functions for an extensible interface

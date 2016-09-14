@@ -1,0 +1,15 @@
+# Accessing plotly.js events in R, without shiny
+
+Accessing plotly.js events in shiny is easy ([for example](https://plot.ly/r/shiny-tutorial/)), but shiny adds a lot of additional infrastructure that makes it hard to share your work, especially at scale. Very soon, plotly R users will have ways to perform [highlighting](https://cpsievert.github.io/plotly_book/highlighting.html) and [linked highlighting](https://cpsievert.github.io/plotly_book/linked-highlighting.html) without shiny or any knowledge of HTML/JavaScript. However, if you do know some JavaScript, you can access (and respond to) plotly.js events without shiny, without having to leave the comfort of your R prompt, thanks to the `onRender()` function from the **htmlwidgets** package [@htmlwidgets]. This function allows you to write a JavaScript function which will be invoked on the htmlwidget object after it is done rendering. This JavaScript function should have at least two arguments: (1) the DOM element containing the htmlwidget (`el`) and (2) the data passed from R (`x`). Here we use the `onRender()` function to send "event data" to the browser's console upon hovering a point.
+
+```{r}
+library(plotly)
+library(htmlwidgets)
+plot_ly(mtcars, x = ~wt, y = ~mpg) %>%
+  onRender("
+    function(el, x) {
+      var gd = document.getElementById(el.id);
+      gd.on('plotly_hover', function(pt) { console.log('hover', pt); });
+    }
+  ")
+```

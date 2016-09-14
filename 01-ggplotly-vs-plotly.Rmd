@@ -1,14 +1,8 @@
-# Two interfaces, one central object
+# Two approaches, one object
 
-There are two main ways to create a **plotly** object (i.e., visualization) in R. The `plot_ly()` function transforms _data_ into a **plotly** object, while the `ggplotly()` function transforms a ggplot object into a plotly object [@ggplot2]; [@plotly]. No matter which interface you use, printing a plotly object results in an interactive web-based visualization with tooltips, zooming, and panning. Furthermore, once you have a plotly object, any **plotly** function can be used to modify that plotly object. As a result, we can effectively modify or post-process **ggplot2** plots to leverage features exclusive to plotly (see section XXX for some compelling examples showing the power of this idea).
+There are two main ways to initiate a plotly object in R. The `plot_ly()` function transforms _data_ into a plotly object, while the `ggplotly()` function transforms a _ggplot object_ into a plotly object [@ggplot2]; [@plotly]. Regardless how plotly object is created, printing it results in an interactive web-based visualization with tooltips, zooming, and panning enabled by default. It is also possible to enable more advanced interactive techniques, such as [animation](#animation) and [linked highlighting](#linked-highlighting).
 
-A good question to ask now would be: "Why the need for two interfaces"? The quick and easy answer is that **ggplot2** can be quite slow; but has an elegant interface with many useful abstractions (e.g., a consistent interface for altering scales), smart defaults, very extensive set of features, and a huge community of users and developers. On the other hand, `plot_ly()` can be much faster, mostly because it does less magic. Furthermore, **ggplot2** is focused on 2D graphics, whereas plotly.js has awesome 3D scientific visualization capabilities -- the inspiration having `plot_ly()` in the first place. Even though **ggplot2** does a lot of things right (which `plot_ly()` strives to adopt), one could argue it has a number of design flaws which will probably never be fixed (which `plot_ly()` strives to avoid).
-
-As shown explicitly in the next section, the design of the `plot_ly()` interface is heavily inspired by **ggplot2**, and it's implementation of the Grammar of Graphics [@Wilkinson:2005]. In its layered approach to the grammar of graphics [@Wickham:2010hya], it defines a _layer_ as the combination of five elements: (1) data (2) aesthetic mapping (3) geometry (4) statistical summary (5) positional adjustment. The fact that these elements are easily understood in isolation, but can be combined in many ways to produce complex visualizations, is a huge reason for ggplot2's success (not to mention its support for a bunch of different useful geometries and statistics). 
-
-One could argue, however, that embedding data transformations (e.g., statistical summaries and positional adjustments) inside the plot building step was a mistake since other packages can't leverage that functionality. We're already seeing [glimpses](https://channel9.msdn.com/Events/useR-international-R-User-conference/useR2016/Towards-a-grammar-of-interactive-graphics) of Hadley's vision for the future where statistical computations and data transformations are decoupled from the actual rendering stage [@ggvis]; [@ggstat]. One could also argue that **ggplot2**'s overriding of the `+` operator to combine components is another design flaw -- layers should instead be described as a sequence of pure functions which perform data transformation(s) and mapping(s) to visuals.
-
-As always, the devil is in the detail, so I've provided a list at the end of this chapter that provides more details about the limitations behind each interface which may be helpful for [Choosing an interface](#sec:choosing). For now, we'll point out some obvious similarities and differences with a few examples.
+The initial inspiration for the `plot_ly()` function was to support [plotly.js](https://github.com/plotly/plotly.js) chart types that **ggplot2** doesn't support, such as 3D surface and mesh plots. Over time, this effort snowballed into a full-blown interface to the entire plotly.js graphing library with additional abstractions inspired by the grammar of graphics [@Wilkinson:2005]. This "non-ggplot2" interface to plotly.js is (somewhat intentionally) not as fully featured as **ggplot2** to provide more efficient alternative for certain plots. Also, by having high-level functions that can modify plotly objects, we're also able to [Extend `ggplotly()`](#extend-ggplotly). In the next section, we introduce some similarities and differences between `ggplotly()` and `plot_ly()` through a case study.
 
 ## A case study of housing sales in Texas
 
@@ -21,12 +15,16 @@ txhousing
 
 In attempt to understand house price behavior over time, we could plot `date` on x, `median` on y, and group the lines connecting these x/y pairs by `city`. Using **ggplot2**, we can _initiate_ a ggplot object with the `ggplot()` function which accepts a data frame and a mapping from data variables to visual aesthetics. By just initiating the object, **ggplot2** won't know how to geometrically represent the mapping until we add a layer to the plot via one of `geom_*()` (or `stat_*()`) functions (in this case, we want `geom_line()`). In this case, it is also a good idea to specify alpha transparency so that 5 lines plotted on top of each other appear as solid black, to help avoid overplotting.
 
+```{block, type='rmdtip'}
+If you're new to **ggplot2**, the [ggplot2 cheatsheet](https://www.rstudio.com/wp-content/uploads/2015/12/ggplot2-cheatsheet-2.0.pdf) provides a nice quick overview. The [online docs](http://docs.ggplot2.org/current/) or [R graphics cookbook](http://www.cookbook-r.com/Graphs/) are helpful for learning by example, and the [ggplot2 book](https://github.com/hadley/ggplot2-book) provides a nice overview of the conceptual underpinnings.
+```
+
 ```{r}
 p <- ggplot(txhousing, aes(date, median, group = city)) +
   geom_line(alpha = 0.2)
 ```
 
-Now that we have a valid **ggplot2** object, `p`, the **plotly** package provides the `ggplotly()` function which converts a ggplot object to a plotly object. By default, it supplies the entire aesthetic mapping to the tooltip, but the `tooltip` argument provides a way to restrict tooltip info to a subset of that mapping. Furthermore, in cases where the statistic of a layer is something than the identity function (e.g., `geom_bin2d()` and `geom_hex()`), relevant "intermediate" variables generated in the process are also supplied to the tooltip. This provides a nice mechanism for decoding visual aesthetics (e.g., color) used to represent a measure of interest (e.g, count/value). In Figure \@ref(fig:ggsubplot), the `subplot()` function from the **plotly** package (discussed in more detail in [subplots](#subplot)), which accepts a collection of ggplot and/or plotly objects, helps to concisely display tooltips for a number of scenarios, and how to suppress them.
+Now that we have a valid **ggplot2** object, `p`, the **plotly** package provides the `ggplotly()` function which converts a ggplot object to a plotly object. By default, it supplies the entire aesthetic mapping to the tooltip, but the `tooltip` argument provides a way to restrict tooltip info to a subset of that mapping. Furthermore, in cases where the statistic of a layer is something other than the identity function (e.g., `geom_bin2d()` and `geom_hex()`), relevant "intermediate" variables generated in the process are also supplied to the tooltip. This provides a nice mechanism for decoding visual aesthetics (e.g., color) used to represent a measure of interest (e.g, count/value). In Figure \@ref(fig:ggsubplot), the `subplot()` function from the **plotly** package (discussed in more detail in [subplots](#subplot)), which accepts a collection of ggplot and/or plotly objects, helps to concisely display tooltips for a number of scenarios, and how to suppress them.
 
 ```{r ggsubplot, fig.cap = "By default all aesthetic mappings are displayed upon hover. The tooltip argument provides a way to display a subset of the mapping."}
 subplot(
@@ -42,25 +40,37 @@ subplot(
 Although **ggplot2** does not have a `text` aesthetic, the `ggplotly()` function recognizes this aesthetic and displays it in the tooltip by default. In addition to providing a way to supply "meta" information, it also provides a way to customize your tooltips (do this by restricting the tooltip to the text aesthetic -- `ggplotly(p, tooltip = "text")`)
 ```
 
-### The `plot_ly()` interface
+### The `plot_ly()` interface {#plot_ly}
 
-The `plot_ly()` function draws inspiration from ggplot2's implementation of the grammar of graphics, but provides a more flexible and direct interface to [plotly.js](https://github.com/plotly/plotly.js). The interface is also functional, and designed to work with dplyr's generic data manipulation functions, so visualizations can be described as a sequence of data manipulations and visual components via the pipe operator (`%>%`) from the **magrittr** package. Note that, similar to `ggplot()`, `plot_ly()` only initiatizes the plot with "global" visual attributes
+The `plot_ly()` function draws inspiration from the grammar of graphics, but in contrast to `ggplotly()`, it provides a more flexible and direct interface to [plotly.js](https://github.com/plotly/plotly.js). It is more direct in the sense that it doesn't call **ggplot2**'s sometimes expensive plot building routines, and it is more flexible in the sense that data frames are not required, which is useful for visualizing matrices, as shown in [Get Started](#get-started). Although data frames are not required, it is recommended to use them whenever possible, especially when constructing a plot with multiple layers. 
+
+When a data frame is associated with a **plotly** object, it allows us to manipulate the data underlying that object in the same way we would directly manipulate the data. Since every **plotly** function is designed to modify a plotly object (and the data underlying that object), we can express complex multi-layer plots as a sequence (or, more specifically, a directed acyclic graph) of data manipulations and mappings to the visual space. Moreover, **plotly** functions are designed to take a plotly object as input, and return a modified plotly object, making it easy to chain together operations via the pipe operator (`%>%`) from the **magrittr** package (something I'll refer to as the data-plot-pipeline). 
 
 ```{r}
-p <- txhousing %>%
+base <- txhousing %>%
   plot_ly(x = ~date, y = ~median) %>%
   group_by(city) %>%
-  add_lines(alpha = 0.3, name = "Texan Cities", hoverinfo = "none")
+  add_lines(alpha = 0.2, name = "Texan Cities", hoverinfo = "none")
 
-p %>%
+base %>%
   filter(city == "Houston") %>%
   add_lines(color = I("red"), name = "Houston")
 ```
 
+TODO:
+(1) example with data passed explicity to data argument
+(2) example of multi layer plot without data frames
+
+This "data-plot-pipeline" is desirable for a number of reasons: (1) makes your code easier to read and understand (2) any generic function that modifies a data frame can be incorporated into the pipeline (TODO: write a section on writing S3 methods?) (3) as discussed in [Linked Highlighting](#linked-highlighting), it provides a natural mechanism for implementing the pipelines necessary for interactive graphics [@plumbing].
+
+Note that, similar to `ggplot()`, `plot_ly()` only initiatizes the plot with "global" visual attributes
+
+
+
 This plot doesn't tell us much (other than prices seems to be increasing overall) since it's hard to see what's happening in individual cities. We could highlight a particular series by subsetting the data 
 
 ```{r}
-p %>%
+base %>%
   group_by(date) %>% 
   summarise(
     q1 = quantile(median, 0.25, na.rm = TRUE),
@@ -72,22 +82,6 @@ p %>%
 ```
 
 
-
-### Adding layers
-
-The `ggplotly()` function translates [ggplot2](https://cran.r-project.org/web/packages/ggplot2/index.html) graphics to a plotly equivalent, for example:
-
-```{r}
-library(plotly)
-p <- qplot(data = txhousing, x = date, y = median, group = city, alpha = I(0.3), geom = "line")
-
-p <- p + geom_line(data = subset(txhousing, city == "Houston"), color = "red")
-
-
-ggplotly(p) %>%
-  filter(city == "Houston") %>%
-  add_lines(color = I("red"), name = "Houston")
-```
 
 ## Combining the two
 
