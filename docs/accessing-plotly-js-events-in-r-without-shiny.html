@@ -8,20 +8,20 @@
   <title>A plotly tutoRial</title>
   <meta content="text/html; charset=UTF-8" http-equiv="Content-Type">
   <meta name="description" content="An overview of the R package plotly">
-  <meta name="generator" content="bookdown 0.1 and GitBook 2.6.7">
+  <meta name="generator" content="bookdown 0.1.7 and GitBook 2.6.7">
 
   <meta property="og:title" content="A plotly tutoRial" />
   <meta property="og:type" content="book" />
-  <meta property="og:url" content="<a href="http://ropensci.github.io/plotly/" class="uri">http://ropensci.github.io/plotly/</a>" />
-  <meta property="og:image" content="<a href="http://ropensci.github.io/plotly/" class="uri">http://ropensci.github.io/plotly/</a>images/plotly.png" />
+  <meta property="og:url" content="http://ropensci.github.io/plotly/" />
+  <meta property="og:image" content="http://ropensci.github.io/plotly/images/plotly.png" />
   <meta property="og:description" content="An overview of the R package plotly" />
   <meta name="github-repo" content="ropensci/plotly" />
 
   <meta name="twitter:card" content="summary" />
   <meta name="twitter:title" content="A plotly tutoRial" />
-  
+  <meta name="twitter:site" content="@cpsievert" />
   <meta name="twitter:description" content="An overview of the R package plotly" />
-  <meta name="twitter:image" content="<a href="http://ropensci.github.io/plotly/" class="uri">http://ropensci.github.io/plotly/</a>images/plotly.png" />
+  <meta name="twitter:image" content="http://ropensci.github.io/plotly/images/plotly.png" />
 
 <meta name="author" content="Carson Sievert">
 
@@ -148,6 +148,7 @@ code > span.in { color: #60a0b0; font-weight: bold; font-style: italic; } /* Inf
 <li class="chapter" data-level="9.1" data-path="converting-custom-geoms.html"><a href="converting-custom-geoms.html"><i class="fa fa-check"></i><b>9.1</b> Converting custom geoms</a></li>
 <li class="chapter" data-level="9.2" data-path="wrappers-for-domain-specific-viz.html"><a href="wrappers-for-domain-specific-viz.html"><i class="fa fa-check"></i><b>9.2</b> Wrappers for domain-specific viz</a></li>
 </ul></li>
+<li class="chapter" data-level="10" data-path="references.html"><a href="references.html"><i class="fa fa-check"></i><b>10</b> References</a></li>
 <li class="divider"></li>
 <li><a href="https://bookdown.org" target="blank">Published with bookdown</a></li>
 
@@ -170,7 +171,7 @@ code > span.in { color: #60a0b0; font-weight: bold; font-style: italic; } /* Inf
             <section class="normal" id="section-">
 <div id="accessing-plotly.js-events-in-r-without-shiny" class="section level1">
 <h1><span class="header-section-number">7</span> Accessing plotly.js events in R, without shiny</h1>
-<p>Accessing plotly.js events in shiny is easy (<a href="https://plot.ly/r/shiny-tutorial/">for example</a>), but shiny adds a lot of additional infrastructure that makes it hard to share your work, especially at scale. Very soon, plotly R users will have ways to perform <a href="https://cpsievert.github.io/plotly_book/highlighting.html">highlighting</a> and <a href="https://cpsievert.github.io/plotly_book/linked-highlighting.html">linked highlighting</a> without shiny or any knowledge of HTML/JavaScript. However, if you do know some JavaScript, you can access (and respond to) plotly.js events without shiny, without having to leave the comfort of your R prompt, thanks to the <code>onRender()</code> function from the <strong>htmlwidgets</strong> package <span class="citation">(Vaidyanathan et al. <a href="#ref-htmlwidgets">2016</a>)</span>. This function allows you to write a JavaScript function which will be invoked on the htmlwidget object after it is done rendering. This JavaScript function should have at least two arguments: (1) the DOM element containing the htmlwidget (<code>el</code>) and (2) the data passed from R (<code>x</code>). Here we use the <code>onRender()</code> function to send “event data” to the browser’s console upon hovering a point.</p>
+<p>Accessing plotly.js events in shiny is easy (<a href="https://plot.ly/r/shiny-tutorial/">for example</a>), but shiny adds a lot of additional infrastructure that makes it hard to share your work, especially at scale. Very soon, plotly R users will have ways to perform <a href="https://cpsievert.github.io/plotly_book/highlighting.html">highlighting</a> and <a href="https://cpsievert.github.io/plotly_book/linked-highlighting.html">linked highlighting</a> without shiny or any knowledge of HTML/JavaScript. However, if you do know some JavaScript, you can access (and respond to) plotly.js events without shiny, without having to leave the comfort of your R prompt, thanks to the <code>onRender()</code> function from the <strong>htmlwidgets</strong> package <span class="citation">(Vaidyanathan et al. <a href="references.html#ref-htmlwidgets">2016</a>)</span>. This function allows you to write a JavaScript function which will be invoked on the htmlwidget object after it is done rendering. This JavaScript function should have at least two arguments: (1) the DOM element containing the htmlwidget (<code>el</code>) and (2) the data passed from R (<code>x</code>). Here we use the <code>onRender()</code> function to send “event data” to the browser’s console upon hovering a point.</p>
 <div class="sourceCode"><pre class="sourceCode r"><code class="sourceCode r"><span class="kw">library</span>(plotly)
 <span class="kw">library</span>(htmlwidgets)
 <span class="kw">plot_ly</span>(mtcars, <span class="dt">x =</span> ~wt, <span class="dt">y =</span> ~mpg) %&gt;%
@@ -180,15 +181,9 @@ code > span.in { color: #60a0b0; font-weight: bold; font-style: italic; } /* Inf
 <span class="st">      gd.on(&#39;plotly_hover&#39;, function(pt) { console.log(&#39;hover&#39;, pt); });</span>
 <span class="st">    }</span>
 <span class="st">  &quot;</span>)</code></pre></div>
-<div id="htmlwidget-b271bbabe86efaf00c89" style="width:768px;height:474.624px;" class="plotly html-widget"></div>
-<script type="application/json" data-for="htmlwidget-b271bbabe86efaf00c89">{"x":{"layout":{"margin":{"b":40,"l":60,"t":25,"r":10},"xaxis":{"title":"wt"},"yaxis":{"title":"mpg"},"hovermode":"closest"},"config":{"modeBarButtonsToRemove":["sendDataToCloud"]},"base_url":"https://plot.ly","source":"A","data":[{"x":[2.62,2.875,2.32,3.215,3.44,3.46,3.57,3.19,3.15,3.44,3.44,4.07,3.73,3.78,5.25,5.424,5.345,2.2,1.615,1.835,2.465,3.52,3.435,3.84,3.845,1.935,2.14,1.513,3.17,2.77,3.57,2.78],"y":[21,21,22.8,21.4,18.7,18.1,14.3,24.4,22.8,19.2,17.8,16.4,17.3,15.2,10.4,10.4,14.7,32.4,30.4,33.9,21.5,15.5,15.2,13.3,19.2,27.3,26,30.4,15.8,19.7,15,21.4],"type":"scatter","mode":"markers","marker":{"fillcolor":"rgba(31,119,180,1)","color":"rgba(31,119,180,1)","line":{"color":"transparent"}}}]},"evals":[],"jsHooks":{"render":[{"code":"\n    function(el, x) {\n      var gd = document.getElementById(el.id);\n      gd.on('plotly_hover', function(pt) { console.log('hover', pt); });\n    }\n  ","data":null}]}}</script>
+<div id="htmlwidget-815c16a048a63beea427" style="width:768px;height:474.624px;" class="plotly html-widget"></div>
+<script type="application/json" data-for="htmlwidget-815c16a048a63beea427">{"x":{"layout":{"margin":{"b":40,"l":60,"t":25,"r":10},"xaxis":{"title":"wt"},"yaxis":{"title":"mpg"},"hovermode":"closest"},"config":{"modeBarButtonsToRemove":["sendDataToCloud"]},"base_url":"https://plot.ly","source":"A","data":[{"x":[2.62,2.875,2.32,3.215,3.44,3.46,3.57,3.19,3.15,3.44,3.44,4.07,3.73,3.78,5.25,5.424,5.345,2.2,1.615,1.835,2.465,3.52,3.435,3.84,3.845,1.935,2.14,1.513,3.17,2.77,3.57,2.78],"y":[21,21,22.8,21.4,18.7,18.1,14.3,24.4,22.8,19.2,17.8,16.4,17.3,15.2,10.4,10.4,14.7,32.4,30.4,33.9,21.5,15.5,15.2,13.3,19.2,27.3,26,30.4,15.8,19.7,15,21.4],"type":"scatter","mode":"markers","marker":{"fillcolor":"rgba(31,119,180,1)","color":"rgba(31,119,180,1)","line":{"color":"transparent"}}}]},"evals":[],"jsHooks":{"render":[{"code":"\n    function(el, x) {\n      var gd = document.getElementById(el.id);\n      gd.on('plotly_hover', function(pt) { console.log('hover', pt); });\n    }\n  ","data":null}]}}</script>
 
-</div>
-<h3>References</h3>
-<div id="refs" class="references">
-<div id="ref-htmlwidgets">
-<p>Vaidyanathan, Ramnath, Yihui Xie, JJ Allaire, Joe Cheng, and Kenton Russell. 2016. <em>Htmlwidgets: HTML Widgets for R</em>. <a href="https://CRAN.R-project.org/package=htmlwidgets" class="uri">https://CRAN.R-project.org/package=htmlwidgets</a>.</p>
-</div>
 </div>
             </section>
 

@@ -8,20 +8,20 @@
   <title>A plotly tutoRial</title>
   <meta content="text/html; charset=UTF-8" http-equiv="Content-Type">
   <meta name="description" content="An overview of the R package plotly">
-  <meta name="generator" content="bookdown 0.1 and GitBook 2.6.7">
+  <meta name="generator" content="bookdown 0.1.7 and GitBook 2.6.7">
 
   <meta property="og:title" content="A plotly tutoRial" />
   <meta property="og:type" content="book" />
-  <meta property="og:url" content="<a href="http://ropensci.github.io/plotly/" class="uri">http://ropensci.github.io/plotly/</a>" />
-  <meta property="og:image" content="<a href="http://ropensci.github.io/plotly/" class="uri">http://ropensci.github.io/plotly/</a>images/plotly.png" />
+  <meta property="og:url" content="http://ropensci.github.io/plotly/" />
+  <meta property="og:image" content="http://ropensci.github.io/plotly/images/plotly.png" />
   <meta property="og:description" content="An overview of the R package plotly" />
   <meta name="github-repo" content="ropensci/plotly" />
 
   <meta name="twitter:card" content="summary" />
   <meta name="twitter:title" content="A plotly tutoRial" />
-  
+  <meta name="twitter:site" content="@cpsievert" />
   <meta name="twitter:description" content="An overview of the R package plotly" />
-  <meta name="twitter:image" content="<a href="http://ropensci.github.io/plotly/" class="uri">http://ropensci.github.io/plotly/</a>images/plotly.png" />
+  <meta name="twitter:image" content="http://ropensci.github.io/plotly/images/plotly.png" />
 
 <meta name="author" content="Carson Sievert">
 
@@ -148,6 +148,7 @@ code > span.in { color: #60a0b0; font-weight: bold; font-style: italic; } /* Inf
 <li class="chapter" data-level="9.1" data-path="converting-custom-geoms.html"><a href="converting-custom-geoms.html"><i class="fa fa-check"></i><b>9.1</b> Converting custom geoms</a></li>
 <li class="chapter" data-level="9.2" data-path="wrappers-for-domain-specific-viz.html"><a href="wrappers-for-domain-specific-viz.html"><i class="fa fa-check"></i><b>9.2</b> Wrappers for domain-specific viz</a></li>
 </ul></li>
+<li class="chapter" data-level="10" data-path="references.html"><a href="references.html"><i class="fa fa-check"></i><b>10</b> References</a></li>
 <li class="divider"></li>
 <li><a href="https://bookdown.org" target="blank">Published with bookdown</a></li>
 
@@ -170,20 +171,8 @@ code > span.in { color: #60a0b0; font-weight: bold; font-style: italic; } /* Inf
             <section class="normal" id="section-">
 <div id="two-approaches-one-object" class="section level1">
 <h1><span class="header-section-number">1</span> Two approaches, one object</h1>
-<p>There are two main ways to initiate a plotly object in R. The <code>plot_ly()</code> function transforms <em>data</em> into a plotly object, while the <code>ggplotly()</code> function transforms a <em>ggplot object</em> into a plotly object <span class="citation">(Wickham <a href="#ref-ggplot2">2009</a>)</span>; <span class="citation">(Sievert et al. <a href="#ref-plotly">2016</a>)</span>. Regardless how plotly object is created, printing it results in an interactive web-based visualization with tooltips, zooming, and panning enabled by default. It is also possible to enable more advanced interactive techniques, such as <a href="animation.html#animation">animation</a> and <a href="linked-highlighting.html#linked-highlighting">linked highlighting</a>.</p>
-<p>The initial inspiration for the <code>plot_ly()</code> function was to support <a href="https://github.com/plotly/plotly.js">plotly.js</a> chart types that <strong>ggplot2</strong> doesn’t support, such as 3D surface and mesh plots. Over time, this effort snowballed into a full-blown interface to the entire plotly.js graphing library with additional abstractions inspired by the grammar of graphics <span class="citation">(Wilkinson <a href="#ref-Wilkinson:2005">2005</a>)</span>. This “non-ggplot2” interface to plotly.js is (somewhat intentionally) not as fully featured as <strong>ggplot2</strong> to provide more efficient alternative for certain plots. Also, by having high-level functions that can modify plotly objects, we’re also able to <a href="#extend-ggplotly">extend <code>ggplotly()</code></a>. In the next section, we introduce some similarities and differences between <code>ggplotly()</code> and <code>plot_ly()</code> through a case study.</p> 
-</div>
-<h3>References</h3>
-<div id="refs" class="references">
-<div id="ref-ggplot2">
-<p>Wickham, Hadley. 2009. <em>Ggplot2: Elegant Graphics for Data Analysis</em>. Springer-Verlag New York. <a href="http://ggplot2.org" class="uri">http://ggplot2.org</a>.</p>
-</div>
-<div id="ref-plotly">
-<p>Sievert, Carson, Chris Parmer, Toby Hocking, Scott Chamberlain, Karthik Ram, Marianne Corvellec, and Pedro Despouy. 2016. <em>Plotly: Create Interactive Web Graphics via ’Plotly.js’</em>.</p>
-</div>
-<div id="ref-Wilkinson:2005">
-<p>Wilkinson, Leland. 2005. <em>The Grammar of Graphics (Statistics and Computing)</em>. Secaucus, NJ, USA: Springer-Verlag New York, Inc.</p>
-</div>
+<p>There are two main ways to initiate a plotly object in R. The <code>plot_ly()</code> function transforms <em>data</em> into a plotly object, while the <code>ggplotly()</code> function transforms a <em>ggplot object</em> into a plotly object <span class="citation">(Wickham <a href="references.html#ref-ggplot2">2009</a>)</span>; <span class="citation">(Sievert et al. <a href="references.html#ref-plotly">2016</a>)</span>. Regardless how plotly object is created, printing it results in an interactive web-based visualization with tooltips, zooming, and panning enabled by default. It is also possible to enable more advanced interactive techniques, such as <a href="animation.html#animation">animation</a> and <a href="linked-highlighting.html#linked-highlighting">linked highlighting</a>.</p>
+<p>The initial inspiration for the <code>plot_ly()</code> function was to support <a href="https://github.com/plotly/plotly.js">plotly.js</a> chart types that <strong>ggplot2</strong> doesn’t support, such as 3D surface and mesh plots. Over time, this effort snowballed into a full-blown interface to the entire plotly.js graphing library with additional abstractions inspired by the grammar of graphics <span class="citation">(Wilkinson <a href="references.html#ref-Wilkinson:2005">2005</a>)</span>. This “non-ggplot2” interface to plotly.js is (somewhat intentionally) not as fully featured as <strong>ggplot2</strong> to provide more efficient alternative for certain plots. Also, by having high-level functions that can modify plotly objects, we’re also able to <a href="#extend-ggplotly">extend <code>ggplotly()</code></a>. In the next section, we introduce some similarities and differences between <code>ggplotly()</code> and <code>plot_ly()</code> through a case study.</p> 
 </div>
             </section>
 

@@ -8,20 +8,20 @@
   <title>A plotly tutoRial</title>
   <meta content="text/html; charset=UTF-8" http-equiv="Content-Type">
   <meta name="description" content="An overview of the R package plotly">
-  <meta name="generator" content="bookdown 0.1 and GitBook 2.6.7">
+  <meta name="generator" content="bookdown 0.1.7 and GitBook 2.6.7">
 
   <meta property="og:title" content="A plotly tutoRial" />
   <meta property="og:type" content="book" />
-  <meta property="og:url" content="<a href="http://ropensci.github.io/plotly/" class="uri">http://ropensci.github.io/plotly/</a>" />
-  <meta property="og:image" content="<a href="http://ropensci.github.io/plotly/" class="uri">http://ropensci.github.io/plotly/</a>images/plotly.png" />
+  <meta property="og:url" content="http://ropensci.github.io/plotly/" />
+  <meta property="og:image" content="http://ropensci.github.io/plotly/images/plotly.png" />
   <meta property="og:description" content="An overview of the R package plotly" />
   <meta name="github-repo" content="ropensci/plotly" />
 
   <meta name="twitter:card" content="summary" />
   <meta name="twitter:title" content="A plotly tutoRial" />
-  
+  <meta name="twitter:site" content="@cpsievert" />
   <meta name="twitter:description" content="An overview of the R package plotly" />
-  <meta name="twitter:image" content="<a href="http://ropensci.github.io/plotly/" class="uri">http://ropensci.github.io/plotly/</a>images/plotly.png" />
+  <meta name="twitter:image" content="http://ropensci.github.io/plotly/images/plotly.png" />
 
 <meta name="author" content="Carson Sievert">
 
@@ -148,6 +148,7 @@ code > span.in { color: #60a0b0; font-weight: bold; font-style: italic; } /* Inf
 <li class="chapter" data-level="9.1" data-path="converting-custom-geoms.html"><a href="converting-custom-geoms.html"><i class="fa fa-check"></i><b>9.1</b> Converting custom geoms</a></li>
 <li class="chapter" data-level="9.2" data-path="wrappers-for-domain-specific-viz.html"><a href="wrappers-for-domain-specific-viz.html"><i class="fa fa-check"></i><b>9.2</b> Wrappers for domain-specific viz</a></li>
 </ul></li>
+<li class="chapter" data-level="10" data-path="references.html"><a href="references.html"><i class="fa fa-check"></i><b>10</b> References</a></li>
 <li class="divider"></li>
 <li><a href="https://bookdown.org" target="blank">Published with bookdown</a></li>
 
@@ -170,23 +171,8 @@ code > span.in { color: #60a0b0; font-weight: bold; font-style: italic; } /* Inf
             <section class="normal" id="section-">
 <div id="plotly-interface-internals" class="section level1">
 <h1><span class="header-section-number">8</span> plotly interface internals</h1>
-<p>This chapter describes some of the internals of the <strong>plotly</strong> package – specifically how it interfaces with the plotly.js graphing library. The plotly.js library (as with many other JavaScript graphing libraries) strives to describe any plot through a plot specification defined via JavaScript Object Notation (JSON). JSON is a language independent data-interchange format that was originally designed for JavaScript, but parsers for many different languages now exist, including R <span class="citation">(Temple Lang <a href="#ref-RJSONIO">2014</a>)</span>; <span class="citation">(Ooms <a href="#ref-jsonlite">2014</a>)</span>. JSON is a recursive key-value data structure (similar to a list in R), and essentially any valid JavaScript value has a natural R equivalent (e.g., <code>NULL</code>/<code>null</code>). As a result, any JSON object can be created from an appropriate R list, meaning that theoretically any plotly.js plot can be described via an R list.</p>
-<p>The idea of interfacing R with JavaScript libraries via JSON data transfer has been popular way for quite some time <span class="citation">(Vaidyanathan <a href="#ref-rCharts">2013</a>)</span>; <span class="citation">(<span class="citeproc-not-found" data-reference-id="LDAvis"><strong>???</strong></span>)</span>; <span class="citation">(T. D. Hocking, VanderPlas, and Sievert <a href="#ref-animint">2015</a>)</span>. The R package <strong>htmlwidgets</strong> standardized this bridge, and provides some additional infrastructure for making sure the HTML output works as expected in multiple contexts (in the R console or RStudio, within <strong>rmarkdown</strong> documents, and embedded inside <strong>shiny</strong> apps). The <strong>htmlwidgets</strong> also provides ways for both widget authors and users to extend the functionality of the underlying JavaScript library. In fact, the <strong>plotly</strong> package uses this mechanism to extend the plotly.js graphing library and enable all the material in <a href="advanced-interactive-techniques">Advanced interactive techniques</a>.</p> 
-</div>
-<h3>References</h3>
-<div id="refs" class="references">
-<div id="ref-RJSONIO">
-<p>Temple Lang, Duncan. 2014. <em>RJSONIO: Serialize R Objects to Json, Javascript Object Notation</em>. <a href="http://CRAN.R-project.org/package=RJSONIO" class="uri">http://CRAN.R-project.org/package=RJSONIO</a>.</p>
-</div>
-<div id="ref-jsonlite">
-<p>Ooms, Jeroen. 2014. “The Jsonlite Package: A Practical and Consistent Mapping Between Json Data and R Objects.” <em>ArXiv:1403.2805 [Stat.CO]</em>. <a href="http://arxiv.org/abs/1403.2805" class="uri">http://arxiv.org/abs/1403.2805</a>.</p>
-</div>
-<div id="ref-rCharts">
-<p>Vaidyanathan, Ramnath. 2013. <em>RCharts: Interactive Charts Using Javascript Visualization Libraries</em>. <a href="https://github.com/ramnathv/rCharts/" class="uri">https://github.com/ramnathv/rCharts/</a>.</p>
-</div>
-<div id="ref-animint">
-<p>Hocking, Toby Dylan, Susan VanderPlas, and Carson Sievert. 2015. <em>Animint: Interactive Animations</em>.</p>
-</div>
+<p>This chapter describes some of the internals of the <strong>plotly</strong> package – specifically how it interfaces with the plotly.js graphing library. The plotly.js library (as with many other JavaScript graphing libraries) strives to describe any plot through a plot specification defined via JavaScript Object Notation (JSON). JSON is a language independent data-interchange format that was originally designed for JavaScript, but parsers for many different languages now exist, including R <span class="citation">(Temple Lang <a href="references.html#ref-RJSONIO">2014</a>)</span>; <span class="citation">(Ooms <a href="references.html#ref-jsonlite">2014</a>)</span>. JSON is a recursive key-value data structure (similar to a list in R), and essentially any valid JavaScript value has a natural R equivalent (e.g., <code>NULL</code>/<code>null</code>). As a result, any JSON object can be created from an appropriate R list, meaning that theoretically any plotly.js plot can be described via an R list.</p>
+<p>The idea of interfacing R with JavaScript libraries via JSON data transfer has been popular way for quite some time <span class="citation">(Vaidyanathan <a href="references.html#ref-rCharts">2013</a>)</span>; <span class="citation">(<span class="citeproc-not-found" data-reference-id="LDAvis"><strong>???</strong></span>)</span>; <span class="citation">(T. D. Hocking, VanderPlas, and Sievert <a href="references.html#ref-animint">2015</a>)</span>. The R package <strong>htmlwidgets</strong> standardized this bridge, and provides some additional infrastructure for making sure the HTML output works as expected in multiple contexts (in the R console or RStudio, within <strong>rmarkdown</strong> documents, and embedded inside <strong>shiny</strong> apps). The <strong>htmlwidgets</strong> also provides ways for both widget authors and users to extend the functionality of the underlying JavaScript library. In fact, the <strong>plotly</strong> package uses this mechanism to extend the plotly.js graphing library and enable all the material in <a href="advanced-interactive-techniques">Advanced interactive techniques</a>.</p> 
 </div>
             </section>
 
