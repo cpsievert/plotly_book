@@ -1,4 +1,10 @@
 language: R
+ cache:
+   packages: true
+   directories: "docs"
+
+before_script:
+  - Rscript -e "devtools::install_github('ropensci/plotly')"
 
 script:
   - make
