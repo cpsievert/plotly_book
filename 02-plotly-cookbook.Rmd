@@ -5,6 +5,21 @@ This chapter demonstrates the capabilities of `plot_ly()` through a series of ex
 1. Provide sensible defaults/messages/warnings based on the information supplied, but still allows for full customization through [plotly.js](https://github.com/plotly/plotly.js)' (the open source JavaScript graphing library which powers plotly) [figure reference](https://plot.ly/r/reference/).
 2. Leverage useful concepts from the grammar of graphics (without requiring it to be used).
 
+## Scatterplots
+
+Given a numeric variable(s) on x and y, `plot_ly()` defaults to a scatterplot
+
+```{r}
+subplot(
+  plot_ly(mtcars, x = ~wt, y = ~mpg),
+  plot_ly(mtcars, x = ~wt, y = ~mpg, color = ~disp),
+  plot_ly(mtcars, x = ~wt, y = ~mpg, color = ~factor(vs))
+)
+
+```
+
+
+
 ## Smart defaults, messages, warnings, errors
 
 If no visualization type is specified, `plot_ly()` infers a sensible type based on the information provided. In this case, a numeric matrix (named `volcano`) is mapped to the `z` attribute, so a heatmap is a sensible default. 

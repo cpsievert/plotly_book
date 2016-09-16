@@ -1,8 +1,10 @@
 # Two approaches, one object
 
-There are two main ways to initiate a plotly object in R. The `plot_ly()` function transforms _data_ into a plotly object, while the `ggplotly()` function transforms a _ggplot object_ into a plotly object [@ggplot2]; [@plotly]. Regardless how plotly object is created, printing it results in an interactive web-based visualization with tooltips, zooming, and panning enabled by default. It is also possible to enable more advanced interactive techniques, such as [animation](#animation) and [linked highlighting](#linked-highlighting).
+There are two main ways to initiate a plotly object in R. The `plot_ly()` function transforms _data_ into a plotly object, while the `ggplotly()` function transforms a _ggplot object_ into a plotly object [@ggplot2]; [@plotly]. Regardless how plotly object is created, printing it results in an interactive web-based visualization with tooltips, zooming, and panning enabled by default. It is also possible to enable more advanced interactive techniques, such as [animation](#animation) and [linked highlighting](#linked-highlighting). This chapter discusses some of the philosophy behind each approach, explores some of their similarities, and explains why understanding both approaches is extremely powerful.
 
-The initial inspiration for the `plot_ly()` function was to support [plotly.js](https://github.com/plotly/plotly.js) chart types that **ggplot2** doesn't support, such as 3D surface and mesh plots. Over time, this effort snowballed into a full-blown interface to the entire plotly.js graphing library with additional abstractions inspired by the grammar of graphics [@Wilkinson:2005]. This "non-ggplot2" interface to plotly.js is (somewhat intentionally) not as fully featured as **ggplot2** to provide more efficient alternative for certain plots. Also, by having high-level functions that can modify plotly objects, we're also able to [extend `ggplotly()`](#extend-ggplotly). In the next section, we introduce some similarities and differences between `ggplotly()` and `plot_ly()` through a case study.
+The initial inspiration for the `plot_ly()` function was to support [plotly.js](https://github.com/plotly/plotly.js) chart types that **ggplot2** doesn't support, such as 3D surface and mesh plots. Over time, this effort snowballed into an interface to the entire plotly.js graphing library with additional abstractions inspired by the grammar of graphics [@Wilkinson:2005]. This newer "non-ggplot2" interface to plotly.js is currently not, and may never be, as fully featured as **ggplot2**. Since we can already translate a fairly large amount of ggplot objects to plotly objects, I'd rather not reinvent those same abstractions, and focus providing useful tools for [advanced interactive graphics](advanced-interactive-techniques).
+
+The next section uses a case study to introduce some of the similarities between `ggplotly()` and `plot_ly()`, dives into the cognitive framework behind `plot_ly()`, and also demonstrates how to [extend `ggplotly()`](#extending-ggplotly) with functions that can modify plotly objects.
 
 ## A case study of housing sales in Texas
 
@@ -44,6 +46,8 @@ The `ggplotly()` function translates most things that you can do in **ggplot2**,
 
 ### The `plot_ly()` interface {#plot_ly}
 
+#### The Layered Grammar of Graphics
+
 The cognitive framework underlying the `plot_ly()` interface draw inspiration from the layered grammar of graphics [@Wickham:2010hya], but in contrast to `ggplotly()`, it provides a more flexible and direct interface to [plotly.js](https://github.com/plotly/plotly.js). It is more direct in the sense that it doesn't call **ggplot2**'s sometimes expensive plot building routines, and it is more flexible in the sense that data frames are not required, which is useful for visualizing matrices, as shown in [Get Started](#get-started). Although data frames are not required, it is recommended to use them whenever possible, especially when constructing a plot with multiple layers or groups. 
 
 When a data frame is associated with a **plotly** object, it allows us to manipulate the data underlying that object in the same way we would directly manipulate the data. Currently, `plot_ly()` borrows semantics from and provides special plotly methods for generic functions in the **dplyr** and **tidyr** packages [@dplyr]; [@tidyr]. Most importantly, `plot_ly()` recognizes and preserves groupings created with **dplyr**'s `group_by()`.
@@ -57,85 +61,125 @@ p <- plot_ly(tx, x = ~date, y = ~median)
 plotly_data(p)
 ```
 
-Defining groups in this fashion ensures `plot_ly()` will produce at least one graphical mark per group.^[In practice, it's easy to forget about "lingering" groups (e.g., `mtcars %>% group_by(vs, am) %>% summarise(s = sum(mpg))`), so in some cases, you may need to `ungroup()` your data before plotting it.] So far we've specified `x` and `y` attributes in the plotly object `p`, but we have not yet specified the geometric relation between these x/y pairs. Similar to `geom_line()` in **ggplot2**, the `add_lines()` function connects (a group of) x/y pairs with lines in the order of their `x` values, which is useful when plotting time series as shown in Figure \@ref(fig:houston).
-
-
-
-Similar to the `ggplot()` function in **ggplot2**, `plot_ly()` initializes a plot object, and any attributes defined here . 
+Defining groups in this fashion ensures `plot_ly()` will produce at least one graphical mark per group.^[In practice, it's easy to forget about "lingering" groups (e.g., `mtcars %>% group_by(vs, am) %>% summarise(s = sum(mpg))`), so in some cases, you may need to `ungroup()` your data before plotting it.] So far we've specified `x`/`y` attributes in the plotly object `p`, but we have not yet specified the geometric relation between these x/y pairs. Similar to `geom_line()` in **ggplot2**, the `add_lines()` function connects (a group of) x/y pairs with lines in the order of their `x` values, which is useful when plotting time series as shown in Figure \@ref(fig:houston).
 
 ```{r houston, fig.cap = "Median house sales in houston compared to other Texan cities"}
-# we get one line per city since p knows city is a grouping variable
-p2 <- add_lines(p, alpha = 0.2, name = "Texan Cities", hoverinfo = "none")
-# add another line to highlight houston
+# add a line highlighting houston
 add_lines(
-  p2, name = "Houston", color = I("red"),
-  data = filter(txhousing, city == "Houston")
+  # plots one line per city since p knows city is a grouping variable
+  add_lines(p, alpha = 0.2, name = "Texan Cities", hoverinfo = "none"),
+  name = "Houston", data = filter(txhousing, city == "Houston")
 )
 ```
 
-The **plotly** package has a collection of `add_*()` functions, all of which inherit attributes defined in `plot_ly()`. These functions also inherit the data associated with the plotly object provided as input, unless otherwise specified in the `data` argument. I prefer to think about `add_*()` functions like a layer in **ggplot2**, which is slightly different from the concept of a plotly.js trace. In Figure \@ref(fig:houston), there is a 1-to-1 correspondence between layers and traces, but as you will find in the [The plotly cookbook](the-plotly-cookbook), an `add_*()` function can produce numerous traces. 
+The **plotly** package has a collection of `add_*()` functions, all of which inherit attributes defined in `plot_ly()`. These functions also inherit the data associated with the plotly object provided as input, unless otherwise specified with the `data` argument. I prefer to think about `add_*()` functions like a layer in **ggplot2**, which is slightly different, but related to a plotly.js trace. In Figure \@ref(fig:houston), there is a 1-to-1 correspondence between layers and traces, but `add_*()` functions do generate numerous traces whenever mapping a discrete variable to a visual aesthetic (e.g., [color](scatterplots-discrete-color)). In this case, since each call to `add_lines()` generates a single trace, it makes sense to `name` the trace, so a sensible legend entry is created.
 
-In the first layer of Figure \@ref(fig:houston), there is one line per city, but this entire layer is implemented with a single trace. We _could have_ produced one trace for each line, but this is expensive because, by default, each trace produces a legend entry and tries to display meaningful hover information. It is much more efficient to render this layer as a single trace with missing values to differentiate groups. In fact, this is exactly how the group aesthetic is translated in `ggplotly()`; otherwise, layers with many groups (e.g., `geom_map()`) would be slow to render.
+In the first layer of Figure \@ref(fig:houston), there is one line per city, but all these lines belong a single trace. We _could have_ produced one trace for each line, but this is way more computationally expensive because, among other things, each trace produces a legend entry and tries to display meaningful hover information. It is much more efficient to render this layer as a single trace with missing values to differentiate groups. In fact, this is exactly how the group aesthetic is translated in `ggplotly()`; otherwise, layers with many groups (e.g., `geom_map()`) would be slow to render.
+
+#### The data-plot-pipeline
 
 Since every **plotly** function modifies a plotly object (or the data underlying that object), we can express complex multi-layer plots as a sequence (or, more specifically, a directed acyclic graph) of data manipulations and mappings to the visual space. Moreover, **plotly** functions are designed to take a plotly object as input, and return a modified plotly object, making it easy to chain together operations via the pipe operator (`%>%`) from the **magrittr** package [@magrittr]. Consequently, we can re-express Figure \@ref(fig:houston) in a much more readable and understandable fashion.
 
-```{r, eval = FALSE}
-txhousing %>%
+```{r, results = "hide"}
+allCities <- txhousing %>%
   group_by(city) %>%
   plot_ly(x = ~date, y = ~median) %>%
-  add_lines(alpha = 0.2, name = "Texan Cities", hoverinfo = "none") %>%
+  add_lines(alpha = 0.2, name = "Texan Cities", hoverinfo = "none")
+
+allCities %>%
   filter(city == "Houston") %>%
-  add_lines(color = I("red"), name = "Houston")
+  add_lines(name = "Houston")
 ```
 
-Not only does it make you
+Sometimes the directed acyclic graph property of a pipeline can be too restrictive for certain types of plots. In this example, after filtering the data down to Houston, there is no way to recover the original data inside the pipeline. The `add_fun()` function helps to work-around this restriction^[Credit to Winston Chang and Hadley Wickham for this idea. The `add_fun()` is very much like `layer_f()` in **ggvis**.] -- it works by applying some function to the plotly object, then returns the data that was originally fed into it. This effectively provides a way to isolate data transformations from the data associated with the plotly object^[Also, effectively putting a [pipeline inside a pipeline](http://www.memecreator.org/meme/yo-dawg-i-heard-u-like-pipelines-so-we-put-a-pipeline-in-your-pipeline)]. Figure \@ref(fig:houston-vs-sa) gives an example of how one can use this idea to highlight more than one city.
 
-```{r}
-txhousing %>%
-  group_by(city) %>%
-  plot_ly(x = ~date, y = ~median) %>%
-  add_lines(alpha = 0.2, name = "Texan Cities", hoverinfo = "none") %>%
-  group_by(date) %>% 
-  summarise(
-    q1 = quantile(median, 0.25, na.rm = TRUE),
-    m = median(median, na.rm = TRUE),
-    q3 = quantile(median, 0.75, na.rm = TRUE)
-  ) %>%
-  add_lines(y = ~m, color = I("red"), name = "median") %>%
-  add_ribbons(ymin = ~q1, ymax = ~q3, color = I("red"), name = "IQR")
+```{r houston-vs-sa, fig.cap = "Highlighting both Houston and San Antonio"}
+allCities %>%
+  add_fun(function(plot) {
+    plot %>% filter(city == "Houston") %>% add_lines(name = "Houston")
+  }) %>%
+  add_fun(function(plot) {
+    plot %>% filter(city == "San Antonio") %>% add_lines(name = "San Antonio")
+  })
 ```
+
+To help avoid code duplication, the `add_fun()` also allows you to pass additional arguments to the function being applied. In addition to making your code more expressive, it leaves you less prone to making mistakes. Figure \@ref(fig:summary) makes use of this pattern, by highlighting Houston and San Antonio in comparison to the first, second, and third quartile of median monthly house sales.
+
+```{r summary, fig.cap = "First, second, and third quartile of median monthly house sales."}
+# reusable function for highlighting a particular city
+layer_city <- function(plot, name) {
+  plot %>% filter(city == name) %>% add_lines(name = name)
+}
+
+# reusable function for plotting overall median & IQR
+layer_iqr <- function(plot) {
+  plot %>%
+    group_by(date) %>% 
+    summarise(
+      q1 = quantile(median, 0.25, na.rm = TRUE),
+      m = median(median, na.rm = TRUE),
+      q3 = quantile(median, 0.75, na.rm = TRUE)
+    ) %>%
+    add_lines(y = ~m, name = "median", color = I("black")) %>%
+    add_ribbons(ymin = ~q1, ymax = ~q3, name = "IQR", color = I("black"))
+}
+
+allCities %>%
+  add_fun(layer_iqr) %>%
+  add_fun(layer_city, "Houston") %>%
+  add_fun(layer_city, "San Antonio")
+```
+
 
 
 TODO:
-(1) example with data passed explicity to data argument
-(2) example of multi layer plot without data frames
+  (1) example with data passed explicity to data argument
+  (2) example of multi layer plot without data frames
 
 
-
-
-This "data-plot-pipeline" is desirable for a number of reasons: (1) makes your code easier to read and understand (2) any generic function that modifies a data frame can be incorporated into the pipeline (TODO: write a section on writing S3 methods?) (3) as discussed in [Linked Highlighting](#linked-highlighting), it provides a natural mechanism for implementing the pipelines necessary for interactive graphics [@plumbing].
-
-Note that, similar to `ggplot()`, `plot_ly()` only initiatizes the plot with "global" visual attributes
-
-
-
-This plot doesn't tell us much (other than prices seems to be increasing overall) since it's hard to see what's happening in individual cities. We could highlight a particular series by subsetting the data 
-
+In summary, the "data-plot-pipeline" is desirable for a number of reasons: (1) makes your code easier to read and understand, (2) allows you to think of both your data and plots using a single, uniform data structure, and (3) provides a natural mechanism for implementing the pipeline(s) necessary in interactive graphics system with support for [Linked Highlighting](#linked-highlighting) [@plumbing].
 
 
 ## Extending `ggplotly()`
 
-```{r}
-p <- ggplot(txhousing, aes(x = date, y = median)) +
-  geom_line(aes(group = city), alpha = 0.3) +
-  geom_smooth()
+Since the `ggplotly()` function returns a plotly object, we can manipulate that object  `plot_ly()`. 
 
-ggplotly(p) %>%
-  filter(city == "Houston") %>%
-  add_lines(color = I("red"), name = "Houston")
+```{r}
+p <- ggplot(mtcars, aes(x = wt, y = mpg)) +
+  geom_point() + geom_smooth()
+
+p %>%
+  ggplotly(layerData = 2, originalData = FALSE) %>%
+  plotly_data()
+```
+
+
+```{r}
+p %>%
+  ggplotly(layerData = 2, originalData = F) %>%
+  add_fun(function(p) {
+    p %>% slice(which.max(se)) %>%
+      add_segments(x = ~x, xend = ~x, y = ~ymin, yend = ~ymax) %>%
+      add_annotations("Maximum uncertainty", ax = 60)
+  }) %>%
+  add_fun(function(p) {
+    p %>% slice(which.min(se)) %>%
+      add_segments(x = ~x, xend = ~x, y = ~ymin, yend = ~ymax) %>%
+      add_annotations("Minimum uncertainty")
+  })
 ```
 
 * Expose the pre-statistics data. 
+
+
+```{r, eval = FALSE}
+library(crosstalk)
+sd <- SharedData$new(txhousing, ~year)
+p <- ggplot(sd, aes(month, median)) + 
+  geom_line(aes(group = city)) + geom_smooth(method = "gam") + 
+  facet_wrap(~ year)
+ggplotly(p) %>% highlight("plotly_hover")
+```
 
 
 

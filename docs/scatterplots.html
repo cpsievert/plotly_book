@@ -32,8 +32,8 @@
   <meta name="apple-mobile-web-app-status-bar-style" content="black">
   
   
-<link rel="prev" href="plot-ly-for-collaboration.html">
-<link rel="next" href="a-case-study-of-housing-sales-in-texas.html">
+<link rel="prev" href="the-plotly-cookbook.html">
+<link rel="next" href="smart-defaults-messages-warnings-errors.html">
 
 <script src="libs/jquery/jquery.min.js"></script>
 <link href="libs/gitbook/css/style.css" rel="stylesheet" />
@@ -171,19 +171,24 @@ code > span.in { color: #60a0b0; font-weight: bold; font-style: italic; } /* Inf
           <div class="page-inner">
 
             <section class="normal" id="section-">
-<div id="two-approaches-one-object" class="section level1">
-<h1><span class="header-section-number">1</span> Two approaches, one object</h1>
-<p>There are two main ways to initiate a plotly object in R. The <code>plot_ly()</code> function transforms <em>data</em> into a plotly object, while the <code>ggplotly()</code> function transforms a <em>ggplot object</em> into a plotly object <span class="citation">(Wickham <a href="references.html#ref-ggplot2">2009</a>)</span>; <span class="citation">(Sievert et al. <a href="references.html#ref-plotly">2016</a>)</span>. Regardless how plotly object is created, printing it results in an interactive web-based visualization with tooltips, zooming, and panning enabled by default. It is also possible to enable more advanced interactive techniques, such as <a href="animation.html#animation">animation</a> and <a href="linked-highlighting.html#linked-highlighting">linked highlighting</a>. This chapter discusses some of the philosophy behind each approach, explores some of their similarities, and explains why understanding both approaches is extremely powerful.</p>
-<p>The initial inspiration for the <code>plot_ly()</code> function was to support <a href="https://github.com/plotly/plotly.js">plotly.js</a> chart types that <strong>ggplot2</strong> doesn’t support, such as 3D surface and mesh plots. Over time, this effort snowballed into an interface to the entire plotly.js graphing library with additional abstractions inspired by the grammar of graphics <span class="citation">(Wilkinson <a href="references.html#ref-Wilkinson:2005">2005</a>)</span>. This newer “non-ggplot2” interface to plotly.js is currently not, and may never be, as fully featured as <strong>ggplot2</strong>. Since we can already translate a fairly large amount of ggplot objects to plotly objects, I’d rather not reinvent those same abstractions, and focus providing useful tools for <a href="advanced-interactive-techniques">advanced interactive graphics</a>.</p>
-<p>The next section uses a case study to introduce some of the similarities between <code>ggplotly()</code> and <code>plot_ly()</code>, dives into the cognitive framework behind <code>plot_ly()</code>, and also demonstrates how to <a href="extending-ggplotly.html#extending-ggplotly">extend <code>ggplotly()</code></a> with functions that can modify plotly objects.</p> 
+<div id="scatterplots" class="section level2">
+<h2><span class="header-section-number">2.1</span> Scatterplots</h2>
+<p>Given a numeric variable(s) on x and y, <code>plot_ly()</code> defaults to a scatterplot</p>
+<div class="sourceCode"><pre class="sourceCode r"><code class="sourceCode r"><span class="kw">subplot</span>(
+  <span class="kw">plot_ly</span>(mtcars, <span class="dt">x =</span> ~wt, <span class="dt">y =</span> ~mpg),
+  <span class="kw">plot_ly</span>(mtcars, <span class="dt">x =</span> ~wt, <span class="dt">y =</span> ~mpg, <span class="dt">color =</span> ~disp),
+  <span class="kw">plot_ly</span>(mtcars, <span class="dt">x =</span> ~wt, <span class="dt">y =</span> ~mpg, <span class="dt">color =</span> ~<span class="kw">factor</span>(vs))
+)</code></pre></div>
+<div id="htmlwidget-1e8088159adf8a3697a1" style="width:768px;height:474.624px;" class="plotly html-widget"></div>
+<script type="application/json" data-for="htmlwidget-1e8088159adf8a3697a1">{"x":{"data":[{"x":[2.62,2.875,2.32,3.215,3.44,3.46,3.57,3.19,3.15,3.44,3.44,4.07,3.73,3.78,5.25,5.424,5.345,2.2,1.615,1.835,2.465,3.52,3.435,3.84,3.845,1.935,2.14,1.513,3.17,2.77,3.57,2.78],"y":[21,21,22.8,21.4,18.7,18.1,14.3,24.4,22.8,19.2,17.8,16.4,17.3,15.2,10.4,10.4,14.7,32.4,30.4,33.9,21.5,15.5,15.2,13.3,19.2,27.3,26,30.4,15.8,19.7,15,21.4],"type":"scatter","mode":"markers","marker":{"fillcolor":"rgba(31,119,180,1)","color":"rgba(31,119,180,1)","line":{"color":"transparent"}},"xaxis":"x","yaxis":"y"},{"x":[2.62,2.875,2.32,3.215,3.44,3.46,3.57,3.19,3.15,3.44,3.44,4.07,3.73,3.78,5.25,5.424,5.345,2.2,1.615,1.835,2.465,3.52,3.435,3.84,3.845,1.935,2.14,1.513,3.17,2.77,3.57,2.78],"y":[21,21,22.8,21.4,18.7,18.1,14.3,24.4,22.8,19.2,17.8,16.4,17.3,15.2,10.4,10.4,14.7,32.4,30.4,33.9,21.5,15.5,15.2,13.3,19.2,27.3,26,30.4,15.8,19.7,15,21.4],"type":"scatter","mode":"markers","marker":{"colorbar":{"title":"disp","ticklen":2},"cmin":71.1,"cmax":472,"colorscale":[["0","rgba(68,1,84,1)"],["0.0136567722624096","rgba(69,7,88,1)"],["0.0193938638064355","rgba(69,9,90,1)"],["0.0548453479670741","rgba(71,23,101,1)"],["0.0970732518500041","rgba(72,36,115,1)"],["0.122453645963249","rgba(71,44,122,1)"],["0.124033424794213","rgba(71,44,122,1)"],["0.174295335495136","rgba(68,60,130,1)"],["0.185748732019623","rgba(67,63,131,1)"],["0.209310301820903","rgba(64,70,135,1)"],["0.221751060114742","rgba(62,74,137,1)"],["0.240708406086306","rgba(61,79,138,1)"],["0.312297331005238","rgba(53,98,141,1)"],["0.449052132701422","rgba(38,131,142,1)"],["0.510601147418309","rgba(36,147,139,1)"],["0.510601147418309","rgba(36,147,139,1)"],["0.552506859565976","rgba(31,157,137,1)"],["0.580631080069843","rgba(38,164,134,1)"],["0.635819406335745","rgba(49,176,126,1)"],["0.697035836035586","rgba(73,189,113,1)"],["0.716887004240459","rgba(83,193,107,1)"],["0.733100523821402","rgba(91,196,103,1)"],["0.861977217926332","rgba(165,218,58,1)"],["0.955516753970234","rgba(225,228,40,1)"],["1","rgba(253,231,37,1)"]],"showscale":false,"color":[160,160,108,258,360,225,360,146.7,140.8,167.6,167.6,275.8,275.8,275.8,472,460,440,78.7,75.7,71.1,120.1,318,304,350,400,79,120.3,95.1,351,145,301,121],"line":{"color":"transparent"}},"xaxis":"x2","yaxis":"y2"},{"x":[1.513,5.424],"y":[10.4,33.9],"type":"scatter","mode":"markers","opacity":0,"hoverinfo":"none","showlegend":false,"marker":{"colorbar":{"title":"disp","ticklen":2},"cmin":71.1,"cmax":472,"colorscale":[["0","rgba(68,1,84,1)"],["0.0136567722624096","rgba(69,7,88,1)"],["0.0193938638064355","rgba(69,9,90,1)"],["0.0548453479670741","rgba(71,23,101,1)"],["0.0970732518500041","rgba(72,36,115,1)"],["0.122453645963249","rgba(71,44,122,1)"],["0.124033424794213","rgba(71,44,122,1)"],["0.174295335495136","rgba(68,60,130,1)"],["0.185748732019623","rgba(67,63,131,1)"],["0.209310301820903","rgba(64,70,135,1)"],["0.221751060114742","rgba(62,74,137,1)"],["0.240708406086306","rgba(61,79,138,1)"],["0.312297331005238","rgba(53,98,141,1)"],["0.449052132701422","rgba(38,131,142,1)"],["0.510601147418309","rgba(36,147,139,1)"],["0.510601147418309","rgba(36,147,139,1)"],["0.552506859565976","rgba(31,157,137,1)"],["0.580631080069843","rgba(38,164,134,1)"],["0.635819406335745","rgba(49,176,126,1)"],["0.697035836035586","rgba(73,189,113,1)"],["0.716887004240459","rgba(83,193,107,1)"],["0.733100523821402","rgba(91,196,103,1)"],["0.861977217926332","rgba(165,218,58,1)"],["0.955516753970234","rgba(225,228,40,1)"],["1","rgba(253,231,37,1)"]],"showscale":true,"color":[71.1,472]},"xaxis":"x2","yaxis":"y2"},{"x":[2.62,2.875,3.44,3.57,4.07,3.73,3.78,5.25,5.424,5.345,3.52,3.435,3.84,3.845,2.14,3.17,2.77,3.57],"y":[21,21,18.7,14.3,16.4,17.3,15.2,10.4,10.4,14.7,15.5,15.2,13.3,19.2,26,15.8,19.7,15],"type":"scatter","mode":"markers","name":"0","marker":{"fillcolor":"rgba(102,194,165,0.5)","color":"rgba(102,194,165,1)","line":{"color":"transparent"}},"xaxis":"x3","yaxis":"y3"},{"x":[2.32,3.215,3.46,3.19,3.15,3.44,3.44,2.2,1.615,1.835,2.465,1.935,1.513,2.78],"y":[22.8,21.4,18.1,24.4,22.8,19.2,17.8,32.4,30.4,33.9,21.5,27.3,30.4,21.4],"type":"scatter","mode":"markers","name":"1","marker":{"fillcolor":"rgba(141,160,203,0.5)","color":"rgba(141,160,203,1)","line":{"color":"transparent"}},"xaxis":"x3","yaxis":"y3"}],"layout":{"xaxis":{"domain":[0,0.313333333333333],"anchor":"y"},"xaxis2":{"domain":[0.353333333333333,0.646666666666667],"anchor":"y2"},"xaxis3":{"domain":[0.686666666666667,1],"anchor":"y3"},"yaxis3":{"domain":[0,1],"anchor":"x3"},"yaxis2":{"domain":[0,1],"anchor":"x2"},"yaxis":{"domain":[0,1],"anchor":"x"},"margin":{"b":40,"l":60,"t":25,"r":10},"hovermode":"closest","showlegend":false},"source":"A"},"evals":[],"jsHooks":[]}</script>
 </div>
             </section>
 
           </div>
         </div>
       </div>
-<a href="plot-ly-for-collaboration.html" class="navigation navigation-prev " aria-label="Previous page"><i class="fa fa-angle-left"></i></a>
-<a href="a-case-study-of-housing-sales-in-texas.html" class="navigation navigation-next " aria-label="Next page""><i class="fa fa-angle-right"></i></a>
+<a href="the-plotly-cookbook.html" class="navigation navigation-prev " aria-label="Previous page"><i class="fa fa-angle-left"></i></a>
+<a href="smart-defaults-messages-warnings-errors.html" class="navigation navigation-next " aria-label="Next page""><i class="fa fa-angle-right"></i></a>
 
 <script src="libs/gitbook/js/app.min.js"></script>
 <script src="libs/gitbook/js/lunr.js"></script>
@@ -202,7 +207,7 @@ gitbook.start({
 "size": 2
 },
 "edit": {
-"link": "https://github.com/cpsievert/plotly_book/edit/master/01-ggplotly-vs-plotly.Rmd",
+"link": "https://github.com/cpsievert/plotly_book/edit/master/02-plotly-cookbook.Rmd",
 "text": "Edit"
 },
 "download": ["bookdown.pdf", "bookdown.epub", "bookdown.mobi"],
