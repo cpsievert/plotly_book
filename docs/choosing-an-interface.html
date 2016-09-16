@@ -32,8 +32,8 @@
   <meta name="apple-mobile-web-app-status-bar-style" content="black">
   
   
-<link rel="prev" href="shiny.html">
-<link rel="next" href="plotly-interface-internals.html">
+<link rel="prev" href="extending-ggplotly.html">
+<link rel="next" href="the-plotly-cookbook.html">
 
 <script src="libs/jquery/jquery.min.js"></script>
 <link href="libs/gitbook/css/style.css" rel="stylesheet" />
@@ -175,29 +175,24 @@ code > span.in { color: #60a0b0; font-weight: bold; font-style: italic; } /* Inf
           <div class="page-inner">
 
             <section class="normal" id="section-">
-<div id="accessing-plotly.js-events-in-r-without-shiny" class="section level1">
-<h1><span class="header-section-number">7</span> Accessing plotly.js events in R, without shiny</h1>
-<p>Accessing plotly.js events in shiny is easy (<a href="https://plot.ly/r/shiny-tutorial/">for example</a>), but shiny adds a lot of additional infrastructure that makes it hard to share your work, especially at scale. Very soon, plotly R users will have ways to perform <a href="https://cpsievert.github.io/plotly_book/highlighting.html">highlighting</a> and <a href="https://cpsievert.github.io/plotly_book/linked-highlighting.html">linked highlighting</a> without shiny or any knowledge of HTML/JavaScript. However, if you do know some JavaScript, you can access (and respond to) plotly.js events without shiny, without having to leave the comfort of your R prompt, thanks to the <code>onRender()</code> function from the <strong>htmlwidgets</strong> package <span class="citation">(Vaidyanathan et al. <a href="references.html#ref-htmlwidgets">2016</a>)</span>. This function allows you to write a JavaScript function which will be invoked on the htmlwidget object after it is done rendering. This JavaScript function should have at least two arguments: (1) the DOM element containing the htmlwidget (<code>el</code>) and (2) the data passed from R (<code>x</code>). Here we use the <code>onRender()</code> function to send “event data” to the browser’s console upon hovering a point.</p>
-<div class="sourceCode"><pre class="sourceCode r"><code class="sourceCode r"><span class="kw">library</span>(plotly)
-<span class="kw">library</span>(htmlwidgets)
-<span class="kw">plot_ly</span>(mtcars, <span class="dt">x =</span> ~wt, <span class="dt">y =</span> ~mpg) %&gt;%
-<span class="st">  </span><span class="kw">onRender</span>(<span class="st">&quot;</span>
-<span class="st">    function(el, x) {</span>
-<span class="st">      var gd = document.getElementById(el.id);</span>
-<span class="st">      gd.on(&#39;plotly_hover&#39;, function(pt) { console.log(&#39;hover&#39;, pt); });</span>
-<span class="st">    }</span>
-<span class="st">  &quot;</span>)</code></pre></div>
-<div id="htmlwidget-6962a43c3af799a4a574" style="width:768px;height:474.624px;" class="plotly html-widget"></div>
-<script type="application/json" data-for="htmlwidget-6962a43c3af799a4a574">{"x":{"layout":{"margin":{"b":40,"l":60,"t":25,"r":10},"xaxis":{"title":"wt"},"yaxis":{"title":"mpg"},"hovermode":"closest"},"config":{"modeBarButtonsToRemove":["sendDataToCloud"]},"base_url":"https://plot.ly","source":"A","data":[{"x":[2.62,2.875,2.32,3.215,3.44,3.46,3.57,3.19,3.15,3.44,3.44,4.07,3.73,3.78,5.25,5.424,5.345,2.2,1.615,1.835,2.465,3.52,3.435,3.84,3.845,1.935,2.14,1.513,3.17,2.77,3.57,2.78],"y":[21,21,22.8,21.4,18.7,18.1,14.3,24.4,22.8,19.2,17.8,16.4,17.3,15.2,10.4,10.4,14.7,32.4,30.4,33.9,21.5,15.5,15.2,13.3,19.2,27.3,26,30.4,15.8,19.7,15,21.4],"type":"scatter","mode":"markers","marker":{"fillcolor":"rgba(31,119,180,1)","color":"rgba(31,119,180,1)","line":{"color":"transparent"}}}]},"evals":[],"jsHooks":{"render":[{"code":"\n    function(el, x) {\n      var gd = document.getElementById(el.id);\n      gd.on('plotly_hover', function(pt) { console.log('hover', pt); });\n    }\n  ","data":null}]}}</script>
+<div id="choosing-an-interface" class="section level2">
+<h2><span class="header-section-number">1.3</span> Choosing an interface</h2>
+<ol style="list-style-type: decimal">
+<li>ggplot2’s interface wasn’t designed for interactive graphics. Directly extending the grammar to support more advanced types of interaction (e.g., linked brushing) is a risky endeavor.</li>
+<li>ggplot2 requires data frame(s) and can be inefficient (especially for time series).</li>
+<li>ggplot2 does not have a functional interface (making it awkward to combine with modern functional interfaces such as dplyr), and does not satisfy <a href="https://en.wikipedia.org/wiki/Referential_transparency">referential transparency</a> (making it easier to program with – for more details, see )</li>
+<li><code>ggplotly()</code> tries to replicate <em>exactly</em> what you see in the corresponding static ggplot2 graph. To do so, it sends axis tick information to plotly as <a href="https://plot.ly/r/reference/#layout-xaxis-tickvals">tickvals</a>/<a href="https://plot.ly/r/reference/#layout-xaxis-ticktext">ticktext</a> properties, and consequently, axis ticks do not update on zoom events.</li>
+</ol>
 
 </div>
+<!-- </div> -->
             </section>
 
           </div>
         </div>
       </div>
-<a href="shiny.html" class="navigation navigation-prev " aria-label="Previous page"><i class="fa fa-angle-left"></i></a>
-<a href="plotly-interface-internals.html" class="navigation navigation-next " aria-label="Next page""><i class="fa fa-angle-right"></i></a>
+<a href="extending-ggplotly.html" class="navigation navigation-prev " aria-label="Previous page"><i class="fa fa-angle-left"></i></a>
+<a href="the-plotly-cookbook.html" class="navigation navigation-next " aria-label="Next page""><i class="fa fa-angle-right"></i></a>
 
 <script src="libs/gitbook/js/app.min.js"></script>
 <script src="libs/gitbook/js/lunr.js"></script>
@@ -216,7 +211,7 @@ gitbook.start({
 "size": 2
 },
 "edit": {
-"link": "https://github.com/cpsievert/plotly_book/edit/master/07-events.Rmd",
+"link": "https://github.com/cpsievert/plotly_book/edit/master/01-ggplotly-vs-plotly.Rmd",
 "text": "Edit"
 },
 "download": ["bookdown.pdf", "bookdown.epub", "bookdown.mobi"],

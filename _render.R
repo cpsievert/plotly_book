@@ -1,6 +1,7 @@
 quiet = "--quiet" %in% commandArgs(FALSE)
 formats = commandArgs(TRUE)
 travis = !is.na(Sys.getenv('CI', NA))
+library("methods")
 
 # provide default formats if necessary
 if (length(formats) == 0) formats = c(

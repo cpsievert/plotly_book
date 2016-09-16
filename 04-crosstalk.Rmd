@@ -33,6 +33,19 @@ TODO: Talk about the convenience of having "standard" events generated across ch
 
 ## Linked highlighting
 
+* Linked highlighting between facets
+
+```{r, eval = FALSE}
+library(crosstalk)
+sd <- SharedData$new(txhousing, ~year)
+p <- ggplot(sd, aes(month, median)) + 
+  geom_line(aes(group = city)) + geom_smooth(method = "gam") + 
+  facet_wrap(~ year)
+ggplotly(p) %>% highlight("plotly_hover")
+```
+
+
+
 TODO: show 06-plotly-pipeline.R example. Explain the importance of the pipeline.
 
 ## Current limitations
