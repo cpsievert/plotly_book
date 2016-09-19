@@ -52,6 +52,9 @@
 <link href="libs/plotlyjs/plotly-htmlwidgets.css" rel="stylesheet" />
 <script src="libs/plotlyjs/plotly-latest.min.js"></script>
 <script src="libs/plotly-binding/plotly.js"></script>
+<link href="libs/jsoneditor/jsoneditor.min.css" rel="stylesheet" />
+<script src="libs/jsoneditor/jsoneditor.min.js"></script>
+<script src="libs/jsonedit-binding/jsonedit.js"></script>
 
 
 <style type="text/css">
@@ -115,7 +118,8 @@ code > span.in { color: #60a0b0; font-weight: bold; font-style: italic; } /* Inf
 </ul></li>
 <li class="chapter" data-level="1" data-path="two-approaches-one-object.html"><a href="two-approaches-one-object.html"><i class="fa fa-check"></i><b>1</b> Two approaches, one object</a><ul>
 <li class="chapter" data-level="1.1" data-path="a-case-study-of-housing-sales-in-texas.html"><a href="a-case-study-of-housing-sales-in-texas.html"><i class="fa fa-check"></i><b>1.1</b> A case study of housing sales in Texas</a><ul>
-<li class="chapter" data-level="1.1.1" data-path="a-case-study-of-housing-sales-in-texas.html"><a href="a-case-study-of-housing-sales-in-texas.html#plot_ly"><i class="fa fa-check"></i><b>1.1.1</b> The <code>plot_ly()</code> interface</a></li>
+<li class="chapter" data-level="1.1.1" data-path="a-case-study-of-housing-sales-in-texas.html"><a href="a-case-study-of-housing-sales-in-texas.html#ggplotly"><i class="fa fa-check"></i><b>1.1.1</b> The <code>ggplotly()</code> function</a></li>
+<li class="chapter" data-level="1.1.2" data-path="a-case-study-of-housing-sales-in-texas.html"><a href="a-case-study-of-housing-sales-in-texas.html#plot_ly"><i class="fa fa-check"></i><b>1.1.2</b> The <code>plot_ly()</code> interface</a></li>
 </ul></li>
 <li class="chapter" data-level="1.2" data-path="extending-ggplotly.html"><a href="extending-ggplotly.html"><i class="fa fa-check"></i><b>1.2</b> Extending <code>ggplotly()</code></a><ul>
 <li class="chapter" data-level="1.2.1" data-path="extending-ggplotly.html"><a href="extending-ggplotly.html#customizing-the-layout"><i class="fa fa-check"></i><b>1.2.1</b> Customizing the layout</a></li>
@@ -187,8 +191,8 @@ code > span.in { color: #60a0b0; font-weight: bold; font-style: italic; } /* Inf
 <span class="st">      gd.on(&#39;plotly_hover&#39;, function(pt) { console.log(&#39;hover&#39;, pt); });</span>
 <span class="st">    }</span>
 <span class="st">  &quot;</span>)</code></pre></div>
-<div id="htmlwidget-6962a43c3af799a4a574" style="width:768px;height:474.624px;" class="plotly html-widget"></div>
-<script type="application/json" data-for="htmlwidget-6962a43c3af799a4a574">{"x":{"layout":{"margin":{"b":40,"l":60,"t":25,"r":10},"xaxis":{"title":"wt"},"yaxis":{"title":"mpg"},"hovermode":"closest"},"config":{"modeBarButtonsToRemove":["sendDataToCloud"]},"base_url":"https://plot.ly","source":"A","data":[{"x":[2.62,2.875,2.32,3.215,3.44,3.46,3.57,3.19,3.15,3.44,3.44,4.07,3.73,3.78,5.25,5.424,5.345,2.2,1.615,1.835,2.465,3.52,3.435,3.84,3.845,1.935,2.14,1.513,3.17,2.77,3.57,2.78],"y":[21,21,22.8,21.4,18.7,18.1,14.3,24.4,22.8,19.2,17.8,16.4,17.3,15.2,10.4,10.4,14.7,32.4,30.4,33.9,21.5,15.5,15.2,13.3,19.2,27.3,26,30.4,15.8,19.7,15,21.4],"type":"scatter","mode":"markers","marker":{"fillcolor":"rgba(31,119,180,1)","color":"rgba(31,119,180,1)","line":{"color":"transparent"}}}]},"evals":[],"jsHooks":{"render":[{"code":"\n    function(el, x) {\n      var gd = document.getElementById(el.id);\n      gd.on('plotly_hover', function(pt) { console.log('hover', pt); });\n    }\n  ","data":null}]}}</script>
+<div id="htmlwidget-89e2b16140bf15978292" style="width:672px;height:415.296px;" class="plotly html-widget"></div>
+<script type="application/json" data-for="htmlwidget-89e2b16140bf15978292">{"x":{"layout":{"margin":{"b":40,"l":60,"t":25,"r":10},"xaxis":{"title":"wt"},"yaxis":{"title":"mpg"},"hovermode":"closest"},"config":{"modeBarButtonsToRemove":["sendDataToCloud"]},"base_url":"https://plot.ly","source":"A","data":[{"x":[2.62,2.875,2.32,3.215,3.44,3.46,3.57,3.19,3.15,3.44,3.44,4.07,3.73,3.78,5.25,5.424,5.345,2.2,1.615,1.835,2.465,3.52,3.435,3.84,3.845,1.935,2.14,1.513,3.17,2.77,3.57,2.78],"y":[21,21,22.8,21.4,18.7,18.1,14.3,24.4,22.8,19.2,17.8,16.4,17.3,15.2,10.4,10.4,14.7,32.4,30.4,33.9,21.5,15.5,15.2,13.3,19.2,27.3,26,30.4,15.8,19.7,15,21.4],"type":"scatter","mode":"markers","marker":{"fillcolor":"rgba(31,119,180,1)","color":"rgba(31,119,180,1)","line":{"color":"transparent"}}}]},"evals":[],"jsHooks":{"render":[{"code":"\n    function(el, x) {\n      var gd = document.getElementById(el.id);\n      gd.on('plotly_hover', function(pt) { console.log('hover', pt); });\n    }\n  ","data":null}]}}</script>
 
 </div>
             </section>

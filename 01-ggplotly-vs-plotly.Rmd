@@ -26,9 +26,11 @@ p <- ggplot(txhousing, aes(date, median)) +
   geom_line(aes(group = city), alpha = 0.2)
 ```
 
+### The `ggplotly()` function {#ggplotly}
+
 Now that we have a valid **ggplot2** object, `p`, the **plotly** package provides the `ggplotly()` function which converts a ggplot object to a plotly object. By default, it supplies the entire aesthetic mapping to the tooltip, but the `tooltip` argument provides a way to restrict tooltip info to a subset of that mapping. Furthermore, in cases where the statistic of a layer is something other than the identity function (e.g., `geom_bin2d()` and `geom_hex()`), relevant "intermediate" variables generated in the process are also supplied to the tooltip. This provides a nice mechanism for decoding visual aesthetics (e.g., color) used to represent a measure of interest (e.g, count/value). In Figure \@ref(fig:ggsubplot), the `subplot()` function from the **plotly** package (discussed in more detail in [subplots](#subplot)), which accepts a collection of ggplot and/or plotly objects, helps to concisely display tooltips for a number of scenarios, and how to suppress them.
 
-```{r ggsubplot, fig.cap = "By default all aesthetic mappings are displayed upon hover. The tooltip argument provides a way to display a subset of the mapping."}
+```{r ggsubplot, fig.width = 8, fig.cap = "By default all aesthetic mappings are displayed upon hover. The tooltip argument provides a way to display a subset of the mapping."}
 subplot(
   p, ggplotly(p, tooltip = "city"), 
   ggplot(txhousing, aes(date, median)) + geom_bin2d(),
@@ -50,7 +52,7 @@ The `ggplotly()` function translates most things that you can do in **ggplot2**,
 
 The cognitive framework underlying the `plot_ly()` interface draw inspiration from the layered grammar of graphics [@Wickham:2010hya], but in contrast to `ggplotly()`, it provides a more flexible and direct interface to [plotly.js](https://github.com/plotly/plotly.js). It is more direct in the sense that it doesn't call **ggplot2**'s sometimes expensive plot building routines, and it is more flexible in the sense that data frames are not required, which is useful for visualizing matrices, as shown in [Get Started](#get-started). Although data frames are not required, it is recommended to use them whenever possible, especially when constructing a plot with multiple layers or groups. 
 
-When a data frame is associated with a **plotly** object, it allows us to manipulate the data underlying that object in the same way we would directly manipulate the data. Currently, `plot_ly()` borrows semantics from and provides special plotly methods for generic functions in the **dplyr** and **tidyr** packages [@dplyr]; [@tidyr]. Most importantly, `plot_ly()` recognizes and preserves groupings created with **dplyr**'s `group_by()`.
+When a data frame is associated with a **plotly** object, it allows us to manipulate the data underlying that object in the same way we would directly manipulate the data. Currently, `plot_ly()` borrows semantics from and provides special plotly methods for generic functions in the **dplyr** and **tidyr** packages [@dplyr]; [@tidyr]. Most importantly, `plot_ly()` recognizes and preserves groupings created with **dplyr**'s `group_by()` function.
 
 ```{r}
 library(dplyr)
@@ -91,7 +93,7 @@ allCities %>%
   add_lines(name = "Houston")
 ```
 
-Sometimes the directed acyclic graph property of a pipeline can be too restrictive for certain types of plots. In this example, after filtering the data down to Houston, there is no way to recover the original data inside the pipeline. The `add_fun()` function helps to work-around this restriction^[Credit to Winston Chang and Hadley Wickham for this idea. The `add_fun()` is very much like `layer_f()` function in **ggvis**.] -- it works by applying some function to the plotly object, then returns the data that was originally fed into it. This effectively provides a way to isolate data transformations from the data associated with the plotly object^[Also, effectively putting a [pipeline inside a pipeline](http://www.memecreator.org/meme/yo-dawg-i-heard-u-like-pipelines-so-we-put-a-pipeline-in-your-pipeline)]. Figure \@ref(fig:houston-vs-sa) uses this idea to highlight both Houston and San Antonio.
+Sometimes the directed acyclic graph property of a pipeline can be too restrictive for certain types of plots. In this example, after filtering the data down to Houston, there is no way to recover the original data inside the pipeline. The `add_fun()` function helps to work-around this restriction^[Credit to Winston Chang and Hadley Wickham for this idea. The `add_fun()` is very much like `layer_f()` function in **ggvis**.] -- it works by applying a function to the plotly object, but does not affect the data associated with the plotly object. This effectively provides a way to isolate data transformations within the pipeline^[Also, effectively putting a [pipeline inside a pipeline](http://www.memecreator.org/meme/yo-dawg-i-heard-u-like-pipelines-so-we-put-a-pipeline-in-your-pipeline)]. Figure \@ref(fig:houston-vs-sa) uses this idea to highlight both Houston and San Antonio.
 
 ```{r houston-vs-sa, fig.cap = "Highlighting both Houston and San Antonio"}
 allCities %>%
@@ -103,7 +105,7 @@ allCities %>%
   })
 ```
 
-It's helpful to conceptual the function supplied to `add_fun()` as a "layer" function -- a function that accepts a plot object as input, possibly applies a summary statistic to the data, and maps that data to visual objects. To make layering functions more modular, flexible, and expressive, the `add_fun()` allows you to pass additional arguments to a layer function. Figure \@ref(fig:summary) makes use of this pattern, by creating a reusable function for layering both a particular city as well as the first, second, and third quartile of median monthly house sales (by city).
+It is useful to think of the function supplied to `add_fun()` as a "layer" function -- a function that accepts a plot object as input, possibly applies a transformation to the data, and maps that data to visual objects. To make layering functions more modular, flexible, and expressive, the `add_fun()` allows you to pass additional arguments to a layer function. Figure \@ref(fig:summary) makes use of this pattern, by creating a reusable function for layering both a particular city as well as the first, second, and third quartile of median monthly house sales (by city).
 
 ```{r summary, fig.cap = "First, second, and third quartile of median monthly house sales."}
 # reusable function for highlighting a particular city
@@ -130,7 +132,7 @@ allCities %>%
   add_fun(layer_city, "San Antonio")
 ```
 
-A layering function does not have to be data-plot-pipeline itself. It's only requirement on a layering function is that the first argument is a plot object and it returns a plot object. This provides an opportunity to fit a model to the plot data, extract the model components you desire, and map those components to visuals. Furthermore, since **plotly**'s `add_*()` functions don't require a data.frame, you can supply those components directly to attributes (as long as they are well-defined), as done in Figure \@ref(fig) via the **forecast** package [@forecast].
+A layering function does not have to be a data-plot-pipeline itself. Its only requirement on a layering function is that the first argument is a plot object and it returns a plot object. This provides an opportunity to say, fit a model to the plot data, extract the model components you desire, and map those components to visuals. Furthermore, since **plotly**'s `add_*()` functions don't require a data.frame, you can supply those components directly to attributes (as long as they are well-defined), as done in Figure \@ref(fig:forecast) via the **forecast** package [@forecast].
 
 ```{r forecast, fig.cap = "Layering on a 4-year forecast from a exponential smoothing state space model."}
 library(forecast)
@@ -159,14 +161,13 @@ txhousing %>%
   add_fun(layer_forecast)
 ```
 
-In summary, the "data-plot-pipeline" is desirable for a number of reasons: (1) makes your code easier to read and understand, (2) encourages you to think of both your data and plots using a single, uniform data structure, and (3) provides a natural mechanism for implementing the pipeline(s) necessary in interactive graphics system with support for [Linked Highlighting](#linked-highlighting) [@plumbing].
-
+In summary, the "data-plot-pipeline" is desirable for a number of reasons: (1) makes your code easier to read and understand, (2) encourages you to think of both your data and plots using a single, uniform data structure, which (3) makes it easy to combine and reuse different pipelines, and (4) provides a natural mechanism for implementing the pipeline(s) necessary in interactive graphics system with support for [Linked Highlighting](#linked-highlighting) [@plumbing]. As it turns out, we can even use these ideas when creating a plotly object via `ggplotly()`, as discused in the next section [Extending `ggplotly()`](extending-ggplotly()).
 
 ## Extending `ggplotly()`
 
 ### Customizing the layout
 
-Since the `ggplotly()` function returns a plotly object, we can manipulate that object in the same way that we would manipulate an object created with `plot_ly()`. A simple and obviously useful application of this is for changing default interaction modes, like plotly.js' [layout.hovermode](https://plot.ly/r/reference/#layout-hovermode).
+Since the `ggplotly()` function returns a plotly object, we can manipulate that object in the same way that we would manipulate an object created with `plot_ly()`. A simple and obviously useful application of this is to specify interaction modes, like plotly.js' [layout.hovermode](https://plot.ly/r/reference/#layout-hovermode).
 
 ```{r}
 p <- ggplot(fortify(gold), aes(x, y)) + geom_line()
@@ -217,8 +218,12 @@ Although it is not used in this example, it worth noting that when adding plotly
 
 As mentioned previously, `ggplotly()` translates each ggplot2 layer into one or more plotly.js traces. In this translation, it is forced to make a number of assumptions about trace attribute values that may or may not be appropriate for the use case. The `style()` function is useful in this scenario, as it provides a way to modify trace attribute values in a plotly object. Before using it, you may want to inspect the actual traces in a given plotly object using the `plotly_json()` function. This function uses the **listviewer** package to display a convenient interactive view of the JSON object sent to plotly.js [@listviewer]. By clicking on the arrow next to the data element, you can see the traces (data) behind the plot. In this case, we have three traces: one for the `geom_point()` layer and two for the `geom_smooth()` layer.
 
-```{r listviewer, fig.cap = "Using listviewer to inspect a plotly object."}
+```{r, eval = FALSE}
 plotly_json(p)
+```
+
+```{r listviewer, echo = FALSE, fig.cap = "Using listviewer to inspect a plotly object."}
+plotly_json(p, jsonedit = TRUE)
 ```
 
 Say, for example, we'd like to display information when hovering over points, but not when hovering over the fitted values or error bounds. The ggplot2 API has no semantics for making this distinction, but this is easily done in plotly.js by setting the [hoverinfo](https://plot.ly/r/reference/#scatter-hoverinfo) attribute to `"none"`. Since the fitted values or error bounds are contained in the second and third traces, we can hide the information on just these traces using the `traces` attribute in the `style()` function:
@@ -231,8 +236,7 @@ style(p, hoverinfo = "none", traces = 2:3)
 ## Choosing an interface
 
 
-
-1. ggplot2's interface wasn't designed for interactive graphics. Directly extending the grammar to support more advanced types of interaction (e.g., linked brushing) is a risky endeavor.
-2. ggplot2 requires data frame(s) and can be inefficient (especially for time series).
-3. ggplot2 does not have a functional interface (making it awkward to combine with modern functional interfaces such as dplyr), and does not satisfy [referential transparency](https://en.wikipedia.org/wiki/Referential_transparency) (making it easier to program with -- for more details, see )
-4. `ggplotly()` tries to replicate _exactly_ what you see in the corresponding static ggplot2 graph. To do so, it sends axis tick information to plotly as [tickvals](https://plot.ly/r/reference/#layout-xaxis-tickvals)/[ticktext](https://plot.ly/r/reference/#layout-xaxis-ticktext) properties, and consequently, axis ticks do not update on zoom events.
+1. ggplot2 requires data frame(s) and can be inefficient (especially for time series).
+2. ggplot2 does not have a functional interface (making it awkward to combine with modern functional interfaces such as dplyr), and does not satisfy [referential transparency](https://en.wikipedia.org/wiki/Referential_transparency) (making it easier to program with -- for more details, see )
+3. `ggplotly()` tries to replicate _exactly_ what you see in the corresponding static ggplot2 graph. To do so, it sends axis tick information to plotly as [tickvals](https://plot.ly/r/reference/#layout-xaxis-tickvals)/[ticktext](https://plot.ly/r/reference/#layout-xaxis-ticktext) properties, and consequently, axis ticks do not update on zoom events.
+4. ggplot2's interface wasn't designed for interactive graphics. Directly extending the grammar to support more advanced types of interaction (e.g., linked brushing) is a risky endeavor.

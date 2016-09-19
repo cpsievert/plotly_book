@@ -17,16 +17,20 @@ documentclass: book
 # Overview {-}
 
 ```{r setup, include=FALSE}
-options(htmltools.dir.version = FALSE, formatR.indent = 2)
-if (packageVersion('plotly') < '4.0.1') {
-  devtools::install_github('ropensci/plotly')
-}
 knitr::opts_chunk$set(
   message = FALSE, 
   warning = FALSE, 
-  fig.width = 8, 
+  comment = "#>",
+  collapse = TRUE,
+  cache = TRUE,
+  fig.width = 7, 
   fig.asp = 0.618,
-  fig.align = "center"
+  fig.align = "center",
+  fig.show = "hold"
+)
+options(
+  dplyr.print_min = 6, dplyr.print_max = 6, 
+  digits = 3, htmltools.dir.version = FALSE
 )
 ```
 
@@ -51,6 +55,12 @@ Or you can install the development release via the devtools package:
 ```{r, eval = FALSE}
 if (!require("devtools")) install.packages("devtools")
 devtools::install_github("ropensci/plotly")
+```
+
+The version of the R package used to build this site is:
+
+```{r}
+packageVersion("plotly")
 ```
 
 ## Get started {-}
