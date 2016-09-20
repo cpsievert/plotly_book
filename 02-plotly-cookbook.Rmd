@@ -4,7 +4,7 @@ This chapter demonstrates the capabilities of `plot_ly()` through a series of ex
 
 ## Scatter traces
 
-A plotly visualization is composed of one (or more) trace(s), and every trace has a `type`. The default trace type, "scatter", can be used to draw a large amount of geometries, and actually powers many of the `add_*()` functions such as `add_markers()`, `add_lines()`, `add_paths()`, `add_segments()`, `add_ribbons()`, and `add_polygons()`. These functions make assumptions about the [mode](https://plot.ly/r/reference/#scatter-mode) of the scatter trace (among other things), but any of the attributes listed under the [scatter section of the figure reference](https://plot.ly/r/reference/#scatter) may be passed to these functions, .
+A plotly visualization is composed of one (or more) trace(s), and every trace has a `type`. The default trace type, "scatter", can be used to draw a large amount of geometries, and actually powers many of the `add_*()` functions such as `add_markers()`, `add_lines()`, `add_paths()`, `add_segments()`, `add_ribbons()`, and `add_polygons()`. These functions make assumptions about the [mode](https://plot.ly/r/reference/#scatter-mode) of the scatter trace (among other things), but any of the attributes listed under the [scatter section of the figure reference](https://plot.ly/r/reference/#scatter) may be passed to these functions.
 
 ### Scatterplots
 
@@ -83,28 +83,30 @@ subplot(
 )
 ```
 
-
 #### Scatterplot matrices
 
 I currently recommend creating scatterplot matrices via the `ggpairs()` function from the **GGally** package [@GGally] and using the `ggplotly()` function to convert it.
 
-```{r}
+```{r, fig.asp = 1, fig.width = 8}
 pm <- GGally::ggpairs(iris)
 ggplotly(pm)
 ```
 
+### Dotplots & Error bars
 
-### Dotplots
+A dotplot is similar to a scatterplot, except instead of two numeric axes, one is categorical. The usual goal of a dotplot is to compare value(s) on a numerical scale over numerous categories. In this context, dotplots are preferrable to pie charts since comparing position along a common scale is much easier than comparing angle or area [@graphical-perception]; [@crowdsourcing-graphical-perception]. Furthermore, dotplots can be preferrable to bar charts, especially when comparing values within a narrow range far away from 0 [@few-values]. Also, when presenting point estimates, and uncertainty associated with those estimates, bar charts tend to exaggerate the difference in point estimates, and lose focus on uncertainty [@messing].
 
-A dotplot is very similar to a scatterplot, except instead of two numeric axes, one is categorical. 
+A popular application for dotplots (with error bars) is the so-called "coefficient plot" for visualizing the point estimates of coefficients and their standard error. The `coefplot()` function in the **coefplot** package [@coefplot] and the `ggcoef()` function in the **GGally** both produce coefficient plots for many types of model objects in R using **ggplot2**, which we can translate to plotly via `ggplotly()`. Since these packages use points and segments to draw the coefficient plots, the hover information is not the best, and it'd be better to use [error objects](https://plot.ly/r/reference/#scatter-error_x). Figure \@ref(fig:coefplot) uses the `tidy()` function from the **broom** package [@broom] to obtain a data frame with one row per model coefficient, and produce a coefficient plot with error bars along the x-axis. 
 
-#### Adding error bars
-
-```{r}
-m <- lm(Sepal.Length ~ Sepal.Width + Petal.Length + Petal.Width, data = iris)
-d <- broom::tidy(m)
+```{r coefplot, fig.cap = "A coefficient plot"}
+m <- lm(Sepal.Length ~ Sepal.Width * Petal.Length * Petal.Width, data = iris)
+# arrange by estimate, then make term a factor to order categories in the plot
+d <- broom::tidy(m) %>% 
+  arrange(desc(estimate)) %>%
+  mutate(term = factor(term, levels = term))
 plot_ly(d, x = ~estimate, y = ~term) %>%
-  add_markers(error_x = ~list(value = std.error))
+  add_markers(error_x = ~list(value = std.error)) %>%
+  layout(margin = list(l = 200))
 ```
 
 ### Lines
@@ -120,12 +122,30 @@ plot_ly(d, x = ~estimate, y = ~term) %>%
 
 ### Segments
 
+```{r}
+```
+
 ### Ribbons
+
+Ribbons are useful for showing uncertainy bounds as a function of x. The `add_ribbons()` function creates ribbons and requires the arguments: `ymin` and `ymax`.
+
+```{r}
+m <- lm(mpg ~ wt, data = mtcars)
+broom::augment(m) %>%
+  plot_ly(x = ~wt, showlegend = FALSE) %>%
+  add_markers(y = ~mpg, color = I("black")) %>%
+  add_ribbons(ymin = ~.fitted - 1.96 * .se.fit, 
+              ymax = ~.fitted + 1.96 * .se.fit, color = I("gray80")) %>%
+  add_lines(y = ~.fitted, color = I("steelblue"))
+```
 
 ### Area
 
 ### Polygons
 
+```{r}
+
+```
 
 ## Bar charts
 
