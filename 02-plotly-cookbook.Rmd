@@ -111,8 +111,34 @@ plot_ly(d, x = ~estimate, y = ~term) %>%
 
 ### Lines
 
+This section surveys useful applications of `add_lines()`. This function is similar to `add_paths()`, except that it ensures that the order in which lines are drawn according to x values. 
+
+#### Time series plots
+
 ```{r}
 ```
+
+#### Parallel Coordinates
+
+One very useful, but often overlooked, visualization technique is the parallel coordinates plot. Parallel coordinates provide a way to compare values along a common (or non-aligned) positional scale(s) -- the most basic of all perceptual tasks -- in more than 3 dimensions [@graphical-perception]. Usually each line represents every measurement for a given row (or observation) in a data set. When measurements are on very different scales, some care must be taken, and variables must transformed to be put on a common scale. As Figure \@ref(fig:pcp-common) shows, even when variables are measured on a similar scale, it can still be a informative to transform variables in different ways.
+
+```{r pcp-common, fig.width = 8, fig.cap = "Parallel coordinates plots of the Iris dataset. On the left is the raw measurements. In the middle, each variable is scaled to have mean of 0 and standard deviation of 1. On the right, each variable is scaled to have a minimum of 0 and a maximum of 1."}
+iris$obs <- seq_len(nrow(iris))
+iris_pcp <- function(transform = identity) {
+  iris[] <- purrr::map_if(iris, is.numeric, transform)
+  tidyr::gather(iris, variable, value, -Species, -obs) %>% 
+    group_by(obs) %>% 
+    plot_ly(x = ~variable, y = ~value, color = ~Species) %>% 
+    add_lines(alpha = 0.3)
+}
+subplot(
+  iris_pcp(), 
+  iris_pcp(scale),
+  iris_pcp(scales::rescale)
+) %>% hide_legend()
+```
+
+In [linked highlighting](#linked-highlighting), parallel coordinates are linked to lower dimensional (but sometimes higher resolution) graphics of related data to guide multi-variate data exploration.
 
 ### Paths
 
