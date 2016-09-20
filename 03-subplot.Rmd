@@ -1,6 +1,6 @@
 # The subplot() function {#subplot}
 
-The `subplot()` function provides a flexible interface for arranging multiple **plotly** plots in a single view. It is more flexible than most trellis display frameworks (e.g., ggplot2's `facet_wrap()`) as you don't have to condition on a value of common variable in each display [@trellis]. Its capabilities and interface is similar to the `grid.arrange()` function from the **gridExtra** package, which allows you to arrange multiple **grid** grobs in a single view, effectively providing a way to arrange (possibly unrelated)  **ggplot2** and/or **lattice** plots in a single view [@grid]; [@gridExtra]; [@lattice]. The simplest way to use it is to pass plotly visualizations directly to `subplot()`.
+The `subplot()` function provides a flexible interface for arranging multiple **plotly** plots in a single view. It is more flexible than most trellis display frameworks (e.g., ggplot2's `facet_wrap()`) as you don't have to condition on a value of common variable in each display [@trellis]. Its capabilities and interface is similar to the `grid.arrange()` function from the **gridExtra** package, which allows you to arrange multiple **grid** grobs in a single view, effectively providing a way to arrange (possibly unrelated)  **ggplot2** and/or **lattice** plots in a single view [@base]; [@gridExtra]; [@lattice]. The simplest way to use it is to pass plotly objects directly to `subplot()`.
 
 ```{r}
 library(plotly)
@@ -84,16 +84,14 @@ g <- list(
 )
 # create a map of population density
 density <- state.x77[, "Population"] / state.x77[, "Area"]
-map <- plot_ly(
-  z = ~density, 
-  text = state.name, locations = state.abb,
-  type = 'choropleth', locationmode = 'USA-states', geo = "geo"
-) %>% layout(geo = g)
+map <- plot_ly(z = ~density, text = state.name, locations = state.abb) %>%
+  add_choropleth(locationmode = 'USA-states') %>% 
+  layout(geo = g)
 # create a bunch of horizontal bar charts 
 vars <- colnames(state.x77)
 barcharts <- lapply(vars, function(var) {
-  plot_ly(x = state.x77[, var], y = state.name, type = "bar", 
-          orientation = "h", name = var) %>%
+  plot_ly(x = state.x77[, var], y = state.name) %>%
+    add_bars(orientation = "h", name = var) %>%
     layout(showlegend = FALSE, hovermode = "y",
            yaxis = list(showticklabels = FALSE))
 })
@@ -115,14 +113,5 @@ gg2 <- ggplot(e, aes(factor(1), value)) + geom_violin() +
   facet_wrap(~variable, scales = "free_y", ncol = 1) + 
   theme(axis.text = element_blank(), axis.ticks = element_blank())
 subplot(gg1, gg2) %>% layout(margin = list(l = 50))
-```
-
-This infrastructure allows `ggplotly()` to understand ggmatrix 
-objects -- the class of object returned by the `ggpairs()` function in the 
-**GGally** package.
-
-```{r}
-pm <- GGally::ggpairs(iris)
-ggplotly(pm)
 ```
 

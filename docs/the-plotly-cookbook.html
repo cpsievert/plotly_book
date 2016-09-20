@@ -33,7 +33,7 @@
   
   
 <link rel="prev" href="choosing-an-interface.html">
-<link rel="next" href="scatterplots.html">
+<link rel="next" href="scatter-traces.html">
 
 <script src="libs/jquery/jquery.min.js"></script>
 <link href="libs/gitbook/css/style.css" rel="stylesheet" />
@@ -129,13 +129,21 @@ code > span.in { color: #60a0b0; font-weight: bold; font-style: italic; } /* Inf
 <li class="chapter" data-level="1.3" data-path="choosing-an-interface.html"><a href="choosing-an-interface.html"><i class="fa fa-check"></i><b>1.3</b> Choosing an interface</a></li>
 </ul></li>
 <li class="chapter" data-level="2" data-path="the-plotly-cookbook.html"><a href="the-plotly-cookbook.html"><i class="fa fa-check"></i><b>2</b> The plotly cookbook</a><ul>
-<li class="chapter" data-level="2.1" data-path="scatterplots.html"><a href="scatterplots.html"><i class="fa fa-check"></i><b>2.1</b> Scatterplots</a></li>
-<li class="chapter" data-level="2.2" data-path="smart-defaults-messages-warnings-errors.html"><a href="smart-defaults-messages-warnings-errors.html"><i class="fa fa-check"></i><b>2.2</b> Smart defaults, messages, warnings, errors</a></li>
-<li class="chapter" data-level="2.3" data-path="functional-interface.html"><a href="functional-interface.html"><i class="fa fa-check"></i><b>2.3</b> Functional interface</a></li>
-<li class="chapter" data-level="2.4" data-path="special-arguments.html"><a href="special-arguments.html"><i class="fa fa-check"></i><b>2.4</b> Special arguments</a><ul>
-<li class="chapter" data-level="2.4.1" data-path="special-arguments.html"><a href="special-arguments.html#the-color-argument"><i class="fa fa-check"></i><b>2.4.1</b> The color argument</a></li>
-<li class="chapter" data-level="2.4.2" data-path="special-arguments.html"><a href="special-arguments.html#the-symbol-argument"><i class="fa fa-check"></i><b>2.4.2</b> The symbol argument</a></li>
+<li class="chapter" data-level="2.1" data-path="scatter-traces.html"><a href="scatter-traces.html"><i class="fa fa-check"></i><b>2.1</b> Scatter traces</a><ul>
+<li class="chapter" data-level="2.1.1" data-path="scatter-traces.html"><a href="scatter-traces.html#scatterplots"><i class="fa fa-check"></i><b>2.1.1</b> Scatterplots</a></li>
+<li class="chapter" data-level="2.1.2" data-path="scatter-traces.html"><a href="scatter-traces.html#dotplots"><i class="fa fa-check"></i><b>2.1.2</b> Dotplots</a></li>
+<li class="chapter" data-level="2.1.3" data-path="scatter-traces.html"><a href="scatter-traces.html#lines"><i class="fa fa-check"></i><b>2.1.3</b> Lines</a></li>
+<li class="chapter" data-level="2.1.4" data-path="scatter-traces.html"><a href="scatter-traces.html#paths"><i class="fa fa-check"></i><b>2.1.4</b> Paths</a></li>
+<li class="chapter" data-level="2.1.5" data-path="scatter-traces.html"><a href="scatter-traces.html#segments"><i class="fa fa-check"></i><b>2.1.5</b> Segments</a></li>
+<li class="chapter" data-level="2.1.6" data-path="scatter-traces.html"><a href="scatter-traces.html#ribbons"><i class="fa fa-check"></i><b>2.1.6</b> Ribbons</a></li>
+<li class="chapter" data-level="2.1.7" data-path="scatter-traces.html"><a href="scatter-traces.html#area"><i class="fa fa-check"></i><b>2.1.7</b> Area</a></li>
+<li class="chapter" data-level="2.1.8" data-path="scatter-traces.html"><a href="scatter-traces.html#polygons"><i class="fa fa-check"></i><b>2.1.8</b> Polygons</a></li>
 </ul></li>
+<li class="chapter" data-level="2.2" data-path="bar-charts.html"><a href="bar-charts.html"><i class="fa fa-check"></i><b>2.2</b> Bar charts</a></li>
+<li class="chapter" data-level="2.3" data-path="histograms.html"><a href="histograms.html"><i class="fa fa-check"></i><b>2.3</b> Histograms</a></li>
+<li class="chapter" data-level="2.4" data-path="contour-plots.html"><a href="contour-plots.html"><i class="fa fa-check"></i><b>2.4</b> Contour plots</a></li>
+<li class="chapter" data-level="2.5" data-path="d.html"><a href="d.html"><i class="fa fa-check"></i><b>2.5</b> 3D</a></li>
+<li class="chapter" data-level="2.6" data-path="annotations.html"><a href="annotations.html"><i class="fa fa-check"></i><b>2.6</b> Annotations</a></li>
 </ul></li>
 <li class="chapter" data-level="3" data-path="subplot.html"><a href="subplot.html"><i class="fa fa-check"></i><b>3</b> The subplot() function</a><ul>
 <li class="chapter" data-level="3.1" data-path="recursive-subplots.html"><a href="recursive-subplots.html"><i class="fa fa-check"></i><b>3.1</b> Recursive subplots</a></li>
@@ -181,11 +189,7 @@ code > span.in { color: #60a0b0; font-weight: bold; font-style: italic; } /* Inf
             <section class="normal" id="section-">
 <div id="the-plotly-cookbook" class="section level1">
 <h1><span class="header-section-number">2</span> The plotly cookbook</h1>
-<p>This chapter demonstrates the capabilities of <code>plot_ly()</code> through a series of examples. In a nutshell, <code>plot_ly()</code> aims to:</p>
-<ol style="list-style-type: decimal">
-<li>Provide sensible defaults/messages/warnings based on the information supplied, but still allows for full customization through <a href="https://github.com/plotly/plotly.js">plotly.js</a>’ (the open source JavaScript graphing library which powers plotly) <a href="https://plot.ly/r/reference/">figure reference</a>.</li>
-<li>Leverage useful concepts from the grammar of graphics (without requiring it to be used).</li>
-</ol> 
+<p>This chapter demonstrates the capabilities of <code>plot_ly()</code> through a series of examples. The <code>plot_ly()</code> function does provide a direct interface to plotly.js, so anything in <a href="https://plot.ly/r/reference/">the figure reference</a> can be specified via <code>plot_ly()</code>, but this chapter will focus more on the semantics unique to the R package that can’t be found on the figure reference. Along the way, we will touch on some best practices in visualization.</p> 
 </div>
             </section>
 
@@ -193,7 +197,7 @@ code > span.in { color: #60a0b0; font-weight: bold; font-style: italic; } /* Inf
         </div>
       </div>
 <a href="choosing-an-interface.html" class="navigation navigation-prev " aria-label="Previous page"><i class="fa fa-angle-left"></i></a>
-<a href="scatterplots.html" class="navigation navigation-next " aria-label="Next page""><i class="fa fa-angle-right"></i></a>
+<a href="scatter-traces.html" class="navigation navigation-next " aria-label="Next page""><i class="fa fa-angle-right"></i></a>
 
 <script src="libs/gitbook/js/app.min.js"></script>
 <script src="libs/gitbook/js/lunr.js"></script>
