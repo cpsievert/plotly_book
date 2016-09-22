@@ -32,8 +32,8 @@
   <meta name="apple-mobile-web-app-status-bar-style" content="black">
   
   
-<link rel="prev" href="highlighting.html">
-<link rel="next" href="current-limitations.html">
+<link rel="prev" href="maps.html">
+<link rel="next" href="boxplots.html">
 
 <script src="libs/jquery/jquery.min.js"></script>
 <link href="libs/gitbook/css/style.css" rel="stylesheet" />
@@ -186,26 +186,23 @@ code > span.in { color: #60a0b0; font-weight: bold; font-style: italic; } /* Inf
           <div class="page-inner">
 
             <section class="normal" id="section-">
-<div id="linked-highlighting" class="section level2">
-<h2><span class="header-section-number">4.2</span> Linked highlighting</h2>
-<ul>
-<li>Linked highlighting between facets</li>
-</ul>
-<div class="sourceCode"><pre class="sourceCode r"><code class="sourceCode r"><span class="kw">library</span>(crosstalk)
-sd &lt;-<span class="st"> </span>SharedData$<span class="kw">new</span>(txhousing, ~year)
-p &lt;-<span class="st"> </span><span class="kw">ggplot</span>(sd, <span class="kw">aes</span>(month, median)) +<span class="st"> </span>
-<span class="st">  </span><span class="kw">geom_line</span>(<span class="kw">aes</span>(<span class="dt">group =</span> city)) +<span class="st"> </span><span class="kw">geom_smooth</span>(<span class="dt">method =</span> <span class="st">&quot;gam&quot;</span>) +<span class="st"> </span>
-<span class="st">  </span><span class="kw">facet_wrap</span>(~<span class="st"> </span>year)
-<span class="kw">ggplotly</span>(p) %&gt;%<span class="st"> </span><span class="kw">highlight</span>(<span class="st">&quot;plotly_hover&quot;</span>)</code></pre></div>
-<p>TODO: show 06-plotly-pipeline.R example. Explain the importance of the pipeline.</p>
+<div id="bars-histograms" class="section level2">
+<h2><span class="header-section-number">2.3</span> Bars &amp; histograms</h2>
+<p>plotly.js has both a “bar” and “histogram” trace type. In statistical graphics, the term histogram is reserved for numeric variables, but the histogram trace type can be used to display categorical data.</p>
+<div class="sourceCode"><pre class="sourceCode r"><code class="sourceCode r"><span class="kw">subplot</span>(
+  <span class="kw">plot_ly</span>(mpg, <span class="dt">x =</span> ~cyl),
+  <span class="kw">plot_ly</span>(mpg, <span class="dt">x =</span> ~<span class="kw">factor</span>(cyl))
+)</code></pre></div>
+<div id="htmlwidget-6da16d000649f9d600a7" style="width:576px;height:355.968px;" class="plotly html-widget"></div>
+<script type="application/json" data-for="htmlwidget-6da16d000649f9d600a7">{"x":{"data":[{"x":[4,4,4,4,6,6,6,4,4,4,4,6,6,6,6,6,6,8,8,8,8,8,8,8,8,8,8,8,8,8,8,8,4,4,6,6,6,4,6,6,6,6,6,6,6,6,6,6,6,6,6,6,8,8,8,8,8,6,8,8,8,8,8,8,8,8,8,8,8,8,8,8,8,8,8,8,8,6,6,6,6,8,8,6,6,8,8,8,8,8,6,6,6,6,8,8,8,8,8,4,4,4,4,4,4,4,4,4,4,4,4,4,6,6,6,4,4,4,4,6,6,6,6,6,6,8,8,8,8,8,8,8,8,8,8,8,8,6,6,8,8,4,4,4,4,6,6,6,6,6,6,6,6,8,6,6,6,6,8,4,4,4,4,4,4,4,4,4,4,4,4,4,4,4,4,6,6,6,8,4,4,4,4,6,6,6,4,4,4,4,6,6,6,4,4,4,4,4,8,8,4,4,4,6,6,6,6,4,4,4,4,6,4,4,4,4,4,5,5,6,6,4,4,4,4,5,5,4,4,4,4,6,6,6],"type":"histogram","marker":{"fillcolor":"rgba(31,119,180,1)","color":"rgba(31,119,180,1)","line":{"color":"transparent"}},"xaxis":"x","yaxis":"y"},{"x":["4","4","4","4","6","6","6","4","4","4","4","6","6","6","6","6","6","8","8","8","8","8","8","8","8","8","8","8","8","8","8","8","4","4","6","6","6","4","6","6","6","6","6","6","6","6","6","6","6","6","6","6","8","8","8","8","8","6","8","8","8","8","8","8","8","8","8","8","8","8","8","8","8","8","8","8","8","6","6","6","6","8","8","6","6","8","8","8","8","8","6","6","6","6","8","8","8","8","8","4","4","4","4","4","4","4","4","4","4","4","4","4","6","6","6","4","4","4","4","6","6","6","6","6","6","8","8","8","8","8","8","8","8","8","8","8","8","6","6","8","8","4","4","4","4","6","6","6","6","6","6","6","6","8","6","6","6","6","8","4","4","4","4","4","4","4","4","4","4","4","4","4","4","4","4","6","6","6","8","4","4","4","4","6","6","6","4","4","4","4","6","6","6","4","4","4","4","4","8","8","4","4","4","6","6","6","6","4","4","4","4","6","4","4","4","4","4","5","5","6","6","4","4","4","4","5","5","4","4","4","4","6","6","6"],"type":"histogram","marker":{"fillcolor":"rgba(31,119,180,1)","color":"rgba(31,119,180,1)","line":{"color":"transparent"}},"xaxis":"x2","yaxis":"y2"}],"layout":{"xaxis":{"domain":[0,0.48],"anchor":"y"},"xaxis2":{"domain":[0.52,1],"type":"category","categoryorder":"array","categoryarray":["4","5","6","8"],"anchor":"y2"},"yaxis2":{"domain":[0,1],"anchor":"x2"},"yaxis":{"domain":[0,1],"anchor":"x"},"margin":{"b":40,"l":60,"t":25,"r":10}},"config":{"modeBarButtonsToRemove":["sendDataToCloud"]},"source":"A","subplot":true},"evals":[],"jsHooks":[]}</script>
 </div>
             </section>
 
           </div>
         </div>
       </div>
-<a href="highlighting.html" class="navigation navigation-prev " aria-label="Previous page"><i class="fa fa-angle-left"></i></a>
-<a href="current-limitations.html" class="navigation navigation-next " aria-label="Next page""><i class="fa fa-angle-right"></i></a>
+<a href="maps.html" class="navigation navigation-prev " aria-label="Previous page"><i class="fa fa-angle-left"></i></a>
+<a href="boxplots.html" class="navigation navigation-next " aria-label="Next page""><i class="fa fa-angle-right"></i></a>
 
 <script src="libs/gitbook/js/app.min.js"></script>
 <script src="libs/gitbook/js/lunr.js"></script>
@@ -224,7 +221,7 @@ gitbook.start({
 "size": 2
 },
 "edit": {
-"link": "https://github.com/cpsievert/plotly_book/edit/master/04-crosstalk.Rmd",
+"link": "https://github.com/cpsievert/plotly_book/edit/master/02-plotly-cookbook.Rmd",
 "text": "Edit"
 },
 "download": ["bookdown.pdf", "bookdown.epub", "bookdown.mobi"],
