@@ -218,9 +218,9 @@ broom::augment(m) %>%
 
 ### Polygons
 
-The `add_polygons()` function is essentially equivalent to `add_paths()` with the [fill](https://plot.ly/r/reference/#scatter-fill) attribute set to "toself". Polygons for the basis for other, higher-level, geometries such as `add_ribbons()`, but can be useful in their own right, especially for maps:
+The `add_polygons()` function is essentially equivalent to `add_paths()` with the [fill](https://plot.ly/r/reference/#scatter-fill) attribute set to "toself". Polygons for the basis for other, higher-level, geometries such as `add_ribbons()`, but can be useful in their own right. 
 
-```{r}
+```{r map-canada, "A map of Canada using the default cartesian coordinate system."}
 map_data("world", "canada") %>%
   group_by(group) %>%
   plot_ly(x = ~long, y = ~lat, alpha = 0.2) %>%
@@ -232,7 +232,9 @@ map_data("world", "canada") %>%
 
 ## Maps
 
-As shown in [polygons](#polygons), it is possible to create maps using plotly's default (cartesian) coordinate system, but plotly.js also has support for plotting [scatter traces](#scatter-traces) on top of either a [custom geo layout](https://plot.ly/r/reference/#layout-geo) or a [mapbox layout](https://plot.ly/r/reference/#layout-mapbox). Figure \@ref(fig:maps) compares the three different layout options in a single subplot. Any of the `add_*()` functions found under [scatter traces](https://cpsievert.github.io/plotly_book/scatter-traces.html) should work as expected on plotly-geo (initialized via `geo()`) or plotly-mapbox (initialized via `mapbox()`) objects.
+### Using scatter traces
+
+As shown in [polygons](#polygons), it is possible to create maps using plotly's default (cartesian) coordinate system, but plotly.js also has support for plotting [scatter traces](#scatter-traces) on top of either a [custom geo layout](https://plot.ly/r/reference/#layout-geo) or a [mapbox layout](https://plot.ly/r/reference/#layout-mapbox). Figure \@ref(fig:maps) compares the three different layout options in a single subplot.
 
 ```{r maps, fig.width = 8, fig.cap = "A few maps"}
 dat <- map_data("world", "canada") %>% group_by(group)
@@ -241,7 +243,7 @@ map1 <- plot_ly(dat, x = ~long, y = ~lat) %>%
   add_paths(size = I(1)) %>%
   add_segments(x = -100, xend = -50, y = 50, 75)
 
-map2 <- mapbox(dat, x = ~long, y = ~lat) %>% 
+map2 <- plot_mapbox(dat, x = ~long, y = ~lat) %>% 
   add_paths(size = I(2)) %>%
   add_segments(x = -100, xend = -50, y = 50, 75) %>%
   layout(mapbox = list(zoom = 0,
@@ -249,7 +251,7 @@ map2 <- mapbox(dat, x = ~long, y = ~lat) %>%
    ))
 
 # geo() is the only object type which supports different map projections
-map3 <- geo(dat, x = ~long, y = ~lat) %>% 
+map3 <- plot_geo(dat, x = ~long, y = ~lat) %>% 
   add_markers(size = I(1)) %>%
   add_segments(x = -100, xend = -50, y = 50, 75) %>%
   layout(geo = list(projection = list(type = "mercator")))
@@ -257,6 +259,33 @@ map3 <- geo(dat, x = ~long, y = ~lat) %>%
 subplot(map1, map2) %>%
   subplot(map3, nrows = 2) %>% 
   hide_legend()
+```
+
+Any of the `add_*()` functions found under [scatter traces](https://cpsievert.github.io/plotly_book/scatter-traces.html) should work as expected on plotly-geo (initialized via `plot_geo()`) or plotly-mapbox (initialized via `plot_mapbox()`) objects. You can think of `plot_geo()` and `plot_mapbox()` as special cases (or more opiniated versions) of `plot_ly()`. For one, they won't allow you to mix scatter and non-scatter traces in a single plot object, which you probably don't want to do anyway. In order to enable Figure \@ref(fig:maps), plotly.js _can't_ make this restriction, but since we have `subplot()` in R, we _can_ make this restriction without sacrificing flexibility.
+
+### Choropleths
+
+In addition to scatter traces, plotly-geo objects can also create a [choropleth](https://plot.ly/r/reference/#choropleth) trace/layer. Figure \@ref(fig:us-density) shows the population density of the U.S. via a choropleth, and also layers on markers for the state center locations, using the U.S. state data from the **datasets** package [@base]. By simply providing a [`z`](https://plot.ly/r/reference/#choropleth-z) attribute, plotly-geo objects will try to create a choropleth, but you'll also need to provide [`locations`](https://plot.ly/r/reference/#choropleth-locations) and a [`locationmode`](https://plot.ly/r/reference/#choropleth-locationmode).
+
+```{r us-density, fig.cap = "A map of U.S. population density using the `state.x77` data from the **datasets** package."}
+density <- state.x77[, "Population"] / state.x77[, "Area"]
+
+g <- list(
+  scope = 'usa',
+  projection = list(type = 'albers usa'),
+  lakecolor = toRGB('white')
+)
+
+plot_geo() %>%
+  add_trace(
+    z = ~density, text = state.name,
+    locations = state.abb, locationmode = 'USA-states'
+  ) %>%
+  add_markers(
+    x = state.center[["x"]], y = state.center[["y"]], 
+    size = I(2), symbol = I(8), color = I("white"), hoverinfo = "none"
+  ) %>%
+  layout(geo = g)
 ```
 
 ## Bars & histograms
