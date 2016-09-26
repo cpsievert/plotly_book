@@ -378,17 +378,53 @@ ggplotly(p)
 
 
 
-
 ## Boxplots
 
+Boxplots encode the five number summary of a numeric variable, and are more efficient than [trellis displays of histograms](multiple-numeric-distributions) for comparing many numeric distributions. The `add_boxplot()` function requires one numeric variable, and guarantees boxplots are [oriented](https://plot.ly/r/reference/#box-orientation) correctly, regardless of whether the numeric variable is placed on the x or y scale. As Figure \@ref(fig:cut-boxes) shows, on the axis orthogonal to the numeric axis, you can provide a discrete variable (for conditioning) or supply a single value (to name the axis category).
 
+```{r cut-boxes}
+p <- plot_ly(diamonds, y = ~price, color = I("black"), 
+             alpha = 0.1, boxpoints = "suspectedoutliers")
+p1 <- p %>% add_boxplot(x = "Overall")
+p2 <- p %>% add_boxplot(x = ~cut)
+subplot(
+  p1, p2, shareY = TRUE,
+  widths = c(0.2, 0.8), margin = 0
+) %>% hide_legend()
+```
 
-## 2D Distributions
+If you want to partition by more than one discrete variable, I recommend mapping the interaction of those variables to the discrete axis, and coloring by the nested variable, as Figure \@ref(fig:cut-by-clarity-boxes) does with diamond clarity and cut.
+
+```{r cut-by-clarity-boxes, fig.cap = "Diamond prices by cut and clarity."}
+plot_ly(diamonds, x = ~price, y = ~interaction(clarity, cut)) %>%
+  add_boxplot(color = ~clarity) %>%
+  layout(yaxis = list(title = ""), margin = list(l = 100))
+```
+
+It is also helpful to sort the boxplots according to something meaningful, such as the median price. Figure \@ref(fig:cut-by-clarity-boxes-sorted) presents the same information as Figure \@ref(fig:cut-by-clarity-boxes), but sorts the boxplots by their median, and makes it immediately clear that diamonds with a cut of "SI2" have the highest diamond price, on average.
+
+```{r cut-by-clarity-boxes-sorted, fig.cap = "Diamond prices by cut and clarity, sorted by price median."}
+d <- diamonds %>%
+  mutate(cc = interaction(clarity, cut))
+
+# interaction levels sorted by median price
+lvls <- d %>%
+  group_by(cc) %>%
+  summarise(m = median(price)) %>%
+  arrange(m) %>%
+  .[["cc"]]
+
+plot_ly(d, x = ~price, y = ~factor(cc, lvls)) %>%
+  add_boxplot(color = ~clarity) %>%
+  layout(yaxis = list(title = ""), margin = list(l = 100))
+```
+
+Similar to `add_histogram()`, `add_boxplot()` sends the raw data to the browser, and lets plotly.js compute summary statistics. Unfortunately, plotly.js does not yet allow precomputed statistics for boxplots.^[Follow the issue here <https://github.com/plotly/plotly.js/issues/242>]
+
+## 2D distributions
 
 
 ## 3D surfaces
-
-* 
 
 ## Annotations
 
