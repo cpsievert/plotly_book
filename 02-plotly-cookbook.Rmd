@@ -174,7 +174,7 @@ It is also worth noting that the **GGally** offers a `ggparcoord()` function whi
 
 #### 3D line plots
 
-To make a 3D line plot, just add a `z` attribute:
+To make a 3D line plot, just add a `z` attribute (in addition to `x` and `y`):
 
 ```{r 3D-lines, fig.cap = "A 3D scatterplot"}
 plot_ly(mpg, x = ~cty, y = ~hwy, z = ~cyl) %>%
@@ -323,7 +323,7 @@ subplot(p1, p2) %>% hide_legend()
 
 ### Multiple numeric distributions
 
-It is often useful to see how the distribution of a numeric variable changes with respect to a discrete variable. When using bars to visualize multiple numeric distributions, I recommend plotting each distribution on its own axis, rather than trying to overlay them on a single axis.^[It's much easier to visualize multiple numeric distributions on a single axis using [lines](#lines)]. This is where the [`subplot()` infrastructure](#subplot), and its support for trellis displays, comes in handy. Figure \@ref(fig:many-prices) shows a trellis display of diamond price by diamond color. Note how the `one_plot()` function defines what to display on each panel, then a split-apply-recombine strategy is employed to generate the trellis display.
+It is often useful to see how the numeric distribution changes with respect to a discrete variable. When using bars to visualize multiple numeric distributions, I recommend plotting each distribution on its own axis, rather than trying to overlay them on a single axis.^[It's much easier to visualize multiple numeric distributions on a single axis using [lines](#lines)]. This is where the [`subplot()` infrastructure](#subplot), and its support for trellis displays, comes in handy. Figure \@ref(fig:many-prices) shows a trellis display of diamond price by diamond color. Note how the `one_plot()` function defines what to display on each panel, then a split-apply-recombine strategy is employed to generate the trellis display.
 
 ```{r many-prices, fig.cap = "A trellis display of diamond price by diamond color."}
 one_plot <- function(d) {
@@ -344,61 +344,37 @@ diamonds %>%
 
 ### Multiple discrete distributions
 
-Visualizing multiple discrete distributions is suprisingly complicated -- evidenced by the multiple books written on the subject . When dealing with multiple categorical variables, perhaps the easiest thing to do is visualize counts of their interaction, as Figure \@ref(fig:cut-by-clarity) does using a grouped bar chart. 
+Visualizing multiple discrete distributions is difficult. The subtle complexity is due to the fact that both counts and proportions are important for understanding multi-variate discrete distributions. Figure \@ref(fig:cut-by-clarity) presents diamond counts, divided by both their cut and clarity, using a grouped bar chart. 
 
 ```{r cut-by-clarity, fig.cap = "A grouped bar chart"}
-p <- plot_ly(diamonds, x = ~cut, color = ~clarity)
+plot_ly(diamonds, x = ~cut, color = ~clarity) %>%
+  add_histogram()
 ```
 
-```{r}
-subplot(
-  add_histogram(p),
-  add_histogram(p, histnorm = "percent"),
-  nrows = 2, shareX = TRUE
-) %>% hide_legend()
-```
+Figure \@ref(fig:cut-by-clarity) is useful for comparing the number of diamonds by clarity, given a type of cut. For instance, within "Ideal" diamonds, a cut of "VS1" is most popular, "VS2" is second most popular, and "I1" the least popular. The distribution of clarity within "Ideal" diamonds seems to be fairly similar to other diamonds, but it's hard to make this comparison using raw counts. Figure \@ref(fig:cut-by-clarity-prop) makes this comparison easier by showing the relative frequency of diamonds by clarity, given a cut. 
 
-
-```{r many-clarity-stacked, fig.cap = "A stacked bar chart"}
-plot_ly(diamonds, x = ~cut, color = ~clarity) %>% 
-  add_histogram() %>% layout(barmode = "stack")
-```
-
-
-```{r many-clarity-cut, fig.width = 8, fig.cap = "A trellis display of diamond price by diamond color."}
-one_plot <- function(d) {
-  plot_ly(d, x = ~cut, color = ~color) %>%
-    add_annotations(
-      ~paste("Clarity:", unique(clarity)), x = 0.5, y = 1, 
-      xref = "paper", yref = "paper", showarrow = FALSE
-    )
-}
-
-diamonds %>%
-  split(.$clarity) %>%
-  lapply(one_plot) %>% 
-  subplot(nrows = 2, shareX = TRUE, titleX = FALSE) %>%
-  hide_legend()
+```{r cut-by-clarity-prop, fig.cap = "A stacked bar chart showing the proportion of clarity within "}
+# number of diamonds by cut and clarity (n)
+cc <- count(diamonds, cut, clarity)
+# number of diamonds by cut (nn)
+cc2 <- left_join(cc, count(cc, cut, wt = n))
+cc2 %>%
+  mutate(prop = n / nn) %>%
+  plot_ly(x = ~cut, y = ~prop, color = ~clarity) %>%
+  add_bars() %>%
+  layout(barmode = "stack")
 ```
 
 
+This type of plot, also known as a spine plot, is a special case of a mosaic plot. In a mosaic plot, you can scale both bar widths and heights according to discrete distributions. For mosaic plots, I recommend using the **ggmosaic** package [@ggmosaic], which implements a custom **ggplot2** geom designed for mosaic plots, which we can convert to plotly via `ggplotly()`. Figure \@ref(fig:ggmosaic) show a mosaic plot of cut by clarity. Notice how the bar widths are scaled proportional to the cut frequency.
 
 
 ```{r ggmosaic, fig.cap = "Using ggmosaic and ggplotly() to create advanced interactive visualizations of categorical data"}
 library(ggmosaic)
-p <- ggplot(data = happy) +
-  geom_mosaic(aes(weight = wtssall, x = product(health, happy, sex), fill = health), na.rm = TRUE) +
-  theme(axis.text.x = element_text(angle = 25, hjust = 1)) + 
-  labs(x = " Sex : Health", y = "Happiness", title = "divider = mosaic()")
+p <- ggplot(data = cc) +
+  geom_mosaic(aes(weight = n, x = product(cut), fill = clarity))
 ggplotly(p)
 ```
-
-
-
-
-### Multi-variate numerical distributions
-
-Visualizing many numerical distributions is a bit more tricky. 
 
 
 
