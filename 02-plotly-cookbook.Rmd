@@ -290,14 +290,118 @@ plot_geo() %>%
 
 ## Bars & histograms
 
-plotly.js has both a "bar" and "histogram" trace type. In statistical graphics, the term histogram is reserved for numeric variables, but the histogram trace type can be used to display categorical data.
+The `add_bars()` and `add_histogram()` functions wrap the [bar](https://plot.ly/r/reference/#bar) and [histogram](https://plot.ly/r/reference/#histogram) plotly.js trace types. The main difference between them is that bar traces require bar heights (both `x` and `y`), whereas histogram traces require just a single variable, and plotly.js handles binning in the browser.^[This has some interesting applications for [linked highlighting](#linked-highlighting) as it allows for summary statistics to be computed on-the-fly based on a selection] And perhaps confusingly, both of these functions can be used to visualize the distribution of either a numeric or a discrete variable. So, essentially, the only difference between them is where the binning occurs.
+
+Figure \@ref(fig:numeric) compares the default binning algorithm in plotly.js to a few different algorithms available in R via the `hist()` function. Although plotly.js has the ability to customize histogram bins via [xbins](https://plot.ly/r/reference/#histogram-xbins)/[ybins](https://plot.ly/r/reference/#histogram-ybins), R has diverse facilities for estimating the optimal number of bins in a histogram that we can easily leverage. The `hist()` function alone allows us to reference 3 famous algorithms by name [@Sturges]; [@FD]; [@hist-scott], but there are also packages (e.g. the **histogram** package) which extend this interface to incorporate more methodology [@histogram]. The `price_hist()` function below wraps the `hist()` function to obtain the binning results, and map those bins to a plotly version of the histogram using `add_bars()`.
+
+```{r numeric, fig.cap = "plotly.js's default binning algorithm versus R's `hist()` default"}
+p1 <- plot_ly(diamonds, x = ~price) %>% add_histogram(name = "plotly.js")
+
+price_hist <- function(method = "FD") {
+  h <- hist(diamonds$price, breaks = method, plot = FALSE)
+  plot_ly(x = h$mids, y = h$counts) %>% add_bars(name = method)
+}
+
+subplot(
+  p1, price_hist(), price_hist("Sturges"),  price_hist("Scott"),
+  nrows = 4, shareX = TRUE
+)
+```
+
+Figure \@ref(fig:discrete) demonstrates two ways of creating a basic bar chart. Although the visual results are the same, its worth noting the difference in implementation. The `add_histogram()` function sends all of the observed values to the browser and lets plotly.js perform the binning. It takes more human effort to perform the binning in R, but doing so has the benefit of sending less data, and requiring less computation work of the web browser. In this case, we have only about 50,000 records, so there is much of a difference in page load times or page size. However, with 1 Million records, page load time more than doubles and page size nearly doubles.^[These tests were run on Google Chrome and loaded a page with a single bar chart. [Here](https://www.webpagetest.org/result/160924_DP_JBX/) are the results for `add_histogram()` and [here](https://www.webpagetest.org/result/160924_QG_JA1/) are the results for `add_bars()` ]
+
+```{r discrete, fig.cap = "Number of diamonds by cut."}
+p1 <- plot_ly(diamonds, x = ~cut) %>% add_histogram()
+
+p2 <- diamonds %>%
+  dplyr::count(cut) %>%
+  plot_ly(x = ~cut, y = ~n) %>% 
+  add_bars()
+
+subplot(p1, p2) %>% hide_legend()
+```
+
+### Multiple numeric distributions
+
+It is often useful to see how the distribution of a numeric variable changes with respect to a discrete variable. When using bars to visualize multiple numeric distributions, I recommend plotting each distribution on its own axis, rather than trying to overlay them on a single axis.^[It's much easier to visualize multiple numeric distributions on a single axis using [lines](#lines)]. This is where the [`subplot()` infrastructure](#subplot), and its support for trellis displays, comes in handy. Figure \@ref(fig:many-prices) shows a trellis display of diamond price by diamond color. Note how the `one_plot()` function defines what to display on each panel, then a split-apply-recombine strategy is employed to generate the trellis display.
+
+```{r many-prices, fig.cap = "A trellis display of diamond price by diamond color."}
+one_plot <- function(d) {
+  plot_ly(d, x = ~price) %>%
+    add_annotations(
+      ~paste("Clarity:", unique(clarity)), x = 0.5, y = 1, 
+      xref = "paper", yref = "paper", showarrow = FALSE
+    )
+}
+
+diamonds %>%
+  split(.$clarity) %>%
+  lapply(one_plot) %>% 
+  subplot(nrows = 2, shareX = TRUE, titleX = FALSE) %>%
+  hide_legend()
+```
+
+
+### Multiple discrete distributions
+
+Visualizing multiple discrete distributions is suprisingly complicated -- evidenced by the multiple books written on the subject . When dealing with multiple categorical variables, perhaps the easiest thing to do is visualize counts of their interaction, as Figure \@ref(fig:cut-by-clarity) does using a grouped bar chart. 
+
+```{r cut-by-clarity, fig.cap = "A grouped bar chart"}
+p <- plot_ly(diamonds, x = ~cut, color = ~clarity)
+```
 
 ```{r}
 subplot(
-  plot_ly(mpg, x = ~cyl),
-  plot_ly(mpg, x = ~factor(cyl))
-)
+  add_histogram(p),
+  add_histogram(p, histnorm = "percent"),
+  nrows = 2, shareX = TRUE
+) %>% hide_legend()
 ```
+
+
+```{r many-clarity-stacked, fig.cap = "A stacked bar chart"}
+plot_ly(diamonds, x = ~cut, color = ~clarity) %>% 
+  add_histogram() %>% layout(barmode = "stack")
+```
+
+
+```{r many-clarity-cut, fig.width = 8, fig.cap = "A trellis display of diamond price by diamond color."}
+one_plot <- function(d) {
+  plot_ly(d, x = ~cut, color = ~color) %>%
+    add_annotations(
+      ~paste("Clarity:", unique(clarity)), x = 0.5, y = 1, 
+      xref = "paper", yref = "paper", showarrow = FALSE
+    )
+}
+
+diamonds %>%
+  split(.$clarity) %>%
+  lapply(one_plot) %>% 
+  subplot(nrows = 2, shareX = TRUE, titleX = FALSE) %>%
+  hide_legend()
+```
+
+
+
+
+```{r ggmosaic, fig.cap = "Using ggmosaic and ggplotly() to create advanced interactive visualizations of categorical data"}
+library(ggmosaic)
+p <- ggplot(data = happy) +
+  geom_mosaic(aes(weight = wtssall, x = product(health, happy, sex), fill = health), na.rm = TRUE) +
+  theme(axis.text.x = element_text(angle = 25, hjust = 1)) + 
+  labs(x = " Sex : Health", y = "Happiness", title = "divider = mosaic()")
+ggplotly(p)
+```
+
+
+
+
+### Multi-variate numerical distributions
+
+Visualizing many numerical distributions is a bit more tricky. 
+
+
+
 
 ## Boxplots
 

@@ -16,13 +16,14 @@ for (fmt in formats) {
     bookdown::calibre('_book/bookdown.epub', 'mobi')
 }
 
-# patch HTML files in gh-pages if built on Travis
-if (travis) {
-  r = '<body onload="window.location = \'https://bookdown.org/yihui\'+location.pathname">'
-  for (f in list.files('_book', '[.]html$', full.names = TRUE)) {
-    x = readLines(f)
-    if (length(i <- grep('^\\s*<body>\\s*$', x)) == 0) next
-    x[i[1]] = r
-    writeLines(x, f)
-  }
+# insert google analytics
+ga <- readLines("includes/ga.html")
+for (f in list.files('docs', '[.]html$', full.names = TRUE)) {
+  x <- readLines(f)
+  n <- length(x)
+  i <- grep('^\\s*</body>\\s*$', x)
+  writeLines(
+    c(x[seq.int(1, i-1)], ga, x[seq.int(i, n)]),
+    f
+  )
 }
