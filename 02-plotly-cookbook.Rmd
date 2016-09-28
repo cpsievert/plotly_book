@@ -292,7 +292,7 @@ plot_geo() %>%
 
 The `add_bars()` and `add_histogram()` functions wrap the [bar](https://plot.ly/r/reference/#bar) and [histogram](https://plot.ly/r/reference/#histogram) plotly.js trace types. The main difference between them is that bar traces require bar heights (both `x` and `y`), whereas histogram traces require just a single variable, and plotly.js handles binning in the browser.^[This has some interesting applications for [linked highlighting](#linked-highlighting) as it allows for summary statistics to be computed on-the-fly based on a selection] And perhaps confusingly, both of these functions can be used to visualize the distribution of either a numeric or a discrete variable. So, essentially, the only difference between them is where the binning occurs.
 
-Figure \@ref(fig:numeric) compares the default binning algorithm in plotly.js to a few different algorithms available in R via the `hist()` function. Although plotly.js has the ability to customize histogram bins via [xbins](https://plot.ly/r/reference/#histogram-xbins)/[ybins](https://plot.ly/r/reference/#histogram-ybins), R has diverse facilities for estimating the optimal number of bins in a histogram that we can easily leverage. The `hist()` function alone allows us to reference 3 famous algorithms by name [@Sturges]; [@FD]; [@hist-scott], but there are also packages (e.g. the **histogram** package) which extend this interface to incorporate more methodology [@histogram]. The `price_hist()` function below wraps the `hist()` function to obtain the binning results, and map those bins to a plotly version of the histogram using `add_bars()`.
+Figure \@ref(fig:numeric) compares the default binning algorithm in plotly.js to a few different algorithms available in R via the `hist()` function. Although plotly.js has the ability to customize histogram bins via [xbins](https://plot.ly/r/reference/#histogram-xbins)/[ybins](https://plot.ly/r/reference/#histogram-ybins), R has diverse facilities for estimating the optimal number of bins in a histogram that we can easily leverage.^[Optimal in this context is the number of bins which minimizes the distance between the empirical histogram and the underlying density.] The `hist()` function alone allows us to reference 3 famous algorithms by name [@Sturges]; [@FD]; [@hist-scott], but there are also packages (e.g. the **histogram** package) which extend this interface to incorporate more methodology [@histogram]. The `price_hist()` function below wraps the `hist()` function to obtain the binning results, and map those bins to a plotly version of the histogram using `add_bars()`.
 
 ```{r numeric, fig.cap = "plotly.js's default binning algorithm versus R's `hist()` default"}
 p1 <- plot_ly(diamonds, x = ~price) %>% add_histogram(name = "plotly.js")
@@ -376,8 +376,6 @@ p <- ggplot(data = cc) +
 ggplotly(p)
 ```
 
-
-
 ## Boxplots
 
 Boxplots encode the five number summary of a numeric variable, and are more efficient than [trellis displays of histograms](multiple-numeric-distributions) for comparing many numeric distributions. The `add_boxplot()` function requires one numeric variable, and guarantees boxplots are [oriented](https://plot.ly/r/reference/#box-orientation) correctly, regardless of whether the numeric variable is placed on the x or y scale. As Figure \@ref(fig:cut-boxes) shows, on the axis orthogonal to the numeric axis, you can provide a discrete variable (for conditioning) or supply a single value (to name the axis category).
@@ -395,7 +393,7 @@ subplot(
 
 If you want to partition by more than one discrete variable, I recommend mapping the interaction of those variables to the discrete axis, and coloring by the nested variable, as Figure \@ref(fig:cut-by-clarity-boxes) does with diamond clarity and cut.
 
-```{r cut-by-clarity-boxes, fig.cap = "Diamond prices by cut and clarity."}
+```{r cut-by-clarity-boxes, fig.width = 8, fig.cap = "Diamond prices by cut and clarity."}
 plot_ly(diamonds, x = ~price, y = ~interaction(clarity, cut)) %>%
   add_boxplot(color = ~clarity) %>%
   layout(yaxis = list(title = ""), margin = list(l = 100))
@@ -403,7 +401,7 @@ plot_ly(diamonds, x = ~price, y = ~interaction(clarity, cut)) %>%
 
 It is also helpful to sort the boxplots according to something meaningful, such as the median price. Figure \@ref(fig:cut-by-clarity-boxes-sorted) presents the same information as Figure \@ref(fig:cut-by-clarity-boxes), but sorts the boxplots by their median, and makes it immediately clear that diamonds with a cut of "SI2" have the highest diamond price, on average.
 
-```{r cut-by-clarity-boxes-sorted, fig.cap = "Diamond prices by cut and clarity, sorted by price median."}
+```{r cut-by-clarity-boxes-sorted, fig.width = 8, fig.cap = "Diamond prices by cut and clarity, sorted by price median."}
 d <- diamonds %>%
   mutate(cc = interaction(clarity, cut))
 
@@ -421,10 +419,101 @@ plot_ly(d, x = ~price, y = ~factor(cc, lvls)) %>%
 
 Similar to `add_histogram()`, `add_boxplot()` sends the raw data to the browser, and lets plotly.js compute summary statistics. Unfortunately, plotly.js does not yet allow precomputed statistics for boxplots.^[Follow the issue here <https://github.com/plotly/plotly.js/issues/242>]
 
+
 ## 2D distributions
 
+### Rectangular binning in plotly.js
 
-## 3D surfaces
+The **plotly** package provides two functions for displaying rectangular bins: `add_heatmap()` and `add_histogram2d()`. For numeric data, the `add_heatmap()` function is a 2D analog of `add_bars()` (bins must be pre-computed), and the `add_histogram2d()` function is a 2D analog of `add_histogram()` (bins can be computed in the browser). Thus, I recommend `add_histogram2d()` for exploratory purposes, since you don't have to think about how to perform binning. It also provides a useful [`zsmooth`](https://plot.ly/r/reference/#histogram2d-zsmooth) attribute for effectively increasing the number of bins (currently, "best" performs a [bi-linear interpolation](https://en.wikipedia.org/wiki/Bilinear_interpolation), a type of nearest neighbors algorithm), and [nbinsx](https://plot.ly/r/reference/#histogram2d-nbinsx)/[nbinsy](https://plot.ly/r/reference/#histogram2d-nbinsy) attributes to set the number of bins in the x and/or y directions. Figure \@ref(fig:histogram2d) compares three different uses of `add_histogram()`: (1) plotly.js' default binning algorithm, (2) the default plus smoothing, (3) setting the number of bins in the x and y directions.
+
+```{r histogram2d, fig.cap = "Three different uses of `histogram2d()`"}
+p <- plot_ly(diamonds, x = ~log(carat), y = ~log(price))
+subplot(
+  add_histogram2d(p) %>%
+    colorbar(title = "default", len = 1/3, y = 1) %>%
+    layout(xaxis = list(title = "default")),
+  add_histogram2d(p, zsmooth = "best") %>%
+    colorbar(title = "zsmooth", len = 1/3, y = 2/3 - 0.05) %>%
+    layout(xaxis = list(title = "zsmooth")),
+  add_histogram2d(p, nbinsx = 60, nbinsy = 60) %>%
+    colorbar(title = "nbins", len = 1/3, y = 1/3 - 0.1) %>%
+    layout(xaxis = list(title = "nbins")),
+  shareY = TRUE, titleX = TRUE
+)
+```
+
+### Rectangular binning in R
+
+In [Bars & histograms](#bars-histograms), we leveraged a number of algorithms for computing the "optimal" number of bins in 1D by routing the results of `hist()` into `add_bars()`. There is a surprising lack of academic research and computational tools for the 2D analog. Among the research that does exist, solutions usually depend on characteristics of the unknown underlying distribution, so a sensible approach is to assume a Gaussian form [@mde]. Practically speaking, that assumption is not very useful, but thankfully kernel density estimation, and specifically the `kde2d()` function from the **MASS** package provides a well-supported rule-of-thumb.
+
+```{r heatmap-corr-diamonds, fig.cap = "2D Density estimation via the `kde2d()` function"}
+kde_count <- function(x, y, ...) {
+  kde <- MASS::kde2d(x, y, ...)
+  df <- with(kde, setNames(expand.grid(x, y), c("x", "y")))
+  df$count <- with(kde, c(z) * length(x) * diff(x)[1] * diff(y)[1])
+  data.frame(df)
+}
+
+kd <- with(diamonds, kde_count(log(carat), log(price), n = 30))
+plot_ly(kd, x = ~x, y = ~y, z = ~count) %>% 
+  add_heatmap() %>%
+  colorbar(title = "Number of diamonds")
+```
+
+### Basic heatmaps
+
+The `add_heatmap()` function can also handle categorical x and y variables.
+
+```{r}
+corr <- cor(diamonds[vapply(diamonds, is.numeric, logical(1))])
+plot_ly(x = rownames(corr), y = colnames(corr), z = corr) %>%
+  add_heatmap() %>%
+  colorbar(limits = c(-1, 1))
+```
+
+A heatmap with categorical axes is basically a two-way table. The `Titanic` dataset is a four-way table that we can put into a tidy data frame using the `tidy()` function from the **broom** package.
+
+```{r}
+broom::tidy(Titanic) %>%
+  plot_ly(x = ~interaction(Age, Survived), y = ~interaction(Class, Sex)) %>%
+  add_heatmap(z = ~Freq)
+
+
+#one_heatmap <- function(d) {
+#  plot_ly(d, x = ~Class, y = ~Sex) %>% 
+#    add_heatmap(z = ~Freq) %>%
+#    add_annotations(
+#      ~unique(paste(Age, Survived, sep = ", ")), x = 0.5, y = 1, 
+#      yanchor = "bottom", xanchor = "middle",
+#      xref = "paper", yref = "paper", showarrow = FALSE
+#    )
+#}
+#
+#tidy(Titanic) %>%
+#  group_by(Age, Survived) %>%
+#  do(p = one_heatmap(.)) %>%
+#  subplot(
+#    nrows = 2, margin = c(0.01, 0.01, 0.04, 0.04),
+#    shareX = TRUE, shareY = TRUE, 
+#    titleY = FALSE, titleX = FALSE
+#  )
+```
+
+
+### Contours
+
+```{r}
+plot_ly(diamonds, x = ~cut, y = ~clarity) %>% 
+  add_histogram2dcontour()
+```
+
+
+
+## 3D plots
+
+### Surface
+
+### Mesh
 
 ## Annotations
 

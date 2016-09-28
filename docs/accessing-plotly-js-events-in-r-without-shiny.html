@@ -32,7 +32,7 @@
   <meta name="apple-mobile-web-app-status-bar-style" content="black">
   
   
-<link rel="prev" href="shiny.html">
+<link rel="prev" href="advanced-usage-of-event-data.html">
 <link rel="next" href="plotly-interface-internals.html">
 
 <script src="libs/jquery/jquery.min.js"></script>
@@ -146,8 +146,16 @@ code > span.in { color: #60a0b0; font-weight: bold; font-style: italic; } /* Inf
 <li class="chapter" data-level="2.3.2" data-path="bars-histograms.html"><a href="bars-histograms.html#multiple-discrete-distributions"><i class="fa fa-check"></i><b>2.3.2</b> Multiple discrete distributions</a></li>
 </ul></li>
 <li class="chapter" data-level="2.4" data-path="boxplots.html"><a href="boxplots.html"><i class="fa fa-check"></i><b>2.4</b> Boxplots</a></li>
-<li class="chapter" data-level="2.5" data-path="d-distributions.html"><a href="d-distributions.html"><i class="fa fa-check"></i><b>2.5</b> 2D Distributions</a></li>
-<li class="chapter" data-level="2.6" data-path="d-surfaces.html"><a href="d-surfaces.html"><i class="fa fa-check"></i><b>2.6</b> 3D surfaces</a></li>
+<li class="chapter" data-level="2.5" data-path="d-distributions.html"><a href="d-distributions.html"><i class="fa fa-check"></i><b>2.5</b> 2D distributions</a><ul>
+<li class="chapter" data-level="2.5.1" data-path="d-distributions.html"><a href="d-distributions.html#rectangular-binning-in-plotly.js"><i class="fa fa-check"></i><b>2.5.1</b> Rectangular binning in plotly.js</a></li>
+<li class="chapter" data-level="2.5.2" data-path="d-distributions.html"><a href="d-distributions.html#rectangular-binning-in-r"><i class="fa fa-check"></i><b>2.5.2</b> Rectangular binning in R</a></li>
+<li class="chapter" data-level="2.5.3" data-path="d-distributions.html"><a href="d-distributions.html#basic-heatmaps"><i class="fa fa-check"></i><b>2.5.3</b> Basic heatmaps</a></li>
+<li class="chapter" data-level="2.5.4" data-path="d-distributions.html"><a href="d-distributions.html#contours"><i class="fa fa-check"></i><b>2.5.4</b> Contours</a></li>
+</ul></li>
+<li class="chapter" data-level="2.6" data-path="d-plots.html"><a href="d-plots.html"><i class="fa fa-check"></i><b>2.6</b> 3D plots</a><ul>
+<li class="chapter" data-level="2.6.1" data-path="d-plots.html"><a href="d-plots.html#surface"><i class="fa fa-check"></i><b>2.6.1</b> Surface</a></li>
+<li class="chapter" data-level="2.6.2" data-path="d-plots.html"><a href="d-plots.html#mesh"><i class="fa fa-check"></i><b>2.6.2</b> Mesh</a></li>
+</ul></li>
 <li class="chapter" data-level="2.7" data-path="annotations.html"><a href="annotations.html"><i class="fa fa-check"></i><b>2.7</b> Annotations</a></li>
 </ul></li>
 <li class="chapter" data-level="3" data-path="subplot.html"><a href="subplot.html"><i class="fa fa-check"></i><b>3</b> The subplot() function</a><ul>
@@ -160,7 +168,11 @@ code > span.in { color: #60a0b0; font-weight: bold; font-style: italic; } /* Inf
 <li class="chapter" data-level="4.3" data-path="current-limitations.html"><a href="current-limitations.html"><i class="fa fa-check"></i><b>4.3</b> Current limitations</a></li>
 </ul></li>
 <li class="chapter" data-level="5" data-path="animation.html"><a href="animation.html"><i class="fa fa-check"></i><b>5</b> Animation</a></li>
-<li class="chapter" data-level="6" data-path="shiny.html"><a href="shiny.html"><i class="fa fa-check"></i><b>6</b> shiny</a></li>
+<li class="chapter" data-level="6" data-path="shiny.html"><a href="shiny.html"><i class="fa fa-check"></i><b>6</b> shiny</a><ul>
+<li class="chapter" data-level="6.1" data-path="accessing-user-events.html"><a href="accessing-user-events.html"><i class="fa fa-check"></i><b>6.1</b> Accessing user events</a></li>
+<li class="chapter" data-level="6.2" data-path="routing-user-events.html"><a href="routing-user-events.html"><i class="fa fa-check"></i><b>6.2</b> Routing user events</a></li>
+<li class="chapter" data-level="6.3" data-path="advanced-usage-of-event-data.html"><a href="advanced-usage-of-event-data.html"><i class="fa fa-check"></i><b>6.3</b> Advanced usage of event data</a></li>
+</ul></li>
 <li class="chapter" data-level="7" data-path="accessing-plotly-js-events-in-r-without-shiny.html"><a href="accessing-plotly-js-events-in-r-without-shiny.html"><i class="fa fa-check"></i><b>7</b> Accessing plotly.js events in R, without shiny</a></li>
 <li class="chapter" data-level="8" data-path="plotly-interface-internals.html"><a href="plotly-interface-internals.html"><i class="fa fa-check"></i><b>8</b> plotly interface internals</a><ul>
 <li class="chapter" data-level="8.1" data-path="ensuring-type-safety-in-data-transfer.html"><a href="ensuring-type-safety-in-data-transfer.html"><i class="fa fa-check"></i><b>8.1</b> Ensuring type safety in data transfer</a></li>
@@ -204,8 +216,8 @@ code > span.in { color: #60a0b0; font-weight: bold; font-style: italic; } /* Inf
 <span class="st">      gd.on(&#39;plotly_hover&#39;, function(pt) { console.log(&#39;hover&#39;, pt); });</span>
 <span class="st">    }</span>
 <span class="st">  &quot;</span>)</code></pre></div>
-<div id="htmlwidget-41c44fffc72c097d0b99" style="width:576px;height:355.968px;" class="plotly html-widget"></div>
-<script type="application/json" data-for="htmlwidget-41c44fffc72c097d0b99">{"x":{"layout":{"margin":{"b":40,"l":60,"t":25,"r":10},"xaxis":{"domain":[0,1],"title":"wt"},"yaxis":{"domain":[0,1],"title":"mpg"},"hovermode":"closest"},"config":{"modeBarButtonsToRemove":["sendDataToCloud"]},"base_url":"https://plot.ly","source":"A","data":[{"x":[2.62,2.875,2.32,3.215,3.44,3.46,3.57,3.19,3.15,3.44,3.44,4.07,3.73,3.78,5.25,5.424,5.345,2.2,1.615,1.835,2.465,3.52,3.435,3.84,3.845,1.935,2.14,1.513,3.17,2.77,3.57,2.78],"y":[21,21,22.8,21.4,18.7,18.1,14.3,24.4,22.8,19.2,17.8,16.4,17.3,15.2,10.4,10.4,14.7,32.4,30.4,33.9,21.5,15.5,15.2,13.3,19.2,27.3,26,30.4,15.8,19.7,15,21.4],"type":"scatter","mode":"markers","marker":{"fillcolor":"rgba(31,119,180,1)","color":"rgba(31,119,180,1)","line":{"color":"transparent"}},"xaxis":"x","yaxis":"y"}]},"evals":[],"jsHooks":{"render":[{"code":"\n    function(el, x) {\n      var gd = document.getElementById(el.id);\n      gd.on('plotly_hover', function(pt) { console.log('hover', pt); });\n    }\n  ","data":null}]}}</script>
+<div id="htmlwidget-3d05ab49cbb7db7a3f1c" style="width:576px;height:355.968px;" class="plotly html-widget"></div>
+<script type="application/json" data-for="htmlwidget-3d05ab49cbb7db7a3f1c">{"x":{"layout":{"margin":{"b":40,"l":60,"t":25,"r":10},"xaxis":{"domain":[0,1],"title":"wt"},"yaxis":{"domain":[0,1],"title":"mpg"},"hovermode":"closest"},"config":{"modeBarButtonsToRemove":["sendDataToCloud"]},"base_url":"https://plot.ly","source":"A","data":[{"x":[2.62,2.875,2.32,3.215,3.44,3.46,3.57,3.19,3.15,3.44,3.44,4.07,3.73,3.78,5.25,5.424,5.345,2.2,1.615,1.835,2.465,3.52,3.435,3.84,3.845,1.935,2.14,1.513,3.17,2.77,3.57,2.78],"y":[21,21,22.8,21.4,18.7,18.1,14.3,24.4,22.8,19.2,17.8,16.4,17.3,15.2,10.4,10.4,14.7,32.4,30.4,33.9,21.5,15.5,15.2,13.3,19.2,27.3,26,30.4,15.8,19.7,15,21.4],"type":"scatter","mode":"markers","marker":{"fillcolor":"rgba(31,119,180,1)","color":"rgba(31,119,180,1)","line":{"color":"transparent"}},"xaxis":"x","yaxis":"y"}]},"evals":[],"jsHooks":{"render":[{"code":"\n    function(el, x) {\n      var gd = document.getElementById(el.id);\n      gd.on('plotly_hover', function(pt) { console.log('hover', pt); });\n    }\n  ","data":null}]}}</script>
 
 </div>
             </section>
@@ -213,7 +225,7 @@ code > span.in { color: #60a0b0; font-weight: bold; font-style: italic; } /* Inf
           </div>
         </div>
       </div>
-<a href="shiny.html" class="navigation navigation-prev " aria-label="Previous page"><i class="fa fa-angle-left"></i></a>
+<a href="advanced-usage-of-event-data.html" class="navigation navigation-prev " aria-label="Previous page"><i class="fa fa-angle-left"></i></a>
 <a href="plotly-interface-internals.html" class="navigation navigation-next " aria-label="Next page""><i class="fa fa-angle-right"></i></a>
 
 <script src="libs/gitbook/js/app.min.js"></script>
