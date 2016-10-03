@@ -1,0 +1,550 @@
+# The plotly cookbook
+
+This chapter demonstrates the capabilities of `plot_ly()` through a series of examples. The `plot_ly()` function does provide a direct interface to plotly.js, so anything in [the figure reference](https://plot.ly/r/reference/) can be specified via `plot_ly()`, but this chapter will focus more on the semantics unique to the R package that can't be found on the figure reference. Along the way, we will touch on some best practices in visualization.
+
+## Scatter traces
+
+A plotly visualization is composed of one (or more) trace(s), and every trace has a `type`. The default trace type, "scatter", can be used to draw a large amount of geometries, and actually powers many of the `add_*()` functions such as `add_markers()`, `add_lines()`, `add_paths()`, `add_segments()`, `add_ribbons()`, and `add_polygons()`. Among other things, these functions make assumptions about the [mode](https://plot.ly/r/reference/#scatter-mode) of the scatter trace, but any valid attribute(s) listed under the [scatter section of the figure reference](https://plot.ly/r/reference/#scatter) may be used to override defaults.
+
+You may notice some arguments are related to items in the in the figure reference, but are not listed (e.g., `color`/`colors`, `symbol`/`symbols`, `linetype`/`linetypes`, `size`/`sizes`). These arguments (documented on the help page `help(plot_ly)`) are unique to the R package and make it easier to scale data values to visual aesthetics. Generally speaking, the singular form of the argument defines the domain of the scale (data) and the plural form defines the range of the scale (visuals). To make it easier to alter default visual aesthetics (e.g., change all points from blue to black), interprets "AsIs" values (values wrapped with the `I()` function) as values that already live in visual space, and thus do not need to be scaled. The next section on scatterplots explores detailed use of the `color`/`colors`, `symbol`/`symbols`, & `size`/`sizes` arguments. The section on [lineplots](#line-plots) explores detailed use of the `linetype`/`linetypes`.
+
+### Scatterplots
+
+The scatterplot is useful for visualizing the correlation between two quantitative variables. If you supply a numeric vector for x and y in `plot_ly()`, it defaults to a scatterplot, but you can also be explicit about adding a layer of markers/points via the `add_markers()` function. A common problem with scatterplots is overplotting, meaning that there are multiple observations occupying the same (or similar) x/y locations. There are a few ways to combat overplotting including: alpha transparency, hollow symbols, and [2D density estimation](#rectangular-binning-in-R). Figure \@ref(fig:scatterplots) shows how alpha transparency and hollow symbols can provide an improvment over the default. 
+
+```{r scatterplots, fig.cap = "Three versions of a basic scatterplot"}
+subplot(
+  plot_ly(mpg, x = ~cty, y = ~hwy, name = "default"),
+  plot_ly(mpg, x = ~cty, y = ~hwy) %>% add_markers(alpha = 0.2, name = "alpha"),
+  plot_ly(mpg, x = ~cty, y = ~hwy) %>% add_markers(symbol = I(1), name = "hollow")
+)
+```
+
+In Figure \@ref(fig:scatterplots), hollow circles are specified via `symbol = I(1)`. By default, the `symbol` argument (as well as the `color`/`size`/`linetype` arguments) assumes value(s) are "data", which need to be mapped to a visual palette (provided by `symbols`). Wrapping values with the `I()` function notifies `plot_ly()` that these values should be taken "AsIs". If you compare the result of `plot(1:25, 1:25, pch = 1:25)` to Figure \@ref(fig:pch), you'll see that `plot_ly()` can translate R's plotting characters (pch), but you can also use [plotly.js' symbol syntax](https://plot.ly/r/reference/#scatter-marker-symbol), if you desire.
+
+```{r pch, fig.cap = "Specifying symbol in a scatterplot"}
+subplot(
+  plot_ly(x = 1:25, y = 1:25, symbol = I(1:25), name = "pch"),
+  plot_ly(mpg, x = ~cty, y = ~hwy, symbol = ~cyl, symbols = 1:3, name = "cyl")
+)
+```
+
+When mapping a numeric variable to `symbol`, it creates only one trace, so no legend is generated. If you do want one trace per symbol, make sure the variable you're mapping is a factor, as Figure \@ref(fig:symbol-factor) demonstrates. When plotting multiple traces, the default plotly.js color scale will apply, but you can set the color of every trace generated from this layer with `color = I("black")`, or similar.
+
+```{r symbol-factor, fig.cap = "Mapping symbol to a factor"}
+p <- plot_ly(mpg, x = ~cty, y = ~hwy, alpha = 0.3) 
+subplot(
+  add_markers(p, symbol = ~cyl, name = "A single trace"),
+  add_markers(p, symbol = ~factor(cyl), color = I("black"))
+)
+```
+
+The `color` argument adheres to similar rules as `symbol`:
+
+* If numeric, `color` produces one trace, but [colorbar](https://plot.ly/r/reference/#scatter-marker-colorbar) is also generated to aide the decoding of colors back to data values. The `colorbar()` function can be used to customize the appearance of this automatically generated guide. The default colorscale is viridis, a perceptually-uniform colorscale (even when converted to black-and-white), and perceivable even to those with common forms of color blindness [@viridis].
+
+* If discrete, `color` produces one trace per value, meaning a [legend](https://plot.ly/r/reference/#layout-legend) is generated. If an ordered factor, the default colorscale is viridis [@viridisLite]; otherwise, it is the "Set2" palette from the __RColorBrewer__ package [@RColorBrewer]
+
+```{r, color-types, fig.cap = "Variations on a numeric color mapping."}
+p <- plot_ly(mpg, x = ~cty, y = ~hwy, alpha = 0.5)
+subplot(
+  add_markers(p, color = ~cyl, showlegend = FALSE) %>% 
+    colorbar(title = "Viridis", len = 1/2, y = 1),
+  add_markers(p, color = ~factor(cyl))
+) %>% layout(showlegend = TRUE)
+```
+
+There are a number of ways to alter the default colorscale via the `colors` argument. This argument excepts: (1) a color brewer palette name (see the row names of `RColorBrewer::brewer.pal.info` for valid names), (2) a vector of colors to interpolate, or (3) a color interpolation function like `colorRamp()` or `scales::colour_ramp()`. Although this grants a lot of flexibility, one should be concious of using a sequential colorscale for numeric variables (& ordered factors) as shown in \@ref(fig:color-numeric), and a qualitative colorscale for discrete variables as shown in \@ref(fig:color-discrete). (TODO: touch on lurking variables?)
+
+```{r color-numeric, fig.cap = "Three variations on a numeric color mapping"}    
+subplot(
+  add_markers(p, color = ~cyl, colors = c("#132B43", "#56B1F7")) %>%
+    colorbar(title = "ggplot2 default", len = 1/3, y = 1),
+  add_markers(p, color = ~cyl, colors = viridisLite::inferno(10)) %>% 
+    colorbar(title = "Inferno", len = 1/3, y = 2/3),
+  add_markers(p, color = ~cyl, colors = colorRamp(c("red", "white", "blue"))) %>% 
+    colorbar(title = "colorRamp", len = 1/3, y = 1/3)
+)
+```
+
+```{r color-discrete, fig.cap = "Three variations on a discrete color mapping"}         
+subplot(
+  add_markers(p, color = ~factor(cyl), colors = "Pastel1"),
+  add_markers(p, color = ~factor(cyl), colors = colorRamp(c("red", "blue"))),
+  add_markers(p, color = ~factor(cyl), 
+              colors = c(`4` = "red", `5` = "black", `6` = "blue", `8` = "green"))
+) %>% layout(showlegend = FALSE)
+```
+
+For scatterplots, the `size` argument controls the area of markers (unless otherwise specified via [sizemode](https://plot.ly/r/reference/#scatter-marker-sizemode)), and _must_ be a numeric variable. The `sizes` argument controls the minimum and maximum size of circles, in pixels:
+
+```{r}
+subplot(
+  add_markers(p, size = ~cyl, name = "default"),
+  add_markers(p, size = ~cyl, sizes = c(1, 500), name = "custom")
+)
+```
+
+#### 3D scatterplots
+
+To make a 3D scatterplot, just add a `z` attribute:
+
+```{r 3D-scatterplot, fig.cap = "A 3D scatterplot"}
+plot_ly(mpg, x = ~cty, y = ~hwy, z = ~cyl) %>%
+  add_markers(color = ~cyl)
+```
+
+#### Scatterplot matrices
+
+I currently recommend creating scatterplot matrices via the `ggpairs()` function from the **GGally** package [@GGally] and using the `ggplotly()` function to convert it.
+
+```{r, fig.asp = 1, fig.width = 8}
+pm <- GGally::ggpairs(iris)
+ggplotly(pm)
+```
+
+### Dotplots & error bars
+
+A dotplot is similar to a scatterplot, except instead of two numeric axes, one is categorical. The usual goal of a dotplot is to compare value(s) on a numerical scale over numerous categories. In this context, dotplots are preferrable to pie charts since comparing position along a common scale is much easier than comparing angle or area [@graphical-perception]; [@crowdsourcing-graphical-perception]. Furthermore, dotplots can be preferrable to bar charts, especially when comparing values within a narrow range far away from 0 [@few-values]. Also, when presenting point estimates, and uncertainty associated with those estimates, bar charts tend to exaggerate the difference in point estimates, and lose focus on uncertainty [@messing].
+
+A popular application for dotplots (with error bars) is the so-called "coefficient plot" for visualizing the point estimates of coefficients and their standard error. The `coefplot()` function in the **coefplot** package [@coefplot] and the `ggcoef()` function in the **GGally** both produce coefficient plots for many types of model objects in R using **ggplot2**, which we can translate to plotly via `ggplotly()`. Since these packages use points and segments to draw the coefficient plots, the hover information is not the best, and it'd be better to use [error objects](https://plot.ly/r/reference/#scatter-error_x). Figure \@ref(fig:coefplot) uses the `tidy()` function from the **broom** package [@broom] to obtain a data frame with one row per model coefficient, and produce a coefficient plot with error bars along the x-axis. 
+
+```{r coefplot, fig.cap = "A coefficient plot"}
+m <- lm(Sepal.Length ~ Sepal.Width * Petal.Length * Petal.Width, data = iris)
+# arrange by estimate, then make term a factor to order categories in the plot
+d <- broom::tidy(m) %>% 
+  arrange(desc(estimate)) %>%
+  mutate(term = factor(term, levels = term))
+plot_ly(d, x = ~estimate, y = ~term) %>%
+  add_markers(error_x = ~list(value = std.error)) %>%
+  layout(margin = list(l = 200))
+```
+
+### Line plots
+
+This section surveys useful applications of `add_lines()` and `add_paths()`. The only difference between these functions is that `add_lines()` connects x/y pairs from left to right, instead of the order in which the data appears. Both functions understand the `color`, `linetype`, and `alpha` attributes^[plotly.js currently [does not support data arrays for `scatter.line.width` or `scatter.line.color`](https://github.com/plotly/plotly.js/issues/147), meaning a single line trace can only have one width/color in 2D line plot, and consequently numeric `color`/`size` mappings won't work], as well as groupings defined by `group_by()`.
+
+Figure \@ref(fig:houston) uses `group_by()` to plot one line per city in the `txhousing` dataset using a _single_ trace. Since there can only be one tooltip per trace, hovering over that plot does not reveal useful information. Although plotting many traces can be computationally expensive, it is necessary in order to display better information on hover. Since the `color` argument produces one trace per value (if the variable (`city`) is discrete), hovering on Figure \@ref(fig:many-traces) reveals the top ~10 cities at a given x value. Since 46 colors is too many to perceive in a single plot, Figure \@ref(fig:many-traces) also restricts the set of possible `colors` to black. 
+
+```{r many-traces, fig.cap = "Median house sales with one trace per city."}
+plot_ly(txhousing, x = ~date, y = ~median) %>%
+  add_lines(color = ~city, colors = "black", alpha = 0.2)
+```
+
+Generally speaking, it's hard to perceive more than 8 different colors/linetypes/symbols in a given plot, so sometimes we have to filter data to use these effectively. Here we use the **dplyr** package to find the top 5 cities in terms of average monthly sales (`top5`), then effectively filter the original data to contain just these cities via `semi_join()`. Once we have the data is filtered, mapping city to `color` or `linetype` is trivial. The color palette can be altered via the `colors` argument, and follows the same rules as [scatterplots](#scatterplots). The linetype palette can be altered via the `linetypes` argument, and accepts R's [`lty` values](https://github.com/wch/r-source/blob/e5b21d0397c607883ff25cca379687b86933d730/src/library/graphics/man/par.Rd#L726-L743) or plotly.js [dash values](https://plot.ly/r/reference/#scatter-line-dash).
+
+```{r}
+library(dplyr)
+top5 <- txhousing %>%
+  group_by(city) %>%
+  summarise(m = mean(sales, na.rm = TRUE)) %>%
+  arrange(desc(m)) %>%
+  top_n(5)
+
+p <- semi_join(txhousing, top5) %>%
+  plot_ly(x = ~date, y = ~median)
+
+subplot(
+  add_lines(p, color = ~city),
+  add_lines(p, linetype = ~city),
+  shareX = TRUE, nrows = 2
+)
+```
+
+#### Density plots
+
+In [Bars & histograms](#bars-histograms), we leveraged a number of algorithms in R for computing the "optimal" number of bins for a histogram, via `hist()`, and routing those results to `add_bars()`.
+
+```{r}
+kerns <- c("gaussian", "epanechnikov", "rectangular", 
+          "triangular", "biweight", "cosine", "optcosine")
+p <- plot_ly()
+for (k in kerns) {
+  d <- density(txhousing$median, kernel = k, na.rm = TRUE)
+  p <- add_lines(p, x = d$x, y = d$y, name = k)
+}
+layout(p, xaxis = list(title = "Median monthly price"))
+```
+
+
+
+```{r, eval = FALSE, echo = FALSE}
+# devtools::install_github("ropensci/plotly#741")
+bws <- seq(1, 10, seq = 1)
+p <- plot_ly()
+for (i in seq_along(bws)) {
+  d <- density(txhousing$median, bw = bws[[i]], na.rm = TRUE)
+  p <- p %>% add_lines(x = d$x, y = d$y, frame = bws[[1]])
+}
+p
+```
+
+
+#### Parallel Coordinates
+
+One very useful, but often overlooked, visualization technique is the parallel coordinates plot. Parallel coordinates provide a way to compare values along a common (or non-aligned) positional scale(s) -- the most basic of all perceptual tasks -- in more than 3 dimensions [@graphical-perception]. Usually each line represents every measurement for a given row (or observation) in a data set. When measurements are on very different scales, some care must be taken, and variables must transformed to be put on a common scale. As Figure \@ref(fig:pcp-common) shows, even when variables are measured on a similar scale, it can still be a informative to transform variables in different ways.
+
+```{r pcp-common, fig.width = 8, fig.cap = "Parallel coordinates plots of the Iris dataset. On the left is the raw measurements. In the middle, each variable is scaled to have mean of 0 and standard deviation of 1. On the right, each variable is scaled to have a minimum of 0 and a maximum of 1."}
+iris$obs <- seq_len(nrow(iris))
+iris_pcp <- function(transform = identity) {
+  iris[] <- purrr::map_if(iris, is.numeric, transform)
+  tidyr::gather(iris, variable, value, -Species, -obs) %>% 
+    group_by(obs) %>% 
+    plot_ly(x = ~variable, y = ~value, color = ~Species) %>% 
+    add_lines(alpha = 0.3)
+}
+subplot(
+  iris_pcp(), 
+  iris_pcp(scale),
+  iris_pcp(scales::rescale)
+) %>% hide_legend()
+```
+
+It is also worth noting that the **GGally** offers a `ggparcoord()` function which creates parallel coordinate plots via **ggplot2**, which we can convert to plotly via `ggplotly()`. In [linked highlighting](#linked-highlighting), parallel coordinates are linked to lower dimensional (but sometimes higher resolution) graphics of related data to guide multi-variate data exploration.
+
+#### 3D line plots
+
+To make a 3D line plot, just add a `z` attribute (in addition to `x` and `y`):
+
+```{r 3D-lines, fig.cap = "A 3D scatterplot"}
+plot_ly(mpg, x = ~cty, y = ~hwy, z = ~cyl) %>%
+  add_lines(color = ~displ)
+```
+
+### Segments
+
+The `add_segments()` function essentially provides a way to connect two points ((`x`, `y`) to (`xend`, `yend`)) with a line. Segments form the building blocks for many useful chart types, including candlestick charts, a popular way to visualize stock prices. Figure \@ref(fig:candlestick) uses the **quantmod** package [@quantmod] to obtain stock price data for Microsoft and plots two segments for each day: one to encode the opening/closing values, and one to encode the daily high/low.
+
+```{r candlestick, fig.cap = "A candelstick chart"}
+library(quantmod)
+msft <- getSymbols("MSFT", auto.assign = F)
+dat <- as.data.frame(msft)
+dat$date <- index(msft)
+dat <- subset(dat, date >= "2016-01-01")
+
+names(dat) <- sub("^MSFT\\.", "", names(dat))
+
+plot_ly(dat, x = ~date, xend = ~date, color = ~Close > Open, 
+        colors = c("red", "forestgreen"), hoverinfo = "none") %>%
+  add_segments(y = ~Low, yend = ~High, size = I(1)) %>%
+  add_segments(y = ~Open, yend = ~Close, size = I(3)) %>%
+  layout(showlegend = FALSE, yaxis = list(title = "Price")) %>%
+  rangeslider()
+```
+
+### Ribbons
+
+Ribbons are useful for showing uncertainy bounds as a function of x. The `add_ribbons()` function creates ribbons and requires the arguments: `ymin` and `ymax`. The `augment()` function from the **broom** package appends observational-level model components (e.g., fitted values stored as a new column `.fitted`) which is useful for extracting those components in a form that is convenient for visualization. 
+
+```{r}
+m <- lm(mpg ~ wt, data = mtcars)
+broom::augment(m) %>%
+  plot_ly(x = ~wt, showlegend = FALSE) %>%
+  add_markers(y = ~mpg, color = I("black")) %>%
+  add_ribbons(ymin = ~.fitted - 1.96 * .se.fit, 
+              ymax = ~.fitted + 1.96 * .se.fit, color = I("gray80")) %>%
+  add_lines(y = ~.fitted, color = I("steelblue"))
+```
+
+### Polygons
+
+The `add_polygons()` function is essentially equivalent to `add_paths()` with the [fill](https://plot.ly/r/reference/#scatter-fill) attribute set to "toself". Polygons from the basis for other, higher-level, geometries such as `add_ribbons()`, but can be useful in their own right. 
+
+```{r map-canada, "A map of Canada using the default cartesian coordinate system."}
+map_data("world", "canada") %>%
+  group_by(group) %>%
+  plot_ly(x = ~long, y = ~lat, alpha = 0.2) %>%
+  add_polygons(hoverinfo = "none", color = I("black")) %>%
+  add_markers(text = ~paste(name, "<br />", pop), hoverinfo = "text", 
+              color = I("red"), data = maps::canada.cities) %>%
+  layout(showlegend = FALSE)
+```
+
+## Maps
+
+### Using scatter traces
+
+As shown in [polygons](#polygons), it is possible to create maps using plotly's default (cartesian) coordinate system, but plotly.js also has support for plotting [scatter traces](#scatter-traces) on top of either a [custom geo layout](https://plot.ly/r/reference/#layout-geo) or a [mapbox layout](https://plot.ly/r/reference/#layout-mapbox). Figure \@ref(fig:maps) compares the three different layout options in a single subplot.
+
+```{r maps, fig.width = 8, fig.cap = "A few maps"}
+dat <- map_data("world", "canada") %>% group_by(group)
+
+map1 <- plot_ly(dat, x = ~long, y = ~lat) %>% 
+  add_paths(size = I(1)) %>%
+  add_segments(x = -100, xend = -50, y = 50, 75)
+
+map2 <- plot_mapbox(dat, x = ~long, y = ~lat) %>% 
+  add_paths(size = I(2)) %>%
+  add_segments(x = -100, xend = -50, y = 50, 75) %>%
+  layout(mapbox = list(zoom = 0,
+      center = list(lat = ~median(lat), lon = ~median(long))
+   ))
+
+# geo() is the only object type which supports different map projections
+map3 <- plot_geo(dat, x = ~long, y = ~lat) %>% 
+  add_markers(size = I(1)) %>%
+  add_segments(x = -100, xend = -50, y = 50, 75) %>%
+  layout(geo = list(projection = list(type = "mercator")))
+
+subplot(map1, map2) %>%
+  subplot(map3, nrows = 2) %>% 
+  hide_legend()
+```
+
+Any of the `add_*()` functions found under [scatter traces](https://cpsievert.github.io/plotly_book/scatter-traces.html) should work as expected on plotly-geo (initialized via `plot_geo()`) or plotly-mapbox (initialized via `plot_mapbox()`) objects. You can think of `plot_geo()` and `plot_mapbox()` as special cases (or more opiniated versions) of `plot_ly()`. For one, they won't allow you to mix scatter and non-scatter traces in a single plot object, which you probably don't want to do anyway. In order to enable Figure \@ref(fig:maps), plotly.js _can't_ make this restriction, but since we have `subplot()` in R, we _can_ make this restriction without sacrificing flexibility.
+
+### Choropleths
+
+In addition to scatter traces, plotly-geo objects can also create a [choropleth](https://plot.ly/r/reference/#choropleth) trace/layer. Figure \@ref(fig:us-density) shows the population density of the U.S. via a choropleth, and also layers on markers for the state center locations, using the U.S. state data from the **datasets** package [@base]. By simply providing a [`z`](https://plot.ly/r/reference/#choropleth-z) attribute, plotly-geo objects will try to create a choropleth, but you'll also need to provide [`locations`](https://plot.ly/r/reference/#choropleth-locations) and a [`locationmode`](https://plot.ly/r/reference/#choropleth-locationmode).
+
+```{r us-density, fig.cap = "A map of U.S. population density using the `state.x77` data from the **datasets** package."}
+density <- state.x77[, "Population"] / state.x77[, "Area"]
+
+g <- list(
+  scope = 'usa',
+  projection = list(type = 'albers usa'),
+  lakecolor = toRGB('white')
+)
+
+plot_geo() %>%
+  add_trace(
+    z = ~density, text = state.name,
+    locations = state.abb, locationmode = 'USA-states'
+  ) %>%
+  add_markers(
+    x = state.center[["x"]], y = state.center[["y"]], 
+    size = I(2), symbol = I(8), color = I("white"), hoverinfo = "none"
+  ) %>%
+  layout(geo = g)
+```
+
+## Bars & histograms
+
+The `add_bars()` and `add_histogram()` functions wrap the [bar](https://plot.ly/r/reference/#bar) and [histogram](https://plot.ly/r/reference/#histogram) plotly.js trace types. The main difference between them is that bar traces require bar heights (both `x` and `y`), whereas histogram traces require just a single variable, and plotly.js handles binning in the browser.^[This has some interesting applications for [linked highlighting](#linked-highlighting) as it allows for summary statistics to be computed on-the-fly based on a selection] And perhaps confusingly, both of these functions can be used to visualize the distribution of either a numeric or a discrete variable. So, essentially, the only difference between them is where the binning occurs.
+
+Figure \@ref(fig:numeric) compares the default binning algorithm in plotly.js to a few different algorithms available in R via the `hist()` function. Although plotly.js has the ability to customize histogram bins via [xbins](https://plot.ly/r/reference/#histogram-xbins)/[ybins](https://plot.ly/r/reference/#histogram-ybins), R has diverse facilities for estimating the optimal number of bins in a histogram that we can easily leverage.^[Optimal in this context is the number of bins which minimizes the distance between the empirical histogram and the underlying density.] The `hist()` function alone allows us to reference 3 famous algorithms by name [@Sturges]; [@FD]; [@hist-scott], but there are also packages (e.g. the **histogram** package) which extend this interface to incorporate more methodology [@histogram]. The `price_hist()` function below wraps the `hist()` function to obtain the binning results, and map those bins to a plotly version of the histogram using `add_bars()`.
+
+```{r numeric, fig.cap = "plotly.js's default binning algorithm versus R's `hist()` default"}
+p1 <- plot_ly(diamonds, x = ~price) %>% add_histogram(name = "plotly.js")
+
+price_hist <- function(method = "FD") {
+  h <- hist(diamonds$price, breaks = method, plot = FALSE)
+  plot_ly(x = h$mids, y = h$counts) %>% add_bars(name = method)
+}
+
+subplot(
+  p1, price_hist(), price_hist("Sturges"),  price_hist("Scott"),
+  nrows = 4, shareX = TRUE
+)
+```
+
+Figure \@ref(fig:discrete) demonstrates two ways of creating a basic bar chart. Although the visual results are the same, its worth noting the difference in implementation. The `add_histogram()` function sends all of the observed values to the browser and lets plotly.js perform the binning. It takes more human effort to perform the binning in R, but doing so has the benefit of sending less data, and requiring less computation work of the web browser. In this case, we have only about 50,000 records, so there is much of a difference in page load times or page size. However, with 1 Million records, page load time more than doubles and page size nearly doubles.^[These tests were run on Google Chrome and loaded a page with a single bar chart. [Here](https://www.webpagetest.org/result/160924_DP_JBX/) are the results for `add_histogram()` and [here](https://www.webpagetest.org/result/160924_QG_JA1/) are the results for `add_bars()` ]
+
+```{r discrete, fig.cap = "Number of diamonds by cut."}
+p1 <- plot_ly(diamonds, x = ~cut) %>% add_histogram()
+
+p2 <- diamonds %>%
+  dplyr::count(cut) %>%
+  plot_ly(x = ~cut, y = ~n) %>% 
+  add_bars()
+
+subplot(p1, p2) %>% hide_legend()
+```
+
+### Multiple numeric distributions
+
+It is often useful to see how the numeric distribution changes with respect to a discrete variable. When using bars to visualize multiple numeric distributions, I recommend plotting each distribution on its own axis, rather than trying to overlay them on a single axis.^[It's much easier to visualize multiple numeric distributions on a single axis using [lines](#lines)]. This is where the [`subplot()` infrastructure](#subplot), and its support for trellis displays, comes in handy. Figure \@ref(fig:many-prices) shows a trellis display of diamond price by diamond color. Note how the `one_plot()` function defines what to display on each panel, then a split-apply-recombine strategy is employed to generate the trellis display.
+
+```{r many-prices, fig.cap = "A trellis display of diamond price by diamond color."}
+one_plot <- function(d) {
+  plot_ly(d, x = ~price) %>%
+    add_annotations(
+      ~paste("Clarity:", unique(clarity)), x = 0.5, y = 1, 
+      xref = "paper", yref = "paper", showarrow = FALSE
+    )
+}
+
+diamonds %>%
+  split(.$clarity) %>%
+  lapply(one_plot) %>% 
+  subplot(nrows = 2, shareX = TRUE, titleX = FALSE) %>%
+  hide_legend()
+```
+
+
+### Multiple discrete distributions
+
+Visualizing multiple discrete distributions is difficult. The subtle complexity is due to the fact that both counts and proportions are important for understanding multi-variate discrete distributions. Figure \@ref(fig:cut-by-clarity) presents diamond counts, divided by both their cut and clarity, using a grouped bar chart. 
+
+```{r cut-by-clarity, fig.cap = "A grouped bar chart"}
+plot_ly(diamonds, x = ~cut, color = ~clarity) %>%
+  add_histogram()
+```
+
+Figure \@ref(fig:cut-by-clarity) is useful for comparing the number of diamonds by clarity, given a type of cut. For instance, within "Ideal" diamonds, a cut of "VS1" is most popular, "VS2" is second most popular, and "I1" the least popular. The distribution of clarity within "Ideal" diamonds seems to be fairly similar to other diamonds, but it's hard to make this comparison using raw counts. Figure \@ref(fig:cut-by-clarity-prop) makes this comparison easier by showing the relative frequency of diamonds by clarity, given a cut. 
+
+```{r cut-by-clarity-prop, fig.cap = "A stacked bar chart showing the proportion of clarity within "}
+# number of diamonds by cut and clarity (n)
+cc <- count(diamonds, cut, clarity)
+# number of diamonds by cut (nn)
+cc2 <- left_join(cc, count(cc, cut, wt = n))
+cc2 %>%
+  mutate(prop = n / nn) %>%
+  plot_ly(x = ~cut, y = ~prop, color = ~clarity) %>%
+  add_bars() %>%
+  layout(barmode = "stack")
+```
+
+
+This type of plot, also known as a spine plot, is a special case of a mosaic plot. In a mosaic plot, you can scale both bar widths and heights according to discrete distributions. For mosaic plots, I recommend using the **ggmosaic** package [@ggmosaic], which implements a custom **ggplot2** geom designed for mosaic plots, which we can convert to plotly via `ggplotly()`. Figure \@ref(fig:ggmosaic) show a mosaic plot of cut by clarity. Notice how the bar widths are scaled proportional to the cut frequency.
+
+
+```{r ggmosaic, error = TRUE, fig.cap = "Using ggmosaic and ggplotly() to create advanced interactive visualizations of categorical data"}
+library(ggmosaic)
+p <- ggplot(data = cc) +
+  geom_mosaic(aes(weight = n, x = product(cut), fill = clarity))
+ggplotly(p)
+```
+
+## Boxplots
+
+Boxplots encode the five number summary of a numeric variable, and are more efficient than [trellis displays of histograms](multiple-numeric-distributions) for comparing many numeric distributions. The `add_boxplot()` function requires one numeric variable, and guarantees boxplots are [oriented](https://plot.ly/r/reference/#box-orientation) correctly, regardless of whether the numeric variable is placed on the x or y scale. As Figure \@ref(fig:cut-boxes) shows, on the axis orthogonal to the numeric axis, you can provide a discrete variable (for conditioning) or supply a single value (to name the axis category).
+
+```{r cut-boxes, fig.cap = "Overall diamond price and price by cut."}
+p <- plot_ly(diamonds, y = ~price, color = I("black"), 
+             alpha = 0.1, boxpoints = "suspectedoutliers")
+p1 <- p %>% add_boxplot(x = "Overall")
+p2 <- p %>% add_boxplot(x = ~cut)
+subplot(
+  p1, p2, shareY = TRUE,
+  widths = c(0.2, 0.8), margin = 0
+) %>% hide_legend()
+```
+
+If you want to partition by more than one discrete variable, I recommend mapping the interaction of those variables to the discrete axis, and coloring by the nested variable, as Figure \@ref(fig:cut-by-clarity-boxes) does with diamond clarity and cut.
+
+```{r cut-by-clarity-boxes, fig.width = 8, fig.cap = "Diamond prices by cut and clarity."}
+plot_ly(diamonds, x = ~price, y = ~interaction(clarity, cut)) %>%
+  add_boxplot(color = ~clarity) %>%
+  layout(yaxis = list(title = ""), margin = list(l = 100))
+```
+
+It is also helpful to sort the boxplots according to something meaningful, such as the median price. Figure \@ref(fig:cut-by-clarity-boxes-sorted) presents the same information as Figure \@ref(fig:cut-by-clarity-boxes), but sorts the boxplots by their median, and makes it immediately clear that diamonds with a cut of "SI2" have the highest diamond price, on average.
+
+```{r cut-by-clarity-boxes-sorted, fig.width = 8, fig.cap = "Diamond prices by cut and clarity, sorted by price median."}
+d <- diamonds %>%
+  mutate(cc = interaction(clarity, cut))
+
+# interaction levels sorted by median price
+lvls <- d %>%
+  group_by(cc) %>%
+  summarise(m = median(price)) %>%
+  arrange(m) %>%
+  .[["cc"]]
+
+plot_ly(d, x = ~price, y = ~factor(cc, lvls)) %>%
+  add_boxplot(color = ~clarity) %>%
+  layout(yaxis = list(title = ""), margin = list(l = 100))
+```
+
+Similar to `add_histogram()`, `add_boxplot()` sends the raw data to the browser, and lets plotly.js compute summary statistics. Unfortunately, plotly.js does not yet allow precomputed statistics for boxplots.^[Follow the issue here <https://github.com/plotly/plotly.js/issues/242>]
+
+
+## 2D distributions
+
+### Rectangular binning in plotly.js
+
+The **plotly** package provides two functions for displaying rectangular bins: `add_heatmap()` and `add_histogram2d()`. For numeric data, the `add_heatmap()` function is a 2D analog of `add_bars()` (bins must be pre-computed), and the `add_histogram2d()` function is a 2D analog of `add_histogram()` (bins can be computed in the browser). Thus, I recommend `add_histogram2d()` for exploratory purposes, since you don't have to think about how to perform binning. It also provides a useful [`zsmooth`](https://plot.ly/r/reference/#histogram2d-zsmooth) attribute for effectively increasing the number of bins (currently, "best" performs a [bi-linear interpolation](https://en.wikipedia.org/wiki/Bilinear_interpolation), a type of nearest neighbors algorithm), and [nbinsx](https://plot.ly/r/reference/#histogram2d-nbinsx)/[nbinsy](https://plot.ly/r/reference/#histogram2d-nbinsy) attributes to set the number of bins in the x and/or y directions. Figure \@ref(fig:histogram2d) compares three different uses of `add_histogram()`: (1) plotly.js' default binning algorithm, (2) the default plus smoothing, (3) setting the number of bins in the x and y directions.
+
+```{r histogram2d, fig.cap = "Three different uses of `histogram2d()`"}
+p <- plot_ly(diamonds, x = ~log(carat), y = ~log(price))
+subplot(
+  add_histogram2d(p) %>%
+    colorbar(title = "default", len = 1/3, y = 1) %>%
+    layout(xaxis = list(title = "default")),
+  add_histogram2d(p, zsmooth = "best") %>%
+    colorbar(title = "zsmooth", len = 1/3, y = 2/3 - 0.05) %>%
+    layout(xaxis = list(title = "zsmooth")),
+  add_histogram2d(p, nbinsx = 60, nbinsy = 60) %>%
+    colorbar(title = "nbins", len = 1/3, y = 1/3 - 0.1) %>%
+    layout(xaxis = list(title = "nbins")),
+  shareY = TRUE, titleX = TRUE
+)
+```
+
+### Rectangular binning in R
+
+In [Bars & histograms](#bars-histograms), we leveraged a number of algorithms in R for computing the "optimal" number of bins for a histogram, via `hist()`, and routing those results to `add_bars()`. There is a surprising lack of research and computational tools for the 2D analog, and among the research that does exist, solutions usually depend on characteristics of the unknown underlying distribution, so the typical approach is to assume a Gaussian form [@mde]. Kernel density estimation is another non
+
+Practically speaking, that assumption is not very useful, but thankfully , and specifically the `kde2d()` function from the **MASS** package, provides a well-supported rule-of-thumb.
+
+```{r heatmap-corr-diamonds, fig.cap = "2D Density estimation via the `kde2d()` function"}
+kde_count <- function(x, y, ...) {
+  kde <- MASS::kde2d(x, y, ...)
+  df <- with(kde, setNames(expand.grid(x, y), c("x", "y")))
+  df$count <- with(kde, c(z) * length(x) * diff(x)[1] * diff(y)[1])
+  data.frame(df)
+}
+
+kd <- with(diamonds, kde_count(log(carat), log(price), n = 30))
+plot_ly(kd, x = ~x, y = ~y, z = ~count) %>% 
+  add_heatmap() %>%
+  colorbar(title = "Number of diamonds")
+```
+
+### Basic heatmaps
+
+The `add_heatmap()` function can also handle categorical x and y variables.
+
+```{r}
+corr <- cor(diamonds[vapply(diamonds, is.numeric, logical(1))])
+plot_ly(x = rownames(corr), y = colnames(corr), z = corr) %>%
+  add_heatmap() %>%
+  colorbar(limits = c(-1, 1))
+```
+
+A heatmap with categorical axes is basically a two-way table. The `Titanic` dataset is a four-way table that we can put into a tidy data frame using the `tidy()` function from the **broom** package.
+
+```{r}
+broom::tidy(Titanic) %>%
+  plot_ly(x = ~interaction(Age, Survived), y = ~interaction(Class, Sex)) %>%
+  add_heatmap(z = ~Freq)
+
+
+#one_heatmap <- function(d) {
+#  plot_ly(d, x = ~Class, y = ~Sex) %>% 
+#    add_heatmap(z = ~Freq) %>%
+#    add_annotations(
+#      ~unique(paste(Age, Survived, sep = ", ")), x = 0.5, y = 1, 
+#      yanchor = "bottom", xanchor = "middle",
+#      xref = "paper", yref = "paper", showarrow = FALSE
+#    )
+#}
+#
+#tidy(Titanic) %>%
+#  group_by(Age, Survived) %>%
+#  do(p = one_heatmap(.)) %>%
+#  subplot(
+#    nrows = 2, margin = c(0.01, 0.01, 0.04, 0.04),
+#    shareX = TRUE, shareY = TRUE, 
+#    titleY = FALSE, titleX = FALSE
+#  )
+```
+
+
+### Contours
+
+```{r}
+plot_ly(diamonds, x = ~cut, y = ~clarity) %>% 
+  add_histogram2dcontour()
+```
+
+## 3D plots
+
+### Surface
+
+### Mesh
+
+## Annotations
+
+The `add_annotations()` function

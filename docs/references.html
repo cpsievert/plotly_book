@@ -8,7 +8,7 @@
   <title>plotly for R</title>
   <meta content="text/html; charset=UTF-8" http-equiv="Content-Type">
   <meta name="description" content="An overview of the R package plotly">
-  <meta name="generator" content="bookdown 0.1.7 and GitBook 2.6.7">
+  <meta name="generator" content="bookdown 0.1.14 and GitBook 2.6.7">
 
   <meta property="og:title" content="plotly for R" />
   <meta property="og:type" content="book" />
@@ -25,6 +25,7 @@
 
 <meta name="author" content="Carson Sievert">
 
+  
 
 
   <meta name="viewport" content="width=device-width, initial-scale=1">
@@ -32,7 +33,7 @@
   <meta name="apple-mobile-web-app-status-bar-style" content="black">
   
   
-<link rel="prev" href="wrappers-for-domain-specific-viz.html">
+<link rel="prev" href="linking-views-without-shiny.html">
 
 
 <script src="libs/jquery/jquery.min.js"></script>
@@ -52,9 +53,16 @@
 <link href="libs/plotlyjs/plotly-htmlwidgets.css" rel="stylesheet" />
 <script src="libs/plotlyjs/plotly-latest.min.js"></script>
 <script src="libs/plotly-binding/plotly.js"></script>
+<script src="libs/crosstalk/js/crosstalk.js"></script>
 <link href="libs/jsoneditor/jsoneditor.min.css" rel="stylesheet" />
 <script src="libs/jsoneditor/jsoneditor.min.js"></script>
 <script src="libs/jsonedit-binding/jsonedit.js"></script>
+<link href="libs/leaflet/leaflet.css" rel="stylesheet" />
+<script src="libs/leaflet/leaflet.js"></script>
+<link href="libs/leafletfix/leafletfix.css" rel="stylesheet" />
+<link href="libs/leaflet-label/leaflet.label.css" rel="stylesheet" />
+<script src="libs/leaflet-label/leaflet.label.js"></script>
+<script src="libs/leaflet-binding/leaflet.js"></script>
 
 
 <style type="text/css">
@@ -158,32 +166,28 @@ code > span.in { color: #60a0b0; font-weight: bold; font-style: italic; } /* Inf
 </ul></li>
 <li class="chapter" data-level="2.7" data-path="annotations.html"><a href="annotations.html"><i class="fa fa-check"></i><b>2.7</b> Annotations</a></li>
 </ul></li>
-<li class="chapter" data-level="3" data-path="subplot.html"><a href="subplot.html"><i class="fa fa-check"></i><b>3</b> The subplot() function</a><ul>
+<li class="chapter" data-level="3" data-path="subplot.html"><a href="subplot.html"><i class="fa fa-check"></i><b>3</b> Arranging multiple views</a><ul>
 <li class="chapter" data-level="3.1" data-path="recursive-subplots.html"><a href="recursive-subplots.html"><i class="fa fa-check"></i><b>3.1</b> Recursive subplots</a></li>
 <li class="chapter" data-level="3.2" data-path="ggplot2-subplots.html"><a href="ggplot2-subplots.html"><i class="fa fa-check"></i><b>3.2</b> ggplot2 subplots</a></li>
 </ul></li>
-<li class="chapter" data-level="4" data-path="advanced-interactive-techniques.html"><a href="advanced-interactive-techniques.html"><i class="fa fa-check"></i><b>4</b> Advanced interactive techniques</a><ul>
-<li class="chapter" data-level="4.1" data-path="highlighting.html"><a href="highlighting.html"><i class="fa fa-check"></i><b>4.1</b> Highlighting</a></li>
-<li class="chapter" data-level="4.2" data-path="linked-highlighting.html"><a href="linked-highlighting.html"><i class="fa fa-check"></i><b>4.2</b> Linked highlighting</a></li>
-<li class="chapter" data-level="4.3" data-path="current-limitations.html"><a href="current-limitations.html"><i class="fa fa-check"></i><b>4.3</b> Current limitations</a></li>
+<li class="chapter" data-level="4" data-path="animating-views.html"><a href="animating-views.html"><i class="fa fa-check"></i><b>4</b> Animating views</a></li>
+<li class="chapter" data-level="5" data-path="multiple-linked-views.html"><a href="multiple-linked-views.html"><i class="fa fa-check"></i><b>5</b> Multiple linked views</a><ul>
+<li class="chapter" data-level="5.1" data-path="linking-views-with-shiny.html"><a href="linking-views-with-shiny.html"><i class="fa fa-check"></i><b>5.1</b> Linking views with shiny</a><ul>
+<li class="chapter" data-level="5.1.1" data-path="linking-views-with-shiny.html"><a href="linking-views-with-shiny.html#accessing-plotly-events"><i class="fa fa-check"></i><b>5.1.1</b> Accessing plotly events</a></li>
+<li class="chapter" data-level="5.1.2" data-path="linking-views-with-shiny.html"><a href="linking-views-with-shiny.html#routing-events"><i class="fa fa-check"></i><b>5.1.2</b> Routing events</a></li>
+<li class="chapter" data-level="5.1.3" data-path="linking-views-with-shiny.html"><a href="linking-views-with-shiny.html#advanced-usage-of-event-data"><i class="fa fa-check"></i><b>5.1.3</b> Advanced usage of event data</a></li>
 </ul></li>
-<li class="chapter" data-level="5" data-path="animation.html"><a href="animation.html"><i class="fa fa-check"></i><b>5</b> Animation</a></li>
-<li class="chapter" data-level="6" data-path="shiny.html"><a href="shiny.html"><i class="fa fa-check"></i><b>6</b> shiny</a><ul>
-<li class="chapter" data-level="6.1" data-path="accessing-user-events.html"><a href="accessing-user-events.html"><i class="fa fa-check"></i><b>6.1</b> Accessing user events</a></li>
-<li class="chapter" data-level="6.2" data-path="routing-user-events.html"><a href="routing-user-events.html"><i class="fa fa-check"></i><b>6.2</b> Routing user events</a></li>
-<li class="chapter" data-level="6.3" data-path="advanced-usage-of-event-data.html"><a href="advanced-usage-of-event-data.html"><i class="fa fa-check"></i><b>6.3</b> Advanced usage of event data</a></li>
+<li class="chapter" data-level="5.2" data-path="linking-views-without-shiny.html"><a href="linking-views-without-shiny.html"><i class="fa fa-check"></i><b>5.2</b> Linking views without shiny</a><ul>
+<li class="chapter" data-level="5.2.1" data-path="linking-views-without-shiny.html"><a href="linking-views-without-shiny.html#a-motivating-example"><i class="fa fa-check"></i><b>5.2.1</b> A motivating example</a></li>
+<li class="chapter" data-level="5.2.2" data-path="linking-views-without-shiny.html"><a href="linking-views-without-shiny.html#linking-to-different-plotly-objects"><i class="fa fa-check"></i><b>5.2.2</b> Linking to different plotly objects</a></li>
+<li class="chapter" data-level="5.2.3" data-path="linking-views-without-shiny.html"><a href="linking-views-without-shiny.html#linking-aggregated-views"><i class="fa fa-check"></i><b>5.2.3</b> Linking aggregated views</a></li>
+<li class="chapter" data-level="5.2.4" data-path="linking-views-without-shiny.html"><a href="linking-views-without-shiny.html#linking-to-leaflet"><i class="fa fa-check"></i><b>5.2.4</b> Linking to leaflet</a></li>
+<li class="chapter" data-level="5.2.5" data-path="linking-views-without-shiny.html"><a href="linking-views-without-shiny.html#custom-linking-via-javascript"><i class="fa fa-check"></i><b>5.2.5</b> Custom linking via JavaScript</a></li>
+<li class="chapter" data-level="5.2.6" data-path="linking-views-without-shiny.html"><a href="linking-views-without-shiny.html#highlighting-options"><i class="fa fa-check"></i><b>5.2.6</b> Highlighting options</a></li>
+<li class="chapter" data-level="5.2.7" data-path="linking-views-without-shiny.html"><a href="linking-views-without-shiny.html#limitations"><i class="fa fa-check"></i><b>5.2.7</b> Limitations</a></li>
 </ul></li>
-<li class="chapter" data-level="7" data-path="accessing-plotly-js-events-in-r-without-shiny.html"><a href="accessing-plotly-js-events-in-r-without-shiny.html"><i class="fa fa-check"></i><b>7</b> Accessing plotly.js events in R, without shiny</a></li>
-<li class="chapter" data-level="8" data-path="plotly-interface-internals.html"><a href="plotly-interface-internals.html"><i class="fa fa-check"></i><b>8</b> plotly interface internals</a><ul>
-<li class="chapter" data-level="8.1" data-path="ensuring-type-safety-in-data-transfer.html"><a href="ensuring-type-safety-in-data-transfer.html"><i class="fa fa-check"></i><b>8.1</b> Ensuring type safety in data transfer</a></li>
-<li class="chapter" data-level="8.2" data-path="plotly-object-representation.html"><a href="plotly-object-representation.html"><i class="fa fa-check"></i><b>8.2</b> plotly object representation</a></li>
-<li class="chapter" data-level="8.3" data-path="miscellanous.html"><a href="miscellanous.html"><i class="fa fa-check"></i><b>8.3</b> Miscellanous</a></li>
 </ul></li>
-<li class="chapter" data-level="9" data-path="extending-ggplotly-and-plotly.html"><a href="extending-ggplotly-and-plotly.html"><i class="fa fa-check"></i><b>9</b> Extending ggplotly and plotly</a><ul>
-<li class="chapter" data-level="9.1" data-path="converting-custom-geoms.html"><a href="converting-custom-geoms.html"><i class="fa fa-check"></i><b>9.1</b> Converting custom geoms</a></li>
-<li class="chapter" data-level="9.2" data-path="wrappers-for-domain-specific-viz.html"><a href="wrappers-for-domain-specific-viz.html"><i class="fa fa-check"></i><b>9.2</b> Wrappers for domain-specific viz</a></li>
-</ul></li>
-<li class="chapter" data-level="10" data-path="references.html"><a href="references.html"><i class="fa fa-check"></i><b>10</b> References</a></li>
+<li class="chapter" data-level="6" data-path="references.html"><a href="references.html"><i class="fa fa-check"></i><b>6</b> References</a></li>
 <li class="divider"></li>
 <li><a href="https://bookdown.org" target="blank">Published with bookdown</a></li>
 
@@ -205,20 +209,41 @@ code > span.in { color: #60a0b0; font-weight: bold; font-style: italic; } /* Inf
 
             <section class="normal" id="section-">
 <div id="references" class="section level1">
-<h1><span class="header-section-number">10</span> References</h1>
+<h1><span class="header-section-number">6</span> References</h1>
 <!-- https://twitter.com/tjmahr/status/763435602935095296 -->
 <div id="refs">
+<div id="ref-Ahlberg:1997tb">
+<p>Ahlberg, Christopher, Christopher Williamson, and Ben Shneiderman. 1997. “Dynamic Queries for Information Exploration: An Implementation and Evaluation.” <em>ACM CHI Conference Proceedings</em>, July, 1–8.</p>
+</div>
 <div id="ref-gridExtra">
 <p>Auguie, Baptiste. 2016. <em>GridExtra: Miscellaneous Functions for “Grid” Graphics</em>. <a href="https://CRAN.R-project.org/package=gridExtra" class="uri">https://CRAN.R-project.org/package=gridExtra</a>.</p>
 </div>
 <div id="ref-magrittr">
 <p>Bache, Stefan Milton, and Hadley Wickham. 2014. <em>Magrittr: A Forward-Pipe Operator for R</em>. <a href="https://CRAN.R-project.org/package=magrittr" class="uri">https://CRAN.R-project.org/package=magrittr</a>.</p>
 </div>
+<div id="ref-brushing-scatterplots">
+<p>Becker, RA, and WS Cleveland. 1987. “Brushing Scatterplots.” <em>Technometrics</em> 29 (2): 127–42.</p>
+</div>
 <div id="ref-crowdsourcing-graphical-perception">
 <p>Bostock, Jeffrey Heer AND Michael. 2010. “Crowdsourcing Graphical Perception: Using Mechanical Turk to Assess Visualization Design.” In <em>ACM Human Factors in Computing Systems (Chi)</em>, 203–12. <a href="http://vis.stanford.edu/papers/crowdsourcing-graphical-perception" class="uri">http://vis.stanford.edu/papers/crowdsourcing-graphical-perception</a>.</p>
 </div>
+<div id="ref-ggvis">
+<p>Chang, Winston, and Hadley Wickham. 2016. <em>Ggvis: Interactive Grammar of Graphics</em>. <a href="https://CRAN.R-project.org/package=ggvis" class="uri">https://CRAN.R-project.org/package=ggvis</a>.</p>
+</div>
+<div id="ref-shiny">
+<p>Chang, Winston, Joe Cheng, JJ Allaire, Yihui Xie, and Jonathan McPherson. 2016. <em>Shiny: Web Application Framework for R</em>. <a href="https://CRAN.R-project.org/package=shiny" class="uri">https://CRAN.R-project.org/package=shiny</a>.</p>
+</div>
+<div id="ref-leaflet">
+<p>Cheng, Joe, and Yihui Xie. 2016. <em>Leaflet: Create Interactive Web Maps with the Javascript ’Leaflet’ Library</em>. <a href="http://rstudio.github.io/leaflet/" class="uri">http://rstudio.github.io/leaflet/</a>.</p>
+</div>
 <div id="ref-graphical-perception">
 <p>Cleveland, William S, and Robert McGill. 1984. “Graphical Perception: Theory, Experimentation, and Application to the Development of Graphical Methods.” <em>Journal of the American Statistical Association</em> 79 (September): 531–54.</p>
+</div>
+<div id="ref-ggobi:2007">
+<p>Cook, Dianne, and Deborah F. Swayne. 2007. <em>Interactive and Dynamic Graphics for Data Analysis : With R and Ggobi</em>. Use R ! New York: Springer. <a href="http://www.ggobi.org/book/" class="uri">http://www.ggobi.org/book/</a>.</p>
+</div>
+<div id="ref-Cook:2007uk">
+<p>Cook, Dianne, Andreas Buja, and Deborah F Swayne. 2007. “Interactive High-Dimensional Data Visualization.” <em>Journal of Computational and Graphical Statistics</em>, December, 1–23.</p>
 </div>
 <div id="ref-viridis">
 <p>Data Science, Berkeley Institute for. 2016. “Mpl Colormaps.” <a href="http://web.archive.org/web/20160601125258/http://bids.github.io/colormap/" class="uri">http://web.archive.org/web/20160601125258/http://bids.github.io/colormap/</a>.</p>
@@ -234,6 +259,9 @@ code > span.in { color: #60a0b0; font-weight: bold; font-style: italic; } /* Inf
 </div>
 <div id="ref-viridisLite">
 <p>Garnier, Simon. 2016. <em>ViridisLite: Default Color Maps from ’Matplotlib’ (Lite Version)</em>. <a href="https://CRAN.R-project.org/package=viridisLite" class="uri">https://CRAN.R-project.org/package=viridisLite</a>.</p>
+</div>
+<div id="ref-rbokeh">
+<p>Hafen, Ryan, and Continuum Analytics, Inc. 2016. <em>Rbokeh: R Interface for Bokeh</em>. <a href="https://CRAN.R-project.org/package=rbokeh" class="uri">https://CRAN.R-project.org/package=rbokeh</a>.</p>
 </div>
 <div id="ref-animint">
 <p>Hocking, Toby Dylan, Susan VanderPlas, and Carson Sievert. 2015. <em>Animint: Interactive Animations</em>.</p>
@@ -255,9 +283,6 @@ code > span.in { color: #60a0b0; font-weight: bold; font-style: italic; } /* Inf
 </div>
 <div id="ref-RColorBrewer">
 <p>Neuwirth, Erich. 2014. <em>RColorBrewer: ColorBrewer Palettes</em>. <a href="https://CRAN.R-project.org/package=RColorBrewer" class="uri">https://CRAN.R-project.org/package=RColorBrewer</a>.</p>
-</div>
-<div id="ref-jsonlite">
-<p>Ooms, Jeroen. 2014. “The Jsonlite Package: A Practical and Consistent Mapping Between Json Data and R Objects.” <em>ArXiv:1403.2805 [Stat.CO]</em>. <a href="http://arxiv.org/abs/1403.2805" class="uri">http://arxiv.org/abs/1403.2805</a>.</p>
 </div>
 <div id="ref-base">
 <p>R Core Team. 2016. <em>R: A Language and Environment for Statistical Computing</em>. Vienna, Austria: R Foundation for Statistical Computing. <a href="https://www.R-project.org/" class="uri">https://www.R-project.org/</a>.</p>
@@ -289,14 +314,14 @@ code > span.in { color: #60a0b0; font-weight: bold; font-style: italic; } /* Inf
 <div id="ref-Sturges">
 <p>Sturges, Herbert A. 1926. “The Choice of a Class Interval.” <em>Journal of the American Statistical Association</em> 21 (153): 65–66. doi:<a href="https://doi.org/10.1080/01621459.1926.10502161">10.1080/01621459.1926.10502161</a>.</p>
 </div>
-<div id="ref-RJSONIO">
-<p>Temple Lang, Duncan. 2014. <em>RJSONIO: Serialize R Objects to Json, Javascript Object Notation</em>. <a href="http://CRAN.R-project.org/package=RJSONIO" class="uri">http://CRAN.R-project.org/package=RJSONIO</a>.</p>
-</div>
-<div id="ref-rCharts">
-<p>Vaidyanathan, Ramnath. 2013. <em>RCharts: Interactive Charts Using Javascript Visualization Libraries</em>. <a href="https://github.com/ramnathv/rCharts/" class="uri">https://github.com/ramnathv/rCharts/</a>.</p>
+<div id="ref-iPlots">
+<p>Urbanek, Simon. 2011. <em>Acinonyx: IPlots EXtreme</em>. <a href="http://www.rforge.net/Acinonyx/" class="uri">http://www.rforge.net/Acinonyx/</a>.</p>
 </div>
 <div id="ref-htmlwidgets">
 <p>Vaidyanathan, Ramnath, Yihui Xie, JJ Allaire, Joe Cheng, and Kenton Russell. 2016. <em>Htmlwidgets: HTML Widgets for R</em>. <a href="https://CRAN.R-project.org/package=htmlwidgets" class="uri">https://CRAN.R-project.org/package=htmlwidgets</a>.</p>
+</div>
+<div id="ref-loon">
+<p>Waddell, Adrian R., and R. Wayne Oldford. 2015. <em>Loon: Interactive Statistical Visualization</em>. <a href="http://www.uwaterloon.ca" class="uri">http://www.uwaterloon.ca</a>.</p>
 </div>
 <div id="ref-ggplot2">
 <p>Wickham, Hadley. 2009. <em>Ggplot2: Elegant Graphics for Data Analysis</em>. Springer-Verlag New York. <a href="http://ggplot2.org" class="uri">http://ggplot2.org</a>.</p>
@@ -313,15 +338,23 @@ code > span.in { color: #60a0b0; font-weight: bold; font-style: italic; } /* Inf
 <div id="ref-plumbing">
 <p>Wickham, Hadley, Michael Lawrence, Dianne Cook, Andreas Buja, Heike Hofmann, and Deborah F Swayne. 2010. “The Plumbing of Interactive Graphics.” <em>Computational Statistics</em>, April, 1–7.</p>
 </div>
+<div id="ref-rggobi">
+<p>Wickham, Hadley, Michael Lawrence, Duncan Temple Lang, and Deborah F Swayne. 2008. “An Introduction to Rggobi.” <em>R-News</em> 8 (2): 3–7. <a href="http://CRAN.R-project.org/doc/Rnews/Rnews_2008-2.pdf" class="uri">http://CRAN.R-project.org/doc/Rnews/Rnews_2008-2.pdf</a>.</p>
+</div>
 <div id="ref-Wilkinson:2005">
 <p>Wilkinson, Leland. 2005. <em>The Grammar of Graphics (Statistics and Computing)</em>. Secaucus, NJ, USA: Springer-Verlag New York, Inc.</p>
 </div>
 <div id="ref-banking">
 <p>William S. Cleveland, Robert McGill, Marylyn E. McGill. 1988. “The Shape Parameter of a Two-Variable Graph.” <em>Journal of the American Statistical Association</em> 83 (402). [American Statistical Association, Taylor &amp; Francis, Ltd.]: 289–300. <a href="http://www.jstor.org/stable/2288843" class="uri">http://www.jstor.org/stable/2288843</a>.</p>
 </div>
+<div id="ref-cranvas">
+<p>Yihui Xie, Di Cook, Heike Hofmann. 2013. <em>Interactive Statistical Graphics Based on Qt</em>.</p>
+</div>
 </div>
 
 </div>
+
+
 
 
 
@@ -341,7 +374,7 @@ code > span.in { color: #60a0b0; font-weight: bold; font-style: italic; } /* Inf
           </div>
         </div>
       </div>
-<a href="wrappers-for-domain-specific-viz.html" class="navigation navigation-prev navigation-unique" aria-label="Previous page"><i class="fa fa-angle-left"></i></a>
+<a href="linking-views-without-shiny.html" class="navigation navigation-prev navigation-unique" aria-label="Previous page"><i class="fa fa-angle-left"></i></a>
 
 
 <script src="libs/gitbook/js/app.min.js"></script>
@@ -361,7 +394,7 @@ gitbook.start({
 "size": 2
 },
 "edit": {
-"link": "https://github.com/cpsievert/plotly_book/edit/master/10-references.Rmd",
+"link": "https://github.com/cpsievert/plotly_book/edit/master/references.Rmd",
 "text": "Edit"
 },
 "download": ["bookdown.pdf", "bookdown.epub", "bookdown.mobi"],

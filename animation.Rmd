@@ -1,0 +1,24 @@
+# Animating views
+
+```{block, type='rmdwarning'}
+The code is this section is still under development and is likely to change.
+To run any of the code you see in this section, you'll need this developmental version of the package:
+`devtools::install_github("ropensci/plotly#741")`
+```
+
+Both `plot_ly()` and `ggplotly()` understand a `frame` aesthetic. 
+
+```{r, eval = FALSE}
+data(gapminder, package = "gapminder")
+p <- ggplot(gapminder, aes(gdpPercap, lifeExp, size = pop, 
+                           color = continent, frame = year)) +
+  geom_point() +
+  scale_x_log10()
+
+ggplotly(p)
+```
+
+
+IDEAS:
+  * Grand tour
+  * Demonstrate high variance in density estimation via binning (i.e., same data and different anchor points for the bins can result in very different values for the binned frequencies)

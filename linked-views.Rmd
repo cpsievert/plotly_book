@@ -1,0 +1,114 @@
+# Multiple linked views
+
+```{block, type='rmdwarning'}
+The code is this section is still under development and is likely to change.
+To run any of the code you see in this section, you'll need this developmental version of the package:
+`devtools::install_github("ropensci/plotly#554")`
+```
+
+Multiple linked views is a concept that has existed in many forms within the statistical graphics and information visualization community for many years [@brushing-scatterplots]; [@ggobi:2007]; [@Ahlberg:1997tb]. @Cook:2007uk provides nice motivation for and definition of multiple linked views:
+
+> Multiple linked views are the optimal framework for posing queries about data. A user should be able to pose a query graphically, and a computer should be able to present the response graphically as well. Both query and response should occur in the same visual field. This calls for a mechanism that links the graphical query to the graphical response. A graphical user interface that has such linking mechanisms is an implementation of the notion of "multiple linked views."
+
+There are a number of R packages that provide a graphics rendering toolkits with built-in support for multiple linked views. Some are implemented as desktop applications [@rggobi]; [@cranvas]; [@iPlots]; [@loon] while others are within a web-based environment [@animint]; [@ggvis]; [@rbokeh]. In addition to being easier to share, the advantage of using web-based option(s) is that we can link views across different systems. To date, the most versatile tool for linking arbitrary views in R is **shiny** [@shiny], which provides a reactive programming framework for authoring web applications powered by R. [Linking views with shiny](#linking-views-with-shiny) explains how to access plotly events on a shiny server, and informing related views about the events.  
+
+Although **shiny** apps provide a tremendous amount of flexibility when linking views, deploying and sharing shiny apps is way more complicated than a standalone HTML file. When you print a plotly object (or any object built on top of the **htmlwidgets** [@htmlwidgets] infrastructure) it produces a standalone HTML file with some interactivity baked into it. The **plotly** package is unique in the sense that you can link multiple views without shiny in three different ways: inside the same plotly object, link multiple plotly objects, or even link to other htmlwidget packages such as **leaflet** [@leaflet]. Furthermore, since plotly.js has some built-in support for performing statistical summaries, in some cases, we can produce aggregated views of selected data. [Linking views without shiny](#linking-views-with-shiny) explains this framework in detail through a series of examples.
+
+## Linking views with shiny
+
+### Accessing plotly events
+
+The plotly.js library emits custom events when a user interacts directly with a graph. The `event_data()` function provides a mechanism for accessing the data corresponding to those events within a shiny app. Figure \@ref(fig:plotlyEvents) demonstrates the most commonly used events: mouse hover (`"plotly_hover"`), click (`"plotly_click"`), and click+drag (`"plotly_selected"`).^[You can run this example yourself using the following command -- `shiny::runApp(system.file("examples", "plotlyEvents", package = "plotly"))`] There are multiple modes for click+drag interactions in plotly.js: zoom, pan, rectangular selection, and lasso selection. The default click+drag mode can be set via the [dragmode](https://plot.ly/r/reference/#layout-dragmode) attribute, but the mode can also be changed via the mode bar. 
+
+```{r plotlyEvents, echo=FALSE, fig.cap = "A demonstration of plotly events in shiny"}
+file <- if (identical(knitr:::pandoc_to(), 'html')) "gifs/plotlyEvents.gif" else "images/plotlyEvents.png"
+knitr::include_graphics(file)
+```
+
+### Routing events
+
+Accessing plotly events is not very useful unless we do something with it. When using `event_data()`, it's important to 
+
+* <https://github.com/ropensci/plotly/tree/master/inst/examples/plotlyLinkedClick>
+* <https://github.com/ropensci/plotly/tree/master/inst/examples/plotlyLinkedBrush>
+
+### Advanced usage of event data
+
+* Could use this as an example -- <https://github.com/ropensci/plotly/issues/730>
+
+
+
+## Linking views without shiny
+
+### A motivating example
+
+```{r, eval = FALSE}
+library(crosstalk)
+library(plotly)
+
+sd <- SharedData$new(txhousing, ~year)
+p <- ggplot(sd, aes(month, median)) +
+  geom_line(aes(group = year)) + 
+  geom_smooth(data = txhousing, method = "gam") + 
+  facet_wrap(~ city)
+
+ggplotly(p) %>%
+  highlight(on = "plotly_hover", defaultValues = 2015, color = "red")
+```
+
+
+### Linking to different plotly objects
+
+### Linking aggregated views
+
+TODO: show 06-plotly-pipeline.R example. Explain the importance of the pipeline.
+
+### Linking to leaflet
+
+```{r}
+library(plotly)
+library(leaflet)
+library(crosstalk)
+library(htmltools)
+
+sd <- SharedData$new(quakes)
+p <- plot_ly(sd, x = ~depth, y = ~mag) %>% add_markers(alpha = 0.5)
+map <- leaflet(sd) %>% addTiles() %>% addCircles()
+browsable(tagList(list(p, map)))
+```
+
+### Custom linking via JavaScript
+
+Accessing plotly.js events in shiny is easy ([for example](https://plot.ly/r/shiny-tutorial/)), but shiny adds a lot of additional infrastructure that makes it hard to share your work, especially at scale. Very soon, plotly R users will have ways to perform [highlighting](https://cpsievert.github.io/plotly_book/highlighting.html) and [linked highlighting](https://cpsievert.github.io/plotly_book/linked-highlighting.html) without shiny or any knowledge of HTML/JavaScript. However, if you do know some JavaScript, you can access (and respond to) plotly.js events without shiny, without having to leave the comfort of your R prompt, thanks to the `onRender()` function from the **htmlwidgets** package [@htmlwidgets]. This function allows you to write a JavaScript function which will be invoked on the htmlwidget object after it is done rendering. This JavaScript function should have at least two arguments: (1) the DOM element containing the htmlwidget (`el`) and (2) the data passed from R (`x`). Figure \@ref(fig:hover-log) the `onRender()` function to send "event data" to the browser's console upon hovering a point.
+
+```{r hover-log, fig.cap = "A simple scatterplot that emits data whenever the user hovers on a point."}
+library(plotly)
+library(htmlwidgets)
+plot_ly(mtcars, x = ~wt, y = ~mpg) %>%
+  onRender("
+    function(el, x) {
+      var gd = document.getElementById(el.id);
+      gd.on('plotly_hover', function(pt) { console.log('hover', pt); });
+    }
+  ")
+```
+
+
+### Highlighting options
+
+TODO: Talk about the convenience of having "standard" events generated across chart types. When working with something like D3, you typically have to bind to DOM elements when attaching listeners, which does not generalize well.
+
+### Limitations
+
+As discussed in previous chapters, **plotly** graphs have zoom, pan, and identification type interactions enabled by default. This chapter discusses methods that enable other types of useful interactions listed in Table \@ref(tab:techniques).
+
+```{r techniques, echo = FALSE}
+knitr::kable(
+  readr::read_csv2("interactions.txt"), booktabs = TRUE,
+  caption = "A taxonomy of interaction types"
+)
+```
+
+* Currently not working with filled polygons (TODO: is this still true?) -- https://github.com/plotly/plotly.js/issues/884
+* Currently not working with gl2d -- https://github.com/plotly/plotly.js/issues/886
+* Currently leaflet is the only htmlwidget, with crosstalk support, that will respect non-default arguments in plotly's highlight() function.
