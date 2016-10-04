@@ -96,9 +96,9 @@ plot_ly(mpg, x = ~cty, y = ~hwy, z = ~cyl) %>%
 
 #### Scatterplot matrices
 
-I currently recommend creating scatterplot matrices via the `ggpairs()` function from the **GGally** package [@GGally] and using the `ggplotly()` function to convert it.
+Scatterplot matrices _can_ be made via `plot_ly()` and `subplot()`, but `ggplotly()` has a special method for translating ggmatrix objects from the **GGally** package to plotly objects [@GGally]. These objects are essentially a matrix of ggplot objects and are the underlying data structure which powers higher level functions in **GGally**, such as `ggpairs()`, a function for creating a generalized pairs plot [@gpp]. The generalized pairs plot could be motivated as a generalization of the scatterplot matrix which supports categorical data and different visual representations of the data beyond a scatterplot. Figure \@ref(fig:ggpairs) shows an interactive version of the generalized pairs plot made via `ggpairs()` and `ggplotly()`. In [Linking views without shiny](#linking-views-without-shiny), we explore how this framework can be extended to enable linked brushing in the generalized pairs plot.
 
-```{r, fig.asp = 1, fig.width = 8}
+```{r ggpairs, fig.asp = 1, fig.width = 8, fig.cap = "An interactive version of the generalized pairs plot made via the `ggpairs()` function from the **GGally** package"}
 pm <- GGally::ggpairs(iris)
 ggplotly(pm)
 ```

@@ -14,23 +14,70 @@ There are a number of R packages that provide a graphics rendering toolkits with
 
 Although **shiny** apps provide a tremendous amount of flexibility when linking views, deploying and sharing shiny apps is way more complicated than a standalone HTML file. When you print a plotly object (or any object built on top of the **htmlwidgets** [@htmlwidgets] infrastructure) it produces a standalone HTML file with some interactivity baked into it. The **plotly** package is unique in the sense that you can link multiple views without shiny in three different ways: inside the same plotly object, link multiple plotly objects, or even link to other htmlwidget packages such as **leaflet** [@leaflet]. Furthermore, since plotly.js has some built-in support for performing statistical summaries, in some cases, we can produce aggregated views of selected data. [Linking views without shiny](#linking-views-with-shiny) explains this framework in detail through a series of examples.
 
-## Linking views with shiny
+Before exploring the two different approaches for linking views, it can be useful to understand a bit about how interactive graphics systems work, in general. @viewing-pipeline and @plumbing discuss the fundamental elements that all interactive graphics systems must possess -- the most important being the concept of a data-plot-pipeline. As @plumbing states: "A pipeline controls the transformation from data to graphical objects on our screens". Most, if not all, of the software discussed in this work describes systems implemented as desktop applications, where the pipeline resides on a single machine. While this is convenient for developers, it impedes the user's ability to share their work with others.
 
-### Accessing plotly events
+Figure \@ref(fig:server-client) provides a simple visual depiction of the two options available when implementing the pipeline within a web-based environment. [Linking views without shiny](#linking-views-with-shiny) explores cases where the pipeline resides entirely within a client's web-browser, without any calls to a seperate process. This is highly desirable because visualizations are then easily shared and viewed from a single file, without any software requirements (besides a web browser). On the other hand, it is a restrictive environment for statistical computing since we can not directly leverage R's computational facilities.^[If the number of possible selection states is small, it may be possible to pre-compute all possible (statistical) results, and navigate them without recomputing on the fly. TODO: provide an example!!] 
+On other words, whenever the pipeline involves re-computing a statistical model, or performing a complicated aggregation, I suggest [linking views with shiny](#linking-views-with-shiny).
 
-The plotly.js library emits custom events when a user interacts directly with a graph. The `event_data()` function provides a mechanism for accessing the data corresponding to those events within a shiny app. Figure \@ref(fig:plotlyEvents) demonstrates the most commonly used events: mouse hover (`"plotly_hover"`), click (`"plotly_click"`), and click+drag (`"plotly_selected"`).^[You can run this example yourself using the following command -- `shiny::runApp(system.file("examples", "plotlyEvents", package = "plotly"))`] There are multiple modes for click+drag interactions in plotly.js: zoom, pan, rectangular selection, and lasso selection. The default click+drag mode can be set via the [dragmode](https://plot.ly/r/reference/#layout-dragmode) attribute, but the mode can also be changed via the mode bar. 
-
-```{r plotlyEvents, echo=FALSE, fig.cap = "A demonstration of plotly events in shiny"}
-file <- if (identical(knitr:::pandoc_to(), 'html')) "gifs/plotlyEvents.gif" else "images/plotlyEvents.png"
-knitr::include_graphics(file)
+```{r server-client, echo=FALSE, fig.cap="A visual depiction of the different approaches to implementing a pipeline in a web-based environment. The R package **shiny** exposes the pipeline to users in R, which requires a web server for viewing. The R package **crosstalk** will allow developers to implement and expose the pipeline on both the server and client levels."}
+knitr::include_graphics("images/server-client.png")
 ```
 
-### Routing events
+## Linking views with shiny
 
-Accessing plotly events is not very useful unless we do something with it. When using `event_data()`, it's important to 
+### Accessing events in shiny
 
-* <https://github.com/ropensci/plotly/tree/master/inst/examples/plotlyLinkedClick>
-* <https://github.com/ropensci/plotly/tree/master/inst/examples/plotlyLinkedBrush>
+The plotly.js library emits custom events when a user interacts directly with a graph. The `event_data()` function provides a mechanism for accessing the data corresponding to those events within a shiny app. The shiny app in Figure \@ref(fig:plotlyEvents) is designed to demonstrate the most useful plotly events one may access via `event_data()`: mouse hover (`"plotly_hover"`), click (`"plotly_click"`), and click+drag (`"plotly_selected"`). All of these events return selections on the data scale, not on a pixel scale, which is useful for [updating views](#updating-views).
+
+There are currently four different modes for click+drag interactions in plotly.js, but only two will trigger a `"plotly_selected"` event: rectangular and lasso selection. The other two dragmodes, zoom and pan, both emit a `"plotly_relayout"` event which could be useful for say, providing global context in relation to a zoom event and/or recomputing a model based on new x/y limits. In Figure \@ref(fig:plotlyEvents), the default click+drag mode was set to rectangular selection set via the [dragmode](https://plot.ly/r/reference/#layout-dragmode) attribute, but the mode can also be changed interactively via the mode bar at the top of the graph.
+
+The video in Figure \@ref(fig:plotlyEvents) helps demonstrate how different user events cause different blocks of code to be evaluated on the R server.^[You can also run the example yourself using the following code -- `shiny::runApp(system.file("examples", "plotlyEvents", package = "plotly"))`] Conceptually, you can think of events as different inputs that becomes invalidated when the event is triggered by plotly.js. Moreover, similar to restrictions placed on references to input value(s) in shiny, `event_data()` has to be called _within_ a reactive expressions. As RStudio's [lesson on reactive expressions](http://web.archive.org/web/20160405081516/http://shiny.rstudio.com/tutorial/lesson6/) points out:
+
+> A reactive expression is an R expression that uses widget input [(e.g., `event_data()`)] and returns a value.
+
+Any of the `render*()` functions in **shiny** turn a regular R expression into a reactive expression. In Figure \@ref(fig:plotlyEvents), every use of `event_data()` appears within `renderPrint()` since we only need to display the result of the event on the user interface with `verbatimTextOutput()`. In the next section, we use the return result of `event_data()` to display more interesting and informative views of user events.
+
+```{r plotlyEvents, echo=FALSE, fig.cap = "A video demonstration of plotly events in shiny. The video can be accessed [here](http://i.imgur.com/SJVIBvW.gif)"}
+knitr::include_graphics("images/plotlyEvents.gif")
+```
+
+### Updating views
+
+Obtaining data from a plotly event is easy, but updating view(s) based on the result of an event can be difficult. To start with something fairly easy, consider two scatterplots showing the same observations, but on different axes (i.e.., a subset of a scatterplot matrix). Figure \@ref(fig:plotlyLinkedBrushEasy) shows a linked lasso brush between two scatterplots. The main idea is that we first plot all the observations in black, then highlight the selection by adding an additional layer of selected points in red using the data returned by `event_data()`. In order to guarantee that we can uniquely identify observations in the event data, it is also crucial that we attach a `key` attribute to each observation (here the rownames of the data), which we can then use to filter the original data down to the selected observations. 
+
+In Figure \@ref(fig:plotlyLinkedBrushEasy), I conciously update the source of the selection (the top plot) to match the visual characteristics of the target (the bottom plot). In general, whenever linking views to display graphical selection(s), matching the visual characteristics of the selection both the source and target(s) can aide interpretation, especially when using interactive graphics to present results to others. Although the update rule in Figure \@ref(fig:plotlyLinkedBrushEasy) is to simply layer on additional points, a full redraw is performed during the update, which can impact performance when dealing with a large amount of graphical elements.^[When updating a plot within a shiny app, typically]
+
+```{r plotlyLinkedBrushEasy, echo=FALSE, fig.cap = "A video demonstration of linked brushing in a shiny app. The video can be accessed [here](http://i.imgur.com/rUroUHT.gif) and the code to run the example is [here](https://gist.github.com/cpsievert/5934f173cafffb8dfb4f23d5488cd185)"}
+knitr::include_graphics("images/plotlyLinkedBrushEasy.gif")
+```
+
+Since the update rule is the same for each view in Figure \@ref(fig:plotlyLinkedBrushEasy), we end up with a lot of redundant code that can be made more modular, as shown [here](https://gist.github.com/cpsievert/6fc17f4dc6d43c88dd214c12bb1a0324). Since the only difference between the two views is the x/y variables, we can write a function that accepts x/y variables as input, and output a plotly object. Since this function outputs a plotly object, and is dependent upon `event_data()` (which can only be called within a reactive context), this function can only be called within a reactive context provided by the `renderPlotly()` function in the **plotly** package. 
+Making code more modular not only makes it less reading, but it leaves you less prone to making mistakes.
+
+TODO: keep going and talk about targeting 
+
+```{r plotlyLinkedBrush, echo=FALSE, fig.cap = "Linked brushing between a scatterplot and marginal histograms."}
+knitr::include_graphics("images/plotlyLinkedBrush.gif")
+```
+
+
+
+### Targeting views
+
+The linked brushing example in Figure \@ref(fig:plotlyLinkedBrushEasy) has bi-directional communication, meaning a `"plotly_selected"` event deriving from either view, will impact the other view. In other words, each view can be either the source or target of the selection. 
+
+Figure \@ref(fig:plotlyLinkedClick) shows a heatmap of a correlation matrix linked to a scatterplot. 
+
+
+```{r plotlyLinkedClick, echo=FALSE, fig.cap = "Clicking on a cell in a correlation matrix to view the corresponding scatterplot"}
+knitr::include_graphics("images/plotlyLinkedClick.gif")
+```
+
+
+
+
+
+
 
 ### Advanced usage of event data
 
