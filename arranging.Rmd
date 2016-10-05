@@ -1,6 +1,6 @@
 # Arranging multiple views
 
-One technique essential to high-dimensional data analysis is the ability to arrange multiple views. Ideally, these views are linked in some way to foster comparisons. The next section, [Arranging htmlwidgets](#arranging-htmlwidgets) describes techniques for arranging htmlwidget objects, which many R packages for creating web-based data visualizations build upon, including **plotly**. Typically interactivity is isolated _within_ an htmlwidget object, but [Linking views without shiny](#linking-views-without-shiny) explores some more recent work on enabling interactivity _across_ htmlwidget objects. The following section, [Subplots](#subplots) describes the `subplot()` function, which is useful for _merging_ multiple plotly objects into a single htmlwidget object. The main benefit of merging (rather than arranging) plotly objects is that it gives us the ability to synchronize zoom and pan events across multiple axes.
+One technique essential to high-dimensional data analysis is the ability to arrange multiple views. Ideally, these views are linked in some way to foster comparisons (the next chapter discusses linking techniques). The next section, [Arranging htmlwidgets](#arranging-htmlwidgets) describes techniques for arranging htmlwidget objects, which many R packages for creating web-based data visualizations build upon, including **plotly**. Typically interactivity is isolated _within_ an htmlwidget object, but [Linking views without shiny](#linking-views-without-shiny) explores some more recent work on enabling interactivity _across_ htmlwidget objects. The following section, [Subplots](#subplots) describes the `subplot()` function, which is useful for _merging_ multiple plotly objects into a single htmlwidget object. The main benefit of merging (rather than arranging) plotly objects is that it gives us the ability to synchronize zoom and pan events across multiple axes. The last section, [Navigating many views](#navigating-many-views) discusses some useful tools for restricting focus on interesting views when there are more views than you can possibly digest visually.
 
 ## Arranging htmlwidgets
 
@@ -12,11 +12,12 @@ set.seed(100)
 
 ```{r multiple-htmlwidgets, fig.cap = "Printing multiple htmlwidget objects with `tagList()`. To render tag lists at the command line, wrap them in `browsable()` "}
 library(htmltools)
+library(plotly)
 p <- plot_ly(x = rnorm(100))
 tagList(p, p)
 ```
 
-Figure \@ref(fig:multiple-htmlwidgets) renders two plots, each in its own row spanning the width of the page, because each htmlwidget object is an HTML `<div>` tag. More often than not, it is desirable to arrange multiple plots in a given row, and there are a few ways to do that. A very flexible approach is to wrap all of your plots in a [flexbox](https://css-tricks.com/snippets/css/a-guide-to-flexbox/) (i.e., an HTML `<div>` with `display: flex` Cascading Style Sheets (CSS) property). The `tags$div()` function from **htmltools** provides a way to wrap a `<div>` around both tag lists and htmlwidget objects, and set attributes, such as `style`. As \@ref(fig:flexbox) demonstrates, this approach also provides a nice way to add custom styling to the page, such as borders around each panel.
+Figure \@ref(fig:multiple-htmlwidgets) renders two plots, each in its own row spanning the width of the page, because each htmlwidget object is an HTML `<div>` tag. More often than not, it is desirable to arrange multiple plots in a given row, and there are a few ways to do that. A very flexible approach is to wrap all of your plots in a [flexbox](https://css-tricks.com/snippets/css/a-guide-to-flexbox/) (i.e., an HTML `<div>` with `display: flex` Cascading Style Sheets (CSS) property). The `tags$div()` function from **htmltools** provides a way to wrap a `<div>` around both tag lists and htmlwidget objects, and set attributes, such as `style`. As Figure \@ref(fig:flexbox) demonstrates, this approach also provides a nice way to add custom styling to the page, such as borders around each panel.
 
 ```{r flexbox, fig.cap = "Arranging multiple htmlwidgets with flexbox"}
 tags$div(
@@ -101,7 +102,7 @@ layout(s, showlegend = FALSE)
 
 Note that, since `subplot()` returns a plotly object, any [layout attribute](https://plot.ly/r/reference/#layout) can be modified downstream via `layout()`.
 
-## Recursive subplots
+### Recursive subplots
 
 The `subplot()` function is designed to work recursively so that you can have subplots of subplots. This idea is useful when your desired layout doesn't conform to the table structure described in the previous section. In fact, you can think of a subplot of subplots like a spreadsheet with merged cells.
 
@@ -146,7 +147,7 @@ subplot(
 )
 ```
 
-## ggplot2 subplots
+### ggplot2 subplots
 
 The `subplot()` function also understands ggplot2 objects, and converts them to an interactive web-based version via `ggplotly()` before arranging them in the final layout.
 
@@ -158,4 +159,58 @@ gg2 <- ggplot(e, aes(factor(1), value)) + geom_violin() +
   facet_wrap(~variable, scales = "free_y", ncol = 1) + 
   theme(axis.text = element_blank(), axis.ticks = element_blank())
 subplot(gg1, gg2) %>% layout(margin = list(l = 50))
+```
+
+
+## Navigating many views
+
+Sometimes you have to consider way more views than you can possibly digest visually. In [Multiple linked views](#multiple-linked-views), we explore some useful techniques for implementing the popular visualization mantra from @details-on-demand: 
+
+> "Overview first, zoom and filter, then details-on-demand."
+
+In fact, Figure \@ref(fig:plotlyLinkedClick) from that section provides an example of this mantra put into practice. The correlation matrix provides an overview of the correlation structure between all the variables, and by clicking a cell, it populates a scatterplot between those two specific variables. This works fine with tens or hundreds or variables, but once you have thousands or tens-of-thousands of variables, this technique begins to fall apart. At that point, you may be better off defining a range of correlations that you're interested in exploring, or better yet, incorporating another measure (e.g., a test statistic), then focusing on views that match a certain criteria.
+
+@scagnostics-tukey first described the idea of using quantitative measurements of scatterplot characteristics (e.g. correlation) to help guide exploratory analysis of many variables. This idea, coined scagnostics (short for scatterplot diagnostics), has since been made explicit, and many measures have been explored, even measures specifically useful for time-series have been proposed [@Wilkinson:2005]; [@Wilkinson:2008]; [@Wilkinson:2012]. Probably the most universally useful scagnostic is the outlying measure which helps identify projections of the data space that contain outlying observations.
+
+The same problems and principles that inspired scagnostics has inspired work on more general divide & recombine technique(s) for working with many statistical artifacts [@divide-recombine]; [@RHIPE], including visualizations [@trelliscope].
+
+
+```{r trelliscope, eval = FALSE, fig.cap = "Using plotly within a trelliscope"}
+library(trelliscopecore)
+library(dplyr)
+library(plotly)
+
+# cognostics data frame
+iris_cog_df <- iris %>%
+  group_by(Species) %>%
+  summarise(
+    mean_sl = cog(mean(Sepal.Length), desc = "mean sepal length"),
+    mean_sw = cog(mean(Sepal.Width), desc = "mean sepal length"),
+    mean_pl = cog(mean(Petal.Length), desc = "mean sepal length"),
+    mean_pw = cog(mean(Petal.Width), desc = "mean sepal length")
+  )
+
+iris_cog_df <- as_cognostics(iris_cog_df, cond_cols = "Species", key_col = "Species")
+
+# list of panels
+panels <- iris %>%
+  split(iris$Species) %>%
+  lapply(function(x) {
+    plot_ly(x, x = ~Sepal.Length, y = ~Sepal.Width) %>% config(collaborate = FALSE)
+  })
+
+base_path <- tempdir()
+
+write_panels(panels, base_path = base_path, name = "iris")
+
+write_display_obj(
+  iris_cog_df,
+  panel_example = panels[[1]],
+  base_path = base_path,
+  name = "iris"
+)
+
+prepare_display(base_path)
+
+view_display(base_path)
 ```

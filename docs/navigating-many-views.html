@@ -33,8 +33,8 @@
   <meta name="apple-mobile-web-app-status-bar-style" content="black">
   
   
-<link rel="prev" href="annotations.html">
-<link rel="next" href="arranging-htmlwidgets.html">
+<link rel="prev" href="subplots.html">
+<link rel="next" href="animating-views.html">
 
 <script src="libs/jquery/jquery.min.js"></script>
 <link href="libs/gitbook/css/style.css" rel="stylesheet" />
@@ -218,17 +218,62 @@ code > span.in { color: #60a0b0; font-weight: bold; font-style: italic; } /* Inf
           <div class="page-inner">
 
             <section class="normal" id="section-">
-<div id="arranging-multiple-views" class="section level1">
-<h1><span class="header-section-number">3</span> Arranging multiple views</h1>
-<p>One technique essential to high-dimensional data analysis is the ability to arrange multiple views. Ideally, these views are linked in some way to foster comparisons (the next chapter discusses linking techniques). The next section, <a href="arranging-htmlwidgets.html#arranging-htmlwidgets">Arranging htmlwidgets</a> describes techniques for arranging htmlwidget objects, which many R packages for creating web-based data visualizations build upon, including <strong>plotly</strong>. Typically interactivity is isolated <em>within</em> an htmlwidget object, but <a href="linking-views-without-shiny.html#linking-views-without-shiny">Linking views without shiny</a> explores some more recent work on enabling interactivity <em>across</em> htmlwidget objects. The following section, <a href="subplots.html#subplots">Subplots</a> describes the <code>subplot()</code> function, which is useful for <em>merging</em> multiple plotly objects into a single htmlwidget object. The main benefit of merging (rather than arranging) plotly objects is that it gives us the ability to synchronize zoom and pan events across multiple axes. The last section, <a href="navigating-many-views.html#navigating-many-views">Navigating many views</a> discusses some useful tools for restricting focus on interesting views when there are more views than you can possibly digest visually.</p> 
+<div id="navigating-many-views" class="section level2">
+<h2><span class="header-section-number">3.3</span> Navigating many views</h2>
+<p>Sometimes you have to consider way more views than you can possibly digest visually. In <a href="multiple-linked-views.html#multiple-linked-views">Multiple linked views</a>, we explore some useful techniques for implementing the popular visualization mantra from <span class="citation">Shneiderman (<a href="references.html#ref-details-on-demand">1996</a>)</span>:</p>
+<blockquote>
+<p>“Overview first, zoom and filter, then details-on-demand.”</p>
+</blockquote>
+<p>In fact, Figure <a href="linking-views-with-shiny.html#fig:plotlyLinkedClick">5.4</a> from that section provides an example of this mantra put into practice. The correlation matrix provides an overview of the correlation structure between all the variables, and by clicking a cell, it populates a scatterplot between those two specific variables. This works fine with tens or hundreds or variables, but once you have thousands or tens-of-thousands of variables, this technique begins to fall apart. At that point, you may be better off defining a range of correlations that you’re interested in exploring, or better yet, incorporating another measure (e.g., a test statistic), then focusing on views that match a certain criteria.</p>
+<p><span class="citation">J. W. Tukey and Tukey (n.d.)</span> first described the idea of using quantitative measurements of scatterplot characteristics (e.g. correlation) to help guide exploratory analysis of many variables. This idea, coined scagnostics (short for scatterplot diagnostics), has since been made explicit, and many measures have been explored, even measures specifically useful for time-series have been proposed <span class="citation">(Wilkinson <a href="references.html#ref-Wilkinson:2005">2005</a>)</span>; <span class="citation">(Wilkinson and Wills <a href="references.html#ref-Wilkinson:2008">2008</a>)</span>; <span class="citation">(Dang and Wilkinson <a href="references.html#ref-Wilkinson:2012">2012</a>)</span>. Probably the most universally useful scagnostic is the outlying measure which helps identify projections of the data space that contain outlying observations.</p>
+<p>The same problems and principles that inspired scagnostics has inspired work on more general divide &amp; recombine technique(s) for working with many statistical artifacts <span class="citation">(William S. Cleveland and Hafen <a href="references.html#ref-divide-recombine">2014</a>)</span>; <span class="citation">(Saptarshi Guha and Cleveland <a href="references.html#ref-RHIPE">2012</a>)</span>, including visualizations <span class="citation">(R. Hafen et al. <a href="references.html#ref-trelliscope">2013</a>)</span>.</p>
+<div class="sourceCode"><pre class="sourceCode r"><code class="sourceCode r"><span class="kw">library</span>(trelliscopecore)
+<span class="kw">library</span>(dplyr)
+<span class="kw">library</span>(plotly)
+
+<span class="co"># cognostics data frame</span>
+iris_cog_df &lt;-<span class="st"> </span>iris %&gt;%
+<span class="st">  </span><span class="kw">group_by</span>(Species) %&gt;%
+<span class="st">  </span><span class="kw">summarise</span>(
+    <span class="dt">mean_sl =</span> <span class="kw">cog</span>(<span class="kw">mean</span>(Sepal.Length), <span class="dt">desc =</span> <span class="st">&quot;mean sepal length&quot;</span>),
+    <span class="dt">mean_sw =</span> <span class="kw">cog</span>(<span class="kw">mean</span>(Sepal.Width), <span class="dt">desc =</span> <span class="st">&quot;mean sepal length&quot;</span>),
+    <span class="dt">mean_pl =</span> <span class="kw">cog</span>(<span class="kw">mean</span>(Petal.Length), <span class="dt">desc =</span> <span class="st">&quot;mean sepal length&quot;</span>),
+    <span class="dt">mean_pw =</span> <span class="kw">cog</span>(<span class="kw">mean</span>(Petal.Width), <span class="dt">desc =</span> <span class="st">&quot;mean sepal length&quot;</span>)
+  )
+
+iris_cog_df &lt;-<span class="st"> </span><span class="kw">as_cognostics</span>(iris_cog_df, <span class="dt">cond_cols =</span> <span class="st">&quot;Species&quot;</span>, <span class="dt">key_col =</span> <span class="st">&quot;Species&quot;</span>)
+
+<span class="co"># list of panels</span>
+panels &lt;-<span class="st"> </span>iris %&gt;%
+<span class="st">  </span><span class="kw">split</span>(iris$Species) %&gt;%
+<span class="st">  </span><span class="kw">lapply</span>(function(x) {
+    <span class="kw">plot_ly</span>(x, <span class="dt">x =</span> ~Sepal.Length, <span class="dt">y =</span> ~Sepal.Width) %&gt;%<span class="st"> </span><span class="kw">config</span>(<span class="dt">collaborate =</span> <span class="ot">FALSE</span>)
+  })
+
+base_path &lt;-<span class="st"> </span><span class="kw">tempdir</span>()
+
+<span class="kw">write_panels</span>(panels, <span class="dt">base_path =</span> base_path, <span class="dt">name =</span> <span class="st">&quot;iris&quot;</span>)
+
+<span class="kw">write_display_obj</span>(
+  iris_cog_df,
+  <span class="dt">panel_example =</span> panels[[<span class="dv">1</span>]],
+  <span class="dt">base_path =</span> base_path,
+  <span class="dt">name =</span> <span class="st">&quot;iris&quot;</span>
+)
+
+<span class="kw">prepare_display</span>(base_path)
+
+<span class="kw">view_display</span>(base_path)</code></pre></div>
+
 </div>
+<!-- </div> -->
             </section>
 
           </div>
         </div>
       </div>
-<a href="annotations.html" class="navigation navigation-prev " aria-label="Previous page"><i class="fa fa-angle-left"></i></a>
-<a href="arranging-htmlwidgets.html" class="navigation navigation-next " aria-label="Next page""><i class="fa fa-angle-right"></i></a>
+<a href="subplots.html" class="navigation navigation-prev " aria-label="Previous page"><i class="fa fa-angle-left"></i></a>
+<a href="animating-views.html" class="navigation navigation-next " aria-label="Next page""><i class="fa fa-angle-right"></i></a>
 
 <script src="libs/gitbook/js/app.min.js"></script>
 <script src="libs/gitbook/js/lunr.js"></script>

@@ -45,31 +45,27 @@ knitr::include_graphics("images/plotlyEvents.gif")
 
 Obtaining data from a plotly event is easy, but updating view(s) based on the result of an event can be difficult. To start with something fairly easy, consider two scatterplots showing the same observations, but on different axes (i.e.., a subset of a scatterplot matrix). Figure \@ref(fig:plotlyLinkedBrushEasy) shows a linked lasso brush between two scatterplots. The main idea is that we first plot all the observations in black, then highlight the selection by adding an additional layer of selected points in red using the data returned by `event_data()`. In order to guarantee that we can uniquely identify observations in the event data, it is also crucial that we attach a `key` attribute to each observation (here the rownames of the data), which we can then use to filter the original data down to the selected observations. 
 
-Figure \@ref(fig:plotlyLinkedBrushEasy) consciously updates the source of the selection (the top plot) to match the visual characteristics of the target (the bottom plot). In general, whenever linking views to display graphical selection(s), matching the visual characteristics of the selection both the source and target(s) can aide interpretation, especially when using interactive graphics to present results to others. Although the update rule in Figure \@ref(fig:plotlyLinkedBrushEasy) is to simply layer on additional points, a full redraw is performed during the update, which can impact performance when dealing with a large amount of graphical elements.^[When updating a plot within a shiny app, typically]
+Figure \@ref(fig:plotlyLinkedBrushEasy) consciously updates the source of the selection (the top plot) to match the visual characteristics of the target (the bottom plot). In general, whenever linking views to display graphical selection(s), matching the visual characteristics of the selection both the source and target(s) can aide interpretation, especially when using interactive graphics to present results to others. Although the update rule in Figure \@ref(fig:plotlyLinkedBrushEasy) is to simply layer on additional points, a full redraw is performed during the update, which can impact performance when dealing with a large amount of graphical elements.
+
+Figure \@ref(fig:plotlyLinkedBrushEasy) could be made slightly more efficient by just changing the color of selected points, or dimming the non-selected points, rather than plotting an extra layer of points. However, this technique does not work for chart types that display aggregate values (e.g., how do you dim non-selected values in a box plot?). For this reason, in [Linking views without shiny](#linking-views-without-shiny), selections are implemented as an additional layer, but avoid the full redraw required when updating plot via **shiny** reactive framework.^[To my knowledge, the **leaflet** package is the only R package which provides a way to update a plot in a shiny app without a full redraw.]
 
 ```{r plotlyLinkedBrushEasy, echo=FALSE, fig.cap = "A video demonstration of linked brushing in a shiny app. The video can be accessed [here](http://i.imgur.com/rUroUHT.gif) and the code to run the example is [here](https://gist.github.com/cpsievert/5934f173cafffb8dfb4f23d5488cd185)"}
 knitr::include_graphics("images/plotlyLinkedBrushEasy.gif")
 ```
 
-Since the update rule is the same for each view in Figure \@ref(fig:plotlyLinkedBrushEasy), we end up with a lot of redundant code that can be made more modular, as shown [here](https://gist.github.com/cpsievert/6fc17f4dc6d43c88dd214c12bb1a0324). Since the only difference between the two views is the x/y variables, we can write a function that accepts x/y variables as input, and output a plotly object. Since this function outputs a plotly object, and is dependent upon `event_data()` (which can only be called within a reactive context), this function can only be called within a reactive context provided by the `renderPlotly()` function in the **plotly** package. 
-Making code more modular not only makes it less reading, but it leaves you less prone to making mistakes.
+Since the update rule is the same for each view in Figure \@ref(fig:plotlyLinkedBrushEasy), we end up with a lot of redundant code that can be made more modular, as shown [here](https://gist.github.com/cpsievert/6fc17f4dc6d43c88dd214c12bb1a0324). Making code more modular not only makes for less reading, but it leaves you less prone to making mistakes. Since the only difference between the two plots is the x/y variables, we can write a function that accepts x/y variables as input, and output a plotly object. Since this function outputs a plotly object, and is dependent upon `event_data()`, which can only be called within a reactive expression, this function can only be called within the `renderPlotly()` function in the **plotly** package. 
 
-
-
-```{r plotlyLinkedBrush, echo=FALSE, fig.cap = "Linked brushing between a scatterplot and marginal histograms."}
+```{r plotlyLinkedBrush, eval=FALSE, echo=FALSE, fig.cap = "Linked brushing between a scatterplot and marginal histograms."}
 knitr::include_graphics("images/plotlyLinkedBrush.gif")
 ```
 
 
-
 ### Targeting views
 
-The linked brushing example in Figure \@ref(fig:plotlyLinkedBrushEasy) has bi-directional communication, meaning a `"plotly_selected"` event deriving from either view, will impact the other view. In other words, each view can be either the source or target of the selection. 
-
-Figure \@ref(fig:plotlyLinkedClick) shows a heatmap of a correlation matrix linked to a scatterplot. 
+The linked brushing example in Figure \@ref(fig:plotlyLinkedBrushEasy) has bi-directional communication -- a `"plotly_selected"` event deriving from either view impacts the other view. In other words, each view can be either the source or target of the selection. Often times, we want _one_ view to be the source of a selection, and related view(s) to be the target. Figure \@ref(fig:plotlyLinkedClick) shows a heatmap of a correlation matrix (the source of a selction) linked to a scatterplot (the target of a selection). By clicking on a cell in the correlation matrix, a scatterplot of the two variables is displayed below the matrix. 
 
 
-```{r plotlyLinkedClick, echo=FALSE, fig.cap = "Clicking on a cell in a correlation matrix to view the corresponding scatterplot"}
+```{r plotlyLinkedClick, echo=FALSE, fig.cap = "A video demonstration of clicking on a cell in a correlation matrix to view the corresponding scatterplot.  The video can be accessed [here]() and the code to run the example is [here]()"}
 knitr::include_graphics("images/plotlyLinkedClick.gif")
 ```
 
