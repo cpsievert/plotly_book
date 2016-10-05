@@ -173,9 +173,9 @@ code > span.in { color: #60a0b0; font-weight: bold; font-style: italic; } /* Inf
 </ul></li>
 <li class="chapter" data-level="3" data-path="arranging-multiple-views.html"><a href="arranging-multiple-views.html"><i class="fa fa-check"></i><b>3</b> Arranging multiple views</a><ul>
 <li class="chapter" data-level="3.1" data-path="arranging-htmlwidgets.html"><a href="arranging-htmlwidgets.html"><i class="fa fa-check"></i><b>3.1</b> Arranging htmlwidgets</a></li>
-<li class="chapter" data-level="3.2" data-path="subplots.html"><a href="subplots.html"><i class="fa fa-check"></i><b>3.2</b> Subplots</a><ul>
-<li class="chapter" data-level="3.2.1" data-path="subplots.html"><a href="subplots.html#recursive-subplots"><i class="fa fa-check"></i><b>3.2.1</b> Recursive subplots</a></li>
-<li class="chapter" data-level="3.2.2" data-path="subplots.html"><a href="subplots.html#ggplot2-subplots"><i class="fa fa-check"></i><b>3.2.2</b> ggplot2 subplots</a></li>
+<li class="chapter" data-level="3.2" data-path="merging-plotly-objects.html"><a href="merging-plotly-objects.html"><i class="fa fa-check"></i><b>3.2</b> Merging plotly objects</a><ul>
+<li class="chapter" data-level="3.2.1" data-path="merging-plotly-objects.html"><a href="merging-plotly-objects.html#recursive-subplots"><i class="fa fa-check"></i><b>3.2.1</b> Recursive subplots</a></li>
+<li class="chapter" data-level="3.2.2" data-path="merging-plotly-objects.html"><a href="merging-plotly-objects.html#ggplot2-subplots"><i class="fa fa-check"></i><b>3.2.2</b> ggplot2 subplots</a></li>
 </ul></li>
 <li class="chapter" data-level="3.3" data-path="navigating-many-views.html"><a href="navigating-many-views.html"><i class="fa fa-check"></i><b>3.3</b> Navigating many views</a></li>
 </ul></li>
@@ -185,10 +185,9 @@ code > span.in { color: #60a0b0; font-weight: bold; font-style: italic; } /* Inf
 <li class="chapter" data-level="5.1.1" data-path="linking-views-with-shiny.html"><a href="linking-views-with-shiny.html#accessing-events-in-shiny"><i class="fa fa-check"></i><b>5.1.1</b> Accessing events in shiny</a></li>
 <li class="chapter" data-level="5.1.2" data-path="linking-views-with-shiny.html"><a href="linking-views-with-shiny.html#updating-views"><i class="fa fa-check"></i><b>5.1.2</b> Updating views</a></li>
 <li class="chapter" data-level="5.1.3" data-path="linking-views-with-shiny.html"><a href="linking-views-with-shiny.html#targeting-views"><i class="fa fa-check"></i><b>5.1.3</b> Targeting views</a></li>
-<li class="chapter" data-level="5.1.4" data-path="linking-views-with-shiny.html"><a href="linking-views-with-shiny.html#advanced-usage-of-event-data"><i class="fa fa-check"></i><b>5.1.4</b> Advanced usage of event data</a></li>
 </ul></li>
 <li class="chapter" data-level="5.2" data-path="linking-views-without-shiny.html"><a href="linking-views-without-shiny.html"><i class="fa fa-check"></i><b>5.2</b> Linking views without shiny</a><ul>
-<li class="chapter" data-level="5.2.1" data-path="linking-views-without-shiny.html"><a href="linking-views-without-shiny.html#a-motivating-example"><i class="fa fa-check"></i><b>5.2.1</b> A motivating example</a></li>
+<li class="chapter" data-level="5.2.1" data-path="linking-views-without-shiny.html"><a href="linking-views-without-shiny.html#motivating-examples"><i class="fa fa-check"></i><b>5.2.1</b> Motivating examples</a></li>
 <li class="chapter" data-level="5.2.2" data-path="linking-views-without-shiny.html"><a href="linking-views-without-shiny.html#linking-to-different-plotly-objects"><i class="fa fa-check"></i><b>5.2.2</b> Linking to different plotly objects</a></li>
 <li class="chapter" data-level="5.2.3" data-path="linking-views-without-shiny.html"><a href="linking-views-without-shiny.html#linking-aggregated-views"><i class="fa fa-check"></i><b>5.2.3</b> Linking aggregated views</a></li>
 <li class="chapter" data-level="5.2.4" data-path="linking-views-without-shiny.html"><a href="linking-views-without-shiny.html#linking-to-leaflet"><i class="fa fa-check"></i><b>5.2.4</b> Linking to leaflet</a></li>
@@ -251,19 +250,15 @@ Figure 5.3: A video demonstration of linked brushing in a shiny app. The video c
 </div>
 <div id="targeting-views" class="section level3">
 <h3><span class="header-section-number">5.1.3</span> Targeting views</h3>
-<p>The linked brushing example in Figure <a href="linking-views-with-shiny.html#fig:plotlyLinkedBrushEasy">5.3</a> has bi-directional communication – a <code>&quot;plotly_selected&quot;</code> event deriving from either view impacts the other view. In other words, each view can be either the source or target of the selection. Often times, we want <em>one</em> view to be the source of a selection, and related view(s) to be the target. Figure <a href="linking-views-with-shiny.html#fig:plotlyLinkedClick">5.4</a> shows a heatmap of a correlation matrix (the source of a selction) linked to a scatterplot (the target of a selection). By clicking on a cell in the correlation matrix, a scatterplot of the two variables is displayed below the matrix.</p>
+<p>The linked brushing example in Figure <a href="linking-views-with-shiny.html#fig:plotlyLinkedBrushEasy">5.3</a> has bi-directional communication – a <code>&quot;plotly_selected&quot;</code> event deriving from either view impacts the other view. In other words, each view can be either the source or target of the selection. Often times, we want <em>one</em> view to be the source of a selection, and related view(s) to be the target. Figure <a href="linking-views-with-shiny.html#fig:plotlyLinkedClick">5.4</a> shows a heatmap of a correlation matrix (the source of a selection) linked to a scatterplot (the target of a selection). By clicking on a cell in the correlation matrix, a scatterplot of the two variables is displayed below the matrix.</p>
+<p>To update the scatterplot view, Figure <a href="linking-views-with-shiny.html#fig:plotlyLinkedClick">5.4</a> accesses <code>&quot;plotly_click&quot;</code> events via the <code>event_data()</code> function, but it also careful to not access click events triggered from the scatterplot. By strategically matching the value of the <code>source</code> argument in the <code>plot_ly()</code> and <code>event_data()</code> functions, Figure <a href="linking-views-with-shiny.html#fig:plotlyLinkedClick">5.4</a> effectively restricts the scope of events to a specific plot (the heatmap).</p>
 <div class="figure"><span id="fig:plotlyLinkedClick"></span>
-<img src="images/plotlyLinkedClick.gif" alt="A video demonstration of clicking on a cell in a correlation matrix to view the corresponding scatterplot.  The video can be accessed [here]() and the code to run the example is [here]()" align:"center" />
+<img src="images/plotlyLinkedClick.gif" alt="A video demonstration of clicking on a cell in a correlation matrix to view the corresponding scatterplot. The video can be accessed [here](http://i.imgur.com/2pNZejk.gif) and the code to run the example is [here](https://gist.github.com/cpsievert/ece4741967baf1840843ecc44c1bb677)" align:"center" />
 <p class="caption">
-Figure 5.4: A video demonstration of clicking on a cell in a correlation matrix to view the corresponding scatterplot. The video can be accessed <a href="">here</a> and the code to run the example is <a href="">here</a>
+Figure 5.4: A video demonstration of clicking on a cell in a correlation matrix to view the corresponding scatterplot. The video can be accessed <a href="http://i.imgur.com/2pNZejk.gif">here</a> and the code to run the example is <a href="https://gist.github.com/cpsievert/ece4741967baf1840843ecc44c1bb677">here</a>
 </p>
 </div>
-</div>
-<div id="advanced-usage-of-event-data" class="section level3">
-<h3><span class="header-section-number">5.1.4</span> Advanced usage of event data</h3>
-<ul>
-<li>Could use this as an example – <a href="https://github.com/ropensci/plotly/issues/730" class="uri">https://github.com/ropensci/plotly/issues/730</a></li>
-</ul>
+<p>Another aspect of Figure <a href="linking-views-with-shiny.html#fig:plotlyLinkedClick">5.4</a> that makes it an interesting example is that the <code>key</code> attribute is a matrix, matching the same dimensions of <code>z</code> (i.e, the values displayed in each cell). For good reason, most linked views paradigms (including the paradigm discussed in <a href="linking-views-without-shiny.html#linking-views-without-shiny">Linking views without shiny</a>) restrict linkage definitions to relational database schemas. In this case, it is more efficient to implement the relation with a key matrix, rather than a column.</p>
 </div>
 </div>
 <div class="footnotes">

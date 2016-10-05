@@ -44,18 +44,18 @@ fluidPage(
 
 All the arrangement approaches discussed thus far are agnostic to output format, meaning that they can be used to arrange htmlwidgets within _any_  **knitr**/**rmarkdown** document.^[Although HTML can not possibly render in a pdf or word document, **knitr** can automatically detect a non-HTML output format and embed a static image of the htmlwidget via the **webshot** package [@webshot].] If the htmlwidgets do not need to be embedded within a larger document that requires an opininated output format, the **flexdashboard** package provides a **rmarkdown** template for generating dashboards, with a convenient syntax for arranging views [@flexdashboard].
 
-## Subplots
+## Merging plotly objects
 
-The `subplot()` function provides a flexible interface for arranging multiple **plotly** plots in a single view. It is more flexible than most trellis display frameworks (e.g., ggplot2's `facet_wrap()`) as you don't have to condition on a value of common variable in each display [@trellis]. Its capabilities and interface is similar to the `grid.arrange()` function from the **gridExtra** package, which allows you to arrange multiple **grid** grobs in a single view, effectively providing a way to arrange (possibly unrelated)  **ggplot2** and/or **lattice** plots in a single view [@base]; [@gridExtra]; [@lattice]. The simplest way to use it is to pass plotly objects directly to `subplot()`.
+The `subplot()` function provides a flexible interface for merging multiple plotly objects into a single object (i.e., view). It is more flexible than most trellis display frameworks (e.g., ggplot2's `facet_wrap()`) as you don't have to condition on a value of common variable in each display [@trellis]. Its capabilities and interface is similar to the `grid.arrange()` function from the **gridExtra** package, which allows you to arrange multiple **grid** grobs in a single view, effectively providing a way to arrange (possibly unrelated)  **ggplot2** and/or **lattice** plots in a single view [@base]; [@gridExtra]; [@lattice]. Figure \@ref(fig:simple) shows the most simple way to use `subplot()` which is to directly supply plotly objects.
 
-```{r}
+```{r simple, fig.cap = "The most basic use of `subplot()` to merge multiple plotly objects into a single plotly object."}
 library(plotly)
 p1 <- plot_ly(economics, x = ~date, y = ~unemploy, name = "unemploy") %>% add_lines()
 p2 <- plot_ly(economics, x = ~date, y = ~uempmed, name = "uempmed") %>% add_lines()
 subplot(p1, p2)
 ```
 
-Although `subplot()` accepts an arbitrary number of plot objects, passing a _list_ of plots can save typing and redundant code when dealing with a large number of plots. To demonstrate, let's create one time series for each variable in the `economics` dataset and share the x-axis so that zoom/pan events are synchronized across each series:
+Although `subplot()` accepts an arbitrary number of plot objects, passing a _list_ of plots can save typing and redundant code when dealing with a large number of plots. Figure \@ref(fig:economics) shows one time series for each variable in the `economics` dataset and share the x-axis so that zoom/pan events are synchronized across each series:
 
 ```{r economics, fig.cap = "Five different economic variables on different y scales and a common x scale. Zoom and pan events in the x-direction are synchronized across plots."}
 vars <- setdiff(names(economics), "date")
@@ -149,9 +149,9 @@ subplot(
 
 ### ggplot2 subplots
 
-The `subplot()` function also understands ggplot2 objects, and converts them to an interactive web-based version via `ggplotly()` before arranging them in the final layout.
+Underneath the hood, ggplot2 facets are implemented as subplots, which enables the synchronized zoom events on shared axes. Since subplots work recursively, it is also possible to have a subplot of ggplot2 faceted plots, as Figure \@ref(fig:ggplot2-subplots) shows. Moreover, `subplot()` can understand ggplot objects, so there is no need to translate them to plotly object via `ggplotly()`  (unless you want to leverage some of the `ggplotly()` arguments, such as `tooltip` for customizing information displayed on hover).
 
-```{r}
+```{r ggplot2-subplots, fig.cap = "Arranging multiple faceted ggplot2 plots into a plotly subplot."}
 e <- tidyr::gather(economics, variable, value, -date)
 gg1 <- ggplot(e, aes(date, value)) + geom_line() +
   facet_wrap(~variable, scales = "free_y", ncol = 1)
@@ -161,7 +161,6 @@ gg2 <- ggplot(e, aes(factor(1), value)) + geom_violin() +
 subplot(gg1, gg2) %>% layout(margin = list(l = 50))
 ```
 
-
 ## Navigating many views
 
 Sometimes you have to consider way more views than you can possibly digest visually. In [Multiple linked views](#multiple-linked-views), we explore some useful techniques for implementing the popular visualization mantra from @details-on-demand: 
@@ -170,10 +169,9 @@ Sometimes you have to consider way more views than you can possibly digest visua
 
 In fact, Figure \@ref(fig:plotlyLinkedClick) from that section provides an example of this mantra put into practice. The correlation matrix provides an overview of the correlation structure between all the variables, and by clicking a cell, it populates a scatterplot between those two specific variables. This works fine with tens or hundreds or variables, but once you have thousands or tens-of-thousands of variables, this technique begins to fall apart. At that point, you may be better off defining a range of correlations that you're interested in exploring, or better yet, incorporating another measure (e.g., a test statistic), then focusing on views that match a certain criteria.
 
-@scagnostics-tukey first described the idea of using quantitative measurements of scatterplot characteristics (e.g. correlation) to help guide exploratory analysis of many variables. This idea, coined scagnostics (short for scatterplot diagnostics), has since been made explicit, and many measures have been explored, even measures specifically useful for time-series have been proposed [@Wilkinson:2005]; [@Wilkinson:2008]; [@Wilkinson:2012]. Probably the most universally useful scagnostic is the outlying measure which helps identify projections of the data space that contain outlying observations.
+@scagnostics-tukey first described the idea of using quantitative measurements of scatterplot characteristics (e.g. correlation) to help guide exploratory analysis of many variables. This idea, coined scagnostics (short for scatterplot diagnostics), has since been made explicit, and many measures have been explored, even measures specifically useful for time-series have been proposed [@Wilkinson:2005]; [@Wilkinson:2008]; [@Wilkinson:2012]. Probably the most universally useful scagnostic is the outlying measure which helps identify projections of the data space that contain outlying observations. Of course, the idea of associating quantitative measures with a graphical display of data can be generalized to include more that just scatterplots, and in this more general case, these measures are sometimes referred to as cognostics.
 
-The same problems and principles that inspired scagnostics has inspired work on more general divide & recombine technique(s) for working with many statistical artifacts [@divide-recombine]; [@RHIPE], including visualizations [@trelliscope].
-
+The same problems and principles that inspired scagnostics has inspired work on more general divide & recombine technique(s) for working with navigating through many statistical artifacts [@divide-recombine]; [@RHIPE], including visualizations [@trelliscope]. The **trelliscope** package provides a system for computing arbitrary cognostics on each panel of a trellis display as well as an interactive graphical user interface for defining (and navigating through) interesting panels based on those cognostics [@trelliscope-pkg]. This system also allows users to define the graphical method for displaying each panel, so **plotly** graphs can easily be embedded. The **trelliscope** package is currently built upon **shiny**, but as Figure \@ref(fig:trelliscope) demonstrates, the **trelliscopecore** package provides lower-level tools that allow one to create trelliscope displays without **shiny**.
 
 ```{r trelliscope, eval = FALSE, fig.cap = "Using plotly within a trelliscope"}
 library(trelliscopecore)
