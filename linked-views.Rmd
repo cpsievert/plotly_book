@@ -6,7 +6,7 @@ To run any of the code you see in this section, you'll need this developmental v
 `devtools::install_github("ropensci/plotly#554")`
 ```
 
-Multiple linked views is a concept that has existed in many forms within the statistical graphics and information visualization community for many years [@brushing-scatterplots]; [@ggobi:2007]; [@Ahlberg:1997tb]. @Cook:2007uk provides nice motivation for and definition of multiple linked views:
+Multiple linked views is a concept that has existed in many forms within the statistical graphics and information visualization community for decades [@brushing-scatterplots]; [@ggobi:2007]; [@Ahlberg:1997tb]. @Cook:2007uk provides nice motivation for and definition of multiple linked views:
 
 > Multiple linked views are the optimal framework for posing queries about data. A user should be able to pose a query graphically, and a computer should be able to present the response graphically as well. Both query and response should occur in the same visual field. This calls for a mechanism that links the graphical query to the graphical response. A graphical user interface that has such linking mechanisms is an implementation of the notion of "multiple linked views."
 
@@ -19,7 +19,7 @@ Before exploring the two different approaches for linking views, it can be usefu
 Figure \@ref(fig:server-client) provides a simple visual depiction of the two options available when implementing the pipeline within a web-based environment. [Linking views without shiny](#linking-views-with-shiny) explores cases where the pipeline resides entirely within a client's web-browser, without any calls to a seperate process. This is highly desirable because visualizations are then easily shared and viewed from a single file, without any software requirements (besides a web browser). On the other hand, it is a restrictive environment for statistical computing since we can not directly leverage R's computational facilities.^[If the number of possible selection states is small, it may be possible to pre-compute all possible (statistical) results, and navigate them without recomputing on the fly. TODO: provide an example!!] 
 On other words, whenever the pipeline involves re-computing a statistical model, or performing a complicated aggregation, I suggest [linking views with shiny](#linking-views-with-shiny).
 
-```{r server-client, echo=FALSE, fig.cap="A visual depiction of the different approaches to implementing a pipeline in a web-based environment. The R package **shiny** exposes the pipeline to users in R, which requires a web server for viewing. The R package **crosstalk** will allow developers to implement and expose the pipeline on both the server and client levels."}
+```{r server-client, echo=FALSE, out.width=700, fig.cap="A visual depiction of the different approaches to implementing a pipeline in a web-based environment. The R package **shiny** exposes the pipeline to users in R, which requires a web server for viewing. The R package **crosstalk** will allow developers to implement and expose the pipeline on both the server and client levels."}
 knitr::include_graphics("images/server-client.png")
 ```
 
@@ -45,7 +45,7 @@ knitr::include_graphics("images/plotlyEvents.gif")
 
 Obtaining data from a plotly event is easy, but updating view(s) based on the result of an event can be difficult. To start with something fairly easy, consider two scatterplots showing the same observations, but on different axes (i.e.., a subset of a scatterplot matrix). Figure \@ref(fig:plotlyLinkedBrushEasy) shows a linked lasso brush between two scatterplots. The main idea is that we first plot all the observations in black, then highlight the selection by adding an additional layer of selected points in red using the data returned by `event_data()`. In order to guarantee that we can uniquely identify observations in the event data, it is also crucial that we attach a `key` attribute to each observation (here the rownames of the data), which we can then use to filter the original data down to the selected observations. 
 
-In Figure \@ref(fig:plotlyLinkedBrushEasy), I conciously update the source of the selection (the top plot) to match the visual characteristics of the target (the bottom plot). In general, whenever linking views to display graphical selection(s), matching the visual characteristics of the selection both the source and target(s) can aide interpretation, especially when using interactive graphics to present results to others. Although the update rule in Figure \@ref(fig:plotlyLinkedBrushEasy) is to simply layer on additional points, a full redraw is performed during the update, which can impact performance when dealing with a large amount of graphical elements.^[When updating a plot within a shiny app, typically]
+Figure \@ref(fig:plotlyLinkedBrushEasy) consciously updates the source of the selection (the top plot) to match the visual characteristics of the target (the bottom plot). In general, whenever linking views to display graphical selection(s), matching the visual characteristics of the selection both the source and target(s) can aide interpretation, especially when using interactive graphics to present results to others. Although the update rule in Figure \@ref(fig:plotlyLinkedBrushEasy) is to simply layer on additional points, a full redraw is performed during the update, which can impact performance when dealing with a large amount of graphical elements.^[When updating a plot within a shiny app, typically]
 
 ```{r plotlyLinkedBrushEasy, echo=FALSE, fig.cap = "A video demonstration of linked brushing in a shiny app. The video can be accessed [here](http://i.imgur.com/rUroUHT.gif) and the code to run the example is [here](https://gist.github.com/cpsievert/5934f173cafffb8dfb4f23d5488cd185)"}
 knitr::include_graphics("images/plotlyLinkedBrushEasy.gif")
@@ -54,7 +54,7 @@ knitr::include_graphics("images/plotlyLinkedBrushEasy.gif")
 Since the update rule is the same for each view in Figure \@ref(fig:plotlyLinkedBrushEasy), we end up with a lot of redundant code that can be made more modular, as shown [here](https://gist.github.com/cpsievert/6fc17f4dc6d43c88dd214c12bb1a0324). Since the only difference between the two views is the x/y variables, we can write a function that accepts x/y variables as input, and output a plotly object. Since this function outputs a plotly object, and is dependent upon `event_data()` (which can only be called within a reactive context), this function can only be called within a reactive context provided by the `renderPlotly()` function in the **plotly** package. 
 Making code more modular not only makes it less reading, but it leaves you less prone to making mistakes.
 
-TODO: keep going and talk about targeting 
+
 
 ```{r plotlyLinkedBrush, echo=FALSE, fig.cap = "Linked brushing between a scatterplot and marginal histograms."}
 knitr::include_graphics("images/plotlyLinkedBrush.gif")

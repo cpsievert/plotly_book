@@ -57,6 +57,11 @@
 <link href="libs/jsoneditor/jsoneditor.min.css" rel="stylesheet" />
 <script src="libs/jsoneditor/jsoneditor.min.js"></script>
 <script src="libs/jsonedit-binding/jsonedit.js"></script>
+<meta name="viewport" content="width=device-width, initial-scale=1" />
+<link href="libs/bootstrap/css/bootstrap.min.css" rel="stylesheet" />
+<script src="libs/bootstrap/js/bootstrap.min.js"></script>
+<script src="libs/bootstrap/shim/html5shiv.min.js"></script>
+<script src="libs/bootstrap/shim/respond.min.js"></script>
 <link href="libs/leaflet/leaflet.css" rel="stylesheet" />
 <script src="libs/leaflet/leaflet.js"></script>
 <link href="libs/leafletfix/leafletfix.css" rel="stylesheet" />
@@ -166,9 +171,11 @@ code > span.in { color: #60a0b0; font-weight: bold; font-style: italic; } /* Inf
 </ul></li>
 <li class="chapter" data-level="2.7" data-path="annotations.html"><a href="annotations.html"><i class="fa fa-check"></i><b>2.7</b> Annotations</a></li>
 </ul></li>
-<li class="chapter" data-level="3" data-path="subplot.html"><a href="subplot.html"><i class="fa fa-check"></i><b>3</b> Arranging multiple views</a><ul>
-<li class="chapter" data-level="3.1" data-path="recursive-subplots.html"><a href="recursive-subplots.html"><i class="fa fa-check"></i><b>3.1</b> Recursive subplots</a></li>
-<li class="chapter" data-level="3.2" data-path="ggplot2-subplots.html"><a href="ggplot2-subplots.html"><i class="fa fa-check"></i><b>3.2</b> ggplot2 subplots</a></li>
+<li class="chapter" data-level="3" data-path="arranging-multiple-views.html"><a href="arranging-multiple-views.html"><i class="fa fa-check"></i><b>3</b> Arranging multiple views</a><ul>
+<li class="chapter" data-level="3.1" data-path="arranging-htmlwidgets.html"><a href="arranging-htmlwidgets.html"><i class="fa fa-check"></i><b>3.1</b> Arranging htmlwidgets</a></li>
+<li class="chapter" data-level="3.2" data-path="subplots.html"><a href="subplots.html"><i class="fa fa-check"></i><b>3.2</b> Subplots</a></li>
+<li class="chapter" data-level="3.3" data-path="recursive-subplots.html"><a href="recursive-subplots.html"><i class="fa fa-check"></i><b>3.3</b> Recursive subplots</a></li>
+<li class="chapter" data-level="3.4" data-path="ggplot2-subplots.html"><a href="ggplot2-subplots.html"><i class="fa fa-check"></i><b>3.4</b> ggplot2 subplots</a></li>
 </ul></li>
 <li class="chapter" data-level="4" data-path="animating-views.html"><a href="animating-views.html"><i class="fa fa-check"></i><b>4</b> Animating views</a></li>
 <li class="chapter" data-level="5" data-path="multiple-linked-views.html"><a href="multiple-linked-views.html"><i class="fa fa-check"></i><b>5</b> Multiple linked views</a><ul>
@@ -216,16 +223,16 @@ code > span.in { color: #60a0b0; font-weight: bold; font-style: italic; } /* Inf
 The code is this section is still under development and is likely to change. To run any of the code you see in this section, you’ll need this developmental version of the package: <code>devtools::install_github(“ropensci/plotly#554”)</code>
 </p>
 </div>
-<p>Multiple linked views is a concept that has existed in many forms within the statistical graphics and information visualization community for many years <span class="citation">(Becker and Cleveland <a href="references.html#ref-brushing-scatterplots">1987</a>)</span>; <span class="citation">(Cook and Swayne <a href="references.html#ref-ggobi:2007">2007</a>)</span>; <span class="citation">(Ahlberg, Williamson, and Shneiderman <a href="references.html#ref-Ahlberg:1997tb">1997</a>)</span>. <span class="citation">Cook, Buja, and Swayne (<a href="references.html#ref-Cook:2007uk">2007</a>)</span> provides nice motivation for and definition of multiple linked views:</p>
+<p>Multiple linked views is a concept that has existed in many forms within the statistical graphics and information visualization community for decades <span class="citation">(Becker and Cleveland <a href="references.html#ref-brushing-scatterplots">1987</a>)</span>; <span class="citation">(Cook and Swayne <a href="references.html#ref-ggobi:2007">2007</a>)</span>; <span class="citation">(Ahlberg, Williamson, and Shneiderman <a href="references.html#ref-Ahlberg:1997tb">1997</a>)</span>. <span class="citation">Cook, Buja, and Swayne (<a href="references.html#ref-Cook:2007uk">2007</a>)</span> provides nice motivation for and definition of multiple linked views:</p>
 <blockquote>
 <p>Multiple linked views are the optimal framework for posing queries about data. A user should be able to pose a query graphically, and a computer should be able to present the response graphically as well. Both query and response should occur in the same visual field. This calls for a mechanism that links the graphical query to the graphical response. A graphical user interface that has such linking mechanisms is an implementation of the notion of “multiple linked views.”</p>
 </blockquote>
 <p>There are a number of R packages that provide a graphics rendering toolkits with built-in support for multiple linked views. Some are implemented as desktop applications <span class="citation">(Wickham et al. <a href="references.html#ref-rggobi">2008</a>)</span>; <span class="citation">(Yihui Xie <a href="references.html#ref-cranvas">2013</a>)</span>; <span class="citation">(Urbanek <a href="references.html#ref-iPlots">2011</a>)</span>; <span class="citation">(Waddell and Oldford <a href="references.html#ref-loon">2015</a>)</span> while others are within a web-based environment <span class="citation">(T. D. Hocking, VanderPlas, and Sievert <a href="references.html#ref-animint">2015</a>)</span>; <span class="citation">(Chang and Wickham <a href="references.html#ref-ggvis">2016</a>)</span>; <span class="citation">(Hafen and Continuum Analytics, Inc. <a href="references.html#ref-rbokeh">2016</a>)</span>. In addition to being easier to share, the advantage of using web-based option(s) is that we can link views across different systems. To date, the most versatile tool for linking arbitrary views in R is <strong>shiny</strong> <span class="citation">(Chang et al. <a href="references.html#ref-shiny">2016</a>)</span>, which provides a reactive programming framework for authoring web applications powered by R. <a href="linking-views-with-shiny.html#linking-views-with-shiny">Linking views with shiny</a> explains how to access plotly events on a shiny server, and informing related views about the events.</p>
 <p>Although <strong>shiny</strong> apps provide a tremendous amount of flexibility when linking views, deploying and sharing shiny apps is way more complicated than a standalone HTML file. When you print a plotly object (or any object built on top of the <strong>htmlwidgets</strong> <span class="citation">(Vaidyanathan et al. <a href="references.html#ref-htmlwidgets">2016</a>)</span> infrastructure) it produces a standalone HTML file with some interactivity baked into it. The <strong>plotly</strong> package is unique in the sense that you can link multiple views without shiny in three different ways: inside the same plotly object, link multiple plotly objects, or even link to other htmlwidget packages such as <strong>leaflet</strong> <span class="citation">(Cheng and Xie <a href="references.html#ref-leaflet">2016</a>)</span>. Furthermore, since plotly.js has some built-in support for performing statistical summaries, in some cases, we can produce aggregated views of selected data. <a href="linking-views-with-shiny.html#linking-views-with-shiny">Linking views without shiny</a> explains this framework in detail through a series of examples.</p>
 <p>Before exploring the two different approaches for linking views, it can be useful to understand a bit about how interactive graphics systems work, in general. <span class="citation">Andreas Buja and McDonald (<a href="references.html#ref-viewing-pipeline">1988</a>)</span> and <span class="citation">Wickham et al. (<a href="references.html#ref-plumbing">2010</a>)</span> discuss the fundamental elements that all interactive graphics systems must possess – the most important being the concept of a data-plot-pipeline. As <span class="citation">Wickham et al. (<a href="references.html#ref-plumbing">2010</a>)</span> states: “A pipeline controls the transformation from data to graphical objects on our screens”. Most, if not all, of the software discussed in this work describes systems implemented as desktop applications, where the pipeline resides on a single machine. While this is convenient for developers, it impedes the user’s ability to share their work with others.</p>
-<p>Figure <a href="multiple-linked-views.html#fig:server-client">5.1</a> provides a simple visual depiction of the two options available when implementing the pipeline within a web-based environment. <a href="linking-views-with-shiny.html#linking-views-with-shiny">Linking views without shiny</a> explores cases where the pipeline resides entirely within a client’s web-browser, without any calls to a seperate process. This is highly desirable because visualizations are then easily shared and viewed from a single file, without any software requirements (besides a web browser). On the other hand, it is a restrictive environment for statistical computing since we can not directly leverage R’s computational facilities.<a href="#fn11" class="footnoteRef" id="fnref11"><sup>11</sup></a> On other words, whenever the pipeline involves re-computing a statistical model, or performing a complicated aggregation, I suggest <a href="linking-views-with-shiny.html#linking-views-with-shiny">linking views with shiny</a>.</p>
+<p>Figure <a href="multiple-linked-views.html#fig:server-client">5.1</a> provides a simple visual depiction of the two options available when implementing the pipeline within a web-based environment. <a href="linking-views-with-shiny.html#linking-views-with-shiny">Linking views without shiny</a> explores cases where the pipeline resides entirely within a client’s web-browser, without any calls to a seperate process. This is highly desirable because visualizations are then easily shared and viewed from a single file, without any software requirements (besides a web browser). On the other hand, it is a restrictive environment for statistical computing since we can not directly leverage R’s computational facilities.<a href="#fn12" class="footnoteRef" id="fnref12"><sup>12</sup></a> On other words, whenever the pipeline involves re-computing a statistical model, or performing a complicated aggregation, I suggest <a href="linking-views-with-shiny.html#linking-views-with-shiny">linking views with shiny</a>.</p>
 <div class="figure"><span id="fig:server-client"></span>
-<img src="images/server-client.png" alt="A visual depiction of the different approaches to implementing a pipeline in a web-based environment. The R package **shiny** exposes the pipeline to users in R, which requires a web server for viewing. The R package **crosstalk** will allow developers to implement and expose the pipeline on both the server and client levels." width="267" align:"center" />
+<img src="images/server-client.png" alt="A visual depiction of the different approaches to implementing a pipeline in a web-based environment. The R package **shiny** exposes the pipeline to users in R, which requires a web server for viewing. The R package **crosstalk** will allow developers to implement and expose the pipeline on both the server and client levels." width="700" align:"center" />
 <p class="caption">
 Figure 5.1: A visual depiction of the different approaches to implementing a pipeline in a web-based environment. The R package <strong>shiny</strong> exposes the pipeline to users in R, which requires a web server for viewing. The R package <strong>crosstalk</strong> will allow developers to implement and expose the pipeline on both the server and client levels.
 </p>
@@ -233,8 +240,8 @@ Figure 5.1: A visual depiction of the different approaches to implementing a pip
 </div>
 <div class="footnotes">
 <hr />
-<ol start="11">
-<li id="fn11"><p>If the number of possible selection states is small, it may be possible to pre-compute all possible (statistical) results, and navigate them without recomputing on the fly. TODO: provide an example!!<a href="multiple-linked-views.html#fnref11">↩</a></p></li>
+<ol start="12">
+<li id="fn12"><p>If the number of possible selection states is small, it may be possible to pre-compute all possible (statistical) results, and navigate them without recomputing on the fly. TODO: provide an example!!<a href="multiple-linked-views.html#fnref12">↩</a></p></li>
 </ol>
 </div>
             </section>
@@ -265,7 +272,7 @@ gitbook.start({
 "link": "https://github.com/cpsievert/plotly_book/edit/master/linked-views.Rmd",
 "text": "Edit"
 },
-"download": ["bookdown.pdf", "bookdown.epub", "bookdown.mobi"],
+"download": ["plotly_book.pdf", "plotly_book.epub", "plotly_book.mobi"],
 "toc": {
 "collapse": "subsection"
 }

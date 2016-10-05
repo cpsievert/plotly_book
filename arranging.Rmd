@@ -1,5 +1,50 @@
 # Arranging multiple views
 
+One technique essential to high-dimensional data analysis is the ability to arrange multiple views. Ideally, these views are linked in some way to foster comparisons. The next section, [Arranging htmlwidgets](#arranging-htmlwidgets) describes techniques for arranging htmlwidget objects, which many R packages for creating web-based data visualizations build upon, including **plotly**. Typically interactivity is isolated _within_ an htmlwidget object, but [Linking views without shiny](#linking-views-without-shiny) explores some more recent work on enabling interactivity _across_ htmlwidget objects. The following section, [Subplots](#subplots) describes the `subplot()` function, which is useful for _merging_ multiple plotly objects into a single htmlwidget object. The main benefit of merging (rather than arranging) plotly objects is that it gives us the ability to synchronize zoom and pan events across multiple axes.
+
+## Arranging htmlwidgets
+
+Since plotly objects inherit properties from an htmlwidget object, any method that works for arranging htmlwidgets also works for plotly objects. In some sense, an htmlwidget object is just a collection of HTML tags, and the **htmltools** package provides some useful functions for working with HTML tags [@htmltools]. The `tagList()` function gathers multiple HTML tags into a tag list, and when printing a tag list inside of a **knitr**/**rmarkdown** document [@knitr]; [@rmarkdown], it knows to render as HTML. When printing outside of this context (e.g., at the command line), a tag list prints as a character string by default. In order to view the rendered HTML, provide the tag list to the `browsable()` function.
+
+```{r, echo = FALSE}
+set.seed(100)
+```
+
+```{r multiple-htmlwidgets, fig.cap = "Printing multiple htmlwidget objects with `tagList()`. To render tag lists at the command line, wrap them in `browsable()` "}
+library(htmltools)
+p <- plot_ly(x = rnorm(100))
+tagList(p, p)
+```
+
+Figure \@ref(fig:multiple-htmlwidgets) renders two plots, each in its own row spanning the width of the page, because each htmlwidget object is an HTML `<div>` tag. More often than not, it is desirable to arrange multiple plots in a given row, and there are a few ways to do that. A very flexible approach is to wrap all of your plots in a [flexbox](https://css-tricks.com/snippets/css/a-guide-to-flexbox/) (i.e., an HTML `<div>` with `display: flex` Cascading Style Sheets (CSS) property). The `tags$div()` function from **htmltools** provides a way to wrap a `<div>` around both tag lists and htmlwidget objects, and set attributes, such as `style`. As \@ref(fig:flexbox) demonstrates, this approach also provides a nice way to add custom styling to the page, such as borders around each panel.
+
+```{r flexbox, fig.cap = "Arranging multiple htmlwidgets with flexbox"}
+tags$div(
+  style = "display: flex; flex-wrap: wrap",
+  tagList(
+    tags$div(p, style = "width: 100%; padding: 1em; border: solid;"),
+    tags$div(p, style = "width: 50%; padding: 1em; border: solid;"),
+    tags$div(p, style = "width: 50%; padding: 1em; border: solid;")
+  )
+)
+```
+
+Another way to arrange multiple htmlwidget objects on a single page is to leverage the `fluidPage()`, `fluidRow()`, and `column()` functions from the **shiny** package.
+
+```{r fluid, fig.cap = "Arranging multiple htmlwidgets with `fluidPage()` from the **shiny** package."}
+library(shiny)
+fluidPage(
+  fluidRow(p),
+  fluidRow(
+    column(6, p), column(6, p) 
+  )
+)
+```
+
+All the arrangement approaches discussed thus far are agnostic to output format, meaning that they can be used to arrange htmlwidgets within _any_  **knitr**/**rmarkdown** document.^[Although HTML can not possibly render in a pdf or word document, **knitr** can automatically detect a non-HTML output format and embed a static image of the htmlwidget via the **webshot** package [@webshot].] If the htmlwidgets do not need to be embedded within a larger document that requires an opininated output format, the **flexdashboard** package provides a **rmarkdown** template for generating dashboards, with a convenient syntax for arranging views [@flexdashboard].
+
+## Subplots
+
 The `subplot()` function provides a flexible interface for arranging multiple **plotly** plots in a single view. It is more flexible than most trellis display frameworks (e.g., ggplot2's `facet_wrap()`) as you don't have to condition on a value of common variable in each display [@trellis]. Its capabilities and interface is similar to the `grid.arrange()` function from the **gridExtra** package, which allows you to arrange multiple **grid** grobs in a single view, effectively providing a way to arrange (possibly unrelated)  **ggplot2** and/or **lattice** plots in a single view [@base]; [@gridExtra]; [@lattice]. The simplest way to use it is to pass plotly objects directly to `subplot()`.
 
 ```{r}
@@ -114,4 +159,3 @@ gg2 <- ggplot(e, aes(factor(1), value)) + geom_violin() +
   theme(axis.text = element_blank(), axis.ticks = element_blank())
 subplot(gg1, gg2) %>% layout(margin = list(l = 50))
 ```
-
