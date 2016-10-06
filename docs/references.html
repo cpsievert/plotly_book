@@ -62,12 +62,6 @@
 <script src="libs/bootstrap/js/bootstrap.min.js"></script>
 <script src="libs/bootstrap/shim/html5shiv.min.js"></script>
 <script src="libs/bootstrap/shim/respond.min.js"></script>
-<link href="libs/leaflet/leaflet.css" rel="stylesheet" />
-<script src="libs/leaflet/leaflet.js"></script>
-<link href="libs/leafletfix/leafletfix.css" rel="stylesheet" />
-<link href="libs/leaflet-label/leaflet.label.css" rel="stylesheet" />
-<script src="libs/leaflet-label/leaflet.label.js"></script>
-<script src="libs/leaflet-binding/leaflet.js"></script>
 
 
 <style type="text/css">
@@ -188,11 +182,11 @@ code > span.in { color: #60a0b0; font-weight: bold; font-style: italic; } /* Inf
 </ul></li>
 <li class="chapter" data-level="5.2" data-path="linking-views-without-shiny.html"><a href="linking-views-without-shiny.html"><i class="fa fa-check"></i><b>5.2</b> Linking views without shiny</a><ul>
 <li class="chapter" data-level="5.2.1" data-path="linking-views-without-shiny.html"><a href="linking-views-without-shiny.html#motivating-examples"><i class="fa fa-check"></i><b>5.2.1</b> Motivating examples</a></li>
-<li class="chapter" data-level="5.2.2" data-path="linking-views-without-shiny.html"><a href="linking-views-without-shiny.html#linking-to-different-plotly-objects"><i class="fa fa-check"></i><b>5.2.2</b> Linking to different plotly objects</a></li>
-<li class="chapter" data-level="5.2.3" data-path="linking-views-without-shiny.html"><a href="linking-views-without-shiny.html#linking-aggregated-views"><i class="fa fa-check"></i><b>5.2.3</b> Linking aggregated views</a></li>
-<li class="chapter" data-level="5.2.4" data-path="linking-views-without-shiny.html"><a href="linking-views-without-shiny.html#linking-to-leaflet"><i class="fa fa-check"></i><b>5.2.4</b> Linking to leaflet</a></li>
-<li class="chapter" data-level="5.2.5" data-path="linking-views-without-shiny.html"><a href="linking-views-without-shiny.html#custom-linking-via-javascript"><i class="fa fa-check"></i><b>5.2.5</b> Custom linking via JavaScript</a></li>
-<li class="chapter" data-level="5.2.6" data-path="linking-views-without-shiny.html"><a href="linking-views-without-shiny.html#highlighting-options"><i class="fa fa-check"></i><b>5.2.6</b> Highlighting options</a></li>
+<li class="chapter" data-level="5.2.2" data-path="linking-views-without-shiny.html"><a href="linking-views-without-shiny.html#transient-versus-persistent-selection"><i class="fa fa-check"></i><b>5.2.2</b> Transient versus persistent selection</a></li>
+<li class="chapter" data-level="5.2.3" data-path="linking-views-without-shiny.html"><a href="linking-views-without-shiny.html#linking-with-other-htmlwidgets"><i class="fa fa-check"></i><b>5.2.3</b> Linking with other htmlwidgets</a></li>
+<li class="chapter" data-level="5.2.4" data-path="linking-views-without-shiny.html"><a href="linking-views-without-shiny.html#linking-aggregated-views"><i class="fa fa-check"></i><b>5.2.4</b> Linking aggregated views</a></li>
+<li class="chapter" data-level="5.2.5" data-path="linking-views-without-shiny.html"><a href="linking-views-without-shiny.html#more-examples"><i class="fa fa-check"></i><b>5.2.5</b> More examples</a></li>
+<li class="chapter" data-level="5.2.6" data-path="linking-views-without-shiny.html"><a href="linking-views-without-shiny.html#custom-linking-via-javascript"><i class="fa fa-check"></i><b>5.2.6</b> Custom linking via JavaScript</a></li>
 <li class="chapter" data-level="5.2.7" data-path="linking-views-without-shiny.html"><a href="linking-views-without-shiny.html#limitations"><i class="fa fa-check"></i><b>5.2.7</b> Limitations</a></li>
 </ul></li>
 </ul></li>
@@ -233,6 +227,9 @@ code > span.in { color: #60a0b0; font-weight: bold; font-style: italic; } /* Inf
 <div id="ref-viewing-pipeline">
 <p>Andreas Buja, Catherine Hurley, Daniel Asimov, and John A. McDonald. 1988. “Elements of a Viewing Pipeline for Data Analysis.” In <em>Dynamic Graphics for Statistics</em>, edited by William S. Cleveland and Marylyn E. McGill. Belmont, California: Wadsworth, Inc.</p>
 </div>
+<div id="ref-colourpicker">
+<p>Attali, Dean. 2016. <em>Colourpicker: A Colour Picker Widget for Shiny Apps, Rstudio, R-Markdown, and ’Htmlwidgets’</em>. <a href="https://CRAN.R-project.org/package=colourpicker" class="uri">https://CRAN.R-project.org/package=colourpicker</a>.</p>
+</div>
 <div id="ref-gridExtra">
 <p>Auguie, Baptiste. 2016. <em>GridExtra: Miscellaneous Functions for “Grid” Graphics</em>. <a href="https://CRAN.R-project.org/package=gridExtra" class="uri">https://CRAN.R-project.org/package=gridExtra</a>.</p>
 </div>
@@ -255,7 +252,7 @@ code > span.in { color: #60a0b0; font-weight: bold; font-style: italic; } /* Inf
 <p>Chang, Winston, Joe Cheng, JJ Allaire, Yihui Xie, and Jonathan McPherson. 2016. <em>Shiny: Web Application Framework for R</em>. <a href="https://CRAN.R-project.org/package=shiny" class="uri">https://CRAN.R-project.org/package=shiny</a>.</p>
 </div>
 <div id="ref-crosstalk">
-<p>Cheng, Joe. n.d. <em>Crosstalk: Inter-Widget Interactivity for Html Widgets</em>.</p>
+<p>Cheng, Joe. 2016. <em>Crosstalk: Inter-Widget Interactivity for Html Widgets</em>.</p>
 </div>
 <div id="ref-leaflet">
 <p>Cheng, Joe, and Yihui Xie. 2016. <em>Leaflet: Create Interactive Web Maps with the Javascript ’Leaflet’ Library</em>. <a href="http://rstudio.github.io/leaflet/" class="uri">http://rstudio.github.io/leaflet/</a>.</p>

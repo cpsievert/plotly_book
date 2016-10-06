@@ -73,6 +73,10 @@ To run any of the code you see in this section, you'll need this developmental v
 `devtools::install_github("ropensci/plotly#554")`
 ```
 
+<!-- TODO:
+Explain again the importance of having standalone HTML?
+-->
+
 ### Motivating examples
 
 As shown in [Linking views with shiny](#linking-views-with-shiny), the `key` attribute provides a way to attach a key (i.e., ID) to graphical elements -- an essential feature when making graphical queries. When linking views in **plotly** outside of **shiny**, the suggested way to attach a key to graphical elements is via the `SharedData` class from the **crosstalk** package [@crosstalk]. At the very least, the `new()` method for this class requires a data frame, and a key variable. Lets suppose we're interested in making comparisons of housing sales across cities for a given year using the `txhousing` dataset. Given that interest, we may want to make graphical queries that condition on a year, so we start by creating a `SharedData` object with `year` as the shared key.
@@ -83,10 +87,9 @@ library(crosstalk)
 sd <- SharedData$new(txhousing, ~year)
 ```
 
-As far as `ggplotly()` and `plot_ly()` are concerned, `SharedData` object(s) act like a data frame, but with a special `key` attribute attached to graphical elements. Since both interfaces are based on [the layered grammar of graphics](#the-layered-grammar-of-graphics), `key` attributes can be attached at the layer level, and those attributes can also be shared across multiple views. Figure \@ref(fig:linked-panels) demonstrates both of these features to link multiple views of monthly median house sales in various Texan cities. As the [video](http://i.imgur.com/DdPdSBB.gif) shows, hovering over a line in any panel selects that particular year, and all corresponding panels update to highlight that year. The result is an incredibly powerful for comparing house sale prices not only across cities for a given year, but also across years for a given city.
+As far as `ggplotly()` and `plot_ly()` are concerned, `SharedData` object(s) act just like a data frame, but with a special `key` attribute attached to graphical elements. Since both interfaces are based on [the layered grammar of graphics](#the-layered-grammar-of-graphics), `key` attributes can be attached at the layer level, and those attributes can also be shared across multiple views. Figure \@ref(fig:linked-panels) leverages both of these features to link multiple views of median house sales in various Texan cities. As the [video](http://i.imgur.com/DdPdSBB.gif) shows, hovering over a line in any panel selects that particular year, and all corresponding panels update to highlight that year. The result is an incredibly powerful for comparing house sale prices not only across cities for a given year, but also across years for a given city.
 
 ```{r, eval = FALSE}
-library(plotly)
 p <- ggplot(sd, aes(month, median)) +
   geom_line(aes(group = year)) + 
   geom_smooth(data = txhousing, method = "gam") + 
@@ -100,24 +103,76 @@ ggplotly(p, tooltip = "year") %>%
 knitr::include_graphics("images/crosstalkLinkedPanels.gif")
 ```
 
+Figure \@ref(fig:linked-panels) uses the `highlight()` function from the **plotly** package to specify the type of plotly event for triggering a selection (via the `on` argument), the color of the selection (via the `color` argument), and set a default selection (via the `defaultValues` argument). The `off` argument controls the type of event that clears selections, and by default, is set to a `plotly_relayout` event, which can be triggered by clicking the home icon in the mode bar (or via zoom/pan). The `highlight()` function can also be used to enable persistent (rather than transient) selections, and dynamically control selection colors, which is very useful for making comparisons.
 
-### Linking to different plotly objects
+<!--
+TODO: Talk about the convenience of having "standard" events generated across chart types. When working with something like D3, you typically have to bind to DOM elements when attaching listeners, which does not generalize well.
+-->
+
+### Transient versus persistent selection
+
+The examples in the previous section use transient selection -- meaning that when a value is selected, previous selection(s) are forgotten. Sometimes it is more useful to allow selections to accumulate, a type of selection known as persistent selection. To demonstrate the difference, Figure \@ref(fig:persistent) presents two different takes a single view, one with transient selection (on the left) and one with persistent selection (on the right). Both selection modes can be used when linking multiple views, but as Figure \@ref(fig:persistent) shows, highlighting graphical elements, even in a single view, can be useful tool to avoid overplotting. 
+
+```{r, eval = FALSE}
+sd <- SharedData$new(txhousing, ~city)
+p <- ggplot(sd, aes(date, median)) + geom_line()
+gg <- ggplotly(p, tooltip = "city")
+
+highlight(gg, on = "plotly_hover", dynamic = TRUE)
+highlight(gg, on = "plotly_hover", dynamic = TRUE, persistent = TRUE)
+```
+
+```{r persistent, fig.cap = "Highlighting lines with transient versus persistent selection. In the left hand panel, transient selection (the default); and in the right hand panel, persistent selection. The video may be accessed [here](http://i.imgur.com/WyBmdv3.gif)"}
+knitr::include_graphics("images/transientVsPersist.gif")
+```
+
+Figure \@ref(fig:persistent) also sets the `dynamic` argument to `TRUE` to populate a widget, powered by the **colourpicker** package [@colourpicker], for dynamically altering the selection color. When paired with persistent selection, this makes for a powerful tool for making comparisons between two selection sets. For Figure \@ref(fig:persistent), transient selection is probably the better mode for an initial look at the data (in particular, to help reveal any structure in missingness or anomalies), whereas persistent selection is better for making comparisons once have a better idea of what cities might be interesting to compare.
+
+### Linking with other htmlwidgets
+
+Perhaps the most exciting thing about building a linked views framework on top of the **crosstalk** package is that it provides a standardized protocol for working with selections that other **htmlwidget** packages may build upon. If implemented carefully, this effectively provides a way to link views between two independent graphical systems -- something that really has not been done in interactive statistical graphics. This grants a tremendous amount of power to the analyst since she/he may leverage the strengths of multiple systems in a single linked views analysis. Figure \@ref(fig:leaflet) shows an example of linked views between plotly and leaflet for exploring the relationship between the magnitude and geographic location of earthquakes. 
+
+```{r, eval = FALSE}
+library(plotly)
+library(leaflet)
+
+sd <- SharedData$new(quakes)
+
+p <- plot_ly(sd, x = ~depth, y = ~mag) %>% 
+  add_markers(alpha = 0.5) %>%
+  layout(dragmode = "select") %>%
+  highlight(dynamic = TRUE, persistent = TRUE)
+
+map <- leaflet(sd) %>% 
+  addTiles() %>% 
+  addCircles()
+
+htmltools::tagList(p, map)
+```
+
+```{r leaflet, fig.cap = "Linking views between plotly and leaflet to explore the relation between magnitude and geographic location of earthquakes around Fiji. The video may be accessed [here](http://i.imgur.com/hd0tG0r.gif)"}
+knitr::include_graphics("images/plotlyLeaflet.gif")
+```
+
+In Figure \@ref(fig:leaflet), the user first highlights earthquakes with a magnitude of 5 or higher in red (via plotly), then earthquakes with a magnitude of 4.5 or lower, and the corresponding earthquakes are highlighted in the leaflet map. This immediately reveals an interesting relationship in magnitude and geographic location, and leaflet provides the ability to zoom and pan on the map to investigate regions that have a high density of quakes. It's worth noting that the **crosstalk** package itself does not provide semantics for describing persistent/dynamic selections, but **plotly** does inform crosstalk about these semantics which other **htmlwidget** authors can access in their JavaScript rendering logic.
 
 ### Linking aggregated views
 
 TODO: show 06-plotly-pipeline.R example. Explain the importance of the pipeline.
 
-### Linking to leaflet
+### More examples
+
+The most up-to-date examples are kept 
 
 ```{r}
-library(plotly)
-library(leaflet)
-
-sd <- SharedData$new(quakes)
-p <- plot_ly(sd, x = ~depth, y = ~mag) %>% add_markers(alpha = 0.5)
-map <- leaflet(sd) %>% addTiles() %>% addCircles()
-htmltools::tagList(p, map)
+crosstalkDir <- system.file("examples", "crosstalk", package = "plotly")
+list.files(crosstalkDir)
 ```
+
+```{r}
+source(file.path(crosstalkDir, "07-binned-target.R"), print.eval = TRUE)
+```
+
 
 ### Custom linking via JavaScript
 
@@ -136,9 +191,7 @@ plot_ly(mtcars, x = ~wt, y = ~mpg) %>%
 ```
 
 
-### Highlighting options
 
-TODO: Talk about the convenience of having "standard" events generated across chart types. When working with something like D3, you typically have to bind to DOM elements when attaching listeners, which does not generalize well.
 
 ### Limitations
 
