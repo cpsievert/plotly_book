@@ -1,6 +1,6 @@
 # Multiple linked views
 
-Multiple linked views is a concept that has existed in many forms within the statistical graphics and information visualization community for decades [@brushing-scatterplots]; [@ggobi:2007]; [@Ahlberg:1997tb]. @Cook:2007uk provides nice motivation for and definition of multiple linked views:
+Multiple linked views is a general concept that has existed in many forms within the statistical graphics and information visualization community for decades [@brushing-scatterplots]; [@ggobi:2007]; [@Ahlberg:1997tb]. @Cook:2007uk provides nice motivation for and definition of multiple linked views:
 
 > Multiple linked views are the optimal framework for posing queries about data. A user should be able to pose a query graphically, and a computer should be able to present the response graphically as well. Both query and response should occur in the same visual field. This calls for a mechanism that links the graphical query to the graphical response. A graphical user interface that has such linking mechanisms is an implementation of the notion of "multiple linked views."
 
@@ -8,9 +8,9 @@ There are a number of R packages that provide a graphics rendering toolkits with
 
 Although **shiny** apps provide a tremendous amount of flexibility when linking views, deploying and sharing shiny apps is way more complicated than a standalone HTML file. When you print a plotly object (or any object built on top of the **htmlwidgets** [@htmlwidgets] infrastructure) it produces a standalone HTML file with some interactivity baked into it. The **plotly** package is unique in the sense that you can link multiple views without shiny in three different ways: inside the same plotly object, link multiple plotly objects, or even link to other htmlwidget packages such as **leaflet** [@leaflet]. Furthermore, since plotly.js has some built-in support for performing statistical summaries, in some cases, we can produce aggregated views of selected data. [Linking views without shiny](#linking-views-with-shiny) explains this framework in detail through a series of examples.
 
-Before exploring the two different approaches for linking views, it can be useful to understand a bit about how interactive graphics systems work, in general. @viewing-pipeline and @plumbing discuss the fundamental elements that all interactive graphics systems must possess -- the most important being the concept of a data-plot-pipeline. As @plumbing states: "A pipeline controls the transformation from data to graphical objects on our screens". Most, if not all, of the software discussed in this work describes systems implemented as desktop applications, where the pipeline resides on a single machine. While this is convenient for developers, it impedes the user's ability to share their work with others.
+Before exploring the two different approaches for linking views, it can be useful to understand a bit about how interactive graphics systems work, in general. @viewing-pipeline and @plumbing discuss the fundamental elements that all interactive graphics systems must possess -- the most important being the concept of a data-plot-pipeline. As @plumbing states: "A pipeline controls the transformation from data to graphical objects on our screens". All of the software discussed in this work describes systems implemented as desktop applications, where the entire pipeline resides on a single machine. However, the situation becomes more complicated in a web-based environment. Developers have to choose more carefully where computations should occur -- in the browser via `JavaScript` (typically more efficient, and easy to share, but a lack of statistical functionality) or in a statistical programming language like `R` (introduces a complicated infrastructure which compromises usability).
 
-Figure \@ref(fig:server-client) provides a simple visual depiction of the two options available when implementing the pipeline within a web-based environment. [Linking views without shiny](#linking-views-with-shiny) explores cases where the pipeline resides entirely within a client's web-browser, without any calls to a seperate process. This is highly desirable because visualizations are then easily shared and viewed from a single file, without any software requirements (besides a web browser). On the other hand, it is a restrictive environment for statistical computing since we can not directly leverage R's computational facilities.^[If the number of possible selection states is small, it may be possible to pre-compute all possible (statistical) results, and navigate them without recomputing on the fly. TODO: provide an example!!] 
+Figure \@ref(fig:server-client) provides a basic visual depiction of the two options available when implementing the pipeline within a web-based environment. [Linking views without shiny](#linking-views-with-shiny) explores cases where the pipeline resides entirely within a client's web-browser, without any calls to a seperate process. This is highly desirable because visualizations are then easily shared and viewed from a single file, without any software requirements (besides a web browser). On the other hand, it is a restrictive environment for statistical computing since we can not directly leverage R's computational facilities.^[If the number of possible selection states is small, it may be possible to pre-compute all possible (statistical) results, and navigate them without recomputing on the fly. TODO: provide an example!!] 
 On other words, whenever the pipeline involves re-computing a statistical model, or performing a complicated aggregation, I suggest [linking views with shiny](#linking-views-with-shiny).
 
 ```{r server-client, echo=FALSE, out.width=700, fig.cap="A visual depiction of the different approaches to implementing a pipeline in a web-based environment. The R package **shiny** exposes the pipeline to users in R, which requires a web server for viewing. The R package **crosstalk** will allow developers to implement and expose the pipeline on both the server and client levels."}
@@ -87,7 +87,7 @@ library(crosstalk)
 sd <- SharedData$new(txhousing, ~year)
 ```
 
-As far as `ggplotly()` and `plot_ly()` are concerned, `SharedData` object(s) act just like a data frame, but with a special `key` attribute attached to graphical elements. Since both interfaces are based on [the layered grammar of graphics](#the-layered-grammar-of-graphics), `key` attributes can be attached at the layer level, and those attributes can also be shared across multiple views. Figure \@ref(fig:linked-panels) leverages both of these features to link multiple views of median house sales in various Texan cities. As the [video](http://i.imgur.com/DdPdSBB.gif) shows, hovering over a line in any panel selects that particular year, and all corresponding panels update to highlight that year. The result is an incredibly powerful for comparing house sale prices not only across cities for a given year, but also across years for a given city.
+As far as `ggplotly()` and `plot_ly()` are concerned, `SharedData` object(s) act just like a data frame, but with a special `key` attribute attached to graphical elements. Since both interfaces are based on [the layered grammar of graphics](#the-layered-grammar-of-graphics), `key` attributes can be attached at the layer level, and those attributes can also be shared across multiple views. Figure \@ref(fig:linked-panels) leverages both of these features to link multiple views of median house sales in various Texan cities. As the [video](http://i.imgur.com/DdPdSBB.gif) shows, hovering over a line in any panel selects that particular year, and all corresponding panels update to highlight that year. The result is an incredibly powerful tool for quickly comparing house sale prices, not only across cities for a given year, but also across years for a given city.
 
 ```{r, eval = FALSE}
 p <- ggplot(sd, aes(month, median)) +
@@ -103,11 +103,27 @@ ggplotly(p, tooltip = "year") %>%
 knitr::include_graphics("images/crosstalkLinkedPanels.gif")
 ```
 
-Figure \@ref(fig:linked-panels) uses the `highlight()` function from the **plotly** package to specify the type of plotly event for triggering a selection (via the `on` argument), the color of the selection (via the `color` argument), and set a default selection (via the `defaultValues` argument). The `off` argument controls the type of event that clears selections, and by default, is set to a `plotly_relayout` event, which can be triggered by clicking the home icon in the mode bar (or via zoom/pan). The `highlight()` function can also be used to enable persistent (rather than transient) selections, and dynamically control selection colors, which is very useful for making comparisons.
+<!-- TODO: talk more about the finding in the figure -->
+
+Figure \@ref(fig:linked-panels) uses the `highlight()` function from the **plotly** package to specify the type of plotly event for triggering a selection (via the `on` argument), the color of the selection (via the `color` argument), and set a default selection (via the `defaultValues` argument). The `off` argument controls the type of event that clears selections, and by default, is set to a `plotly_relayout` event, which can be triggered by clicking the home icon in the mode bar (or via zoom/pan). The `highlight()` function can also be used to control [Transient versus persistent selection](#transient-versus-persistent-selection) modes, and dynamically control selection colors, which is very useful for making comparisons.
 
 <!--
 TODO: Talk about the convenience of having "standard" events generated across chart types. When working with something like D3, you typically have to bind to DOM elements when attaching listeners, which does not generalize well.
 -->
+
+Figure \@ref(fig:linked-ggally) shows another example of using `SharedData` objects to link multiple views, this time to enable linked brushing in a scatterplot matrix via the `ggpairs()` function from the **GGally** package. As discussed in [Scatterplot matrices](#scatterplot-matrices), the `ggpairs()` function implements the generalized pairs plot -- a generalization of the scatterplot matrix -- an incredibly useful tool for exploratory data analysis. Since the `Species` variable (as discrete variable) is mapped to colour in Figure \@ref(fig:linked-ggally), we can inspect both correlations, and marginal densities, dependent upon Species type. By adding the brushing capabilities via `ggplotly()`, we add the ability to examine the dependence between a continuous conditional distribution and other variables. For this type of interaction, a unique key should be attached to each observation in the original data, which is the default behavior of the `SharedData` object's `new()` method when no key is provided.
+
+```{r, eval = FALSE}
+d <- SharedData$new(iris)
+p <- GGally::ggpairs(d, aes(color = Species), columns = 1:4)
+layout(ggplotly(p), dragmode = "select")
+```
+
+```{r linked-ggally, echo = FALSE, fig.cap = "Brushing a scatterplot matrix via the `ggairs()` function in the **GGally** package. A video demonstrating the graphical queries can be viewed [here](http://i.imgur.com/dPTtH3H.gif)"}
+knitr::include_graphics("images/plotlyGGally.gif")
+```
+
+When the graphical query is made is \@ref(fig:linked-ggally), the marginal densities do not update. This points out one of the weaknesses of implementing multiple linked views without shiny (or some other R backend). The browser knows nothing about the algorithm **GGally** (or **ggplot2**) uses to compute a density, so updating the densities in a consistent way is not realistic without being able to call R from the browser. It is true that we could try to precompute densities for every possible selection state, but this does not generally scale well when the number of selection states is large, even as large as Figure \@ref(fig:linked-ggally). As discussed briefly in [bars & histograms](#bars-histograms), [Boxplots](#boxplots), and [2D distributions](#2D-distributions), plotly.js does have some statistical functionality that we can leverage to display [Dynamic aggregates](#dynamic-aggregates), but this currently covers only a few types of statistical displays.
 
 ### Transient versus persistent selection
 
@@ -156,9 +172,38 @@ knitr::include_graphics("images/plotlyLeaflet.gif")
 
 In Figure \@ref(fig:leaflet), the user first highlights earthquakes with a magnitude of 5 or higher in red (via plotly), then earthquakes with a magnitude of 4.5 or lower, and the corresponding earthquakes are highlighted in the leaflet map. This immediately reveals an interesting relationship in magnitude and geographic location, and leaflet provides the ability to zoom and pan on the map to investigate regions that have a high density of quakes. It's worth noting that the **crosstalk** package itself does not provide semantics for describing persistent/dynamic selections, but **plotly** does inform crosstalk about these semantics which other **htmlwidget** authors can access in their JavaScript rendering logic.
 
-### Linking aggregated views
+### Building a pipeline in R
 
-TODO: show 06-plotly-pipeline.R example. Explain the importance of the pipeline.
+```{r, eval = FALSE}
+sd <- SharedData$new(txhousing, ~city)
+
+base <- plot_ly(sd, color = I("black")) %>%
+  group_by(city)
+
+p1 <- base %>%
+  summarise(has = sum(is.na(median))) %>%
+  filter(has > 0) %>%
+  arrange(has) %>%
+  add_bars(x = ~has, y = ~factor(city, levels = city), hoverinfo = "none") %>%
+  layout(
+    barmode = "overlay",
+    xaxis = list(title = "Number of months missing"),
+    yaxis = list(title = "")
+  ) 
+
+p2 <- base %>%
+  add_lines(x = ~date, y = ~median, alpha = 0.3) %>%
+  layout(xaxis = list(title = ""))
+
+subplot(p1, p2, titleX = TRUE, widths = c(0.3, 0.7)) %>% 
+  layout(margin = list(l = 120)) %>%
+  highlight(on = "plotly_click", off = "plotly_unhover", color = "red")
+```
+
+### Dynamic aggregates
+
+```{r}
+```
 
 ### More examples
 
@@ -189,8 +234,6 @@ plot_ly(mtcars, x = ~wt, y = ~mpg) %>%
     }
   ")
 ```
-
-
 
 
 ### Limitations
