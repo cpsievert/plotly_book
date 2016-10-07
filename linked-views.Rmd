@@ -172,7 +172,21 @@ knitr::include_graphics("images/plotlyLeaflet.gif")
 
 In Figure \@ref(fig:leaflet), the user first highlights earthquakes with a magnitude of 5 or higher in red (via plotly), then earthquakes with a magnitude of 4.5 or lower, and the corresponding earthquakes are highlighted in the leaflet map. This immediately reveals an interesting relationship in magnitude and geographic location, and leaflet provides the ability to zoom and pan on the map to investigate regions that have a high density of quakes. It's worth noting that the **crosstalk** package itself does not provide semantics for describing persistent/dynamic selections, but **plotly** does inform crosstalk about these semantics which other **htmlwidget** authors can access in their JavaScript rendering logic.
 
-### Building a pipeline in R
+### The SharedData plot pipeline
+
+Sometimes it is useful to display a summary (i.e., overview) in one view and link that summary to more detailed views. Figure \@ref(fig:bars-lines) is one such example that displays a bar chart of all Texan cities with one or more missing values (the summary) linked with their values over time (the details). By default, the bar chart allows us to quickly see which cities have the most missing values, and by clicking a specific bar, it reveals the relationship between missing values and time for a given city. In cities with the most missing values, data did not start appearing until somewhere around 2006-2010, but for most other cities (e.g., Harlingen, Galveston, Temple-Belton, etc), values started appearing in 2000, but for some reason go missing around 2002-2003.
+
+```{r bars-lines, echo = FALSE, fig.cap = "A bar chart of cities with one or more missing median house sales linked to a time series of those sales over time. The video may be accessed [here](http://i.imgur.com/hzVe2FR.gif)"}
+knitr::include_graphics("images/plotlyLinkedBars.gif")
+```
+
+When implementing linked views like Figure \@ref(fig:bars-lines), it can be helpful to conceptualize a pipeline between a central data frame and the corresponding views. Figure \@ref(fig:pipeline) is a visual depcition of this conceptual model between the central data frame and the eventual linked views in Figure \@ref(fig:bars-lines). In order to generate the bar chart on the left, the pipeline contains a function for computing summary statistics (the number of missing values per city). On the other hand, the time series does not require any summarization -- implying the pipeline for this view is the identity function.
+
+```{r pipeline, echo = FALSE, fig.cap = "A diagram of the pipeline between the data and graphics."}
+knitr::include_graphics("images/pipeline.png")
+```
+
+Since the pipeline from data to graphic is either an identity function or a summarization of some kind, it is good idea to use the most granular form of the data for the `SharedData` object, and use [the data-plot-pipeline](#the-data-plot-pipeline) to define a pipeline from the data to the plot. As @plumbing writes, a true interactive graphics system is aware of the both the function from the central data object to the graphic, as well as the inverse function (i.e., the function from the graphic back to the cental data object). As it currently stands, **plotly** loses this information when the result is pushed to the web browser, but that does not matter for Figure \@ref(fig:bars-lines) since pipelines do not have to re-execute upon user selections.^[Since **dplyr** semantics translate to `SQL` primitives, you could imagine a system that translates a data-plot-pipeline to `SQL` queries, and dynamically re-executes within the browser via something like `SQL.js` [@SQLjs].]
 
 ```{r, eval = FALSE}
 sd <- SharedData$new(txhousing, ~city)
