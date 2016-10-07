@@ -183,11 +183,12 @@ code > span.in { color: #60a0b0; font-weight: bold; font-style: italic; } /* Inf
 <li class="chapter" data-level="4.2.1" data-path="linking-views-without-shiny.html"><a href="linking-views-without-shiny.html#motivating-examples"><i class="fa fa-check"></i><b>4.2.1</b> Motivating examples</a></li>
 <li class="chapter" data-level="4.2.2" data-path="linking-views-without-shiny.html"><a href="linking-views-without-shiny.html#transient-versus-persistent-selection"><i class="fa fa-check"></i><b>4.2.2</b> Transient versus persistent selection</a></li>
 <li class="chapter" data-level="4.2.3" data-path="linking-views-without-shiny.html"><a href="linking-views-without-shiny.html#linking-with-other-htmlwidgets"><i class="fa fa-check"></i><b>4.2.3</b> Linking with other htmlwidgets</a></li>
-<li class="chapter" data-level="4.2.4" data-path="linking-views-without-shiny.html"><a href="linking-views-without-shiny.html#the-shareddata-plot-pipeline"><i class="fa fa-check"></i><b>4.2.4</b> The SharedData plot pipeline</a></li>
-<li class="chapter" data-level="4.2.5" data-path="linking-views-without-shiny.html"><a href="linking-views-without-shiny.html#dynamic-aggregates"><i class="fa fa-check"></i><b>4.2.5</b> Dynamic aggregates</a></li>
-<li class="chapter" data-level="4.2.6" data-path="linking-views-without-shiny.html"><a href="linking-views-without-shiny.html#more-examples"><i class="fa fa-check"></i><b>4.2.6</b> More examples</a></li>
-<li class="chapter" data-level="4.2.7" data-path="linking-views-without-shiny.html"><a href="linking-views-without-shiny.html#custom-linking-via-javascript"><i class="fa fa-check"></i><b>4.2.7</b> Custom linking via JavaScript</a></li>
-<li class="chapter" data-level="4.2.8" data-path="linking-views-without-shiny.html"><a href="linking-views-without-shiny.html#limitations"><i class="fa fa-check"></i><b>4.2.8</b> Limitations</a></li>
+<li class="chapter" data-level="4.2.4" data-path="linking-views-without-shiny.html"><a href="linking-views-without-shiny.html#selection-via-indirect-manipulation"><i class="fa fa-check"></i><b>4.2.4</b> Selection via indirect manipulation</a></li>
+<li class="chapter" data-level="4.2.5" data-path="linking-views-without-shiny.html"><a href="linking-views-without-shiny.html#the-shareddata-plot-pipeline"><i class="fa fa-check"></i><b>4.2.5</b> The SharedData plot pipeline</a></li>
+<li class="chapter" data-level="4.2.6" data-path="linking-views-without-shiny.html"><a href="linking-views-without-shiny.html#dynamic-aggregates"><i class="fa fa-check"></i><b>4.2.6</b> Dynamic aggregates</a></li>
+<li class="chapter" data-level="4.2.7" data-path="linking-views-without-shiny.html"><a href="linking-views-without-shiny.html#more-examples"><i class="fa fa-check"></i><b>4.2.7</b> More examples</a></li>
+<li class="chapter" data-level="4.2.8" data-path="linking-views-without-shiny.html"><a href="linking-views-without-shiny.html#custom-linking-via-javascript"><i class="fa fa-check"></i><b>4.2.8</b> Custom linking via JavaScript</a></li>
+<li class="chapter" data-level="4.2.9" data-path="linking-views-without-shiny.html"><a href="linking-views-without-shiny.html#limitations"><i class="fa fa-check"></i><b>4.2.9</b> Limitations</a></li>
 </ul></li>
 </ul></li>
 <li class="chapter" data-level="5" data-path="animating-views.html"><a href="animating-views.html"><i class="fa fa-check"></i><b>5</b> Animating views</a></li>
@@ -252,9 +253,9 @@ TODO: Talk about the convenience of having "standard" events generated across ch
 p &lt;-<span class="st"> </span>GGally::<span class="kw">ggpairs</span>(d, <span class="kw">aes</span>(<span class="dt">color =</span> Species), <span class="dt">columns =</span> <span class="dv">1</span>:<span class="dv">4</span>)
 <span class="kw">layout</span>(<span class="kw">ggplotly</span>(p), <span class="dt">dragmode =</span> <span class="st">&quot;select&quot;</span>)</code></pre></div>
 <div class="figure"><span id="fig:linked-ggally"></span>
-<img src="images/plotlyGGally.gif" alt="Brushing a scatterplot matrix via the `ggairs()` function in the **GGally** package. A video demonstrating the graphical queries can be viewed [here](http://i.imgur.com/dPTtH3H.gif)" align:"center" />
+<img src="images/plotlyGGally.gif" alt="Brushing a scatterplot matrix via the `ggpairs()` function in the **GGally** package. A video demonstrating the graphical queries can be viewed [here](http://i.imgur.com/dPTtH3H.gif)" align:"center" />
 <p class="caption">
-Figure 4.6: Brushing a scatterplot matrix via the <code>ggairs()</code> function in the <strong>GGally</strong> package. A video demonstrating the graphical queries can be viewed <a href="http://i.imgur.com/dPTtH3H.gif">here</a>
+Figure 4.6: Brushing a scatterplot matrix via the <code>ggpairs()</code> function in the <strong>GGally</strong> package. A video demonstrating the graphical queries can be viewed <a href="http://i.imgur.com/dPTtH3H.gif">here</a>
 </p>
 </div>
 <p>When the graphical query is made is <a href="linking-views-without-shiny.html#fig:linked-ggally">4.6</a>, the marginal densities do not update. This points out one of the weaknesses of implementing multiple linked views without shiny (or some other R backend). The browser knows nothing about the algorithm <strong>GGally</strong> (or <strong>ggplot2</strong>) uses to compute a density, so updating the densities in a consistent way is not realistic without being able to call R from the browser. It is true that we could try to precompute densities for every possible selection state, but this does not generally scale well when the number of selection states is large, even as large as Figure <a href="linking-views-without-shiny.html#fig:linked-ggally">4.6</a>. As discussed briefly in <a href="bars-histograms.html#bars-histograms">bars &amp; histograms</a>, <a href="boxplots.html#boxplots">Boxplots</a>, and <a href="#2D-distributions">2D distributions</a>, plotly.js does have some statistical functionality that we can leverage to display <a href="linking-views-without-shiny.html#dynamic-aggregates">Dynamic aggregates</a>, but this currently covers only a few types of statistical displays.</p>
@@ -268,7 +269,6 @@ gg &lt;-<span class="st"> </span><span class="kw">ggplotly</span>(p, <span class
 
 <span class="kw">highlight</span>(gg, <span class="dt">on =</span> <span class="st">&quot;plotly_hover&quot;</span>, <span class="dt">dynamic =</span> <span class="ot">TRUE</span>)
 <span class="kw">highlight</span>(gg, <span class="dt">on =</span> <span class="st">&quot;plotly_hover&quot;</span>, <span class="dt">dynamic =</span> <span class="ot">TRUE</span>, <span class="dt">persistent =</span> <span class="ot">TRUE</span>)</code></pre></div>
-<div class="sourceCode"><pre class="sourceCode r"><code class="sourceCode r">knitr::<span class="kw">include_graphics</span>(<span class="st">&quot;images/transientVsPersist.gif&quot;</span>)</code></pre></div>
 <div class="figure"><span id="fig:persistent"></span>
 <img src="images/transientVsPersist.gif" alt="Highlighting lines with transient versus persistent selection. In the left hand panel, transient selection (the default); and in the right hand panel, persistent selection. The video may be accessed [here](http://i.imgur.com/WyBmdv3.gif)" align:"center" />
 <p class="caption">
@@ -295,7 +295,6 @@ map &lt;-<span class="st"> </span><span class="kw">leaflet</span>(sd) %&gt;%<spa
 <span class="st">  </span><span class="kw">addCircles</span>()
 
 htmltools::<span class="kw">tagList</span>(p, map)</code></pre></div>
-<div class="sourceCode"><pre class="sourceCode r"><code class="sourceCode r">knitr::<span class="kw">include_graphics</span>(<span class="st">&quot;images/plotlyLeaflet.gif&quot;</span>)</code></pre></div>
 <div class="figure"><span id="fig:leaflet"></span>
 <img src="images/plotlyLeaflet.gif" alt="Linking views between plotly and leaflet to explore the relation between magnitude and geographic location of earthquakes around Fiji. The video may be accessed [here](http://i.imgur.com/hd0tG0r.gif)" align:"center" />
 <p class="caption">
@@ -304,23 +303,38 @@ Figure 4.8: Linking views between plotly and leaflet to explore the relation bet
 </div>
 <p>In Figure <a href="linking-views-without-shiny.html#fig:leaflet">4.8</a>, the user first highlights earthquakes with a magnitude of 5 or higher in red (via plotly), then earthquakes with a magnitude of 4.5 or lower, and the corresponding earthquakes are highlighted in the leaflet map. This immediately reveals an interesting relationship in magnitude and geographic location, and leaflet provides the ability to zoom and pan on the map to investigate regions that have a high density of quakes. It’s worth noting that the <strong>crosstalk</strong> package itself does not provide semantics for describing persistent/dynamic selections, but <strong>plotly</strong> does inform crosstalk about these semantics which other <strong>htmlwidget</strong> authors can access in their JavaScript rendering logic.</p>
 </div>
+<div id="selection-via-indirect-manipulation" class="section level3">
+<h3><span class="header-section-number">4.2.4</span> Selection via indirect manipulation</h3>
+<p>The interactions described thus far in <a href="linking-views-without-shiny.html#linking-views-without-shiny">Linking views without shiny</a> is what <span class="citation">Cook and Swayne (<a href="references.html#ref-ggobi:2007">2007</a>)</span> calls direct manipulation, where the user makes graphical queries by directly interacting with graphical elements. In Figure <a href="linking-views-without-shiny.html#fig:indirect-manip">4.9</a>, cities are queried indirectly via a dropdown powered by the selectize.js library <span class="citation">(B. R. &amp; Contributors <a href="references.html#ref-selectizejs">2016</a>)</span>. Indirect manipulation is especially useful when you have unit(s) of interest (e.g. your favorite city), but can not easily find that unit in the graphical space. The combination of direct and indirect manipulation is powerful, especially when the interactive widgets for indirect manipulation are synched with direct manipulation events. As shown in Figure <a href="linking-views-without-shiny.html#fig:indirect-manip">4.9</a>, when cities are queried indirectly, the graph updates accordingly, and when cities are queried directly, the select box updates accordingly.</p>
+<div class="sourceCode"><pre class="sourceCode r"><code class="sourceCode r"><span class="co"># The group name is currently used to populate a title for the selectize widget</span>
+sd &lt;-<span class="st"> </span>SharedData$<span class="kw">new</span>(txhousing, ~city, <span class="st">&quot;Choose a city&quot;</span>)
+<span class="kw">plot_ly</span>(sd, <span class="dt">x =</span> ~date, <span class="dt">y =</span> ~median) %&gt;%
+<span class="st">  </span><span class="kw">add_lines</span>(<span class="dt">text =</span> ~city, <span class="dt">hoverinfo =</span> <span class="st">&quot;text&quot;</span>) %&gt;%
+<span class="st">  </span><span class="kw">highlight</span>(<span class="dt">on =</span> <span class="st">&quot;plotly_hover&quot;</span>, <span class="dt">persistent =</span> <span class="ot">TRUE</span>, <span class="dt">selectize =</span> <span class="ot">TRUE</span>)</code></pre></div>
+<div class="figure"><span id="fig:indirect-manip"></span>
+<img src="images/plotlySelectize.gif" alt="Selecting cities by indirect manipulation. The video may be accessed [here]()" align:"center" />
+<p class="caption">
+Figure 4.9: Selecting cities by indirect manipulation. The video may be accessed <a href="">here</a>
+</p>
+</div>
+</div>
 <div id="the-shareddata-plot-pipeline" class="section level3">
-<h3><span class="header-section-number">4.2.4</span> The SharedData plot pipeline</h3>
-<p>Sometimes it is useful to display a summary (i.e., overview) in one view and link that summary to more detailed views. Figure <a href="linking-views-without-shiny.html#fig:bars-lines">4.9</a> is one such example that displays a bar chart of all Texan cities with one or more missing values (the summary) linked with their values over time (the details). By default, the bar chart allows us to quickly see which cities have the most missing values, and by clicking a specific bar, it reveals the relationship between missing values and time for a given city. In cities with the most missing values, data did not start appearing until somewhere around 2006-2010, but for most other cities (e.g., Harlingen, Galveston, Temple-Belton, etc), values started appearing in 2000, but for some reason go missing around 2002-2003.</p>
+<h3><span class="header-section-number">4.2.5</span> The SharedData plot pipeline</h3>
+<p>Sometimes it is useful to display a summary (i.e., overview) in one view and link that summary to more detailed views. Figure <a href="linking-views-without-shiny.html#fig:bars-lines">4.10</a> is one such example that displays a bar chart of all Texan cities with one or more missing values (the summary) linked with their values over time (the details). By default, the bar chart allows us to quickly see which cities have the most missing values, and by clicking a specific bar, it reveals the relationship between missing values and time for a given city. In cities with the most missing values, data did not start appearing until somewhere around 2006-2010, but for most other cities (e.g., Harlingen, Galveston, Temple-Belton, etc), values started appearing in 2000, but for some reason go missing around 2002-2003.</p>
 <div class="figure"><span id="fig:bars-lines"></span>
 <img src="images/plotlyLinkedBars.gif" alt="A bar chart of cities with one or more missing median house sales linked to a time series of those sales over time. The video may be accessed [here](http://i.imgur.com/hzVe2FR.gif)" align:"center" />
 <p class="caption">
-Figure 4.9: A bar chart of cities with one or more missing median house sales linked to a time series of those sales over time. The video may be accessed <a href="http://i.imgur.com/hzVe2FR.gif">here</a>
+Figure 4.10: A bar chart of cities with one or more missing median house sales linked to a time series of those sales over time. The video may be accessed <a href="http://i.imgur.com/hzVe2FR.gif">here</a>
 </p>
 </div>
-<p>When implementing linked views like Figure <a href="linking-views-without-shiny.html#fig:bars-lines">4.9</a>, it can be helpful to conceptualize a pipeline between a central data frame and the corresponding views. Figure <a href="linking-views-without-shiny.html#fig:pipeline">4.10</a> is a visual depcition of this conceptual model between the central data frame and the eventual linked views in Figure <a href="linking-views-without-shiny.html#fig:bars-lines">4.9</a>. In order to generate the bar chart on the left, the pipeline contains a function for computing summary statistics (the number of missing values per city). On the other hand, the time series does not require any summarization – implying the pipeline for this view is the identity function.</p>
+<p>When implementing linked views like Figure <a href="linking-views-without-shiny.html#fig:bars-lines">4.10</a>, it can be helpful to conceptualize a pipeline between a central data frame and the corresponding views. Figure <a href="linking-views-without-shiny.html#fig:pipeline">4.11</a> is a visual depcition of this conceptual model between the central data frame and the eventual linked views in Figure <a href="linking-views-without-shiny.html#fig:bars-lines">4.10</a>. In order to generate the bar chart on the left, the pipeline contains a function for computing summary statistics (the number of missing values per city). On the other hand, the time series does not require any summarization – implying the pipeline for this view is the identity function.</p>
 <div class="figure"><span id="fig:pipeline"></span>
 <img src="images/pipeline.png" alt="A diagram of the pipeline between the data and graphics." width="502" align:"center" />
 <p class="caption">
-Figure 4.10: A diagram of the pipeline between the data and graphics.
+Figure 4.11: A diagram of the pipeline between the data and graphics.
 </p>
 </div>
-<p>Since the pipeline from data to graphic is either an identity function or a summarization of some kind, it is good idea to use the most granular form of the data for the <code>SharedData</code> object, and use <a href="a-case-study-of-housing-sales-in-texas.html#the-data-plot-pipeline">the data-plot-pipeline</a> to define a pipeline from the data to the plot. As <span class="citation">Wickham et al. (<a href="references.html#ref-plumbing">2010</a>)</span> writes, a true interactive graphics system is aware of the both the function from the central data object to the graphic, as well as the inverse function (i.e., the function from the graphic back to the cental data object). As it currently stands, <strong>plotly</strong> loses this information when the result is pushed to the web browser, but that does not matter for Figure <a href="linking-views-without-shiny.html#fig:bars-lines">4.9</a> since pipelines do not have to re-execute upon user selections.<a href="#fn15" class="footnoteRef" id="fnref15"><sup>15</sup></a></p>
+<p>Since the pipeline from data to graphic is either an identity function or a summarization of some kind, it is good idea to use the most granular form of the data for the <code>SharedData</code> object, and use <a href="a-case-study-of-housing-sales-in-texas.html#the-data-plot-pipeline">the data-plot-pipeline</a> to define a pipeline from the data to the plot. As <span class="citation">Wickham et al. (<a href="references.html#ref-plumbing">2010</a>)</span> writes, a true interactive graphics system is aware of the both the function from the central data object to the graphic, as well as the inverse function (i.e., the function from the graphic back to the cental data object). As it currently stands, <strong>plotly</strong> loses this information when the result is pushed to the web browser, but that does not matter for Figure <a href="linking-views-without-shiny.html#fig:bars-lines">4.10</a> since pipelines do not have to re-execute upon user selections.<a href="#fn15" class="footnoteRef" id="fnref15"><sup>15</sup></a></p>
 <div class="sourceCode"><pre class="sourceCode r"><code class="sourceCode r">sd &lt;-<span class="st"> </span>SharedData$<span class="kw">new</span>(txhousing, ~city)
 
 base &lt;-<span class="st"> </span><span class="kw">plot_ly</span>(sd, <span class="dt">color =</span> <span class="kw">I</span>(<span class="st">&quot;black&quot;</span>)) %&gt;%
@@ -346,10 +360,10 @@ p2 &lt;-<span class="st"> </span>base %&gt;%
 <span class="st">  </span><span class="kw">highlight</span>(<span class="dt">on =</span> <span class="st">&quot;plotly_click&quot;</span>, <span class="dt">off =</span> <span class="st">&quot;plotly_unhover&quot;</span>, <span class="dt">color =</span> <span class="st">&quot;red&quot;</span>)</code></pre></div>
 </div>
 <div id="dynamic-aggregates" class="section level3">
-<h3><span class="header-section-number">4.2.5</span> Dynamic aggregates</h3>
+<h3><span class="header-section-number">4.2.6</span> Dynamic aggregates</h3>
 </div>
 <div id="more-examples" class="section level3">
-<h3><span class="header-section-number">4.2.6</span> More examples</h3>
+<h3><span class="header-section-number">4.2.7</span> More examples</h3>
 <p>The most up-to-date examples are kept</p>
 <div class="sourceCode"><pre class="sourceCode r"><code class="sourceCode r">crosstalkDir &lt;-<span class="st"> </span><span class="kw">system.file</span>(<span class="st">&quot;examples&quot;</span>, <span class="st">&quot;crosstalk&quot;</span>, <span class="dt">package =</span> <span class="st">&quot;plotly&quot;</span>)
 <span class="kw">list.files</span>(crosstalkDir)
@@ -360,8 +374,8 @@ p2 &lt;-<span class="st"> </span>base %&gt;%
 <div class="sourceCode"><pre class="sourceCode r"><code class="sourceCode r"><span class="kw">source</span>(<span class="kw">file.path</span>(crosstalkDir, <span class="st">&quot;07-binned-target.R&quot;</span>), <span class="dt">print.eval =</span> <span class="ot">TRUE</span>)</code></pre></div>
 </div>
 <div id="custom-linking-via-javascript" class="section level3">
-<h3><span class="header-section-number">4.2.7</span> Custom linking via JavaScript</h3>
-<p>Accessing plotly.js events in shiny is easy (<a href="https://plot.ly/r/shiny-tutorial/">for example</a>), but shiny adds a lot of additional infrastructure that makes it hard to share your work, especially at scale. Very soon, plotly R users will have ways to perform <a href="https://cpsievert.github.io/plotly_book/highlighting.html">highlighting</a> and <a href="https://cpsievert.github.io/plotly_book/linked-highlighting.html">linked highlighting</a> without shiny or any knowledge of HTML/JavaScript. However, if you do know some JavaScript, you can access (and respond to) plotly.js events without shiny, without having to leave the comfort of your R prompt, thanks to the <code>onRender()</code> function from the <strong>htmlwidgets</strong> package <span class="citation">(Vaidyanathan et al. <a href="references.html#ref-htmlwidgets">2016</a>)</span>. This function allows you to write a JavaScript function which will be invoked on the htmlwidget object after it is done rendering. This JavaScript function should have at least two arguments: (1) the DOM element containing the htmlwidget (<code>el</code>) and (2) the data passed from R (<code>x</code>). Figure <a href="linking-views-without-shiny.html#fig:hover-log">4.11</a> the <code>onRender()</code> function to send “event data” to the browser’s console upon hovering a point.</p>
+<h3><span class="header-section-number">4.2.8</span> Custom linking via JavaScript</h3>
+<p>Accessing plotly.js events in shiny is easy (<a href="https://plot.ly/r/shiny-tutorial/">for example</a>), but shiny adds a lot of additional infrastructure that makes it hard to share your work, especially at scale. Very soon, plotly R users will have ways to perform <a href="https://cpsievert.github.io/plotly_book/highlighting.html">highlighting</a> and <a href="https://cpsievert.github.io/plotly_book/linked-highlighting.html">linked highlighting</a> without shiny or any knowledge of HTML/JavaScript. However, if you do know some JavaScript, you can access (and respond to) plotly.js events without shiny, without having to leave the comfort of your R prompt, thanks to the <code>onRender()</code> function from the <strong>htmlwidgets</strong> package <span class="citation">(Vaidyanathan et al. <a href="references.html#ref-htmlwidgets">2016</a>)</span>. This function allows you to write a JavaScript function which will be invoked on the htmlwidget object after it is done rendering. This JavaScript function should have at least two arguments: (1) the DOM element containing the htmlwidget (<code>el</code>) and (2) the data passed from R (<code>x</code>). Figure <a href="linking-views-without-shiny.html#fig:hover-log">4.12</a> the <code>onRender()</code> function to send “event data” to the browser’s console upon hovering a point.</p>
 <div class="sourceCode"><pre class="sourceCode r"><code class="sourceCode r"><span class="kw">library</span>(plotly)
 <span class="kw">library</span>(htmlwidgets)
 <span class="kw">plot_ly</span>(mtcars, <span class="dt">x =</span> ~wt, <span class="dt">y =</span> ~mpg) %&gt;%
@@ -375,12 +389,12 @@ p2 &lt;-<span class="st"> </span>base %&gt;%
 <div id="htmlwidget-e56ad552239eac452f54" style="width:576px;height:355.968px;" class="plotly html-widget"></div>
 <script type="application/json" data-for="htmlwidget-e56ad552239eac452f54">{"x":{"layout":{"margin":{"b":40,"l":60,"t":25,"r":10},"xaxis":{"domain":[0,1],"title":"wt"},"yaxis":{"domain":[0,1],"title":"mpg"},"hovermode":"closest","dragmode":"zoom","showlegend":false},"source":"A","data":[{"x":[2.62,2.875,2.32,3.215,3.44,3.46,3.57,3.19,3.15,3.44,3.44,4.07,3.73,3.78,5.25,5.424,5.345,2.2,1.615,1.835,2.465,3.52,3.435,3.84,3.845,1.935,2.14,1.513,3.17,2.77,3.57,2.78],"y":[21,21,22.8,21.4,18.7,18.1,14.3,24.4,22.8,19.2,17.8,16.4,17.3,15.2,10.4,10.4,14.7,32.4,30.4,33.9,21.5,15.5,15.2,13.3,19.2,27.3,26,30.4,15.8,19.7,15,21.4],"type":"scatter","mode":"markers","marker":{"fillcolor":"rgba(31,119,180,1)","color":"rgba(31,119,180,1)","line":{"color":"transparent"}},"xaxis":"x","yaxis":"y"}],"highlight":{"on":"plotly_selected","off":"plotly_relayout","dynamic":false,"persistent":false,"defaultValues":null,"color":null,"opacityDim":0.2,"showInLegend":false},"base_url":"https://plot.ly"},"evals":[],"jsHooks":{"render":[{"code":"\n    function(el, x) {\n      var gd = document.getElementById(el.id);\n      gd.on('plotly_hover', function(pt) { console.log('hover', pt); });\n    }\n  ","data":null}]}}</script>
 <p class="caption">
-Figure 4.11: A simple scatterplot that emits data whenever the user hovers on a point.
+Figure 4.12: A simple scatterplot that emits data whenever the user hovers on a point.
 </p>
 </div>
 </div>
 <div id="limitations" class="section level3">
-<h3><span class="header-section-number">4.2.8</span> Limitations</h3>
+<h3><span class="header-section-number">4.2.9</span> Limitations</h3>
 <p>As discussed in previous chapters, <strong>plotly</strong> graphs have zoom, pan, and identification type interactions enabled by default. This chapter discusses methods that enable other types of useful interactions listed in Table <a href="linking-views-without-shiny.html#tab:techniques">4.1</a>.</p>
 <table>
 <caption><span id="tab:techniques">Table 4.1: </span>A taxonomy of interaction types</caption>
@@ -431,7 +445,7 @@ Figure 4.11: A simple scatterplot that emits data whenever the user hovers on a 
 <div class="footnotes">
 <hr />
 <ol start="15">
-<li id="fn15"><p>Since <strong>dplyr</strong> semantics translate to <code>SQL</code> primitives, you could imagine a system that translates a data-plot-pipeline to <code>SQL</code> queries, and dynamically re-executes within the browser via something like <code>SQL.js</code> <span class="citation">(LOJKINE <a href="references.html#ref-SQLjs">2016</a>)</span>.<a href="linking-views-without-shiny.html#fnref15">↩</a></p></li>
+<li id="fn15"><p>Since <strong>dplyr</strong> semantics translate to <code>SQL</code> primitives, you could imagine a system that translates a data-plot-pipeline to <code>SQL</code> queries, and dynamically re-executes within the browser via something like <code>SQL.js</code> <span class="citation">(O. L. &amp; Contributors <a href="references.html#ref-SQLjs">2016</a>)</span>.<a href="linking-views-without-shiny.html#fnref15">↩</a></p></li>
 </ol>
 </div>
             </section>

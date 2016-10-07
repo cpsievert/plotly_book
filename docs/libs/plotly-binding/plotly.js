@@ -282,7 +282,26 @@ HTMLWidgets.widget({
         (function() {
           var set = allSets[i];
           var grp = crosstalk.group(set);
-  
+          
+          // Create a selectize widget for each group
+          if (x.selectize) {
+            var selectizeID = Object.keys(x.selectize)[i];
+            var items = x.selectize[selectizeID].items;
+            var first = [{value: "", label: "(All)"}];
+            var opts = {
+              options: first.concat(items),
+              searchField: "label",
+              valueField: "value",
+              labelField: "label"
+            };
+            var select = $("#" + selectizeID).find("select")[0];
+            var selectize = $(select).selectize(opts)[0].selectize;
+            selectize.on("change", function() {
+              // TODO: updateSelection() should really work when we *remove* items...
+              traceManager.updateSelection(set, selectize.items);
+            });
+          }
+          
           // When crosstalk selection changes, update plotly style
           grp.var("selection").on("change", function crosstalk_sel_change(e) {
             if (e.sender !== el) {
@@ -292,10 +311,21 @@ HTMLWidgets.widget({
               // group.
               removeBrush(el);
             }
+            
             // e.value is either null, or an array of newly selected values
             if (e.oldValue !== e.value) {
               traceManager.updateSelection(set, e.value);
+              // https://github.com/selectize/selectize.js/blob/master/docs/api.md#methods_items
+              if (e.value === null) {
+                selectize.clear(true);
+              } else {
+                selectize.addItem(e.value, true);
+                selectize.close();
+              }
+              
             }
+            
+            
           });
 
           grp.var("filter").on("change", function crosstalk_filter_change(e) {

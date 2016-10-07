@@ -138,7 +138,7 @@ highlight(gg, on = "plotly_hover", dynamic = TRUE)
 highlight(gg, on = "plotly_hover", dynamic = TRUE, persistent = TRUE)
 ```
 
-```{r persistent, fig.cap = "Highlighting lines with transient versus persistent selection. In the left hand panel, transient selection (the default); and in the right hand panel, persistent selection. The video may be accessed [here](http://i.imgur.com/WyBmdv3.gif)"}
+```{r persistent, echo = FALSE, fig.cap = "Highlighting lines with transient versus persistent selection. In the left hand panel, transient selection (the default); and in the right hand panel, persistent selection. The video may be accessed [here](http://i.imgur.com/WyBmdv3.gif)"}
 knitr::include_graphics("images/transientVsPersist.gif")
 ```
 
@@ -166,7 +166,7 @@ map <- leaflet(sd) %>%
 htmltools::tagList(p, map)
 ```
 
-```{r leaflet, fig.cap = "Linking views between plotly and leaflet to explore the relation between magnitude and geographic location of earthquakes around Fiji. The video may be accessed [here](http://i.imgur.com/hd0tG0r.gif)"}
+```{r leaflet, echo = FALSE, fig.cap = "Linking views between plotly and leaflet to explore the relation between magnitude and geographic location of earthquakes around Fiji. The video may be accessed [here](http://i.imgur.com/hd0tG0r.gif)"}
 knitr::include_graphics("images/plotlyLeaflet.gif")
 ```
 
@@ -174,7 +174,7 @@ In Figure \@ref(fig:leaflet), the user first highlights earthquakes with a magni
 
 ### Selection via indirect manipulation
 
-The interactions described thus far in [Linking views without shiny](#linking-views-without-shiny) is what @ggobi:2007 calls direct manipulation, where the user directly makes graphical queries by directly interacting with graphical elements. Sometimes it is useful to be able to define a query 
+The interactions described thus far in [Linking views without shiny](#linking-views-without-shiny) is what @ggobi:2007 calls direct manipulation, where the user makes graphical queries by directly interacting with graphical elements. In Figure \@ref(fig:indirect-manip), cities are queried indirectly via a dropdown powered by the selectize.js library [@selectizejs]. Indirect manipulation is especially useful when you have unit(s) of interest (e.g. your favorite city), but can not easily find that unit in the graphical space. The combination of direct and indirect manipulation is powerful, especially when the interactive widgets for indirect manipulation are synched with direct manipulation events. As shown in Figure \@ref(fig:indirect-manip), when cities are queried indirectly, the graph updates accordingly, and when cities are queried directly, the select box updates accordingly.
 
 ```{r, eval = FALSE}
 # The group name is currently used to populate a title for the selectize widget
@@ -184,7 +184,7 @@ plot_ly(sd, x = ~date, y = ~median) %>%
   highlight(on = "plotly_hover", persistent = TRUE, selectize = TRUE)
 ```
 
-```{r indirect-manip, fig.cap = "Selecting cities by indirect manipulation. The video may be accessed [here]()"}
+```{r indirect-manip, echo = FALSE, fig.cap = "Selecting cities by indirect manipulation. The video may be accessed [here]()"}
 knitr::include_graphics("images/plotlySelectize.gif")
 ```
 
