@@ -172,6 +172,22 @@ knitr::include_graphics("images/plotlyLeaflet.gif")
 
 In Figure \@ref(fig:leaflet), the user first highlights earthquakes with a magnitude of 5 or higher in red (via plotly), then earthquakes with a magnitude of 4.5 or lower, and the corresponding earthquakes are highlighted in the leaflet map. This immediately reveals an interesting relationship in magnitude and geographic location, and leaflet provides the ability to zoom and pan on the map to investigate regions that have a high density of quakes. It's worth noting that the **crosstalk** package itself does not provide semantics for describing persistent/dynamic selections, but **plotly** does inform crosstalk about these semantics which other **htmlwidget** authors can access in their JavaScript rendering logic.
 
+### Selection via indirect manipulation
+
+The interactions described thus far in [Linking views without shiny](#linking-views-without-shiny) is what @ggobi:2007 calls direct manipulation, where the user directly makes graphical queries by directly interacting with graphical elements. Sometimes it is useful to be able to define a query 
+
+```{r, eval = FALSE}
+# The group name is currently used to populate a title for the selectize widget
+sd <- SharedData$new(txhousing, ~city, "Choose a city")
+plot_ly(sd, x = ~date, y = ~median) %>%
+  add_lines(text = ~city, hoverinfo = "text") %>%
+  highlight(on = "plotly_hover", persistent = TRUE, selectize = TRUE)
+```
+
+```{r indirect-manip, fig.cap = "Selecting cities by indirect manipulation. The video may be accessed [here]()"}
+knitr::include_graphics("images/plotlySelectize.gif")
+```
+
 ### The SharedData plot pipeline
 
 Sometimes it is useful to display a summary (i.e., overview) in one view and link that summary to more detailed views. Figure \@ref(fig:bars-lines) is one such example that displays a bar chart of all Texan cities with one or more missing values (the summary) linked with their values over time (the details). By default, the bar chart allows us to quickly see which cities have the most missing values, and by clicking a specific bar, it reveals the relationship between missing values and time for a given city. In cities with the most missing values, data did not start appearing until somewhere around 2006-2010, but for most other cities (e.g., Harlingen, Galveston, Temple-Belton, etc), values started appearing in 2000, but for some reason go missing around 2002-2003.
@@ -250,7 +266,10 @@ plot_ly(mtcars, x = ~wt, y = ~mpg) %>%
 ```
 
 
+
+
 ### Limitations
+
 
 As discussed in previous chapters, **plotly** graphs have zoom, pan, and identification type interactions enabled by default. This chapter discusses methods that enable other types of useful interactions listed in Table \@ref(tab:techniques).
 
