@@ -23,10 +23,12 @@ HTMLWidgets.widget({
 
   resize: function(el, width, height, instance) {
     if (instance.autosize) {
+      var width = instance.width || width;
+      var height = instance.height || height;
       Plotly.relayout(el.id, {width: width, height: height});
     }
-  },
-
+  },  
+  
   renderValue: function(el, x, instance) {
 
     // Release previously registered crosstalk event listeners
@@ -43,14 +45,20 @@ HTMLWidgets.widget({
     }
 
     var graphDiv = document.getElementById(el.id);
-
+    
     // if no plot exists yet, create one with a particular configuration
     if (!instance.plotly) {
-      var plot = Plotly.plot(graphDiv, x.data, x.layout, x.config);
+      
+      var plot = Plotly.plot(graphDiv, x);
       instance.plotly = true;
-      instance.autosize = x.layout.autosize;
+      instance.autosize = x.layout.autosize || true;
+      instance.width = x.layout.width;
+      instance.height = x.layout.height;
+      
     } else {
-      var plot = Plotly.newPlot(graphDiv, x.data, x.layout);
+      
+      var plot = Plotly.newPlot(graphDiv, x);
+      
     }
     
     // Attach attributes (e.g., "key", "z") to plotly event data
@@ -160,8 +168,14 @@ HTMLWidgets.widget({
       if (!curveObj.key || !curveObj.set) {
         continue;
       }
-      for (var pointIdx = 0; pointIdx < curveObj.key.length; pointIdx++) {
-        keyCache[joinSetAndKey(curveObj.set, curveObj.key[pointIdx])] =
+      var key = [];
+      if (typeof(curveObj.key) === "object") {
+        key.push(Object.keys(curveObj.key));
+      } else {
+        key.push(curveObj.key);
+      }
+      for (var pointIdx = 0; pointIdx < key.length; pointIdx++) {
+        keyCache[joinSetAndKey(curveObj.set, key[pointIdx])] =
           {curveNumber: curve, pointNumber: pointIdx};
       }
     }
@@ -178,8 +192,10 @@ HTMLWidgets.widget({
         }
         // Look up the keys
         var key = curveObj.key[points[i].pointNumber];
+
         keysBySet[curveObj.set] = keysBySet[curveObj.set] || [];
         keysBySet[curveObj.set].push(key);
+        
       }
       return keysBySet;
     }
@@ -213,44 +229,29 @@ HTMLWidgets.widget({
       return curves;
     }
     
-    // highlight options passed from R
-    var ct = x.highlight || {
-      on: "plotly_selected",
-      off: "plotly_relayout",
-      color: [],
-      dynamic: false,
-      persistent: false,
-      opacityDim: 0.2,
-      showInLegend: false
-    };
-    
-    // make sure color is an array
-    if (!Array.isArray(ct.color)) {
-      ct.color = [ct.color];
+    x.highlight.color = x.highlight.color || [];
+    // make sure highlight color is an array
+    if (!Array.isArray(x.highlight.color)) {
+      x.highlight.color = [x.highlight.color];
     }
-    
-    // inform the world about plotly's crosstalk config
-    var ctConfig = crosstalk.var("plotlyCrosstalkOpts").set(ct);
 
-    var traceManager = new TraceManager(graphDiv, ct);
+    var traceManager = new TraceManager(graphDiv, x.highlight);
 
-    // Gather all sets.
-    var crosstalkGroups = {};
+    // Gather all *unique* sets.
     var allSets = [];
     for (var curveIdx = 0; curveIdx < x.data.length; curveIdx++) {
-      if (x.data[curveIdx].set) {
-        if (!crosstalkGroups[x.data[curveIdx].set]) {
-          allSets.push(x.data[curveIdx].set);
-          crosstalkGroups[x.data[curveIdx].set] = [];
+      var newSet = x.data[curveIdx].set;
+      if (newSet) {
+        if (allSets.indexOf(newSet) === -1) {
+          allSets.push(newSet);
         }
-        crosstalkGroups[x.data[curveIdx].set].push(curveIdx);
       }
     }
 
     if (allSets.length > 0) {
       
       // On plotly event, update crosstalk variable selection value
-      graphDiv.on(ct.on, function turnOn(e) {
+      graphDiv.on(x.highlight.on, function turnOn(e) {
         if (e) {
           var selectedKeys = pointsToKeys(e.points);
           // Keys are group names, values are array of selected keys from group.
@@ -271,7 +272,7 @@ HTMLWidgets.widget({
       });
       
       // On a plotly "clear" event, set crosstalk variable value to null
-      graphDiv.on(ct.off, function turnOff(e) {
+      graphDiv.on(x.highlight.off, function turnOff(e) {
         for (var i = 0; i < allSets.length; i++) {
           crosstalk.group(allSets[i]).var("selection").set(null, {sender: el});
         }
@@ -316,16 +317,16 @@ HTMLWidgets.widget({
             if (e.oldValue !== e.value) {
               traceManager.updateSelection(set, e.value);
               // https://github.com/selectize/selectize.js/blob/master/docs/api.md#methods_items
-              if (e.value === null) {
-                selectize.clear(true);
-              } else {
-                selectize.addItem(e.value, true);
-                selectize.close();
+              if (x.selectize) {
+                if (e.value === null) {
+                  selectize.clear(true);
+                } else {
+                  selectize.addItem(e.value, true);
+                  selectize.close();
+                }
               }
               
             }
-            
-            
           });
 
           grp.var("filter").on("change", function crosstalk_filter_change(e) {
@@ -356,6 +357,12 @@ function TraceManager(graphDiv, highlight) {
   // Preserve the original data. We'll subset based off of this whenever
   // filtering is (re)applied.
   this.origData = JSON.parse(JSON.stringify(graphDiv.data));
+  
+  // supply defaults for opacity
+  for (var i = 0; i < this.origData.length; i++) {
+    this.origData[i].opacity = this.origData[i].opacity || 1;
+    this.gd.data[i].dimmed = false;
+  }
 
   // key: group name, value: null or array of keys representing the
   // most recently received selection for that group.
@@ -363,9 +370,6 @@ function TraceManager(graphDiv, highlight) {
   
   // selection parameters (e.g., transient versus persistent selection)
   this.highlight = highlight;
-  
-  // have original traces been dimmed to highlight a selection?
-  this.dimmed = false;
 }
 
 TraceManager.prototype.close = function() {
@@ -379,14 +383,13 @@ TraceManager.prototype.updateFilter = function(group, keys) {
   if (typeof(keys) === "undefined" || keys === null) {
     this.gd.data = JSON.parse(JSON.stringify(this.origData));
   } else {
-    var keySet = new Set(keys);
   
     for (var i = 0; i < this.origData.length; i++) {
       var trace = this.origData[i];
       if (!trace.key || trace.set !== group) {
         continue;
       }
-      var matches = findMatches(trace.key, keySet);
+      var matches = findNestedMatches(trace.key, keys);
       // subsetArrayAttrs doesn't mutate trace (it makes a modified clone)
       this.gd.data[i] = subsetArrayAttrs(trace, matches);
     }
@@ -417,10 +420,8 @@ TraceManager.prototype.updateSelection = function(group, keys) {
   // selection, delete the "selection traces"
   if (keys === null || !this.highlight.persistent && nNewTraces > 0) {
     var tracesToRemove = [];
-    for (var i = 0; i < this.gd.data.length; i++) {
-      if (this.gd.data[i].hasOwnProperty("crosstalkSelection")) {
-        tracesToRemove.push(i);
-      }
+    for (var i = this.origData.length; i < this.origData.length + nNewTraces; i++) {
+      tracesToRemove.push(i);
     }
     Plotly.deleteTraces(this.gd, tracesToRemove);
   }
@@ -429,114 +430,160 @@ TraceManager.prototype.updateSelection = function(group, keys) {
     
     // go back to original opacity
     for (var i = 0; i < this.origData.length; i++) {
-      Plotly.restyle(
-        this.gd, {"opacity": (this.origData[i].opacity || 1)}, i
-      );
+      Plotly.restyle(this.gd, {"opacity": this.origData[i].opacity}, i);
+      this.gd.data[i].dimmed = false;
     }
-    this.dimmed = false;
     
   } else if (keys.length >= 1) {
     
-    var keySet = new Set(keys || []);
-    
+    // this variable is set in R/highlight.R
+    var selectionColour = crosstalk.var("plotlySelectionColour").get() || 
+      this.highlight.color[0];
     var traces = [];
+    
     for (var i = 0; i < this.origData.length; i++) {
-      var trace = this.origData[i];
+      var trace = this.gd.data[i];
       if (!trace.key || trace.set !== group) {
         continue;
       }
       // Get sorted array of matching indices in trace.key
-      var matches = findMatches(trace.key, keySet);
+      var matches = findNestedMatches(trace.key, keys);
       if (matches.length > 0) {
         trace = subsetArrayAttrs(trace, matches);
+        // opacity in this.gd.data is dimmed...
+        trace.opacity = this.origData[i].opacity;
         trace.showlegend = this.highlight.showInLegend;
+        trace.hoverinfo = this.highlight.hoverinfo || trace.hoverinfo;
         trace.name = "selected";
-        // TODO: allow user to choose selection/original hoverinfo?
-        trace.hoverinfo = "none";
         // inherit marker/line attributes from the existing trace
-        trace.marker = this.gd._fullData[i].marker || {};
-        // prevent Plotly.addTraces() from changing color of original traces
-        // (happens if user doesn't specify trace color)
-        var suppliedMarker = this.gd.data[i].marker || {};
-        if (suppliedMarker.color !== trace.marker.color) {
-          var marker = this.gd._fullData[i].marker || {};
-          Plotly.restyle(
-            this.gd.id, {'marker.color': marker.color}, i
-          );
+        var d = this.gd._fullData[i];
+        if (d.marker) {
+          trace.marker = d.marker;
+          trace.marker.color =  selectionColour || trace.marker.color;
         }
-        trace.line = this.gd._fullData[i].line || {};
-        var suppliedLine = this.gd.data[i].line || {};
-        if (suppliedLine.color !== trace.line.color) {
-          var line = this.gd._fullData[i].line || {};
-          Plotly.restyle(
-            this.gd.id, {'line.color': line.color}, i
-          );
+        if (d.line) {
+          trace.line = d.line;
+          trace.line.color =  selectionColour || trace.line.color;
         }
-        // this variable is set in R/highlight.R
-        var selectionColour = crosstalk.var("plotlySelectionColour").get() || 
-          this.highlight.color[0];
-        trace.marker.color =  selectionColour || trace.marker.color;
-        trace.line.color = selectionColour || trace.line.color;
-        // just a flag so we know this is a "selection trace"
-        trace.crosstalkSelection = true;
+        if (d.textfont) {
+          trace.textfont = d.textfont;
+          trace.textfont.color =  selectionColour || trace.textfont.color;
+        }
+        trace._crosstalkIndex = i;
         traces.push(trace);
+        // dim opacity of original traces (if they aren't already)
+        if (!trace.dimmed) {
+          var opacity = this.origData[i].opacity * this.highlight.opacityDim;
+          Plotly.restyle(this.gd, {"opacity": opacity}, i);
+          this.gd.data[i].dimmed = true;
+        }
       }
     }
     
-    // add selection traces *underneath* original traces, but *on top of*
-    // existing selections
-    tracesToAdd = [];
-    for (var k = nNewTraces; k < traces.length + nNewTraces; k++) {
-      tracesToAdd.push(k);
+    if (traces.length > 0) {
+      
+      var nCurrentTraces = this.gd._fullData.length;
+      
+      Plotly.addTraces(this.gd, traces).then(function(gd) {
+        // incrementally add selection traces to frames
+        // (this is heavily inspired by Plotly.Plots.modifyFrames() 
+        // in src/plots/plots.js)
+        var _hash = gd._transitionData._frameHash;
+        var _frames = gd._transitionData._frames || [];
+        
+        for (var i = 0; i < _frames.length; i++) {
+          
+          // create a lookup table mapping trace index of *selected* traces 
+          // and their *original* index
+          var origIdx = [];
+          var newIdx = [];
+          for (var j = 0; j < traces.length; j++) {
+            var idx = traces[j]._crosstalkIndex;
+            if (_frames[i].traces.indexOf(idx) > -1) {
+              origIdx.push(idx);
+              newIdx.push(nCurrentTraces + j);
+              _frames[i].traces.push(nCurrentTraces + j);
+            }
+          }
+          
+          // nothing to do...
+          if (origIdx.length === 0) {
+            continue;
+          }
+          
+          for (var j = 0; j < origIdx.length; j++) {
+            var frameTrace = _frames[i].data[j];
+            if (!frameTrace.key || frameTrace.set !== group) {
+              continue;
+            }
+            // Get sorted array of matching indices in trace.key
+            var matches = findNestedMatches(frameTrace.key, keys);
+            if (matches.length > 0) {
+              frameTrace = subsetArrayAttrs(frameTrace, matches);
+              var d = gd._fullData[newIdx[j]];
+              if (d.marker) {
+                frameTrace.marker = d.marker;
+              }
+              if (d.line) {
+                frameTrace.line = d.line;
+              }
+              if (d.textfont) {
+                frameTrace.textfont = d.textfont;
+              }
+              _frames[i].data.push(frameTrace);
+            }
+          }
+          
+          // update gd._transitionData._frameHash
+          _hash[_frames[i].name] = _frames[i];
+        }
+      
+      });
+      
     }
-    Plotly.addTraces(this.gd, traces, tracesToAdd);
     
-    if (!this.dimmed) {
-      // reduce opacity of original traces
-      for (var i = traces.length; i < traces.length + this.origData.length; i++) {
-        var opacity = (this.gd._fullData[i].opacity) * this.highlight.opacityDim;
-        Plotly.restyle(this.gd, {"opacity": opacity}, i);  
-      }
-      this.dimmed = true;
-    }
   }
 };
 
 
-function Set(contents /* optional */) {
-  this._map = {};
-  if (contents) {
-    contents.forEach(this.add, this);
-  }
-}
-
-Set.prototype.has = function(val) {
-  return !!this._map[val];
-};
-
-Set.prototype.add = function(val) {
-  this._map[val] = true;
-};
-
-Set.prototype.remove = function(val) {
-  delete this._map[val];
-};
-
-function findMatches(haystack, needleSet) {
+// find matches for nested keys
+function findNestedMatches(haystack, needleSet) {
   var matches = [];
-  haystack.forEach(function(obj, i) {
-    if (needleSet.has(obj) || obj === null) {
-      matches.push(i);
+  // ensure both haystack and needleset are an array of an arrays
+  for (var i = 0; i < haystack.length; i++) {
+    if (!Array.isArray(haystack[i])) {
+      haystack[i] = [haystack[i]];
     }
-  });
+  }
+  for (var i = 0; i < needleSet.length; i++) {
+     if (!Array.isArray(needleSet[i])) {
+      needleSet[i] = [needleSet[i]];
+    }
+  }
+  // return a match if a haystack element is a subset of a
+  for (var i = 0; i < haystack.length; i++) {
+    var hay = haystack[i];
+    for (var j = 0; j < needleSet.length; j++) {
+      // have we already found a match?
+      if (matches.indexOf(i) >= 0) {
+        continue;
+      }
+      var match = hay.every(function(val) { 
+        return val === null || needleSet[j].indexOf(val) >= 0; 
+      });
+      if (match) {
+        matches.push(i);
+      }
+    }
+  }
   return matches;
 }
 
 function isPlainObject(obj) {
-    return (
-        Object.prototype.toString.call(obj) === '[object Object]' &&
-        Object.getPrototypeOf(obj) === Object.prototype
-    );
+  return (
+    Object.prototype.toString.call(obj) === '[object Object]' &&
+    Object.getPrototypeOf(obj) === Object.prototype
+  );
 }
 
 function subsetArrayAttrs(obj, indices) {

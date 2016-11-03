@@ -1,3 +1,7 @@
+gitbook:
+	mkdir -p docs/images && cp images/* docs/images
+	Rscript --quiet _render.R "bookdown::gitbook"
+
 pdf:
 	mkdir -p docs/images && cp images/* docs/images
 	Rscript --quiet _render.R "bookdown::pdf_book"
@@ -5,10 +9,5 @@ pdf:
 	cp docs/plotly_book.tex ../phd-thesis/
 	mkdir -p ../phd-thesis/images && cp docs/images/*.pdf ../phd-thesis/images
 
-gitbook:
-	mkdir -p docs/images && cp images/* docs/images
-	Rscript --quiet _render.R "bookdown::gitbook"
-
-all:
-	mkdir -p docs/images && cp images/* docs/images
-	Rscript --quiet _render.R "bookdown::gitbook"
+clean:
+	rm -r _bookdown_files/

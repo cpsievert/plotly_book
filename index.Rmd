@@ -29,9 +29,11 @@ opts_chunk$set(
   fig.asp = 0.618,
   fig.show = "hold"
 )
-if (identical(knitr:::pandoc_to(), "html")) {
-  opts_chunk$set(out.extra = 'align:"center"')
-}
+switch(
+  knitr:::pandoc_to(),
+  html = opts_chunk$set(out.width = 700, out.extra = 'align:"center"'),
+  pdf = opts_chunk$set(out.width = "0.5\\textwidth", fig.width = 8)
+)
 
 options(
   dplyr.print_min = 6, dplyr.print_max = 6, 

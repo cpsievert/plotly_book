@@ -10,29 +10,37 @@ Since plotly objects inherit properties from an htmlwidget object, any method th
 set.seed(100)
 ```
 
-```{r multiple-htmlwidgets, fig.cap = "Printing multiple htmlwidget objects with `tagList()`. To render tag lists at the command line, wrap them in `browsable()` "}
+```{r multiple-htmlwidgets-fake, eval = FALSE}
 library(htmltools)
 library(plotly)
 p <- plot_ly(x = rnorm(100))
 tagList(p, p)
 ```
 
+```{r multiple-htmlwidgets, echo = FALSE,  fig.cap = "Printing multiple htmlwidget objects with `tagList()`. To render tag lists at the command line, wrap them in `browsable()` ", screenshot.alt = "screenshots/multiple-htmlwidgets"}
+# resort to this until this gets resolved -- https://github.com/rstudio/bookdown/issues/74
+knitr::include_graphics("images/multiple-htmlwidgets")
+```
+
+
 Figure \@ref(fig:multiple-htmlwidgets) renders two plots, each in its own row spanning the width of the page, because each htmlwidget object is an HTML `<div>` tag. More often than not, it is desirable to arrange multiple plots in a given row, and there are a few ways to do that. A very flexible approach is to wrap all of your plots in a [flexbox](https://css-tricks.com/snippets/css/a-guide-to-flexbox/) (i.e., an HTML `<div>` with `display: flex` Cascading Style Sheets (CSS) property). The `tags$div()` function from **htmltools** provides a way to wrap a `<div>` around both tag lists and htmlwidget objects, and set attributes, such as `style`. As Figure \@ref(fig:flexbox) demonstrates, this approach also provides a nice way to add custom styling to the page, such as borders around each panel.
 
-```{r flexbox, fig.cap = "Arranging multiple htmlwidgets with flexbox"}
+```{r flexbox-fake, eval = FALSE}
 tags$div(
   style = "display: flex; flex-wrap: wrap",
-  tagList(
-    tags$div(p, style = "width: 100%; padding: 1em; border: solid;"),
-    tags$div(p, style = "width: 50%; padding: 1em; border: solid;"),
-    tags$div(p, style = "width: 50%; padding: 1em; border: solid;")
-  )
+  tags$div(p, style = "width: 50%; padding: 1em; border: solid;"),
+  tags$div(p, style = "width: 50%; padding: 1em; border: solid;"),
+  tags$div(p, style = "width: 100%; padding: 1em; border: solid;")
 )
+```
+
+```{r flexbox, echo = FALSE, fig.cap = "Arranging multiple htmlwidgets with flexbox"}
+knitr::include_graphics("images/flexbox")
 ```
 
 Another way to arrange multiple htmlwidget objects on a single page is to leverage the `fluidPage()`, `fluidRow()`, and `column()` functions from the **shiny** package.
 
-```{r fluid, fig.cap = "Arranging multiple htmlwidgets with `fluidPage()` from the **shiny** package."}
+```{r fluid-fake, eval = FALSE}
 library(shiny)
 fluidPage(
   fluidRow(p),
@@ -40,6 +48,10 @@ fluidPage(
     column(6, p), column(6, p) 
   )
 )
+```
+
+```{r fluid, echo = FALSE,  fig.cap = "Arranging multiple htmlwidgets with `fluidPage()` from the **shiny** package."}
+knitr::include_graphics("images/fluid")
 ```
 
 All the arrangement approaches discussed thus far are agnostic to output format, meaning that they can be used to arrange htmlwidgets within _any_  **knitr**/**rmarkdown** document.^[Although HTML can not possibly render in a pdf or word document, **knitr** can automatically detect a non-HTML output format and embed a static image of the htmlwidget via the **webshot** package [@webshot].] If the htmlwidgets do not need to be embedded within a larger document that requires an opininated output format, the **flexdashboard** package provides a **rmarkdown** template for generating dashboards, with a convenient syntax for arranging views [@flexdashboard].
@@ -50,8 +62,10 @@ The `subplot()` function provides a flexible interface for merging multiple plot
 
 ```{r simple, fig.cap = "The most basic use of `subplot()` to merge multiple plotly objects into a single plotly object."}
 library(plotly)
-p1 <- plot_ly(economics, x = ~date, y = ~unemploy, name = "unemploy") %>% add_lines()
-p2 <- plot_ly(economics, x = ~date, y = ~uempmed, name = "uempmed") %>% add_lines()
+p1 <- plot_ly(economics, x = ~date, y = ~unemploy) %>% 
+  add_lines(name = "unemploy")
+p2 <- plot_ly(economics, x = ~date, y = ~uempmed) %>% 
+  add_lines(name = "uempmed")
 subplot(p1, p2)
 ```
 
@@ -78,19 +92,19 @@ economics %>%
   subplot(nrows = 5, shareX = TRUE)
 ```
 
-Conceptually, `subplot()` provides a way to place a collection of plots into a table with a given number of rows and columns. The number of rows (and, by consequence, the number of columns) is specified via the `nrows` argument. By default each row/column shares an equal proportion of the overall height/width, but as shown in the diagram below, that default can be changed via the `heights` and `widths` arguments.
+Conceptually, `subplot()` provides a way to place a collection of plots into a table with a given number of rows and columns. The number of rows (and, by consequence, the number of columns) is specified via the `nrows` argument. By default each row/column shares an equal proportion of the overall height/width, but as shown in Figure \@ref(fig:proportions) the default can be changed via the `heights` and `widths` arguments.
 
-```{r, echo = FALSE}
-knitr::include_graphics("images/proportions.svg")
+```{r proportions, echo = FALSE, fig.cap = "A visual diagram of controling the `heights` of rows and `widths` of columns."}
+knitr::include_graphics("images/proportions")
 ```
 
-This flexibility is quite useful for a number of visualizations, for example, a joint density plot (the new [heatmaply](https://github.com/talgalili/heatmaply) package is another good example).
+This flexibility is quite useful for a number of visualizations, for example, as shown in Figure \@ref(fig:joint), a joint density plot is really of subplot of joint and marginal densities. The **heatmaply** package is great example of leveraging `subplot()` in a similar way to create interactive dendograms [@heatmaply].
 
-```{r}
+```{r joint, fig.cap = "A joint density plot with synchronized axes."}
 x <- rnorm(100)
 y <- rnorm(100)
 s <- subplot(
-  plot_ly(x = x, type = "histogram", color = I("black")), 
+  plot_ly(x = x, color = I("black")), 
   plotly_empty(), 
   plot_ly(x = x, y = y, color = I("black")), 
   plot_ly(y = y, color = I("black")),
@@ -100,17 +114,11 @@ s <- subplot(
 layout(s, showlegend = FALSE)
 ```
 
-Note that, since `subplot()` returns a plotly object, any [layout attribute](https://plot.ly/r/reference/#layout) can be modified downstream via `layout()`.
-
 ### Recursive subplots
 
-The `subplot()` function is designed to work recursively so that you can have subplots of subplots. This idea is useful when your desired layout doesn't conform to the table structure described in the previous section. In fact, you can think of a subplot of subplots like a spreadsheet with merged cells.
+The `subplot()` function returns a plotly object so it can be modified like any other plotly object. This effectively means that subplots work recursively (i.e., you can have subplots within subplots). This idea is useful when your desired layout doesn't conform to the table structure described in the previous section. In fact, you can think of a subplot of subplots like a spreadsheet with merged cells. Figure \@ref(fig:recursive) gives a basic example where each row of the outer-most subplot contains a different number of columns.
 
-```{r, echo = FALSE}
-knitr::include_graphics("images/subplot.svg")
-```
-
-```{r}
+```{r recursive, fig.cap = "Recursive subplots.", screenshot.alt = "screenshots/recursive"}
 plotList <- function(nplots) {
   lapply(seq_len(nplots), function(x) plot_ly())
 }
@@ -119,9 +127,9 @@ s2 <- subplot(plotList(2), shareY = TRUE)
 subplot(s1, s2, plot_ly(), nrows = 3, margin = 0.04, heights = c(0.6, 0.3, 0.1))
 ```
 
-The concept is particularly useful when you want plot(s) in a given row to have different widths from plot(s) in another row.
+The concept is particularly useful when you want plot(s) in a given row to have different widths from plot(s) in another row. Figure \@ref(fig:map-subplot) uses this recursive behavior to place many bar charts in the first row, and a single choropleth in the second row.
 
-```{r, fig.asp = 1}
+```{r map-subplot, fig.cap = "Multiple bar charts of US statistics by state in a subplot with a choropleth of population density", screenshot.alt = "screenshots/map-subplot"}
 # specify some map projection/options
 g <- list(
   scope = 'usa',
@@ -143,7 +151,7 @@ barcharts <- lapply(vars, function(var) {
 })
 subplot(
   subplot(barcharts, margin = 0.01), map, 
-  nrows = 2, heights = c(0.3, 0.7)
+  nrows = 2, heights = c(0.3, 0.7), margin = 0.1
 )
 ```
 
@@ -151,7 +159,7 @@ subplot(
 
 Underneath the hood, ggplot2 facets are implemented as subplots, which enables the synchronized zoom events on shared axes. Since subplots work recursively, it is also possible to have a subplot of ggplot2 faceted plots, as Figure \@ref(fig:ggplot2-subplots) shows. Moreover, `subplot()` can understand ggplot objects, so there is no need to translate them to plotly object via `ggplotly()`  (unless you want to leverage some of the `ggplotly()` arguments, such as `tooltip` for customizing information displayed on hover).
 
-```{r ggplot2-subplots, fig.cap = "Arranging multiple faceted ggplot2 plots into a plotly subplot."}
+```{r ggplot2-subplots, fig.cap = "Arranging multiple faceted ggplot2 plots into a plotly subplot.", screenshot.alt = "screenshots/ggplot2-subplots"}
 e <- tidyr::gather(economics, variable, value, -date)
 gg1 <- ggplot(e, aes(date, value)) + geom_line() +
   facet_wrap(~variable, scales = "free_y", ncol = 1)
@@ -173,7 +181,7 @@ In fact, Figure \@ref(fig:plotlyLinkedClick) from that section provides an examp
 
 The same problems and principles that inspired scagnostics has inspired work on more general divide & recombine technique(s) for working with navigating through many statistical artifacts [@divide-recombine]; [@RHIPE], including visualizations [@trelliscope]. The **trelliscope** package provides a system for computing arbitrary cognostics on each panel of a trellis display as well as an interactive graphical user interface for defining (and navigating through) interesting panels based on those cognostics [@trelliscope-pkg]. This system also allows users to define the graphical method for displaying each panel, so **plotly** graphs can easily be embedded. The **trelliscope** package is currently built upon **shiny**, but as Figure \@ref(fig:trelliscope) demonstrates, the **trelliscopecore** package provides lower-level tools that allow one to create trelliscope displays without **shiny**.
 
-```{r trelliscope, eval = FALSE, fig.cap = "Using plotly within a trelliscope"}
+```{r trelliscope-fake, eval = FALSE}
 library(trelliscopecore)
 library(dplyr)
 library(plotly)
@@ -211,4 +219,8 @@ write_display_obj(
 prepare_display(base_path)
 
 view_display(base_path)
+```
+
+```{r trelliscope, echo = FALSE, fig.cap = "Using plotly within a trelliscope"}
+knitr::include_graphics("images/trelliscope")
 ```
