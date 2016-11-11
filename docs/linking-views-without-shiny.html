@@ -180,13 +180,19 @@ code > span.in { color: #60a0b0; font-weight: bold; font-style: italic; } /* Inf
 <li class="chapter" data-level="4.2.4" data-path="linking-views-without-shiny.html"><a href="linking-views-without-shiny.html#selection-via-indirect-manipulation"><i class="fa fa-check"></i><b>4.2.4</b> Selection via indirect manipulation</a></li>
 <li class="chapter" data-level="4.2.5" data-path="linking-views-without-shiny.html"><a href="linking-views-without-shiny.html#the-shareddata-plot-pipeline"><i class="fa fa-check"></i><b>4.2.5</b> The SharedData plot pipeline</a></li>
 <li class="chapter" data-level="4.2.6" data-path="linking-views-without-shiny.html"><a href="linking-views-without-shiny.html#dynamic-aggregates"><i class="fa fa-check"></i><b>4.2.6</b> Dynamic aggregates</a></li>
-<li class="chapter" data-level="4.2.7" data-path="linking-views-without-shiny.html"><a href="linking-views-without-shiny.html#hierarchial-categorical-selection"><i class="fa fa-check"></i><b>4.2.7</b> Hierarchial categorical selection</a></li>
+<li class="chapter" data-level="4.2.7" data-path="linking-views-without-shiny.html"><a href="linking-views-without-shiny.html#nested-selections"><i class="fa fa-check"></i><b>4.2.7</b> Nested selections</a></li>
 <li class="chapter" data-level="4.2.8" data-path="linking-views-without-shiny.html"><a href="linking-views-without-shiny.html#more-examples"><i class="fa fa-check"></i><b>4.2.8</b> More examples</a></li>
+<li class="chapter" data-level="4.2.9" data-path="linking-views-without-shiny.html"><a href="linking-views-without-shiny.html#limitations"><i class="fa fa-check"></i><b>4.2.9</b> Limitations</a></li>
 </ul></li>
 </ul></li>
 <li class="chapter" data-level="5" data-path="animating-views.html"><a href="animating-views.html"><i class="fa fa-check"></i><b>5</b> Animating views</a><ul>
 <li class="chapter" data-level="5.1" data-path="key-frame-animations.html"><a href="key-frame-animations.html"><i class="fa fa-check"></i><b>5.1</b> Key frame animations</a></li>
 <li class="chapter" data-level="5.2" data-path="linking-animated-views.html"><a href="linking-animated-views.html"><i class="fa fa-check"></i><b>5.2</b> Linking animated views</a></li>
+</ul></li>
+<li class="chapter" data-level="6" data-path="advanced-topics.html"><a href="advanced-topics.html"><i class="fa fa-check"></i><b>6</b> Advanced topics</a><ul>
+<li class="chapter" data-level="6.1" data-path="custom-behavior-via-javascript.html"><a href="custom-behavior-via-javascript.html"><i class="fa fa-check"></i><b>6.1</b> Custom behavior via JavaScript</a></li>
+<li class="chapter" data-level="6.2" data-path="translating-custom-ggplot2-geoms.html"><a href="translating-custom-ggplot2-geoms.html"><i class="fa fa-check"></i><b>6.2</b> Translating custom ggplot2 geoms</a></li>
+<li class="chapter" data-level="6.3" data-path="designing-an-htmlwidget-interface.html"><a href="designing-an-htmlwidget-interface.html"><i class="fa fa-check"></i><b>6.3</b> Designing an htmlwidget interface</a></li>
 </ul></li>
 <li class="chapter" data-level="" data-path="references.html"><a href="references.html"><i class="fa fa-check"></i>References</a></li>
 <li class="divider"></li>
@@ -325,7 +331,7 @@ Figure 4.9: A bar chart of cities with one or more missing median house sales li
 </div>
 <p>When implementing linked views like Figure <a href="linking-views-without-shiny.html#fig:bars-lines">4.9</a>, it can be helpful to conceptualize a pipeline between a central data frame and the corresponding views. Figure <a href="linking-views-without-shiny.html#fig:pipeline">4.10</a> is a visual depiction of this conceptual model between the central data frame and the eventual linked views in Figure <a href="linking-views-without-shiny.html#fig:bars-lines">4.9</a>. In order to generate the bar chart on the left, the pipeline contains a function for computing summary statistics (the number of missing values per city). On the other hand, the time series does not require any summarization – implying the pipeline for this view is the identity function.</p>
 <div class="figure"><span id="fig:pipeline"></span>
-<img src="images/pipeline" alt="A diagram of the pipeline between the data and graphics." width="700" align:"center" />
+<img src="images/pipeline.png" alt="A diagram of the pipeline between the data and graphics." width="700" align:"center" />
 <p class="caption">
 Figure 4.10: A diagram of the pipeline between the data and graphics.
 </p>
@@ -368,7 +374,7 @@ scatterplot &lt;-<span class="st"> </span><span class="kw">plot_ly</span>(d, <sp
   scatterplot, <span class="dt">shareY =</span> <span class="ot">TRUE</span>
 ) %&gt;%<span class="st"> </span><span class="kw">layout</span>(<span class="dt">dragmode =</span> <span class="st">&quot;select&quot;</span>)</code></pre></div>
 <div class="figure"><span id="fig:highlight-boxplot"></span>
-<img src="images/highlight-boxplot" alt="Dynamically populating a boxplot reflecting brushed observations" width="700" align:"center" />
+<img src="images/highlight-boxplot.gif" alt="Dynamically populating a boxplot reflecting brushed observations" width="700" align:"center" />
 <p class="caption">
 Figure 4.11: Dynamically populating a boxplot reflecting brushed observations
 </p>
@@ -383,15 +389,68 @@ Figure 4.11: Dynamically populating a boxplot reflecting brushed observations
 <span class="co"># plotly.js will try to dodge bars placed under the same category</span>
 <span class="kw">layout</span>(p, <span class="dt">barmode =</span> <span class="st">&quot;overlay&quot;</span>)</code></pre></div>
 <div class="figure"><span id="fig:highlight-bars"></span>
-<img src="images/highlight-bars" alt="Dynamically populating a bar chart reflecting brushed observations" width="700" align:"center" />
+<img src="images/highlight-bars.gif" alt="Dynamically populating a bar chart reflecting brushed observations" width="700" align:"center" />
 <p class="caption">
 Figure 4.12: Dynamically populating a bar chart reflecting brushed observations
 </p>
 </div>
 </div>
-<div id="hierarchial-categorical-selection" class="section level3">
-<h3><span class="header-section-number">4.2.7</span> Hierarchial categorical selection</h3>
-<p>All of the sections under <a href="linking-views-without-shiny.html#linking-views-without-shiny">linking views without shiny</a> thus far have attached a <em>single value</em> to a graphical mark or group of marks. However, there are also situations where it makes sense to attach multiple values to mark(s). Instead of using multiple keys to assign multiple values, it is actually more powerful to use a single <em>nested</em> key, since multiple keys can not support a different number of values for each mark. For example, suppose I have 4 (x, y) pairs, and each pair is associated with a different set of categorical values:</p>
+<div id="nested-selections" class="section level3">
+<h3><span class="header-section-number">4.2.7</span> Nested selections</h3>
+<div id="grouped-selections-via-ggplotly" class="section level4">
+<h4><span class="header-section-number">4.2.7.1</span> Grouped selections via <code>ggplotly()</code></h4>
+<p>In statistical graphics, it is quite common for a graphical element to be tied to multiple observations. For example, a line representing the fitted values from a linear model is inherently connected to the observations used to fit the model. In fact, any graphical summary (e.g. boxplot, histogram, density, etc.) can be linked back the original data used to derive them. Especially when comparing multiple summaries, it can be useful to highlight group(s) of summaries, as well as the raw data that created them. Figure <a href="linking-views-without-shiny.html#fig:smooth-highlight">4.13</a> uses <code>ggplotly()</code>’s built-in support for linking graphical summaries with raw data to enable highlighting of linear models.<a href="#fn15" class="footnoteRef" id="fnref15"><sup>15</sup></a> Furthermore, notice how there are actually two levels of selection in Figure <a href="linking-views-without-shiny.html#fig:smooth-highlight">4.13</a> – when hovering over a single point, just that point is selected, but when hovering over a fitted line, all the observations tied to that line are selected.</p>
+<!--
+Figure \@ref(fig:bars-lines) is one such example where each bar (i.e., each city) is tied to multiple observations (i.e., monthly sales within city). In that example, the group and key variables are the same (`city`), but what happens when they are different? In the case that a key variable is _nested_ inside a **ggplot2** group, `ggplotly()` will automatically track each group.
+-->
+<div class="sourceCode"><pre class="sourceCode r"><code class="sourceCode r"><span class="co"># if you don&#39;t want to highlight individual points, you could specify</span>
+<span class="co"># `class` as the key variable here, instead of the default (rownames)</span>
+m &lt;-<span class="st"> </span>SharedData$<span class="kw">new</span>(mpg)
+p &lt;-<span class="st"> </span><span class="kw">ggplot</span>(m, <span class="kw">aes</span>(displ, hwy, <span class="dt">colour =</span> class)) +
+<span class="st">    </span><span class="kw">geom_point</span>() +
+<span class="st">    </span><span class="kw">geom_smooth</span>(<span class="dt">se =</span> <span class="ot">FALSE</span>, <span class="dt">method =</span> <span class="st">&quot;lm&quot;</span>)
+<span class="kw">ggplotly</span>(p) %&gt;%<span class="st"> </span><span class="kw">highlight</span>(<span class="st">&quot;plotly_hover&quot;</span>)</code></pre></div>
+<div class="figure"><span id="fig:smooth-highlight"></span>
+<img src="images/smooth-highlight.gif" alt="Engine displacement versus highway miles per gallon by class of car. The linear model for each class, as well as the individual observations, can be selected by hovering over the line of fitted values. An individual observation can also be selected by hovering over the relevant point." width="700" align:"center" />
+<p class="caption">
+Figure 4.13: Engine displacement versus highway miles per gallon by class of car. The linear model for each class, as well as the individual observations, can be selected by hovering over the line of fitted values. An individual observation can also be selected by hovering over the relevant point.
+</p>
+</div>
+<p>At first, it might not seem as though “nested” selections are that useful. After all, the highlighting of individual points in Figure <a href="linking-views-without-shiny.html#fig:smooth-highlight">4.13</a> does not supply us with any additional information. However, applying this same idea to multiple views of the same observations can be quite useful. Figure <a href="linking-views-without-shiny.html#fig:ggnostic">4.14</a> demonstrates a useful application via the <code>ggnostic()</code> function from the <strong>GGally</strong> package <span class="citation">(Schloerke et al. <a href="#ref-GGally">2016</a>)</span>. This function produces a matrix of diagnostic plots from a fitted model object, with different diagnostic measures in each row, and different explanatory variables in each column. Figure <a href="linking-views-without-shiny.html#fig:ggnostic">4.14</a> shows the default display for a linear model, which includes residuals (<code>resid</code>), estimates of residual standard deviation when a particular observation is excluded (<code>sigma</code>), diagonals from the projection matrix (<code>hat</code>), and cooks distance (<code>cooksd</code>).</p>
+<div class="sourceCode"><pre class="sourceCode r"><code class="sourceCode r"><span class="co"># for better tick labels</span>
+mtcars$am &lt;-<span class="st"> </span>dplyr::<span class="kw">recode</span>(mtcars$am, <span class="st">`</span><span class="dt">0</span><span class="st">`</span> =<span class="st"> &quot;automatic&quot;</span>, <span class="st">`</span><span class="dt">1</span><span class="st">`</span> =<span class="st"> &quot;manual&quot;</span>)
+<span class="co"># choose a model by AIC stepping backwards </span>
+mod &lt;-<span class="st"> </span><span class="kw">step</span>(<span class="kw">lm</span>(mpg ~<span class="st"> </span>., <span class="dt">data =</span> mtcars), <span class="dt">trace =</span> <span class="ot">FALSE</span>)
+<span class="co"># produce diagnostic plots, coloring by automatic/manual</span>
+pm &lt;-<span class="st"> </span>GGally::<span class="kw">ggnostic</span>(mod, <span class="dt">mapping =</span> <span class="kw">aes</span>(<span class="dt">color =</span> am))
+<span class="co"># ggplotly() will automatically add rownames as a key if none is provided</span>
+<span class="kw">ggplotly</span>(pm) %&gt;%<span class="st"> </span><span class="kw">highlight</span>(<span class="st">&quot;plotly_click&quot;</span>, <span class="dt">persistent =</span> <span class="ot">TRUE</span>)</code></pre></div>
+<div class="figure"><span id="fig:ggnostic"></span>
+<img src="images/ggnostic.gif" alt="Using nested selections to highlight numerous diagnostics from different regions of the design matrix." width="700" align:"center" />
+<p class="caption">
+Figure 4.14: Using nested selections to highlight numerous diagnostics from different regions of the design matrix.
+</p>
+</div>
+<p>Injecting interactivity into <code>ggnostic()</code> via <code>ggplotly()</code> enhances the diagnostic plot in at least two ways. Coloring by a factor variable in the model allows us to highlight that region of the design matrix by selecting a relevant statistical summary, which can help avoid overplotting when dealing with numerous factor levels. For example, in Figure <a href="linking-views-without-shiny.html#fig:ggnostic">4.14</a>, the user first highlights diagnostics for cars with manual transmission (in blue), then cars with automatic transmission (in red). Perhaps more widely useful is the ability to highlight individual observations since most of these diagnostics are designed to identify highly influential or unusual observations.</p>
+<p>In Figure <a href="linking-views-without-shiny.html#fig:ggnostic">4.14</a>, there is one observation with a noticably high value of <code>cooksd</code>, which suggests the observation has a large influence on the fitted model. Clicking on that point highlights its corresponding diagnostic measures, plotted against each explanatory variable. Doing so makes it obvious that this observation is influential since it has a unusually high response/residual in a fairly sparse region of the design space (i.e., it has a pretty high value of <code>wt</code>) and removing it would significantly reduce the estimated standard deviation (<code>sigma</code>). By comparison, the other two observations with similar values of <code>wt</code> have a response value very close to the overall mean, so even though their value of <code>hat</code> is high, their value of <code>sigma</code> is low.</p>
+<p>Highlighting groups via fitted lines is certainly useful, but it is not the only way to highlight groups via a graphical summary. In fact, anytime a key variable is supplied to <strong>ggplot2</strong> layer with a non-identity statistic, it automatically attaches all the unique key values tied to all the observations that went into creating the group – enabling linked selections between raw and aggregated forms of the data. For example, Figure <a href="linking-views-without-shiny.html#fig:density2scatter">4.15</a> links several density estimates back to the original data, and by clicking on a particular density estimate, it highlights all of the observations associated with that group. Yet again, this is an effective strategy to combat overplotting by bring groups of interests to the foreground of the graphic.</p>
+<div class="sourceCode"><pre class="sourceCode r"><code class="sourceCode r">m &lt;-<span class="st"> </span>SharedData$<span class="kw">new</span>(mpg)
+p1 &lt;-<span class="st"> </span><span class="kw">ggplot</span>(m, <span class="kw">aes</span>(displ, <span class="dt">fill =</span> class)) +<span class="st"> </span><span class="kw">geom_density</span>()
+p2 &lt;-<span class="st"> </span><span class="kw">ggplot</span>(m, <span class="kw">aes</span>(displ, hwy, <span class="dt">fill =</span> class)) +<span class="st"> </span><span class="kw">geom_point</span>()
+<span class="kw">subplot</span>(p1, p2) %&gt;%<span class="st"> </span><span class="kw">highlight</span>(<span class="st">&quot;plotly_click&quot;</span>) %&gt;%<span class="st"> </span><span class="kw">hide_legend</span>()</code></pre></div>
+<div class="figure"><span id="fig:density2scatter"></span>
+<img src="images/density2scatter.gif" alt="Clicking on a density estimate to highlight all the raw observations that went into that estimate." width="700" align:"center" />
+<p class="caption">
+Figure 4.15: Clicking on a density estimate to highlight all the raw observations that went into that estimate.
+</p>
+</div>
+<!--
+All of the sections under [linking views without shiny](#linking-views-without-shiny) thus far have attached a _single value_ to a graphical mark or group of marks. In mathematical terms, this implies that the mapping from visual space to data space can be described through a surjective function. However, there are also situations where it is useful to attach numerous key values to a graphical mark (i.e. nested keys). 
+-->
+</div>
+<div id="hierarchical-selection" class="section level4">
+<h4><span class="header-section-number">4.2.7.2</span> Hierarchical selection</h4>
+<p>In the previous section, we leveraged <code>ggplotly()</code>’s ability to attach multiple key values to a graphical object to perform “grouped selections” on statistical objects (e.g., selecting a density estimate selects all the corresponding observations). In all those examples, groups are distinct (specifically, no one observation can be an input to more than one group), so what happens when groups are not distinct? Under the hood, <strong>plotly</strong> considers each graphical mark to be a “group”, in the sense that a <em>set of element(s)/value(s)</em> can be associated with each mark. Given selected mark(s) (i.e. groups of interest), it considers any subset of the selection(s) to be match, leading to a notion of hierarchical selection. For a simple example, suppose I have 4 (x, y) pairs, and each pair is associated with a different set of categorical values:</p>
 <div class="sourceCode"><pre class="sourceCode r"><code class="sourceCode r"><span class="co"># data frames do support list columns,</span>
 <span class="co"># but tibble::tibble() provides a nicer API for this...</span>
 d &lt;-<span class="st"> </span><span class="kw">data.frame</span>(<span class="dt">x =</span> <span class="dv">1</span>:<span class="dv">4</span>, <span class="dt">y =</span> <span class="dv">1</span>:<span class="dv">4</span>)
@@ -402,29 +461,32 @@ d
 <span class="co">#&gt; 2 2 2       a, b</span>
 <span class="co">#&gt; 3 3 3    a, b, c</span>
 <span class="co">#&gt; 4 4 4 a, b, c, d</span></code></pre></div>
-<p>Suppose point (3, 3) is selected – implying the set <span class="math inline">\(\{ a, b, c \}\)</span> is of interest – what key sets should be considered a match? The most sensible approach is to match any subsets of the selected set, so for example, this key set would match the sets <span class="math inline">\(\{ a \}\)</span>, <span class="math inline">\(\{ b \}\)</span>, <span class="math inline">\(\{ c \}\)</span>, <span class="math inline">\(\{ a, b \}\)</span>, <span class="math inline">\(\{ a, c \}\)</span>, and <span class="math inline">\(\{ b, c \}\)</span>. This leads to a type of selection I’ll refer to as <em>hierarchical</em> categorical selection. Figure <a href="linking-views-without-shiny.html#fig:hierarchial">4.13</a> provides a visual demo of this example in action:</p>
+<p>Suppose point (3, 3) is selected – implying the set <span class="math inline">\(\{ a, b, c \}\)</span> is of interest – what key sets should be considered a match? The most sensible approach is to match any subsets of the selected set, so for example, this key set would match the sets <span class="math inline">\(\{ a \}\)</span>, <span class="math inline">\(\{ b \}\)</span>, <span class="math inline">\(\{ c \}\)</span>, <span class="math inline">\(\{ a, b \}\)</span>, <span class="math inline">\(\{ a, c \}\)</span>, and <span class="math inline">\(\{ b, c \}\)</span>. This leads to a type of selection I will refer to as <em>hierarchical</em> selection. Figure <a href="linking-views-without-shiny.html#fig:hierarchial">4.16</a> provides a visual demo of this example in action:</p>
 <div class="sourceCode"><pre class="sourceCode r"><code class="sourceCode r">SharedData$<span class="kw">new</span>(d, ~key) %&gt;%
 <span class="st">  </span><span class="kw">plot_ly</span>(<span class="dt">x =</span> ~x, <span class="dt">y =</span> ~y)</code></pre></div>
 <div class="figure"><span id="fig:hierarchial"></span>
 <img src="images/hierarchial.gif" alt="A simple example of hierarchial selection" width="700" align:"center" />
 <p class="caption">
-Figure 4.13: A simple example of hierarchial selection
+Figure 4.16: A simple example of hierarchial selection
 </p>
 </div>
-<p>More informally, hierarchical categorical selection provides a nice way to select all the “children” of a given “parent” selection. This type of selection is useful when their is a natural hierarchy to a dataset, such as for a dendrogram, and <a href="linking-views-without-shiny.html#fig:dendro">4.14</a> demonstrates:</p>
+<p>Another way to think of hierarchical selection is to select all the “children” of a given “parent” node, which has a natural extenstion to dendrograms as <a href="linking-views-without-shiny.html#fig:dendro">4.17</a> demonstrates:</p>
 <div class="figure"><span id="fig:dendro"></span>
 <img src="images/dendro.gif" alt="Leveraging hierarchical selection and persistent brushing to paint branches of a dendrogram." width="700" align:"center" />
 <p class="caption">
-Figure 4.14: Leveraging hierarchical selection and persistent brushing to paint branches of a dendrogram.
+Figure 4.17: Leveraging hierarchical selection and persistent brushing to paint branches of a dendrogram.
 </p>
+</div>
 </div>
 </div>
 <div id="more-examples" class="section level3">
 <h3><span class="header-section-number">4.2.8</span> More examples</h3>
 <p>The <strong>plotly</strong> package bundles a bunch of demos that illustrate all the options available when linking views without <strong>shiny</strong> via <strong>crosstalk</strong>’s <code>SharedData</code> class and <strong>plotly</strong>’s <code>highlight()</code> function. To list all the examples, enter <code>demo(package = &quot;plotly&quot;)</code> into your R prompt, and pick a topic (e.g., <code>demo(&quot;highlight-intro&quot;, package = &quot;plotly&quot;)</code>).</p>
+</div>
+<div id="limitations" class="section level3">
+<h3><span class="header-section-number">4.2.9</span> Limitations</h3>
+<p>In terms of <a href="linking-views-without-shiny.html#linking-views-without-shiny">linking views without shiny</a>, the biggest limitation is the lack of ability to perform statistical aggregations in real time based on user queries. For example, Figure <a href="linking-animated-views.html#fig:animation-gapminder">5.6</a> could be improved by layering on a linear model specific to the user selection, to make it easier to compare and track those relationships over time. In this case, one may want to opt into <a href="linking-views-without-shiny.html#linking-views-without-shiny">linking views with shiny</a> to trigger the execution of R code in response to a user query. Also, at least currently, there are a limited number of selection modes to choose from (e.g., XOR, COMPLEMENT modes are not yet supported), but these modes can also be implemented within a shiny app (the <a href="https://github.com/ropensci/plotly/blob/cd93ab303efa56007b8bba725bab140e8a8aae39/inst/examples/lmGadget/app.R">lmGadget</a> shiny gadget would be one such example of XOR selection).</p>
 <!--
-
-### Limitations
 
 * Currently leaflet is the only htmlwidget, with crosstalk support, that will respect non-default arguments in plotly's highlight() function.
 
@@ -451,11 +513,15 @@ As discussed in previous chapters, **plotly** graphs have zoom, pan, and identif
 <div id="ref-plumbing">
 <p>Wickham, Hadley, Michael Lawrence, Dianne Cook, Andreas Buja, Heike Hofmann, and Deborah F Swayne. 2010. “The Plumbing of Interactive Graphics.” <em>Computational Statistics</em>, April, 1–7.</p>
 </div>
+<div id="ref-GGally">
+<p>Schloerke, Barret, Jason Crowley, Di Cook, Francois Briatte, Moritz Marbach, Edwin Thoen, Amos Elberg, and Joseph Larmarange. 2016. <em>GGally: Extension to ’Ggplot2’</em>.</p>
+</div>
 </div>
 <div class="footnotes">
 <hr />
 <ol start="14">
 <li id="fn14"><p>Since <strong>dplyr</strong> semantics translate to <code>SQL</code> primitives, you could imagine a system that translates a data-plot-pipeline to <code>SQL</code> queries, and dynamically re-executes within the browser via something like <code>SQL.js</code> <span class="citation">(O. L. &amp; Contributors <a href="#ref-SQLjs">2016</a>)</span>.<a href="linking-views-without-shiny.html#fnref14">↩</a></p></li>
+<li id="fn15"><p>Strictly speaking, as long as a key is provided to a <strong>ggplot2</strong> layer with a non-identity statistic, <code>ggplotly()</code> will nest keys within group.<a href="linking-views-without-shiny.html#fnref15">↩</a></p></li>
 </ol>
 </div>
             </section>

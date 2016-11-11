@@ -358,10 +358,10 @@ function TraceManager(graphDiv, highlight) {
   // filtering is (re)applied.
   this.origData = JSON.parse(JSON.stringify(graphDiv.data));
   
-  // supply defaults for opacity
+  // to avoid doing this over and over
+  this.origOpacity = [];
   for (var i = 0; i < this.origData.length; i++) {
-    this.origData[i].opacity = this.origData[i].opacity || 1;
-    this.gd.data[i].dimmed = false;
+    this.origOpacity[i] = this.origData[i].opacity || 1;
   }
 
   // key: group name, value: null or array of keys representing the
@@ -411,16 +411,12 @@ TraceManager.prototype.updateSelection = function(group, keys) {
   
   this.groupSelections[group] = keys;
   
-  var nNewTraces = this.gd.data.length - this.origData.length;
-  if (nNewTraces < 0) {
-    throw new Error("Something went wrong. Please file an issue here -> https://github.com/ropensci/plotly/issues");
-  }
-  
   // if selection has been cleared, or if this is transient (not persistent)
   // selection, delete the "selection traces"
+  var nNewTraces = this.gd.data.length - this.origData.length;
   if (keys === null || !this.highlight.persistent && nNewTraces > 0) {
     var tracesToRemove = [];
-    for (var i = this.origData.length; i < this.origData.length + nNewTraces; i++) {
+    for (var i = this.origData.length; i < this.gd.data.length; i++) {
       tracesToRemove.push(i);
     }
     Plotly.deleteTraces(this.gd, tracesToRemove);
@@ -429,17 +425,22 @@ TraceManager.prototype.updateSelection = function(group, keys) {
   if (keys === null) {
     
     // go back to original opacity
-    for (var i = 0; i < this.origData.length; i++) {
-      Plotly.restyle(this.gd, {"opacity": this.origData[i].opacity}, i);
-      this.gd.data[i].dimmed = false;
-    }
+    Plotly.restyle(this.gd, {"opacity": this.origOpacity});
     
   } else if (keys.length >= 1) {
     
+    // placeholder for new "selection traces"
+    var traces = [];
     // this variable is set in R/highlight.R
     var selectionColour = crosstalk.var("plotlySelectionColour").get() || 
       this.highlight.color[0];
-    var traces = [];
+    
+    // TODO: think about how we could set a mode in the dynamic brush to just highlight 
+    // (i.e., this mode would preserve coloring of existing selections and simply dim opacity)
+    //if (selectionColour === "transparent") {
+    //  selectionColour = null;
+    //}
+    
     
     for (var i = 0; i < this.origData.length; i++) {
       var trace = this.gd.data[i];
@@ -471,16 +472,28 @@ TraceManager.prototype.updateSelection = function(group, keys) {
         }
         trace._crosstalkIndex = i;
         traces.push(trace);
-        // dim opacity of original traces (if they aren't already)
-        if (!trace.dimmed) {
-          var opacity = this.origData[i].opacity * this.highlight.opacityDim;
-          Plotly.restyle(this.gd, {"opacity": opacity}, i);
-          this.gd.data[i].dimmed = true;
-        }
       }
     }
     
     if (traces.length > 0) {
+      
+      // dim original traces that have a set matching the set of selection sets
+      var sets = Object.keys(this.groupSelections);
+      for (var i = 0; i < this.origData.length; i++) {
+        // have we already dimmed this trace?
+        if (this.origOpacity[i] !== this.gd._fullData[i].opacity) {
+          continue;
+        }
+        // is this worth doing?
+        if (this.highlight.opacityDim === 1) {
+          continue;
+        }
+        var matches = findNestedMatches(sets, [this.origData[i].set]);
+        if (matches.length) {
+          var opacity = this.origOpacity[i] * this.highlight.opacityDim;
+          Plotly.restyle(this.gd, {"opacity": opacity}, i);
+        }
+      }
       
       var nCurrentTraces = this.gd._fullData.length;
       
@@ -493,25 +506,26 @@ TraceManager.prototype.updateSelection = function(group, keys) {
         
         for (var i = 0; i < _frames.length; i++) {
           
-          // create a lookup table mapping trace index of *selected* traces 
-          // and their *original* index
-          var origIdx = [];
+          
+          // add to _frames[i].traces *if* this frame references selected trace(s)
           var newIdx = [];
           for (var j = 0; j < traces.length; j++) {
             var idx = traces[j]._crosstalkIndex;
             if (_frames[i].traces.indexOf(idx) > -1) {
-              origIdx.push(idx);
               newIdx.push(nCurrentTraces + j);
               _frames[i].traces.push(nCurrentTraces + j);
             }
           }
           
           // nothing to do...
-          if (origIdx.length === 0) {
+          if (newIdx.length === 0) {
             continue;
           }
           
-          for (var j = 0; j < origIdx.length; j++) {
+          var ctr = 0;
+          var nFrameTraces = _frames[i].data.length;
+          
+          for (var j = 0; j < nFrameTraces; j++) {
             var frameTrace = _frames[i].data[j];
             if (!frameTrace.key || frameTrace.set !== group) {
               continue;
@@ -520,7 +534,7 @@ TraceManager.prototype.updateSelection = function(group, keys) {
             var matches = findNestedMatches(frameTrace.key, keys);
             if (matches.length > 0) {
               frameTrace = subsetArrayAttrs(frameTrace, matches);
-              var d = gd._fullData[newIdx[j]];
+              var d = gd._fullData[newIdx[ctr]];
               if (d.marker) {
                 frameTrace.marker = d.marker;
               }
@@ -530,6 +544,7 @@ TraceManager.prototype.updateSelection = function(group, keys) {
               if (d.textfont) {
                 frameTrace.textfont = d.textfont;
               }
+              ctr = ctr + 1;
               _frames[i].data.push(frameTrace);
             }
           }

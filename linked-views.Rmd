@@ -180,7 +180,7 @@ knitr::include_graphics("images/plotlyLinkedBars.gif")
 When implementing linked views like Figure \@ref(fig:bars-lines), it can be helpful to conceptualize a pipeline between a central data frame and the corresponding views. Figure \@ref(fig:pipeline) is a visual depiction of this conceptual model between the central data frame and the eventual linked views in Figure \@ref(fig:bars-lines). In order to generate the bar chart on the left, the pipeline contains a function for computing summary statistics (the number of missing values per city). On the other hand, the time series does not require any summarization -- implying the pipeline for this view is the identity function.
 
 ```{r pipeline, echo = FALSE, fig.cap = "A diagram of the pipeline between the data and graphics."}
-knitr::include_graphics("images/pipeline")
+knitr::include_graphics("images/pipeline.png")
 ```
 
 Since the pipeline from data to graphic is either an identity function or a summarization of some kind, it is good idea to use the most granular form of the data for the `SharedData` object, and use [the data-plot-pipeline](#the-data-plot-pipeline) to define a pipeline from the data to the plot. As @plumbing writes, a true interactive graphics system is aware of the both the function from the central data object to the graphic, as well as the inverse function (i.e., the function from the graphic back to the central data object). As it currently stands, **plotly** loses this information when the result is pushed to the web browser, but that does not matter for Figure \@ref(fig:bars-lines) since pipelines do not have to re-execute upon user selections.^[Since **dplyr** semantics translate to `SQL` primitives, you could imagine a system that translates a data-plot-pipeline to `SQL` queries, and dynamically re-executes within the browser via something like `SQL.js` [@SQLjs].]
@@ -228,7 +228,7 @@ subplot(
 ```
 
 ```{r highlight-boxplot, echo = FALSE, fig.cap = "Dynamically populating a boxplot reflecting brushed observations"}
-knitr::include_graphics("images/highlight-boxplot")
+knitr::include_graphics("images/highlight-boxplot.gif")
 ```
 
 Figure \@ref(fig:highlight-boxplot) is very similar to Figure \@ref(fig:highlight-bars), but uses `add_histogram()` to link to a bar chart of the number of cylinders rather than a boxplot of engine displacement. By brushing to select cars with a low engine displacement, we can see that (obviously) displacement is related with to the number of cylinders.
@@ -245,12 +245,76 @@ layout(p, barmode = "overlay")
 ```
 
 ```{r highlight-bars, echo = FALSE, fig.cap = "Dynamically populating a bar chart reflecting brushed observations"}
-knitr::include_graphics("images/highlight-bars")
+knitr::include_graphics("images/highlight-bars.gif")
 ```
 
-### Hierarchial categorical selection
+### Nested selections
 
-All of the sections under [linking views without shiny](#linking-views-without-shiny) thus far have attached a _single value_ to a graphical mark or group of marks. However, there are also situations where it makes sense to attach multiple values to mark(s). Instead of using multiple keys to assign multiple values, it is actually more powerful to use a single _nested_ key, since multiple keys can not support a different number of values for each mark. For example, suppose I have 4 (x, y) pairs, and each pair is associated with a different set of categorical values:
+#### Grouped selections via `ggplotly()`
+
+In statistical graphics, it is quite common for a graphical element to be tied to multiple observations. For example, a line representing the fitted values from a linear model is inherently connected to the observations used to fit the model. In fact, any graphical summary (e.g. boxplot, histogram, density, etc.) can be linked back the original data used to derive them. Especially when comparing multiple summaries, it can be useful to highlight group(s) of summaries, as well as the raw data that created them. Figure \@ref(fig:smooth-highlight) uses `ggplotly()`'s built-in support for linking graphical summaries with raw data to enable highlighting of linear models.^[Strictly speaking, as long as a key is provided to a **ggplot2** layer with a non-identity statistic, `ggplotly()` will nest keys within group.] Furthermore, notice how there are actually two levels of selection in Figure \@ref(fig:smooth-highlight) -- when hovering over a single point, just that point is selected, but when hovering over a fitted line, all the observations tied to that line are selected.
+
+<!--
+Figure \@ref(fig:bars-lines) is one such example where each bar (i.e., each city) is tied to multiple observations (i.e., monthly sales within city). In that example, the group and key variables are the same (`city`), but what happens when they are different? In the case that a key variable is _nested_ inside a **ggplot2** group, `ggplotly()` will automatically track each group.
+-->
+
+```{r smooth-highlight-fake, eval = FALSE}
+# if you don't want to highlight individual points, you could specify
+# `class` as the key variable here, instead of the default (rownames)
+m <- SharedData$new(mpg)
+p <- ggplot(m, aes(displ, hwy, colour = class)) +
+    geom_point() +
+    geom_smooth(se = FALSE, method = "lm")
+ggplotly(p) %>% highlight("plotly_hover")
+```
+
+```{r smooth-highlight, echo = FALSE, fig.cap = "Engine displacement versus highway miles per gallon by class of car. The linear model for each class, as well as the individual observations, can be selected by hovering over the line of fitted values. An individual observation can also be selected by hovering over the relevant point."}
+knitr::include_graphics("images/smooth-highlight.gif")
+```
+
+At first, it might not seem as though "nested" selections are that useful. After all, the highlighting of individual points in Figure \@ref(fig:smooth-highlight) does not supply us with any additional information. However, applying this same idea to multiple views of the same observations can be quite useful. Figure \@ref(fig:ggnostic) demonstrates a useful application via the `ggnostic()` function from the **GGally** package [@GGally]. This function produces a matrix of diagnostic plots from a fitted model object, with different diagnostic measures in each row, and different explanatory variables in each column. Figure \@ref(fig:ggnostic) shows the default display for a linear model, which includes residuals (`resid`), estimates of residual standard deviation when a particular observation is excluded (`sigma`), diagonals from the projection matrix (`hat`), and cooks distance (`cooksd`). 
+
+```{r ggnostic-fake, eval = FALSE}
+# for better tick labels
+mtcars$am <- dplyr::recode(mtcars$am, `0` = "automatic", `1` = "manual")
+# choose a model by AIC stepping backwards 
+mod <- step(lm(mpg ~ ., data = mtcars), trace = FALSE)
+# produce diagnostic plots, coloring by automatic/manual
+pm <- GGally::ggnostic(mod, mapping = aes(color = am))
+# ggplotly() will automatically add rownames as a key if none is provided
+ggplotly(pm) %>% highlight("plotly_click", persistent = TRUE)
+```
+
+```{r ggnostic, echo = FALSE, fig.cap = "Using nested selections to highlight numerous diagnostics from different regions of the design matrix."}
+knitr::include_graphics("images/ggnostic.gif")
+```
+
+Injecting interactivity into `ggnostic()` via `ggplotly()` enhances the diagnostic plot in at least two ways. Coloring by a factor variable in the model allows us to highlight that region of the design matrix by selecting a relevant statistical summary, which can help avoid overplotting when dealing with numerous factor levels. For example, in Figure \@ref(fig:ggnostic), the user first highlights diagnostics for cars with manual transmission (in blue), then cars with automatic transmission (in red). Perhaps more widely useful is the ability to highlight individual observations since most of these diagnostics are designed to identify highly influential or unusual observations.
+
+In Figure \@ref(fig:ggnostic), there is one observation with a noticably high value of `cooksd`, which suggests the observation has a large influence on the fitted model. Clicking on that point highlights its corresponding diagnostic measures, plotted against each explanatory variable. Doing so makes it obvious that this observation is influential since it has a unusually high response/residual in a fairly sparse region of the design space (i.e., it has a pretty high value of `wt`) and removing it would significantly reduce the estimated standard deviation (`sigma`). By comparison, the other two observations with similar values of `wt` have a response value very close to the overall mean, so even though their value of `hat` is high, their value of `sigma` is low.
+
+Highlighting groups via fitted lines is certainly useful, but it is not the only way to highlight groups via a graphical summary. In fact, anytime a key variable is supplied to **ggplot2** layer with a non-identity statistic, it automatically attaches all the unique key values tied to all the observations that went into creating the group -- enabling linked selections between raw and aggregated forms of the data. For example, Figure \@ref(fig:density2scatter) links several density estimates back to the original data, and by clicking on a particular density estimate, it highlights all of the observations associated with that group. Yet again, this is an effective strategy to combat overplotting by bring groups of interests to the foreground of the graphic.
+
+```{r density2scatter-fake, eval = FALSE}
+m <- SharedData$new(mpg)
+p1 <- ggplot(m, aes(displ, fill = class)) + geom_density()
+p2 <- ggplot(m, aes(displ, hwy, fill = class)) + geom_point()
+subplot(p1, p2) %>% highlight("plotly_click") %>% hide_legend()
+```
+
+```{r density2scatter, echo = FALSE, fig.cap = "Clicking on a density estimate to highlight all the raw observations that went into that estimate."}
+knitr::include_graphics("images/density2scatter.gif")
+```
+
+
+<!--
+All of the sections under [linking views without shiny](#linking-views-without-shiny) thus far have attached a _single value_ to a graphical mark or group of marks. In mathematical terms, this implies that the mapping from visual space to data space can be described through a surjective function. However, there are also situations where it is useful to attach numerous key values to a graphical mark (i.e. nested keys). 
+-->
+
+
+#### Hierarchical selection
+
+In the previous section, we leveraged `ggplotly()`'s ability to attach multiple key values to a graphical object to perform "grouped selections" on statistical objects (e.g., selecting a density estimate selects all the corresponding observations). In all those examples, groups are distinct (specifically, no one observation can be an input to more than one group), so what happens when groups are not distinct? Under the hood, **plotly** considers each graphical mark to be a "group", in the sense that a _set of element(s)/value(s)_ can be associated with each mark. Given selected mark(s) (i.e. groups of interest), it considers any subset of the selection(s) to be match, leading to a notion of hierarchical selection. For a simple example, suppose I have 4 (x, y) pairs, and each pair is associated with a different set of categorical values:
 
 ```{r}
 # data frames do support list columns,
@@ -260,7 +324,7 @@ d$key <- lapply(1:4, function(x) letters[seq_len(x)])
 d
 ```
 
-Suppose point (3, 3) is selected -- implying the set $\{ a, b, c \}$ is of interest -- what key sets should be considered a match? The most sensible approach is to match any subsets of the selected set, so for example, this key set would match the sets $\{ a \}$, $\{ b \}$, $\{ c \}$, $\{ a, b \}$, $\{ a, c \}$, and $\{ b, c \}$. This leads to a type of selection I'll refer to as _hierarchical_ categorical selection. Figure \@ref(fig:hierarchial) provides a visual demo of this example in action:
+Suppose point (3, 3) is selected -- implying the set $\{ a, b, c \}$ is of interest -- what key sets should be considered a match? The most sensible approach is to match any subsets of the selected set, so for example, this key set would match the sets $\{ a \}$, $\{ b \}$, $\{ c \}$, $\{ a, b \}$, $\{ a, c \}$, and $\{ b, c \}$. This leads to a type of selection I will refer to as _hierarchical_ selection. Figure \@ref(fig:hierarchial) provides a visual demo of this example in action:
 
 ```{r, eval = FALSE}
 SharedData$new(d, ~key) %>%
@@ -271,7 +335,7 @@ SharedData$new(d, ~key) %>%
 knitr::include_graphics("images/hierarchial.gif")
 ```
 
-More informally, hierarchical categorical selection provides a nice way to select all the "children" of a given "parent" selection. This type of selection is useful when their is a natural hierarchy to a dataset, such as for a dendrogram, and \@ref(fig:dendro) demonstrates:
+Another way to think of hierarchical selection is to select all the "children" of a given "parent" node, which has a natural extenstion to dendrograms as \@ref(fig:dendro) demonstrates:
 
 ```{r dendro, echo = FALSE, fig.cap = "Leveraging hierarchical selection and persistent brushing to paint branches of a dendrogram."}
 knitr::include_graphics("images/dendro.gif")
@@ -282,10 +346,11 @@ knitr::include_graphics("images/dendro.gif")
 
 The __plotly__ package bundles a bunch of demos that illustrate all the options available when linking views without __shiny__ via __crosstalk__'s `SharedData` class and __plotly__'s `highlight()` function. To list all the examples, enter `demo(package = "plotly")` into your R prompt, and pick a topic (e.g., `demo("highlight-intro", package = "plotly")`).
 
+### Limitations
+
+In terms of [linking views without shiny](#linking-views-without-shiny), the biggest limitation is the lack of ability to perform statistical aggregations in real time based on user queries. For example, Figure \@ref(fig:animation-gapminder) could be improved by layering on a linear model specific to the user selection, to make it easier to compare and track those relationships over time. In this case, one may want to opt into [linking views with shiny](#linking-views-without-shiny) to trigger the execution of R code in response to a user query. Also, at least currently, there are a limited number of selection modes to choose from (e.g., XOR, COMPLEMENT modes are not yet supported), but these modes can also be implemented within a shiny app (the [lmGadget](https://github.com/ropensci/plotly/blob/cd93ab303efa56007b8bba725bab140e8a8aae39/inst/examples/lmGadget/app.R) shiny gadget would be one such example of XOR selection). 
 
 <!--
-
-### Limitations
 
 * Currently leaflet is the only htmlwidget, with crosstalk support, that will respect non-default arguments in plotly's highlight() function.
 

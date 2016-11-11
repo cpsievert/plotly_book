@@ -55,7 +55,23 @@ base %>%
 
 ## Linking animated views
 
-The section [linking views without shiny](#linking-views-without-shiny) details a framework for linking views through direct manipulation. This same framework can be leveraged to link views between animations. Figure \@ref(fig:animation-gapminder) links two animated views: on the left-hand side is population density by country and on the right-hand side is GDP per capita versus life expectancy. By default, all of the years are shown in black and the current year is shown in red. By pressing play to animate through the years, we can see that all three of these variables have increased (on average) fairly consistently over time. By linking the animated layers, we may condition on an interesting region of this data space to make comparisons in the overall relationship over time. 
+The section [linking views without shiny](#linking-views-without-shiny) details a framework for linking views through direct manipulation. This same framework can be leveraged to highlight objects as they progress through an animation, or even link objects between animations. Figure \@ref(fig:gapminder-highlight-animation) extends Figure \@ref(fig:animation-ggplotly) by layering on linear models specific to each frame and specifying `continent` as a key variable. As a result, one may interactively highlight any continent they wish, and track the relationship through the animation. In the animated version of Figure \@ref(fig:animation-ggplotly), the user highlights the Americas, which makes it much easier to see that the relationship between GDP per capita and life expectancy was very strong starting in the 1950s, but progressively weakened throughout the years.
+
+```{r gapminder-highlight-animation, echo = FALSE, fig.cap = "Highlighting the relationship between GDP per capita and life expectancy in the Americas and tracking that relationship through several decades."}
+knitr::include_graphics("images/gapminder-highlight-animation.gif")
+```
+
+```{r gapminder-highlight-animation-fake, include = knitr:::is_html_output()}
+g <- crosstalk::SharedData$new(gapminder, ~continent)
+gg <- ggplot(g, aes(gdpPercap, lifeExp, color = continent, frame = year)) +
+  geom_point(aes(size = pop, ids = country)) +
+  geom_smooth(se = FALSE, method = "lm") +
+  scale_x_log10()
+ggplotly(gg) %>% 
+  highlight("plotly_hover")
+```
+
+In addition to highlighting objects within an animation, objects may also be linked between animations. Figure \@ref(fig:animation-gapminder) links two animated views: on the left-hand side is population density by country and on the right-hand side is GDP per capita versus life expectancy. By default, all of the years are shown in black and the current year is shown in red. By pressing play to animate through the years, we can see that all three of these variables have increased (on average) fairly consistently over time. By linking the animated layers, we may condition on an interesting region of this data space to make comparisons in the overall relationship over time. 
 
 For example, in Figure \@ref(fig:animation-gapminder), countries below the 50th percentile in terms of population density are highlighted in blue, then the animation is played again to reveal a fairly interesting difference in these groups. From 1952 to 1977, countries with a low population density seem to enjoy large increases in GDP per capita and moderate increases in life expectancy, then in the early 80s, their GPD seems to decrease while the life expectancy greatly increases. In comparison, the high density countries seems to enjoy a more consistent and steady increase in both GDP and life expectancy. Of course, there are a handful of exceptions to the overall trend, such as the noticable drop in life expectancy for a handful of countries during the nineties, which are mostly African countries feeling the affects of war.
 
@@ -103,10 +119,10 @@ subplot(p1, p2, nrows = 1, widths = c(0.3, 0.7), titleX = TRUE) %>%
 Although Figure \@ref(fig:animation-gapminder) links two animated layers, it is probably more common to link non-animated display(s) with an animation. A sophicated use within the statistical graphics literature is to link views with a grand tour to view model predictions projected onto a high-dimensional space [@model-vis-paper]. The grand tour is a special kind of animation that interpolates between random 2D projections of numeric data allowing us, to perceive the shape of a high-dimensional point cloud [@grand-tour]. Figure \@ref(fig:tour-USArrests) links a grand tour to a dendrogram displaying the results of a hierarchal clustering algorithm on the 50 US states with respect to Murder arrests (per 100,000), Assault arrests (per 100,000), Rape arrests (per 100,000), and percent urban population.
 
 ```{r tour-USArrests, echo = FALSE, fig.cap = "Linking a dendrogram to a grand tour and map of the `USArrests` data to visualize a classification in 5 dimensions."}
-knitr::include_graphics("images/animation-USArrests.gif")
+knitr::include_graphics("images/tour-USArrests.gif")
 ```
 
-Figure \@ref(fig:tour-USArrests) makes use of [hierarchial categorical selection](#hierarchial-categorical-selection) to select all the states (as well as all the child nodes) under a given node in both the dendogram and the grand tour. This effectively provides a model selection tool in an unsupervised setting where one may choose a number of clusters by choosing relevant nodes in the dendrogram and viewing the model fit projected onto the data space. As shown in Figure \@ref(fig:tour-USArrests), after picking the 3 most obvious clusters, it looks as though a straight line could be drawn to completely separate the groups in the initial projection of the tour -- which suggests a split along this linear combination of these variables would provide a good classifier.^[In this situation, it may be desirable to retrieve the relevant linear combination after finding it. Since the slider displays the value of the current frame, one may go back to the data used to create the visualization, subset it to this value, and retrieve this linear combination.]
+Figure \@ref(fig:tour-USArrests) makes use of [hierarchial selection](#hierarchial-selection) to select all the states (as well as all the child nodes) under a given node in both the dendogram and the grand tour. This effectively provides a model selection tool in an unsupervised setting where one may choose a number of clusters by choosing relevant nodes in the dendrogram and viewing the model fit projected onto the data space. As shown in Figure \@ref(fig:tour-USArrests), after picking the 3 most obvious clusters, it looks as though a straight line could be drawn to completely separate the groups in the initial projection of the tour -- which suggests a split along this linear combination of these variables would provide a good classifier.^[In this situation, it may be desirable to retrieve the relevant linear combination after finding it. Since the slider displays the value of the current frame, one may go back to the data used to create the visualization, subset it to this value, and retrieve this linear combination.]
 
 The code to generate Figure \@ref(fig:tour-USArrests), as well as a few other examples of the grand tour and linking brushing can be found in the package demos. To run the code for Figure \@ref(fig:tour-USArrests), run `demo("tour-USArrests", package = "plotly")`. To see a list of the other available demos, run `readLines(system.file("demo/00Index", package = "plotly"))`.
 
