@@ -8,7 +8,7 @@
   <title>plotly for R</title>
   <meta content="text/html; charset=UTF-8" http-equiv="Content-Type">
   <meta name="description" content="An overview of the R package plotly">
-  <meta name="generator" content="bookdown 0.1.16 and GitBook 2.6.7">
+  <meta name="generator" content="bookdown 0.2 and GitBook 2.6.7">
 
   <meta property="og:title" content="plotly for R" />
   <meta property="og:type" content="book" />
@@ -25,13 +25,7 @@
 
 <meta name="author" content="Carson Sievert">
 
-  
 
-<script type="text/x-mathjax-config">
-MathJax.Hub.Config({
-  TeX: { equationNumbers: { autoNumber: "AMS" } }
-});
-</script>
 
   <meta name="viewport" content="width=device-width, initial-scale=1">
   <meta name="apple-mobile-web-app-capable" content="yes">
@@ -219,8 +213,8 @@ code > span.in { color: #60a0b0; font-weight: bold; font-style: italic; } /* Inf
 <h2><span class="header-section-number">6.3</span> Designing an htmlwidget interface</h2>
 <p>The plotly.js library, as with many other JavaScript graphing libraries, strives to describe any plot through a plot specification defined via JavaScript Object Notation (JSON). JSON is a language independent data-interchange format that was originally designed for JavaScript, but parsers for many different languages now exist, including R <span class="citation">(Temple Lang <a href="#ref-RJSONIO">2014</a>)</span>; <span class="citation">(Ooms <a href="#ref-jsonlite">2014</a>)</span>. JSON is a recursive key-value data structure (similar to a list in R), and essentially any valid JavaScript value has a natural R equivalent (e.g., <code>NULL</code>/<code>null</code>). As a result, any JSON object can be created from an appropriate R list, meaning that theoretically any plotly.js plot can be described via an R list. However, simply providing a bridge between R lists and JSON does not guarantee a powerful or usable interface, especially for a general purpose graphing library.</p>
 <p>Although it can be complicated to implement, R interfaces to JavaScript graphing libraries should leverage R’s strong resources for computing on the language to design a more expressive interface <span class="citation">(Wickham <a href="#ref-adv-r">2014</a>)</span>. It should also look and feel like (and work well with!) other commonly used interfaces in R. A good way to do this is to embrace (pure and predictable) functional programming. Most importantly, this implies that every function <em>modifies</em> a central type of object – meaning that every function input and output the same type of object (predictable). Furthermore, if the output of a function can be determined completely by the input (i.e., pure), it removes any need to search for other code that may be affecting the output. In the case of providing an interface to a JavaScript graphing library, there are a number of reasons why the central object should inherit from the central object provided by the <strong>htmlwidgets</strong> package.</p>
-<p>The idea of interfacing R with JavaScript libraries via JSON data transfer has been popular approach for quite some time <span class="citation">(Vaidyanathan <a href="#ref-rCharts">2013</a>)</span>; <span class="citation">(Hocking, VanderPlas, and Sievert <a href="#ref-animint">2015</a>)</span>; <span class="citation">(Sievert and Shirley <a href="#ref-Sievert:2014b">2014</a>)</span>. The R package <strong>htmlwidgets</strong> standardized this bridge, and provides some additional infrastructure for making sure the HTML output works as expected in multiple contexts (in the R console or RStudio, within <strong>rmarkdown</strong> documents, and even embedded inside <strong>shiny</strong> apps). The <strong>htmlwidgets</strong> package itself is opininated about the data structure used to represent the widget in R since it needs to retain meta-information about the widget, such as the sizing policy. To avoid surprise, widget authors should strive to have all functions in their interface modify this data structure.<a href="#fn20" class="footnoteRef" id="fnref20"><sup>20</sup></a></p>
-<p>JavaScript graping libraries usually have strong requirements about the JSON structure used to create a plot. In some cases, the R interface needs to know about these requirements in order to faithfully translate R objects to JSON. For example, in plotly.js some attributes must <em>always</em> be an array (e.g. x/y), even if they are length 1, while other attributes cannot be an array must be a literal constant (e.g. name). This leads to a situation where the translation rules from R to JSON cannot be simply “box all vectors of length 1 into an array (or not)”:</p>
+<p>The idea of interfacing R with JavaScript libraries via JSON data transfer has been popular approach for quite some time <span class="citation">(Vaidyanathan <a href="#ref-rCharts">2013</a>)</span>; <span class="citation">(Hocking, VanderPlas, and Sievert <a href="#ref-animint">2015</a>)</span>; <span class="citation">(Sievert and Shirley <a href="#ref-Sievert:2014b">2014</a>)</span>. The R package <strong>htmlwidgets</strong> standardized this bridge, and provides some additional infrastructure for making sure the HTML output works as expected in multiple contexts (in the R console or RStudio, within <strong>rmarkdown</strong> documents, and even embedded inside <strong>shiny</strong> apps). The <strong>htmlwidgets</strong> package itself is opinionated about the data structure used to represent the widget in R since it needs to retain meta-information about the widget, such as the sizing policy. To avoid surprise, widget authors should strive to have all functions in their interface modify this data structure.<a href="#fn20" class="footnoteRef" id="fnref20"><sup>20</sup></a></p>
+<p>JavaScript graphing libraries usually have strong requirements about the JSON structure used to create a plot. In some cases, the R interface needs to know about these requirements in order to faithfully translate R objects to JSON. For example, in plotly.js some attributes must <em>always</em> be an array (e.g. x/y), even if they are length 1, while other attributes cannot be an array must be a literal constant (e.g. name). This leads to a situation where the translation rules from R to JSON cannot be simply “box all vectors of length 1 into an array (or not)”:</p>
 <div class="sourceCode"><pre class="sourceCode javascript"><code class="sourceCode javascript"><span class="at">list</span>(x <span class="op">=</span> <span class="dv">1</span><span class="op">,</span> y <span class="op">=</span> <span class="dv">1</span><span class="op">,</span> name <span class="op">=</span> <span class="st">&quot;A point&quot;</span>) <span class="op">=&gt;</span> <span class="op">{</span><span class="dt">x</span><span class="op">:</span> [<span class="dv">1</span>]<span class="op">,</span> <span class="dt">y</span><span class="op">:</span> [<span class="dv">1</span>]<span class="op">,</span> <span class="dt">name</span><span class="op">:</span> <span class="st">&quot;A point&quot;</span><span class="op">}</span></code></pre></div>
 <p>Thankfully plotly.js provides a plot schema which declares types for each attribute that <strong>plotly</strong> leverages internally. If necessary, <strong>plotly</strong> tries to coerce each attribute to its expected type at print time, and also searches for any unsupported attributes that may have been specified by the user (and throws a warning that the attribute will be ignored). This helps</p>
 <!-- TODO:
@@ -286,7 +280,7 @@ gitbook.start({
 "link": "https://github.com/cpsievert/plotly_book/edit/master/advanced.Rmd",
 "text": "Edit"
 },
-"download": ["plotly_book.pdf"],
+"download": ["plotly_book.pdf", "plotly_book.epub", "plotly_book.mobi"],
 "toc": {
 "collapse": "subsection"
 }

@@ -77,7 +77,7 @@ p <- ggplot(sd, aes(month, median)) +
   facet_wrap(~ city)
 
 ggplotly(p, tooltip = "year") %>%
-  highlight(on = "plotly_hover", defaultValues = 2015, color = "red")
+  highlight(on = "plotly_click", defaultValues = 2015, color = "red")
 ```
 
 ```{r linked-panels, echo = FALSE, fig.cap = "Monthly median house sales by year and city. Each panel represents a city and panels are linked by year. A video demonstrating the graphical queries can be viewed [here](http://i.imgur.com/DdPdSBB.gif)"}
@@ -282,7 +282,7 @@ mod <- step(lm(mpg ~ ., data = mtcars), trace = FALSE)
 # produce diagnostic plots, coloring by automatic/manual
 pm <- GGally::ggnostic(mod, mapping = aes(color = am))
 # ggplotly() will automatically add rownames as a key if none is provided
-ggplotly(pm) %>% highlight("plotly_click", persistent = TRUE)
+ggplotly(pm) %>% highlight("plotly_click")
 ```
 
 ```{r ggnostic, echo = FALSE, fig.cap = "Using nested selections to highlight numerous diagnostics from different regions of the design matrix."}
@@ -291,7 +291,7 @@ knitr::include_graphics("images/ggnostic.gif")
 
 Injecting interactivity into `ggnostic()` via `ggplotly()` enhances the diagnostic plot in at least two ways. Coloring by a factor variable in the model allows us to highlight that region of the design matrix by selecting a relevant statistical summary, which can help avoid overplotting when dealing with numerous factor levels. For example, in Figure \@ref(fig:ggnostic), the user first highlights diagnostics for cars with manual transmission (in blue), then cars with automatic transmission (in red). Perhaps more widely useful is the ability to highlight individual observations since most of these diagnostics are designed to identify highly influential or unusual observations.
 
-In Figure \@ref(fig:ggnostic), there is one observation with a noticably high value of `cooksd`, which suggests the observation has a large influence on the fitted model. Clicking on that point highlights its corresponding diagnostic measures, plotted against each explanatory variable. Doing so makes it obvious that this observation is influential since it has a unusually high response/residual in a fairly sparse region of the design space (i.e., it has a pretty high value of `wt`) and removing it would significantly reduce the estimated standard deviation (`sigma`). By comparison, the other two observations with similar values of `wt` have a response value very close to the overall mean, so even though their value of `hat` is high, their value of `sigma` is low.
+In Figure \@ref(fig:ggnostic), there is one observation with a noticeably high value of `cooksd`, which suggests the observation has a large influence on the fitted model. Clicking on that point highlights its corresponding diagnostic measures, plotted against each explanatory variable. Doing so makes it obvious that this observation is influential since it has a unusually high response/residual in a fairly sparse region of the design space (i.e., it has a pretty high value of `wt`) and removing it would significantly reduce the estimated standard deviation (`sigma`). By comparison, the other two observations with similar values of `wt` have a response value very close to the overall mean, so even though their value of `hat` is high, their value of `sigma` is low.
 
 Highlighting groups via fitted lines is certainly useful, but it is not the only way to highlight groups via a graphical summary. In fact, anytime a key variable is supplied to **ggplot2** layer with a non-identity statistic, it automatically attaches all the unique key values tied to all the observations that went into creating the group -- enabling linked selections between raw and aggregated forms of the data. For example, Figure \@ref(fig:density2scatter) links several density estimates back to the original data, and by clicking on a particular density estimate, it highlights all of the observations associated with that group. Yet again, this is an effective strategy to combat overplotting by bring groups of interests to the foreground of the graphic.
 
@@ -324,18 +324,18 @@ d$key <- lapply(1:4, function(x) letters[seq_len(x)])
 d
 ```
 
-Suppose point (3, 3) is selected -- implying the set $\{ a, b, c \}$ is of interest -- what key sets should be considered a match? The most sensible approach is to match any subsets of the selected set, so for example, this key set would match the sets $\{ a \}$, $\{ b \}$, $\{ c \}$, $\{ a, b \}$, $\{ a, c \}$, and $\{ b, c \}$. This leads to a type of selection I will refer to as _hierarchical_ selection. Figure \@ref(fig:hierarchial) provides a visual demo of this example in action:
+Suppose point (3, 3) is selected -- implying the set $\{ a, b, c \}$ is of interest -- what key sets should be considered a match? The most sensible approach is to match any subsets of the selected set, so for example, this key set would match the sets $\{ a \}$, $\{ b \}$, $\{ c \}$, $\{ a, b \}$, $\{ a, c \}$, and $\{ b, c \}$. This leads to a type of selection I will refer to as _hierarchical_ selection. Figure \@ref(fig:hierarchical) provides a visual demo of this example in action:
 
 ```{r, eval = FALSE}
 SharedData$new(d, ~key) %>%
   plot_ly(x = ~x, y = ~y)
 ```
 
-```{r hierarchial, echo = FALSE, fig.cap = "A simple example of hierarchial selection"}
-knitr::include_graphics("images/hierarchial.gif")
+```{r hierarchical, echo = FALSE, fig.cap = "A simple example of hierarchial selection"}
+knitr::include_graphics("images/hierarchical.gif")
 ```
 
-Another way to think of hierarchical selection is to select all the "children" of a given "parent" node, which has a natural extenstion to dendrograms as \@ref(fig:dendro) demonstrates:
+Another way to think of hierarchical selection is to select all the "children" of a given "parent" node, which has a natural extension to dendrograms as \@ref(fig:dendro) demonstrates:
 
 ```{r dendro, echo = FALSE, fig.cap = "Leveraging hierarchical selection and persistent brushing to paint branches of a dendrogram."}
 knitr::include_graphics("images/dendro.gif")

@@ -25,32 +25,32 @@ require(["gitbook", "lodash", "jQuery"], function(gitbook, _, $) {
       });
     };
     down = normalizeDownload(down);
-    if (down) if (down.length === 1 && /[.]pdf$/.test(down[0][0])) {
-      gitbook.toolbar.createButton({
-        icon: 'fa fa-file-pdf-o',
-        label: down[0][1],
-        position: 'left',
-        onClick: function(e) {
-          e.preventDefault();
-          window.open(down[0][0]);
-        }
-      });
-    } else {
-      gitbook.toolbar.createButton({
-        icon: 'fa fa-download',
-        label: 'Download',
-        position: 'left',
-        dropdown: $.map(down, function(item, i) {
-          return {
-            text: item[1],
-            onClick: function(e) {
-              e.preventDefault();
-              window.open(item[0]);
-            }
-          };
-        })
-      });
-    }
+    //if (down) if (down.length === 1 && /[.]pdf$/.test(down[0][0])) {
+    //  gitbook.toolbar.createButton({
+    //    icon: 'fa fa-file-pdf-o',
+    //    label: down[0][1],
+    //    position: 'left',
+    //    onClick: function(e) {
+    //      e.preventDefault();
+    //      window.open(down[0][0]);
+    //    }
+    //  });
+    //} else {
+    //  gitbook.toolbar.createButton({
+    //    icon: 'fa fa-download',
+    //    label: 'Download',
+    //    position: 'left',
+    //    dropdown: $.map(down, function(item, i) {
+    //      return {
+    //        text: item[1],
+    //        onClick: function(e) {
+    //          e.preventDefault();
+    //          window.open(item[0]);
+    //        }
+    //      };
+    //    })
+    //  });
+    //}
 
     // highlight the current section in TOC
     var href = window.location.pathname;

@@ -51,7 +51,7 @@ subplot(
 Although **ggplot2** does not have a `text` aesthetic, the `ggplotly()` function recognizes this aesthetic and displays it in the tooltip by default. In addition to providing a way to supply "meta" information, it also provides a way to customize your tooltips (do this by restricting the tooltip to the text aesthetic -- `ggplotly(p, tooltip = "text")`)
 ```
 
-The `ggplotly()` function translates most things that you can do in **ggplot2**, but not quite everything. To help demonstrate the coverage, I've built a [plotly version of the ggplot2 docs](http://ropensci.github.io/plotly/ggplot2). This version of the docs displays the `ggplotly()` version of each plot in a static form (to reduce page loading time), but you can click any plot to view its interactive version. The next section deomnstrates how to create plotly.js visualizations via the R package, without **ggplot2**, via the `plot_ly()` function. We'll then leverage those concepts to [extend `ggplotly()`](#extending-ggplotly).
+The `ggplotly()` function translates most things that you can do in **ggplot2**, but not quite everything. To help demonstrate the coverage, I've built a [plotly version of the ggplot2 docs](http://ropensci.github.io/plotly/ggplot2). This version of the docs displays the `ggplotly()` version of each plot in a static form (to reduce page loading time), but you can click any plot to view its interactive version. The next section demonstrates how to create plotly.js visualizations via the R package, without **ggplot2**, via the `plot_ly()` function. We'll then leverage those concepts to [extend `ggplotly()`](#extending-ggplotly).
 
 ### The `plot_ly()` interface
 
@@ -168,7 +168,7 @@ txhousing %>%
   add_fun(layer_forecast)
 ```
 
-In summary, the "data-plot-pipeline" is desirable for a number of reasons: (1) makes your code easier to read and understand, (2) encourages you to think of both your data and plots using a single, uniform data structure, which (3) makes it easy to combine and reuse transformations. As it turns out, we can even use these ideas when creating a plotly object via `ggplotly()`, as discused in the next section [Extending `ggplotly()`](extending-ggplotly.
+In summary, the "data-plot-pipeline" is desirable for a number of reasons: (1) makes your code easier to read and understand, (2) encourages you to think of both your data and plots using a single, uniform data structure, which (3) makes it easy to combine and reuse transformations. As it turns out, we can even use these ideas when creating a plotly object via `ggplotly()`, as discussed in the next section [Extending `ggplotly()`](#extending-ggplotly).
 
 ## Extending `ggplotly()`
 
@@ -219,7 +219,7 @@ p %>%
   })
 ```
 
-Although it is not used in this example, it worth noting that when adding plotly layers to the output of `ggplotly()`, it will inherit mappings from the ggplot aesthetic mapping, which may or may not be desired, but the `inherit` argument in any of the `add_*()` functions may be set to `FALSE` to avoid this behavoir.
+Although it is not used in this example, it worth noting that when adding plotly layers to the output of `ggplotly()`, it will inherit mappings from the ggplot aesthetic mapping, which may or may not be desired, but the `inherit` argument in any of the `add_*()` functions may be set to `FALSE` to avoid this behavior.
 
 ### Modifying layers
 

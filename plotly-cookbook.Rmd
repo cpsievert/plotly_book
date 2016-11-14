@@ -61,7 +61,7 @@ subplot(
 ) %>% layout(showlegend = TRUE)
 ```
 
-There are a number of ways to alter the default colorscale via the `colors` argument. This argument excepts: (1) a color brewer palette name (see the row names of `RColorBrewer::brewer.pal.info` for valid names), (2) a vector of colors to interpolate, or (3) a color interpolation function like `colorRamp()` or `scales::colour_ramp()`. Although this grants a lot of flexibility, one should be concious of using a sequential colorscale for numeric variables (& ordered factors) as shown in \@ref(fig:color-numeric), and a qualitative colorscale for discrete variables as shown in \@ref(fig:color-discrete). (TODO: touch on lurking variables?)
+There are a number of ways to alter the default colorscale via the `colors` argument. This argument excepts: (1) a color brewer palette name (see the row names of `RColorBrewer::brewer.pal.info` for valid names), (2) a vector of colors to interpolate, or (3) a color interpolation function like `colorRamp()` or `scales::colour_ramp()`. Although this grants a lot of flexibility, one should be conscious of using a sequential colorscale for numeric variables (& ordered factors) as shown in \@ref(fig:color-numeric), and a qualitative colorscale for discrete variables as shown in \@ref(fig:color-discrete). (TODO: touch on lurking variables?)
 
 ```{r color-numeric, fig.cap = "Three variations on a numeric color mapping", screenshot.alt = "screenshots/color-numeric"}    
 subplot(
@@ -112,7 +112,7 @@ ggplotly(pm)
 
 ### Dotplots & error bars
 
-A dotplot is similar to a scatterplot, except instead of two numeric axes, one is categorical. The usual goal of a dotplot is to compare value(s) on a numerical scale over numerous categories. In this context, dotplots are preferrable to pie charts since comparing position along a common scale is much easier than comparing angle or area [@graphical-perception]; [@crowdsourcing-graphical-perception]. Furthermore, dotplots can be preferrable to bar charts, especially when comparing values within a narrow range far away from 0 [@few-values]. Also, when presenting point estimates, and uncertainty associated with those estimates, bar charts tend to exaggerate the difference in point estimates, and lose focus on uncertainty [@messing].
+A dotplot is similar to a scatterplot, except instead of two numeric axes, one is categorical. The usual goal of a dotplot is to compare value(s) on a numerical scale over numerous categories. In this context, dotplots are preferable to pie charts since comparing position along a common scale is much easier than comparing angle or area [@graphical-perception]; [@crowdsourcing-graphical-perception]. Furthermore, dotplots can be preferable to bar charts, especially when comparing values within a narrow range far away from 0 [@few-values]. Also, when presenting point estimates, and uncertainty associated with those estimates, bar charts tend to exaggerate the difference in point estimates, and lose focus on uncertainty [@messing].
 
 A popular application for dotplots (with error bars) is the so-called "coefficient plot" for visualizing the point estimates of coefficients and their standard error. The `coefplot()` function in the **coefplot** package [@coefplot] and the `ggcoef()` function in the **GGally** both produce coefficient plots for many types of model objects in R using **ggplot2**, which we can translate to plotly via `ggplotly()`. Since these packages use points and segments to draw the coefficient plots, the hover information is not the best, and it'd be better to use [error objects](https://plot.ly/r/reference/#scatter-error_x). Figure \@ref(fig:coefplot) uses the `tidy()` function from the **broom** package [@broom] to obtain a data frame with one row per model coefficient, and produce a coefficient plot with error bars along the x-axis. 
 
@@ -248,7 +248,7 @@ plot_ly(dat, x = ~date, xend = ~date, color = ~Close > Open,
 
 ### Ribbons
 
-Ribbons are useful for showing uncertainy bounds as a function of x. The `add_ribbons()` function creates ribbons and requires the arguments: `x`, `ymin`, and `ymax`. The `augment()` function from the **broom** package appends observational-level model components (e.g., fitted values stored as a new column `.fitted`) which is useful for extracting those components in a convenient form for visualization. Figure \@ref(fig:broom-lm) shows the fitted values and uncertainty bounds from a linear model object.
+Ribbons are useful for showing uncertainty bounds as a function of x. The `add_ribbons()` function creates ribbons and requires the arguments: `x`, `ymin`, and `ymax`. The `augment()` function from the **broom** package appends observational-level model components (e.g., fitted values stored as a new column `.fitted`) which is useful for extracting those components in a convenient form for visualization. Figure \@ref(fig:broom-lm) shows the fitted values and uncertainty bounds from a linear model object.
 
 ```{r broom-lm, fig.cap = "Plotting fitted values and uncertainty bounds of a linear model via the **broom** package."}
 m <- lm(mpg ~ wt, data = mtcars)
@@ -278,7 +278,7 @@ map_data("world", "canada") %>%
 
 ### Using scatter traces
 
-As shown in [polygons](#polygons), it is possible to create maps using plotly's default (cartesian) coordinate system, but plotly.js also has support for plotting [scatter traces](#scatter-traces) on top of either a [custom geo layout](https://plot.ly/r/reference/#layout-geo) or a [mapbox layout](https://plot.ly/r/reference/#layout-mapbox). Figure \@ref(fig:maps) compares the three different layout options in a single subplot.
+As shown in [polygons](#polygons), it is possible to create maps using plotly's default (Cartesian) coordinate system, but plotly.js also has support for plotting [scatter traces](#scatter-traces) on top of either a [custom geo layout](https://plot.ly/r/reference/#layout-geo) or a [mapbox layout](https://plot.ly/r/reference/#layout-mapbox). Figure \@ref(fig:maps) compares the three different layout options in a single subplot.
 
 ```{r maps, fig.width = 8, fig.cap = "Three different ways to render a map. On the top left is plotly's default cartesian coordinate system, on the top right is plotly's custom geographic layout, and on the bottom is mapbox.", screenshot.alt = "screenshots/maps"}
 dat <- map_data("world", "canada") %>% group_by(group)
@@ -305,7 +305,7 @@ subplot(map1, map2) %>%
   hide_legend()
 ```
 
-Any of the `add_*()` functions found under [scatter traces](https://cpsievert.github.io/plotly_book/scatter-traces.html) should work as expected on plotly-geo (initialized via `plot_geo()`) or plotly-mapbox (initialized via `plot_mapbox()`) objects. You can think of `plot_geo()` and `plot_mapbox()` as special cases (or more opiniated versions) of `plot_ly()`. For one, they won't allow you to mix scatter and non-scatter traces in a single plot object, which you probably don't want to do anyway. In order to enable Figure \@ref(fig:maps), plotly.js _can't_ make this restriction, but since we have `subplot()` in R, we _can_ make this restriction without sacrificing flexibility.
+Any of the `add_*()` functions found under [scatter traces](https://cpsievert.github.io/plotly_book/scatter-traces.html) should work as expected on plotly-geo (initialized via `plot_geo()`) or plotly-mapbox (initialized via `plot_mapbox()`) objects. You can think of `plot_geo()` and `plot_mapbox()` as special cases (or more opinionated versions) of `plot_ly()`. For one, they won't allow you to mix scatter and non-scatter traces in a single plot object, which you probably don't want to do anyway. In order to enable Figure \@ref(fig:maps), plotly.js _can't_ make this restriction, but since we have `subplot()` in R, we _can_ make this restriction without sacrificing flexibility.
 
 ### Choropleths
 
@@ -522,7 +522,7 @@ plot_ly(x = rownames(corr), y = colnames(corr), z = corr) %>%
 
 In [scatter traces](#scatter-traces), we saw how to make [3D scatter plots](#3D-scatterplots) and [3D paths/lines](#3D-paths), but plotly.js also supports 3D surface and triangular mesh surfaces (aka trisurf plots). For a nice tutorial on creating trisurf plots in R via `plot_ly()`, I recommend visiting [this tutorial](http://moderndata.plot.ly/trisurf-plots-in-r-using-plotly/). 
 
-Creating 3D surfaces with `add_surface()` is a lot like creating heatmaps with `add_heatmap()`. In fact, you can even create 3D surfaces over categorical x/y (try changing `add_heatmap()` to `add_surface()` in Figure \@ref(fig:correlation))! That being said, there should be a sensible ordering to the x/y axes in a surface plot since plotly.js interpolates z values. Usually the 3D surface is over a continous region, as is done in Figure \@ref(fig:surface) to display the height of a volcano. If a numeric matrix is provided to z as in Figure \@ref(fig:surface), the x and y attributes do not have to be provided, but if they are, the length of x should match the number of rows in the matrix and y should match the number of columns.
+Creating 3D surfaces with `add_surface()` is a lot like creating heatmaps with `add_heatmap()`. In fact, you can even create 3D surfaces over categorical x/y (try changing `add_heatmap()` to `add_surface()` in Figure \@ref(fig:correlation))! That being said, there should be a sensible ordering to the x/y axes in a surface plot since plotly.js interpolates z values. Usually the 3D surface is over a continuous region, as is done in Figure \@ref(fig:surface) to display the height of a volcano. If a numeric matrix is provided to z as in Figure \@ref(fig:surface), the x and y attributes do not have to be provided, but if they are, the length of x should match the number of rows in the matrix and y should match the number of columns.
 
 ```{r surface, fig.cap = "A 3D surface of volcano height.", screenshot.alt = "screenshots/surface"}
 x <- seq_len(nrow(volcano)) + 100

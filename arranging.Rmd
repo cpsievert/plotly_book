@@ -54,7 +54,7 @@ fluidPage(
 knitr::include_graphics("images/fluid")
 ```
 
-All the arrangement approaches discussed thus far are agnostic to output format, meaning that they can be used to arrange htmlwidgets within _any_  **knitr**/**rmarkdown** document.^[Although HTML can not possibly render in a pdf or word document, **knitr** can automatically detect a non-HTML output format and embed a static image of the htmlwidget via the **webshot** package [@webshot].] If the htmlwidgets do not need to be embedded within a larger document that requires an opininated output format, the **flexdashboard** package provides a **rmarkdown** template for generating dashboards, with a convenient syntax for arranging views [@flexdashboard].
+All the arrangement approaches discussed thus far are agnostic to output format, meaning that they can be used to arrange htmlwidgets within _any_  **knitr**/**rmarkdown** document.^[Although HTML can not possibly render in a pdf or word document, **knitr** can automatically detect a non-HTML output format and embed a static image of the htmlwidget via the **webshot** package [@webshot].] If the htmlwidgets do not need to be embedded within a larger document that requires an opinionated output format, the **flexdashboard** package provides a **rmarkdown** template for generating dashboards, with a convenient syntax for arranging views [@flexdashboard].
 
 ## Merging plotly objects
 
@@ -80,7 +80,7 @@ plots <- lapply(vars, function(var) {
 subplot(plots, nrows = length(plots), shareX = TRUE, titleX = FALSE)
 ```
 
-A plotly subplot is a single plotly graph with multiple traces anchored on different axes. If you pre-specify an [axis ID](https://plot.ly/r/reference/#scatter-yaxis) for each trace, `subplot()` will respect that ID. Figure \@ref(fig:prepopulate) uses this fact in correspondence with the fact that mapping a discrete variable to `color` creates one trace per value. In addition to providing more control over trace placement, this provides a convenient way to control coloring (we could have `symbol`/`linetype` to acheive the same effect).
+A plotly subplot is a single plotly graph with multiple traces anchored on different axes. If you pre-specify an [axis ID](https://plot.ly/r/reference/#scatter-yaxis) for each trace, `subplot()` will respect that ID. Figure \@ref(fig:prepopulate) uses this fact in correspondence with the fact that mapping a discrete variable to `color` creates one trace per value. In addition to providing more control over trace placement, this provides a convenient way to control coloring (we could have `symbol`/`linetype` to achieve the same effect).
 
 ```{r prepopulate, fig.cap = "Pre-populating y axis IDs."}
 economics %>%
@@ -98,7 +98,7 @@ Conceptually, `subplot()` provides a way to place a collection of plots into a t
 knitr::include_graphics("images/proportions")
 ```
 
-This flexibility is quite useful for a number of visualizations, for example, as shown in Figure \@ref(fig:joint), a joint density plot is really of subplot of joint and marginal densities. The **heatmaply** package is great example of leveraging `subplot()` in a similar way to create interactive dendograms [@heatmaply].
+This flexibility is quite useful for a number of visualizations, for example, as shown in Figure \@ref(fig:joint), a joint density plot is really of subplot of joint and marginal densities. The **heatmaply** package is great example of leveraging `subplot()` in a similar way to create interactive dendrograms [@heatmaply].
 
 ```{r joint, fig.cap = "A joint density plot with synchronized axes."}
 x <- rnorm(100)

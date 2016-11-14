@@ -440,6 +440,12 @@ TraceManager.prototype.updateSelection = function(group, keys) {
     //if (selectionColour === "transparent") {
     //  selectionColour = null;
     //}
+    // "transparent" means this the selection colour, 
+    //if (selectionColour === "transparent") {
+    //  for (var j = 0; j < this.gd.data.length; j++) {
+    //    
+    //  }
+    //}
     
     
     for (var i = 0; i < this.origData.length; i++) {
@@ -460,11 +466,13 @@ TraceManager.prototype.updateSelection = function(group, keys) {
         var d = this.gd._fullData[i];
         if (d.marker) {
           trace.marker = d.marker;
-          trace.marker.color =  selectionColour || trace.marker.color;
+          trace.marker.color =  selectionColour || trace.selectionColour || trace.marker.color;
+          this.gd.data[i].selectionColour = trace.marker.color;
         }
         if (d.line) {
           trace.line = d.line;
-          trace.line.color =  selectionColour || trace.line.color;
+          trace.line.color =  selectionColour || trace.selectionColour || trace.line.color;
+          this.gd.data[i].selectionColour = trace.line.color;
         }
         if (d.textfont) {
           trace.textfont = d.textfont;
@@ -479,9 +487,12 @@ TraceManager.prototype.updateSelection = function(group, keys) {
       
       // dim original traces that have a set matching the set of selection sets
       var sets = Object.keys(this.groupSelections);
-      for (var i = 0; i < this.origData.length; i++) {
+      var n = selectionColour === "transparent" ? this.gd.data.length : this.origData.length;
+      for (var i = 0; i < n; i++) {
+        var opacity = this.origOpacity[i] || 1;
+        console.log(opacity);
         // have we already dimmed this trace?
-        if (this.origOpacity[i] !== this.gd._fullData[i].opacity) {
+        if (opacity !== this.gd._fullData[i].opacity && selectionColour !== "transparent") {
           continue;
         }
         // is this worth doing?
@@ -490,8 +501,8 @@ TraceManager.prototype.updateSelection = function(group, keys) {
         }
         var matches = findNestedMatches(sets, [this.origData[i].set]);
         if (matches.length) {
-          var opacity = this.origOpacity[i] * this.highlight.opacityDim;
-          Plotly.restyle(this.gd, {"opacity": opacity}, i);
+          
+          Plotly.restyle(this.gd, {"opacity": opacity * this.highlight.opacityDim}, i);
         }
       }
       

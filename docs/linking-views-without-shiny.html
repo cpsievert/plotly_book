@@ -8,7 +8,7 @@
   <title>plotly for R</title>
   <meta content="text/html; charset=UTF-8" http-equiv="Content-Type">
   <meta name="description" content="An overview of the R package plotly">
-  <meta name="generator" content="bookdown 0.1.16 and GitBook 2.6.7">
+  <meta name="generator" content="bookdown 0.2 and GitBook 2.6.7">
 
   <meta property="og:title" content="plotly for R" />
   <meta property="og:type" content="book" />
@@ -25,13 +25,7 @@
 
 <meta name="author" content="Carson Sievert">
 
-  
 
-<script type="text/x-mathjax-config">
-MathJax.Hub.Config({
-  TeX: { equationNumbers: { autoNumber: "AMS" } }
-});
-</script>
 
   <meta name="viewport" content="width=device-width, initial-scale=1">
   <meta name="apple-mobile-web-app-capable" content="yes">
@@ -238,7 +232,7 @@ sd &lt;-<span class="st"> </span>SharedData$<span class="kw">new</span>(txhousin
 <span class="st">  </span><span class="kw">facet_wrap</span>(~<span class="st"> </span>city)
 
 <span class="kw">ggplotly</span>(p, <span class="dt">tooltip =</span> <span class="st">&quot;year&quot;</span>) %&gt;%
-<span class="st">  </span><span class="kw">highlight</span>(<span class="dt">on =</span> <span class="st">&quot;plotly_hover&quot;</span>, <span class="dt">defaultValues =</span> <span class="dv">2015</span>, <span class="dt">color =</span> <span class="st">&quot;red&quot;</span>)</code></pre></div>
+<span class="st">  </span><span class="kw">highlight</span>(<span class="dt">on =</span> <span class="st">&quot;plotly_click&quot;</span>, <span class="dt">defaultValues =</span> <span class="dv">2015</span>, <span class="dt">color =</span> <span class="st">&quot;red&quot;</span>)</code></pre></div>
 <div class="figure"><span id="fig:linked-panels"></span>
 <img src="images/crosstalkLinkedPanels.gif" alt="Monthly median house sales by year and city. Each panel represents a city and panels are linked by year. A video demonstrating the graphical queries can be viewed [here](http://i.imgur.com/DdPdSBB.gif)" width="700" align:"center" />
 <p class="caption">
@@ -424,7 +418,7 @@ mod &lt;-<span class="st"> </span><span class="kw">step</span>(<span class="kw">
 <span class="co"># produce diagnostic plots, coloring by automatic/manual</span>
 pm &lt;-<span class="st"> </span>GGally::<span class="kw">ggnostic</span>(mod, <span class="dt">mapping =</span> <span class="kw">aes</span>(<span class="dt">color =</span> am))
 <span class="co"># ggplotly() will automatically add rownames as a key if none is provided</span>
-<span class="kw">ggplotly</span>(pm) %&gt;%<span class="st"> </span><span class="kw">highlight</span>(<span class="st">&quot;plotly_click&quot;</span>, <span class="dt">persistent =</span> <span class="ot">TRUE</span>)</code></pre></div>
+<span class="kw">ggplotly</span>(pm) %&gt;%<span class="st"> </span><span class="kw">highlight</span>(<span class="st">&quot;plotly_click&quot;</span>)</code></pre></div>
 <div class="figure"><span id="fig:ggnostic"></span>
 <img src="images/ggnostic.gif" alt="Using nested selections to highlight numerous diagnostics from different regions of the design matrix." width="700" align:"center" />
 <p class="caption">
@@ -432,7 +426,7 @@ Figure 4.14: Using nested selections to highlight numerous diagnostics from diff
 </p>
 </div>
 <p>Injecting interactivity into <code>ggnostic()</code> via <code>ggplotly()</code> enhances the diagnostic plot in at least two ways. Coloring by a factor variable in the model allows us to highlight that region of the design matrix by selecting a relevant statistical summary, which can help avoid overplotting when dealing with numerous factor levels. For example, in Figure <a href="linking-views-without-shiny.html#fig:ggnostic">4.14</a>, the user first highlights diagnostics for cars with manual transmission (in blue), then cars with automatic transmission (in red). Perhaps more widely useful is the ability to highlight individual observations since most of these diagnostics are designed to identify highly influential or unusual observations.</p>
-<p>In Figure <a href="linking-views-without-shiny.html#fig:ggnostic">4.14</a>, there is one observation with a noticably high value of <code>cooksd</code>, which suggests the observation has a large influence on the fitted model. Clicking on that point highlights its corresponding diagnostic measures, plotted against each explanatory variable. Doing so makes it obvious that this observation is influential since it has a unusually high response/residual in a fairly sparse region of the design space (i.e., it has a pretty high value of <code>wt</code>) and removing it would significantly reduce the estimated standard deviation (<code>sigma</code>). By comparison, the other two observations with similar values of <code>wt</code> have a response value very close to the overall mean, so even though their value of <code>hat</code> is high, their value of <code>sigma</code> is low.</p>
+<p>In Figure <a href="linking-views-without-shiny.html#fig:ggnostic">4.14</a>, there is one observation with a noticeably high value of <code>cooksd</code>, which suggests the observation has a large influence on the fitted model. Clicking on that point highlights its corresponding diagnostic measures, plotted against each explanatory variable. Doing so makes it obvious that this observation is influential since it has a unusually high response/residual in a fairly sparse region of the design space (i.e., it has a pretty high value of <code>wt</code>) and removing it would significantly reduce the estimated standard deviation (<code>sigma</code>). By comparison, the other two observations with similar values of <code>wt</code> have a response value very close to the overall mean, so even though their value of <code>hat</code> is high, their value of <code>sigma</code> is low.</p>
 <p>Highlighting groups via fitted lines is certainly useful, but it is not the only way to highlight groups via a graphical summary. In fact, anytime a key variable is supplied to <strong>ggplot2</strong> layer with a non-identity statistic, it automatically attaches all the unique key values tied to all the observations that went into creating the group – enabling linked selections between raw and aggregated forms of the data. For example, Figure <a href="linking-views-without-shiny.html#fig:density2scatter">4.15</a> links several density estimates back to the original data, and by clicking on a particular density estimate, it highlights all of the observations associated with that group. Yet again, this is an effective strategy to combat overplotting by bring groups of interests to the foreground of the graphic.</p>
 <div class="sourceCode"><pre class="sourceCode r"><code class="sourceCode r">m &lt;-<span class="st"> </span>SharedData$<span class="kw">new</span>(mpg)
 p1 &lt;-<span class="st"> </span><span class="kw">ggplot</span>(m, <span class="kw">aes</span>(displ, <span class="dt">fill =</span> class)) +<span class="st"> </span><span class="kw">geom_density</span>()
@@ -461,16 +455,16 @@ d
 <span class="co">#&gt; 2 2 2       a, b</span>
 <span class="co">#&gt; 3 3 3    a, b, c</span>
 <span class="co">#&gt; 4 4 4 a, b, c, d</span></code></pre></div>
-<p>Suppose point (3, 3) is selected – implying the set <span class="math inline">\(\{ a, b, c \}\)</span> is of interest – what key sets should be considered a match? The most sensible approach is to match any subsets of the selected set, so for example, this key set would match the sets <span class="math inline">\(\{ a \}\)</span>, <span class="math inline">\(\{ b \}\)</span>, <span class="math inline">\(\{ c \}\)</span>, <span class="math inline">\(\{ a, b \}\)</span>, <span class="math inline">\(\{ a, c \}\)</span>, and <span class="math inline">\(\{ b, c \}\)</span>. This leads to a type of selection I will refer to as <em>hierarchical</em> selection. Figure <a href="linking-views-without-shiny.html#fig:hierarchial">4.16</a> provides a visual demo of this example in action:</p>
+<p>Suppose point (3, 3) is selected – implying the set <span class="math inline">\(\{ a, b, c \}\)</span> is of interest – what key sets should be considered a match? The most sensible approach is to match any subsets of the selected set, so for example, this key set would match the sets <span class="math inline">\(\{ a \}\)</span>, <span class="math inline">\(\{ b \}\)</span>, <span class="math inline">\(\{ c \}\)</span>, <span class="math inline">\(\{ a, b \}\)</span>, <span class="math inline">\(\{ a, c \}\)</span>, and <span class="math inline">\(\{ b, c \}\)</span>. This leads to a type of selection I will refer to as <em>hierarchical</em> selection. Figure <a href="linking-views-without-shiny.html#fig:hierarchical">4.16</a> provides a visual demo of this example in action:</p>
 <div class="sourceCode"><pre class="sourceCode r"><code class="sourceCode r">SharedData$<span class="kw">new</span>(d, ~key) %&gt;%
 <span class="st">  </span><span class="kw">plot_ly</span>(<span class="dt">x =</span> ~x, <span class="dt">y =</span> ~y)</code></pre></div>
-<div class="figure"><span id="fig:hierarchial"></span>
-<img src="images/hierarchial.gif" alt="A simple example of hierarchial selection" width="700" align:"center" />
+<div class="figure"><span id="fig:hierarchical"></span>
+<img src="images/hierarchical.gif" alt="A simple example of hierarchial selection" width="700" align:"center" />
 <p class="caption">
 Figure 4.16: A simple example of hierarchial selection
 </p>
 </div>
-<p>Another way to think of hierarchical selection is to select all the “children” of a given “parent” node, which has a natural extenstion to dendrograms as <a href="linking-views-without-shiny.html#fig:dendro">4.17</a> demonstrates:</p>
+<p>Another way to think of hierarchical selection is to select all the “children” of a given “parent” node, which has a natural extension to dendrograms as <a href="linking-views-without-shiny.html#fig:dendro">4.17</a> demonstrates:</p>
 <div class="figure"><span id="fig:dendro"></span>
 <img src="images/dendro.gif" alt="Leveraging hierarchical selection and persistent brushing to paint branches of a dendrogram." width="700" align:"center" />
 <p class="caption">
@@ -552,7 +546,7 @@ gitbook.start({
 "link": "https://github.com/cpsievert/plotly_book/edit/master/linked-views.Rmd",
 "text": "Edit"
 },
-"download": ["plotly_book.pdf"],
+"download": ["plotly_book.pdf", "plotly_book.epub", "plotly_book.mobi"],
 "toc": {
 "collapse": "subsection"
 }
