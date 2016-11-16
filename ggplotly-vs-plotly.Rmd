@@ -114,7 +114,7 @@ allCities %>%
 
 It is useful to think of the function supplied to `add_fun()` as a "layer" function -- a function that accepts a plot object as input, possibly applies a transformation to the data, and maps that data to visual objects. To make layering functions more modular, flexible, and expressive, the `add_fun()` allows you to pass additional arguments to a layer function. Figure \@ref(fig:summary) makes use of this pattern, by creating a reusable function for layering both a particular city as well as the first, second, and third quartile of median monthly house sales (by city).
 
-```{r summary, error = TRUE, fig.cap = "First, second, and third quartile of median monthly house pirce in Texas."}
+```{r summary, fig.cap = "First, second, and third quartile of median monthly house price in Texas.", screenshot.alt = "screenshots/summary"}
 # reusable function for highlighting a particular city
 layer_city <- function(plot, name) {
   plot %>% filter(city == name) %>% add_lines(name = name)
@@ -141,7 +141,7 @@ allCities %>%
 
 A layering function does not have to be a data-plot-pipeline itself. Its only requirement on a layering function is that the first argument is a plot object and it returns a plot object. This provides an opportunity to say, fit a model to the plot data, extract the model components you desire, and map those components to visuals. Furthermore, since **plotly**'s `add_*()` functions don't require a data.frame, you can supply those components directly to attributes (as long as they are well-defined), as done in Figure \@ref(fig:forecast) via the **forecast** package [@forecast].
 
-```{r forecast, error = TRUE, fig.cap = "Layering on a 4-year forecast from a exponential smoothing state space model."}
+```{r forecast, fig.cap = "Layering on a 4-year forecast from a exponential smoothing state space model.", screenshot.alt = "screenshots/forecast"}
 library(forecast)
 layer_forecast <- function(plot) {
   d <- plotly_data(plot)
@@ -176,7 +176,7 @@ In summary, the "data-plot-pipeline" is desirable for a number of reasons: (1) m
 
 Since the `ggplotly()` function returns a plotly object, we can manipulate that object in the same way that we would manipulate any other plotly object. A simple and useful application of this is to specify interaction modes, like plotly.js' [layout.dragmode](https://plot.ly/r/reference/#layout-dragmode) for specifying the mode of click+drag events. Figure \@ref(fig:ggplotly-layout) demonstrates how the default for this attribute can be modified via the `layout()` function.
 
-```{r ggplotly-layout, fig.cap = "Customizing the dragmode of an interactive ggplot2 graph."}
+```{r ggplotly-layout, fig.cap = "Customizing the dragmode of an interactive ggplot2 graph.", screenshot.alt = "screenshots/ggplotly-dragmode"}
 p <- ggplot(fortify(gold), aes(x, y)) + geom_line()
 gg <- ggplotly(p)
 layout(gg, dragmode = "pan")
@@ -204,7 +204,7 @@ p %>%
 
 This is the dataset ggplot2 uses to actually draw the fitted values (as a line) and standard error bounds (as a ribbon). Figure \@ref(fig:se-annotations) uses this data to add additional information about the model fit; in particular, it adds a vertical lines and annotations at the x-values that are associated with the highest and lowest amount uncertainty in y. 
 
-```{r se-annotations, fig.cap = "Leveraging data associated with a `geom_smooth()` layer to display additional information about the model fit."}
+```{r se-annotations, fig.cap = "Leveraging data associated with a `geom_smooth()` layer to display additional information about the model fit.", screenshot.alt = "screenshots/se-annotations"}
 p %>%
   ggplotly(layerData = 2, originalData = F) %>%
   add_fun(function(p) {
@@ -229,19 +229,18 @@ As mentioned previously, `ggplotly()` translates each ggplot2 layer into one or 
 plotly_json(p)
 ```
 
-```{r listviewer, echo = FALSE, fig.cap = "Using listviewer to inspect a plotly object."}
+```{r listviewer, echo = FALSE, fig.cap = "Using listviewer to inspect the JSON representation of a plotly object."}
 plotly_json(p, jsonedit = TRUE)
 ```
 
-Say, for example, we'd like to display information when hovering over points, but not when hovering over the fitted values or error bounds. The ggplot2 API has no semantics for making this distinction, but this is easily done in plotly.js by setting the [hoverinfo](https://plot.ly/r/reference/#scatter-hoverinfo) attribute to `"none"`. Since the fitted values or error bounds are contained in the second and third traces, we can hide the information on just these traces using the `traces` attribute in the `style()` function:
+Say, for example, we'd like to display information when hovering over points, but not when hovering over the fitted values or error bounds. The ggplot2 API has no semantics for making this distinction, but this is easily done in plotly.js by setting the [hoverinfo](https://plot.ly/r/reference/#scatter-hoverinfo) attribute to `"none"`. Since the fitted values or error bounds are contained in the second and third traces, we can hide the information on just these traces using the `traces` attribute in the `style()` function. Generally speaking, the `style()` function is designed _modify_ attribute values of trace(s) within a plotly object, which is primarily useful for customizing defaults produced via `ggplotly()`.
 
-```{r}
+```{r style-hoverinfo, fig.cap = "Using the `style()` function to modify hoverinfo attribute values of a plotly object created via `ggplotly()` (by default, `ggplotly()` displays hoverinfo for all traces). In this case, the hoverinfo for a fitted line and error bounds are hidden.", screenshot.alt = "screenshots/style-hoverinfo"}
 style(p, hoverinfo = "none", traces = 2:3)
 ```
 
 <!-- TODO: make this more convincing
 ## Choosing an interface
-
 
 1. ggplot2 requires data frame(s) and can be inefficient (especially for time series).
 2. ggplot2 does not have a functional interface (making it awkward to combine with modern functional interfaces such as dplyr), and does not satisfy [referential transparency](https://en.wikipedia.org/wiki/Referential_transparency) (making it easier to program with -- for more details, see )

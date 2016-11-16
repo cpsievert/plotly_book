@@ -261,6 +261,7 @@ HTMLWidgets.widget({
                 .set(selectedKeys[set], {sender: el});
             }
           }
+          
           // Any groups that weren't represented in the selection, should be
           // treated as if zero points were selected.
           for (var i = 0; i < allSets.length; i++) {
@@ -268,6 +269,7 @@ HTMLWidgets.widget({
               crosstalk.group(allSets[i]).var("selection").set([], {sender: el});
             }
           }
+          
         }
       });
       
@@ -437,15 +439,10 @@ TraceManager.prototype.updateSelection = function(group, keys) {
     
     // TODO: think about how we could set a mode in the dynamic brush to just highlight 
     // (i.e., this mode would preserve coloring of existing selections and simply dim opacity)
-    //if (selectionColour === "transparent") {
-    //  selectionColour = null;
-    //}
-    // "transparent" means this the selection colour, 
-    //if (selectionColour === "transparent") {
-    //  for (var j = 0; j < this.gd.data.length; j++) {
-    //    
-    //  }
-    //}
+    var isTransparent = selectionColour === "transparent";
+    if (isTransparent) {
+      selectionColour = null;
+    }
     
     
     for (var i = 0; i < this.origData.length; i++) {
@@ -457,28 +454,29 @@ TraceManager.prototype.updateSelection = function(group, keys) {
       var matches = findNestedMatches(trace.key, keys);
       if (matches.length > 0) {
         trace = subsetArrayAttrs(trace, matches);
-        // opacity in this.gd.data is dimmed...
-        trace.opacity = this.origData[i].opacity;
+        trace.opacity = this.origOpacity[i];
         trace.showlegend = this.highlight.showInLegend;
         trace.hoverinfo = this.highlight.hoverinfo || trace.hoverinfo;
         trace.name = "selected";
         // inherit marker/line attributes from the existing trace
-        var d = this.gd._fullData[i];
+        var idx = (isTransparent) ? trace._newIndex || i : i
+        var d = this.gd._fullData[idx];
         if (d.marker) {
           trace.marker = d.marker;
-          trace.marker.color =  selectionColour || trace.selectionColour || trace.marker.color;
-          this.gd.data[i].selectionColour = trace.marker.color;
+          trace.marker.color =  selectionColour || trace.marker.color;
         }
         if (d.line) {
           trace.line = d.line;
-          trace.line.color =  selectionColour || trace.selectionColour || trace.line.color;
-          this.gd.data[i].selectionColour = trace.line.color;
+          trace.line.color =  selectionColour || trace.line.color;
         }
         if (d.textfont) {
           trace.textfont = d.textfont;
           trace.textfont.color =  selectionColour || trace.textfont.color;
         }
-        trace._crosstalkIndex = i;
+        // keep track of mapping between this new trace and the trace it targets
+        trace._originalIndex = i;
+        trace._newIndex = this.gd._fullData.length + traces.length;
+        //this.gd.data[i]._newIndex = this.gd._fullData.length + traces.length;
         traces.push(trace);
       }
     }
@@ -487,21 +485,20 @@ TraceManager.prototype.updateSelection = function(group, keys) {
       
       // dim original traces that have a set matching the set of selection sets
       var sets = Object.keys(this.groupSelections);
-      var n = selectionColour === "transparent" ? this.gd.data.length : this.origData.length;
+      // transparent selections also allow for dimming of selection sets
+      var n = isTransparent ? this.gd.data.length : this.origData.length;
       for (var i = 0; i < n; i++) {
         var opacity = this.origOpacity[i] || 1;
-        console.log(opacity);
         // have we already dimmed this trace?
-        if (opacity !== this.gd._fullData[i].opacity && selectionColour !== "transparent") {
-          continue;
-        }
+        //if (opacity !== this.gd._fullData[i].opacity && selectionColour !== "transparent") {
+        //  continue;
+        //}
         // is this worth doing?
         if (this.highlight.opacityDim === 1) {
           continue;
         }
-        var matches = findNestedMatches(sets, [this.origData[i].set]);
+        var matches = findNestedMatches(sets, [this.gd.data[i].set]);
         if (matches.length) {
-          
           Plotly.restyle(this.gd, {"opacity": opacity * this.highlight.opacityDim}, i);
         }
       }
@@ -517,19 +514,18 @@ TraceManager.prototype.updateSelection = function(group, keys) {
         
         for (var i = 0; i < _frames.length; i++) {
           
-          
           // add to _frames[i].traces *if* this frame references selected trace(s)
-          var newIdx = [];
+          var newIndices = [];
           for (var j = 0; j < traces.length; j++) {
-            var idx = traces[j]._crosstalkIndex;
-            if (_frames[i].traces.indexOf(idx) > -1) {
-              newIdx.push(nCurrentTraces + j);
-              _frames[i].traces.push(nCurrentTraces + j);
+            var tr = traces[j];
+            if (_frames[i].traces.indexOf(tr._originalIndex) > -1) {
+              newIndices.push(tr._newIndex);
+              _frames[i].traces.push(tr._newIndex);
             }
           }
           
           // nothing to do...
-          if (newIdx.length === 0) {
+          if (newIndices.length === 0) {
             continue;
           }
           
@@ -545,7 +541,7 @@ TraceManager.prototype.updateSelection = function(group, keys) {
             var matches = findNestedMatches(frameTrace.key, keys);
             if (matches.length > 0) {
               frameTrace = subsetArrayAttrs(frameTrace, matches);
-              var d = gd._fullData[newIdx[ctr]];
+              var d = gd._fullData[newIndices[ctr]];
               if (d.marker) {
                 frameTrace.marker = d.marker;
               }
