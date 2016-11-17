@@ -479,9 +479,9 @@ Figure 4.17: Leveraging hierarchical selection and persistent brushing to paint 
 </div>
 <div id="limitations" class="section level3">
 <h3><span class="header-section-number">4.2.9</span> Limitations</h3>
-<p>In terms of <a href="linking-views-without-shiny.html#linking-views-without-shiny">linking views without shiny</a>, the biggest limitation is the lack of ability to perform statistical aggregations in real time based on user queries. For example, Figure <a href="linking-animated-views.html#fig:animation-gapminder">5.6</a> could be improved by layering on a linear model specific to the user selection, to make it easier to compare and track those relationships over time. In this case, one may want to opt into <a href="linking-views-without-shiny.html#linking-views-without-shiny">linking views with shiny</a> to trigger the execution of R code in response to a user query. Also, at least currently, there are a limited number of selection modes to choose from (e.g., XOR, COMPLEMENT modes are not yet supported), but these modes can also be implemented within a shiny app (the <a href="https://github.com/ropensci/plotly/blob/cd93ab303efa56007b8bba725bab140e8a8aae39/inst/examples/lmGadget/app.R">lmGadget</a> shiny gadget would be one such example of XOR selection).</p>
+<p>In terms of <a href="linking-views-without-shiny.html#linking-views-without-shiny">linking views without shiny</a>, the biggest limitation is the lack of ability to perform statistical aggregations in real time based on user queries. For example, Figure <a href="linking-animated-views.html#fig:animation-gapminder">5.6</a> could be improved by layering on a linear model specific to the user selection, to make it easier to compare and track those relationships over time. In this case, one may want to opt into <a href="linking-views-without-shiny.html#linking-views-without-shiny">linking views with shiny</a> to trigger the execution of R code in response to a user query. While this is a fundamental limitation of the system design, there are also a number of current limitations from an implementation perspective.</p>
+<p>As discussed in <a href="linking-views-without-shiny.html#transient-versus-persistent-selection">persistent vs transient selection</a>, <strong>plotly</strong> does have some native support for memorizing selections, but there is currently rewinding selections, like the techniques described by <span class="citation">Hofmann and Theus (<a href="#ref-selection-sequences">1998</a>)</span>. Also, at least currently, there are a limited number of selection modes to choose from (e.g., AND, XOR, COMPLEMENT modes are not yet supported), but these modes can also be implemented within a shiny app (the <a href="https://github.com/ropensci/plotly/blob/cd93ab303efa56007b8bba725bab140e8a8aae39/inst/examples/lmGadget/app.R">lmGadget</a> shiny gadget would be one such example of XOR selection).</p>
 <!--
-
 * Currently leaflet is the only htmlwidget, with crosstalk support, that will respect non-default arguments in plotly's highlight() function.
 
 As discussed in previous chapters, **plotly** graphs have zoom, pan, and identification type interactions enabled by default. This chapter discusses methods that enable other types of useful interactions listed in Table \@ref(tab:techniques).
@@ -509,6 +509,9 @@ As discussed in previous chapters, **plotly** graphs have zoom, pan, and identif
 </div>
 <div id="ref-GGally">
 <p>Schloerke, Barret, Jason Crowley, Di Cook, Francois Briatte, Moritz Marbach, Edwin Thoen, Amos Elberg, and Joseph Larmarange. 2016. <em>GGally: Extension to ’Ggplot2’</em>.</p>
+</div>
+<div id="ref-selection-sequences">
+<p>Hofmann, Heike, and Martin Theus. 1998. “Selection sequences in MANET.” <em>Computational Statistics</em>, January, 1–12.</p>
 </div>
 </div>
 <div class="footnotes">

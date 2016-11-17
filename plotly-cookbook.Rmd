@@ -49,9 +49,9 @@ The `color` argument adheres to similar rules as `symbol`:
 p <- plot_ly(mpg, x = ~cty, y = ~hwy, alpha = 0.5)
 subplot(
   add_markers(p, color = ~cyl, showlegend = FALSE) %>% 
-    colorbar(title = "Viridis", len = 1/2, y = 1),
+    colorbar(title = "Viridis"),
   add_markers(p, color = ~factor(cyl))
-) %>% layout(showlegend = TRUE)
+)
 ```
 
 There are a number of ways to alter the default colorscale via the `colors` argument. This argument excepts: (1) a color brewer palette name (see the row names of `RColorBrewer::brewer.pal.info` for valid names), (2) a vector of colors to interpolate, or (3) a color interpolation function like `colorRamp()` or `scales::colour_ramp()`. Although this grants a lot of flexibility, one should be conscious of using a sequential colorscale for numeric variables (& ordered factors) as shown in \@ref(fig:color-numeric), and a qualitative colorscale for discrete variables as shown in \@ref(fig:color-discrete). (TODO: touch on lurking variables?)
@@ -59,12 +59,12 @@ There are a number of ways to alter the default colorscale via the `colors` argu
 ```{r color-numeric, fig.cap = "Three variations on a numeric color mapping", screenshot.alt = "screenshots/color-numeric"}    
 subplot(
   add_markers(p, color = ~cyl, colors = c("#132B43", "#56B1F7")) %>%
-    colorbar(title = "ggplot2 default", len = 1/3, y = 1),
+    colorbar(title = "ggplot2 default"),
   add_markers(p, color = ~cyl, colors = viridisLite::inferno(10)) %>% 
-    colorbar(title = "Inferno", len = 1/3, y = 2/3),
+    colorbar(title = "Inferno"),
   add_markers(p, color = ~cyl, colors = colorRamp(c("red", "white", "blue"))) %>% 
-    colorbar(title = "colorRamp", len = 1/3, y = 1/3)
-)
+    colorbar(title = "colorRamp")
+) %>% hide_legend()
 ```
 
 ```{r color-discrete, fig.cap = "Three variations on a discrete color mapping", screenshot.alt = "screenshots/color-discrete"}  
@@ -73,7 +73,7 @@ subplot(
   add_markers(p, color = ~factor(cyl), colors = colorRamp(c("red", "blue"))),
   add_markers(p, color = ~factor(cyl), 
               colors = c(`4` = "red", `5` = "black", `6` = "blue", `8` = "green"))
-) %>% layout(showlegend = FALSE)
+) %>% hide_legend()
 ```
 
 For scatterplots, the `size` argument controls the area of markers (unless otherwise specified via [sizemode](https://plot.ly/r/reference/#scatter-marker-sizemode)), and _must_ be a numeric variable. The `sizes` argument controls the minimum and maximum size of circles, in pixels:
@@ -465,13 +465,13 @@ The **plotly** package provides two functions for displaying rectangular bins: `
 p <- plot_ly(diamonds, x = ~log(carat), y = ~log(price))
 subplot(
   add_histogram2d(p) %>%
-    colorbar(title = "default", len = 1/3, y = 1) %>%
+    colorbar(title = "default") %>%
     layout(xaxis = list(title = "default")),
   add_histogram2d(p, zsmooth = "best") %>%
-    colorbar(title = "zsmooth", len = 1/3, y = 2/3 - 0.05) %>%
+    colorbar(title = "zsmooth") %>%
     layout(xaxis = list(title = "zsmooth")),
   add_histogram2d(p, nbinsx = 60, nbinsy = 60) %>%
-    colorbar(title = "nbins", len = 1/3, y = 1/3 - 0.1) %>%
+    colorbar(title = "nbins") %>%
     layout(xaxis = list(title = "nbins")),
   shareY = TRUE, titleX = TRUE
 )
