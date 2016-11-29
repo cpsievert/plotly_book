@@ -60,7 +60,7 @@ All the arrangement approaches discussed thus far are agnostic to output format,
 
 The `subplot()` function provides a flexible interface for merging multiple plotly objects into a single object (i.e., view). It is more flexible than most trellis display frameworks (e.g., ggplot2's `facet_wrap()`) as you don't have to condition on a value of common variable in each display [@trellis]. Its capabilities and interface is similar to the `grid.arrange()` function from the **gridExtra** package, which allows you to arrange multiple **grid** grobs in a single view, effectively providing a way to arrange (possibly unrelated)  **ggplot2** and/or **lattice** plots in a single view [@base]; [@gridExtra]; [@lattice]. Figure \@ref(fig:simple) shows the most simple way to use `subplot()` which is to directly supply plotly objects.
 
-```{r simple, fig.cap = "The most basic use of `subplot()` to merge multiple plotly objects into a single plotly object."}
+```{r simple, fig.cap = "The most basic use of `subplot()` to merge multiple plotly objects into a single plotly object.", screenshot.alt = "screenshots/simple"}
 library(plotly)
 p1 <- plot_ly(economics, x = ~date, y = ~unemploy) %>% 
   add_lines(name = "unemploy")
@@ -71,7 +71,7 @@ subplot(p1, p2)
 
 Although `subplot()` accepts an arbitrary number of plot objects, passing a _list_ of plots can save typing and redundant code when dealing with a large number of plots. Figure \@ref(fig:economics) shows one time series for each variable in the `economics` dataset and share the x-axis so that zoom/pan events are synchronized across each series:
 
-```{r economics, fig.cap = "Five different economic variables on different y scales and a common x scale. Zoom and pan events in the x-direction are synchronized across plots."}
+```{r economics, fig.cap = "Five different economic variables on different y scales and a common x scale. Zoom and pan events in the x-direction are synchronized across plots.", screenshot.alt = "screenshots/economics"}
 vars <- setdiff(names(economics), "date")
 plots <- lapply(vars, function(var) {
   plot_ly(economics, x = ~date, y = as.formula(paste0("~", var)), name = var) %>%
@@ -82,7 +82,7 @@ subplot(plots, nrows = length(plots), shareX = TRUE, titleX = FALSE)
 
 A plotly subplot is a single plotly graph with multiple traces anchored on different axes. If you pre-specify an [axis ID](https://plot.ly/r/reference/#scatter-yaxis) for each trace, `subplot()` will respect that ID. Figure \@ref(fig:prepopulate) uses this fact in correspondence with the fact that mapping a discrete variable to `color` creates one trace per value. In addition to providing more control over trace placement, this provides a convenient way to control coloring (we could have `symbol`/`linetype` to achieve the same effect).
 
-```{r prepopulate, fig.cap = "Pre-populating y axis IDs."}
+```{r prepopulate, fig.cap = "Pre-populating y axis IDs.", screenshot.alt = "screenshots/prepopulate"}
 economics %>%
   tidyr::gather(variable, value, -date) %>%
   transform(id = as.integer(factor(variable))) %>%
@@ -100,7 +100,7 @@ knitr::include_graphics("images/proportions")
 
 This flexibility is quite useful for a number of visualizations, for example, as shown in Figure \@ref(fig:joint), a joint density plot is really of subplot of joint and marginal densities. The **heatmaply** package is great example of leveraging `subplot()` in a similar way to create interactive dendrograms [@heatmaply].
 
-```{r joint, fig.cap = "A joint density plot with synchronized axes."}
+```{r joint, fig.cap = "A joint density plot with synchronized axes.", screenshot.alt = "screenshots/joint"}
 x <- rnorm(100)
 y <- rnorm(100)
 s <- subplot(
