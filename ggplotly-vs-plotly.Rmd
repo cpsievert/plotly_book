@@ -57,7 +57,7 @@ The `ggplotly()` function translates most things that you can do in **ggplot2**,
 
 #### The Layered Grammar of Graphics
 
-The cognitive framework underlying the `plot_ly()` interface draws inspiration from the layered grammar of graphics [@Wickham:2010hya], but in contrast to `ggplotly()`, it provides a more flexible and direct interface to [plotly.js](https://github.com/plotly/plotly.js). It is more direct in the sense that it doesn't call **ggplot2**'s sometimes expensive plot building routines, and it is more flexible in the sense that data frames are not required, which is useful for visualizing matrices, as shown in [Get Started](#get-started). Although data frames are not required, using them is highly recommended, especially when constructing a plot with multiple layers or groups. 
+The cognitive framework underlying the `plot_ly()` interface draws inspiration from the layered grammar of graphics [@ggplot2-paper], but in contrast to `ggplotly()`, it provides a more flexible and direct interface to [plotly.js](https://github.com/plotly/plotly.js). It is more direct in the sense that it doesn't call **ggplot2**'s sometimes expensive plot building routines, and it is more flexible in the sense that data frames are not required, which is useful for visualizing matrices, as shown in [Get Started](#get-started). Although data frames are not required, using them is highly recommended, especially when constructing a plot with multiple layers or groups. 
 
 When a data frame is associated with a **plotly** object, it allows us to manipulate the data underlying that object in the same way we would directly manipulate the data. Currently, `plot_ly()` borrows semantics from and provides special plotly methods for generic functions in the **dplyr** and **tidyr** packages [@dplyr]; [@tidyr]. Most importantly, `plot_ly()` recognizes and preserves groupings created with **dplyr**'s `group_by()` function.
 
@@ -190,37 +190,6 @@ rangeslider(gg)
 
 Since a single plotly object can only have one layout, modifying the layout of `ggplotly()` is fairly easy, but it's trickier to [add](#adding-layers) and [modify](#modifying-layers) layers.
 
-### Adding layers
-
-Since `ggplotly()` returns a plotly object, and plotly objects have data associated with them, we can effectively associate data from a ggplot object with a plotly object, before or after summary statistics have been applied. Since each ggplot layer owns a data frame, it is useful to have some way to specify the particular layer of data of interest, which is the point of the `layerData` argument in `ggplotly()`. Also, when a particular layer applies a summary statistic (e.g., `geom_bin()`), or applies a model (e.g., `geom_smooth()`) to the data, it might be useful to access the output of that transformation, which is the point of the `originalData` argument in `ggplotly()`. 
-
-```{r}
-p <- ggplot(mtcars, aes(x = wt, y = mpg)) +
-   geom_point() + geom_smooth()
-p %>%
-  ggplotly(layerData = 2, originalData = FALSE) %>%
-  plotly_data()
-```
-
-This is the dataset ggplot2 uses to actually draw the fitted values (as a line) and standard error bounds (as a ribbon). Figure \@ref(fig:se-annotations) uses this data to add additional information about the model fit; in particular, it adds a vertical lines and annotations at the x-values that are associated with the highest and lowest amount uncertainty in y. 
-
-```{r se-annotations, fig.cap = "Leveraging data associated with a `geom_smooth()` layer to display additional information about the model fit.", screenshot.alt = "screenshots/se-annotations"}
-p %>%
-  ggplotly(layerData = 2, originalData = F) %>%
-  add_fun(function(p) {
-    p %>% slice(which.max(se)) %>%
-      add_segments(x = ~x, xend = ~x, y = ~ymin, yend = ~ymax) %>%
-      add_annotations("Maximum uncertainty", ax = 60)
-  }) %>%
-  add_fun(function(p) {
-    p %>% slice(which.min(se)) %>%
-      add_segments(x = ~x, xend = ~x, y = ~ymin, yend = ~ymax) %>%
-      add_annotations("Minimum uncertainty")
-  })
-```
-
-Although it is not used in this example, it worth noting that when adding plotly layers to the output of `ggplotly()`, it will inherit mappings from the ggplot aesthetic mapping, which may or may not be desired, but the `inherit` argument in any of the `add_*()` functions may be set to `FALSE` to avoid this behavior.
-
 ### Modifying layers
 
 As mentioned previously, `ggplotly()` translates each ggplot2 layer into one or more plotly.js traces. In this translation, it is forced to make a number of assumptions about trace attribute values that may or may not be appropriate for the use case. The `style()` function is useful in this scenario, as it provides a way to modify trace attribute values in a plotly object. Before using it, you may want to inspect the actual traces in a given plotly object using the `plotly_json()` function. This function uses the **listviewer** package to display a convenient interactive view of the JSON object sent to plotly.js [@listviewer]. By clicking on the arrow next to the data element, you can see the traces (data) behind the plot. In this case, we have three traces: one for the `geom_point()` layer and two for the `geom_smooth()` layer.
@@ -238,6 +207,66 @@ Say, for example, we'd like to display information when hovering over points, bu
 ```{r style-hoverinfo, fig.cap = "Using the `style()` function to modify hoverinfo attribute values of a plotly object created via `ggplotly()` (by default, `ggplotly()` displays hoverinfo for all traces). In this case, the hoverinfo for a fitted line and error bounds are hidden.", screenshot.alt = "screenshots/style-hoverinfo"}
 style(p, hoverinfo = "none", traces = 2:3)
 ```
+
+### Leveraging statistical output
+
+Since `ggplotly()` returns a plotly object, and plotly objects can have data attached to them, it attaches data from **ggplot2** layer(s) (either before or after summary statistics have been applied). Furthermore, since each ggplot layer owns a data frame, it is useful to have some way to specify the particular layer of data of interest, which is done via the `layerData` argument in `ggplotly()`. Also, when a particular layer applies a summary statistic (e.g., `geom_bin()`), or applies a statistical model (e.g., `geom_smooth()`) to the data, it might be useful to access the output of that transformation, which is the point of the `originalData` argument in `ggplotly()`. 
+
+```{r}
+p <- ggplot(mtcars, aes(x = wt, y = mpg)) +
+   geom_point() + geom_smooth()
+p %>%
+  ggplotly(layerData = 2, originalData = FALSE) %>%
+  plotly_data()
+```
+
+The data shown above is the data ggplot2 uses to actually draw the fitted values (as a line) and standard error bounds (as a ribbon). Figure \@ref(fig:se-annotations) leverages this data to add additional information about the model fit; in particular, it adds a vertical lines and annotations at the x-values that are associated with the highest and lowest amount uncertainty in the fitted values. Producing a plot like this with **ggplot2** would be impossible using `geom_smooth()` alone.^[It could be recreated by fitting the model via `loess()`, obtaining the fitted values and standard error with `predict()`, and feeding those results into `geom_line()`/`geom_ribbon()`/`geom_text()`/`geom_segment()`, but that process is much more onerous.] Providing a simple visual clue like this can help combat visual misperceptions of uncertainty bands due to the sine illusion [@sine-illusion]. 
+
+```{r se-annotations, fig.cap = "Leveraging data associated with a `geom_smooth()` layer to display additional information about the model fit.", screenshot.alt = "screenshots/se-annotations"}
+p %>%
+  ggplotly(layerData = 2, originalData = F) %>%
+  add_fun(function(p) {
+    p %>% slice(which.max(se)) %>%
+      add_segments(x = ~x, xend = ~x, y = ~ymin, yend = ~ymax) %>%
+      add_annotations("Maximum uncertainty", ax = 60)
+  }) %>%
+  add_fun(function(p) {
+    p %>% slice(which.min(se)) %>%
+      add_segments(x = ~x, xend = ~x, y = ~ymin, yend = ~ymax) %>%
+      add_annotations("Minimum uncertainty")
+  })
+```
+
+In addition to leveraging output from `StatSmooth`, it is sometimes useful to leverage output of other statistics, especially for annotation purposes. Figure \@ref(fig:StatBin) leverages the output of `StatBin` to add annotations to a stacked bar chart. Annotation is primarily helpful for displaying the heights of bars in a stacked bar chart, since decoding the heights of bars is a fairly difficult perceptual task [@graphical-perception]. As result, it is much easier to compare bar heights representing the proportion of diamonds with a given clarity across various diamond cuts.
+
+```{r StatBin, fig.cap = "Leveraging output from `StatBin` to add annotations to a stacked bar chart (created via `geom_bar()`) which makes it easier to compare bar heights.", screenshot.alt = "screenshots/StatBin"}
+p <- ggplot(diamonds, aes(cut, fill = clarity)) +
+  geom_bar(position = "fill")
+
+ggplotly(p, originalData = FALSE) %>%
+  mutate(ydiff = ymax - ymin) %>% 
+  add_text(
+    x = ~x, y = ~1 - (ymin + ymax) / 2,
+    text = ~ifelse(ydiff > 0.02, round(ydiff, 2), ""),
+    showlegend = FALSE, hoverinfo = "none",
+    color = I("black"), size = I(9)
+  )
+```
+
+Another useful application is labelling the levels of each piece/polygon output by `StatDensity2d` as shown in Figure \@ref(fig:StatDensity2d). Note that, in this example, the `add_text()` layer takes advantage of `ggplotly()`'s ability to inherit aesthetics from the global mapping. Furthermore, since `originalData` is `FALSE`, it attaches the "built" aesthetics (i.e.,  the `x`/`y` positions after `StatDensity2d` has been applied to the raw data).
+
+```{r StatDensity2d, fig.cap = "Leveraging output from `StatDensity2d` to add annotations to contour levels. a stacked bar chart (created via `geom_bar()`) which makes it easier to compare bar heights.", screenshot.alt = "screenshots/StatDensity2d"}
+p <- ggplot(MASS::geyser, aes(x = waiting, y = duration)) +
+  geom_density2d()
+
+ggplotly(p, originalData = FALSE) %>% 
+  group_by(piece) %>%
+  slice(which.min(y)) %>% 
+  add_text(
+    text = ~level, size = I(9), color = I("black"), hoverinfo = "none"
+  )
+```
+
 
 <!-- TODO: make this more convincing
 ## Choosing an interface

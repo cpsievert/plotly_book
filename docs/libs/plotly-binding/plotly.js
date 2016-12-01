@@ -49,9 +49,9 @@ HTMLWidgets.widget({
     // if no plot exists yet, create one with a particular configuration
     if (!instance.plotly) {
       
-      instance.autosize = x.layout.autosize || true;
       var plot = Plotly.plot(graphDiv, x);
       instance.plotly = true;
+      instance.autosize = x.layout.autosize || true;
       instance.width = x.layout.width;
       instance.height = x.layout.height;
       

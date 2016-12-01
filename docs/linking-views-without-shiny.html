@@ -8,7 +8,7 @@
   <title>plotly for R</title>
   <meta content="text/html; charset=UTF-8" http-equiv="Content-Type">
   <meta name="description" content="An overview of the R package plotly">
-  <meta name="generator" content="bookdown 0.2.5 and GitBook 2.6.7">
+  <meta name="generator" content="bookdown 0.3 and GitBook 2.6.7">
 
   <meta property="og:title" content="plotly for R" />
   <meta property="og:type" content="book" />
@@ -124,8 +124,8 @@ code > span.in { color: #60a0b0; font-weight: bold; font-style: italic; } /* Inf
 </ul></li>
 <li class="chapter" data-level="1.2" data-path="extending-ggplotly.html"><a href="extending-ggplotly.html"><i class="fa fa-check"></i><b>1.2</b> Extending <code>ggplotly()</code></a><ul>
 <li class="chapter" data-level="1.2.1" data-path="extending-ggplotly.html"><a href="extending-ggplotly.html#customizing-the-layout"><i class="fa fa-check"></i><b>1.2.1</b> Customizing the layout</a></li>
-<li class="chapter" data-level="1.2.2" data-path="extending-ggplotly.html"><a href="extending-ggplotly.html#adding-layers"><i class="fa fa-check"></i><b>1.2.2</b> Adding layers</a></li>
-<li class="chapter" data-level="1.2.3" data-path="extending-ggplotly.html"><a href="extending-ggplotly.html#modifying-layers"><i class="fa fa-check"></i><b>1.2.3</b> Modifying layers</a></li>
+<li class="chapter" data-level="1.2.2" data-path="extending-ggplotly.html"><a href="extending-ggplotly.html#modifying-layers"><i class="fa fa-check"></i><b>1.2.2</b> Modifying layers</a></li>
+<li class="chapter" data-level="1.2.3" data-path="extending-ggplotly.html"><a href="extending-ggplotly.html#leveraging-statistical-output"><i class="fa fa-check"></i><b>1.2.3</b> Leveraging statistical output</a></li>
 </ul></li>
 </ul></li>
 <li class="chapter" data-level="2" data-path="the-plotly-cookbook.html"><a href="the-plotly-cookbook.html"><i class="fa fa-check"></i><b>2</b> The plotly cookbook</a><ul>
@@ -330,7 +330,7 @@ Figure 4.9: A bar chart of cities with one or more missing median house sales li
 Figure 4.10: A diagram of the pipeline between the data and graphics.
 </p>
 </div>
-<p>Since the pipeline from data to graphic is either an identity function or a summarization of some kind, it is good idea to use the most granular form of the data for the <code>SharedData</code> object, and use <a href="a-case-study-of-housing-sales-in-texas.html#the-data-plot-pipeline">the data-plot-pipeline</a> to define a pipeline from the data to the plot. As <span class="citation">Wickham et al. (<a href="#ref-plumbing">2010</a>)</span> writes, a true interactive graphics system is aware of the both the function from the central data object to the graphic, as well as the inverse function (i.e., the function from the graphic back to the central data object). As it currently stands, <strong>plotly</strong> loses this information when the result is pushed to the web browser, but that does not matter for Figure <a href="linking-views-without-shiny.html#fig:bars-lines">4.9</a> since the pipeline does not need to re-execute statistical summaries of information tied to a user event.<a href="#fn14" class="footnoteRef" id="fnref14"><sup>14</sup></a></p>
+<p>Since the pipeline from data to graphic is either an identity function or a summarization of some kind, it is good idea to use the most granular form of the data for the <code>SharedData</code> object, and use <a href="a-case-study-of-housing-sales-in-texas.html#the-data-plot-pipeline">the data-plot-pipeline</a> to define a pipeline from the data to the plot. As <span class="citation">Wickham et al. (<a href="#ref-plumbing">2010</a>)</span> writes, a true interactive graphics system is aware of the both the function from the central data object to the graphic, as well as the inverse function (i.e., the function from the graphic back to the central data object). As it currently stands, <strong>plotly</strong> loses this information when the result is pushed to the web browser, but that does not matter for Figure <a href="linking-views-without-shiny.html#fig:bars-lines">4.9</a> since the pipeline does not need to re-execute statistical summaries of information tied to a user event.<a href="#fn15" class="footnoteRef" id="fnref15"><sup>15</sup></a></p>
 <div class="sourceCode"><pre class="sourceCode r"><code class="sourceCode r">sd &lt;-<span class="st"> </span>SharedData$<span class="kw">new</span>(txhousing, ~city)
 
 base &lt;-<span class="st"> </span><span class="kw">plot_ly</span>(sd, <span class="dt">color =</span> <span class="kw">I</span>(<span class="st">&quot;black&quot;</span>)) %&gt;%
@@ -393,7 +393,7 @@ Figure 4.12: Dynamically populating a bar chart reflecting brushed observations
 <h3><span class="header-section-number">4.2.7</span> Nested selections</h3>
 <div id="grouped-selections-via-ggplotly" class="section level4">
 <h4><span class="header-section-number">4.2.7.1</span> Grouped selections via <code>ggplotly()</code></h4>
-<p>In statistical graphics, it is quite common for a graphical element to be tied to multiple observations. For example, a line representing the fitted values from a linear model is inherently connected to the observations used to fit the model. In fact, any graphical summary (e.g. boxplot, histogram, density, etc.) can be linked back the original data used to derive them. Especially when comparing multiple summaries, it can be useful to highlight group(s) of summaries, as well as the raw data that created them. Figure <a href="linking-views-without-shiny.html#fig:smooth-highlight">4.13</a> uses <code>ggplotly()</code>’s built-in support for linking graphical summaries with raw data to enable highlighting of linear models.<a href="#fn15" class="footnoteRef" id="fnref15"><sup>15</sup></a> Furthermore, notice how there are actually two levels of selection in Figure <a href="linking-views-without-shiny.html#fig:smooth-highlight">4.13</a> – when hovering over a single point, just that point is selected, but when hovering over a fitted line, all the observations tied to that line are selected.</p>
+<p>In statistical graphics, it is quite common for a graphical element to be tied to multiple observations. For example, a line representing the fitted values from a linear model is inherently connected to the observations used to fit the model. In fact, any graphical summary (e.g. boxplot, histogram, density, etc.) can be linked back the original data used to derive them. Especially when comparing multiple summaries, it can be useful to highlight group(s) of summaries, as well as the raw data that created them. Figure <a href="linking-views-without-shiny.html#fig:smooth-highlight">4.13</a> uses <code>ggplotly()</code>’s built-in support for linking graphical summaries with raw data to enable highlighting of linear models.<a href="#fn16" class="footnoteRef" id="fnref16"><sup>16</sup></a> Furthermore, notice how there are actually two levels of selection in Figure <a href="linking-views-without-shiny.html#fig:smooth-highlight">4.13</a> – when hovering over a single point, just that point is selected, but when hovering over a fitted line, all the observations tied to that line are selected.</p>
 <!--
 Figure \@ref(fig:bars-lines) is one such example where each bar (i.e., each city) is tied to multiple observations (i.e., monthly sales within city). In that example, the group and key variables are the same (`city`), but what happens when they are different? In the case that a key variable is _nested_ inside a **ggplot2** group, `ggplotly()` will automatically track each group.
 -->
@@ -516,9 +516,9 @@ As discussed in previous chapters, **plotly** graphs have zoom, pan, and identif
 </div>
 <div class="footnotes">
 <hr />
-<ol start="14">
-<li id="fn14"><p>Since <strong>dplyr</strong> semantics translate to <code>SQL</code> primitives, you could imagine a system that translates a data-plot-pipeline to <code>SQL</code> queries, and dynamically re-executes within the browser via something like <code>SQL.js</code> <span class="citation">(O. L. &amp; Contributors <a href="#ref-SQLjs">2016</a>)</span>.<a href="linking-views-without-shiny.html#fnref14">↩</a></p></li>
-<li id="fn15"><p>Strictly speaking, as long as a key is provided to a <strong>ggplot2</strong> layer with a non-identity statistic, <code>ggplotly()</code> will nest keys within group.<a href="linking-views-without-shiny.html#fnref15">↩</a></p></li>
+<ol start="15">
+<li id="fn15"><p>Since <strong>dplyr</strong> semantics translate to <code>SQL</code> primitives, you could imagine a system that translates a data-plot-pipeline to <code>SQL</code> queries, and dynamically re-executes within the browser via something like <code>SQL.js</code> <span class="citation">(O. L. &amp; Contributors <a href="#ref-SQLjs">2016</a>)</span>.<a href="linking-views-without-shiny.html#fnref15">↩</a></p></li>
+<li id="fn16"><p>Strictly speaking, as long as a key is provided to a <strong>ggplot2</strong> layer with a non-identity statistic, <code>ggplotly()</code> will nest keys within group.<a href="linking-views-without-shiny.html#fnref16">↩</a></p></li>
 </ol>
 </div>
             </section>
