@@ -15,8 +15,10 @@ The scatterplot is useful for visualizing the correlation between two quantitati
 ```{r scatterplots, fig.cap = "Three versions of a basic scatterplot", screenshot.alt = "screenshots/scatterplots"}
 subplot(
   plot_ly(mpg, x = ~cty, y = ~hwy, name = "default"),
-  plot_ly(mpg, x = ~cty, y = ~hwy) %>% add_markers(alpha = 0.2, name = "alpha"),
-  plot_ly(mpg, x = ~cty, y = ~hwy) %>% add_markers(symbol = I(1), name = "hollow")
+  plot_ly(mpg, x = ~cty, y = ~hwy) %>% 
+    add_markers(alpha = 0.2, name = "alpha"),
+  plot_ly(mpg, x = ~cty, y = ~hwy) %>% 
+    add_markers(symbol = I(1), name = "hollow")
 )
 ```
 
@@ -25,7 +27,8 @@ In Figure \@ref(fig:scatterplots), hollow circles are specified via `symbol = I(
 ```{r pch, fig.cap = "Specifying symbol in a scatterplot", screenshot.alt = "screenshots/pch"}
 subplot(
   plot_ly(x = 1:25, y = 1:25, symbol = I(1:25), name = "pch"),
-  plot_ly(mpg, x = ~cty, y = ~hwy, symbol = ~cyl, symbols = 1:3, name = "cyl")
+  plot_ly(mpg, x = ~cty, y = ~hwy, symbol = ~cyl, 
+          symbols = 1:3, name = "cyl")
 )
 ```
 
@@ -56,23 +59,28 @@ subplot(
 
 There are a number of ways to alter the default colorscale via the `colors` argument. This argument excepts: (1) a color brewer palette name (see the row names of `RColorBrewer::brewer.pal.info` for valid names), (2) a vector of colors to interpolate, or (3) a color interpolation function like `colorRamp()` or `scales::colour_ramp()`. Although this grants a lot of flexibility, one should be conscious of using a sequential colorscale for numeric variables (& ordered factors) as shown in \@ref(fig:color-numeric), and a qualitative colorscale for discrete variables as shown in \@ref(fig:color-discrete). (TODO: touch on lurking variables?)
 
-```{r color-numeric, fig.cap = "Three variations on a numeric color mapping", screenshot.alt = "screenshots/color-numeric"}    
+```{r color-numeric, fig.cap = "Three variations on a numeric color mapping", screenshot.alt = "screenshots/color-numeric"}
+col1 <- c("#132B43", "#56B1F7")
+col2 <- viridisLite::inferno(10)
+col3 <- colorRamp(c("red", "white", "blue"))
 subplot(
-  add_markers(p, color = ~cyl, colors = c("#132B43", "#56B1F7")) %>%
+  add_markers(p, color = ~cyl, colors = col1) %>%
     colorbar(title = "ggplot2 default"),
-  add_markers(p, color = ~cyl, colors = viridisLite::inferno(10)) %>% 
+  add_markers(p, color = ~cyl, colors = col2) %>% 
     colorbar(title = "Inferno"),
-  add_markers(p, color = ~cyl, colors = colorRamp(c("red", "white", "blue"))) %>% 
+  add_markers(p, color = ~cyl, colors = col3) %>% 
     colorbar(title = "colorRamp")
 ) %>% hide_legend()
 ```
 
-```{r color-discrete, fig.cap = "Three variations on a discrete color mapping", screenshot.alt = "screenshots/color-discrete"}  
+```{r color-discrete, fig.cap = "Three variations on a discrete color mapping", screenshot.alt = "screenshots/color-discrete"}
+col1 <- "Pastel1"
+col2 <- colorRamp(c("red", "blue"))
+col3 <- c(`4` = "red", `5` = "black", `6` = "blue", `8` = "green")
 subplot(
-  add_markers(p, color = ~factor(cyl), colors = "Pastel1"),
-  add_markers(p, color = ~factor(cyl), colors = colorRamp(c("red", "blue"))),
-  add_markers(p, color = ~factor(cyl), 
-              colors = c(`4` = "red", `5` = "black", `6` = "blue", `8` = "green"))
+  add_markers(p, color = ~factor(cyl), colors = col1),
+  add_markers(p, color = ~factor(cyl), colors = col2),
+  add_markers(p, color = ~factor(cyl), colors = col3)
 ) %>% hide_legend()
 ```
 
@@ -110,8 +118,8 @@ A dotplot is similar to a scatterplot, except instead of two numeric axes, one i
 A popular application for dotplots (with error bars) is the so-called "coefficient plot" for visualizing the point estimates of coefficients and their standard error. The `coefplot()` function in the **coefplot** package [@coefplot] and the `ggcoef()` function in the **GGally** both produce coefficient plots for many types of model objects in R using **ggplot2**, which we can translate to plotly via `ggplotly()`. Since these packages use points and segments to draw the coefficient plots, the hover information is not the best, and it'd be better to use [error objects](https://plot.ly/r/reference/#scatter-error_x). Figure \@ref(fig:coefplot) uses the `tidy()` function from the **broom** package [@broom] to obtain a data frame with one row per model coefficient, and produce a coefficient plot with error bars along the x-axis. 
 
 ```{r coefplot, fig.cap = "A coefficient plot", screenshot.alt = "screenshots/coefplot"}
-m <- lm(Sepal.Length ~ Sepal.Width * Petal.Length * Petal.Width, data = iris)
-# arrange by estimate, then make term a factor to order categories in the plot
+m <- lm(Sepal.Length~Sepal.Width*Petal.Length*Petal.Width, data = iris)
+# to order categories sensibly arrange by estimate then coerce factor 
 d <- broom::tidy(m) %>% 
   arrange(desc(estimate)) %>%
   mutate(term = factor(term, levels = term))
@@ -485,7 +493,8 @@ In [Bars & histograms](#bars-histograms), we leveraged a number of algorithms in
 kde_count <- function(x, y, ...) {
   kde <- MASS::kde2d(x, y, ...)
   df <- with(kde, setNames(expand.grid(x, y), c("x", "y")))
-  # The 'z' returned by kde2d() is a proportion, but we can scale it to a count
+  # The 'z' returned by kde2d() is a proportion, 
+  # but we can scale it to a count
   df$count <- with(kde, c(z) * length(x) * diff(x)[1] * diff(y)[1])
   data.frame(df)
 }

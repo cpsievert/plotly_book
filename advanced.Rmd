@@ -10,10 +10,12 @@ This section describes some advanced topics regarding the **plotly** package. So
 
 The section on [linking views with shiny](#linking-views-with-shiny) shows how to acquire data tied to plotly.js events from a __shiny__ app. Since __shiny__ adds a lot of additional infrastructure, __plotly__ also provides a way to [link views without shiny](#linking-views-without-shiny), but this definitely does not encompass every type of interactivity. Thankfully the **htmlwidgets** package provides a way to invoke a JavaScript function on the widget element (after it is done rendering) from R via the `onRender()` function [@htmlwidgets]. The JavaScript function should have at least two arguments: (1) the DOM element containing the htmlwidget (`el`) and (2) the data passed from R (`x`). This enables, for instance, the ability to author custom behavior tied to a particular plotly.js event. Figure \@ref(fig:click-open) uses `onRender()` to open a relevant Google search upon clicking a point.
 
-```{r click-open, fig.cap = "Using `onRender()` to register a JavaScript callback that opens a google search upon a 'plotly_click' event."}
+```{r click-open, fig.cap = "Using `onRender()` to register a JavaScript callback that opens a google search upon a 'plotly_click' event.", screenshot.alt = "screenshots/click-open"}
 library(plotly)
 library(htmlwidgets)
-search <- paste0("http://google.com/#q=", curl::curl_escape(rownames(mtcars)))
+search <- paste0(
+  "http://google.com/#q=", curl::curl_escape(rownames(mtcars))
+)
 plot_ly(mtcars, x = ~wt, y = ~mpg, color = ~factor(vs)) %>%
   add_markers(text = ~search, hoverinfo = "x+y") %>%
   onRender("

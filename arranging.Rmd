@@ -74,8 +74,8 @@ Although `subplot()` accepts an arbitrary number of plot objects, passing a _lis
 ```{r economics, fig.cap = "Five different economic variables on different y scales and a common x scale. Zoom and pan events in the x-direction are synchronized across plots.", screenshot.alt = "screenshots/economics"}
 vars <- setdiff(names(economics), "date")
 plots <- lapply(vars, function(var) {
-  plot_ly(economics, x = ~date, y = as.formula(paste0("~", var)), name = var) %>%
-    add_lines()
+  plot_ly(economics, x = ~date, y = as.formula(paste0("~", var))) %>%
+    add_lines(name = var)
 })
 subplot(plots, nrows = length(plots), shareX = TRUE, titleX = FALSE)
 ```
@@ -124,7 +124,10 @@ plotList <- function(nplots) {
 }
 s1 <- subplot(plotList(6), nrows = 2, shareX = TRUE, shareY = TRUE)
 s2 <- subplot(plotList(2), shareY = TRUE)
-subplot(s1, s2, plot_ly(), nrows = 3, margin = 0.04, heights = c(0.6, 0.3, 0.1))
+subplot(
+  s1, s2, plot_ly(), nrows = 3, 
+  margin = 0.04, heights = c(0.6, 0.3, 0.1)
+)
 ```
 
 The concept is particularly useful when you want plot(s) in a given row to have different widths from plot(s) in another row. Figure \@ref(fig:map-subplot) uses this recursive behavior to place many bar charts in the first row, and a single choropleth in the second row.
@@ -177,48 +180,19 @@ Sometimes you have to consider way more views than you can possibly digest visua
 
 In fact, Figure \@ref(fig:plotlyLinkedClick) from that section provides an example of this mantra put into practice. The correlation matrix provides an overview of the correlation structure between all the variables, and by clicking a cell, it populates a scatterplot between those two specific variables. This works fine with tens or hundreds or variables, but once you have thousands or tens-of-thousands of variables, this technique begins to fall apart. At that point, you may be better off defining a range of correlations that you're interested in exploring, or better yet, incorporating another measure (e.g., a test statistic), then focusing on views that match a certain criteria.
 
-@scagnostics-tukey first described the idea of using quantitative measurements of scatterplot characteristics (e.g. correlation) to help guide exploratory analysis of many variables. This idea, coined scagnostics (short for scatterplot diagnostics), has since been made explicit, and many measures have been explored, even measures specifically useful for time-series have been proposed [@Wilkinson:2005]; [@Wilkinson:2008]; [@Wilkinson:2012]. Probably the most universally useful scagnostic is the outlying measure which helps identify projections of the data space that contain outlying observations. Of course, the idea of associating quantitative measures with a graphical display of data can be generalized to include more that just scatterplots, and in this more general case, these measures are sometimes referred to as cognostics.
+@scagnostics-tukey first described the idea of using quantitative measurements of scatterplot characteristics (e.g. correlation) to help guide exploratory analysis of many variables. This idea, coined scagnostics (short for scatterplot diagnostics), has since been made explicit, and many measures have been explored, even measures specifically useful for time-series have been proposed [@Wilkinson:2005b]; [@Wilkinson:2008]; [@Wilkinson:2012]. Probably the most universally useful scagnostic is the outlying measure which helps identify projections of the data space that contain outlying observations. Of course, the idea of associating quantitative measures with a graphical display of data can be generalized to include more that just scatterplots, and in this more general case, these measures are sometimes referred to as cognostics.
 
-The same problems and principles that inspired scagnostics has inspired work on more general divide & recombine technique(s) for working with navigating through many statistical artifacts [@divide-recombine]; [@RHIPE], including visualizations [@trelliscope]. The **trelliscope** package provides a system for computing arbitrary cognostics on each panel of a trellis display as well as an interactive graphical user interface for defining (and navigating through) interesting panels based on those cognostics [@trelliscope-pkg]. This system also allows users to define the graphical method for displaying each panel, so **plotly** graphs can easily be embedded. The **trelliscope** package is currently built upon **shiny**, but as Figure \@ref(fig:trelliscope) demonstrates, the **trelliscopecore** package provides lower-level tools that allow one to create trelliscope displays without **shiny**.
+The same problems and principles that inspired scagnostics has inspired work on more general divide & recombine technique(s) for working with navigating through many statistical artifacts [@divide-recombine]; [@RHIPE], including visualizations [@trelliscope]. The **trelliscope** package provides a system for computing arbitrary cognostics on each panel of a trellis display as well as an interactive graphical user interface for defining (and navigating through) interesting panels based on those cognostics [@trelliscope-pkg]. This system also allows users to define the graphical method for displaying each panel, so **plotly** graphs can easily be embedded. The **trelliscope** package is currently built upon **shiny**, but as Figure \@ref(fig:trelliscope) demonstrates, the **trelliscopejs** package provides lower-level tools that allow one to create trelliscope displays without **shiny** [@trelliscopejs].
 
 ```{r trelliscope-fake, eval = FALSE}
-library(trelliscopecore)
-library(dplyr)
-library(plotly)
+library(trelliscopejs)
 
-# cognostics data frame
-iris_cog_df <- iris %>%
-  group_by(Species) %>%
-  summarise(
-    mean_sl = cog(mean(Sepal.Length), desc = "mean sepal length"),
-    mean_sw = cog(mean(Sepal.Width), desc = "mean sepal length"),
-    mean_pl = cog(mean(Petal.Length), desc = "mean sepal length"),
-    mean_pw = cog(mean(Petal.Width), desc = "mean sepal length")
+qplot(cty, hwy, data = mpg) +
+  xlim(7, 37) + ylim(9, 47) + theme_bw() +
+  facet_trelliscope(
+    ~ manufacturer + class, nrow = 2, ncol = 4, 
+    as_plotly = TRUE, plotly_args = list(dynamicTicks = T)
   )
-
-iris_cog_df <- as_cognostics(iris_cog_df, cond_cols = "Species", key_col = "Species")
-
-# list of panels
-panels <- iris %>%
-  split(iris$Species) %>%
-  lapply(function(x) {
-    plot_ly(x, x = ~Sepal.Length, y = ~Sepal.Width) %>% config(collaborate = FALSE)
-  })
-
-base_path <- tempdir()
-
-write_panels(panels, base_path = base_path, name = "iris")
-
-write_display_obj(
-  iris_cog_df,
-  panel_example = panels[[1]],
-  base_path = base_path,
-  name = "iris"
-)
-
-prepare_display(base_path)
-
-view_display(base_path)
 ```
 
 ```{r trelliscope, echo = FALSE, fig.cap = "Using plotly within a trelliscope"}

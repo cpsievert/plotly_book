@@ -48,8 +48,8 @@ Another aspect of Figure \@ref(fig:plotlyLinkedClick) that makes it an interesti
 
 ## Linking views without shiny
 
-```{block, type='rmdwarning'}
-The code is this section is still under development and is likely to change.
+```{block, type='rmdwarning', include=knitr:::is_html_output()}
+The code in this section is still under development and is likely to change.
 To run any of the code you see in this section, you'll need this developmental version of the package:
 `devtools::install_github("ropensci/plotly")`
 ```
@@ -158,8 +158,8 @@ In Figure \@ref(fig:leaflet), the user first highlights earthquakes with a magni
 The interactions described thus far in [Linking views without shiny](#linking-views-without-shiny) is what @ggobi:2007 calls direct manipulation, where the user makes graphical queries by directly interacting with graphical elements. In Figure \@ref(fig:indirect-manip), cities are queried indirectly via a dropdown powered by the selectize.js library [@selectizejs]. Indirect manipulation is especially useful when you have unit(s) of interest (e.g. your favorite city), but can not easily find that unit in the graphical space. The combination of direct and indirect manipulation is powerful, especially when the interactive widgets for indirect manipulation are synced with direct manipulation events. As shown in Figure \@ref(fig:indirect-manip), when cities are queried indirectly, the graph updates accordingly, and when cities are queried directly, the select box updates accordingly. If the time series was linked to other view(s), as it is in the next section, selecting a city via the dropdown menu would highlight all of the relevant view(s).
 
 ```{r, eval = FALSE}
-# The group name is currently used to populate a title for the selectize widget
-sd <- SharedData$new(txhousing, ~city, "Choose a city")
+# Group name is used to populate a title for the dropdown
+sd <- SharedData$new(txhousing, ~city, group = "Choose a city")
 plot_ly(sd, x = ~date, y = ~median) %>%
   add_lines(text = ~city, hoverinfo = "text") %>%
   highlight(on = "plotly_hover", persistent = TRUE, selectize = TRUE)
@@ -195,7 +195,8 @@ p1 <- base %>%
   summarise(has = sum(is.na(median))) %>%
   filter(has > 0) %>%
   arrange(has) %>%
-  add_bars(x = ~has, y = ~factor(city, levels = city), hoverinfo = "none") %>%
+  add_bars(x = ~has, y = ~factor(city, levels = city), 
+           hoverinfo = "none") %>%
   layout(
     barmode = "overlay",
     xaxis = list(title = "Number of months missing"),
@@ -222,7 +223,8 @@ scatterplot <- plot_ly(d, x = ~mpg, y = ~disp) %>%
   layout(dragmode = "select")
 
 subplot(
-  plot_ly(d, y = ~disp, color = I("black")) %>% add_boxplot(name = "overall"),
+  plot_ly(d, y = ~disp, color = I("black")) %>% 
+    add_boxplot(name = "overall"),
   scatterplot, shareY = TRUE
 ) %>% layout(dragmode = "select")
 ```
@@ -247,6 +249,8 @@ layout(p, barmode = "overlay")
 ```{r highlight-bars, echo = FALSE, fig.cap = "Dynamically populating a bar chart reflecting brushed observations"}
 knitr::include_graphics("images/highlight-bars.gif")
 ```
+
+\newpage
 
 ### Nested selections
 
@@ -281,7 +285,7 @@ mtcars$am <- dplyr::recode(mtcars$am, `0` = "automatic", `1` = "manual")
 mod <- step(lm(mpg ~ ., data = mtcars), trace = FALSE)
 # produce diagnostic plots, coloring by automatic/manual
 pm <- GGally::ggnostic(mod, mapping = aes(color = am))
-# ggplotly() will automatically add rownames as a key if none is provided
+# ggplotly() automatically adds rownames as a key if none is provided
 ggplotly(pm) %>% highlight("plotly_click")
 ```
 

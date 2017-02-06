@@ -8,7 +8,7 @@
   <title>plotly for R</title>
   <meta content="text/html; charset=UTF-8" http-equiv="Content-Type">
   <meta name="description" content="An overview of the R package plotly">
-  <meta name="generator" content="bookdown 0.3 and GitBook 2.6.7">
+  <meta name="generator" content="bookdown 0.3.7 and GitBook 2.6.7">
 
   <meta property="og:title" content="plotly for R" />
   <meta property="og:type" content="book" />
@@ -52,7 +52,9 @@
 <link href="libs/plotlyjs/plotly-htmlwidgets.css" rel="stylesheet" />
 <script src="libs/plotlyjs/plotly-latest.min.js"></script>
 <script src="libs/plotly-binding/plotly.js"></script>
-<script src="libs/crosstalk/js/crosstalk.js"></script>
+<link href="libs/crosstalk/css/crosstalk.css" rel="stylesheet" />
+<script src="libs/crosstalk/js/crosstalk.min.js"></script>
+<script src="libs/typedarray/typedarray.min.js"></script>
 <link href="libs/jsoneditor/jsoneditor.min.css" rel="stylesheet" />
 <script src="libs/jsoneditor/jsoneditor.min.js"></script>
 <script src="libs/jsonedit-binding/jsonedit.js"></script>
@@ -101,6 +103,7 @@ code > span.in { color: #60a0b0; font-weight: bold; font-style: italic; } /* Inf
 </head>
 
 <body>
+
 
 
   <div class="book without-animation with-summary font-size-2 font-family-1" data-basepath=".">
@@ -216,45 +219,16 @@ code > span.in { color: #60a0b0; font-weight: bold; font-style: italic; } /* Inf
 <p>“Overview first, zoom and filter, then details-on-demand.”</p>
 </blockquote>
 <p>In fact, Figure <a href="linking-views-with-shiny.html#fig:plotlyLinkedClick">4.3</a> from that section provides an example of this mantra put into practice. The correlation matrix provides an overview of the correlation structure between all the variables, and by clicking a cell, it populates a scatterplot between those two specific variables. This works fine with tens or hundreds or variables, but once you have thousands or tens-of-thousands of variables, this technique begins to fall apart. At that point, you may be better off defining a range of correlations that you’re interested in exploring, or better yet, incorporating another measure (e.g., a test statistic), then focusing on views that match a certain criteria.</p>
-<p><span class="citation">Tukey and Tukey (n.d.)</span> first described the idea of using quantitative measurements of scatterplot characteristics (e.g. correlation) to help guide exploratory analysis of many variables. This idea, coined scagnostics (short for scatterplot diagnostics), has since been made explicit, and many measures have been explored, even measures specifically useful for time-series have been proposed <span class="citation">(Wilkinson <a href="#ref-Wilkinson:2005">2005</a>)</span>; <span class="citation">(Wilkinson and Wills <a href="#ref-Wilkinson:2008">2008</a>)</span>; <span class="citation">(Dang and Wilkinson <a href="#ref-Wilkinson:2012">2012</a>)</span>. Probably the most universally useful scagnostic is the outlying measure which helps identify projections of the data space that contain outlying observations. Of course, the idea of associating quantitative measures with a graphical display of data can be generalized to include more that just scatterplots, and in this more general case, these measures are sometimes referred to as cognostics.</p>
-<p>The same problems and principles that inspired scagnostics has inspired work on more general divide &amp; recombine technique(s) for working with navigating through many statistical artifacts <span class="citation">(Cleveland and Hafen <a href="#ref-divide-recombine">2014</a>)</span>; <span class="citation">(Saptarshi Guha and Cleveland <a href="#ref-RHIPE">2012</a>)</span>, including visualizations <span class="citation">(Hafen et al. <a href="#ref-trelliscope">2013</a>)</span>. The <strong>trelliscope</strong> package provides a system for computing arbitrary cognostics on each panel of a trellis display as well as an interactive graphical user interface for defining (and navigating through) interesting panels based on those cognostics <span class="citation">(Hafen <a href="#ref-trelliscope-pkg">2016</a>)</span>. This system also allows users to define the graphical method for displaying each panel, so <strong>plotly</strong> graphs can easily be embedded. The <strong>trelliscope</strong> package is currently built upon <strong>shiny</strong>, but as Figure <a href="navigating-many-views.html#fig:trelliscope">3.12</a> demonstrates, the <strong>trelliscopecore</strong> package provides lower-level tools that allow one to create trelliscope displays without <strong>shiny</strong>.</p>
-<div class="sourceCode"><pre class="sourceCode r"><code class="sourceCode r"><span class="kw">library</span>(trelliscopecore)
-<span class="kw">library</span>(dplyr)
-<span class="kw">library</span>(plotly)
+<p><span class="citation">Tukey and Tukey (n.d.)</span> first described the idea of using quantitative measurements of scatterplot characteristics (e.g. correlation) to help guide exploratory analysis of many variables. This idea, coined scagnostics (short for scatterplot diagnostics), has since been made explicit, and many measures have been explored, even measures specifically useful for time-series have been proposed <span class="citation">(Wilkinson, Anand, and Grossman <a href="#ref-Wilkinson:2005b">2005</a>)</span>; <span class="citation">(Wilkinson and Wills <a href="#ref-Wilkinson:2008">2008</a>)</span>; <span class="citation">(Dang and Wilkinson <a href="#ref-Wilkinson:2012">2012</a>)</span>. Probably the most universally useful scagnostic is the outlying measure which helps identify projections of the data space that contain outlying observations. Of course, the idea of associating quantitative measures with a graphical display of data can be generalized to include more that just scatterplots, and in this more general case, these measures are sometimes referred to as cognostics.</p>
+<p>The same problems and principles that inspired scagnostics has inspired work on more general divide &amp; recombine technique(s) for working with navigating through many statistical artifacts <span class="citation">(Cleveland and Hafen <a href="#ref-divide-recombine">2014</a>)</span>; <span class="citation">(Saptarshi Guha and Cleveland <a href="#ref-RHIPE">2012</a>)</span>, including visualizations <span class="citation">(Hafen et al. <a href="#ref-trelliscope">2013</a>)</span>. The <strong>trelliscope</strong> package provides a system for computing arbitrary cognostics on each panel of a trellis display as well as an interactive graphical user interface for defining (and navigating through) interesting panels based on those cognostics <span class="citation">(Hafen <a href="#ref-trelliscope-pkg">2016</a>)</span>. This system also allows users to define the graphical method for displaying each panel, so <strong>plotly</strong> graphs can easily be embedded. The <strong>trelliscope</strong> package is currently built upon <strong>shiny</strong>, but as Figure <a href="navigating-many-views.html#fig:trelliscope">3.12</a> demonstrates, the <strong>trelliscopejs</strong> package provides lower-level tools that allow one to create trelliscope displays without <strong>shiny</strong> <span class="citation">(Hafen and Schloerke, n.d.)</span>.</p>
+<div class="sourceCode"><pre class="sourceCode r"><code class="sourceCode r"><span class="kw">library</span>(trelliscopejs)
 
-<span class="co"># cognostics data frame</span>
-iris_cog_df &lt;-<span class="st"> </span>iris %&gt;%
-<span class="st">  </span><span class="kw">group_by</span>(Species) %&gt;%
-<span class="st">  </span><span class="kw">summarise</span>(
-    <span class="dt">mean_sl =</span> <span class="kw">cog</span>(<span class="kw">mean</span>(Sepal.Length), <span class="dt">desc =</span> <span class="st">&quot;mean sepal length&quot;</span>),
-    <span class="dt">mean_sw =</span> <span class="kw">cog</span>(<span class="kw">mean</span>(Sepal.Width), <span class="dt">desc =</span> <span class="st">&quot;mean sepal length&quot;</span>),
-    <span class="dt">mean_pl =</span> <span class="kw">cog</span>(<span class="kw">mean</span>(Petal.Length), <span class="dt">desc =</span> <span class="st">&quot;mean sepal length&quot;</span>),
-    <span class="dt">mean_pw =</span> <span class="kw">cog</span>(<span class="kw">mean</span>(Petal.Width), <span class="dt">desc =</span> <span class="st">&quot;mean sepal length&quot;</span>)
-  )
-
-iris_cog_df &lt;-<span class="st"> </span><span class="kw">as_cognostics</span>(iris_cog_df, <span class="dt">cond_cols =</span> <span class="st">&quot;Species&quot;</span>, <span class="dt">key_col =</span> <span class="st">&quot;Species&quot;</span>)
-
-<span class="co"># list of panels</span>
-panels &lt;-<span class="st"> </span>iris %&gt;%
-<span class="st">  </span><span class="kw">split</span>(iris$Species) %&gt;%
-<span class="st">  </span><span class="kw">lapply</span>(function(x) {
-    <span class="kw">plot_ly</span>(x, <span class="dt">x =</span> ~Sepal.Length, <span class="dt">y =</span> ~Sepal.Width) %&gt;%<span class="st"> </span><span class="kw">config</span>(<span class="dt">collaborate =</span> <span class="ot">FALSE</span>)
-  })
-
-base_path &lt;-<span class="st"> </span><span class="kw">tempdir</span>()
-
-<span class="kw">write_panels</span>(panels, <span class="dt">base_path =</span> base_path, <span class="dt">name =</span> <span class="st">&quot;iris&quot;</span>)
-
-<span class="kw">write_display_obj</span>(
-  iris_cog_df,
-  <span class="dt">panel_example =</span> panels[[<span class="dv">1</span>]],
-  <span class="dt">base_path =</span> base_path,
-  <span class="dt">name =</span> <span class="st">&quot;iris&quot;</span>
-)
-
-<span class="kw">prepare_display</span>(base_path)
-
-<span class="kw">view_display</span>(base_path)</code></pre></div>
+<span class="kw">qplot</span>(cty, hwy, <span class="dt">data =</span> mpg) <span class="op">+</span>
+<span class="st">  </span><span class="kw">xlim</span>(<span class="dv">7</span>, <span class="dv">37</span>) <span class="op">+</span><span class="st"> </span><span class="kw">ylim</span>(<span class="dv">9</span>, <span class="dv">47</span>) <span class="op">+</span><span class="st"> </span><span class="kw">theme_bw</span>() <span class="op">+</span>
+<span class="st">  </span><span class="kw">facet_trelliscope</span>(
+    <span class="op">~</span><span class="st"> </span>manufacturer <span class="op">+</span><span class="st"> </span>class, <span class="dt">nrow =</span> <span class="dv">2</span>, <span class="dt">ncol =</span> <span class="dv">4</span>, 
+    <span class="dt">as_plotly =</span> <span class="ot">TRUE</span>, <span class="dt">plotly_args =</span> <span class="kw">list</span>(<span class="dt">dynamicTicks =</span> T)
+  )</code></pre></div>
 <div class="figure"><span id="fig:trelliscope"></span>
 <img src="images/trelliscope" alt="Using plotly within a trelliscope" width="700" align:"center" />
 <p class="caption">
@@ -269,8 +243,8 @@ Figure 3.12: Using plotly within a trelliscope
 <div id="ref-details-on-demand">
 <p>Shneiderman, Ben. 1996. “The Eyes Have It:A Task by Data Type Taxonomy for Information Visualizations.” <em>VL Proceedings of the IEEE Symposium on Visual Languages</em>, January, 1–9.</p>
 </div>
-<div id="ref-Wilkinson:2005">
-<p>Wilkinson, Leland. 2005. <em>The Grammar of Graphics (Statistics and Computing)</em>. Secaucus, NJ, USA: Springer-Verlag New York, Inc.</p>
+<div id="ref-Wilkinson:2005b">
+<p>Wilkinson, Leland, Anushka Anand, and Robert Grossman. 2005. “Graph-Theoretic Scagnostics.” In <em>Proceedings of the Proceedings of the 2005 Ieee Symposium on Information Visualization</em>, 21. INFOVIS ’05. Washington, DC, USA: IEEE Computer Society. doi:<a href="https://doi.org/10.1109/INFOVIS.2005.14">10.1109/INFOVIS.2005.14</a>.</p>
 </div>
 <div id="ref-Wilkinson:2008">
 <p>Wilkinson, Leland, and Graham Wills. 2008. “Scagnostics Distributions.” <em>Journal of Computational and Graphical Statistics</em>, no. 2: 473–91.</p>

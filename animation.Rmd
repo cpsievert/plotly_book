@@ -2,7 +2,7 @@
 
 ## Key frame animations
 
-```{block, type='rmdwarning'}
+```{block, type='rmdwarning', include=knitr:::is_html_output()}
 The code is this section is still under development and may change.
 To run any of the code you see in this section, you'll need this developmental version of the package:
 `devtools::install_github("ropensci/plotly")`
@@ -12,8 +12,8 @@ Both `plot_ly()` and `ggplotly()` support [key frame](https://en.wikipedia.org/w
 
 ```{r animation-ggplotly, fig.cap = "Animation of the evolution in the relationship between GDP per capita and life expectancy in numerous countries.", screenshot.alt = "screenshots/animation-ggplotly"}
 data(gapminder, package = "gapminder")
-gg <- ggplot(gapminder, aes(gdpPercap, lifeExp)) +
-  geom_point(aes(size = pop, color = continent, frame = year, ids = country)) +
+gg <- ggplot(gapminder, aes(gdpPercap, lifeExp, color = continent)) +
+  geom_point(aes(size = pop, frame = year, ids = country)) +
   scale_x_log10()
 ggplotly(gg)
 ```
@@ -22,21 +22,28 @@ As long as a `frame` variable is provided, an animation is produced with play/pa
 
 ```{r animation-opts, fig.cap = "Modifying animation defaults with `animation_opts()`, `animation_button()`, and `animation_slider()`.", screenshot.alt = "screenshots/animation-opts"}
 base <- gapminder %>%
-  plot_ly(x = ~gdpPercap, y = ~lifeExp, size = ~pop, text = ~country, hoverinfo = "text") %>%
+  plot_ly(x = ~gdpPercap, y = ~lifeExp, size = ~pop, 
+          text = ~country, hoverinfo = "text") %>%
   layout(xaxis = list(type = "log"))
 
 base %>%
   add_markers(color = ~continent, frame = ~year, ids = ~country) %>%
   animation_opts(1000, easing = "elastic") %>%
-  animation_button(x = 1, xanchor = "right", y = 0, yanchor = "bottom") %>%
-  animation_slider(currentvalue = list(prefix = "YEAR ", font = list(color = "red")))
+  animation_button(
+    x = 1, xanchor = "right", y = 0, yanchor = "bottom"
+  ) %>%
+  animation_slider(
+    currentvalue = list(prefix = "YEAR ", font = list(color="red"))
+  )
 ```
 
 If `frame` is a numeric variable (or a character string), frames are always ordered in increasing (alphabetical) order; but for factors, the ordering reflects the ordering of the levels. Consequently, factors provide the most control over the ordering of frames. In Figure \@ref(fig:animation-factors), the continents (i.e., frames) are ordered according their average life expectancy across countries within the continent. Furthermore, since there is no meaningful relationship between objects in different frames of Figure \@ref(fig:animation-factors), the smooth transition duration is set to 0. This helps avoid any confusion that there is a meaningful connection between the smooth transitions. Note that these options control both animations triggered by the play button or via the slider. 
 
 ```{r animation-factors, fig.cap = "Animation of GDP per capita versus life expectancy by continent. The ordering of the contintents goes from lowest average (across countries) life expectancy to highest.", screenshot.alt = "screenshots/animation-factors"}
 meanLife <- with(gapminder, tapply(lifeExp, INDEX = continent, mean))
-gapminder$continent <- factor(gapminder$continent, levels = names(sort(meanLife)))
+gapminder$continent <- factor(
+  gapminder$continent, levels = names(sort(meanLife))
+)
 
 base %>%
   add_markers(data = gapminder, frame = ~continent) %>%
@@ -83,7 +90,7 @@ The `gapminder` data used thus far does not include surface area information, so
 
 ```{r}
 countryByArea <- read.table(
-  "https://gist.githubusercontent.com/cpsievert/d4a4ccb7ce61e2cfaecf9736de4f67fa/raw/9b7d01c2c939d721bdf2f47a6596ac4c055205d3/countryByArea.txt",
+  "https://bit.ly/2h6vscu",
   header = TRUE, stringsAsFactors = FALSE
 )
 

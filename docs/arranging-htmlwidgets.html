@@ -8,7 +8,7 @@
   <title>plotly for R</title>
   <meta content="text/html; charset=UTF-8" http-equiv="Content-Type">
   <meta name="description" content="An overview of the R package plotly">
-  <meta name="generator" content="bookdown 0.3 and GitBook 2.6.7">
+  <meta name="generator" content="bookdown 0.3.7 and GitBook 2.6.7">
 
   <meta property="og:title" content="plotly for R" />
   <meta property="og:type" content="book" />
@@ -52,7 +52,9 @@
 <link href="libs/plotlyjs/plotly-htmlwidgets.css" rel="stylesheet" />
 <script src="libs/plotlyjs/plotly-latest.min.js"></script>
 <script src="libs/plotly-binding/plotly.js"></script>
-<script src="libs/crosstalk/js/crosstalk.js"></script>
+<link href="libs/crosstalk/css/crosstalk.css" rel="stylesheet" />
+<script src="libs/crosstalk/js/crosstalk.min.js"></script>
+<script src="libs/typedarray/typedarray.min.js"></script>
 <link href="libs/jsoneditor/jsoneditor.min.css" rel="stylesheet" />
 <script src="libs/jsoneditor/jsoneditor.min.js"></script>
 <script src="libs/jsonedit-binding/jsonedit.js"></script>
@@ -101,6 +103,7 @@ code > span.in { color: #60a0b0; font-weight: bold; font-style: italic; } /* Inf
 </head>
 
 <body>
+
 
 
   <div class="book without-animation with-summary font-size-2 font-family-1" data-basepath=".">
@@ -223,11 +226,11 @@ Figure 3.1: Printing multiple htmlwidget objects with <code>tagList()</code>. To
 </p>
 </div>
 <p>Figure <a href="arranging-htmlwidgets.html#fig:multiple-htmlwidgets">3.1</a> renders two plots, each in its own row spanning the width of the page, because each htmlwidget object is an HTML <code>&lt;div&gt;</code> tag. More often than not, it is desirable to arrange multiple plots in a given row, and there are a few ways to do that. A very flexible approach is to wrap all of your plots in a <a href="https://css-tricks.com/snippets/css/a-guide-to-flexbox/">flexbox</a> (i.e., an HTML <code>&lt;div&gt;</code> with <code>display: flex</code> Cascading Style Sheets (CSS) property). The <code>tags$div()</code> function from <strong>htmltools</strong> provides a way to wrap a <code>&lt;div&gt;</code> around both tag lists and htmlwidget objects, and set attributes, such as <code>style</code>. As Figure <a href="arranging-htmlwidgets.html#fig:flexbox">3.2</a> demonstrates, this approach also provides a nice way to add custom styling to the page, such as borders around each panel.</p>
-<div class="sourceCode"><pre class="sourceCode r"><code class="sourceCode r">tags$<span class="kw">div</span>(
+<div class="sourceCode"><pre class="sourceCode r"><code class="sourceCode r">tags<span class="op">$</span><span class="kw">div</span>(
   <span class="dt">style =</span> <span class="st">&quot;display: flex; flex-wrap: wrap&quot;</span>,
-  tags$<span class="kw">div</span>(p, <span class="dt">style =</span> <span class="st">&quot;width: 50%; padding: 1em; border: solid;&quot;</span>),
-  tags$<span class="kw">div</span>(p, <span class="dt">style =</span> <span class="st">&quot;width: 50%; padding: 1em; border: solid;&quot;</span>),
-  tags$<span class="kw">div</span>(p, <span class="dt">style =</span> <span class="st">&quot;width: 100%; padding: 1em; border: solid;&quot;</span>)
+  tags<span class="op">$</span><span class="kw">div</span>(p, <span class="dt">style =</span> <span class="st">&quot;width: 50%; padding: 1em; border: solid;&quot;</span>),
+  tags<span class="op">$</span><span class="kw">div</span>(p, <span class="dt">style =</span> <span class="st">&quot;width: 50%; padding: 1em; border: solid;&quot;</span>),
+  tags<span class="op">$</span><span class="kw">div</span>(p, <span class="dt">style =</span> <span class="st">&quot;width: 100%; padding: 1em; border: solid;&quot;</span>)
 )</code></pre></div>
 <div class="figure"><span id="fig:flexbox"></span>
 <img src="images/flexbox" alt="Arranging multiple htmlwidgets with flexbox" width="700" align:"center" />

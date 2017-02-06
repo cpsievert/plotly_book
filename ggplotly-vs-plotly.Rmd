@@ -66,13 +66,13 @@ library(dplyr)
 tx <- group_by(txhousing, city)
 # initiate a plotly object with date on x and median on y
 p <- plot_ly(tx, x = ~date, y = ~median)
-# plotly_data() returns data associated with a plotly object, note the group attribute!
+# plotly_data() returns data associated with a plotly object
 plotly_data(p)
 ```
 
 Defining groups in this fashion ensures `plot_ly()` will produce at least one graphical mark per group.^[In practice, it's easy to forget about "lingering" groups (e.g., `mtcars %>% group_by(vs, am) %>% summarise(s = sum(mpg))`), so in some cases, you may need to `ungroup()` your data before plotting it.] So far we've specified `x`/`y` attributes in the plotly object `p`, but we have not yet specified the geometric relation between these x/y pairs. Similar to `geom_line()` in **ggplot2**, the `add_lines()` function connects (a group of) x/y pairs with lines in the order of their `x` values, which is useful when plotting time series as shown in Figure \@ref(fig:houston).
 
-```{r houston, fig.cap = "Monthly median house price in Houston in comparison to other Texan cities."}
+```{r houston, fig.cap = "Monthly median house price in Houston in comparison to other Texan cities.", screenshot.alt = "screenshots/houston"}
 # add a line highlighting houston
 add_lines(
   # plots one line per city since p knows city is a grouping variable
@@ -89,7 +89,7 @@ In the first layer of Figure \@ref(fig:houston), there is one line per city, but
 
 Since every **plotly** function modifies a plotly object (or the data underlying that object), we can express complex multi-layer plots as a sequence (or, more specifically, a directed acyclic graph) of data manipulations and mappings to the visual space. Moreover, **plotly** functions are designed to take a plotly object as input, and return a modified plotly object, making it easy to chain together operations via the pipe operator (`%>%`) from the **magrittr** package [@magrittr]. Consequently, we can re-express Figure \@ref(fig:houston) in a much more readable and understandable fashion.
 
-```{r, results = "hide"}
+```{r houston2, screenshot.alt = "screenshots/houston"}
 allCities <- txhousing %>%
   group_by(city) %>%
   plot_ly(x = ~date, y = ~median) %>%
@@ -102,13 +102,14 @@ allCities %>%
 
 Sometimes the directed acyclic graph property of a pipeline can be too restrictive for certain types of plots. In this example, after filtering the data down to Houston, there is no way to recover the original data inside the pipeline. The `add_fun()` function helps to work-around this restriction^[Credit to Winston Chang and Hadley Wickham for this idea. The `add_fun()` is very much like `layer_f()` function in **ggvis**.] -- it works by applying a function to the plotly object, but does not affect the data associated with the plotly object. This effectively provides a way to isolate data transformations within the pipeline^[Also, effectively putting a [pipeline inside a pipeline](http://www.memecreator.org/meme/yo-dawg-i-heard-u-like-pipelines-so-we-put-a-pipeline-in-your-pipeline)]. Figure \@ref(fig:houston-vs-sa) uses this idea to highlight both Houston and San Antonio.
 
-```{r houston-vs-sa, fig.cap = "Monthly median house price in Houston and San Antonio in comparison to other Texan cities."}
+```{r houston-vs-sa, fig.cap = "Monthly median house price in Houston and San Antonio in comparison to other Texan cities.", screenshot.alt = "screenshots/houston-vs-sa"}
 allCities %>%
   add_fun(function(plot) {
     plot %>% filter(city == "Houston") %>% add_lines(name = "Houston")
   }) %>%
   add_fun(function(plot) {
-    plot %>% filter(city == "San Antonio") %>% add_lines(name = "San Antonio")
+    plot %>% filter(city == "San Antonio") %>% 
+      add_lines(name = "San Antonio")
   })
 ```
 
