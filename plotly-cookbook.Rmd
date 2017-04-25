@@ -412,7 +412,7 @@ cc2 %>%
 
 This type of plot, also known as a spine plot, is a special case of a mosaic plot. In a mosaic plot, you can scale both bar widths and heights according to discrete distributions. For mosaic plots, I recommend using the **ggmosaic** package [@ggmosaic], which implements a custom **ggplot2** geom designed for mosaic plots, which we can convert to plotly via `ggplotly()`. Figure \@ref(fig:ggmosaic) show a mosaic plot of cut by clarity. Notice how the bar widths are scaled proportional to the cut frequency.
 
-```{r ggmosaic, fig.cap = "Using ggmosaic and ggplotly() to create advanced interactive visualizations of categorical data", screenshot.alt = "screenshots/ggmosaic"}
+```{r ggmosaic, fig.cap = "Using ggmosaic and ggplotly() to create advanced interactive visualizations of categorical data", screenshot.alt = "screenshots/ggmosaic", eval = FALSE}
 library(ggmosaic)
 p <- ggplot(data = cc) +
   geom_mosaic(aes(weight = n, x = product(cut), fill = clarity))

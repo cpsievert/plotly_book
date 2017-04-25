@@ -2,12 +2,6 @@
 
 ## Key frame animations
 
-```{block, type='rmdwarning', include=knitr:::is_html_output()}
-The code is this section is still under development and may change.
-To run any of the code you see in this section, you'll need this developmental version of the package:
-`devtools::install_github("ropensci/plotly")`
-```
-
 Both `plot_ly()` and `ggplotly()` support [key frame](https://en.wikipedia.org/wiki/Key_frame) animations through the `frame` attribute/aesthetic. They also support an `ids` attribute/aesthetic to ensure smooth transitions between objects with the same id (which helps facilitate [object constancy](https://bost.ocks.org/mike/constancy/)). Figure \@ref(fig:animation-ggplotly) recreates the famous gapminder animation of the evolution in the relationship between GDP per capita and life expectancy evolved over time [@gapminder]. The data is recorded on a yearly basis, so the year is assigned to `frame`, and each point in the scatterplot represents a country, so the country is assigned to `ids`, ensuring a smooth transition from year to year for a given country.
 
 ```{r animation-ggplotly, fig.cap = "Animation of the evolution in the relationship between GDP per capita and life expectancy in numerous countries.", screenshot.alt = "screenshots/animation-ggplotly"}
@@ -28,7 +22,7 @@ base <- gapminder %>%
 
 base %>%
   add_markers(color = ~continent, frame = ~year, ids = ~country) %>%
-  animation_opts(1000, easing = "elastic") %>%
+  animation_opts(1000, easing = "elastic", redraw = FALSE) %>%
   animation_button(
     x = 1, xanchor = "right", y = 0, yanchor = "bottom"
   ) %>%
@@ -48,7 +42,7 @@ gapminder$continent <- factor(
 base %>%
   add_markers(data = gapminder, frame = ~continent) %>%
   hide_legend() %>%
-  animation_opts(frame = 1000, transition = 0)
+  animation_opts(frame = 1000, transition = 0, redraw = FALSE)
 ```
 
 Both the `frame` and `ids` attributes operate on the trace level -- meaning that we can target specific layers of the graph to be animated. One obvious use case for this is to provide a background which displays every possible frame (which is not animated) and overlay the animated frames onto that background. Figure \@ref(fig:animation-targets) shows the same information as Figure \@ref(fig:animation-opts), but layers animated frames on top of a background of all the frames. As a result, it is easier to put a specific year into a global context.
@@ -57,7 +51,7 @@ Both the `frame` and `ids` attributes operate on the trace level -- meaning that
 base %>%
   add_markers(color = ~continent, alpha = 0.2, showlegend = F) %>%
   add_markers(color = ~continent, frame = ~year, ids = ~country) %>%
-  animation_opts(1000)
+  animation_opts(1000, redraw = FALSE)
 ```
 
 ## Linking animated views
@@ -118,9 +112,9 @@ p2 <- plot_ly(gap, x = ~gdpPercap, y = ~lifeExp, size = ~popDen,
 
 subplot(p1, p2, nrows = 1, widths = c(0.3, 0.7), titleX = TRUE) %>%
   hide_legend() %>%
-  animation_opts(1000) %>%
-  layout(dragmode = "select", hovermode = "y", margin = list(l = 100)) %>%
-  highlight(off = "plotly_deselect", color = "blue", opacityDim = 1, hoverinfo = "none")
+  animation_opts(1000, redraw = FALSE) %>%
+  layout(hovermode = "y", margin = list(l = 100)) %>%
+  highlight("plotly_selected", color = "blue", opacityDim = 1, hoverinfo = "none")
 ```
 
 Although Figure \@ref(fig:animation-gapminder) links two animated layers, it is probably more common to link non-animated display(s) with an animation. A sophisticated use within the statistical graphics literature is to link views with a grand tour to view model predictions projected onto a high-dimensional space [@model-vis-paper]. The grand tour is a special kind of animation that interpolates between random 2D projections of numeric data allowing us, to perceive the shape of a high-dimensional point cloud [@grand-tour]. Figure \@ref(fig:tour-USArrests) links a grand tour to a dendrogram displaying the results of a hierarchical clustering algorithm on the 50 US states with respect to Murder arrests (per 100,000), Assault arrests (per 100,000), Rape arrests (per 100,000), and percent urban population.

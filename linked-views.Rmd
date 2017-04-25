@@ -48,12 +48,6 @@ Another aspect of Figure \@ref(fig:plotlyLinkedClick) that makes it an interesti
 
 ## Linking views without shiny
 
-```{block, type='rmdwarning', include=knitr:::is_html_output()}
-The code in this section is still under development and is likely to change.
-To run any of the code you see in this section, you'll need this developmental version of the package:
-`devtools::install_github("ropensci/plotly")`
-```
-
 <!-- TODO:
 Explain again the importance of having standalone HTML?
 -->
@@ -63,7 +57,6 @@ Explain again the importance of having standalone HTML?
 As shown in [Linking views with shiny](#linking-views-with-shiny), the `key` attribute provides a way to attach a key (i.e., ID) to graphical elements -- an essential feature when making graphical queries. When linking views in **plotly** outside of **shiny**, the suggested way to attach a key to graphical elements is via the `SharedData` class from the **crosstalk** package [@crosstalk]. At the very least, the `new()` method for this class requires a data frame, and a key variable. Lets suppose we're interested in making comparisons of housing sales across cities for a given year using the `txhousing` dataset. Given that interest, we may want to make graphical queries that condition on a year, so we start by creating a `SharedData` object with `year` as the shared key.
 
 ```{r, eval = FALSE}
-# devtools::install_github("ropensci/crosstalk")
 library(crosstalk)
 sd <- SharedData$new(txhousing, ~year)
 ```
@@ -77,7 +70,7 @@ p <- ggplot(sd, aes(month, median)) +
   facet_wrap(~ city)
 
 ggplotly(p, tooltip = "year") %>%
-  highlight(on = "plotly_click", defaultValues = 2015, color = "red")
+  highlight(defaultValues = 2015, color = "red")
 ```
 
 ```{r linked-panels, echo = FALSE, fig.cap = "Monthly median house sales by year and city. Each panel represents a city and panels are linked by year. A video demonstrating the graphical queries can be viewed [here](http://i.imgur.com/DdPdSBB.gif)"}
@@ -97,7 +90,7 @@ Figure \@ref(fig:linked-ggally) shows another example of using `SharedData` obje
 ```{r, eval = FALSE}
 d <- SharedData$new(iris)
 p <- GGally::ggpairs(d, aes(color = Species), columns = 1:4)
-layout(ggplotly(p), dragmode = "select")
+highlight(ggplotly(p), on = "plotly_selected")
 ```
 
 ```{r linked-ggally, echo = FALSE, fig.cap = "Brushing a scatterplot matrix via the `ggpairs()` function in the **GGally** package. A video demonstrating the graphical queries can be viewed [here](http://i.imgur.com/dPTtH3H.gif)"}
@@ -131,20 +124,24 @@ Perhaps the most exciting thing about building a linked views framework on top o
 
 ```{r, eval = FALSE}
 library(plotly)
+# requires an experimental version of leaflet
+# devtools::install_github("rstudio/leaflet#346")
 library(leaflet)
 
 sd <- SharedData$new(quakes)
 
+# let plotly & leaflet know this is persistent selection
+options(persistent = TRUE)
+
 p <- plot_ly(sd, x = ~depth, y = ~mag) %>% 
   add_markers(alpha = 0.5) %>%
-  layout(dragmode = "select") %>%
-  highlight(dynamic = TRUE, persistent = TRUE)
+  highlight("plotly_selected", dynamic = TRUE)
 
 map <- leaflet(sd) %>% 
   addTiles() %>% 
   addCircles()
 
-htmltools::tagList(p, map)
+bscols(widths = c(6, 6), p, map)
 ```
 
 ```{r leaflet, echo = FALSE, fig.cap = "Linking views between plotly and leaflet to explore the relation between magnitude and geographic location of earthquakes around Fiji. The video may be accessed [here](http://i.imgur.com/hd0tG0r.gif)"}
@@ -161,6 +158,7 @@ The interactions described thus far in [Linking views without shiny](#linking-vi
 # Group name is used to populate a title for the dropdown
 sd <- SharedData$new(txhousing, ~city, group = "Choose a city")
 plot_ly(sd, x = ~date, y = ~median) %>%
+  group_by(city) %>%
   add_lines(text = ~city, hoverinfo = "text") %>%
   highlight(on = "plotly_hover", persistent = TRUE, selectize = TRUE)
 ```
@@ -209,7 +207,7 @@ p2 <- base %>%
 
 subplot(p1, p2, titleX = TRUE, widths = c(0.3, 0.7)) %>% 
   layout(margin = list(l = 120)) %>%
-  highlight(on = "plotly_click", off = "plotly_unhover", color = "red")
+  highlight(color = "red")
 ```
 
 ### Dynamic aggregates
@@ -219,14 +217,13 @@ As discussed in the plotly cookbook, there are a number of way to compute statis
 ```{r highlight-boxplot-fake, eval = FALSE}
 d <- SharedData$new(mtcars)
 scatterplot <- plot_ly(d, x = ~mpg, y = ~disp) %>%
-  add_markers(color = I("black")) %>%
-  layout(dragmode = "select")
+  add_markers(color = I("black"))
 
 subplot(
   plot_ly(d, y = ~disp, color = I("black")) %>% 
     add_boxplot(name = "overall"),
   scatterplot, shareY = TRUE
-) %>% layout(dragmode = "select")
+) %>% highlight("plotly_selected")
 ```
 
 ```{r highlight-boxplot, echo = FALSE, fig.cap = "Dynamically populating a boxplot reflecting brushed observations"}
@@ -243,7 +240,9 @@ p <- subplot(
 
 # Selections are actually additional traces, and, by default, 
 # plotly.js will try to dodge bars placed under the same category
-layout(p, barmode = "overlay")
+p %>% 
+  layout(barmode = "overlay") %>%
+  highlight("plotly_selected")
 ```
 
 ```{r highlight-bars, echo = FALSE, fig.cap = "Dynamically populating a bar chart reflecting brushed observations"}
@@ -332,14 +331,16 @@ Suppose point (3, 3) is selected -- implying the set $\{ a, b, c \}$ is of inter
 
 ```{r, eval = FALSE}
 SharedData$new(d, ~key) %>%
-  plot_ly(x = ~x, y = ~y)
+  plot_ly(x = ~x, y = ~y) %>%
+  highlight("plotly_selected") %>%
+  layout(dragmode = "lasso")
 ```
 
 ```{r hierarchical, echo = FALSE, fig.cap = "A simple example of hierarchial selection"}
 knitr::include_graphics("images/hierarchical.gif")
 ```
 
-Another way to think of hierarchical selection is to select all the "children" of a given "parent" node, which has a natural extension to dendrograms as \@ref(fig:dendro) demonstrates:
+Another way to think of hierarchical selection is to select all the "children" of a given "parent" node, which has a natural extension to dendrograms as \@ref(fig:dendro) demonstrates. The demo, `demo("tour-basic", package = "plotly")`, has an example of linking a dendrogram with a grand tour -- a powerful technique for interactively diagnosing classification models.
 
 ```{r dendro, echo = FALSE, fig.cap = "Leveraging hierarchical selection and persistent brushing to paint branches of a dendrogram."}
 knitr::include_graphics("images/dendro.gif")
@@ -353,8 +354,6 @@ The __plotly__ package bundles a bunch of demos that illustrate all the options 
 ### Limitations
 
 In terms of [linking views without shiny](#linking-views-without-shiny), the biggest limitation is the lack of ability to perform statistical aggregations in real time based on user queries. For example, Figure \@ref(fig:animation-gapminder) could be improved by layering on a linear model specific to the user selection, to make it easier to compare and track those relationships over time. In this case, one may want to opt into [linking views with shiny](#linking-views-without-shiny) to trigger the execution of R code in response to a user query. While this is a fundamental limitation of the system design, there are also a number of current limitations from an implementation perspective.
-
-As discussed in [persistent vs transient selection](#transient-versus-persistent-selection), **plotly** does have some native support for memorizing selections, but there is currently rewinding selections, like the techniques described by @selection-sequences. Also, at least currently, there are a limited number of selection modes to choose from (e.g., AND, XOR, COMPLEMENT modes are not yet supported), but these modes can also be implemented within a shiny app (the [lmGadget](https://github.com/ropensci/plotly/blob/cd93ab303efa56007b8bba725bab140e8a8aae39/inst/examples/lmGadget/app.R) shiny gadget would be one such example of XOR selection). 
 
 <!--
 * Currently leaflet is the only htmlwidget, with crosstalk support, that will respect non-default arguments in plotly's highlight() function.
