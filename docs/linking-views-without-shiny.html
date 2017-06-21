@@ -6,9 +6,8 @@
   <meta charset="UTF-8">
   <meta http-equiv="X-UA-Compatible" content="IE=edge">
   <title>plotly for R</title>
-  <meta content="text/html; charset=UTF-8" http-equiv="Content-Type">
   <meta name="description" content="An overview of the R package plotly">
-  <meta name="generator" content="bookdown 0.3 and GitBook 2.6.7">
+  <meta name="generator" content="bookdown 0.4 and GitBook 2.6.7">
 
   <meta property="og:title" content="plotly for R" />
   <meta property="og:type" content="book" />
@@ -34,7 +33,6 @@
   
 <link rel="prev" href="linking-views-with-shiny.html">
 <link rel="next" href="animating-views.html">
-
 <script src="libs/jquery/jquery.min.js"></script>
 <link href="libs/gitbook/css/style.css" rel="stylesheet" />
 <link href="libs/gitbook/css/plugin-bookdown.css" rel="stylesheet" />
@@ -103,6 +101,7 @@ code > span.in { color: #60a0b0; font-weight: bold; font-style: italic; } /* Inf
 </head>
 
 <body>
+
 
 
   <div class="book without-animation with-summary font-size-2 font-family-1" data-basepath=".">
@@ -326,7 +325,7 @@ Figure 4.9: A bar chart of cities with one or more missing median house sales li
 </div>
 <p>When implementing linked views like Figure <a href="linking-views-without-shiny.html#fig:bars-lines">4.9</a>, it can be helpful to conceptualize a pipeline between a central data frame and the corresponding views. Figure <a href="linking-views-without-shiny.html#fig:pipeline">4.10</a> is a visual depiction of this conceptual model between the central data frame and the eventual linked views in Figure <a href="linking-views-without-shiny.html#fig:bars-lines">4.9</a>. In order to generate the bar chart on the left, the pipeline contains a function for computing summary statistics (the number of missing values per city). On the other hand, the time series does not require any summarization – implying the pipeline for this view is the identity function.</p>
 <div class="figure"><span id="fig:pipeline"></span>
-<img src="images/pipeline.png" alt="A diagram of the pipeline between the data and graphics." width="700" align:"center" />
+<img src="images/pipeline.svg" alt="A diagram of the pipeline between the data and graphics." width="700" align:"center" />
 <p class="caption">
 Figure 4.10: A diagram of the pipeline between the data and graphics.
 </p>
@@ -530,8 +529,9 @@ As discussed in previous chapters, **plotly** graphs have zoom, pan, and identif
         </div>
       </div>
 <a href="linking-views-with-shiny.html" class="navigation navigation-prev " aria-label="Previous page"><i class="fa fa-angle-left"></i></a>
-<a href="animating-views.html" class="navigation navigation-next " aria-label="Next page""><i class="fa fa-angle-right"></i></a>
-
+<a href="animating-views.html" class="navigation navigation-next " aria-label="Next page"><i class="fa fa-angle-right"></i></a>
+    </div>
+  </div>
 <script src="libs/gitbook/js/app.min.js"></script>
 <script src="libs/gitbook/js/lunr.js"></script>
 <script src="libs/gitbook/js/plugin-search.js"></script>
@@ -565,7 +565,7 @@ gitbook.start({
   (function () {
     var script = document.createElement("script");
     script.type = "text/javascript";
-    script.src  = "https://cdn.mathjax.org/mathjax/latest/MathJax.js?config=TeX-AMS-MML_HTMLorMML";
+    script.src  = "https://cdn.bootcss.com/mathjax/2.7.1/MathJax.js?config=TeX-MML-AM_CHTML";
     if (location.protocol !== "file:" && /^https?:/.test(script.src))
       script.src  = script.src.replace(/^https?:/, '');
     document.getElementsByTagName("head")[0].appendChild(script);

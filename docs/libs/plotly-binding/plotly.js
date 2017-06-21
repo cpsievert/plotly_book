@@ -11,14 +11,7 @@ HTMLWidgets.widget({
     // devtools::use_data(Schema, overwrite = T, internal = T)
     // console.log(JSON.stringify(Plotly.PlotSchema.get()));
     
-    return {
-      // Push JavaScript closures onto this list, and renderValue
-      // will pop them off and run them one at a time the next
-      // time it runs. Use this to dispose of e.g. old event
-      // registrations.
-      onNextRender: []
-    };
-    
+    return {};
   },
 
   resize: function(el, width, height, instance) {
@@ -30,18 +23,11 @@ HTMLWidgets.widget({
   },  
   
   renderValue: function(el, x, instance) {
-
-    // Release previously registered crosstalk event listeners
-    while (instance.onNextRender.length > 0) {
-      instance.onNextRender.pop()();
-    }
       
-    var shinyMode;
     if (typeof(window) !== "undefined") {
-      // make sure plots don't get created outside the network
+      // make sure plots don't get created outside the network (for on-prem)
       window.PLOTLYENV = window.PLOTLYENV || {};
       window.PLOTLYENV.BASE_URL = x.base_url;
-      shinyMode = !!window.Shiny;
     }
 
     var graphDiv = document.getElementById(el.id);
@@ -143,9 +129,9 @@ HTMLWidgets.widget({
     }
     
     // remove "sendDataToCloud", unless user has specified they want it
-    var config = x.config || {};
-    if (!config.cloud) {
-      x.config.modeBarButtonsToRemove = config.modeBarButtonsToRemove || [];
+    x.config = x.config || {};
+    if (!x.config.cloud) {
+      x.config.modeBarButtonsToRemove = x.config.modeBarButtonsToRemove || [];
       x.config.modeBarButtonsToRemove.push("sendDataToCloud");
     }
     
@@ -172,6 +158,23 @@ HTMLWidgets.widget({
       var plot = Plotly.plot(graphDiv, x);
       
     }
+    
+    // Trigger plotly.js calls defined via `plotlyProxy()`
+    plot.then(function() {
+      if (HTMLWidgets.shinyMode) {
+        Shiny.addCustomMessageHandler("plotly-calls", function(msg) {
+          var gd = document.getElementById(msg.id);
+          if (!gd) {
+            throw new Error("Couldn't find plotly graph with id: " + msg.id);
+          }
+          if (!Plotly[msg.method]) {
+            throw new Error("Unknown method " + msg.method);
+          }
+          var args = [gd].concat(msg.args);
+          Plotly[msg.method].apply(null, args);
+        });
+      }
+    });
     
     // Attach attributes (e.g., "key", "z") to plotly event data
     function eventDataWithKey(eventData) {
@@ -221,12 +224,12 @@ HTMLWidgets.widget({
     }
     
     // send user input event data to shiny
-    if (shinyMode) {
+    if (HTMLWidgets.shinyMode) {
       // https://plot.ly/javascript/zoom-events/
       graphDiv.on('plotly_relayout', function(d) {
         Shiny.onInputChange(
           ".clientValue-plotly_relayout-" + x.source, 
-          JSON.stringify(eventDataWithKey(d))
+          JSON.stringify(d)
         );
       });
       graphDiv.on('plotly_hover', function(d) {
@@ -275,29 +278,25 @@ HTMLWidgets.widget({
           continue;
         }
         
+        // set defaults for this keySet
+        // note that we don't track the nested property (yet) since we always 
+        // emit the union -- http://cpsievert.github.io/talks/20161212b/#21
+        keysBySet[trace.set] = keysBySet[trace.set] || {
+          value: [],
+          _isSimpleKey: trace._isSimpleKey
+        };
+        
         // selecting a point of a "simple" trace means: select the 
         // entire key attached to this trace, which is useful for,
         // say clicking on a fitted line to select corresponding observations 
-        if (trace._isSimpleKey) {
-          keysBySet[trace.set] = {value: trace.key, _isSimpleKey: true};
-          // TODO: could this be made more efficient by looping at the trace level first?
-          continue;
-        }
+        var key = trace._isSimpleKey ? trace.key : trace.key[points[i].pointNumber];
+        // http://stackoverflow.com/questions/10865025/merge-flatten-an-array-of-arrays-in-javascript
+        var keyFlat = trace._isNestedKey ? [].concat.apply([], key) : key;
         
-        // set defaults for this key set
-        keysBySet[trace.set] = keysBySet[trace.set] || 
-          {value: [], _isSimpleKey: false};
-        
-        // the key for this point (could be "nested" -- i.e. a 2D array)
-        var key = trace.key[points[i].pointNumber];
-        if (trace._isNestedKey) {
-          // TODO: is this faster than pushing?
-          keysBySet[trace.set].value = keysBySet[trace.set].value.concat(key);
-        } else {
-          keysBySet[trace.set].value.push(key);
-        }
-        
+        // TODO: better to only add new values?
+        keysBySet[trace.set].value = keysBySet[trace.set].value.concat(keyFlat);
       }
+      
       return keysBySet;
     }
     
@@ -321,7 +320,63 @@ HTMLWidgets.widget({
       }
     }
 
-    if (allSets.length > 0) {
+    // register event listeners for all sets
+    for (var i = 0; i < allSets.length; i++) {
+      
+      var set = allSets[i];
+      var selection = new crosstalk.SelectionHandle(set);
+      var filter = new crosstalk.FilterHandle(set);
+      
+      var filterChange = function(e) {
+        removeBrush(el);
+        traceManager.updateFilter(set, e.value);
+      };
+      filter.on("change", filterChange);
+      
+      
+      var selectionChange = function(e) {
+        
+        // array of "event objects" tracking the selection history
+        // this is used to avoid adding redundant selections
+        var selectionHistory = crosstalk.var("plotlySelectionHistory").get() || [];
+        
+        // Construct an event object "defining" the current event. 
+        var event = {
+          receiverID: traceManager.gd.id,
+          plotlySelectionColour: crosstalk.group(set).var("plotlySelectionColour").get()
+        };
+        event[set] = e.value;
+        // TODO: is there a smarter way to check object equality?
+        if (selectionHistory.length > 0) {
+          var ev = JSON.stringify(event);
+          for (var i = 0; i < selectionHistory.length; i++) {
+            var sel = JSON.stringify(selectionHistory[i]);
+            if (sel == ev) {
+              return;
+            }
+          }
+        }
+        
+        // accumulate history for persistent selection
+        if (!x.highlight.persistent) {
+          selectionHistory = [event];
+        } else {
+          selectionHistory.push(event);
+        }
+        crosstalk.var("plotlySelectionHistory").set(selectionHistory);
+        
+        // do the actual updating of traces, frames, and the selectize widget
+        traceManager.updateSelection(set, e.value);
+        // https://github.com/selectize/selectize.js/blob/master/docs/api.md#methods_items
+        if (x.selectize) {
+          if (!x.highlight.persistent || e.value === null) {
+            selectize.clear(true);
+          }
+          selectize.addItems(e.value, true);
+          selectize.close();
+        }
+      }
+      selection.on("change", selectionChange);
       
       // Set a crosstalk variable selection value, triggering an update
       graphDiv.on(x.highlight.on, function turnOn(e) {
@@ -330,11 +385,9 @@ HTMLWidgets.widget({
           // Keys are group names, values are array of selected keys from group.
           for (var set in selectedKeys) {
             if (selectedKeys.hasOwnProperty(set)) {
-              crosstalk.group(set).var("selection")
-                .set(selectedKeys[set].value, {sender: el});
+              selection.set(selectedKeys[set].value, {sender: el});
             }
           }
-          
         }
       });
       
@@ -344,113 +397,59 @@ HTMLWidgets.widget({
         // remove any selection history
         crosstalk.var("plotlySelectionHistory").set(null);
         // trigger the actual removal of selection traces
-        for (var i = 0; i < allSets.length; i++) {
-          crosstalk.group(allSets[i]).var("selection").set(null, {sender: el});
-        }
+        selection.set(null, {sender: el});
       });
-      
-
-      for (var i = 0; i < allSets.length; i++) {
-        (function() {
-          var set = allSets[i];
-          var grp = crosstalk.group(set);
           
-          // Create a selectize widget for each group
-          if (x.selectize) {
-            var selectizeID = Object.keys(x.selectize)[i];
-            var items = x.selectize[selectizeID].items;
-            var first = [{value: "", label: "(All)"}];
-            var opts = {
-              options: first.concat(items),
-              searchField: "label",
-              valueField: "value",
-              labelField: "label",
-              maxItems: 50
-            };
-            var select = $("#" + selectizeID).find("select")[0];
-            var selectize = $(select).selectize(opts)[0].selectize;
-            // NOTE: this callback is triggered when *directly* altering 
-            // dropdown items
-            selectize.on("change", function() {
-              var currentItems = traceManager.groupSelections[set] || [];
-              if (!x.highlight.persistent) {
-                removeBrush(el);
-                for (var i = 0; i < currentItems.length; i++) {
-                  selectize.removeItem(currentItems[i], true);
-                }
-              }
-              var newItems = selectize.items.filter(function(idx) { 
-                return currentItems.indexOf(idx) < 0;
-              });
-              if (newItems.length > 0) {
-                traceManager.updateSelection(set, newItems);
-              } else {
-                // Item has been removed...
-                // TODO: this logic won't work for dynamically changing palette 
-                traceManager.updateSelection(set, null);
-                traceManager.updateSelection(set, selectize.items);
-              }
-            });
-          }
-          
-          
-          var crosstalkSelectionChange = function(e) {
-            
-            // array of "event objects" tracking the selection history
-            // this is used to avoid adding redundant selections
-            var selectionHistory = crosstalk.var("plotlySelectionHistory").get() || [];
-            
-            // Construct an event object "defining" the current event. 
-            var event = {
-              receiverID: traceManager.gd.id,
-              plotlySelectionColour: crosstalk.group(set).var("plotlySelectionColour").get()
-            };
-            event[set] = e.value;
-            // TODO: is there a smarter way to check object equality?
-            if (selectionHistory.length > 0) {
-              var ev = JSON.stringify(event);
-              for (var i = 0; i < selectionHistory.length; i++) {
-                var sel = JSON.stringify(selectionHistory[i]);
-                if (sel == ev) {
-                  return;
-                }
-              }
-            }
-            
-            // accumulate history for persistent selection
-            if (!x.highlight.persistent) {
-              selectionHistory = [event];
-            } else {
-              selectionHistory.push(event);
-            }
-            crosstalk.var("plotlySelectionHistory").set(selectionHistory);
-            
-            // e.value is either null, or an array of newly selected values
-            traceManager.updateSelection(set, e.value);
-            // https://github.com/selectize/selectize.js/blob/master/docs/api.md#methods_items
-            if (x.selectize) {
-              if (!x.highlight.persistent || e.value === null) {
-                selectize.clear(true);
-              }
-              selectize.addItems(e.value, true);
-              selectize.close();
-            }
-            
-          }
-          
-          grp.var("selection").on("change", crosstalkSelectionChange);
-
-
-          grp.var("filter").on("change", function crosstalk_filter_change(e) {
+      // register a callback for selectize so that there is bi-directional
+      // communication between the widget and direct manipulation events
+      if (x.selectize) {
+        var selectizeID = Object.keys(x.selectize)[i];
+        var items = x.selectize[selectizeID].items;
+        var first = [{value: "", label: "(All)"}];
+        var opts = {
+          options: first.concat(items),
+          searchField: "label",
+          valueField: "value",
+          labelField: "label",
+          maxItems: 50
+        };
+        var select = $("#" + selectizeID).find("select")[0];
+        var selectize = $(select).selectize(opts)[0].selectize;
+        // NOTE: this callback is triggered when *directly* altering 
+        // dropdown items
+        selectize.on("change", function() {
+          var currentItems = traceManager.groupSelections[set] || [];
+          if (!x.highlight.persistent) {
             removeBrush(el);
-            traceManager.updateFilter(set, e.value);
+            for (var i = 0; i < currentItems.length; i++) {
+              selectize.removeItem(currentItems[i], true);
+            }
+          }
+          var newItems = selectize.items.filter(function(idx) { 
+            return currentItems.indexOf(idx) < 0;
           });
-  
-        })();
+          if (newItems.length > 0) {
+            traceManager.updateSelection(set, newItems);
+          } else {
+            // Item has been removed...
+            // TODO: this logic won't work for dynamically changing palette 
+            traceManager.updateSelection(set, null);
+            traceManager.updateSelection(set, selectize.items);
+          }
+        });
       }
+      
+      
+      
+      
+      
+          
+      
+      
     }
-  }
-});
+    
+  } // end of renderValue
+}); // end of widget definition
 
 /**
  * @param graphDiv The Plotly graph div
@@ -821,70 +820,3 @@ function removeBrush(el) {
     outlines[i].remove();
   }
 }
-
-/* Currently not used
-
-// Given an array of strings, return an object that hierarchically
-// represents the corresponding curves/points.
-//
-// For example, the following data:
-//
-// [
-//   {curveNumber: 0, pointNumber: 1},
-//   {curveNumber: 0, pointNumber: 2},
-//   {curveNumber: 2, pointNumber: 1}
-// ]
-//
-// would be returned as:
-// {
-//   "0": [1, 2],
-//   "2": [1]
-// }
-
-// # Begin Crosstalk support
-    
-// ## Crosstalk point/key translation functions
-//
-// Plotly.js uses curveNumber/pointNumber addressing to refer
-// to data points (i.e. when plotly_selected is received). We
-// prefer to let the R user use key-based addressing, where
-// a string is used that uniquely identifies a data point (we
-// can also use row numbers in a pinch).
-//
-// The pointsToKeys and keysToPoints functions let you convert
-// between the two schemes.
-
-// Combine the name of a set and key into a single string, suitable for
-// using as a keyCache key.
-function joinSetAndKey(set, key) {
-  return set + "\n" + key;
-}
-
-// To allow translation from sets+keys to points in O(1) time, we
-// make a cache that lets us map keys to objects with
-// {curveNumber, pointNumber} properties.
-var keyCache = {};
-for (var i = 0; i < x.data.length; i++) {
-  var trace = x.data[i];
-  if (!trace.key || !trace.set) {
-    continue;
-  }
-  for (var j = 0; j < trace.key.length; j++) {
-    var nm = joinSetAndKey(trace.set, trace.key[j]);
-    keyCache[nm] = {curveNumber: i, pointNumber: j};
-  }
-}
-
-function keysToPoints(set, keys) {
-  var curves = {};
-  for (var i = 0; i < keys.length; i++) {
-    var pt = keyCache[joinSetAndKey(set, keys[i])];
-    if (!pt) {
-      throw new Error("Unknown key " + keys[i]);
-    }
-    curves[pt.curveNumber] = curves[pt.curveNumber] || [];
-    curves[pt.curveNumber].push(pt.pointNumber);
-  }
-  return curves;
-}
-*/
