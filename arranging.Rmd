@@ -17,9 +17,9 @@ p <- plot_ly(x = rnorm(100))
 tagList(p, p)
 ```
 
-```{r multiple-htmlwidgets, echo = FALSE,  fig.cap = "Printing multiple htmlwidget objects with `tagList()`. To render tag lists at the command line, wrap them in `browsable()` ", screenshot.alt = "screenshots/multiple-htmlwidgets"}
+```{r multiple-htmlwidgets, echo = FALSE,  fig.cap = "Printing multiple htmlwidget objects with `tagList()`. To render tag lists at the command line, wrap them in `browsable()`"}
 # resort to this until this gets resolved -- https://github.com/rstudio/bookdown/issues/74
-knitr::include_graphics("images/multiple-htmlwidgets")
+knitr::include_graphics("images/multiple-htmlwidgets.png")
 ```
 
 
@@ -35,7 +35,7 @@ tags$div(
 ```
 
 ```{r flexbox, echo = FALSE, fig.cap = "Arranging multiple htmlwidgets with flexbox"}
-knitr::include_graphics("images/flexbox")
+knitr::include_graphics("images/flexbox.png")
 ```
 
 Another way to arrange multiple htmlwidget objects on a single page is to leverage the `fluidPage()`, `fluidRow()`, and `column()` functions from the **shiny** package.
@@ -51,7 +51,7 @@ fluidPage(
 ```
 
 ```{r fluid, echo = FALSE,  fig.cap = "Arranging multiple htmlwidgets with `fluidPage()` from the **shiny** package."}
-knitr::include_graphics("images/fluid")
+knitr::include_graphics("images/fluid.png")
 ```
 
 All the arrangement approaches discussed thus far are agnostic to output format, meaning that they can be used to arrange htmlwidgets within _any_  **knitr**/**rmarkdown** document.^[Although HTML can not possibly render in a pdf or word document, **knitr** can automatically detect a non-HTML output format and embed a static image of the htmlwidget via the **webshot** package [@webshot].] If the htmlwidgets do not need to be embedded within a larger document that requires an opinionated output format, the **flexdashboard** package provides a **rmarkdown** template for generating dashboards, with a convenient syntax for arranging views [@flexdashboard].

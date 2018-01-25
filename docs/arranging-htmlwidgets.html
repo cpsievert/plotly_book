@@ -7,7 +7,7 @@
   <meta http-equiv="X-UA-Compatible" content="IE=edge">
   <title>plotly for R</title>
   <meta name="description" content="An overview of the R package plotly">
-  <meta name="generator" content="bookdown 0.5 and GitBook 2.6.7">
+  <meta name="generator" content="bookdown 0.6 and GitBook 2.6.7">
 
   <meta property="og:title" content="plotly for R" />
   <meta property="og:type" content="book" />
@@ -56,6 +56,10 @@
 <link href="libs/jsoneditor/jsoneditor.min.css" rel="stylesheet" />
 <script src="libs/jsoneditor/jsoneditor.min.js"></script>
 <script src="libs/jsonedit-binding/jsonedit.js"></script>
+<link href="libs/selectize/selectize.bootstrap3.css" rel="stylesheet" />
+<script src="libs/selectize/selectize.min.js"></script>
+<link href="libs/colourpicker/colourpicker.min.css" rel="stylesheet" />
+<script src="libs/colourpicker/colourpicker.min.js"></script>
 
 
 <style type="text/css">
@@ -141,6 +145,8 @@ code > span.in { color: #60a0b0; font-weight: bold; font-style: italic; } /* Inf
 <li class="chapter" data-level="2.2" data-path="maps.html"><a href="maps.html"><i class="fa fa-check"></i><b>2.2</b> Maps</a><ul>
 <li class="chapter" data-level="2.2.1" data-path="maps.html"><a href="maps.html#using-scatter-traces"><i class="fa fa-check"></i><b>2.2.1</b> Using scatter traces</a></li>
 <li class="chapter" data-level="2.2.2" data-path="maps.html"><a href="maps.html#choropleths"><i class="fa fa-check"></i><b>2.2.2</b> Choropleths</a></li>
+<li class="chapter" data-level="2.2.3" data-path="maps.html"><a href="maps.html#using-geom_sf"><i class="fa fa-check"></i><b>2.2.3</b> Using <code>geom_sf()</code></a></li>
+<li class="chapter" data-level="2.2.4" data-path="maps.html"><a href="maps.html#using-ggmap"><i class="fa fa-check"></i><b>2.2.4</b> Using ggmap</a></li>
 </ul></li>
 <li class="chapter" data-level="2.3" data-path="bars-histograms.html"><a href="bars-histograms.html"><i class="fa fa-check"></i><b>2.3</b> Bars &amp; histograms</a><ul>
 <li class="chapter" data-level="2.3.1" data-path="bars-histograms.html"><a href="bars-histograms.html#multiple-numeric-distributions"><i class="fa fa-check"></i><b>2.3.1</b> Multiple numeric distributions</a></li>
@@ -153,6 +159,7 @@ code > span.in { color: #60a0b0; font-weight: bold; font-style: italic; } /* Inf
 <li class="chapter" data-level="2.5.3" data-path="d-frequencies.html"><a href="d-frequencies.html#categorical-axes"><i class="fa fa-check"></i><b>2.5.3</b> Categorical axes</a></li>
 </ul></li>
 <li class="chapter" data-level="2.6" data-path="other-3d-plots.html"><a href="other-3d-plots.html"><i class="fa fa-check"></i><b>2.6</b> Other 3D plots</a></li>
+<li class="chapter" data-level="2.7" data-path="raster-images.html"><a href="raster-images.html"><i class="fa fa-check"></i><b>2.7</b> Raster images</a></li>
 </ul></li>
 <li class="chapter" data-level="3" data-path="arranging-multiple-views.html"><a href="arranging-multiple-views.html"><i class="fa fa-check"></i><b>3</b> Arranging multiple views</a><ul>
 <li class="chapter" data-level="3.1" data-path="arranging-htmlwidgets.html"><a href="arranging-htmlwidgets.html"><i class="fa fa-check"></i><b>3.1</b> Arranging htmlwidgets</a></li>
@@ -218,7 +225,7 @@ code > span.in { color: #60a0b0; font-weight: bold; font-style: italic; } /* Inf
 p &lt;-<span class="st"> </span><span class="kw">plot_ly</span>(<span class="dt">x =</span> <span class="kw">rnorm</span>(<span class="dv">100</span>))
 <span class="kw">tagList</span>(p, p)</code></pre></div>
 <div class="figure"><span id="fig:multiple-htmlwidgets"></span>
-<img src="images/multiple-htmlwidgets" alt="Printing multiple htmlwidget objects with `tagList()`. To render tag lists at the command line, wrap them in `browsable()` " width="700" align:"center" />
+<img src="images/multiple-htmlwidgets.png" alt="Printing multiple htmlwidget objects with `tagList()`. To render tag lists at the command line, wrap them in `browsable()`" width="700" align:"center" />
 <p class="caption">
 Figure 3.1: Printing multiple htmlwidget objects with <code>tagList()</code>. To render tag lists at the command line, wrap them in <code>browsable()</code>
 </p>
@@ -231,7 +238,7 @@ Figure 3.1: Printing multiple htmlwidget objects with <code>tagList()</code>. To
   tags<span class="op">$</span><span class="kw">div</span>(p, <span class="dt">style =</span> <span class="st">&quot;width: 100%; padding: 1em; border: solid;&quot;</span>)
 )</code></pre></div>
 <div class="figure"><span id="fig:flexbox"></span>
-<img src="images/flexbox" alt="Arranging multiple htmlwidgets with flexbox" width="700" align:"center" />
+<img src="images/flexbox.png" alt="Arranging multiple htmlwidgets with flexbox" width="700" align:"center" />
 <p class="caption">
 Figure 3.2: Arranging multiple htmlwidgets with flexbox
 </p>
@@ -245,7 +252,7 @@ Figure 3.2: Arranging multiple htmlwidgets with flexbox
   )
 )</code></pre></div>
 <div class="figure"><span id="fig:fluid"></span>
-<img src="images/fluid" alt="Arranging multiple htmlwidgets with `fluidPage()` from the **shiny** package." width="700" align:"center" />
+<img src="images/fluid.png" alt="Arranging multiple htmlwidgets with `fluidPage()` from the **shiny** package." width="700" align:"center" />
 <p class="caption">
 Figure 3.3: Arranging multiple htmlwidgets with <code>fluidPage()</code> from the <strong>shiny</strong> package.
 </p>
@@ -315,9 +322,11 @@ gitbook.start({
   (function () {
     var script = document.createElement("script");
     script.type = "text/javascript";
-    script.src  = "https://cdn.bootcss.com/mathjax/2.7.1/MathJax.js?config=TeX-MML-AM_CHTML";
-    if (location.protocol !== "file:" && /^https?:/.test(script.src))
-      script.src  = script.src.replace(/^https?:/, '');
+    var src = "";
+    if (src === "" || src === "true") src = "https://cdn.bootcss.com/mathjax/2.7.1/MathJax.js?config=TeX-MML-AM_CHTML";
+    if (location.protocol !== "file:" && /^https?:/.test(src))
+      src = src.replace(/^https?:/, '');
+    script.src = src;
     document.getElementsByTagName("head")[0].appendChild(script);
   })();
 </script>

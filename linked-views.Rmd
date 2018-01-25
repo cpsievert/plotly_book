@@ -183,31 +183,7 @@ knitr::include_graphics("images/pipeline.svg")
 
 Since the pipeline from data to graphic is either an identity function or a summarization of some kind, it is good idea to use the most granular form of the data for the `SharedData` object, and use [the data-plot-pipeline](#the-data-plot-pipeline) to define a pipeline from the data to the plot. As @plumbing writes, a true interactive graphics system is aware of the both the function from the central data object to the graphic, as well as the inverse function (i.e., the function from the graphic back to the central data object). As it currently stands, **plotly** loses this information when the result is pushed to the web browser, but that does not matter for Figure \@ref(fig:bars-lines) since the pipeline does not need to re-execute statistical summaries of information tied to a user event.^[Since **dplyr** semantics translate to `SQL` primitives, you could imagine a system that translates a data-plot-pipeline to `SQL` queries, and dynamically re-executes within the browser via something like `SQL.js` [@SQLjs].]
 
-```{r, eval = FALSE}
-sd <- SharedData$new(txhousing, ~city)
-
-base <- plot_ly(sd, color = I("black")) %>%
-  group_by(city)
-
-p1 <- base %>%
-  summarise(has = sum(is.na(median))) %>%
-  filter(has > 0) %>%
-  arrange(has) %>%
-  add_bars(x = ~has, y = ~factor(city, levels = city), 
-           hoverinfo = "none") %>%
-  layout(
-    barmode = "overlay",
-    xaxis = list(title = "Number of months missing"),
-    yaxis = list(title = "")
-  ) 
-
-p2 <- base %>%
-  add_lines(x = ~date, y = ~median, alpha = 0.3) %>%
-  layout(xaxis = list(title = ""))
-
-subplot(p1, p2, titleX = TRUE, widths = c(0.3, 0.7)) %>% 
-  layout(margin = list(l = 120)) %>%
-  highlight(color = "red")
+```{r, code = readLines(system.file("demo", "crosstalk-highlight-pipeline.R", package = "plotly"))}
 ```
 
 ### Dynamic aggregates

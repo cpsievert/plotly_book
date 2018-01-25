@@ -1,6 +1,7 @@
 gitbook:
+  echo Using `pandoc --version | sed -n 1p`
+  echo pandoc 2.0 and higher have been known to cause issues
 	mkdir -p docs/images && cp images/* docs/images
-	Rscript -e 'if (rmarkdown:::.pandoc[["version"]] > 2.0) warning("Not yet compatible with pandoc 2.0")'
 	Rscript --quiet _render.R "bookdown::gitbook"
 
 pdf:
