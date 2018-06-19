@@ -252,7 +252,7 @@ p <- ggplot(diamonds, aes(cut, fill = clarity)) +
 ggplotly(p, originalData = FALSE) %>%
   mutate(ydiff = ymax - ymin) %>% 
   add_text(
-    x = ~x, y = ~1 - (ymin + ymax) / 2,
+    x = ~x, y = ~(ymin + ymax) / 2,
     text = ~ifelse(ydiff > 0.02, round(ydiff, 2), ""),
     showlegend = FALSE, hoverinfo = "none",
     color = I("black"), size = I(9)
