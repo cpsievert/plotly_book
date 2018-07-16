@@ -33,12 +33,14 @@ HTMLWidgets.widget({
       
       // Enable persistent selection when shift key is down
       // https://stackoverflow.com/questions/1828613/check-if-a-key-is-down
-       var persistOnShift = function(e) {
+      var persistOnShift = function(e) {
         if (!e) window.event;
         if (e.shiftKey) { 
           x.highlight.persistent = true; 
+          x.highlight.persistentShift = true;
         } else {
           x.highlight.persistent = false; 
+          x.highlight.persistentShift = false;
         }
       };
       
@@ -164,10 +166,15 @@ HTMLWidgets.widget({
       
     } else {
       
+      // new x data could contain a new height/width...
+      // attach to instance so that resize logic knows about the new size
+      instance.width = x.layout.width || instance.width;
+      instance.height = x.layout.height || instance.height;
+      
       // this is essentially equivalent to Plotly.newPlot(), but avoids creating 
       // a new webgl context
       // https://github.com/plotly/plotly.js/blob/2b24f9def901831e61282076cf3f835598d56f0e/src/plot_api/plot_api.js#L531-L532
-      
+
       // TODO: restore crosstalk selections?
       Plotly.purge(graphDiv);
       // TODO: why is this necessary to get crosstalk working?
@@ -192,6 +199,23 @@ HTMLWidgets.widget({
           Plotly[msg.method].apply(null, args);
         });
       }
+      
+      // plotly's mapbox API doesn't currently support setting bounding boxes
+      // https://www.mapbox.com/mapbox-gl-js/example/fitbounds/
+      // so we do this manually...
+      // TODO: make sure this triggers on a redraw and relayout as well as on initial draw
+      var mapboxIDs = graphDiv._fullLayout._subplots.mapbox || [];
+      for (var i = 0; i < mapboxIDs.length; i++) {
+        var id = mapboxIDs[i];
+        var mapOpts = x.layout[id] || {};
+        var args = mapOpts._fitBounds || {};
+        if (!args) {
+          continue;
+        }
+        var mapObj = graphDiv._fullLayout[id]._subplot.map;
+        mapObj.fitBounds(args.bounds, args.options);
+      }
+      
     });
     
     // Attach attributes (e.g., "key", "z") to plotly event data
@@ -282,6 +306,38 @@ HTMLWidgets.widget({
     } 
     
     
+    // send user input event data to dashR
+    // TODO: make this more consistent with Graph() props?
+    var dashRwidgets = window.dashRwidgets || {};
+    var dashRmode = typeof el.setProps === "function" &&
+                    typeof dashRwidgets.htmlwidget === "function";
+    if (dashRmode) {
+      graphDiv.on('plotly_relayout', function(d) {
+        el.setProps({"input_plotly_relayout": d});
+      });
+      graphDiv.on('plotly_hover', function(d) {
+        el.setProps({"input_plotly_hover": eventDataWithKey(d)});
+      });
+      graphDiv.on('plotly_click', function(d) {
+        el.setProps({"input_plotly_click": eventDataWithKey(d)});
+      });
+      graphDiv.on('plotly_selected', function(d) {
+        el.setProps({"input_plotly_selected": eventDataWithKey(d)});
+      });
+      graphDiv.on('plotly_unhover', function(eventData) {
+        el.setProps({"input_plotly_hover": null});
+      });
+      graphDiv.on('plotly_doubleclick', function(eventData) {
+        el.setProps({"input_plotly_click": null});
+      });
+      // 'plotly_deselect' is code for doubleclick when in select mode
+      graphDiv.on('plotly_deselect', function(eventData) {
+        el.setProps({"input_plotly_selected": null});
+        el.setProps({"input_plotly_click": null});
+      });
+    } 
+    
+    
     // Given an array of {curveNumber: x, pointNumber: y} objects,
     // return a hash of {
     //   set1: {value: [key1, key2, ...], _isSimpleKey: false}, 
@@ -304,10 +360,15 @@ HTMLWidgets.widget({
           _isSimpleKey: trace._isSimpleKey
         };
         
+        // Use pointNumber by default, but aggregated traces should emit pointNumbers
+        var ptNum = points[i].pointNumber;
+        var hasPtNum = typeof ptNum === "number";
+        var ptNum = hasPtNum ? ptNum : points[i].pointNumbers;
+        
         // selecting a point of a "simple" trace means: select the 
         // entire key attached to this trace, which is useful for,
         // say clicking on a fitted line to select corresponding observations 
-        var key = trace._isSimpleKey ? trace.key : trace.key[points[i].pointNumber];
+        var key = trace._isSimpleKey ? trace.key : Array.isArray(ptNum) ? ptNum.map(function(idx) { return trace.key[idx]; }) : trace.key[ptNum];
         // http://stackoverflow.com/questions/10865025/merge-flatten-an-array-of-arrays-in-javascript
         var keyFlat = trace._isNestedKey ? [].concat.apply([], key) : key;
         
@@ -354,6 +415,17 @@ HTMLWidgets.widget({
       
       var selectionChange = function(e) {
         
+        // Workaround for 'plotly_selected' now firing previously selected
+        // points (in addition to new ones) when holding shift key. In our case,
+        // we just want the new keys 
+        if (x.highlight.on === "plotly_selected" && x.highlight.persistentShift) {
+          // https://stackoverflow.com/questions/1187518/how-to-get-the-difference-between-two-arrays-in-javascript
+          Array.prototype.diff = function(a) {
+              return this.filter(function(i) {return a.indexOf(i) < 0;});
+          };
+          e.value = e.value.diff(e.oldValue);
+        }
+        
         // array of "event objects" tracking the selection history
         // this is used to avoid adding redundant selections
         var selectionHistory = crosstalk.var("plotlySelectionHistory").get() || [];
@@ -397,7 +469,7 @@ HTMLWidgets.widget({
       selection.on("change", selectionChange);
       
       // Set a crosstalk variable selection value, triggering an update
-      graphDiv.on(x.highlight.on, function turnOn(e) {
+      var turnOn = function(e) {
         if (e) {
           var selectedKeys = pointsToKeys(e.points);
           // Keys are group names, values are array of selected keys from group.
@@ -407,7 +479,11 @@ HTMLWidgets.widget({
             }
           }
         }
-      });
+      };
+      if (x.highlight.debounce > 0) {
+        turnOn = debounce(turnOn, x.highlight.debounce);
+      }
+      graphDiv.on(x.highlight.on, turnOn);
       
       graphDiv.on(x.highlight.off, function turnOff(e) {
         // remove any visual clues
@@ -595,7 +671,7 @@ TraceManager.prototype.updateSelection = function(group, keys) {
         /  (2) highlight(selected = attrs_selected(...))
         */
         // TODO: it would be neat to have a dropdown to dynamically specify these!
-        $.extend(true, trace, this.highlight.selected, d.selected);
+        $.extend(true, trace, this.highlight.selected);
         
         // if it is defined, override color with the "dynamic brush color""
         if (d.marker) {
@@ -609,6 +685,10 @@ TraceManager.prototype.updateSelection = function(group, keys) {
         if (d.textfont) {
           trace.textfont = trace.textfont || {};
           trace.textfont.color =  selectionColour || trace.textfont.color || d.textfont.color;
+        }
+        if (d.fillcolor) {
+          // TODO: should selectionColour inherit alpha from the existing fillcolor?
+          trace.fillcolor = selectionColour || trace.fillcolor || d.fillcolor;
         }
         // attach a sensible name/legendgroup
         trace.name = trace.name || keys.join("<br />");
@@ -707,9 +787,8 @@ TraceManager.prototype.updateSelection = function(group, keys) {
       
       if (tracesToDim.length > 0) {
         Plotly.restyle(this.gd, {"opacity": opacities}, tracesToDim);
-        // this is an unfortunate consequence of the selected/unselected API
-        // https://codepen.io/cpsievert/pen/opOawp
-        Plotly.restyle(this.gd, {"unselected": {"marker": {"opacity": 1}}});
+        // turn off the selected/unselected API
+        Plotly.restyle(this.gd, {"selectedpoints": null});
       }
       
     }
@@ -812,3 +891,25 @@ function removeBrush(el) {
     outlines[i].remove();
   }
 }
+
+
+// https://davidwalsh.name/javascript-debounce-function
+
+// Returns a function, that, as long as it continues to be invoked, will not
+// be triggered. The function will be called after it stops being called for
+// N milliseconds. If `immediate` is passed, trigger the function on the
+// leading edge, instead of the trailing.
+function debounce(func, wait, immediate) {
+	var timeout;
+	return function() {
+		var context = this, args = arguments;
+		var later = function() {
+			timeout = null;
+			if (!immediate) func.apply(context, args);
+		};
+		var callNow = immediate && !timeout;
+		clearTimeout(timeout);
+		timeout = setTimeout(later, wait);
+		if (callNow) func.apply(context, args);
+	};
+};

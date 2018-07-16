@@ -7,7 +7,7 @@
   <meta http-equiv="X-UA-Compatible" content="IE=edge">
   <title>plotly for R</title>
   <meta name="description" content="An overview of the R package plotly">
-  <meta name="generator" content="bookdown 0.6 and GitBook 2.6.7">
+  <meta name="generator" content="bookdown 0.7 and GitBook 2.6.7">
 
   <meta property="og:title" content="plotly for R" />
   <meta property="og:type" content="book" />
@@ -51,8 +51,8 @@
 <script src="libs/typedarray/typedarray.min.js"></script>
 <link href="libs/crosstalk/css/crosstalk.css" rel="stylesheet" />
 <script src="libs/crosstalk/js/crosstalk.min.js"></script>
-<link href="libs/plotlyjs/plotly-htmlwidgets.css" rel="stylesheet" />
-<script src="libs/plotlyjs/plotly-latest.min.js"></script>
+<link href="libs/plotly-htmlwidgets-css/plotly-htmlwidgets.css" rel="stylesheet" />
+<script src="libs/plotly-main/plotly-latest.min.js"></script>
 <link href="libs/jsoneditor/jsoneditor.min.css" rel="stylesheet" />
 <script src="libs/jsoneditor/jsoneditor.min.js"></script>
 <script src="libs/jsonedit-binding/jsonedit.js"></script>
@@ -63,41 +63,67 @@
 
 
 <style type="text/css">
-div.sourceCode { overflow-x: auto; }
-table.sourceCode, tr.sourceCode, td.lineNumbers, td.sourceCode {
-  margin: 0; padding: 0; vertical-align: baseline; border: none; }
-table.sourceCode { width: 100%; line-height: 100%; }
-td.lineNumbers { text-align: right; padding-right: 4px; padding-left: 4px; color: #aaaaaa; border-right: 1px solid #aaaaaa; }
-td.sourceCode { padding-left: 5px; }
-code > span.kw { color: #007020; font-weight: bold; } /* Keyword */
-code > span.dt { color: #902000; } /* DataType */
-code > span.dv { color: #40a070; } /* DecVal */
-code > span.bn { color: #40a070; } /* BaseN */
-code > span.fl { color: #40a070; } /* Float */
-code > span.ch { color: #4070a0; } /* Char */
-code > span.st { color: #4070a0; } /* String */
-code > span.co { color: #60a0b0; font-style: italic; } /* Comment */
-code > span.ot { color: #007020; } /* Other */
-code > span.al { color: #ff0000; font-weight: bold; } /* Alert */
-code > span.fu { color: #06287e; } /* Function */
-code > span.er { color: #ff0000; font-weight: bold; } /* Error */
-code > span.wa { color: #60a0b0; font-weight: bold; font-style: italic; } /* Warning */
-code > span.cn { color: #880000; } /* Constant */
-code > span.sc { color: #4070a0; } /* SpecialChar */
-code > span.vs { color: #4070a0; } /* VerbatimString */
-code > span.ss { color: #bb6688; } /* SpecialString */
-code > span.im { } /* Import */
-code > span.va { color: #19177c; } /* Variable */
-code > span.cf { color: #007020; font-weight: bold; } /* ControlFlow */
-code > span.op { color: #666666; } /* Operator */
-code > span.bu { } /* BuiltIn */
-code > span.ex { } /* Extension */
-code > span.pp { color: #bc7a00; } /* Preprocessor */
-code > span.at { color: #7d9029; } /* Attribute */
-code > span.do { color: #ba2121; font-style: italic; } /* Documentation */
-code > span.an { color: #60a0b0; font-weight: bold; font-style: italic; } /* Annotation */
-code > span.cv { color: #60a0b0; font-weight: bold; font-style: italic; } /* CommentVar */
-code > span.in { color: #60a0b0; font-weight: bold; font-style: italic; } /* Information */
+a.sourceLine { display: inline-block; line-height: 1.25; }
+a.sourceLine { pointer-events: none; color: inherit; text-decoration: inherit; }
+a.sourceLine:empty { height: 1.2em; }
+.sourceCode { overflow: visible; }
+code.sourceCode { white-space: pre; position: relative; }
+div.sourceCode { margin: 1em 0; }
+pre.sourceCode { margin: 0; }
+@media screen {
+div.sourceCode { overflow: auto; }
+}
+@media print {
+code.sourceCode { white-space: pre-wrap; }
+a.sourceLine { text-indent: -1em; padding-left: 1em; }
+}
+pre.numberSource a.sourceLine
+  { position: relative; left: -4em; }
+pre.numberSource a.sourceLine::before
+  { content: attr(data-line-number);
+    position: relative; left: -1em; text-align: right; vertical-align: baseline;
+    border: none; pointer-events: all; display: inline-block;
+    -webkit-touch-callout: none; -webkit-user-select: none;
+    -khtml-user-select: none; -moz-user-select: none;
+    -ms-user-select: none; user-select: none;
+    padding: 0 4px; width: 4em;
+    color: #aaaaaa;
+  }
+pre.numberSource { margin-left: 3em; border-left: 1px solid #aaaaaa;  padding-left: 4px; }
+div.sourceCode
+  {  }
+@media screen {
+a.sourceLine::before { text-decoration: underline; }
+}
+code span.al { color: #ff0000; font-weight: bold; } /* Alert */
+code span.an { color: #60a0b0; font-weight: bold; font-style: italic; } /* Annotation */
+code span.at { color: #7d9029; } /* Attribute */
+code span.bn { color: #40a070; } /* BaseN */
+code span.bu { } /* BuiltIn */
+code span.cf { color: #007020; font-weight: bold; } /* ControlFlow */
+code span.ch { color: #4070a0; } /* Char */
+code span.cn { color: #880000; } /* Constant */
+code span.co { color: #60a0b0; font-style: italic; } /* Comment */
+code span.cv { color: #60a0b0; font-weight: bold; font-style: italic; } /* CommentVar */
+code span.do { color: #ba2121; font-style: italic; } /* Documentation */
+code span.dt { color: #902000; } /* DataType */
+code span.dv { color: #40a070; } /* DecVal */
+code span.er { color: #ff0000; font-weight: bold; } /* Error */
+code span.ex { } /* Extension */
+code span.fl { color: #40a070; } /* Float */
+code span.fu { color: #06287e; } /* Function */
+code span.im { } /* Import */
+code span.in { color: #60a0b0; font-weight: bold; font-style: italic; } /* Information */
+code span.kw { color: #007020; font-weight: bold; } /* Keyword */
+code span.op { color: #666666; } /* Operator */
+code span.ot { color: #007020; } /* Other */
+code span.pp { color: #bc7a00; } /* Preprocessor */
+code span.sc { color: #4070a0; } /* SpecialChar */
+code span.ss { color: #bb6688; } /* SpecialString */
+code span.st { color: #4070a0; } /* String */
+code span.va { color: #19177c; } /* Variable */
+code span.vs { color: #4070a0; } /* VerbatimString */
+code span.wa { color: #60a0b0; font-weight: bold; font-style: italic; } /* Warning */
 </style>
 
 <link rel="stylesheet" href="css/plotly.css" type="text/css" />
@@ -114,7 +140,7 @@ code > span.in { color: #60a0b0; font-weight: bold; font-style: italic; } /* Inf
       <nav role="navigation">
 
 <ul class="summary">
-<li><a href="https://plotcon.plot.ly/workshops">plotly for R <i>master class</i></a></li>
+<li><a href="https://consulting.cpsievert.me">Need help? Work with Carson!</a></li>
 
 <li class="divider"></li>
 <li class="chapter" data-level="" data-path="index.html"><a href="index.html"><i class="fa fa-check"></i>Overview</a><ul>
@@ -226,16 +252,16 @@ code > span.in { color: #60a0b0; font-weight: bold; font-style: italic; } /* Inf
 <p>In fact, Figure <a href="linking-views-with-shiny.html#fig:plotlyLinkedClick">3.15</a> from that section provides an example of this mantra put into practice. The correlation matrix provides an overview of the correlation structure between all the variables, and by clicking a cell, it populates a scatterplot between those two specific variables. This works fine with tens or hundreds or variables, but once you have thousands or tens-of-thousands of variables, this technique begins to fall apart. At that point, you may be better off defining a range of correlations that you’re interested in exploring, or better yet, incorporating another measure (e.g., a test statistic), then focusing on views that match a certain criteria.</p>
 <p><span class="citation">Tukey and Tukey (<a href="#ref-scagnostics-tukey">n.d.</a>)</span> first described the idea of using quantitative measurements of scatterplot characteristics (e.g. correlation) to help guide exploratory analysis of many variables. This idea, coined scagnostics (short for scatterplot diagnostics), has since been made explicit, and many measures have been explored, even measures specifically useful for time-series have been proposed <span class="citation">(Wilkinson, Anand, and Grossman <a href="#ref-Wilkinson:2005b">2005</a>)</span>; <span class="citation">(Wilkinson and Wills <a href="#ref-Wilkinson:2008">2008</a>)</span>; <span class="citation">(Dang and Wilkinson <a href="#ref-Wilkinson:2012">2012</a>)</span>. Probably the most universally useful scagnostic is the outlying measure which helps identify projections of the data space that contain outlying observations. Of course, the idea of associating quantitative measures with a graphical display of data can be generalized to include more that just scatterplots, and in this more general case, these measures are sometimes referred to as cognostics.</p>
 <p>The same problems and principles that inspired scagnostics has inspired work on more general divide &amp; recombine technique(s) for working with navigating through many statistical artifacts <span class="citation">(Cleveland and Hafen <a href="#ref-divide-recombine">2014</a>)</span>; <span class="citation">(Saptarshi Guha and Cleveland <a href="#ref-RHIPE">2012</a>)</span>, including visualizations <span class="citation">(Hafen et al. <a href="#ref-trelliscope">2013</a>)</span>. The <strong>trelliscope</strong> package provides a system for computing arbitrary cognostics on each panel of a trellis display as well as an interactive graphical user interface for defining (and navigating through) interesting panels based on those cognostics <span class="citation">(Hafen <a href="#ref-trelliscope-pkg">2016</a>)</span>. This system also allows users to define the graphical method for displaying each panel, so <strong>plotly</strong> graphs can easily be embedded. The <strong>trelliscope</strong> package is currently built upon <strong>shiny</strong>, but as Figure <a href="navigating-many-views.html#fig:trelliscope">3.12</a> demonstrates, the <strong>trelliscopejs</strong> package provides lower-level tools that allow one to create trelliscope displays without <strong>shiny</strong> <span class="citation">(Hafen and Schloerke, <a href="#ref-trelliscopejs">n.d.</a>)</span>.</p>
-<div class="sourceCode"><pre class="sourceCode r"><code class="sourceCode r"><span class="kw">library</span>(trelliscopejs)
-
-<span class="kw">qplot</span>(cty, hwy, <span class="dt">data =</span> mpg) <span class="op">+</span>
-<span class="st">  </span><span class="kw">xlim</span>(<span class="dv">7</span>, <span class="dv">37</span>) <span class="op">+</span><span class="st"> </span><span class="kw">ylim</span>(<span class="dv">9</span>, <span class="dv">47</span>) <span class="op">+</span><span class="st"> </span><span class="kw">theme_bw</span>() <span class="op">+</span>
-<span class="st">  </span><span class="kw">facet_trelliscope</span>(
-    <span class="op">~</span><span class="st"> </span>manufacturer <span class="op">+</span><span class="st"> </span>class, <span class="dt">nrow =</span> <span class="dv">2</span>, <span class="dt">ncol =</span> <span class="dv">4</span>, 
-    <span class="dt">as_plotly =</span> <span class="ot">TRUE</span>, <span class="dt">plotly_args =</span> <span class="kw">list</span>(<span class="dt">dynamicTicks =</span> T)
-  )</code></pre></div>
+<div class="sourceCode" id="cb71"><pre class="sourceCode r"><code class="sourceCode r"><a class="sourceLine" id="cb71-1" data-line-number="1"><span class="kw">library</span>(trelliscopejs)</a>
+<a class="sourceLine" id="cb71-2" data-line-number="2"></a>
+<a class="sourceLine" id="cb71-3" data-line-number="3"><span class="kw">qplot</span>(cty, hwy, <span class="dt">data =</span> mpg) <span class="op">+</span></a>
+<a class="sourceLine" id="cb71-4" data-line-number="4"><span class="st">  </span><span class="kw">xlim</span>(<span class="dv">7</span>, <span class="dv">37</span>) <span class="op">+</span><span class="st"> </span><span class="kw">ylim</span>(<span class="dv">9</span>, <span class="dv">47</span>) <span class="op">+</span><span class="st"> </span><span class="kw">theme_bw</span>() <span class="op">+</span></a>
+<a class="sourceLine" id="cb71-5" data-line-number="5"><span class="st">  </span><span class="kw">facet_trelliscope</span>(</a>
+<a class="sourceLine" id="cb71-6" data-line-number="6">    <span class="op">~</span><span class="st"> </span>manufacturer <span class="op">+</span><span class="st"> </span>class, <span class="dt">nrow =</span> <span class="dv">2</span>, <span class="dt">ncol =</span> <span class="dv">4</span>, </a>
+<a class="sourceLine" id="cb71-7" data-line-number="7">    <span class="dt">as_plotly =</span> <span class="ot">TRUE</span>, <span class="dt">plotly_args =</span> <span class="kw">list</span>(<span class="dt">dynamicTicks =</span> T)</a>
+<a class="sourceLine" id="cb71-8" data-line-number="8">  )</a></code></pre></div>
 <div class="figure"><span id="fig:trelliscope"></span>
-<img src="images/trelliscope" alt="Using plotly within a trelliscope" width="700" align:"center" />
+<img src="images/trelliscope" alt="Using plotly within a trelliscope"  />
 <p class="caption">
 Figure 3.12: Using plotly within a trelliscope
 </p>
@@ -255,13 +281,13 @@ Figure 3.12: Using plotly within a trelliscope
 <p>Wilkinson, Leland, Anushka Anand, and Robert Grossman. 2005. “Graph-Theoretic Scagnostics.” In <em>Proceedings of the Proceedings of the 2005 Ieee Symposium on Information Visualization</em>, 21. INFOVIS ’05. Washington, DC, USA: IEEE Computer Society. <a href="https://doi.org/10.1109/INFOVIS.2005.14" class="uri">https://doi.org/10.1109/INFOVIS.2005.14</a>.</p>
 </div>
 <div id="ref-Wilkinson:2008">
-<p>Wilkinson, Leland, and Graham Wills. 2008. “Scagnostics Distributions.” <em>Journal of Computational and Graphical Statistics</em>, no. 2:473–91.</p>
+<p>Wilkinson, Leland, and Graham Wills. 2008. “Scagnostics Distributions.” <em>Journal of Computational and Graphical Statistics</em>, no. 2: 473–91.</p>
 </div>
 <div id="ref-Wilkinson:2012">
 <p>Dang, Tuan Nhon, and Leland Wilkinson. 2012. “Timeseer: Detecting interesting distributions in multiple time series data.” <em>VINCI</em>, October, 1–9.</p>
 </div>
 <div id="ref-divide-recombine">
-<p>Cleveland, William S., and Ryan Hafen. 2014. “Divide and Recombine (d&amp;R): Data Science for Large Complex Data.” <em>Statistical Analysis and Data Mining: The ASA Data Science Journal</em> 7 (6):425–33.</p>
+<p>Cleveland, William S., and Ryan Hafen. 2014. “Divide and Recombine (d&amp;R): Data Science for Large Complex Data.” <em>Statistical Analysis and Data Mining: The ASA Data Science Journal</em> 7 (6): 425–33.</p>
 </div>
 <div id="ref-RHIPE">
 <p>Saptarshi Guha, Jeremiah Rounds, Ryan Hafen, and William S. Cleveland. 2012. “Large Complex Data: Divide and Recombine (d&amp;R) with Rhipe.” <em>The ISI’s Journal for the Rapid Dissemination of Statistics Research</em>, August, 53–67.</p>
@@ -318,7 +344,7 @@ gitbook.start({
   (function () {
     var script = document.createElement("script");
     script.type = "text/javascript";
-    var src = "";
+    var src = "true";
     if (src === "" || src === "true") src = "https://cdn.bootcss.com/mathjax/2.7.1/MathJax.js?config=TeX-MML-AM_CHTML";
     if (location.protocol !== "file:" && /^https?:/.test(src))
       src = src.replace(/^https?:/, '');

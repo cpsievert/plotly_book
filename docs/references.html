@@ -7,7 +7,7 @@
   <meta http-equiv="X-UA-Compatible" content="IE=edge">
   <title>plotly for R</title>
   <meta name="description" content="An overview of the R package plotly">
-  <meta name="generator" content="bookdown 0.6 and GitBook 2.6.7">
+  <meta name="generator" content="bookdown 0.7 and GitBook 2.6.7">
 
   <meta property="og:title" content="plotly for R" />
   <meta property="og:type" content="book" />
@@ -51,8 +51,8 @@
 <script src="libs/typedarray/typedarray.min.js"></script>
 <link href="libs/crosstalk/css/crosstalk.css" rel="stylesheet" />
 <script src="libs/crosstalk/js/crosstalk.min.js"></script>
-<link href="libs/plotlyjs/plotly-htmlwidgets.css" rel="stylesheet" />
-<script src="libs/plotlyjs/plotly-latest.min.js"></script>
+<link href="libs/plotly-htmlwidgets-css/plotly-htmlwidgets.css" rel="stylesheet" />
+<script src="libs/plotly-main/plotly-latest.min.js"></script>
 <link href="libs/jsoneditor/jsoneditor.min.css" rel="stylesheet" />
 <script src="libs/jsoneditor/jsoneditor.min.js"></script>
 <script src="libs/jsonedit-binding/jsonedit.js"></script>
@@ -63,41 +63,67 @@
 
 
 <style type="text/css">
-div.sourceCode { overflow-x: auto; }
-table.sourceCode, tr.sourceCode, td.lineNumbers, td.sourceCode {
-  margin: 0; padding: 0; vertical-align: baseline; border: none; }
-table.sourceCode { width: 100%; line-height: 100%; }
-td.lineNumbers { text-align: right; padding-right: 4px; padding-left: 4px; color: #aaaaaa; border-right: 1px solid #aaaaaa; }
-td.sourceCode { padding-left: 5px; }
-code > span.kw { color: #007020; font-weight: bold; } /* Keyword */
-code > span.dt { color: #902000; } /* DataType */
-code > span.dv { color: #40a070; } /* DecVal */
-code > span.bn { color: #40a070; } /* BaseN */
-code > span.fl { color: #40a070; } /* Float */
-code > span.ch { color: #4070a0; } /* Char */
-code > span.st { color: #4070a0; } /* String */
-code > span.co { color: #60a0b0; font-style: italic; } /* Comment */
-code > span.ot { color: #007020; } /* Other */
-code > span.al { color: #ff0000; font-weight: bold; } /* Alert */
-code > span.fu { color: #06287e; } /* Function */
-code > span.er { color: #ff0000; font-weight: bold; } /* Error */
-code > span.wa { color: #60a0b0; font-weight: bold; font-style: italic; } /* Warning */
-code > span.cn { color: #880000; } /* Constant */
-code > span.sc { color: #4070a0; } /* SpecialChar */
-code > span.vs { color: #4070a0; } /* VerbatimString */
-code > span.ss { color: #bb6688; } /* SpecialString */
-code > span.im { } /* Import */
-code > span.va { color: #19177c; } /* Variable */
-code > span.cf { color: #007020; font-weight: bold; } /* ControlFlow */
-code > span.op { color: #666666; } /* Operator */
-code > span.bu { } /* BuiltIn */
-code > span.ex { } /* Extension */
-code > span.pp { color: #bc7a00; } /* Preprocessor */
-code > span.at { color: #7d9029; } /* Attribute */
-code > span.do { color: #ba2121; font-style: italic; } /* Documentation */
-code > span.an { color: #60a0b0; font-weight: bold; font-style: italic; } /* Annotation */
-code > span.cv { color: #60a0b0; font-weight: bold; font-style: italic; } /* CommentVar */
-code > span.in { color: #60a0b0; font-weight: bold; font-style: italic; } /* Information */
+a.sourceLine { display: inline-block; line-height: 1.25; }
+a.sourceLine { pointer-events: none; color: inherit; text-decoration: inherit; }
+a.sourceLine:empty { height: 1.2em; }
+.sourceCode { overflow: visible; }
+code.sourceCode { white-space: pre; position: relative; }
+div.sourceCode { margin: 1em 0; }
+pre.sourceCode { margin: 0; }
+@media screen {
+div.sourceCode { overflow: auto; }
+}
+@media print {
+code.sourceCode { white-space: pre-wrap; }
+a.sourceLine { text-indent: -1em; padding-left: 1em; }
+}
+pre.numberSource a.sourceLine
+  { position: relative; left: -4em; }
+pre.numberSource a.sourceLine::before
+  { content: attr(data-line-number);
+    position: relative; left: -1em; text-align: right; vertical-align: baseline;
+    border: none; pointer-events: all; display: inline-block;
+    -webkit-touch-callout: none; -webkit-user-select: none;
+    -khtml-user-select: none; -moz-user-select: none;
+    -ms-user-select: none; user-select: none;
+    padding: 0 4px; width: 4em;
+    color: #aaaaaa;
+  }
+pre.numberSource { margin-left: 3em; border-left: 1px solid #aaaaaa;  padding-left: 4px; }
+div.sourceCode
+  {  }
+@media screen {
+a.sourceLine::before { text-decoration: underline; }
+}
+code span.al { color: #ff0000; font-weight: bold; } /* Alert */
+code span.an { color: #60a0b0; font-weight: bold; font-style: italic; } /* Annotation */
+code span.at { color: #7d9029; } /* Attribute */
+code span.bn { color: #40a070; } /* BaseN */
+code span.bu { } /* BuiltIn */
+code span.cf { color: #007020; font-weight: bold; } /* ControlFlow */
+code span.ch { color: #4070a0; } /* Char */
+code span.cn { color: #880000; } /* Constant */
+code span.co { color: #60a0b0; font-style: italic; } /* Comment */
+code span.cv { color: #60a0b0; font-weight: bold; font-style: italic; } /* CommentVar */
+code span.do { color: #ba2121; font-style: italic; } /* Documentation */
+code span.dt { color: #902000; } /* DataType */
+code span.dv { color: #40a070; } /* DecVal */
+code span.er { color: #ff0000; font-weight: bold; } /* Error */
+code span.ex { } /* Extension */
+code span.fl { color: #40a070; } /* Float */
+code span.fu { color: #06287e; } /* Function */
+code span.im { } /* Import */
+code span.in { color: #60a0b0; font-weight: bold; font-style: italic; } /* Information */
+code span.kw { color: #007020; font-weight: bold; } /* Keyword */
+code span.op { color: #666666; } /* Operator */
+code span.ot { color: #007020; } /* Other */
+code span.pp { color: #bc7a00; } /* Preprocessor */
+code span.sc { color: #4070a0; } /* SpecialChar */
+code span.ss { color: #bb6688; } /* SpecialString */
+code span.st { color: #4070a0; } /* String */
+code span.va { color: #19177c; } /* Variable */
+code span.vs { color: #4070a0; } /* VerbatimString */
+code span.wa { color: #60a0b0; font-weight: bold; font-style: italic; } /* Warning */
 </style>
 
 <link rel="stylesheet" href="css/plotly.css" type="text/css" />
@@ -114,7 +140,7 @@ code > span.in { color: #60a0b0; font-weight: bold; font-style: italic; } /* Inf
       <nav role="navigation">
 
 <ul class="summary">
-<li><a href="https://plotcon.plot.ly/workshops">plotly for R <i>master class</i></a></li>
+<li><a href="https://consulting.cpsievert.me">Need help? Work with Carson!</a></li>
 
 <li class="divider"></li>
 <li class="chapter" data-level="" data-path="index.html"><a href="index.html"><i class="fa fa-check"></i>Overview</a><ul>
@@ -228,7 +254,7 @@ code > span.in { color: #60a0b0; font-weight: bold; font-style: italic; } /* Inf
 <p>Allaire, JJ, Joe Cheng, Yihui Xie, Jonathan McPherson, Winston Chang, Jeff Allen, Hadley Wickham, Aron Atkins, and Rob Hyndman. 2016. <em>Rmarkdown: Dynamic Documents for R</em>. <a href="https://CRAN.R-project.org/package=rmarkdown" class="uri">https://CRAN.R-project.org/package=rmarkdown</a>.</p>
 </div>
 <div>
-<p>Asimov, Daniel. 1985. “The Grand Tour: A Tool for Viewing Multidimensional Data.” <em>SIAM J. Sci. Stat. Comput.</em> 6 (1). Philadelphia, PA, USA: Society for Industrial; Applied Mathematics:128–43. <a href="https://doi.org/10.1137/0906011" class="uri">https://doi.org/10.1137/0906011</a>.</p>
+<p>Asimov, Daniel. 1985. “The Grand Tour: A Tool for Viewing Multidimensional Data.” <em>SIAM J. Sci. Stat. Comput.</em> 6 (1). Philadelphia, PA, USA: Society for Industrial; Applied Mathematics: 128–43. <a href="https://doi.org/10.1137/0906011" class="uri">https://doi.org/10.1137/0906011</a>.</p>
 </div>
 <div>
 <p>Attali, Dean. 2016. <em>Colourpicker: A Colour Picker Widget for Shiny Apps, Rstudio, R-Markdown, and ’Htmlwidgets’</em>. <a href="https://CRAN.R-project.org/package=colourpicker" class="uri">https://CRAN.R-project.org/package=colourpicker</a>.</p>
@@ -255,10 +281,10 @@ code > span.in { color: #60a0b0; font-weight: bold; font-style: italic; } /* Inf
 <p>Cheng, Joe. 2016. <em>Crosstalk: Inter-Widget Interactivity for Html Widgets</em>.</p>
 </div>
 <div>
-<p>Cleveland, William S., and Ryan Hafen. 2014. “Divide and Recombine (d&amp;R): Data Science for Large Complex Data.” <em>Statistical Analysis and Data Mining: The ASA Data Science Journal</em> 7 (6):425–33.</p>
+<p>Cleveland, William S., and Ryan Hafen. 2014. “Divide and Recombine (d&amp;R): Data Science for Large Complex Data.” <em>Statistical Analysis and Data Mining: The ASA Data Science Journal</em> 7 (6): 425–33.</p>
 </div>
 <div>
-<p>Cleveland, William S, and Robert McGill. 1984. “Graphical Perception: Theory, Experimentation, and Application to the Development of Graphical Methods.” <em>Journal of the American Statistical Association</em> 79 (September):531–54.</p>
+<p>Cleveland, William S, and Robert McGill. 1984. “Graphical Perception: Theory, Experimentation, and Application to the Development of Graphical Methods.” <em>Journal of the American Statistical Association</em> 79 (September): 531–54.</p>
 </div>
 <div>
 <p>Contributors, Brian Reavis &amp;. 2016. “Selectize Is an Extensible jQuery-Based Custom &lt;select&gt; Ui Control.” 2016. <a href="https://github.com/selectize/selectize.js" class="uri">https://github.com/selectize/selectize.js</a>.</p>
@@ -279,13 +305,13 @@ code > span.in { color: #60a0b0; font-weight: bold; font-style: italic; } /* Inf
 <p>de Jong, Jos, and Kenton Russell. 2016. <em>Listviewer: ’Htmlwidget’ for Interactive Views of R Lists</em>. <a href="https://github.com/timelyportfolio/listviewer" class="uri">https://github.com/timelyportfolio/listviewer</a>.</p>
 </div>
 <div>
-<p>Emerson, John W., Walton A. Green, Barret Schloerke, Jason Crowley, Dianne Cook, Heike Hofmann, and Hadley Wickham. 2013. “The Generalized Pairs Plot.” <em>Journal of Computational and Graphical Statistics</em> 22 (1):79–91. <a href="https://doi.org/10.1080/10618600.2012.694762" class="uri">https://doi.org/10.1080/10618600.2012.694762</a>.</p>
+<p>Emerson, John W., Walton A. Green, Barret Schloerke, Jason Crowley, Dianne Cook, Heike Hofmann, and Hadley Wickham. 2013. “The Generalized Pairs Plot.” <em>Journal of Computational and Graphical Statistics</em> 22 (1): 79–91. <a href="https://doi.org/10.1080/10618600.2012.694762" class="uri">https://doi.org/10.1080/10618600.2012.694762</a>.</p>
 </div>
 <div>
 <p>Few, Stephen. 2006. “Data Visualization: Rules for Encoding Values in Graph.” 2006. <a href="https://web.archive.org/web/20160404214629/http://www.perceptualedge.com/articles/b-eye/encoding_values_in_graph.pdf" class="uri">https://web.archive.org/web/20160404214629/http://www.perceptualedge.com/articles/b-eye/encoding_values_in_graph.pdf</a>.</p>
 </div>
 <div>
-<p>Freedman, D., and P. Diaconis. 1981. <em>Zeitschrift Für Wahrscheinlichkeitstheorie Und Verwandte Gebiete</em> 57:453–76.</p>
+<p>Freedman, D., and P. Diaconis. 1981. <em>Zeitschrift Für Wahrscheinlichkeitstheorie Und Verwandte Gebiete</em> 57: 453–76.</p>
 </div>
 <div>
 <p>Galili, Tal. 2016. <em>Heatmaply: Interactive Heat Maps Using ’Plotly’</em>. <a href="https://CRAN.R-project.org/package=heatmaply" class="uri">https://CRAN.R-project.org/package=heatmaply</a>.</p>
@@ -315,7 +341,7 @@ code > span.in { color: #60a0b0; font-weight: bold; font-style: italic; } /* Inf
 <p>Jeppson, Haley, Heike Hofmann, and Di Cook. 2016. <em>Ggmosaic: Mosaic Plots in the ’Ggplot2’ Framework</em>. <a href="http://github.com/haleyjeppson/ggmosaic" class="uri">http://github.com/haleyjeppson/ggmosaic</a>.</p>
 </div>
 <div>
-<p>Kahle, David, and Hadley Wickham. 2013. “Ggmap: Spatial Visualization with Ggplot2.” <em>The R Journal</em> 5 (1):144–61. <a href="http://journal.r-project.org/archive/2013-1/kahle-wickham.pdf" class="uri">http://journal.r-project.org/archive/2013-1/kahle-wickham.pdf</a>.</p>
+<p>Kahle, David, and Hadley Wickham. 2013. “Ggmap: Spatial Visualization with Ggplot2.” <em>The R Journal</em> 5 (1): 144–61. <a href="http://journal.r-project.org/archive/2013-1/kahle-wickham.pdf" class="uri">http://journal.r-project.org/archive/2013-1/kahle-wickham.pdf</a>.</p>
 </div>
 <div>
 <p>Lander, Jared P. 2016. <em>Coefplot: Plots Coefficients from Fitted Models</em>. <a href="https://CRAN.R-project.org/package=coefplot" class="uri">https://CRAN.R-project.org/package=coefplot</a>.</p>
@@ -342,7 +368,7 @@ code > span.in { color: #60a0b0; font-weight: bold; font-style: italic; } /* Inf
 <p>R Core Team. 2016. <em>R: A Language and Environment for Statistical Computing</em>. Vienna, Austria: R Foundation for Statistical Computing. <a href="https://www.R-project.org/" class="uri">https://www.R-project.org/</a>.</p>
 </div>
 <div>
-<p>Richard A. Becker, Ming-Jen Shyu, William S. Cleveland. 1996. “The Visual Design and Control of Trellis Display.” <em>Journal of Computational and Graphical Statistics</em> 5 (2). [American Statistical Association, Taylor &amp; Francis, Ltd., Institute of Mathematical Statistics, Interface Foundation of America]:123–55. <a href="http://www.jstor.org/stable/1390777" class="uri">http://www.jstor.org/stable/1390777</a>.</p>
+<p>Richard A. Becker, Ming-Jen Shyu, William S. Cleveland. 1996. “The Visual Design and Control of Trellis Display.” <em>Journal of Computational and Graphical Statistics</em> 5 (2). [American Statistical Association, Taylor &amp; Francis, Ltd., Institute of Mathematical Statistics, Interface Foundation of America]: 123–55. <a href="http://www.jstor.org/stable/1390777" class="uri">http://www.jstor.org/stable/1390777</a>.</p>
 </div>
 <div>
 <p>Robinson, David. 2016. <em>Broom: Convert Statistical Analysis Objects into Tidy Data Frames</em>. <a href="https://CRAN.R-project.org/package=broom" class="uri">https://CRAN.R-project.org/package=broom</a>.</p>
@@ -366,7 +392,7 @@ code > span.in { color: #60a0b0; font-weight: bold; font-style: italic; } /* Inf
 <p>Schloerke, Barret, Jason Crowley, Di Cook, Francois Briatte, Moritz Marbach, Edwin Thoen, Amos Elberg, and Joseph Larmarange. 2016. <em>GGally: Extension to ’Ggplot2’</em>.</p>
 </div>
 <div>
-<p>Scott, David W. 1979. “On Optimal and Data-Based Histograms.” <em>Biometrika</em> 66:605–10.</p>
+<p>Scott, David W. 1979. “On Optimal and Data-Based Histograms.” <em>Biometrika</em> 66: 605–10.</p>
 </div>
 <div>
 <p>Scott, David W. 1992. <em>Multivariate Density Estimation: Theory, Practice, and Visualization</em>. Wiley &amp; Sons.</p>
@@ -381,7 +407,7 @@ code > span.in { color: #60a0b0; font-weight: bold; font-style: italic; } /* Inf
 <p>Sievert, Carson, and Kenneth E Shirley. 2014. “LDAvis: A method for visualizing and interpreting topics.” <em>Proceedings of the Workshop on Interactive Language Learning, Visualization, and Interfaces</em>, June, 1–8. <a href="http://nlp.stanford.edu/events/illvi2014/papers/sievert-illvi2014.pdf" class="uri">http://nlp.stanford.edu/events/illvi2014/papers/sievert-illvi2014.pdf</a>.</p>
 </div>
 <div>
-<p>Sturges, Herbert A. 1926. “The Choice of a Class Interval.” <em>Journal of the American Statistical Association</em> 21 (153):65–66. <a href="https://doi.org/10.1080/01621459.1926.10502161" class="uri">https://doi.org/10.1080/01621459.1926.10502161</a>.</p>
+<p>Sturges, Herbert A. 1926. “The Choice of a Class Interval.” <em>Journal of the American Statistical Association</em> 21 (153): 65–66. <a href="https://doi.org/10.1080/01621459.1926.10502161" class="uri">https://doi.org/10.1080/01621459.1926.10502161</a>.</p>
 </div>
 <div>
 <p>Temple Lang, Duncan. 2014. <em>RJSONIO: Serialize R Objects to Json, Javascript Object Notation</em>. <a href="http://CRAN.R-project.org/package=RJSONIO" class="uri">http://CRAN.R-project.org/package=RJSONIO</a>.</p>
@@ -399,7 +425,7 @@ code > span.in { color: #60a0b0; font-weight: bold; font-style: italic; } /* Inf
 <p>Vaidyanathan, Ramnath, Yihui Xie, JJ Allaire, Joe Cheng, and Kenton Russell. 2016. <em>Htmlwidgets: HTML Widgets for R</em>. <a href="https://CRAN.R-project.org/package=htmlwidgets" class="uri">https://CRAN.R-project.org/package=htmlwidgets</a>.</p>
 </div>
 <div>
-<p>VanderPlas, Susan, and Heike Hofmann. 2015. “Signs of the Sine Illusion—Why We Need to Care.” <em>Journal of Computational and Graphical Statistics</em> 24 (4):1170–90. <a href="https://doi.org/10.1080/10618600.2014.951547" class="uri">https://doi.org/10.1080/10618600.2014.951547</a>.</p>
+<p>VanderPlas, Susan, and Heike Hofmann. 2015. “Signs of the Sine Illusion—Why We Need to Care.” <em>Journal of Computational and Graphical Statistics</em> 24 (4): 1170–90. <a href="https://doi.org/10.1080/10618600.2014.951547" class="uri">https://doi.org/10.1080/10618600.2014.951547</a>.</p>
 </div>
 <div>
 <p>Venables, W. N., and B. D. Ripley. 2002. <em>Modern Applied Statistics with S</em>. Fourth. New York: Springer. <a href="http://www.stats.ox.ac.uk/pub/MASS4" class="uri">http://www.stats.ox.ac.uk/pub/MASS4</a>.</p>
@@ -408,7 +434,7 @@ code > span.in { color: #60a0b0; font-weight: bold; font-style: italic; } /* Inf
 <p>Wickham, Hadley. 2009. <em>Ggplot2: Elegant Graphics for Data Analysis</em>. Springer-Verlag New York. <a href="http://ggplot2.org" class="uri">http://ggplot2.org</a>.</p>
 </div>
 <div>
-<p>———. 2010. “A Layered Grammar of Graphics.” <em>Journal of Computational and Graphical Statistics</em> 19 (1). Taylor &amp; Francis:3–28.</p>
+<p>———. 2010. “A Layered Grammar of Graphics.” <em>Journal of Computational and Graphical Statistics</em> 19 (1). Taylor &amp; Francis: 3–28.</p>
 </div>
 <div>
 <p>———. 2014. <em>Advanced R</em>. Chapman &amp; Hall.</p>
@@ -417,7 +443,7 @@ code > span.in { color: #60a0b0; font-weight: bold; font-style: italic; } /* Inf
 <p>———. 2016. <em>Tidyr: Easily Tidy Data with ‘Spread()‘ and ‘Gather()‘ Functions</em>. <a href="https://github.com/hadley/tidyr" class="uri">https://github.com/hadley/tidyr</a>.</p>
 </div>
 <div>
-<p>Wickham, Hadley, Dianne Cook, and Heike Hofmann. 2015. “Visualizing Statistical Models: Removing the Blindfold.” <em>Statistical Analysis and Data Mining: The ASA Data Science Journal</em> 8 (4):203–25.</p>
+<p>Wickham, Hadley, Dianne Cook, and Heike Hofmann. 2015. “Visualizing Statistical Models: Removing the Blindfold.” <em>Statistical Analysis and Data Mining: The ASA Data Science Journal</em> 8 (4): 203–25.</p>
 </div>
 <div>
 <p>Wickham, Hadley, and Romain Francois. 2016. <em>Dplyr: A Grammar of Data Manipulation</em>. <a href="https://CRAN.R-project.org/package=dplyr" class="uri">https://CRAN.R-project.org/package=dplyr</a>.</p>
@@ -432,10 +458,10 @@ code > span.in { color: #60a0b0; font-weight: bold; font-style: italic; } /* Inf
 <p>Wilkinson, Leland, Anushka Anand, and Robert Grossman. 2005. “Graph-Theoretic Scagnostics.” In <em>Proceedings of the Proceedings of the 2005 Ieee Symposium on Information Visualization</em>, 21. INFOVIS ’05. Washington, DC, USA: IEEE Computer Society. <a href="https://doi.org/10.1109/INFOVIS.2005.14" class="uri">https://doi.org/10.1109/INFOVIS.2005.14</a>.</p>
 </div>
 <div>
-<p>Wilkinson, Leland, and Graham Wills. 2008. “Scagnostics Distributions.” <em>Journal of Computational and Graphical Statistics</em>, no. 2:473–91.</p>
+<p>Wilkinson, Leland, and Graham Wills. 2008. “Scagnostics Distributions.” <em>Journal of Computational and Graphical Statistics</em>, no. 2: 473–91.</p>
 </div>
 <div>
-<p>William S. Cleveland, Robert McGill, Marylyn E. McGill. 1988. “The Shape Parameter of a Two-Variable Graph.” <em>Journal of the American Statistical Association</em> 83 (402). [American Statistical Association, Taylor &amp; Francis, Ltd.]:289–300. <a href="http://www.jstor.org/stable/2288843" class="uri">http://www.jstor.org/stable/2288843</a>.</p>
+<p>William S. Cleveland, Robert McGill, Marylyn E. McGill. 1988. “The Shape Parameter of a Two-Variable Graph.” <em>Journal of the American Statistical Association</em> 83 (402). [American Statistical Association, Taylor &amp; Francis, Ltd.]: 289–300. <a href="http://www.jstor.org/stable/2288843" class="uri">http://www.jstor.org/stable/2288843</a>.</p>
 </div>
 <div>
 <p>Xie, Yihui. 2016. <em>Knitr: A General-Purpose Package for Dynamic Report Generation in R</em>. <a href="https://CRAN.R-project.org/package=knitr" class="uri">https://CRAN.R-project.org/package=knitr</a>.</p>
@@ -510,7 +536,7 @@ gitbook.start({
   (function () {
     var script = document.createElement("script");
     script.type = "text/javascript";
-    var src = "";
+    var src = "true";
     if (src === "" || src === "true") src = "https://cdn.bootcss.com/mathjax/2.7.1/MathJax.js?config=TeX-MML-AM_CHTML";
     if (location.protocol !== "file:" && /^https?:/.test(src))
       src = src.replace(/^https?:/, '');

@@ -7,7 +7,7 @@
   <meta http-equiv="X-UA-Compatible" content="IE=edge">
   <title>plotly for R</title>
   <meta name="description" content="An overview of the R package plotly">
-  <meta name="generator" content="bookdown 0.6 and GitBook 2.6.7">
+  <meta name="generator" content="bookdown 0.7 and GitBook 2.6.7">
 
   <meta property="og:title" content="plotly for R" />
   <meta property="og:type" content="book" />
@@ -51,8 +51,8 @@
 <script src="libs/typedarray/typedarray.min.js"></script>
 <link href="libs/crosstalk/css/crosstalk.css" rel="stylesheet" />
 <script src="libs/crosstalk/js/crosstalk.min.js"></script>
-<link href="libs/plotlyjs/plotly-htmlwidgets.css" rel="stylesheet" />
-<script src="libs/plotlyjs/plotly-latest.min.js"></script>
+<link href="libs/plotly-htmlwidgets-css/plotly-htmlwidgets.css" rel="stylesheet" />
+<script src="libs/plotly-main/plotly-latest.min.js"></script>
 <link href="libs/jsoneditor/jsoneditor.min.css" rel="stylesheet" />
 <script src="libs/jsoneditor/jsoneditor.min.js"></script>
 <script src="libs/jsonedit-binding/jsonedit.js"></script>
@@ -63,41 +63,67 @@
 
 
 <style type="text/css">
-div.sourceCode { overflow-x: auto; }
-table.sourceCode, tr.sourceCode, td.lineNumbers, td.sourceCode {
-  margin: 0; padding: 0; vertical-align: baseline; border: none; }
-table.sourceCode { width: 100%; line-height: 100%; }
-td.lineNumbers { text-align: right; padding-right: 4px; padding-left: 4px; color: #aaaaaa; border-right: 1px solid #aaaaaa; }
-td.sourceCode { padding-left: 5px; }
-code > span.kw { color: #007020; font-weight: bold; } /* Keyword */
-code > span.dt { color: #902000; } /* DataType */
-code > span.dv { color: #40a070; } /* DecVal */
-code > span.bn { color: #40a070; } /* BaseN */
-code > span.fl { color: #40a070; } /* Float */
-code > span.ch { color: #4070a0; } /* Char */
-code > span.st { color: #4070a0; } /* String */
-code > span.co { color: #60a0b0; font-style: italic; } /* Comment */
-code > span.ot { color: #007020; } /* Other */
-code > span.al { color: #ff0000; font-weight: bold; } /* Alert */
-code > span.fu { color: #06287e; } /* Function */
-code > span.er { color: #ff0000; font-weight: bold; } /* Error */
-code > span.wa { color: #60a0b0; font-weight: bold; font-style: italic; } /* Warning */
-code > span.cn { color: #880000; } /* Constant */
-code > span.sc { color: #4070a0; } /* SpecialChar */
-code > span.vs { color: #4070a0; } /* VerbatimString */
-code > span.ss { color: #bb6688; } /* SpecialString */
-code > span.im { } /* Import */
-code > span.va { color: #19177c; } /* Variable */
-code > span.cf { color: #007020; font-weight: bold; } /* ControlFlow */
-code > span.op { color: #666666; } /* Operator */
-code > span.bu { } /* BuiltIn */
-code > span.ex { } /* Extension */
-code > span.pp { color: #bc7a00; } /* Preprocessor */
-code > span.at { color: #7d9029; } /* Attribute */
-code > span.do { color: #ba2121; font-style: italic; } /* Documentation */
-code > span.an { color: #60a0b0; font-weight: bold; font-style: italic; } /* Annotation */
-code > span.cv { color: #60a0b0; font-weight: bold; font-style: italic; } /* CommentVar */
-code > span.in { color: #60a0b0; font-weight: bold; font-style: italic; } /* Information */
+a.sourceLine { display: inline-block; line-height: 1.25; }
+a.sourceLine { pointer-events: none; color: inherit; text-decoration: inherit; }
+a.sourceLine:empty { height: 1.2em; }
+.sourceCode { overflow: visible; }
+code.sourceCode { white-space: pre; position: relative; }
+div.sourceCode { margin: 1em 0; }
+pre.sourceCode { margin: 0; }
+@media screen {
+div.sourceCode { overflow: auto; }
+}
+@media print {
+code.sourceCode { white-space: pre-wrap; }
+a.sourceLine { text-indent: -1em; padding-left: 1em; }
+}
+pre.numberSource a.sourceLine
+  { position: relative; left: -4em; }
+pre.numberSource a.sourceLine::before
+  { content: attr(data-line-number);
+    position: relative; left: -1em; text-align: right; vertical-align: baseline;
+    border: none; pointer-events: all; display: inline-block;
+    -webkit-touch-callout: none; -webkit-user-select: none;
+    -khtml-user-select: none; -moz-user-select: none;
+    -ms-user-select: none; user-select: none;
+    padding: 0 4px; width: 4em;
+    color: #aaaaaa;
+  }
+pre.numberSource { margin-left: 3em; border-left: 1px solid #aaaaaa;  padding-left: 4px; }
+div.sourceCode
+  {  }
+@media screen {
+a.sourceLine::before { text-decoration: underline; }
+}
+code span.al { color: #ff0000; font-weight: bold; } /* Alert */
+code span.an { color: #60a0b0; font-weight: bold; font-style: italic; } /* Annotation */
+code span.at { color: #7d9029; } /* Attribute */
+code span.bn { color: #40a070; } /* BaseN */
+code span.bu { } /* BuiltIn */
+code span.cf { color: #007020; font-weight: bold; } /* ControlFlow */
+code span.ch { color: #4070a0; } /* Char */
+code span.cn { color: #880000; } /* Constant */
+code span.co { color: #60a0b0; font-style: italic; } /* Comment */
+code span.cv { color: #60a0b0; font-weight: bold; font-style: italic; } /* CommentVar */
+code span.do { color: #ba2121; font-style: italic; } /* Documentation */
+code span.dt { color: #902000; } /* DataType */
+code span.dv { color: #40a070; } /* DecVal */
+code span.er { color: #ff0000; font-weight: bold; } /* Error */
+code span.ex { } /* Extension */
+code span.fl { color: #40a070; } /* Float */
+code span.fu { color: #06287e; } /* Function */
+code span.im { } /* Import */
+code span.in { color: #60a0b0; font-weight: bold; font-style: italic; } /* Information */
+code span.kw { color: #007020; font-weight: bold; } /* Keyword */
+code span.op { color: #666666; } /* Operator */
+code span.ot { color: #007020; } /* Other */
+code span.pp { color: #bc7a00; } /* Preprocessor */
+code span.sc { color: #4070a0; } /* SpecialChar */
+code span.ss { color: #bb6688; } /* SpecialString */
+code span.st { color: #4070a0; } /* String */
+code span.va { color: #19177c; } /* Variable */
+code span.vs { color: #4070a0; } /* VerbatimString */
+code span.wa { color: #60a0b0; font-weight: bold; font-style: italic; } /* Warning */
 </style>
 
 <link rel="stylesheet" href="css/plotly.css" type="text/css" />
@@ -114,7 +140,7 @@ code > span.in { color: #60a0b0; font-weight: bold; font-style: italic; } /* Inf
       <nav role="navigation">
 
 <ul class="summary">
-<li><a href="https://plotcon.plot.ly/workshops">plotly for R <i>master class</i></a></li>
+<li><a href="https://consulting.cpsievert.me">Need help? Work with Carson!</a></li>
 
 <li class="divider"></li>
 <li class="chapter" data-level="" data-path="index.html"><a href="index.html"><i class="fa fa-check"></i>Overview</a><ul>
@@ -223,10 +249,10 @@ code > span.in { color: #60a0b0; font-weight: bold; font-style: italic; } /* Inf
 <h3><span class="header-section-number">4.1.1</span> Accessing events in shiny</h3>
 <p>The plotly.js library emits custom events when a user interacts directly with a graph. The <code>event_data()</code> function provides a mechanism for accessing the data corresponding to those events within a shiny app. The shiny app in Figure <a href="linking-views-with-shiny.html#fig:plotlyEvents">3.13</a> is designed to demonstrate the most useful plotly events one may access via <code>event_data()</code>: mouse hover (<code>&quot;plotly_hover&quot;</code>), click (<code>&quot;plotly_click&quot;</code>), and click+drag (<code>&quot;plotly_selected&quot;</code>). All of these events return selections on the data scale, not on a pixel scale, which is useful for <a href="linking-views-with-shiny.html#updating-views">updating views</a>.</p>
 <p>There are currently four different modes for click+drag interactions in plotly.js, but only two will trigger a <code>&quot;plotly_selected&quot;</code> event: rectangular and lasso selection. The other two drag modes, zoom and pan, both emit a <code>&quot;plotly_relayout&quot;</code> event which could be useful for say, providing global context in relation to a zoom event and/or recomputing a model based on new x/y limits. In Figure <a href="linking-views-with-shiny.html#fig:plotlyEvents">3.13</a>, the default click+drag mode was set to rectangular selection set via the <a href="https://plot.ly/r/reference/#layout-dragmode">dragmode</a> attribute, but the mode can also be changed interactively via the mode bar at the top of the graph.</p>
-<p>The video in Figure <a href="linking-views-with-shiny.html#fig:plotlyEvents">3.13</a> helps demonstrate how different user events cause different blocks of code to be evaluated on the R server.<a href="#fn13" class="footnoteRef" id="fnref13"><sup>13</sup></a> Conceptually, you can think of events as different inputs that becomes invalidated when the event is triggered by plotly.js. Moreover, similar to restrictions placed on references to input value(s) in shiny, <code>event_data()</code> has to be called <em>within</em> a reactive expressions. As RStudio’s <a href="http://web.archive.org/web/20160405081516/http://shiny.rstudio.com/tutorial/lesson6/">lesson on reactive expressions</a> points out: “A reactive expression is an R expression that uses widget input [(e.g., <code>event_data()</code>)] and returns a value.”</p>
+<p>The video in Figure <a href="linking-views-with-shiny.html#fig:plotlyEvents">3.13</a> helps demonstrate how different user events cause different blocks of code to be evaluated on the R server.<a href="#fn13" class="footnote-ref" id="fnref13"><sup>13</sup></a> Conceptually, you can think of events as different inputs that becomes invalidated when the event is triggered by plotly.js. Moreover, similar to restrictions placed on references to input value(s) in shiny, <code>event_data()</code> has to be called <em>within</em> a reactive expressions. As RStudio’s <a href="http://web.archive.org/web/20160405081516/http://shiny.rstudio.com/tutorial/lesson6/">lesson on reactive expressions</a> points out: “A reactive expression is an R expression that uses widget input [(e.g., <code>event_data()</code>)] and returns a value.”</p>
 <p>Any of the <code>render*()</code> functions in <strong>shiny</strong> turn a regular R expression into a reactive expression. In Figure <a href="linking-views-with-shiny.html#fig:plotlyEvents">3.13</a>, every use of <code>event_data()</code> appears within <code>renderPrint()</code> since we only need to display the result of the event on the user interface with <code>verbatimTextOutput()</code>. In the next section, we use the return result of <code>event_data()</code> to display more interesting and informative views of user events.</p>
 <div class="figure"><span id="fig:plotlyEvents"></span>
-<img src="images/plotlyEvents.gif" alt="A video demonstration of plotly events in shiny. The video can be accessed [here](http://i.imgur.com/SJVIBvW.gif)" width="700" align:"center" />
+<img src="images/plotlyEvents.gif" alt="A video demonstration of plotly events in shiny. The video can be accessed [here](http://i.imgur.com/SJVIBvW.gif)"  />
 <p class="caption">
 Figure 3.13: A video demonstration of plotly events in shiny. The video can be accessed <a href="http://i.imgur.com/SJVIBvW.gif">here</a>
 </p>
@@ -236,9 +262,9 @@ Figure 3.13: A video demonstration of plotly events in shiny. The video can be a
 <h3><span class="header-section-number">4.1.2</span> Updating views</h3>
 <p>Obtaining data from a plotly event is easy, but updating view(s) based on the result of an event can be difficult. To start with something fairly easy, consider two scatterplots showing the same observations, but on different axes (i.e.., a subset of a scatterplot matrix). Figure <a href="linking-views-with-shiny.html#fig:plotlyLinkedBrushEasy">3.14</a> shows a linked lasso brush between two scatterplots. The main idea is that we first plot all the observations in black, then highlight the selection by adding an additional layer of selected points in red using the data returned by <code>event_data()</code>. In order to guarantee that we can uniquely identify observations in the event data, it is also crucial that we attach a <code>key</code> attribute to each observation (here the rownames of the data), which we can then use to filter the original data down to the selected observations.</p>
 <p>Figure <a href="linking-views-with-shiny.html#fig:plotlyLinkedBrushEasy">3.14</a> consciously updates the source of the selection (the top plot) to match the visual characteristics of the target (the bottom plot). In general, whenever linking views to display graphical selection(s), matching the visual characteristics of the selection both the source and target(s) can aide interpretation, especially when using interactive graphics to present results to others. Although the update rule in Figure <a href="linking-views-with-shiny.html#fig:plotlyLinkedBrushEasy">3.14</a> is to simply layer on additional points, a full redraw is performed during the update, which can impact performance when dealing with a large amount of graphical elements.</p>
-<p>Figure <a href="linking-views-with-shiny.html#fig:plotlyLinkedBrushEasy">3.14</a> could be made slightly more efficient by just changing the color of selected points, or dimming the non-selected points, rather than plotting an extra layer of points. However, this technique does not work for chart types that display aggregate values (e.g., how do you dim non-selected values in a box plot?). For this reason, in <a href="linking-views-without-shiny.html#linking-views-without-shiny">Linking views without shiny</a>, selections are implemented as an additional layer, but avoid the full redraw required when updating plot via <strong>shiny</strong> reactive framework.<a href="#fn14" class="footnoteRef" id="fnref14"><sup>14</sup></a></p>
+<p>Figure <a href="linking-views-with-shiny.html#fig:plotlyLinkedBrushEasy">3.14</a> could be made slightly more efficient by just changing the color of selected points, or dimming the non-selected points, rather than plotting an extra layer of points. However, this technique does not work for chart types that display aggregate values (e.g., how do you dim non-selected values in a box plot?). For this reason, in <a href="linking-views-without-shiny.html#linking-views-without-shiny">Linking views without shiny</a>, selections are implemented as an additional layer, but avoid the full redraw required when updating plot via <strong>shiny</strong> reactive framework.<a href="#fn14" class="footnote-ref" id="fnref14"><sup>14</sup></a></p>
 <div class="figure"><span id="fig:plotlyLinkedBrushEasy"></span>
-<img src="images/plotlyLinkedBrushEasy.gif" alt="A video demonstration of linked brushing in a shiny app. The video can be accessed [here](http://i.imgur.com/rUroUHT.gif) and the code to run the example is [here](https://gist.github.com/cpsievert/5934f173cafffb8dfb4f23d5488cd185)" width="700" align:"center" />
+<img src="images/plotlyLinkedBrushEasy.gif" alt="A video demonstration of linked brushing in a shiny app. The video can be accessed [here](http://i.imgur.com/rUroUHT.gif) and the code to run the example is [here](https://gist.github.com/cpsievert/5934f173cafffb8dfb4f23d5488cd185)"  />
 <p class="caption">
 Figure 3.14: A video demonstration of linked brushing in a shiny app. The video can be accessed <a href="http://i.imgur.com/rUroUHT.gif">here</a> and the code to run the example is <a href="https://gist.github.com/cpsievert/5934f173cafffb8dfb4f23d5488cd185">here</a>
 </p>
@@ -250,7 +276,7 @@ Figure 3.14: A video demonstration of linked brushing in a shiny app. The video 
 <p>The linked brushing example in Figure <a href="linking-views-with-shiny.html#fig:plotlyLinkedBrushEasy">3.14</a> has bi-directional communication – a <code>&quot;plotly_selected&quot;</code> event deriving from either view impacts the other view. In other words, each view can be either the source or target of the selection. Often times, we want <em>one</em> view to be the source of a selection, and related view(s) to be the target. Figure <a href="linking-views-with-shiny.html#fig:plotlyLinkedClick">3.15</a> shows a heatmap of a correlation matrix (the source of a selection) linked to a scatterplot (the target of a selection). By clicking on a cell in the correlation matrix, a scatterplot of the two variables is displayed below the matrix.</p>
 <p>To update the scatterplot view, Figure <a href="linking-views-with-shiny.html#fig:plotlyLinkedClick">3.15</a> accesses <code>&quot;plotly_click&quot;</code> events via the <code>event_data()</code> function, but it also careful to not access click events triggered from the scatterplot. By strategically matching the value of the <code>source</code> argument in the <code>plot_ly()</code> and <code>event_data()</code> functions, Figure <a href="linking-views-with-shiny.html#fig:plotlyLinkedClick">3.15</a> effectively restricts the scope of events to a specific plot (the heatmap).</p>
 <div class="figure"><span id="fig:plotlyLinkedClick"></span>
-<img src="images/plotlyLinkedClick.gif" alt="A video demonstration of clicking on a cell in a correlation matrix to view the corresponding scatterplot. The video can be accessed [here](http://i.imgur.com/2pNZejk.gif) and the code to run the example is [here](https://gist.github.com/cpsievert/ece4741967baf1840843ecc44c1bb677)" width="700" align:"center" />
+<img src="images/plotlyLinkedClick.gif" alt="A video demonstration of clicking on a cell in a correlation matrix to view the corresponding scatterplot. The video can be accessed [here](http://i.imgur.com/2pNZejk.gif) and the code to run the example is [here](https://gist.github.com/cpsievert/ece4741967baf1840843ecc44c1bb677)"  />
 <p class="caption">
 Figure 3.15: A video demonstration of clicking on a cell in a correlation matrix to view the corresponding scatterplot. The video can be accessed <a href="http://i.imgur.com/2pNZejk.gif">here</a> and the code to run the example is <a href="https://gist.github.com/cpsievert/ece4741967baf1840843ecc44c1bb677">here</a>
 </p>
@@ -261,8 +287,8 @@ Figure 3.15: A video demonstration of clicking on a cell in a correlation matrix
 <div class="footnotes">
 <hr />
 <ol start="13">
-<li id="fn13"><p>You can also run the example yourself using the following code – <code>shiny::runApp(system.file(&quot;examples&quot;, &quot;plotlyEvents&quot;, package = &quot;plotly&quot;))</code><a href="linking-views-with-shiny.html#fnref13">↩</a></p></li>
-<li id="fn14"><p>To my knowledge, the <strong>leaflet</strong> package is the only R package which provides a way to update a plot in a shiny app without a full redraw.<a href="linking-views-with-shiny.html#fnref14">↩</a></p></li>
+<li id="fn13"><p>You can also run the example yourself using the following code – <code>shiny::runApp(system.file(&quot;examples&quot;, &quot;plotlyEvents&quot;, package = &quot;plotly&quot;))</code><a href="linking-views-with-shiny.html#fnref13" class="footnote-back">↩</a></p></li>
+<li id="fn14"><p>To my knowledge, the <strong>leaflet</strong> package is the only R package which provides a way to update a plot in a shiny app without a full redraw.<a href="linking-views-with-shiny.html#fnref14" class="footnote-back">↩</a></p></li>
 </ol>
 </div>
             </section>
@@ -307,7 +333,7 @@ gitbook.start({
   (function () {
     var script = document.createElement("script");
     script.type = "text/javascript";
-    var src = "";
+    var src = "true";
     if (src === "" || src === "true") src = "https://cdn.bootcss.com/mathjax/2.7.1/MathJax.js?config=TeX-MML-AM_CHTML";
     if (location.protocol !== "file:" && /^https?:/.test(src))
       src = src.replace(/^https?:/, '');

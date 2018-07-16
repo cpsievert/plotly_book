@@ -358,11 +358,7 @@ Since plotly has the ability to embed [raster-based images](#raster-images), it'
 ```{r}
 library(ggmap)
 basemap <- get_map(maptype = "satellite", zoom = 8)
-p <- ggmap(basemap) +
-  geom_polygon(aes(x = lon, y = lat, group = plotOrder),
-    data = zips, colour = "black", fill = NA) +
-  ggthemes::theme_map()
-ggplotly(p)
+ggplotly(ggmap(basemap))
 ```
 
 
