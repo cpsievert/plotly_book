@@ -117,16 +117,6 @@ subplot(p1, p2, nrows = 1, widths = c(0.3, 0.7), titleX = TRUE) %>%
   highlight("plotly_selected", color = "blue", opacityDim = 1, hoverinfo = "none")
 ```
 
-Although Figure \@ref(fig:animation-gapminder) links two animated layers, it is probably more common to link non-animated display(s) with an animation. A sophisticated use within the statistical graphics literature is to link views with a grand tour to view model predictions projected onto a high-dimensional space [@model-vis-paper]. The grand tour is a special kind of animation that interpolates between random 2D projections of numeric data allowing us, to perceive the shape of a high-dimensional point cloud [@grand-tour]. Figure \@ref(fig:tour-USArrests) links a grand tour to a dendrogram displaying the results of a hierarchical clustering algorithm on the 50 US states with respect to Murder arrests (per 100,000), Assault arrests (per 100,000), Rape arrests (per 100,000), and percent urban population.
-
-```{r tour-USArrests, echo = FALSE, fig.cap = "Linking a dendrogram to a grand tour and map of the `USArrests` data to visualize a classification in 5 dimensions."}
-knitr::include_graphics("images/tour-USArrests.gif")
-```
-
-Figure \@ref(fig:tour-USArrests) makes use of [hierarchial selection](#hierarchial-selection) to select all the states (as well as all the child nodes) under a given node in both the dendrogram and the grand tour. This effectively provides a model selection tool in an unsupervised setting where one may choose a number of clusters by choosing relevant nodes in the dendrogram and viewing the model fit projected onto the data space. As shown in Figure \@ref(fig:tour-USArrests), after picking the 3 most obvious clusters, it looks as though a straight line could be drawn to completely separate the groups in the initial projection of the tour -- which suggests a split along this linear combination of these variables would provide a good classifier.^[In this situation, it may be desirable to retrieve the relevant linear combination after finding it. Since the slider displays the value of the current frame, one may go back to the data used to create the visualization, subset it to this value, and retrieve this linear combination.]
-
-The code to generate Figure \@ref(fig:tour-USArrests), as well as a few other examples of the grand tour and linking brushing can be found in the package demos. To run the code for Figure \@ref(fig:tour-USArrests), run `demo("tour-USArrests", package = "plotly")`. To see a list of the other available demos, run `readLines(system.file("demo/00Index", package = "plotly"))`.
-
 
 <!--
 IDEAS:

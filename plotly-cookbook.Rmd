@@ -1,5 +1,9 @@
 # The plotly cookbook
 
+```{r, include=FALSE}
+knitr::opts_chunk$set(lazy = TRUE)
+```
+
 This chapter demonstrates the rendering capabilities of `plot_ly()` through a series of examples. The `plot_ly()` function provides a direct interface to plotly.js, so anything in [the figure reference](https://plot.ly/r/reference/) can be specified via `plot_ly()`, but this chapter will focus more on the special semantics unique to the R package that can't be found on the figure reference. Along the way, we will touch on some best practices in visualization.
 
 ## Scatter traces
@@ -102,7 +106,7 @@ plot_ly(mpg, x = ~cty, y = ~hwy, z = ~cyl) %>%
   add_markers(color = ~cyl)
 ```
 
-#### Scatterplot matrices
+#### Scatterplot matrices {#scatterplot-matrices}
 
 Scatterplot matrices _can_ be made via `plot_ly()` and `subplot()`, but `ggplotly()` has a special method for translating ggmatrix objects from the **GGally** package to plotly objects [@GGally]. These objects are essentially a matrix of ggplot objects and are the underlying data structure which powers higher level functions in **GGally**, such as `ggpairs()` -- a function for creating a generalized pairs plot [@gpp]. The generalized pairs plot can be motivated as a generalization of the scatterplot matrix with support for categorical variables and different visual representations of the data powered by the grammar of graphics. Figure \@ref(fig:ggpairs) shows an interactive version of the generalized pairs plot made via `ggpairs()` and `ggplotly()`. In [Linking views without shiny](#linking-views-without-shiny), we explore how this framework can be extended to enable linked brushing in the generalized pairs plot.
 
@@ -275,7 +279,7 @@ map_data("world", "canada") %>%
   layout(showlegend = FALSE)
 ```
 
-## Maps
+## Maps {#maps}
 
 ### Using scatter traces
 
@@ -356,9 +360,9 @@ The most brilliant thing about **sf** is that it stores [geo-spatial structures]
 Since plotly has the ability to embed [raster-based images](#raster-images), it's also possible convert maps generated via the [ggmap](https://cran.r-project.org/package=ggmap) package [@ggmap].
 
 ```{r}
-library(ggmap)
-basemap <- get_map(maptype = "satellite", zoom = 8)
-ggplotly(ggmap(basemap))
+#library(ggmap)
+#basemap <- get_map(maptype = "satellite", zoom = 8)
+#ggplotly(ggmap(basemap))
 ```
 
 

@@ -1,0 +1,68 @@
+
+## Highlight versus filter events {#filter}
+
+Section \@ref(graphical-queries) provided an overview of **plotly**'s framework for *highlight* events, but it also supports *filter* events. These events are tied to slightly different semantics:
+
+* Highlight events dim the opacity of existing marks, then adds an additional graphical layer representing the selection.
+* Filter events completely remove existing marks and rescales axes to the remaining data.[^3]
+
+At least currently, filter events must be fired from filter widgets from the **crosstalk** package.
+
+```{r}
+library(leaflet)
+library(crosstalk)
+library(plotly)
+
+sd <- SharedData$new(quakes)
+stations <- filter_slider("station", "Number of Stations", sd, ~stations)
+
+p <- plot_ly(sd, x = ~depth, y = ~mag) %>% 
+  add_markers(alpha = 0.5) %>% 
+  highlight("plotly_selected")
+
+map <- leaflet(sd) %>% 
+  addTiles() %>% 
+  addCircles()
+
+bscols(
+  widths = c(6, 6, 3), 
+  p, map, stations
+)
+```
+
+
+```{r}
+library(plotly)
+tx <- SharedData$new(txhousing)
+widgets <- bscols(
+  widths = c(12, 12, 12),
+  filter_select("city", "Cities", tx, ~city),
+  filter_slider("sales", "Sales", tx, ~sales),
+  filter_checkbox("year", "Years", tx, ~year, inline = TRUE)
+)
+bscols(
+  widths = c(4, 8), widgets, 
+  plot_ly(tx, x = ~date, y = ~median, showlegend = FALSE) %>% 
+    add_lines(color = ~city, colors = "black")
+)
+```
+
+
+```{r}
+library(gapminder)
+library(crosstalk)
+g <- SharedData$new(gapminder, ~country)
+s <- filter_select("filter", "Select a country", g, ~country)
+
+p <- plot_ly(g) %>%
+  group_by(country) %>%
+  add_lines(x = ~year, y = ~lifeExp, color = ~continent) %>%
+  layout(xaxis = list(title = ""))
+
+bscols(s, p, widths = 12)
+```
+
+
+TODO: are any of the package demos worth including?
+
+[^3]: When using `ggplotly()`, you need to specify `dynamicTicks = TRUE`.

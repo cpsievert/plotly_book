@@ -4,7 +4,7 @@ One technique essential to high-dimensional data analysis is the ability to arra
 
 ## Arranging htmlwidgets
 
-Since plotly objects inherit properties from an htmlwidget object, any method that works for arranging htmlwidgets also works for plotly objects. In some sense, an htmlwidget object is just a collection of HTML tags, and the **htmltools** package provides some useful functions for working with HTML tags [@htmltools]. The `tagList()` function gathers multiple HTML tags into a tag list, and when printing a tag list inside of a **knitr**/**rmarkdown** document [@knitr]; [@rmarkdown], it knows to render as HTML. When printing outside of this context (e.g., at the command line), a tag list prints as a character string by default. In order to view the rendered HTML, provide the tag list to the `browsable()` function.
+Since plotly objects inherit properties from an htmlwidget object, any method that works for arranging htmlwidgets also works for plotly objects. In some sense, an htmlwidget object is just a collection of HTML tags, and the **htmltools** package provides some useful functions for working with HTML tags [@htmltools]. The `tagList()` function gathers multiple HTML tags into a tag list, and when printing a tag list inside of a **knitr**/**rmarkdown** document [@knitr]; [@rmarkdown], it knows to render as HTML. However, when printing via the R/RStudio console, you must use `browsable()` to render and open the tag list as a web page (otherwise, it prints the HTML tags to your R console). Those familiar with **shiny** might already be familiar with using `uiOutput()` and/or `renderUI()` to dynamically render tag lists server-side.
 
 ```{r, echo = FALSE}
 set.seed(100)
@@ -14,7 +14,8 @@ set.seed(100)
 library(htmltools)
 library(plotly)
 p <- plot_ly(x = rnorm(100))
-tagList(p, p)
+# NOTE: you don't need browsable() in rmarkdown, but you do at the R prompt 
+browsable(tagList(p, p))
 ```
 
 ```{r multiple-htmlwidgets, echo = FALSE,  fig.cap = "Printing multiple htmlwidget objects with `tagList()`. To render tag lists at the command line, wrap them in `browsable()`"}
@@ -54,7 +55,7 @@ fluidPage(
 knitr::include_graphics("images/fluid.png")
 ```
 
-All the arrangement approaches discussed thus far are agnostic to output format, meaning that they can be used to arrange htmlwidgets within _any_  **knitr**/**rmarkdown** document.^[Although HTML can not possibly render in a pdf or word document, **knitr** can automatically detect a non-HTML output format and embed a static image of the htmlwidget via the **webshot** package [@webshot].] If the htmlwidgets do not need to be embedded within a larger document that requires an opinionated output format, the **flexdashboard** package provides a **rmarkdown** template for generating dashboards, with a convenient syntax for arranging views [@flexdashboard].
+All the arrangement approaches discussed thus far are agnostic to output format, meaning that they can be used to arrange htmlwidgets within _any_ **knitr**/**rmarkdown** document.^[Although HTML can not possibly render in a pdf or word document, **knitr** can automatically detect a non-HTML output format and embed a static image of the htmlwidget via the **webshot** package [@webshot].] If the htmlwidgets do not need to be embedded within a larger document that requires an opinionated output format, the **flexdashboard** package provides a **rmarkdown** template for generating dashboards, with a convenient syntax for arranging views [@flexdashboard].
 
 ## Merging plotly objects
 

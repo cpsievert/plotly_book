@@ -60,6 +60,27 @@
 <script src="libs/selectize/selectize.min.js"></script>
 <link href="libs/colourpicker/colourpicker.min.css" rel="stylesheet" />
 <script src="libs/colourpicker/colourpicker.min.js"></script>
+<link href="libs/leaflet/leaflet.css" rel="stylesheet" />
+<script src="libs/leaflet/leaflet.js"></script>
+<link href="libs/leafletfix/leafletfix.css" rel="stylesheet" />
+<script src="libs/Proj4Leaflet/proj4-compressed.js"></script>
+<script src="libs/Proj4Leaflet/proj4leaflet.js"></script>
+<link href="libs/rstudio_leaflet/rstudio_leaflet.css" rel="stylesheet" />
+<script src="libs/leaflet-binding/leaflet.js"></script>
+<link href="libs/leaflet-easybutton/easy-button.css" rel="stylesheet" />
+<script src="libs/leaflet-easybutton/easy-button.js"></script>
+<script src="libs/leaflet-easybutton/EasyButton-binding.js"></script>
+<link href="libs/leaflet-locationfilter2/locationfilter.css" rel="stylesheet" />
+<script src="libs/leaflet-locationfilter2/locationfilter.js"></script>
+<script src="libs/leaflet-locationfilter2/locationfilter-bindings.js"></script>
+<link href="libs/ionicons/ionicons.min.css" rel="stylesheet" />
+<link href="libs/ionrangeslider/css/ion.rangeSlider.css" rel="stylesheet" />
+<link href="libs/ionrangeslider/css/ion.rangeSlider.skinShiny.css" rel="stylesheet" />
+<script src="libs/ionrangeslider/js/ion.rangeSlider.min.js"></script>
+<script src="libs/strftime/strftime-min.js"></script>
+<meta name="viewport" content="width=device-width, initial-scale=1" />
+<link href="libs/bootstrap/css/bootstrap.min.css" rel="stylesheet" />
+<script src="libs/bootstrap/js/bootstrap.min.js"></script>
 
 
 <style type="text/css">
@@ -140,18 +161,15 @@ code span.wa { color: #60a0b0; font-weight: bold; font-style: italic; } /* Warni
       <nav role="navigation">
 
 <ul class="summary">
-<li><a href="https://consulting.cpsievert.me">Need help? Work with Carson!</a></li>
-
-<li class="divider"></li>
 <li class="chapter" data-level="" data-path="index.html"><a href="index.html"><i class="fa fa-check"></i>Overview</a><ul>
 <li class="chapter" data-level="" data-path="installation.html"><a href="installation.html"><i class="fa fa-check"></i>Installation</a></li>
 <li class="chapter" data-level="" data-path="get-started.html"><a href="get-started.html"><i class="fa fa-check"></i>Get started</a></li>
 <li class="chapter" data-level="" data-path="plot-ly-for-collaboration.html"><a href="plot-ly-for-collaboration.html"><i class="fa fa-check"></i>plot.ly for collaboration</a></li>
 </ul></li>
 <li class="chapter" data-level="1" data-path="two-approaches-one-object.html"><a href="two-approaches-one-object.html"><i class="fa fa-check"></i><b>1</b> Two approaches, one object</a><ul>
-<li class="chapter" data-level="1.1" data-path="a-case-study-of-housing-sales-in-texas.html"><a href="a-case-study-of-housing-sales-in-texas.html"><i class="fa fa-check"></i><b>1.1</b> A case study of housing sales in Texas</a><ul>
-<li class="chapter" data-level="1.1.1" data-path="a-case-study-of-housing-sales-in-texas.html"><a href="a-case-study-of-housing-sales-in-texas.html#ggplotly"><i class="fa fa-check"></i><b>1.1.1</b> The <code>ggplotly()</code> function</a></li>
-<li class="chapter" data-level="1.1.2" data-path="a-case-study-of-housing-sales-in-texas.html"><a href="a-case-study-of-housing-sales-in-texas.html#the-plot_ly-interface"><i class="fa fa-check"></i><b>1.1.2</b> The <code>plot_ly()</code> interface</a></li>
+<li class="chapter" data-level="1.1" data-path="txhousing-case-study.html"><a href="txhousing-case-study.html"><i class="fa fa-check"></i><b>1.1</b> A case study of housing sales in Texas</a><ul>
+<li class="chapter" data-level="1.1.1" data-path="txhousing-case-study.html"><a href="txhousing-case-study.html#ggplotly"><i class="fa fa-check"></i><b>1.1.1</b> The <code>ggplotly()</code> function</a></li>
+<li class="chapter" data-level="1.1.2" data-path="txhousing-case-study.html"><a href="txhousing-case-study.html#the-plot_ly-interface"><i class="fa fa-check"></i><b>1.1.2</b> The <code>plot_ly()</code> interface</a></li>
 </ul></li>
 <li class="chapter" data-level="1.2" data-path="extending-ggplotly.html"><a href="extending-ggplotly.html"><i class="fa fa-check"></i><b>1.2</b> Extending <code>ggplotly()</code></a><ul>
 <li class="chapter" data-level="1.2.1" data-path="extending-ggplotly.html"><a href="extending-ggplotly.html#customizing-the-layout"><i class="fa fa-check"></i><b>1.2.1</b> Customizing the layout</a></li>
@@ -187,45 +205,44 @@ code span.wa { color: #60a0b0; font-weight: bold; font-style: italic; } /* Warni
 <li class="chapter" data-level="2.6" data-path="other-3d-plots.html"><a href="other-3d-plots.html"><i class="fa fa-check"></i><b>2.6</b> Other 3D plots</a></li>
 <li class="chapter" data-level="2.7" data-path="raster-images.html"><a href="raster-images.html"><i class="fa fa-check"></i><b>2.7</b> Raster images</a></li>
 </ul></li>
-<li class="chapter" data-level="3" data-path="arranging-multiple-views.html"><a href="arranging-multiple-views.html"><i class="fa fa-check"></i><b>3</b> Arranging multiple views</a><ul>
-<li class="chapter" data-level="3.1" data-path="arranging-htmlwidgets.html"><a href="arranging-htmlwidgets.html"><i class="fa fa-check"></i><b>3.1</b> Arranging htmlwidgets</a></li>
-<li class="chapter" data-level="3.2" data-path="merging-plotly-objects.html"><a href="merging-plotly-objects.html"><i class="fa fa-check"></i><b>3.2</b> Merging plotly objects</a><ul>
-<li class="chapter" data-level="3.2.1" data-path="merging-plotly-objects.html"><a href="merging-plotly-objects.html#recursive-subplots"><i class="fa fa-check"></i><b>3.2.1</b> Recursive subplots</a></li>
-<li class="chapter" data-level="3.2.2" data-path="merging-plotly-objects.html"><a href="merging-plotly-objects.html#ggplot2-subplots"><i class="fa fa-check"></i><b>3.2.2</b> ggplot2 subplots</a></li>
+<li class="chapter" data-level="3" data-path="whats-a-data-view.html"><a href="whats-a-data-view.html"><i class="fa fa-check"></i><b>3</b> What’s a data view?</a></li>
+<li class="chapter" data-level="4" data-path="arranging-multiple-views.html"><a href="arranging-multiple-views.html"><i class="fa fa-check"></i><b>4</b> Arranging multiple views</a><ul>
+<li class="chapter" data-level="4.1" data-path="arranging-htmlwidgets.html"><a href="arranging-htmlwidgets.html"><i class="fa fa-check"></i><b>4.1</b> Arranging htmlwidgets</a></li>
+<li class="chapter" data-level="4.2" data-path="merging-plotly-objects.html"><a href="merging-plotly-objects.html"><i class="fa fa-check"></i><b>4.2</b> Merging plotly objects</a><ul>
+<li class="chapter" data-level="4.2.1" data-path="merging-plotly-objects.html"><a href="merging-plotly-objects.html#recursive-subplots"><i class="fa fa-check"></i><b>4.2.1</b> Recursive subplots</a></li>
+<li class="chapter" data-level="4.2.2" data-path="merging-plotly-objects.html"><a href="merging-plotly-objects.html#ggplot2-subplots"><i class="fa fa-check"></i><b>4.2.2</b> ggplot2 subplots</a></li>
 </ul></li>
-<li class="chapter" data-level="3.3" data-path="navigating-many-views.html"><a href="navigating-many-views.html"><i class="fa fa-check"></i><b>3.3</b> Navigating many views</a></li>
+<li class="chapter" data-level="4.3" data-path="navigating-many-views.html"><a href="navigating-many-views.html"><i class="fa fa-check"></i><b>4.3</b> Navigating many views</a></li>
 </ul></li>
-<li class="chapter" data-level="4" data-path="multiple-linked-views.html"><a href="multiple-linked-views.html"><i class="fa fa-check"></i><b>4</b> Multiple linked views</a><ul>
-<li class="chapter" data-level="4.1" data-path="linking-views-with-shiny.html"><a href="linking-views-with-shiny.html"><i class="fa fa-check"></i><b>4.1</b> Linking views with shiny</a><ul>
-<li class="chapter" data-level="4.1.1" data-path="linking-views-with-shiny.html"><a href="linking-views-with-shiny.html#accessing-events-in-shiny"><i class="fa fa-check"></i><b>4.1.1</b> Accessing events in shiny</a></li>
-<li class="chapter" data-level="4.1.2" data-path="linking-views-with-shiny.html"><a href="linking-views-with-shiny.html#updating-views"><i class="fa fa-check"></i><b>4.1.2</b> Updating views</a></li>
-<li class="chapter" data-level="4.1.3" data-path="linking-views-with-shiny.html"><a href="linking-views-with-shiny.html#targeting-views"><i class="fa fa-check"></i><b>4.1.3</b> Targeting views</a></li>
+<li class="chapter" data-level="5" data-path="linking-views-client-side.html"><a href="linking-views-client-side.html"><i class="fa fa-check"></i><b>5</b> Linking views client-side</a><ul>
+<li class="chapter" data-level="5.1" data-path="graphical-queries.html"><a href="graphical-queries.html"><i class="fa fa-check"></i><b>5.1</b> Graphical queries</a></li>
+<li class="chapter" data-level="5.2" data-path="filter.html"><a href="filter.html"><i class="fa fa-check"></i><b>5.2</b> Highlight versus filter events</a></li>
+<li class="chapter" data-level="5.3" data-path="querying-examples.html"><a href="querying-examples.html"><i class="fa fa-check"></i><b>5.3</b> Examples</a><ul>
+<li class="chapter" data-level="5.3.1" data-path="querying-examples.html"><a href="querying-examples.html#trellis-linking"><i class="fa fa-check"></i><b>5.3.1</b> Querying facetted charts</a></li>
+<li class="chapter" data-level="5.3.2" data-path="querying-examples.html"><a href="querying-examples.html#statistical-queries"><i class="fa fa-check"></i><b>5.3.2</b> Statistical queries</a></li>
+<li class="chapter" data-level="5.3.3" data-path="querying-examples.html"><a href="querying-examples.html#statistical-queries-ggplot"><i class="fa fa-check"></i><b>5.3.3</b> Statistical queries with <code>ggplotly()</code></a></li>
+<li class="chapter" data-level="5.3.4" data-path="querying-examples.html"><a href="querying-examples.html#geo-spatial-queries"><i class="fa fa-check"></i><b>5.3.4</b> Geo-spatial queries</a></li>
+<li class="chapter" data-level="5.3.5" data-path="querying-examples.html"><a href="querying-examples.html#linking-with-other-htmlwidgets"><i class="fa fa-check"></i><b>5.3.5</b> Linking with other htmlwidgets</a></li>
+<li class="chapter" data-level="5.3.6" data-path="querying-examples.html"><a href="querying-examples.html#generalized-pairs-plots"><i class="fa fa-check"></i><b>5.3.6</b> Generalized pairs plots</a></li>
+<li class="chapter" data-level="5.3.7" data-path="querying-examples.html"><a href="querying-examples.html#querying-diagnostic-plots"><i class="fa fa-check"></i><b>5.3.7</b> Querying diagnostic plots</a></li>
 </ul></li>
-<li class="chapter" data-level="4.2" data-path="linking-views-without-shiny.html"><a href="linking-views-without-shiny.html"><i class="fa fa-check"></i><b>4.2</b> Linking views without shiny</a><ul>
-<li class="chapter" data-level="4.2.1" data-path="linking-views-without-shiny.html"><a href="linking-views-without-shiny.html#motivating-examples"><i class="fa fa-check"></i><b>4.2.1</b> Motivating examples</a></li>
-<li class="chapter" data-level="4.2.2" data-path="linking-views-without-shiny.html"><a href="linking-views-without-shiny.html#transient-versus-persistent-selection"><i class="fa fa-check"></i><b>4.2.2</b> Transient versus persistent selection</a></li>
-<li class="chapter" data-level="4.2.3" data-path="linking-views-without-shiny.html"><a href="linking-views-without-shiny.html#linking-with-other-htmlwidgets"><i class="fa fa-check"></i><b>4.2.3</b> Linking with other htmlwidgets</a></li>
-<li class="chapter" data-level="4.2.4" data-path="linking-views-without-shiny.html"><a href="linking-views-without-shiny.html#selection-via-indirect-manipulation"><i class="fa fa-check"></i><b>4.2.4</b> Selection via indirect manipulation</a></li>
-<li class="chapter" data-level="4.2.5" data-path="linking-views-without-shiny.html"><a href="linking-views-without-shiny.html#the-shareddata-plot-pipeline"><i class="fa fa-check"></i><b>4.2.5</b> The SharedData plot pipeline</a></li>
-<li class="chapter" data-level="4.2.6" data-path="linking-views-without-shiny.html"><a href="linking-views-without-shiny.html#dynamic-aggregates"><i class="fa fa-check"></i><b>4.2.6</b> Dynamic aggregates</a></li>
-<li class="chapter" data-level="4.2.7" data-path="linking-views-without-shiny.html"><a href="linking-views-without-shiny.html#nested-selections"><i class="fa fa-check"></i><b>4.2.7</b> Nested selections</a></li>
-<li class="chapter" data-level="4.2.8" data-path="linking-views-without-shiny.html"><a href="linking-views-without-shiny.html#more-examples"><i class="fa fa-check"></i><b>4.2.8</b> More examples</a></li>
-<li class="chapter" data-level="4.2.9" data-path="linking-views-without-shiny.html"><a href="linking-views-without-shiny.html#limitations"><i class="fa fa-check"></i><b>4.2.9</b> Limitations</a></li>
+<li class="chapter" data-level="5.4" data-path="limitations.html"><a href="limitations.html"><i class="fa fa-check"></i><b>5.4</b> Limitations</a></li>
 </ul></li>
+<li class="chapter" data-level="6" data-path="linking-server-side.html"><a href="linking-server-side.html"><i class="fa fa-check"></i><b>6</b> Linking views server-side</a><ul>
+<li class="chapter" data-level="6.1" data-path="accessing-events-in-shiny.html"><a href="accessing-events-in-shiny.html"><i class="fa fa-check"></i><b>6.1</b> Accessing events in shiny</a></li>
+<li class="chapter" data-level="6.2" data-path="updating-views.html"><a href="updating-views.html"><i class="fa fa-check"></i><b>6.2</b> Updating views</a></li>
+<li class="chapter" data-level="6.3" data-path="targeting-views.html"><a href="targeting-views.html"><i class="fa fa-check"></i><b>6.3</b> Targeting views</a></li>
 </ul></li>
-<li class="chapter" data-level="5" data-path="animating-views.html"><a href="animating-views.html"><i class="fa fa-check"></i><b>5</b> Animating views</a><ul>
-<li class="chapter" data-level="5.1" data-path="key-frame-animations.html"><a href="key-frame-animations.html"><i class="fa fa-check"></i><b>5.1</b> Key frame animations</a></li>
-<li class="chapter" data-level="5.2" data-path="linking-animated-views.html"><a href="linking-animated-views.html"><i class="fa fa-check"></i><b>5.2</b> Linking animated views</a></li>
+<li class="chapter" data-level="7" data-path="animating-views.html"><a href="animating-views.html"><i class="fa fa-check"></i><b>7</b> Animating views</a><ul>
+<li class="chapter" data-level="7.1" data-path="key-frame-animations.html"><a href="key-frame-animations.html"><i class="fa fa-check"></i><b>7.1</b> Key frame animations</a></li>
+<li class="chapter" data-level="7.2" data-path="linking-animated-views.html"><a href="linking-animated-views.html"><i class="fa fa-check"></i><b>7.2</b> Linking animated views</a></li>
 </ul></li>
-<li class="chapter" data-level="6" data-path="advanced-topics.html"><a href="advanced-topics.html"><i class="fa fa-check"></i><b>6</b> Advanced topics</a><ul>
-<li class="chapter" data-level="6.1" data-path="custom-behavior-via-javascript.html"><a href="custom-behavior-via-javascript.html"><i class="fa fa-check"></i><b>6.1</b> Custom behavior via JavaScript</a></li>
-<li class="chapter" data-level="6.2" data-path="translating-custom-ggplot2-geoms.html"><a href="translating-custom-ggplot2-geoms.html"><i class="fa fa-check"></i><b>6.2</b> Translating custom ggplot2 geoms</a></li>
-<li class="chapter" data-level="6.3" data-path="designing-an-htmlwidget-interface.html"><a href="designing-an-htmlwidget-interface.html"><i class="fa fa-check"></i><b>6.3</b> Designing an htmlwidget interface</a></li>
+<li class="chapter" data-level="8" data-path="advanced-topics.html"><a href="advanced-topics.html"><i class="fa fa-check"></i><b>8</b> Advanced topics</a><ul>
+<li class="chapter" data-level="8.1" data-path="custom-behavior-via-javascript.html"><a href="custom-behavior-via-javascript.html"><i class="fa fa-check"></i><b>8.1</b> Custom behavior via JavaScript</a></li>
+<li class="chapter" data-level="8.2" data-path="translating-custom-ggplot2-geoms.html"><a href="translating-custom-ggplot2-geoms.html"><i class="fa fa-check"></i><b>8.2</b> Translating custom ggplot2 geoms</a></li>
+<li class="chapter" data-level="8.3" data-path="designing-an-htmlwidget-interface.html"><a href="designing-an-htmlwidget-interface.html"><i class="fa fa-check"></i><b>8.3</b> Designing an htmlwidget interface</a></li>
 </ul></li>
 <li class="chapter" data-level="" data-path="references.html"><a href="references.html"><i class="fa fa-check"></i>References</a></li>
-<li class="divider"></li>
-<li><a href="https://bookdown.org" target="blank">Published with bookdown</a></li>
-
 </ul>
 
       </nav>
@@ -248,37 +265,37 @@ code span.wa { color: #60a0b0; font-weight: bold; font-style: italic; } /* Warni
 
 <div id="refs" class="references">
 <div>
-<p>Allaire, JJ. 2016. <em>Flexdashboard: R Markdown Format for Flexible Dashboards</em>. <a href="https://CRAN.R-project.org/package=flexdashboard" class="uri">https://CRAN.R-project.org/package=flexdashboard</a>.</p>
+<p>Ahlberg, Christopher, Christopher Williamson, and Ben Shneiderman. 1991. “Dynamic Queries for Information Exploration: An Implementation and Evaluation.” In <em>ACM Chi ’92 Conference Proceedings</em>, 21:619–26.</p>
 </div>
 <div>
-<p>Allaire, JJ, Joe Cheng, Yihui Xie, Jonathan McPherson, Winston Chang, Jeff Allen, Hadley Wickham, Aron Atkins, and Rob Hyndman. 2016. <em>Rmarkdown: Dynamic Documents for R</em>. <a href="https://CRAN.R-project.org/package=rmarkdown" class="uri">https://CRAN.R-project.org/package=rmarkdown</a>.</p>
+<p>Allaire, JJ. 2016. <em>Flexdashboard: R Markdown Format for Flexible Dashboards</em>. <a href="https://CRAN.R-project.org/package=flexdashboard">https://CRAN.R-project.org/package=flexdashboard</a>.</p>
 </div>
 <div>
-<p>Asimov, Daniel. 1985. “The Grand Tour: A Tool for Viewing Multidimensional Data.” <em>SIAM J. Sci. Stat. Comput.</em> 6 (1). Philadelphia, PA, USA: Society for Industrial; Applied Mathematics: 128–43. <a href="https://doi.org/10.1137/0906011" class="uri">https://doi.org/10.1137/0906011</a>.</p>
+<p>Allaire, JJ, Joe Cheng, Yihui Xie, Jonathan McPherson, Winston Chang, Jeff Allen, Hadley Wickham, Aron Atkins, and Rob Hyndman. 2016. <em>Rmarkdown: Dynamic Documents for R</em>. <a href="https://CRAN.R-project.org/package=rmarkdown">https://CRAN.R-project.org/package=rmarkdown</a>.</p>
 </div>
 <div>
-<p>Attali, Dean. 2016. <em>Colourpicker: A Colour Picker Widget for Shiny Apps, Rstudio, R-Markdown, and ’Htmlwidgets’</em>. <a href="https://CRAN.R-project.org/package=colourpicker" class="uri">https://CRAN.R-project.org/package=colourpicker</a>.</p>
+<p>Asimov, Daniel. 1985. “The Grand Tour: A Tool for Viewing Multidimensional Data.” <em>SIAM J. Sci. Stat. Comput.</em> 6 (1). Philadelphia, PA, USA: Society for Industrial; Applied Mathematics: 128–43. <a href="https://doi.org/10.1137/0906011">https://doi.org/10.1137/0906011</a>.</p>
 </div>
 <div>
-<p>Auguie, Baptiste. 2016. <em>GridExtra: Miscellaneous Functions for &quot;Grid&quot; Graphics</em>. <a href="https://CRAN.R-project.org/package=gridExtra" class="uri">https://CRAN.R-project.org/package=gridExtra</a>.</p>
+<p>Auguie, Baptiste. 2016. <em>GridExtra: Miscellaneous Functions for &quot;Grid&quot; Graphics</em>. <a href="https://CRAN.R-project.org/package=gridExtra">https://CRAN.R-project.org/package=gridExtra</a>.</p>
 </div>
 <div>
-<p>Bache, Stefan Milton, and Hadley Wickham. 2014. <em>Magrittr: A Forward-Pipe Operator for R</em>. <a href="https://CRAN.R-project.org/package=magrittr" class="uri">https://CRAN.R-project.org/package=magrittr</a>.</p>
+<p>Bache, Stefan Milton, and Hadley Wickham. 2014. <em>Magrittr: A Forward-Pipe Operator for R</em>. <a href="https://CRAN.R-project.org/package=magrittr">https://CRAN.R-project.org/package=magrittr</a>.</p>
 </div>
 <div>
-<p>Bostock, Jeffrey Heer AND Michael. 2010. “Crowdsourcing Graphical Perception: Using Mechanical Turk to Assess Visualization Design.” In <em>ACM Human Factors in Computing Systems (Chi)</em>, 203–12. <a href="http://vis.stanford.edu/papers/crowdsourcing-graphical-perception" class="uri">http://vis.stanford.edu/papers/crowdsourcing-graphical-perception</a>.</p>
+<p>Bostock, Jeffrey Heer AND Michael. 2010. “Crowdsourcing Graphical Perception: Using Mechanical Turk to Assess Visualization Design.” In <em>ACM Human Factors in Computing Systems (Chi)</em>, 203–12. <a href="http://vis.stanford.edu/papers/crowdsourcing-graphical-perception">http://vis.stanford.edu/papers/crowdsourcing-graphical-perception</a>.</p>
 </div>
 <div>
-<p>Bryan, Jennifer. 2015. <em>Gapminder: Data from Gapminder</em>. <a href="https://CRAN.R-project.org/package=gapminder" class="uri">https://CRAN.R-project.org/package=gapminder</a>.</p>
+<p>Bryan, Jennifer. 2015. <em>Gapminder: Data from Gapminder</em>. <a href="https://CRAN.R-project.org/package=gapminder">https://CRAN.R-project.org/package=gapminder</a>.</p>
+</div>
+<div>
+<p>Buja, Andreas, John Alan McDonald, John Michalak, and Werner Stuetzle. 1991. “Interactive data visualization using focusing and linking.” <em>IEEE Proceedings of Visualization</em>, February, 1–8.</p>
 </div>
 <div>
 <p>Chambers, J. M. 1992. “Classes and Methods: Object-Oriented Programming in S.” In <em>Statistical Models in S</em>, edited by J. M. Chambers and T. J. Hastie. Wadsworth &amp; Brooks/Cole.</p>
 </div>
 <div>
-<p>Chang, Winston. 2016. <em>Webshot: Take Screenshots of Web Pages</em>. <a href="https://CRAN.R-project.org/package=webshot" class="uri">https://CRAN.R-project.org/package=webshot</a>.</p>
-</div>
-<div>
-<p>Cheng, Joe. 2016. <em>Crosstalk: Inter-Widget Interactivity for Html Widgets</em>.</p>
+<p>Chang, Winston. 2016. <em>Webshot: Take Screenshots of Web Pages</em>. <a href="https://CRAN.R-project.org/package=webshot">https://CRAN.R-project.org/package=webshot</a>.</p>
 </div>
 <div>
 <p>Cleveland, William S., and Ryan Hafen. 2014. “Divide and Recombine (d&amp;R): Data Science for Large Complex Data.” <em>Statistical Analysis and Data Mining: The ASA Data Science Journal</em> 7 (6): 425–33.</p>
@@ -287,106 +304,103 @@ code span.wa { color: #60a0b0; font-weight: bold; font-style: italic; } /* Warni
 <p>Cleveland, William S, and Robert McGill. 1984. “Graphical Perception: Theory, Experimentation, and Application to the Development of Graphical Methods.” <em>Journal of the American Statistical Association</em> 79 (September): 531–54.</p>
 </div>
 <div>
-<p>Contributors, Brian Reavis &amp;. 2016. “Selectize Is an Extensible jQuery-Based Custom &lt;select&gt; Ui Control.” 2016. <a href="https://github.com/selectize/selectize.js" class="uri">https://github.com/selectize/selectize.js</a>.</p>
+<p>Cook, Dianne, Andreas Buja, and Deborah F Swayne. 2007. “Interactive High-Dimensional Data Visualization.” <em>Journal of Computational and Graphical Statistics</em>, December, 1–23.</p>
 </div>
 <div>
-<p>Contributors, Ophir LOJKINE &amp;. 2016. “SQLite Compiled to Javascript.” 2016. <a href="https://github.com/kripken/sql.js" class="uri">https://github.com/kripken/sql.js</a>.</p>
-</div>
-<div>
-<p>Cook, Dianne, and Deborah F. Swayne. 2007. <em>Interactive and Dynamic Graphics for Data Analysis : With R and Ggobi</em>. Use R ! New York: Springer. <a href="http://www.ggobi.org/book/" class="uri">http://www.ggobi.org/book/</a>.</p>
+<p>Curley, James. 2016. <em>Engsoccerdata: English and European Soccer Results 1871-2016</em>. <a href="https://CRAN.R-project.org/package=engsoccerdata">https://CRAN.R-project.org/package=engsoccerdata</a>.</p>
 </div>
 <div>
 <p>Dang, Tuan Nhon, and Leland Wilkinson. 2012. “Timeseer: Detecting interesting distributions in multiple time series data.” <em>VINCI</em>, October, 1–9.</p>
 </div>
 <div>
-<p>Data Science, Berkeley Institute for. 2016. “Mpl Colormaps.” 2016. <a href="http://web.archive.org/web/20160601125258/http://bids.github.io/colormap/" class="uri">http://web.archive.org/web/20160601125258/http://bids.github.io/colormap/</a>.</p>
+<p>Data Science, Berkeley Institute for. 2016. “Mpl Colormaps.” 2016. <a href="http://web.archive.org/web/20160601125258/http://bids.github.io/colormap/">http://web.archive.org/web/20160601125258/http://bids.github.io/colormap/</a>.</p>
 </div>
 <div>
-<p>de Jong, Jos, and Kenton Russell. 2016. <em>Listviewer: ’Htmlwidget’ for Interactive Views of R Lists</em>. <a href="https://github.com/timelyportfolio/listviewer" class="uri">https://github.com/timelyportfolio/listviewer</a>.</p>
+<p>de Jong, Jos, and Kenton Russell. 2016. <em>Listviewer: ’Htmlwidget’ for Interactive Views of R Lists</em>. <a href="https://github.com/timelyportfolio/listviewer">https://github.com/timelyportfolio/listviewer</a>.</p>
 </div>
 <div>
-<p>Emerson, John W., Walton A. Green, Barret Schloerke, Jason Crowley, Dianne Cook, Heike Hofmann, and Hadley Wickham. 2013. “The Generalized Pairs Plot.” <em>Journal of Computational and Graphical Statistics</em> 22 (1): 79–91. <a href="https://doi.org/10.1080/10618600.2012.694762" class="uri">https://doi.org/10.1080/10618600.2012.694762</a>.</p>
+<p>Emerson, John W., Walton A. Green, Barret Schloerke, Jason Crowley, Dianne Cook, Heike Hofmann, and Hadley Wickham. 2013. “The Generalized Pairs Plot.” <em>Journal of Computational and Graphical Statistics</em> 22 (1): 79–91. <a href="https://doi.org/10.1080/10618600.2012.694762">https://doi.org/10.1080/10618600.2012.694762</a>.</p>
 </div>
 <div>
-<p>Few, Stephen. 2006. “Data Visualization: Rules for Encoding Values in Graph.” 2006. <a href="https://web.archive.org/web/20160404214629/http://www.perceptualedge.com/articles/b-eye/encoding_values_in_graph.pdf" class="uri">https://web.archive.org/web/20160404214629/http://www.perceptualedge.com/articles/b-eye/encoding_values_in_graph.pdf</a>.</p>
+<p>Few, Stephen. 2006. “Data Visualization: Rules for Encoding Values in Graph.” 2006. <a href="https://web.archive.org/web/20160404214629/http://www.perceptualedge.com/articles/b-eye/encoding_values_in_graph.pdf">https://web.archive.org/web/20160404214629/http://www.perceptualedge.com/articles/b-eye/encoding_values_in_graph.pdf</a>.</p>
 </div>
 <div>
 <p>Freedman, D., and P. Diaconis. 1981. <em>Zeitschrift Für Wahrscheinlichkeitstheorie Und Verwandte Gebiete</em> 57: 453–76.</p>
 </div>
 <div>
-<p>Galili, Tal. 2016. <em>Heatmaply: Interactive Heat Maps Using ’Plotly’</em>. <a href="https://CRAN.R-project.org/package=heatmaply" class="uri">https://CRAN.R-project.org/package=heatmaply</a>.</p>
+<p>Galili, Tal. 2016. <em>Heatmaply: Interactive Heat Maps Using ’Plotly’</em>. <a href="https://CRAN.R-project.org/package=heatmaply">https://CRAN.R-project.org/package=heatmaply</a>.</p>
 </div>
 <div>
-<p>Garnier, Simon. 2016. <em>ViridisLite: Default Color Maps from ’Matplotlib’ (Lite Version)</em>. <a href="https://CRAN.R-project.org/package=viridisLite" class="uri">https://CRAN.R-project.org/package=viridisLite</a>.</p>
+<p>Garnier, Simon. 2016. <em>ViridisLite: Default Color Maps from ’Matplotlib’ (Lite Version)</em>. <a href="https://CRAN.R-project.org/package=viridisLite">https://CRAN.R-project.org/package=viridisLite</a>.</p>
 </div>
 <div>
-<p>Hafen, R., L. Gosink, J. McDermott, K. Rodland, K. K. V. Dam, and W. S. Cleveland. 2013. “Trelliscope: A System for Detailed Visualization in the Deep Analysis of Large Complex Data.” In <em>Large-Scale Data Analysis and Visualization (Ldav), 2013 Ieee Symposium on</em>, 105–12. <a href="https://doi.org/10.1109/LDAV.2013.6675164" class="uri">https://doi.org/10.1109/LDAV.2013.6675164</a>.</p>
+<p>Hafen, R., L. Gosink, J. McDermott, K. Rodland, K. K. V. Dam, and W. S. Cleveland. 2013. “Trelliscope: A System for Detailed Visualization in the Deep Analysis of Large Complex Data.” In <em>Large-Scale Data Analysis and Visualization (Ldav), 2013 Ieee Symposium on</em>, 105–12. <a href="https://doi.org/10.1109/LDAV.2013.6675164">https://doi.org/10.1109/LDAV.2013.6675164</a>.</p>
 </div>
 <div>
-<p>Hafen, Ryan. 2016. <em>Trelliscope: Create and Navigate Large Multi-Panel Visual Displays</em>. <a href="https://CRAN.R-project.org/package=trelliscope" class="uri">https://CRAN.R-project.org/package=trelliscope</a>.</p>
+<p>Hafen, Ryan. 2016. <em>Trelliscope: Create and Navigate Large Multi-Panel Visual Displays</em>. <a href="https://CRAN.R-project.org/package=trelliscope">https://CRAN.R-project.org/package=trelliscope</a>.</p>
 </div>
 <div>
-<p>Hafen, Ryan, and Barret Schloerke. n.d. <em>Trelliscopejs: Create Interactive Trelliscope Displays</em>. <a href="https://github.com/hafen/trelliscopejs" class="uri">https://github.com/hafen/trelliscopejs</a>.</p>
+<p>Hafen, Ryan, and Barret Schloerke. n.d. <em>Trelliscopejs: Create Interactive Trelliscope Displays</em>. <a href="https://github.com/hafen/trelliscopejs">https://github.com/hafen/trelliscopejs</a>.</p>
 </div>
 <div>
-<p>Hamilton, Nicholas. 2016. <em>Ggtern: An Extension to ’Ggplot2’, for the Creation of Ternary Diagrams</em>. <a href="https://CRAN.R-project.org/package=ggtern" class="uri">https://CRAN.R-project.org/package=ggtern</a>.</p>
+<p>Hamilton, Nicholas. 2016. <em>Ggtern: An Extension to ’Ggplot2’, for the Creation of Ternary Diagrams</em>. <a href="https://CRAN.R-project.org/package=ggtern">https://CRAN.R-project.org/package=ggtern</a>.</p>
 </div>
 <div>
 <p>Hocking, Toby Dylan, Susan VanderPlas, and Carson Sievert. 2015. <em>Animint: Interactive Animations</em>.</p>
 </div>
 <div>
-<p>Hyndman, Rob J. n.d. <em>Forecast: Forecasting Functions for Time Series and Linear Models</em>. <a href="http://github.com/robjhyndman/forecast" class="uri">http://github.com/robjhyndman/forecast</a>.</p>
+<p>Hyndman, Rob J. n.d. <em>Forecast: Forecasting Functions for Time Series and Linear Models</em>. <a href="http://github.com/robjhyndman/forecast">http://github.com/robjhyndman/forecast</a>.</p>
 </div>
 <div>
-<p>Jeppson, Haley, Heike Hofmann, and Di Cook. 2016. <em>Ggmosaic: Mosaic Plots in the ’Ggplot2’ Framework</em>. <a href="http://github.com/haleyjeppson/ggmosaic" class="uri">http://github.com/haleyjeppson/ggmosaic</a>.</p>
+<p>Jeppson, Haley, Heike Hofmann, and Di Cook. 2016. <em>Ggmosaic: Mosaic Plots in the ’Ggplot2’ Framework</em>. <a href="http://github.com/haleyjeppson/ggmosaic">http://github.com/haleyjeppson/ggmosaic</a>.</p>
 </div>
 <div>
-<p>Kahle, David, and Hadley Wickham. 2013. “Ggmap: Spatial Visualization with Ggplot2.” <em>The R Journal</em> 5 (1): 144–61. <a href="http://journal.r-project.org/archive/2013-1/kahle-wickham.pdf" class="uri">http://journal.r-project.org/archive/2013-1/kahle-wickham.pdf</a>.</p>
+<p>Kahle, David, and Hadley Wickham. 2013. “Ggmap: Spatial Visualization with Ggplot2.” <em>The R Journal</em> 5 (1): 144–61. <a href="http://journal.r-project.org/archive/2013-1/kahle-wickham.pdf">http://journal.r-project.org/archive/2013-1/kahle-wickham.pdf</a>.</p>
 </div>
 <div>
-<p>Lander, Jared P. 2016. <em>Coefplot: Plots Coefficients from Fitted Models</em>. <a href="https://CRAN.R-project.org/package=coefplot" class="uri">https://CRAN.R-project.org/package=coefplot</a>.</p>
+<p>Lander, Jared P. 2016. <em>Coefplot: Plots Coefficients from Fitted Models</em>. <a href="https://CRAN.R-project.org/package=coefplot">https://CRAN.R-project.org/package=coefplot</a>.</p>
 </div>
 <div>
-<p>Messing, Solomon. 2012. “Visualization Series: Insight from Cleveland and Tufte on Plotting Numeric Data by Groups.” 2012. <a href="http://web.archive.org/web/20160602202734/https://solomonmessing.wordpress.com/2012/03/04/visualization-series-insight-from-cleveland-and-tufte-on-plotting-numeric-data-by-groups/" class="uri">http://web.archive.org/web/20160602202734/https://solomonmessing.wordpress.com/2012/03/04/visualization-series-insight-from-cleveland-and-tufte-on-plotting-numeric-data-by-groups/</a>.</p>
+<p>Messing, Solomon. 2012. “Visualization Series: Insight from Cleveland and Tufte on Plotting Numeric Data by Groups.” 2012. <a href="http://web.archive.org/web/20160602202734/https://solomonmessing.wordpress.com/2012/03/04/visualization-series-insight-from-cleveland-and-tufte-on-plotting-numeric-data-by-groups/">http://web.archive.org/web/20160602202734/https://solomonmessing.wordpress.com/2012/03/04/visualization-series-insight-from-cleveland-and-tufte-on-plotting-numeric-data-by-groups/</a>.</p>
 </div>
 <div>
-<p>Mildenberger, Thoralf, Yves Rozenholc, and David Zasada. 2009. <em>Histogram: Construction of Regular and Irregular Histograms with Different Options for Automatic Choice of Bins</em>. <a href="https://CRAN.R-project.org/package=histogram" class="uri">https://CRAN.R-project.org/package=histogram</a>.</p>
+<p>Mildenberger, Thoralf, Yves Rozenholc, and David Zasada. 2009. <em>Histogram: Construction of Regular and Irregular Histograms with Different Options for Automatic Choice of Bins</em>. <a href="https://CRAN.R-project.org/package=histogram">https://CRAN.R-project.org/package=histogram</a>.</p>
 </div>
 <div>
-<p>Neuwirth, Erich. 2014. <em>RColorBrewer: ColorBrewer Palettes</em>. <a href="https://CRAN.R-project.org/package=RColorBrewer" class="uri">https://CRAN.R-project.org/package=RColorBrewer</a>.</p>
+<p>Neuwirth, Erich. 2014. <em>RColorBrewer: ColorBrewer Palettes</em>. <a href="https://CRAN.R-project.org/package=RColorBrewer">https://CRAN.R-project.org/package=RColorBrewer</a>.</p>
 </div>
 <div>
-<p>Ooms, Jeroen. 2014. “The Jsonlite Package: A Practical and Consistent Mapping Between Json Data and R Objects.” <em>arXiv:1403.2805 [stat.CO]</em>. <a href="http://arxiv.org/abs/1403.2805" class="uri">http://arxiv.org/abs/1403.2805</a>.</p>
+<p>Ooms, Jeroen. 2014. “The Jsonlite Package: A Practical and Consistent Mapping Between Json Data and R Objects.” <em>arXiv:1403.2805 [stat.CO]</em>. <a href="http://arxiv.org/abs/1403.2805">http://arxiv.org/abs/1403.2805</a>.</p>
 </div>
 <div>
-<p>Pebesma, Edzer. 2018. <em>Sf: Simple Features for R</em>. <a href="https://CRAN.R-project.org/package=sf" class="uri">https://CRAN.R-project.org/package=sf</a>.</p>
+<p>Pebesma, Edzer. 2018. <em>Sf: Simple Features for R</em>. <a href="https://CRAN.R-project.org/package=sf">https://CRAN.R-project.org/package=sf</a>.</p>
 </div>
 <div>
 <p>Pedersen, Thomas Lin. 2016. <em>Ggraph: An Implementation of Grammar of Graphics for Graphs and Networks</em>.</p>
 </div>
 <div>
-<p>R Core Team. 2016. <em>R: A Language and Environment for Statistical Computing</em>. Vienna, Austria: R Foundation for Statistical Computing. <a href="https://www.R-project.org/" class="uri">https://www.R-project.org/</a>.</p>
+<p>R Core Team. 2016. <em>R: A Language and Environment for Statistical Computing</em>. Vienna, Austria: R Foundation for Statistical Computing. <a href="https://www.R-project.org/">https://www.R-project.org/</a>.</p>
 </div>
 <div>
-<p>Richard A. Becker, Ming-Jen Shyu, William S. Cleveland. 1996. “The Visual Design and Control of Trellis Display.” <em>Journal of Computational and Graphical Statistics</em> 5 (2). [American Statistical Association, Taylor &amp; Francis, Ltd., Institute of Mathematical Statistics, Interface Foundation of America]: 123–55. <a href="http://www.jstor.org/stable/1390777" class="uri">http://www.jstor.org/stable/1390777</a>.</p>
+<p>Richard A. Becker, Ming-Jen Shyu, William S. Cleveland. 1996. “The Visual Design and Control of Trellis Display.” <em>Journal of Computational and Graphical Statistics</em> 5 (2). [American Statistical Association, Taylor &amp; Francis, Ltd., Institute of Mathematical Statistics, Interface Foundation of America]: 123–55. <a href="http://www.jstor.org/stable/1390777">http://www.jstor.org/stable/1390777</a>.</p>
 </div>
 <div>
-<p>Robinson, David. 2016. <em>Broom: Convert Statistical Analysis Objects into Tidy Data Frames</em>. <a href="https://CRAN.R-project.org/package=broom" class="uri">https://CRAN.R-project.org/package=broom</a>.</p>
+<p>Robinson, David. 2016. <em>Broom: Convert Statistical Analysis Objects into Tidy Data Frames</em>. <a href="https://CRAN.R-project.org/package=broom">https://CRAN.R-project.org/package=broom</a>.</p>
 </div>
 <div>
-<p>RStudio, and Inc. 2016. <em>Htmltools: Tools for Html</em>. <a href="https://CRAN.R-project.org/package=htmltools" class="uri">https://CRAN.R-project.org/package=htmltools</a>.</p>
+<p>RStudio, and Inc. 2016. <em>Htmltools: Tools for Html</em>. <a href="https://CRAN.R-project.org/package=htmltools">https://CRAN.R-project.org/package=htmltools</a>.</p>
 </div>
 <div>
-<p>Rudis, Bob. 2016. <em>Ggalt: Extra Coordinate Systems, Geoms and Statistical Transformations for ’Ggplot2’</em>. <a href="https://CRAN.R-project.org/package=ggalt" class="uri">https://CRAN.R-project.org/package=ggalt</a>.</p>
+<p>Rudis, Bob. 2016. <em>Ggalt: Extra Coordinate Systems, Geoms and Statistical Transformations for ’Ggplot2’</em>. <a href="https://CRAN.R-project.org/package=ggalt">https://CRAN.R-project.org/package=ggalt</a>.</p>
 </div>
 <div>
-<p>Ryan, Jeffrey A. 2016. <em>Quantmod: Quantitative Financial Modelling Framework</em>. <a href="https://CRAN.R-project.org/package=quantmod" class="uri">https://CRAN.R-project.org/package=quantmod</a>.</p>
+<p>Ryan, Jeffrey A. 2016. <em>Quantmod: Quantitative Financial Modelling Framework</em>. <a href="https://CRAN.R-project.org/package=quantmod">https://CRAN.R-project.org/package=quantmod</a>.</p>
 </div>
 <div>
 <p>Saptarshi Guha, Jeremiah Rounds, Ryan Hafen, and William S. Cleveland. 2012. “Large Complex Data: Divide and Recombine (d&amp;R) with Rhipe.” <em>The ISI’s Journal for the Rapid Dissemination of Statistics Research</em>, August, 53–67.</p>
 </div>
 <div>
-<p>Sarkar, Deepayan. 2008. <em>Lattice: Multivariate Data Visualization with R</em>. New York: Springer. <a href="http://lmdvr.r-forge.r-project.org" class="uri">http://lmdvr.r-forge.r-project.org</a>.</p>
+<p>Sarkar, Deepayan. 2008. <em>Lattice: Multivariate Data Visualization with R</em>. New York: Springer. <a href="http://lmdvr.r-forge.r-project.org">http://lmdvr.r-forge.r-project.org</a>.</p>
 </div>
 <div>
 <p>Schloerke, Barret, Jason Crowley, Di Cook, Francois Briatte, Moritz Marbach, Edwin Thoen, Amos Elberg, and Joseph Larmarange. 2016. <em>GGally: Extension to ’Ggplot2’</em>.</p>
@@ -401,37 +415,55 @@ code span.wa { color: #60a0b0; font-weight: bold; font-style: italic; } /* Warni
 <p>Shneiderman, Ben. 1996. “The Eyes Have It:A Task by Data Type Taxonomy for Information Visualizations.” <em>VL Proceedings of the IEEE Symposium on Visual Languages</em>, January, 1–9.</p>
 </div>
 <div>
+<p>Sievert, Carson. 2018a. “Learning from and Improving Upon Ggplotly Conversions.” Blog. <a href="https://blog.cpsievert.me/2018/01/30/learning-improving-ggplotly-geom-sf/">https://blog.cpsievert.me/2018/01/30/learning-improving-ggplotly-geom-sf/</a>.</p>
+</div>
+<div>
+<p>———. 2018b. “Visualizing Geo-Spatial Data with Sf and Plotly.” Blog. <a href="https://blog.cpsievert.me/2018/03/30/visualizing-geo-spatial-data-with-sf-and-plotly/">https://blog.cpsievert.me/2018/03/30/visualizing-geo-spatial-data-with-sf-and-plotly/</a>.</p>
+</div>
+<div>
 <p>Sievert, Carson, Chris Parmer, Toby Hocking, Scott Chamberlain, Karthik Ram, Marianne Corvellec, and Pedro Despouy. 2016. <em>Plotly: Create Interactive Web Graphics via ’Plotly.js’</em>.</p>
 </div>
 <div>
-<p>Sievert, Carson, and Kenneth E Shirley. 2014. “LDAvis: A method for visualizing and interpreting topics.” <em>Proceedings of the Workshop on Interactive Language Learning, Visualization, and Interfaces</em>, June, 1–8. <a href="http://nlp.stanford.edu/events/illvi2014/papers/sievert-illvi2014.pdf" class="uri">http://nlp.stanford.edu/events/illvi2014/papers/sievert-illvi2014.pdf</a>.</p>
+<p>Sievert, Carson, and Kenneth E Shirley. 2014. “LDAvis: A method for visualizing and interpreting topics.” <em>Proceedings of the Workshop on Interactive Language Learning, Visualization, and Interfaces</em>, June, 1–8. <a href="http://nlp.stanford.edu/events/illvi2014/papers/sievert-illvi2014.pdf">http://nlp.stanford.edu/events/illvi2014/papers/sievert-illvi2014.pdf</a>.</p>
 </div>
 <div>
-<p>Sturges, Herbert A. 1926. “The Choice of a Class Interval.” <em>Journal of the American Statistical Association</em> 21 (153): 65–66. <a href="https://doi.org/10.1080/01621459.1926.10502161" class="uri">https://doi.org/10.1080/01621459.1926.10502161</a>.</p>
+<p>Sturges, Herbert A. 1926. “The Choice of a Class Interval.” <em>Journal of the American Statistical Association</em> 21 (153): 65–66. <a href="https://doi.org/10.1080/01621459.1926.10502161">https://doi.org/10.1080/01621459.1926.10502161</a>.</p>
 </div>
 <div>
-<p>Temple Lang, Duncan. 2014. <em>RJSONIO: Serialize R Objects to Json, Javascript Object Notation</em>. <a href="http://CRAN.R-project.org/package=RJSONIO" class="uri">http://CRAN.R-project.org/package=RJSONIO</a>.</p>
+<p>Swayne, Deborah F, Dianne Cook, and Andreas Buja. 1998. “XGobi: Interactive Dynamic Data Visualization in the X Window System.” <em>Journal of Computational and Graphical Statistics</em> 7 (1): 113–30.</p>
+</div>
+<div>
+<p>Temple Lang, Duncan. 2014. <em>RJSONIO: Serialize R Objects to Json, Javascript Object Notation</em>. <a href="http://CRAN.R-project.org/package=RJSONIO">http://CRAN.R-project.org/package=RJSONIO</a>.</p>
+</div>
+<div>
+<p>Theus, Martin, and Simon Urbanek. 2008. <em>Interactive Graphics for Data Analysis: Principles and Examples</em>. Chapman &amp; Hall / CRC.</p>
+</div>
+<div>
+<p>Tufte, Edward. 2001. <em>The Visual Display of Quantitative Information</em>. Cheshire, Conn: Graphics Press.</p>
 </div>
 <div>
 <p>Tukey, J. W., and P. A. Tukey. n.d. “Computer Graphics and Exploratory Data Analysis: An Introduction.” In <em>In Proceedings of the Sixth Annual Conference and Exposition: Computer Graphics85</em>.</p>
 </div>
 <div>
-<p>Tyner, Samantha, and Heike Hofmann. 2016. <em>Geomnet: Network Visualization in the ’Ggplot2’ Framework</em>. <a href="https://CRAN.R-project.org/package=geomnet" class="uri">https://CRAN.R-project.org/package=geomnet</a>.</p>
+<p>Tyner, Samantha, and Heike Hofmann. 2016. <em>Geomnet: Network Visualization in the ’Ggplot2’ Framework</em>. <a href="https://CRAN.R-project.org/package=geomnet">https://CRAN.R-project.org/package=geomnet</a>.</p>
 </div>
 <div>
-<p>Vaidyanathan, Ramnath. 2013. <em>RCharts: Interactive Charts Using Javascript Visualization Libraries</em>. <a href="https://github.com/ramnathv/rCharts/" class="uri">https://github.com/ramnathv/rCharts/</a>.</p>
+<p>Unwin, Antony, and Heike Hofmann. 2009. “GUI and Command-line - Conflict or Synergy?” <em>Proceedings of the St Symposium on the Interface</em>, September, 1–11.</p>
 </div>
 <div>
-<p>Vaidyanathan, Ramnath, Yihui Xie, JJ Allaire, Joe Cheng, and Kenton Russell. 2016. <em>Htmlwidgets: HTML Widgets for R</em>. <a href="https://CRAN.R-project.org/package=htmlwidgets" class="uri">https://CRAN.R-project.org/package=htmlwidgets</a>.</p>
+<p>Vaidyanathan, Ramnath. 2013. <em>RCharts: Interactive Charts Using Javascript Visualization Libraries</em>. <a href="https://github.com/ramnathv/rCharts/">https://github.com/ramnathv/rCharts/</a>.</p>
 </div>
 <div>
-<p>VanderPlas, Susan, and Heike Hofmann. 2015. “Signs of the Sine Illusion—Why We Need to Care.” <em>Journal of Computational and Graphical Statistics</em> 24 (4): 1170–90. <a href="https://doi.org/10.1080/10618600.2014.951547" class="uri">https://doi.org/10.1080/10618600.2014.951547</a>.</p>
+<p>Vaidyanathan, Ramnath, Yihui Xie, JJ Allaire, Joe Cheng, and Kenton Russell. 2016. <em>Htmlwidgets: HTML Widgets for R</em>. <a href="https://CRAN.R-project.org/package=htmlwidgets">https://CRAN.R-project.org/package=htmlwidgets</a>.</p>
 </div>
 <div>
-<p>Venables, W. N., and B. D. Ripley. 2002. <em>Modern Applied Statistics with S</em>. Fourth. New York: Springer. <a href="http://www.stats.ox.ac.uk/pub/MASS4" class="uri">http://www.stats.ox.ac.uk/pub/MASS4</a>.</p>
+<p>VanderPlas, Susan, and Heike Hofmann. 2015. “Signs of the Sine Illusion—Why We Need to Care.” <em>Journal of Computational and Graphical Statistics</em> 24 (4): 1170–90. <a href="https://doi.org/10.1080/10618600.2014.951547">https://doi.org/10.1080/10618600.2014.951547</a>.</p>
 </div>
 <div>
-<p>Wickham, Hadley. 2009. <em>Ggplot2: Elegant Graphics for Data Analysis</em>. Springer-Verlag New York. <a href="http://ggplot2.org" class="uri">http://ggplot2.org</a>.</p>
+<p>Venables, W. N., and B. D. Ripley. 2002. <em>Modern Applied Statistics with S</em>. Fourth. New York: Springer. <a href="http://www.stats.ox.ac.uk/pub/MASS4">http://www.stats.ox.ac.uk/pub/MASS4</a>.</p>
+</div>
+<div>
+<p>Wickham, Hadley. 2009. <em>Ggplot2: Elegant Graphics for Data Analysis</em>. Springer-Verlag New York. <a href="http://ggplot2.org">http://ggplot2.org</a>.</p>
 </div>
 <div>
 <p>———. 2010. “A Layered Grammar of Graphics.” <em>Journal of Computational and Graphical Statistics</em> 19 (1). Taylor &amp; Francis: 3–28.</p>
@@ -440,34 +472,36 @@ code span.wa { color: #60a0b0; font-weight: bold; font-style: italic; } /* Warni
 <p>———. 2014. <em>Advanced R</em>. Chapman &amp; Hall.</p>
 </div>
 <div>
-<p>———. 2016. <em>Tidyr: Easily Tidy Data with ‘Spread()‘ and ‘Gather()‘ Functions</em>. <a href="https://github.com/hadley/tidyr" class="uri">https://github.com/hadley/tidyr</a>.</p>
+<p>———. 2016. <em>Tidyr: Easily Tidy Data with ‘Spread()‘ and ‘Gather()‘ Functions</em>. <a href="https://github.com/hadley/tidyr">https://github.com/hadley/tidyr</a>.</p>
 </div>
 <div>
 <p>Wickham, Hadley, Dianne Cook, and Heike Hofmann. 2015. “Visualizing Statistical Models: Removing the Blindfold.” <em>Statistical Analysis and Data Mining: The ASA Data Science Journal</em> 8 (4): 203–25.</p>
 </div>
 <div>
-<p>Wickham, Hadley, and Romain Francois. 2016. <em>Dplyr: A Grammar of Data Manipulation</em>. <a href="https://CRAN.R-project.org/package=dplyr" class="uri">https://CRAN.R-project.org/package=dplyr</a>.</p>
-</div>
-<div>
-<p>Wickham, Hadley, Michael Lawrence, Dianne Cook, Andreas Buja, Heike Hofmann, and Deborah F Swayne. 2010. “The Plumbing of Interactive Graphics.” <em>Computational Statistics</em>, April, 1–7.</p>
+<p>Wickham, Hadley, and Romain Francois. 2016. <em>Dplyr: A Grammar of Data Manipulation</em>. <a href="https://CRAN.R-project.org/package=dplyr">https://CRAN.R-project.org/package=dplyr</a>.</p>
 </div>
 <div>
 <p>Wilkinson, Leland. 2005. <em>The Grammar of Graphics (Statistics and Computing)</em>. Secaucus, NJ, USA: Springer-Verlag New York, Inc.</p>
 </div>
 <div>
-<p>Wilkinson, Leland, Anushka Anand, and Robert Grossman. 2005. “Graph-Theoretic Scagnostics.” In <em>Proceedings of the Proceedings of the 2005 Ieee Symposium on Information Visualization</em>, 21. INFOVIS ’05. Washington, DC, USA: IEEE Computer Society. <a href="https://doi.org/10.1109/INFOVIS.2005.14" class="uri">https://doi.org/10.1109/INFOVIS.2005.14</a>.</p>
+<p>Wilkinson, Leland, Anushka Anand, and Robert Grossman. 2005. “Graph-Theoretic Scagnostics.” In <em>Proceedings of the Proceedings of the 2005 Ieee Symposium on Information Visualization</em>, 21. INFOVIS ’05. Washington, DC, USA: IEEE Computer Society. <a href="https://doi.org/10.1109/INFOVIS.2005.14">https://doi.org/10.1109/INFOVIS.2005.14</a>.</p>
 </div>
 <div>
 <p>Wilkinson, Leland, and Graham Wills. 2008. “Scagnostics Distributions.” <em>Journal of Computational and Graphical Statistics</em>, no. 2: 473–91.</p>
 </div>
 <div>
-<p>William S. Cleveland, Robert McGill, Marylyn E. McGill. 1988. “The Shape Parameter of a Two-Variable Graph.” <em>Journal of the American Statistical Association</em> 83 (402). [American Statistical Association, Taylor &amp; Francis, Ltd.]: 289–300. <a href="http://www.jstor.org/stable/2288843" class="uri">http://www.jstor.org/stable/2288843</a>.</p>
+<p>William S. Cleveland, Robert McGill, Marylyn E. McGill. 1988. “The Shape Parameter of a Two-Variable Graph.” <em>Journal of the American Statistical Association</em> 83 (402). [American Statistical Association, Taylor &amp; Francis, Ltd.]: 289–300. <a href="http://www.jstor.org/stable/2288843">http://www.jstor.org/stable/2288843</a>.</p>
 </div>
 <div>
-<p>Xie, Yihui. 2016. <em>Knitr: A General-Purpose Package for Dynamic Report Generation in R</em>. <a href="https://CRAN.R-project.org/package=knitr" class="uri">https://CRAN.R-project.org/package=knitr</a>.</p>
+<p>Wills, Graham. 2008. “Linked Data Views.” In <em>Handbook of Data Visualization</em>, 217–41. Berlin, Heidelberg: Springer Berlin Heidelberg. <a href="https://doi.org/10.1007/978-3-540-33037-0_10">https://doi.org/10.1007/978-3-540-33037-0_10</a>.</p>
+</div>
+<div>
+<p>Xie, Yihui. 2016. <em>Knitr: A General-Purpose Package for Dynamic Report Generation in R</em>. <a href="https://CRAN.R-project.org/package=knitr">https://CRAN.R-project.org/package=knitr</a>.</p>
 </div>
 </div>
 </div>
+
+
 
 
 
@@ -531,19 +565,6 @@ gitbook.start({
 });
 </script>
 
-<!-- dynamically load mathjax for compatibility with self-contained -->
-<script>
-  (function () {
-    var script = document.createElement("script");
-    script.type = "text/javascript";
-    var src = "true";
-    if (src === "" || src === "true") src = "https://cdn.bootcss.com/mathjax/2.7.1/MathJax.js?config=TeX-MML-AM_CHTML";
-    if (location.protocol !== "file:" && /^https?:/.test(src))
-      src = src.replace(/^https?:/, '');
-    script.src = src;
-    document.getElementsByTagName("head")[0].appendChild(script);
-  })();
-</script>
 <script>(function(i,s,o,g,r,a,m){i['GoogleAnalyticsObject']=r;i[r]=i[r]||function(){(i[r].q=i[r].q||[]).push(arguments)},i[r].l=1*new Date();a=s.createElement(o),m=s.getElementsByTagName(o)[0];a.async=1;a.src=g;m.parentNode.insertBefore(a,m)})(window,document,'script','https://www.google-analytics.com/analytics.js','ga');ga('create', 'UA-39373211-1', 'auto');ga('send', 'pageview');</script>
 </body>
 
