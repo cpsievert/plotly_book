@@ -382,7 +382,7 @@ subplot(
 )
 ```
 
-Figure \@ref(fig:discrete) demonstrates two ways of creating a basic bar chart. Although the visual results are the same, its worth noting the difference in implementation. The `add_histogram()` function sends all of the observed values to the browser and lets plotly.js perform the binning. It takes more human effort to perform the binning in R, but doing so has the benefit of sending less data, and requiring less computation work of the web browser. In this case, we have only about 50,000 records, so there is much of a difference in page load times or page size. However, with 1 Million records, page load time more than doubles and page size nearly doubles.^[These tests were run on Google Chrome and loaded a page with a single bar chart. [Here](https://www.webpagetest.org/result/160924_DP_JBX/) are the results for `add_histogram()` and [here](https://www.webpagetest.org/result/160924_QG_JA1/) are the results for `add_bars()` ]
+Figure \@ref(fig:discrete) demonstrates two ways of creating a basic bar chart. Although the visual results are the same, its worth noting the difference in implementation. The `add_histogram()` function sends all of the observed values to the browser and lets plotly.js perform the binning. It takes more human effort to perform the binning in R, but doing so has the benefit of sending less data, and requiring less computation work of the web browser. In this case, we have only about 50,000 records, so there is not much of a difference in page load times or page size. However, with 1 Million records, page load time more than doubles and page size nearly doubles.^[These tests were run on Google Chrome and loaded a page with a single bar chart. [Here](https://www.webpagetest.org/result/160924_DP_JBX/) are the results for `add_histogram()` and [here](https://www.webpagetest.org/result/160924_QG_JA1/) are the results for `add_bars()` ]
 
 ```{r discrete, fig.cap = "Number of diamonds by cut.", screenshot.alt = "screenshots/discrete-bars"}
 p1 <- plot_ly(diamonds, x = ~cut) %>% add_histogram()
@@ -439,7 +439,7 @@ cc2 %>%
   layout(barmode = "stack")
 ```
 
-This type of plot, also known as a spine plot, is a special case of a mosaic plot. In a mosaic plot, you can scale both bar widths and heights according to discrete distributions. For mosaic plots, I recommend using the **ggmosaic** package [@ggmosaic], which implements a custom **ggplot2** geom designed for mosaic plots, which we can convert to plotly via `ggplotly()`. Figure \@ref(fig:ggmosaic) show a mosaic plot of cut by clarity. Notice how the bar widths are scaled proportional to the cut frequency.
+This type of plot, also known as a spine plot, is a special case of a mosaic plot. In a mosaic plot, you can scale both bar widths and heights according to discrete distributions. For mosaic plots, I recommend using the **ggmosaic** package [@ggmosaic], which implements a custom **ggplot2** geom designed for mosaic plots, which we can convert to plotly via `ggplotly()`. Figure \@ref(fig:ggmosaic) shows a mosaic plot of cut by clarity. Notice how the bar widths are scaled proportional to the cut frequency.
 
 ```{r ggmosaic, fig.cap = "Using ggmosaic and ggplotly() to create advanced interactive visualizations of categorical data", screenshot.alt = "screenshots/ggmosaic", eval = FALSE}
 library(ggmosaic)
