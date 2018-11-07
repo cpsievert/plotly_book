@@ -190,7 +190,7 @@ p
 
 #### Parallel Coordinates
 
-One very useful, but often overlooked, visualization technique is the parallel coordinates plot. Parallel coordinates provide a way to compare values along a common (or non-aligned) positional scale(s) -- the most basic of all perceptual tasks -- in more than 3 dimensions [@graphical-perception]. Usually each line represents every measurement for a given row (or observation) in a data set. When measurements are on very different scales, some care must be taken, and variables must transformed to be put on a common scale. As Figure \@ref(fig:pcp-common) shows, even when variables are measured on a similar scale, it can still be a informative to transform variables in different ways.
+One very useful, but often overlooked, visualization technique is the parallel coordinates plot. Parallel coordinates provide a way to compare values along a common (or non-aligned) positional scale(s) -- the most basic of all perceptual tasks -- in more than 3 dimensions [@graphical-perception]. Usually each line represents every measurement for a given row (or observation) in a data set. When measurements are on very different scales, some care must be taken, and variables must transformed to be put on a common scale. As Figure \@ref(fig:pcp-common) shows, even when variables are measured on a similar scale, it can still be informative to transform variables in different ways.
 
 ```{r pcp-common, fig.width = 8, fig.cap = "Parallel coordinates plots of the Iris dataset. On the left is the raw measurements. In the middle, each variable is scaled to have mean of 0 and standard deviation of 1. On the right, each variable is scaled to have a minimum of 0 and a maximum of 1.", screenshot.alt = "screenshots/pcp-common"}
 iris$obs <- seq_len(nrow(iris))
@@ -263,7 +263,7 @@ broom::augment(m) %>%
 
 ### Polygons
 
-The `add_polygons()` function is essentially equivalent to `add_paths()` with the [fill](https://plot.ly/r/reference/#scatter-fill) attribute set to "toself". Polygons from the basis for other, higher-level, geometries such as `add_ribbons()`, but can be useful in their own right. 
+The `add_polygons()` function is essentially equivalent to `add_paths()` with the [fill](https://plot.ly/r/reference/#scatter-fill) attribute set to "toself". Polygons form the basis for other, higher-level, geometries such as `add_ribbons()`, but can be useful in their own right. 
 
 ```{r map-canada, fig.cap = "A map of Canada using the default cartesian coordinate system.", screenshot.alt = "screenshots/map-canada"}
 map_data("world", "canada") %>%
