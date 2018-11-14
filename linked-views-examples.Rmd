@@ -2,7 +2,7 @@
 
 ### Querying facetted charts {#trellis-linking}
 
-A facetted chart, also known as a trellis or small multiples display, is an effective way to observe how a certain relationship or visual pattern changes with a discrete variable [@trellis, @tufte2001]. The implementation of a facetted chart partitions a data set into groups, then produces a graphical panel for each group using a fixed visual encoding (e.g. a scatterplot). When these groups are related in some way, it can be useful to consider linking the panels through graphical queries to reveal greater insight, especially when it comes to making comparisons both within and across multiple groups.
+A facetted chart, also known as a trellis or small multiples display, is an effective way to observe how a certain relationship or visual pattern changes with a discrete variable [@trellis] [@tufte2001]. The implementation of a facetted chart partitions a data set into groups, then produces a graphical panel for each group using a fixed visual encoding (e.g. a scatterplot). When these groups are related in some way, it can be useful to consider linking the panels through graphical queries to reveal greater insight, especially when it comes to making comparisons both within and across multiple groups.
 
 Figure \@ref(fig:epl) is an example of making comparisons both within and across panels via graphical querying in a facetted chart. Each panel represents one year of English Premier League standings across time and each line represents a team (the querying variable). Since the x-axis represents the number of games within season and y-axis tracks cumulative points relative to the league average, lines with a positive slope represent above average performance and a negative slope represents below average performance. This design makes it easy to query a good (or bad) team for a particular year (via direct manipulation) to see who the team is as well as how they've compared to the competition in other years. In addition, the dynamic and persistent color brush allows us to query other teams to compare both within and across years. This example is shipped as a demo with the **plotly** package and uses data from the **engsoccerdata** package [@engsoccerdata].
 
@@ -69,7 +69,7 @@ Figure \@ref(fig:2-way-anova) demonstrates routing of a scatterplot brushing eve
 demo("crosstalk-highlight-binned-target-a", package = "plotly")
 ```
 
-```{r 2-way-anova, fig.cap = "Linking a (jittered) dotplot of engine displacement by number of cylinders with boxplots of miles per gallon split by class and a bar chart of Dynamic 2-way ANOVA."}
+```{r 2-way-anova, echo = FALSE, fig.cap = "Linking a (jittered) dotplot of engine displacement by number of cylinders with boxplots of miles per gallon split by class and a bar chart of Dynamic 2-way ANOVA."}
 knitr::include_graphics("https://i.imgur.com/yKAlCs0.gif")
 ```
 
@@ -89,7 +89,7 @@ subplot(
   highlight("plotly_selected")
 ```
 
-```{r mpg-linked-bars, fig.cap = "Linking a bar chart with a scatterplot to query interesting regions of the data space defined by engine displacement (`disp`), miles per gallon highway (`hwy`), and the class of car (`class`). Notice how, by using `add_histogram()`, the number of cars within each class is dynamically computed by plotly.js."}
+```{r mpg-linked-bars, echo = FALSE, fig.cap = "Linking a bar chart with a scatterplot to query interesting regions of the data space defined by engine displacement (`disp`), miles per gallon highway (`hwy`), and the class of car (`class`). Notice how, by using `add_histogram()`, the number of cars within each class is dynamically computed by plotly.js."}
 knitr::include_graphics("https://i.imgur.com/SxpkwQa.gif")
 ```
 
@@ -138,7 +138,7 @@ knitr::include_graphics("images/smooth-highlight.gif")
 
 Figure \@ref(fig:smooth-highlight) demonstrates highlighting in a single view when the querying variable is the row index, but the linking could also be done by matching the querying variable with the **ggplot2** group of interest, as is done in Figure \@ref(fig:ggplotly-linked-densities). This way, when a user highlights an individual point, it highlights the entire group instead of just that point. 
 
-```{r}
+```{r, eval = FALSE}
 m <- highlight_key(mpg, ~class)
 p1 <- ggplot(m, aes(displ, fill = class)) + geom_density()
 p2 <- ggplot(m, aes(displ, hwy, fill = class)) + geom_point()
@@ -157,9 +157,7 @@ In summary, we've learned numerous things about statistical queries:
 
 ### Geo-spatial queries
 
-Section \@ref(maps) covers several different approaches[^1] for rendering geo-spatial information, and each approach supports graphical querying. One clever approach is to render a 3D globe as a surface, then layer on geo-spatial data on top of that globe with a scatter3d trace. Not only is 3D a nice way to visualize geospatial data that has altitude (in addition to latitude and longitude), but it also grants the ability to interpolate color along a path. Figure \@ref(fig:storms) renders tropical storms paths on a 3D globe and uses color to encode the altitude of the storm at that point. Below the 3D view is a 2D view of altitude versus distance traveled. These views are linked by a graphical query where the querying variable is the storm ID.
-
-[^1]: @sf-blog-post outlines the relative strengths and weaknesses of each approach.
+Section \@ref(maps) covers several different approaches^[@sf-blog-post outlines the relative strengths and weaknesses of each approach.] for rendering geo-spatial information, and each approach supports graphical querying. One clever approach is to render a 3D globe as a surface, then layer on geo-spatial data on top of that globe with a scatter3d trace. Not only is 3D a nice way to visualize geospatial data that has altitude (in addition to latitude and longitude), but it also grants the ability to interpolate color along a path. Figure \@ref(fig:storms) renders tropical storms paths on a 3D globe and uses color to encode the altitude of the storm at that point. Below the 3D view is a 2D view of altitude versus distance traveled. These views are linked by a graphical query where the querying variable is the storm ID.
 
 ```{r, eval = FALSE}
 demo("sf-plotly-3D-globe", package = "plotly")
@@ -385,9 +383,7 @@ plot_dendro(dend1, height = 600) %>%
 knitr::include_graphics("images/dendro.gif")
 ```
 
-Figure \@ref(fig:tour-USArrests) links the dendrogram from Figure \@ref(fig:dendro) to a map of the US and a grand tour of the arrest statistics to better understand and diagnose a hierarchical clustering methodology. By highlighting branches of the dendrogram, we can effectively choose a partitioning of the states into similar groups, and see how that model choice projects to the data space[^2] through a grand tour. The grand tour is a special kind of animation that interpolates between random 2D projections of numeric data allowing the viewer to perceive the shape of a high-dimensional point cloud [@grand-tour]. Note how the grouping portrayed in Figure \@ref(fig:tour-USArrests) does a fairly good job of staying separated in the grand tour.
-
-[^2]: Typically statistical models are diagnosed by visualizing data in the model space rather than model(s) in the data space. As @model-vis-paper points, the latter approach can be a very effective way to better understand and diagnosis statistical models. 
+Figure \@ref(fig:tour-USArrests) links the dendrogram from Figure \@ref(fig:dendro) to a map of the US and a grand tour of the arrest statistics to better understand and diagnose a hierarchical clustering methodology. By highlighting branches of the dendrogram, we can effectively choose a partitioning of the states into similar groups, and see how that model choice projects to the data space^[Typically statistical models are diagnosed by visualizing data in the model space rather than model(s) in the data space. As @model-vis-paper points, the latter approach can be a very effective way to better understand and diagnosis statistical models.] through a grand tour. The grand tour is a special kind of animation that interpolates between random 2D projections of numeric data allowing the viewer to perceive the shape of a high-dimensional point cloud [@grand-tour]. Note how the grouping portrayed in Figure \@ref(fig:tour-USArrests) does a fairly good job of staying separated in the grand tour.
 
 ```{r, eval = FALSE}
 demo("animation-tour-USArrests", package = "plotly")

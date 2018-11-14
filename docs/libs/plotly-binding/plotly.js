@@ -243,13 +243,15 @@ HTMLWidgets.widget({
         var gd = document.getElementById(el.id);
         var trace = gd.data[pt.curveNumber];
         
-        // Add other attributes here, if desired
+        // Heatmap z event data should derive from _z calc attribute
+        // https://github.com/ropensci/plotly/issues/1141
+        var z = trace.type === "heatmap" ? "_z" : "z";
         if (!trace._isSimpleKey) {
-          var attrsToAttach = ["key", "z"];
+          var attrsToAttach = ["key", z];
         } else {
           // simple keys fire the whole key
           obj.key = trace.key;
-          var attrsToAttach = ["z"];
+          var attrsToAttach = [z];
         }
         
         for (var i = 0; i < attrsToAttach.length; i++) {
@@ -304,39 +306,6 @@ HTMLWidgets.widget({
         Shiny.onInputChange(".clientValue-plotly_click-" + x.source, null);
       });
     } 
-    
-    
-    // send user input event data to dashR
-    // TODO: make this more consistent with Graph() props?
-    var dashRwidgets = window.dashRwidgets || {};
-    var dashRmode = typeof el.setProps === "function" &&
-                    typeof dashRwidgets.htmlwidget === "function";
-    if (dashRmode) {
-      graphDiv.on('plotly_relayout', function(d) {
-        el.setProps({"input_plotly_relayout": d});
-      });
-      graphDiv.on('plotly_hover', function(d) {
-        el.setProps({"input_plotly_hover": eventDataWithKey(d)});
-      });
-      graphDiv.on('plotly_click', function(d) {
-        el.setProps({"input_plotly_click": eventDataWithKey(d)});
-      });
-      graphDiv.on('plotly_selected', function(d) {
-        el.setProps({"input_plotly_selected": eventDataWithKey(d)});
-      });
-      graphDiv.on('plotly_unhover', function(eventData) {
-        el.setProps({"input_plotly_hover": null});
-      });
-      graphDiv.on('plotly_doubleclick', function(eventData) {
-        el.setProps({"input_plotly_click": null});
-      });
-      // 'plotly_deselect' is code for doubleclick when in select mode
-      graphDiv.on('plotly_deselect', function(eventData) {
-        el.setProps({"input_plotly_selected": null});
-        el.setProps({"input_plotly_click": null});
-      });
-    } 
-    
     
     // Given an array of {curveNumber: x, pointNumber: y} objects,
     // return a hash of {

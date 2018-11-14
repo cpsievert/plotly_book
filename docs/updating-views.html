@@ -31,7 +31,7 @@
   <meta name="apple-mobile-web-app-status-bar-style" content="black">
   
   
-<link rel="prev" href="accessing-events-in-shiny.html">
+<link rel="prev" href="shiny-inputs.html">
 <link rel="next" href="targeting-views.html">
 <script src="libs/jquery/jquery.min.js"></script>
 <link href="libs/gitbook/css/style.css" rel="stylesheet" />
@@ -60,27 +60,13 @@
 <script src="libs/selectize/selectize.min.js"></script>
 <link href="libs/colourpicker/colourpicker.min.css" rel="stylesheet" />
 <script src="libs/colourpicker/colourpicker.min.js"></script>
-<link href="libs/leaflet/leaflet.css" rel="stylesheet" />
-<script src="libs/leaflet/leaflet.js"></script>
-<link href="libs/leafletfix/leafletfix.css" rel="stylesheet" />
-<script src="libs/Proj4Leaflet/proj4-compressed.js"></script>
-<script src="libs/Proj4Leaflet/proj4leaflet.js"></script>
-<link href="libs/rstudio_leaflet/rstudio_leaflet.css" rel="stylesheet" />
-<script src="libs/leaflet-binding/leaflet.js"></script>
-<link href="libs/leaflet-easybutton/easy-button.css" rel="stylesheet" />
-<script src="libs/leaflet-easybutton/easy-button.js"></script>
-<script src="libs/leaflet-easybutton/EasyButton-binding.js"></script>
-<link href="libs/leaflet-locationfilter2/locationfilter.css" rel="stylesheet" />
-<script src="libs/leaflet-locationfilter2/locationfilter.js"></script>
-<script src="libs/leaflet-locationfilter2/locationfilter-bindings.js"></script>
-<link href="libs/ionicons/ionicons.min.css" rel="stylesheet" />
+<meta name="viewport" content="width=device-width, initial-scale=1" />
+<link href="libs/bootstrap/css/bootstrap.min.css" rel="stylesheet" />
+<script src="libs/bootstrap/js/bootstrap.min.js"></script>
 <link href="libs/ionrangeslider/css/ion.rangeSlider.css" rel="stylesheet" />
 <link href="libs/ionrangeslider/css/ion.rangeSlider.skinShiny.css" rel="stylesheet" />
 <script src="libs/ionrangeslider/js/ion.rangeSlider.min.js"></script>
 <script src="libs/strftime/strftime-min.js"></script>
-<meta name="viewport" content="width=device-width, initial-scale=1" />
-<link href="libs/bootstrap/css/bootstrap.min.css" rel="stylesheet" />
-<script src="libs/bootstrap/js/bootstrap.min.js"></script>
 
 
 <style type="text/css">
@@ -101,7 +87,7 @@ a.sourceLine { text-indent: -1em; padding-left: 1em; }
 pre.numberSource a.sourceLine
   { position: relative; left: -4em; }
 pre.numberSource a.sourceLine::before
-  { content: attr(data-line-number);
+  { content: attr(title);
     position: relative; left: -1em; text-align: right; vertical-align: baseline;
     border: none; pointer-events: all; display: inline-block;
     -webkit-touch-callout: none; -webkit-user-select: none;
@@ -229,16 +215,27 @@ code span.wa { color: #60a0b0; font-weight: bold; font-style: italic; } /* Warni
 <li class="chapter" data-level="5.4" data-path="limitations.html"><a href="limitations.html"><i class="fa fa-check"></i><b>5.4</b> Limitations</a></li>
 </ul></li>
 <li class="chapter" data-level="6" data-path="linking-server-side.html"><a href="linking-server-side.html"><i class="fa fa-check"></i><b>6</b> Linking views server-side</a><ul>
-<li class="chapter" data-level="6.1" data-path="accessing-events-in-shiny.html"><a href="accessing-events-in-shiny.html"><i class="fa fa-check"></i><b>6.1</b> Accessing events in shiny</a></li>
-<li class="chapter" data-level="6.2" data-path="updating-views.html"><a href="updating-views.html"><i class="fa fa-check"></i><b>6.2</b> Updating views</a></li>
-<li class="chapter" data-level="6.3" data-path="targeting-views.html"><a href="targeting-views.html"><i class="fa fa-check"></i><b>6.3</b> Targeting views</a></li>
+<li class="chapter" data-level="6.1" data-path="hello-shiny.html"><a href="hello-shiny.html"><i class="fa fa-check"></i><b>6.1</b> Embedding plotly in shiny</a><ul>
+<li class="chapter" data-level="6.1.1" data-path="hello-shiny.html"><a href="hello-shiny.html#your-first-shiny-app"><i class="fa fa-check"></i><b>6.1.1</b> Your first shiny app</a></li>
+<li class="chapter" data-level="6.1.2" data-path="hello-shiny.html"><a href="hello-shiny.html#hiding-and-redrawing-on-resize"><i class="fa fa-check"></i><b>6.1.2</b> Hiding and redrawing on resize</a></li>
+</ul></li>
+<li class="chapter" data-level="6.2" data-path="shiny-inputs.html"><a href="shiny-inputs.html"><i class="fa fa-check"></i><b>6.2</b> Using graphical output as a shiny input</a><ul>
+<li class="chapter" data-level="6.2.1" data-path="shiny-inputs.html"><a href="shiny-inputs.html#plotly-inputs"><i class="fa fa-check"></i><b>6.2.1</b> Accessing plotly input events</a></li>
+</ul></li>
+<li class="chapter" data-level="6.3" data-path="updating-views.html"><a href="updating-views.html"><i class="fa fa-check"></i><b>6.3</b> Updating views</a></li>
+<li class="chapter" data-level="6.4" data-path="targeting-views.html"><a href="targeting-views.html"><i class="fa fa-check"></i><b>6.4</b> Targeting views</a></li>
+<li class="chapter" data-level="6.5" data-path="shiny-performance.html"><a href="shiny-performance.html"><i class="fa fa-check"></i><b>6.5</b> Improving performance</a><ul>
+<li class="chapter" data-level="6.5.1" data-path="shiny-performance.html"><a href="shiny-performance.html#proxies"><i class="fa fa-check"></i><b>6.5.1</b> Partial plotly updates</a></li>
+<li class="chapter" data-level="6.5.2" data-path="shiny-performance.html"><a href="shiny-performance.html#partial-update-examples"><i class="fa fa-check"></i><b>6.5.2</b> Partial update examples</a></li>
+<li class="chapter" data-level="6.5.3" data-path="shiny-performance.html"><a href="shiny-performance.html#other-considerations"><i class="fa fa-check"></i><b>6.5.3</b> Other considerations</a></li>
+</ul></li>
 </ul></li>
 <li class="chapter" data-level="7" data-path="animating-views.html"><a href="animating-views.html"><i class="fa fa-check"></i><b>7</b> Animating views</a><ul>
 <li class="chapter" data-level="7.1" data-path="key-frame-animations.html"><a href="key-frame-animations.html"><i class="fa fa-check"></i><b>7.1</b> Key frame animations</a></li>
 <li class="chapter" data-level="7.2" data-path="linking-animated-views.html"><a href="linking-animated-views.html"><i class="fa fa-check"></i><b>7.2</b> Linking animated views</a></li>
 </ul></li>
 <li class="chapter" data-level="8" data-path="advanced-topics.html"><a href="advanced-topics.html"><i class="fa fa-check"></i><b>8</b> Advanced topics</a><ul>
-<li class="chapter" data-level="8.1" data-path="custom-behavior-via-javascript.html"><a href="custom-behavior-via-javascript.html"><i class="fa fa-check"></i><b>8.1</b> Custom behavior via JavaScript</a></li>
+<li class="chapter" data-level="8.1" data-path="javascript.html"><a href="javascript.html"><i class="fa fa-check"></i><b>8.1</b> Custom behavior via JavaScript</a></li>
 <li class="chapter" data-level="8.2" data-path="translating-custom-ggplot2-geoms.html"><a href="translating-custom-ggplot2-geoms.html"><i class="fa fa-check"></i><b>8.2</b> Translating custom ggplot2 geoms</a></li>
 <li class="chapter" data-level="8.3" data-path="designing-an-htmlwidget-interface.html"><a href="designing-an-htmlwidget-interface.html"><i class="fa fa-check"></i><b>8.3</b> Designing an htmlwidget interface</a></li>
 </ul></li>
@@ -261,22 +258,26 @@ code span.wa { color: #60a0b0; font-weight: bold; font-style: italic; } /* Warni
 
             <section class="normal" id="section-">
 <div id="updating-views" class="section level2">
-<h2><span class="header-section-number">6.2</span> Updating views</h2>
-<p>Obtaining data from a plotly event is easy, but updating view(s) based on the result of an event can be difficult. To start with something fairly easy, consider two scatterplots showing the same observations, but on different axes (i.e.., a subset of a scatterplot matrix). Figure <a href="updating-views.html#fig:plotlyLinkedBrushEasy">6.2</a> shows a linked lasso brush between two scatterplots. The main idea is that we first plot all the observations in black, then highlight the selection by adding an additional layer of selected points in red using the data returned by <code>event_data()</code>. In order to guarantee that we can uniquely identify observations in the event data, it is also crucial that we attach a <code>key</code> attribute to each observation (here the rownames of the data), which we can then use to filter the original data down to the selected observations.</p>
-<p>Figure <a href="updating-views.html#fig:plotlyLinkedBrushEasy">6.2</a> consciously updates the source of the selection (the top plot) to match the visual characteristics of the target (the bottom plot). In general, whenever linking views to display graphical selection(s), matching the visual characteristics of the selection both the source and target(s) can aide interpretation, especially when using interactive graphics to present results to others. Although the update rule in Figure <a href="updating-views.html#fig:plotlyLinkedBrushEasy">6.2</a> is to simply layer on additional points, a full redraw is performed during the update, which can impact performance when dealing with a large amount of graphical elements.</p>
-<p>Figure <a href="updating-views.html#fig:plotlyLinkedBrushEasy">6.2</a> could be made slightly more efficient by just changing the color of selected points, or dimming the non-selected points, rather than plotting an extra layer of points. However, this technique does not work for chart types that display aggregate values (e.g., how do you dim non-selected values in a box plot?). For this reason, in <a href="#linking-views-without-shiny">Linking views without shiny</a>, selections are implemented as an additional layer, but avoid the full redraw required when updating plot via <strong>shiny</strong> reactive framework.<a href="#fn19" class="footnote-ref" id="fnref19"><sup>19</sup></a></p>
+<h2><span class="header-section-number">6.3</span> Updating views</h2>
+<p>TODO:</p>
+<ol style="list-style-type: decimal">
+<li>rewrite and perhaps incorporate <a href="https://github.com/cpsievert/apps/blob/master/shiny/apps/plotlyAg/app.R" class="uri">https://github.com/cpsievert/apps/blob/master/shiny/apps/plotlyAg/app.R</a></li>
+</ol>
+<p>Obtaining data from a plotly event is easy, but updating view(s) based on the result of an event can be difficult. To start with something fairly easy, consider two scatterplots showing the same observations, but on different axes (i.e., a subset of a scatterplot matrix). Figure <a href="updating-views.html#fig:plotlyLinkedBrushEasy">6.7</a> shows a linked lasso brush between two scatterplots. The main idea is that we first plot all the observations in black, then highlight the selection by adding an additional layer of selected points in red using the data returned by <code>event_data()</code>. In order to guarantee that we can uniquely identify observations in the event data, it is also crucial that we attach a <code>key</code> attribute to each observation (here the rownames of the data), which we can then use to filter the original data down to the selected observations.</p>
+<p>Figure <a href="updating-views.html#fig:plotlyLinkedBrushEasy">6.7</a> consciously updates the source of the selection (the top plot) to match the visual characteristics of the target (the bottom plot). In general, whenever linking views to display graphical selection(s), matching the visual characteristics of the selection both the source and target(s) can aide interpretation, especially when using interactive graphics to present results to others. Although the update rule in Figure <a href="updating-views.html#fig:plotlyLinkedBrushEasy">6.7</a> is to simply layer on additional points, a full redraw is performed during the update, which can impact performance when dealing with a large amount of graphical elements.</p>
+<p>Figure <a href="updating-views.html#fig:plotlyLinkedBrushEasy">6.7</a> could be made slightly more efficient by just changing the color of selected points, or dimming the non-selected points, rather than plotting an extra layer of points. However, this technique does not work for chart types that display aggregate values (e.g., how do you dim non-selected values in a box plot?). For this reason, in <a href="#linking-views-without-shiny">Linking views without shiny</a>, selections are implemented as an additional layer, but avoid the full redraw required when updating plot via <strong>shiny</strong> reactive framework.<a href="#fn24" class="footnote-ref" id="fnref24"><sup>24</sup></a></p>
 <div class="figure"><span id="fig:plotlyLinkedBrushEasy"></span>
 <img src="images/plotlyLinkedBrushEasy.gif" alt="A video demonstration of linked brushing in a shiny app. The video can be accessed [here](http://i.imgur.com/rUroUHT.gif) and the code to run the example is [here](https://gist.github.com/cpsievert/5934f173cafffb8dfb4f23d5488cd185)" width="100%" />
 <p class="caption">
-Figure 6.2: A video demonstration of linked brushing in a shiny app. The video can be accessed <a href="http://i.imgur.com/rUroUHT.gif">here</a> and the code to run the example is <a href="https://gist.github.com/cpsievert/5934f173cafffb8dfb4f23d5488cd185">here</a>
+Figure 6.7: A video demonstration of linked brushing in a shiny app. The video can be accessed <a href="http://i.imgur.com/rUroUHT.gif">here</a> and the code to run the example is <a href="https://gist.github.com/cpsievert/5934f173cafffb8dfb4f23d5488cd185">here</a>
 </p>
 </div>
-<p>Since the update rule is the same for each view in Figure <a href="updating-views.html#fig:plotlyLinkedBrushEasy">6.2</a>, we end up with a lot of redundant code that can be made more modular, as shown <a href="https://gist.github.com/cpsievert/6fc17f4dc6d43c88dd214c12bb1a0324">here</a>. Making code more modular not only makes for less reading, but it leaves you less prone to making mistakes. Since the only difference between the two plots is the x/y variables, we can write a function that accepts x/y variables as input, and output a plotly object. Since this function outputs a plotly object, and is dependent upon <code>event_data()</code>, which can only be called within a reactive expression, this function can only be called within the <code>renderPlotly()</code> function in the <strong>plotly</strong> package.</p>
+<p>Since the update rule is the same for each view in Figure <a href="updating-views.html#fig:plotlyLinkedBrushEasy">6.7</a>, we end up with a lot of redundant code that can be made more modular, as shown <a href="https://gist.github.com/cpsievert/6fc17f4dc6d43c88dd214c12bb1a0324">here</a>. Making code more modular not only makes for less reading, but it leaves you less prone to making mistakes. Since the only difference between the two plots is the x/y variables, we can write a function that accepts x/y variables as input, and output a plotly object. Since this function outputs a plotly object, and is dependent upon <code>event_data()</code>, which can only be called within a reactive expression, this function can only be called within the <code>renderPlotly()</code> function in the <strong>plotly</strong> package.</p>
 </div>
 <div class="footnotes">
 <hr />
-<ol start="19">
-<li id="fn19"><p>To my knowledge, the <strong>leaflet</strong> package is the only R package which provides a way to update a plot in a shiny app without a full redraw.<a href="updating-views.html#fnref19" class="footnote-back">↩</a></p></li>
+<ol start="24">
+<li id="fn24"><p>To my knowledge, the <strong>leaflet</strong> package is the only R package which provides a way to update a plot in a shiny app without a full redraw.<a href="updating-views.html#fnref24" class="footnote-back">↩</a></p></li>
 </ol>
 </div>
             </section>
@@ -284,7 +285,7 @@ Figure 6.2: A video demonstration of linked brushing in a shiny app. The video c
           </div>
         </div>
       </div>
-<a href="accessing-events-in-shiny.html" class="navigation navigation-prev " aria-label="Previous page"><i class="fa fa-angle-left"></i></a>
+<a href="shiny-inputs.html" class="navigation navigation-prev " aria-label="Previous page"><i class="fa fa-angle-left"></i></a>
 <a href="targeting-views.html" class="navigation navigation-next " aria-label="Next page"><i class="fa fa-angle-right"></i></a>
     </div>
   </div>

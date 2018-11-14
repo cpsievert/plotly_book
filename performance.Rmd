@@ -1,0 +1,18 @@
+# Performance considerations {#performance}
+
+
+What's in a plotly object?
+What happens at print-time?
+Build-time versus render time
+Build time
+profvis
+Render time
+SVG vs Web-GL rendering
+Data summary/simplification
+
+
+Whether you’re printing the result of `ggplotly()`, `plot_ly()`, or generally any R htmlwidget, there are two main steps that occur: a build (i.e. compile) and render step. Roughly speaking, the build step translates R code to an R list. That list is then serialized as JSON (via `jsonlite::toJSON()`) and should match a JSON specification (i.e. schema) defined by the JavaScript library (which uses the JSON to render the widget).
+
+If you’ve ever found `ggplotly()` slow to print, chances are, the bulk of the time is spent building the R list and sending the JSON to plotly.js. For many htmlwidgets, the build time is negligible, but for more complex widgets like plotly, a lot of things need to happen, especially for ggplotly() since we call ggplot2::ggplot_build(), then crawl and map that data structure to plotly.js. In a **shiny** app, both the build and render stages are required on initial load, but the new `plotlyProxy()` interface provides a way to ‘cache’ expensive build (and render!) operation and update a graph by modifying just specific components of the figure (via plotly.js functions). Outside of a ‘reactive context’ like shiny, you could use `htmlwidgets::saveWidget()` to ‘cache’ the results of the build step to disk, send the file to someone else (or host it online somewhere), then only the render step is required to view the graph.
+
+A quick and easy way to try and improve render performance is to use canvas-based rendering (instead of vector-based SVG) with `toWebGL(p)`. Switching from vector to canvas is generally a good idea when dealing with >30,000 vectors, but in this case, we’re only dealing with a couple hundred vector paths, so switching from vector to canvas for our map won’t significantly improve rendering performance, and in fact, we’ll lose some nice SVG exclusive features (the plotly.js team is getting close to eliminating these limitations!). Instead, what we could (and should!) do is reduce the amount of points along to each path (technically speaking, we’ll reduce the complexity of the SVG d attribute).

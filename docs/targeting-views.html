@@ -32,7 +32,7 @@
   
   
 <link rel="prev" href="updating-views.html">
-<link rel="next" href="animating-views.html">
+<link rel="next" href="shiny-performance.html">
 <script src="libs/jquery/jquery.min.js"></script>
 <link href="libs/gitbook/css/style.css" rel="stylesheet" />
 <link href="libs/gitbook/css/plugin-bookdown.css" rel="stylesheet" />
@@ -60,27 +60,13 @@
 <script src="libs/selectize/selectize.min.js"></script>
 <link href="libs/colourpicker/colourpicker.min.css" rel="stylesheet" />
 <script src="libs/colourpicker/colourpicker.min.js"></script>
-<link href="libs/leaflet/leaflet.css" rel="stylesheet" />
-<script src="libs/leaflet/leaflet.js"></script>
-<link href="libs/leafletfix/leafletfix.css" rel="stylesheet" />
-<script src="libs/Proj4Leaflet/proj4-compressed.js"></script>
-<script src="libs/Proj4Leaflet/proj4leaflet.js"></script>
-<link href="libs/rstudio_leaflet/rstudio_leaflet.css" rel="stylesheet" />
-<script src="libs/leaflet-binding/leaflet.js"></script>
-<link href="libs/leaflet-easybutton/easy-button.css" rel="stylesheet" />
-<script src="libs/leaflet-easybutton/easy-button.js"></script>
-<script src="libs/leaflet-easybutton/EasyButton-binding.js"></script>
-<link href="libs/leaflet-locationfilter2/locationfilter.css" rel="stylesheet" />
-<script src="libs/leaflet-locationfilter2/locationfilter.js"></script>
-<script src="libs/leaflet-locationfilter2/locationfilter-bindings.js"></script>
-<link href="libs/ionicons/ionicons.min.css" rel="stylesheet" />
+<meta name="viewport" content="width=device-width, initial-scale=1" />
+<link href="libs/bootstrap/css/bootstrap.min.css" rel="stylesheet" />
+<script src="libs/bootstrap/js/bootstrap.min.js"></script>
 <link href="libs/ionrangeslider/css/ion.rangeSlider.css" rel="stylesheet" />
 <link href="libs/ionrangeslider/css/ion.rangeSlider.skinShiny.css" rel="stylesheet" />
 <script src="libs/ionrangeslider/js/ion.rangeSlider.min.js"></script>
 <script src="libs/strftime/strftime-min.js"></script>
-<meta name="viewport" content="width=device-width, initial-scale=1" />
-<link href="libs/bootstrap/css/bootstrap.min.css" rel="stylesheet" />
-<script src="libs/bootstrap/js/bootstrap.min.js"></script>
 
 
 <style type="text/css">
@@ -101,7 +87,7 @@ a.sourceLine { text-indent: -1em; padding-left: 1em; }
 pre.numberSource a.sourceLine
   { position: relative; left: -4em; }
 pre.numberSource a.sourceLine::before
-  { content: attr(data-line-number);
+  { content: attr(title);
     position: relative; left: -1em; text-align: right; vertical-align: baseline;
     border: none; pointer-events: all; display: inline-block;
     -webkit-touch-callout: none; -webkit-user-select: none;
@@ -229,16 +215,27 @@ code span.wa { color: #60a0b0; font-weight: bold; font-style: italic; } /* Warni
 <li class="chapter" data-level="5.4" data-path="limitations.html"><a href="limitations.html"><i class="fa fa-check"></i><b>5.4</b> Limitations</a></li>
 </ul></li>
 <li class="chapter" data-level="6" data-path="linking-server-side.html"><a href="linking-server-side.html"><i class="fa fa-check"></i><b>6</b> Linking views server-side</a><ul>
-<li class="chapter" data-level="6.1" data-path="accessing-events-in-shiny.html"><a href="accessing-events-in-shiny.html"><i class="fa fa-check"></i><b>6.1</b> Accessing events in shiny</a></li>
-<li class="chapter" data-level="6.2" data-path="updating-views.html"><a href="updating-views.html"><i class="fa fa-check"></i><b>6.2</b> Updating views</a></li>
-<li class="chapter" data-level="6.3" data-path="targeting-views.html"><a href="targeting-views.html"><i class="fa fa-check"></i><b>6.3</b> Targeting views</a></li>
+<li class="chapter" data-level="6.1" data-path="hello-shiny.html"><a href="hello-shiny.html"><i class="fa fa-check"></i><b>6.1</b> Embedding plotly in shiny</a><ul>
+<li class="chapter" data-level="6.1.1" data-path="hello-shiny.html"><a href="hello-shiny.html#your-first-shiny-app"><i class="fa fa-check"></i><b>6.1.1</b> Your first shiny app</a></li>
+<li class="chapter" data-level="6.1.2" data-path="hello-shiny.html"><a href="hello-shiny.html#hiding-and-redrawing-on-resize"><i class="fa fa-check"></i><b>6.1.2</b> Hiding and redrawing on resize</a></li>
+</ul></li>
+<li class="chapter" data-level="6.2" data-path="shiny-inputs.html"><a href="shiny-inputs.html"><i class="fa fa-check"></i><b>6.2</b> Using graphical output as a shiny input</a><ul>
+<li class="chapter" data-level="6.2.1" data-path="shiny-inputs.html"><a href="shiny-inputs.html#plotly-inputs"><i class="fa fa-check"></i><b>6.2.1</b> Accessing plotly input events</a></li>
+</ul></li>
+<li class="chapter" data-level="6.3" data-path="updating-views.html"><a href="updating-views.html"><i class="fa fa-check"></i><b>6.3</b> Updating views</a></li>
+<li class="chapter" data-level="6.4" data-path="targeting-views.html"><a href="targeting-views.html"><i class="fa fa-check"></i><b>6.4</b> Targeting views</a></li>
+<li class="chapter" data-level="6.5" data-path="shiny-performance.html"><a href="shiny-performance.html"><i class="fa fa-check"></i><b>6.5</b> Improving performance</a><ul>
+<li class="chapter" data-level="6.5.1" data-path="shiny-performance.html"><a href="shiny-performance.html#proxies"><i class="fa fa-check"></i><b>6.5.1</b> Partial plotly updates</a></li>
+<li class="chapter" data-level="6.5.2" data-path="shiny-performance.html"><a href="shiny-performance.html#partial-update-examples"><i class="fa fa-check"></i><b>6.5.2</b> Partial update examples</a></li>
+<li class="chapter" data-level="6.5.3" data-path="shiny-performance.html"><a href="shiny-performance.html#other-considerations"><i class="fa fa-check"></i><b>6.5.3</b> Other considerations</a></li>
+</ul></li>
 </ul></li>
 <li class="chapter" data-level="7" data-path="animating-views.html"><a href="animating-views.html"><i class="fa fa-check"></i><b>7</b> Animating views</a><ul>
 <li class="chapter" data-level="7.1" data-path="key-frame-animations.html"><a href="key-frame-animations.html"><i class="fa fa-check"></i><b>7.1</b> Key frame animations</a></li>
 <li class="chapter" data-level="7.2" data-path="linking-animated-views.html"><a href="linking-animated-views.html"><i class="fa fa-check"></i><b>7.2</b> Linking animated views</a></li>
 </ul></li>
 <li class="chapter" data-level="8" data-path="advanced-topics.html"><a href="advanced-topics.html"><i class="fa fa-check"></i><b>8</b> Advanced topics</a><ul>
-<li class="chapter" data-level="8.1" data-path="custom-behavior-via-javascript.html"><a href="custom-behavior-via-javascript.html"><i class="fa fa-check"></i><b>8.1</b> Custom behavior via JavaScript</a></li>
+<li class="chapter" data-level="8.1" data-path="javascript.html"><a href="javascript.html"><i class="fa fa-check"></i><b>8.1</b> Custom behavior via JavaScript</a></li>
 <li class="chapter" data-level="8.2" data-path="translating-custom-ggplot2-geoms.html"><a href="translating-custom-ggplot2-geoms.html"><i class="fa fa-check"></i><b>8.2</b> Translating custom ggplot2 geoms</a></li>
 <li class="chapter" data-level="8.3" data-path="designing-an-htmlwidget-interface.html"><a href="designing-an-htmlwidget-interface.html"><i class="fa fa-check"></i><b>8.3</b> Designing an htmlwidget interface</a></li>
 </ul></li>
@@ -261,26 +258,24 @@ code span.wa { color: #60a0b0; font-weight: bold; font-style: italic; } /* Warni
 
             <section class="normal" id="section-">
 <div id="targeting-views" class="section level2">
-<h2><span class="header-section-number">6.3</span> Targeting views</h2>
-<p>The linked brushing example in Figure <a href="updating-views.html#fig:plotlyLinkedBrushEasy">6.2</a> has bi-directional communication – a <code>&quot;plotly_selected&quot;</code> event deriving from either view impacts the other view. In other words, each view can be either the source or target of the selection. Often times, we want <em>one</em> view to be the source of a selection, and related view(s) to be the target. Figure <a href="targeting-views.html#fig:plotlyLinkedClick">6.3</a> shows a heatmap of a correlation matrix (the source of a selection) linked to a scatterplot (the target of a selection). By clicking on a cell in the correlation matrix, a scatterplot of the two variables is displayed below the matrix.</p>
-<p>To update the scatterplot view, Figure <a href="targeting-views.html#fig:plotlyLinkedClick">6.3</a> accesses <code>&quot;plotly_click&quot;</code> events via the <code>event_data()</code> function, but it also careful to not access click events triggered from the scatterplot. By strategically matching the value of the <code>source</code> argument in the <code>plot_ly()</code> and <code>event_data()</code> functions, Figure <a href="targeting-views.html#fig:plotlyLinkedClick">6.3</a> effectively restricts the scope of events to a specific plot (the heatmap).</p>
+<h2><span class="header-section-number">6.4</span> Targeting views</h2>
+<p>The linked brushing example in Figure <a href="updating-views.html#fig:plotlyLinkedBrushEasy">6.7</a> has bi-directional communication – a <code>&quot;plotly_selected&quot;</code> event deriving from either view impacts the other view. In other words, each view can be either the source or target of the selection. Often times, we want <em>one</em> view to be the source of a selection, and related view(s) to be the target. Figure <a href="targeting-views.html#fig:plotlyLinkedClick">6.8</a> shows a heatmap of a correlation matrix (the source of a selection) linked to a scatterplot (the target of a selection). By clicking on a cell in the correlation matrix, a scatterplot of the two variables is displayed below the matrix.</p>
+<p>To update the scatterplot view, Figure <a href="targeting-views.html#fig:plotlyLinkedClick">6.8</a> accesses <code>&quot;plotly_click&quot;</code> events via the <code>event_data()</code> function, but it also careful to not access click events triggered from the scatterplot. By strategically matching the value of the <code>source</code> argument in the <code>plot_ly()</code> and <code>event_data()</code> functions, Figure <a href="targeting-views.html#fig:plotlyLinkedClick">6.8</a> effectively restricts the scope of events to a specific plot (the heatmap).</p>
 <div class="figure"><span id="fig:plotlyLinkedClick"></span>
 <img src="images/plotlyLinkedClick.gif" alt="A video demonstration of clicking on a cell in a correlation matrix to view the corresponding scatterplot. The video can be accessed [here](http://i.imgur.com/2pNZejk.gif) and the code to run the example is [here](https://gist.github.com/cpsievert/ece4741967baf1840843ecc44c1bb677)" width="100%" />
 <p class="caption">
-Figure 6.3: A video demonstration of clicking on a cell in a correlation matrix to view the corresponding scatterplot. The video can be accessed <a href="http://i.imgur.com/2pNZejk.gif">here</a> and the code to run the example is <a href="https://gist.github.com/cpsievert/ece4741967baf1840843ecc44c1bb677">here</a>
+Figure 6.8: A video demonstration of clicking on a cell in a correlation matrix to view the corresponding scatterplot. The video can be accessed <a href="http://i.imgur.com/2pNZejk.gif">here</a> and the code to run the example is <a href="https://gist.github.com/cpsievert/ece4741967baf1840843ecc44c1bb677">here</a>
 </p>
 </div>
-<p>Another aspect of Figure <a href="targeting-views.html#fig:plotlyLinkedClick">6.3</a> that makes it an interesting example is that the <code>key</code> attribute is a matrix, matching the same dimensions of <code>z</code> (i.e, the values displayed in each cell). For good reason, most linked views paradigms (including the paradigm discussed in <a href="#linking-views-without-shiny">Linking views without shiny</a>) restrict linkage definitions to relational database schema. In this case, it is more efficient to implement the relation with a key matrix, rather than a column.</p>
-
+<p>Another aspect of Figure <a href="targeting-views.html#fig:plotlyLinkedClick">6.8</a> that makes it an interesting example is that the <code>key</code> attribute is a matrix, matching the same dimensions of <code>z</code> (i.e, the values displayed in each cell). For good reason, most linked views paradigms (including the paradigm discussed in <a href="#linking-views-without-shiny">Linking views without shiny</a>) restrict linkage definitions to relational database schema. In this case, it is more efficient to implement the relation with a key matrix, rather than a column.</p>
 </div>
-<!-- </div> -->
             </section>
 
           </div>
         </div>
       </div>
 <a href="updating-views.html" class="navigation navigation-prev " aria-label="Previous page"><i class="fa fa-angle-left"></i></a>
-<a href="animating-views.html" class="navigation navigation-next " aria-label="Next page"><i class="fa fa-angle-right"></i></a>
+<a href="shiny-performance.html" class="navigation navigation-next " aria-label="Next page"><i class="fa fa-angle-right"></i></a>
     </div>
   </div>
 <script src="libs/gitbook/js/app.min.js"></script>

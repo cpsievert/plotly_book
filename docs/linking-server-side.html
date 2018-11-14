@@ -32,7 +32,7 @@
   
   
 <link rel="prev" href="limitations.html">
-<link rel="next" href="accessing-events-in-shiny.html">
+<link rel="next" href="hello-shiny.html">
 <script src="libs/jquery/jquery.min.js"></script>
 <link href="libs/gitbook/css/style.css" rel="stylesheet" />
 <link href="libs/gitbook/css/plugin-bookdown.css" rel="stylesheet" />
@@ -60,27 +60,13 @@
 <script src="libs/selectize/selectize.min.js"></script>
 <link href="libs/colourpicker/colourpicker.min.css" rel="stylesheet" />
 <script src="libs/colourpicker/colourpicker.min.js"></script>
-<link href="libs/leaflet/leaflet.css" rel="stylesheet" />
-<script src="libs/leaflet/leaflet.js"></script>
-<link href="libs/leafletfix/leafletfix.css" rel="stylesheet" />
-<script src="libs/Proj4Leaflet/proj4-compressed.js"></script>
-<script src="libs/Proj4Leaflet/proj4leaflet.js"></script>
-<link href="libs/rstudio_leaflet/rstudio_leaflet.css" rel="stylesheet" />
-<script src="libs/leaflet-binding/leaflet.js"></script>
-<link href="libs/leaflet-easybutton/easy-button.css" rel="stylesheet" />
-<script src="libs/leaflet-easybutton/easy-button.js"></script>
-<script src="libs/leaflet-easybutton/EasyButton-binding.js"></script>
-<link href="libs/leaflet-locationfilter2/locationfilter.css" rel="stylesheet" />
-<script src="libs/leaflet-locationfilter2/locationfilter.js"></script>
-<script src="libs/leaflet-locationfilter2/locationfilter-bindings.js"></script>
-<link href="libs/ionicons/ionicons.min.css" rel="stylesheet" />
+<meta name="viewport" content="width=device-width, initial-scale=1" />
+<link href="libs/bootstrap/css/bootstrap.min.css" rel="stylesheet" />
+<script src="libs/bootstrap/js/bootstrap.min.js"></script>
 <link href="libs/ionrangeslider/css/ion.rangeSlider.css" rel="stylesheet" />
 <link href="libs/ionrangeslider/css/ion.rangeSlider.skinShiny.css" rel="stylesheet" />
 <script src="libs/ionrangeslider/js/ion.rangeSlider.min.js"></script>
 <script src="libs/strftime/strftime-min.js"></script>
-<meta name="viewport" content="width=device-width, initial-scale=1" />
-<link href="libs/bootstrap/css/bootstrap.min.css" rel="stylesheet" />
-<script src="libs/bootstrap/js/bootstrap.min.js"></script>
 
 
 <style type="text/css">
@@ -101,7 +87,7 @@ a.sourceLine { text-indent: -1em; padding-left: 1em; }
 pre.numberSource a.sourceLine
   { position: relative; left: -4em; }
 pre.numberSource a.sourceLine::before
-  { content: attr(data-line-number);
+  { content: attr(title);
     position: relative; left: -1em; text-align: right; vertical-align: baseline;
     border: none; pointer-events: all; display: inline-block;
     -webkit-touch-callout: none; -webkit-user-select: none;
@@ -229,16 +215,27 @@ code span.wa { color: #60a0b0; font-weight: bold; font-style: italic; } /* Warni
 <li class="chapter" data-level="5.4" data-path="limitations.html"><a href="limitations.html"><i class="fa fa-check"></i><b>5.4</b> Limitations</a></li>
 </ul></li>
 <li class="chapter" data-level="6" data-path="linking-server-side.html"><a href="linking-server-side.html"><i class="fa fa-check"></i><b>6</b> Linking views server-side</a><ul>
-<li class="chapter" data-level="6.1" data-path="accessing-events-in-shiny.html"><a href="accessing-events-in-shiny.html"><i class="fa fa-check"></i><b>6.1</b> Accessing events in shiny</a></li>
-<li class="chapter" data-level="6.2" data-path="updating-views.html"><a href="updating-views.html"><i class="fa fa-check"></i><b>6.2</b> Updating views</a></li>
-<li class="chapter" data-level="6.3" data-path="targeting-views.html"><a href="targeting-views.html"><i class="fa fa-check"></i><b>6.3</b> Targeting views</a></li>
+<li class="chapter" data-level="6.1" data-path="hello-shiny.html"><a href="hello-shiny.html"><i class="fa fa-check"></i><b>6.1</b> Embedding plotly in shiny</a><ul>
+<li class="chapter" data-level="6.1.1" data-path="hello-shiny.html"><a href="hello-shiny.html#your-first-shiny-app"><i class="fa fa-check"></i><b>6.1.1</b> Your first shiny app</a></li>
+<li class="chapter" data-level="6.1.2" data-path="hello-shiny.html"><a href="hello-shiny.html#hiding-and-redrawing-on-resize"><i class="fa fa-check"></i><b>6.1.2</b> Hiding and redrawing on resize</a></li>
+</ul></li>
+<li class="chapter" data-level="6.2" data-path="shiny-inputs.html"><a href="shiny-inputs.html"><i class="fa fa-check"></i><b>6.2</b> Using graphical output as a shiny input</a><ul>
+<li class="chapter" data-level="6.2.1" data-path="shiny-inputs.html"><a href="shiny-inputs.html#plotly-inputs"><i class="fa fa-check"></i><b>6.2.1</b> Accessing plotly input events</a></li>
+</ul></li>
+<li class="chapter" data-level="6.3" data-path="updating-views.html"><a href="updating-views.html"><i class="fa fa-check"></i><b>6.3</b> Updating views</a></li>
+<li class="chapter" data-level="6.4" data-path="targeting-views.html"><a href="targeting-views.html"><i class="fa fa-check"></i><b>6.4</b> Targeting views</a></li>
+<li class="chapter" data-level="6.5" data-path="shiny-performance.html"><a href="shiny-performance.html"><i class="fa fa-check"></i><b>6.5</b> Improving performance</a><ul>
+<li class="chapter" data-level="6.5.1" data-path="shiny-performance.html"><a href="shiny-performance.html#proxies"><i class="fa fa-check"></i><b>6.5.1</b> Partial plotly updates</a></li>
+<li class="chapter" data-level="6.5.2" data-path="shiny-performance.html"><a href="shiny-performance.html#partial-update-examples"><i class="fa fa-check"></i><b>6.5.2</b> Partial update examples</a></li>
+<li class="chapter" data-level="6.5.3" data-path="shiny-performance.html"><a href="shiny-performance.html#other-considerations"><i class="fa fa-check"></i><b>6.5.3</b> Other considerations</a></li>
+</ul></li>
 </ul></li>
 <li class="chapter" data-level="7" data-path="animating-views.html"><a href="animating-views.html"><i class="fa fa-check"></i><b>7</b> Animating views</a><ul>
 <li class="chapter" data-level="7.1" data-path="key-frame-animations.html"><a href="key-frame-animations.html"><i class="fa fa-check"></i><b>7.1</b> Key frame animations</a></li>
 <li class="chapter" data-level="7.2" data-path="linking-animated-views.html"><a href="linking-animated-views.html"><i class="fa fa-check"></i><b>7.2</b> Linking animated views</a></li>
 </ul></li>
 <li class="chapter" data-level="8" data-path="advanced-topics.html"><a href="advanced-topics.html"><i class="fa fa-check"></i><b>8</b> Advanced topics</a><ul>
-<li class="chapter" data-level="8.1" data-path="custom-behavior-via-javascript.html"><a href="custom-behavior-via-javascript.html"><i class="fa fa-check"></i><b>8.1</b> Custom behavior via JavaScript</a></li>
+<li class="chapter" data-level="8.1" data-path="javascript.html"><a href="javascript.html"><i class="fa fa-check"></i><b>8.1</b> Custom behavior via JavaScript</a></li>
 <li class="chapter" data-level="8.2" data-path="translating-custom-ggplot2-geoms.html"><a href="translating-custom-ggplot2-geoms.html"><i class="fa fa-check"></i><b>8.2</b> Translating custom ggplot2 geoms</a></li>
 <li class="chapter" data-level="8.3" data-path="designing-an-htmlwidget-interface.html"><a href="designing-an-htmlwidget-interface.html"><i class="fa fa-check"></i><b>8.3</b> Designing an htmlwidget interface</a></li>
 </ul></li>
@@ -262,7 +259,16 @@ code span.wa { color: #60a0b0; font-weight: bold; font-style: italic; } /* Warni
             <section class="normal" id="section-">
 <div id="linking-server-side" class="section level1">
 <h1><span class="header-section-number">6</span> Linking views server-side</h1>
-<p>Prose coming soon!</p> 
+<p>Section <a href="graphical-queries.html#graphical-queries">5.1</a> covers an approach to linking views client-side with graphical database queries, but not every linked data view can be reasonably framed as a database query. If you need more control, you have at least two more options: add custom JavaScript (covered in section <a href="javascript.html#javascript">8.1</a>) and/or link views server-side via a web application. Some concepts useful for the former approach are covered in <a href="javascript.html#javascript">8.1</a>, but this chapter is all about the latter approach.</p>
+<p>There are several different frameworks for creating web applications via R, but we’ll focus our attention on linking <strong>plotly</strong> graphs with <strong>shiny</strong> – an R package for creating reactive web applications entirely in R. <strong>Shiny</strong>’s reactive programming model allows R programmers to build upon their existing R knowledge and create data-driven web applications without any prior web programming experience. <strong>Shiny</strong> itself is largely agnostic to the engine used to render data views (that is, you can incorporate any sort of R output), but <strong>shiny</strong> itself also adds some special support for interacting with static R graphics and images <span class="citation">(Chang <a href="#ref-shiny-plot-interaction">2017</a>)</span>.</p>
+<p>When linking graphics in a web application, there are tradeoffs to consider when using static R plots over web-based graphics. As it turns out, those tradeoffs complement nicely with the relative strengths and weaknesses of linking views with <strong>plotly</strong>, making their combination a powerful toolkit for linking views on the web from R. <strong>Shiny</strong> itself provides a way to access events with static graphics made with any of the following R packages: <strong>graphics</strong>, <strong>ggplot2</strong>, and <strong>lattice</strong>. These pac are very mature, fully-featured, well-tested, and support a incredibly wide range of graphics. Comparatively speaking, <strong>plotly</strong> does not have the same range and history. However, interacting with static graphics can lead to a poor user experience because everytime a static graphic needs to be updated, <strong>shiny</strong> must make a round-trip to the server and regenerate an entirely new image. On the other hand, since <strong>plotly</strong> is inherently web-based, it allows for more control over how the graphics update in response to user input (e.g., change the color of a few points instead of redrawing the entire image). This idea is explored in more depth in section <a href="updating-views.html#updating-views">6.3</a>.</p>
+<p>This chapter teaches you how to link both static R and <strong>plotly</strong> graphics inside <strong>shiny</strong>, how to get those graphics communicating with other types of data views, and how to do it all efficiently. Section <a href="hello-shiny.html#hello-shiny">6.1</a> provides an introduction to <strong>shiny</strong> it’s reactive programming model, Section <a href="shiny-inputs.html#shiny-inputs">6.2</a> shows how to access user input to both <strong>plotly</strong> and static graphics in <strong>shiny</strong>, Section <a href="updating-views.html#updating-views">6.3</a> shows how to update views based on these user input events, Section <a href="targeting-views.html#targeting-views">6.4</a> shows how to target specific views, and Section <a href="#advanced-applications"><strong>??</strong></a> demonstrates some advanced applications.</p> 
+</div>
+<h3>References</h3>
+<div id="refs" class="references">
+<div id="ref-shiny-plot-interaction">
+<p>Chang, Winston. 2017. “Interactive Plots (in Shiny).” Blog. <a href="http://shiny.rstudio.com/articles/plot-interaction.html">http://shiny.rstudio.com/articles/plot-interaction.html</a>.</p>
+</div>
 </div>
             </section>
 
@@ -270,7 +276,7 @@ code span.wa { color: #60a0b0; font-weight: bold; font-style: italic; } /* Warni
         </div>
       </div>
 <a href="limitations.html" class="navigation navigation-prev " aria-label="Previous page"><i class="fa fa-angle-left"></i></a>
-<a href="accessing-events-in-shiny.html" class="navigation navigation-next " aria-label="Next page"><i class="fa fa-angle-right"></i></a>
+<a href="hello-shiny.html" class="navigation navigation-next " aria-label="Next page"><i class="fa fa-angle-right"></i></a>
     </div>
   </div>
 <script src="libs/gitbook/js/app.min.js"></script>
