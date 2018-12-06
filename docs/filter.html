@@ -5,11 +5,11 @@
 
   <meta charset="UTF-8">
   <meta http-equiv="X-UA-Compatible" content="IE=edge">
-  <title>plotly for R</title>
+  <title>5.2 Highlight versus filter events | plotly for R</title>
   <meta name="description" content="An overview of the R package plotly">
-  <meta name="generator" content="bookdown 0.7 and GitBook 2.6.7">
+  <meta name="generator" content="bookdown  and GitBook 2.6.7">
 
-  <meta property="og:title" content="plotly for R" />
+  <meta property="og:title" content="5.2 Highlight versus filter events | plotly for R />
   <meta property="og:type" content="book" />
   <meta property="og:url" content="http://ropensci.github.io/plotly/" />
   <meta property="og:image" content="http://ropensci.github.io/plotly/images/plotly.png" />
@@ -17,7 +17,7 @@
   <meta name="github-repo" content="ropensci/plotly" />
 
   <meta name="twitter:card" content="summary" />
-  <meta name="twitter:title" content="plotly for R" />
+  <meta name="twitter:title" content="5.2 Highlight versus filter events | plotly for R />
   <meta name="twitter:site" content="@cpsievert" />
   <meta name="twitter:description" content="An overview of the R package plotly" />
   <meta name="twitter:image" content="http://ropensci.github.io/plotly/images/plotly.png" />
@@ -35,6 +35,7 @@
 <link rel="next" href="querying-examples.html">
 <script src="libs/jquery/jquery.min.js"></script>
 <link href="libs/gitbook/css/style.css" rel="stylesheet" />
+<link href="libs/gitbook/css/plugin-table.css" rel="stylesheet" />
 <link href="libs/gitbook/css/plugin-bookdown.css" rel="stylesheet" />
 <link href="libs/gitbook/css/plugin-highlight.css" rel="stylesheet" />
 <link href="libs/gitbook/css/plugin-search.css" rel="stylesheet" />
@@ -219,16 +220,22 @@ code span.wa { color: #60a0b0; font-weight: bold; font-style: italic; } /* Warni
 <li class="chapter" data-level="6.1.1" data-path="hello-shiny.html"><a href="hello-shiny.html#your-first-shiny-app"><i class="fa fa-check"></i><b>6.1.1</b> Your first shiny app</a></li>
 <li class="chapter" data-level="6.1.2" data-path="hello-shiny.html"><a href="hello-shiny.html#hiding-and-redrawing-on-resize"><i class="fa fa-check"></i><b>6.1.2</b> Hiding and redrawing on resize</a></li>
 </ul></li>
-<li class="chapter" data-level="6.2" data-path="shiny-inputs.html"><a href="shiny-inputs.html"><i class="fa fa-check"></i><b>6.2</b> Using graphical output as a shiny input</a><ul>
-<li class="chapter" data-level="6.2.1" data-path="shiny-inputs.html"><a href="shiny-inputs.html#plotly-inputs"><i class="fa fa-check"></i><b>6.2.1</b> Accessing plotly input events</a></li>
+<li class="chapter" data-level="6.2" data-path="shiny-plotly-inputs.html"><a href="shiny-plotly-inputs.html"><i class="fa fa-check"></i><b>6.2</b> Accessing plotly input events</a><ul>
+<li class="chapter" data-level="6.2.1" data-path="shiny-plotly-inputs.html"><a href="shiny-plotly-inputs.html#dragging-events"><i class="fa fa-check"></i><b>6.2.1</b> Dragging events</a></li>
+<li class="chapter" data-level="6.2.2" data-path="shiny-plotly-inputs.html"><a href="shiny-plotly-inputs.html#d-events"><i class="fa fa-check"></i><b>6.2.2</b> 3D events</a></li>
+<li class="chapter" data-level="6.2.3" data-path="shiny-plotly-inputs.html"><a href="shiny-plotly-inputs.html#mapping-events-to-input-data"><i class="fa fa-check"></i><b>6.2.3</b> Mapping events to input data</a></li>
+<li class="chapter" data-level="6.2.4" data-path="shiny-plotly-inputs.html"><a href="shiny-plotly-inputs.html#accessing-edit-events"><i class="fa fa-check"></i><b>6.2.4</b> Accessing edit events</a></li>
 </ul></li>
-<li class="chapter" data-level="6.3" data-path="updating-views.html"><a href="updating-views.html"><i class="fa fa-check"></i><b>6.3</b> Updating views</a></li>
-<li class="chapter" data-level="6.4" data-path="targeting-views.html"><a href="targeting-views.html"><i class="fa fa-check"></i><b>6.4</b> Targeting views</a></li>
-<li class="chapter" data-level="6.5" data-path="shiny-performance.html"><a href="shiny-performance.html"><i class="fa fa-check"></i><b>6.5</b> Improving performance</a><ul>
-<li class="chapter" data-level="6.5.1" data-path="shiny-performance.html"><a href="shiny-performance.html#proxies"><i class="fa fa-check"></i><b>6.5.1</b> Partial plotly updates</a></li>
-<li class="chapter" data-level="6.5.2" data-path="shiny-performance.html"><a href="shiny-performance.html#partial-update-examples"><i class="fa fa-check"></i><b>6.5.2</b> Partial update examples</a></li>
-<li class="chapter" data-level="6.5.3" data-path="shiny-performance.html"><a href="shiny-performance.html#other-considerations"><i class="fa fa-check"></i><b>6.5.3</b> Other considerations</a></li>
+<li class="chapter" data-level="6.3" data-path="updating-views.html"><a href="updating-views.html"><i class="fa fa-check"></i><b>6.3</b> Responding to input events</a></li>
+<li class="chapter" data-level="6.4" data-path="shiny-performance.html"><a href="shiny-performance.html"><i class="fa fa-check"></i><b>6.4</b> Improving performance</a><ul>
+<li class="chapter" data-level="6.4.1" data-path="shiny-performance.html"><a href="shiny-performance.html#proxies"><i class="fa fa-check"></i><b>6.4.1</b> Partial plotly updates</a></li>
+<li class="chapter" data-level="6.4.2" data-path="shiny-performance.html"><a href="shiny-performance.html#partial-update-examples"><i class="fa fa-check"></i><b>6.4.2</b> Partial update examples</a></li>
 </ul></li>
+<li class="chapter" data-level="6.5" data-path="advanced-applications.html"><a href="advanced-applications.html"><i class="fa fa-check"></i><b>6.5</b> Advanced applications</a><ul>
+<li class="chapter" data-level="6.5.1" data-path="advanced-applications.html"><a href="advanced-applications.html#drill-down"><i class="fa fa-check"></i><b>6.5.1</b> Drill-down</a></li>
+<li class="chapter" data-level="6.5.2" data-path="advanced-applications.html"><a href="advanced-applications.html#cross-filter"><i class="fa fa-check"></i><b>6.5.2</b> Cross-filter</a></li>
+</ul></li>
+<li class="chapter" data-level="6.6" data-path="discussion.html"><a href="discussion.html"><i class="fa fa-check"></i><b>6.6</b> Discussion</a></li>
 </ul></li>
 <li class="chapter" data-level="7" data-path="animating-views.html"><a href="animating-views.html"><i class="fa fa-check"></i><b>7</b> Animating views</a><ul>
 <li class="chapter" data-level="7.1" data-path="key-frame-animations.html"><a href="key-frame-animations.html"><i class="fa fa-check"></i><b>7.1</b> Key frame animations</a></li>
@@ -265,29 +272,29 @@ code span.wa { color: #60a0b0; font-weight: bold; font-style: italic; } /* Warni
 <li>A filter event completely remove existing marks and rescales axes to the remaining data.<a href="#fn15" class="footnote-ref" id="fnref15"><sup>15</sup></a></li>
 </ul>
 <p>Figure <a href="filter.html#fig:filter-highlight">5.8</a> provides a quick visual depiction in the difference between filter and highlight events. At least currently, filter events must be fired from filter widgets from the <strong>crosstalk</strong> package, and these widgets expect an object of class <code>SharedData</code> as input. As it turns out, the <code>highlight_key()</code> function, introduced in section <a href="graphical-queries.html#graphical-queries">5.1</a>, creates a <code>SharedData</code> instance and is essentially a wrapper for <code>crosstalk::SharedData$new()</code>.</p>
-<div class="sourceCode" id="cb78"><pre class="sourceCode r"><code class="sourceCode r"><a class="sourceLine" id="cb78-1" title="1"><span class="kw">class</span>(<span class="kw">highlight_key</span>(mtcars))</a>
-<a class="sourceLine" id="cb78-2" title="2"><span class="co">#&gt; [1] &quot;SharedData&quot; &quot;R6&quot;</span></a></code></pre></div>
+<pre class="sourceCode r"><code class="sourceCode r"><span class="kw">class</span>(<span class="kw">highlight_key</span>(mtcars))
+<span class="co">#&gt; [1] &quot;SharedData&quot; &quot;R6&quot;</span></code></pre>
 <p>Figure <a href="filter.html#fig:filter-highlight">5.8</a> demonstrates the main difference in logic between filter and highlight events. Notice how, in the code implementation, the ‘querying variable’ definition for filter events is part of the filter widget. That is, <code>city</code> is defined as the variable of interest in <code>filter_select()</code>, not in the creation of <code>tx</code>. That is (intentionally) different from the approach for highlight events, where the ‘querying variable’ is a property of the dataset behind the graphical elements.</p>
-<div class="sourceCode" id="cb79"><pre class="sourceCode r"><code class="sourceCode r"><a class="sourceLine" id="cb79-1" title="1"><span class="kw">library</span>(crosstalk)</a>
-<a class="sourceLine" id="cb79-2" title="2"></a>
-<a class="sourceLine" id="cb79-3" title="3"><span class="co"># generally speaking, use a &quot;unique&quot; key for filter, </span></a>
-<a class="sourceLine" id="cb79-4" title="4"><span class="co"># especially when you have multiple filters!</span></a>
-<a class="sourceLine" id="cb79-5" title="5">tx &lt;-<span class="st"> </span><span class="kw">highlight_key</span>(txhousing)</a>
-<a class="sourceLine" id="cb79-6" title="6">gg &lt;-<span class="st"> </span><span class="kw">ggplot</span>(tx) <span class="op">+</span><span class="st"> </span><span class="kw">geom_line</span>(<span class="kw">aes</span>(date, median, <span class="dt">group =</span> city))</a>
-<a class="sourceLine" id="cb79-7" title="7">filter &lt;-<span class="st"> </span><span class="kw">bscols</span>(</a>
-<a class="sourceLine" id="cb79-8" title="8">  <span class="kw">filter_select</span>(<span class="st">&quot;id&quot;</span>, <span class="st">&quot;Select a city&quot;</span>, tx, <span class="op">~</span>city),</a>
-<a class="sourceLine" id="cb79-9" title="9">  <span class="kw">ggplotly</span>(gg, <span class="dt">dynamicTicks =</span> <span class="ot">TRUE</span>),</a>
-<a class="sourceLine" id="cb79-10" title="10">  <span class="dt">widths =</span> <span class="kw">c</span>(<span class="dv">12</span>, <span class="dv">12</span>)</a>
-<a class="sourceLine" id="cb79-11" title="11">)</a>
-<a class="sourceLine" id="cb79-12" title="12"></a>
-<a class="sourceLine" id="cb79-13" title="13">tx2 &lt;-<span class="st"> </span><span class="kw">highlight_key</span>(txhousing, <span class="op">~</span>city, <span class="st">&quot;Select a city&quot;</span>)</a>
-<a class="sourceLine" id="cb79-14" title="14">gg &lt;-<span class="st"> </span><span class="kw">ggplot</span>(tx2) <span class="op">+</span><span class="st"> </span><span class="kw">geom_line</span>(<span class="kw">aes</span>(date, median, <span class="dt">group =</span> city))</a>
-<a class="sourceLine" id="cb79-15" title="15">select &lt;-<span class="st"> </span><span class="kw">highlight</span>(</a>
-<a class="sourceLine" id="cb79-16" title="16">  <span class="kw">ggplotly</span>(gg, <span class="dt">tooltip =</span> <span class="st">&quot;city&quot;</span>), </a>
-<a class="sourceLine" id="cb79-17" title="17">  <span class="dt">selectize =</span> <span class="ot">TRUE</span>, <span class="dt">persistent =</span> <span class="ot">TRUE</span></a>
-<a class="sourceLine" id="cb79-18" title="18">)</a>
-<a class="sourceLine" id="cb79-19" title="19"></a>
-<a class="sourceLine" id="cb79-20" title="20"><span class="kw">bscols</span>(filter, select)</a></code></pre></div>
+<pre class="sourceCode r"><code class="sourceCode r"><span class="kw">library</span>(crosstalk)
+
+<span class="co"># generally speaking, use a &quot;unique&quot; key for filter, </span>
+<span class="co"># especially when you have multiple filters!</span>
+tx &lt;-<span class="st"> </span><span class="kw">highlight_key</span>(txhousing)
+gg &lt;-<span class="st"> </span><span class="kw">ggplot</span>(tx) <span class="op">+</span><span class="st"> </span><span class="kw">geom_line</span>(<span class="kw">aes</span>(date, median, <span class="dt">group =</span> city))
+filter &lt;-<span class="st"> </span><span class="kw">bscols</span>(
+  <span class="kw">filter_select</span>(<span class="st">&quot;id&quot;</span>, <span class="st">&quot;Select a city&quot;</span>, tx, <span class="op">~</span>city),
+  <span class="kw">ggplotly</span>(gg, <span class="dt">dynamicTicks =</span> <span class="ot">TRUE</span>),
+  <span class="dt">widths =</span> <span class="kw">c</span>(<span class="dv">12</span>, <span class="dv">12</span>)
+)
+
+tx2 &lt;-<span class="st"> </span><span class="kw">highlight_key</span>(txhousing, <span class="op">~</span>city, <span class="st">&quot;Select a city&quot;</span>)
+gg &lt;-<span class="st"> </span><span class="kw">ggplot</span>(tx2) <span class="op">+</span><span class="st"> </span><span class="kw">geom_line</span>(<span class="kw">aes</span>(date, median, <span class="dt">group =</span> city))
+select &lt;-<span class="st"> </span><span class="kw">highlight</span>(
+  <span class="kw">ggplotly</span>(gg, <span class="dt">tooltip =</span> <span class="st">&quot;city&quot;</span>), 
+  <span class="dt">selectize =</span> <span class="ot">TRUE</span>, <span class="dt">persistent =</span> <span class="ot">TRUE</span>
+)
+
+<span class="kw">bscols</span>(filter, select)</code></pre>
 <div class="figure"><span id="fig:filter-highlight"></span>
 <img src="https://i.imgur.com/krSFN0S.gif" alt="Comparing filter to highlight events. Filter events completely remove existing marks and rescales axes to the remaining data." width="100%" />
 <p class="caption">
@@ -295,19 +302,19 @@ Figure 5.8: Comparing filter to highlight events. Filter events completely remov
 </p>
 </div>
 <p>When using multiple filter widgets to filter the same dataset, as done in Figure <a href="filter.html#fig:multiple-filter-widgets">5.9</a>, you should avoid referencing a non-unique querying variable (i.e., key-column) in the <code>SharedData</code> object used to populate the filter widgets. Remember that the default behavior of <code>highlight_key()</code> and <code>SharedData$new()</code> is to use the row-index (which is unique). This ensures the intersection of multiple filtering widgets queries the correct subset of data.</p>
-<div class="sourceCode" id="cb80"><pre class="sourceCode r"><code class="sourceCode r"><a class="sourceLine" id="cb80-1" title="1"><span class="kw">library</span>(crosstalk)</a>
-<a class="sourceLine" id="cb80-2" title="2">tx &lt;-<span class="st"> </span><span class="kw">highlight_key</span>(txhousing)</a>
-<a class="sourceLine" id="cb80-3" title="3">widgets &lt;-<span class="st"> </span><span class="kw">bscols</span>(</a>
-<a class="sourceLine" id="cb80-4" title="4">  <span class="dt">widths =</span> <span class="kw">c</span>(<span class="dv">12</span>, <span class="dv">12</span>, <span class="dv">12</span>),</a>
-<a class="sourceLine" id="cb80-5" title="5">  <span class="kw">filter_select</span>(<span class="st">&quot;city&quot;</span>, <span class="st">&quot;Cities&quot;</span>, tx, <span class="op">~</span>city),</a>
-<a class="sourceLine" id="cb80-6" title="6">  <span class="kw">filter_slider</span>(<span class="st">&quot;sales&quot;</span>, <span class="st">&quot;Sales&quot;</span>, tx, <span class="op">~</span>sales),</a>
-<a class="sourceLine" id="cb80-7" title="7">  <span class="kw">filter_checkbox</span>(<span class="st">&quot;year&quot;</span>, <span class="st">&quot;Years&quot;</span>, tx, <span class="op">~</span>year, <span class="dt">inline =</span> <span class="ot">TRUE</span>)</a>
-<a class="sourceLine" id="cb80-8" title="8">)</a>
-<a class="sourceLine" id="cb80-9" title="9"><span class="kw">bscols</span>(</a>
-<a class="sourceLine" id="cb80-10" title="10">  <span class="dt">widths =</span> <span class="kw">c</span>(<span class="dv">4</span>, <span class="dv">8</span>), widgets, </a>
-<a class="sourceLine" id="cb80-11" title="11">  <span class="kw">plot_ly</span>(tx, <span class="dt">x =</span> <span class="op">~</span>date, <span class="dt">y =</span> <span class="op">~</span>median, <span class="dt">showlegend =</span> <span class="ot">FALSE</span>) <span class="op">%&gt;%</span><span class="st"> </span></a>
-<a class="sourceLine" id="cb80-12" title="12"><span class="st">    </span><span class="kw">add_lines</span>(<span class="dt">color =</span> <span class="op">~</span>city, <span class="dt">colors =</span> <span class="st">&quot;black&quot;</span>)</a>
-<a class="sourceLine" id="cb80-13" title="13">)</a></code></pre></div>
+<pre class="sourceCode r"><code class="sourceCode r"><span class="kw">library</span>(crosstalk)
+tx &lt;-<span class="st"> </span><span class="kw">highlight_key</span>(txhousing)
+widgets &lt;-<span class="st"> </span><span class="kw">bscols</span>(
+  <span class="dt">widths =</span> <span class="kw">c</span>(<span class="dv">12</span>, <span class="dv">12</span>, <span class="dv">12</span>),
+  <span class="kw">filter_select</span>(<span class="st">&quot;city&quot;</span>, <span class="st">&quot;Cities&quot;</span>, tx, <span class="op">~</span>city),
+  <span class="kw">filter_slider</span>(<span class="st">&quot;sales&quot;</span>, <span class="st">&quot;Sales&quot;</span>, tx, <span class="op">~</span>sales),
+  <span class="kw">filter_checkbox</span>(<span class="st">&quot;year&quot;</span>, <span class="st">&quot;Years&quot;</span>, tx, <span class="op">~</span>year, <span class="dt">inline =</span> <span class="ot">TRUE</span>)
+)
+<span class="kw">bscols</span>(
+  <span class="dt">widths =</span> <span class="kw">c</span>(<span class="dv">4</span>, <span class="dv">8</span>), widgets, 
+  <span class="kw">plot_ly</span>(tx, <span class="dt">x =</span> <span class="op">~</span>date, <span class="dt">y =</span> <span class="op">~</span>median, <span class="dt">showlegend =</span> <span class="ot">FALSE</span>) <span class="op">%&gt;%</span><span class="st"> </span>
+<span class="st">    </span><span class="kw">add_lines</span>(<span class="dt">color =</span> <span class="op">~</span>city, <span class="dt">colors =</span> <span class="st">&quot;black&quot;</span>)
+)</code></pre>
 <div class="container-fluid crosstalk-bscols">
 <div class="fluid-row">
 <div class="col-xs-4">
@@ -495,23 +502,23 @@ Figure 5.9: Filtering on multiple variables.
 </p>
 </div>
 <p>As Figure <a href="filter.html#fig:plotly-leaflet-filter">5.10</a> demonstrates, filter and highlight events can work in conjunction with various <strong>htmlwidgets</strong>. In fact, since the semantics of filter are more well-defined than highlight, linking filter events across <strong>htmlwidgets</strong> via <strong>crosstalk</strong> should generally be more well-supported.<a href="#fn16" class="footnote-ref" id="fnref16"><sup>16</sup></a></p>
-<div class="sourceCode" id="cb81"><pre class="sourceCode r"><code class="sourceCode r"><a class="sourceLine" id="cb81-1" title="1"><span class="kw">library</span>(leaflet)</a>
-<a class="sourceLine" id="cb81-2" title="2"></a>
-<a class="sourceLine" id="cb81-3" title="3">eqs &lt;-<span class="st"> </span><span class="kw">highlight_key</span>(quakes)</a>
-<a class="sourceLine" id="cb81-4" title="4">stations &lt;-<span class="st"> </span><span class="kw">filter_slider</span>(<span class="st">&quot;station&quot;</span>, <span class="st">&quot;Number of Stations&quot;</span>, eqs, <span class="op">~</span>stations)</a>
-<a class="sourceLine" id="cb81-5" title="5"></a>
-<a class="sourceLine" id="cb81-6" title="6">p &lt;-<span class="st"> </span><span class="kw">plot_ly</span>(eqs, <span class="dt">x =</span> <span class="op">~</span>depth, <span class="dt">y =</span> <span class="op">~</span>mag) <span class="op">%&gt;%</span><span class="st"> </span></a>
-<a class="sourceLine" id="cb81-7" title="7"><span class="st">  </span><span class="kw">add_markers</span>(<span class="dt">alpha =</span> <span class="fl">0.5</span>) <span class="op">%&gt;%</span><span class="st"> </span></a>
-<a class="sourceLine" id="cb81-8" title="8"><span class="st">  </span><span class="kw">highlight</span>(<span class="st">&quot;plotly_selected&quot;</span>)</a>
-<a class="sourceLine" id="cb81-9" title="9"></a>
-<a class="sourceLine" id="cb81-10" title="10">map &lt;-<span class="st"> </span><span class="kw">leaflet</span>(eqs) <span class="op">%&gt;%</span><span class="st"> </span></a>
-<a class="sourceLine" id="cb81-11" title="11"><span class="st">  </span><span class="kw">addTiles</span>() <span class="op">%&gt;%</span><span class="st"> </span></a>
-<a class="sourceLine" id="cb81-12" title="12"><span class="st">  </span><span class="kw">addCircles</span>()</a>
-<a class="sourceLine" id="cb81-13" title="13"></a>
-<a class="sourceLine" id="cb81-14" title="14"><span class="kw">bscols</span>(</a>
-<a class="sourceLine" id="cb81-15" title="15">  <span class="dt">widths =</span> <span class="kw">c</span>(<span class="dv">6</span>, <span class="dv">6</span>, <span class="dv">3</span>), </a>
-<a class="sourceLine" id="cb81-16" title="16">  p, map, stations</a>
-<a class="sourceLine" id="cb81-17" title="17">)</a></code></pre></div>
+<pre class="sourceCode r"><code class="sourceCode r"><span class="kw">library</span>(leaflet)
+
+eqs &lt;-<span class="st"> </span><span class="kw">highlight_key</span>(quakes)
+stations &lt;-<span class="st"> </span><span class="kw">filter_slider</span>(<span class="st">&quot;station&quot;</span>, <span class="st">&quot;Number of Stations&quot;</span>, eqs, <span class="op">~</span>stations)
+
+p &lt;-<span class="st"> </span><span class="kw">plot_ly</span>(eqs, <span class="dt">x =</span> <span class="op">~</span>depth, <span class="dt">y =</span> <span class="op">~</span>mag) <span class="op">%&gt;%</span><span class="st"> </span>
+<span class="st">  </span><span class="kw">add_markers</span>(<span class="dt">alpha =</span> <span class="fl">0.5</span>) <span class="op">%&gt;%</span><span class="st"> </span>
+<span class="st">  </span><span class="kw">highlight</span>(<span class="st">&quot;plotly_selected&quot;</span>)
+
+map &lt;-<span class="st"> </span><span class="kw">leaflet</span>(eqs) <span class="op">%&gt;%</span><span class="st"> </span>
+<span class="st">  </span><span class="kw">addTiles</span>() <span class="op">%&gt;%</span><span class="st"> </span>
+<span class="st">  </span><span class="kw">addCircles</span>()
+
+<span class="kw">bscols</span>(
+  <span class="dt">widths =</span> <span class="kw">c</span>(<span class="dv">6</span>, <span class="dv">6</span>, <span class="dv">3</span>), 
+  p, map, stations
+)</code></pre>
 <div class="figure"><span id="fig:plotly-leaflet-filter"></span>
 <img src="https://i.imgur.com/jox7yEK.gif" alt="Linking **plotly** and **leaflet** through both **filter** and **highlight** events." width="100%" />
 <p class="caption">
@@ -519,17 +526,17 @@ Figure 5.10: Linking <strong>plotly</strong> and <strong>leaflet</strong> throug
 </p>
 </div>
 <p>When combining filter and highlight events, one (current) limitation to be aware of is that the highlighting variable has to be nested inside filter variable(s). For example, in Figure <a href="filter.html#fig:gapminder-filter-highlight">5.11</a>, we can filter by continent and highlight by country, but there is currently no way to highlight by contintent and filter by country.</p>
-<div class="sourceCode" id="cb82"><pre class="sourceCode r"><code class="sourceCode r"><a class="sourceLine" id="cb82-1" title="1"><span class="kw">library</span>(gapminder)</a>
-<a class="sourceLine" id="cb82-2" title="2">g &lt;-<span class="st"> </span><span class="kw">highlight_key</span>(gapminder, <span class="op">~</span>country)</a>
-<a class="sourceLine" id="cb82-3" title="3">continent_filter &lt;-<span class="st"> </span><span class="kw">filter_select</span>(<span class="st">&quot;filter&quot;</span>, <span class="st">&quot;Select a country&quot;</span>, g, <span class="op">~</span>continent)</a>
-<a class="sourceLine" id="cb82-4" title="4"></a>
-<a class="sourceLine" id="cb82-5" title="5">p &lt;-<span class="st"> </span><span class="kw">plot_ly</span>(g) <span class="op">%&gt;%</span></a>
-<a class="sourceLine" id="cb82-6" title="6"><span class="st">  </span><span class="kw">group_by</span>(country) <span class="op">%&gt;%</span></a>
-<a class="sourceLine" id="cb82-7" title="7"><span class="st">  </span><span class="kw">add_lines</span>(<span class="dt">x =</span> <span class="op">~</span>year, <span class="dt">y =</span> <span class="op">~</span>lifeExp, <span class="dt">color =</span> <span class="op">~</span>continent) <span class="op">%&gt;%</span></a>
-<a class="sourceLine" id="cb82-8" title="8"><span class="st">  </span><span class="kw">layout</span>(<span class="dt">xaxis =</span> <span class="kw">list</span>(<span class="dt">title =</span> <span class="st">&quot;&quot;</span>)) <span class="op">%&gt;%</span></a>
-<a class="sourceLine" id="cb82-9" title="9"><span class="st">  </span><span class="kw">highlight</span>(<span class="dt">selected =</span> <span class="kw">attrs_selected</span>(<span class="dt">showlegend =</span> <span class="ot">FALSE</span>))</a>
-<a class="sourceLine" id="cb82-10" title="10"></a>
-<a class="sourceLine" id="cb82-11" title="11"><span class="kw">bscols</span>(continent_filter, p, <span class="dt">widths =</span> <span class="dv">12</span>)</a></code></pre></div>
+<pre class="sourceCode r"><code class="sourceCode r"><span class="kw">library</span>(gapminder)
+g &lt;-<span class="st"> </span><span class="kw">highlight_key</span>(gapminder, <span class="op">~</span>country)
+continent_filter &lt;-<span class="st"> </span><span class="kw">filter_select</span>(<span class="st">&quot;filter&quot;</span>, <span class="st">&quot;Select a country&quot;</span>, g, <span class="op">~</span>continent)
+
+p &lt;-<span class="st"> </span><span class="kw">plot_ly</span>(g) <span class="op">%&gt;%</span>
+<span class="st">  </span><span class="kw">group_by</span>(country) <span class="op">%&gt;%</span>
+<span class="st">  </span><span class="kw">add_lines</span>(<span class="dt">x =</span> <span class="op">~</span>year, <span class="dt">y =</span> <span class="op">~</span>lifeExp, <span class="dt">color =</span> <span class="op">~</span>continent) <span class="op">%&gt;%</span>
+<span class="st">  </span><span class="kw">layout</span>(<span class="dt">xaxis =</span> <span class="kw">list</span>(<span class="dt">title =</span> <span class="st">&quot;&quot;</span>)) <span class="op">%&gt;%</span>
+<span class="st">  </span><span class="kw">highlight</span>(<span class="dt">selected =</span> <span class="kw">attrs_selected</span>(<span class="dt">showlegend =</span> <span class="ot">FALSE</span>))
+
+<span class="kw">bscols</span>(continent_filter, p, <span class="dt">widths =</span> <span class="dv">12</span>)</code></pre>
 <div class="figure"><span id="fig:gapminder-filter-highlight"></span>
 <img src="https://i.imgur.com/Kn2ATwQ.gif" alt="Combining filtering and highlighting with non-unique querying variables" width="100%" />
 <p class="caption">
@@ -594,6 +601,10 @@ gitbook.start({
 "edit": {
 "link": "https://github.com/cpsievert/plotly_book/edit/master/linked-views-filter.Rmd",
 "text": "Edit"
+},
+"history": {
+"link": null,
+"text": null
 },
 "download": null,
 "toc": {

@@ -5,11 +5,11 @@
 
   <meta charset="UTF-8">
   <meta http-equiv="X-UA-Compatible" content="IE=edge">
-  <title>plotly for R</title>
+  <title>6 Linking views server-side | plotly for R</title>
   <meta name="description" content="An overview of the R package plotly">
-  <meta name="generator" content="bookdown 0.7 and GitBook 2.6.7">
+  <meta name="generator" content="bookdown  and GitBook 2.6.7">
 
-  <meta property="og:title" content="plotly for R" />
+  <meta property="og:title" content="6 Linking views server-side | plotly for R />
   <meta property="og:type" content="book" />
   <meta property="og:url" content="http://ropensci.github.io/plotly/" />
   <meta property="og:image" content="http://ropensci.github.io/plotly/images/plotly.png" />
@@ -17,7 +17,7 @@
   <meta name="github-repo" content="ropensci/plotly" />
 
   <meta name="twitter:card" content="summary" />
-  <meta name="twitter:title" content="plotly for R" />
+  <meta name="twitter:title" content="6 Linking views server-side | plotly for R />
   <meta name="twitter:site" content="@cpsievert" />
   <meta name="twitter:description" content="An overview of the R package plotly" />
   <meta name="twitter:image" content="http://ropensci.github.io/plotly/images/plotly.png" />
@@ -35,6 +35,7 @@
 <link rel="next" href="hello-shiny.html">
 <script src="libs/jquery/jquery.min.js"></script>
 <link href="libs/gitbook/css/style.css" rel="stylesheet" />
+<link href="libs/gitbook/css/plugin-table.css" rel="stylesheet" />
 <link href="libs/gitbook/css/plugin-bookdown.css" rel="stylesheet" />
 <link href="libs/gitbook/css/plugin-highlight.css" rel="stylesheet" />
 <link href="libs/gitbook/css/plugin-search.css" rel="stylesheet" />
@@ -219,16 +220,22 @@ code span.wa { color: #60a0b0; font-weight: bold; font-style: italic; } /* Warni
 <li class="chapter" data-level="6.1.1" data-path="hello-shiny.html"><a href="hello-shiny.html#your-first-shiny-app"><i class="fa fa-check"></i><b>6.1.1</b> Your first shiny app</a></li>
 <li class="chapter" data-level="6.1.2" data-path="hello-shiny.html"><a href="hello-shiny.html#hiding-and-redrawing-on-resize"><i class="fa fa-check"></i><b>6.1.2</b> Hiding and redrawing on resize</a></li>
 </ul></li>
-<li class="chapter" data-level="6.2" data-path="shiny-inputs.html"><a href="shiny-inputs.html"><i class="fa fa-check"></i><b>6.2</b> Using graphical output as a shiny input</a><ul>
-<li class="chapter" data-level="6.2.1" data-path="shiny-inputs.html"><a href="shiny-inputs.html#plotly-inputs"><i class="fa fa-check"></i><b>6.2.1</b> Accessing plotly input events</a></li>
+<li class="chapter" data-level="6.2" data-path="shiny-plotly-inputs.html"><a href="shiny-plotly-inputs.html"><i class="fa fa-check"></i><b>6.2</b> Accessing plotly input events</a><ul>
+<li class="chapter" data-level="6.2.1" data-path="shiny-plotly-inputs.html"><a href="shiny-plotly-inputs.html#dragging-events"><i class="fa fa-check"></i><b>6.2.1</b> Dragging events</a></li>
+<li class="chapter" data-level="6.2.2" data-path="shiny-plotly-inputs.html"><a href="shiny-plotly-inputs.html#d-events"><i class="fa fa-check"></i><b>6.2.2</b> 3D events</a></li>
+<li class="chapter" data-level="6.2.3" data-path="shiny-plotly-inputs.html"><a href="shiny-plotly-inputs.html#mapping-events-to-input-data"><i class="fa fa-check"></i><b>6.2.3</b> Mapping events to input data</a></li>
+<li class="chapter" data-level="6.2.4" data-path="shiny-plotly-inputs.html"><a href="shiny-plotly-inputs.html#accessing-edit-events"><i class="fa fa-check"></i><b>6.2.4</b> Accessing edit events</a></li>
 </ul></li>
-<li class="chapter" data-level="6.3" data-path="updating-views.html"><a href="updating-views.html"><i class="fa fa-check"></i><b>6.3</b> Updating views</a></li>
-<li class="chapter" data-level="6.4" data-path="targeting-views.html"><a href="targeting-views.html"><i class="fa fa-check"></i><b>6.4</b> Targeting views</a></li>
-<li class="chapter" data-level="6.5" data-path="shiny-performance.html"><a href="shiny-performance.html"><i class="fa fa-check"></i><b>6.5</b> Improving performance</a><ul>
-<li class="chapter" data-level="6.5.1" data-path="shiny-performance.html"><a href="shiny-performance.html#proxies"><i class="fa fa-check"></i><b>6.5.1</b> Partial plotly updates</a></li>
-<li class="chapter" data-level="6.5.2" data-path="shiny-performance.html"><a href="shiny-performance.html#partial-update-examples"><i class="fa fa-check"></i><b>6.5.2</b> Partial update examples</a></li>
-<li class="chapter" data-level="6.5.3" data-path="shiny-performance.html"><a href="shiny-performance.html#other-considerations"><i class="fa fa-check"></i><b>6.5.3</b> Other considerations</a></li>
+<li class="chapter" data-level="6.3" data-path="updating-views.html"><a href="updating-views.html"><i class="fa fa-check"></i><b>6.3</b> Responding to input events</a></li>
+<li class="chapter" data-level="6.4" data-path="shiny-performance.html"><a href="shiny-performance.html"><i class="fa fa-check"></i><b>6.4</b> Improving performance</a><ul>
+<li class="chapter" data-level="6.4.1" data-path="shiny-performance.html"><a href="shiny-performance.html#proxies"><i class="fa fa-check"></i><b>6.4.1</b> Partial plotly updates</a></li>
+<li class="chapter" data-level="6.4.2" data-path="shiny-performance.html"><a href="shiny-performance.html#partial-update-examples"><i class="fa fa-check"></i><b>6.4.2</b> Partial update examples</a></li>
 </ul></li>
+<li class="chapter" data-level="6.5" data-path="advanced-applications.html"><a href="advanced-applications.html"><i class="fa fa-check"></i><b>6.5</b> Advanced applications</a><ul>
+<li class="chapter" data-level="6.5.1" data-path="advanced-applications.html"><a href="advanced-applications.html#drill-down"><i class="fa fa-check"></i><b>6.5.1</b> Drill-down</a></li>
+<li class="chapter" data-level="6.5.2" data-path="advanced-applications.html"><a href="advanced-applications.html#cross-filter"><i class="fa fa-check"></i><b>6.5.2</b> Cross-filter</a></li>
+</ul></li>
+<li class="chapter" data-level="6.6" data-path="discussion.html"><a href="discussion.html"><i class="fa fa-check"></i><b>6.6</b> Discussion</a></li>
 </ul></li>
 <li class="chapter" data-level="7" data-path="animating-views.html"><a href="animating-views.html"><i class="fa fa-check"></i><b>7</b> Animating views</a><ul>
 <li class="chapter" data-level="7.1" data-path="key-frame-animations.html"><a href="key-frame-animations.html"><i class="fa fa-check"></i><b>7.1</b> Key frame animations</a></li>
@@ -261,8 +268,8 @@ code span.wa { color: #60a0b0; font-weight: bold; font-style: italic; } /* Warni
 <h1><span class="header-section-number">6</span> Linking views server-side</h1>
 <p>Section <a href="graphical-queries.html#graphical-queries">5.1</a> covers an approach to linking views client-side with graphical database queries, but not every linked data view can be reasonably framed as a database query. If you need more control, you have at least two more options: add custom JavaScript (covered in section <a href="javascript.html#javascript">8.1</a>) and/or link views server-side via a web application. Some concepts useful for the former approach are covered in <a href="javascript.html#javascript">8.1</a>, but this chapter is all about the latter approach.</p>
 <p>There are several different frameworks for creating web applications via R, but we’ll focus our attention on linking <strong>plotly</strong> graphs with <strong>shiny</strong> – an R package for creating reactive web applications entirely in R. <strong>Shiny</strong>’s reactive programming model allows R programmers to build upon their existing R knowledge and create data-driven web applications without any prior web programming experience. <strong>Shiny</strong> itself is largely agnostic to the engine used to render data views (that is, you can incorporate any sort of R output), but <strong>shiny</strong> itself also adds some special support for interacting with static R graphics and images <span class="citation">(Chang <a href="#ref-shiny-plot-interaction">2017</a>)</span>.</p>
-<p>When linking graphics in a web application, there are tradeoffs to consider when using static R plots over web-based graphics. As it turns out, those tradeoffs complement nicely with the relative strengths and weaknesses of linking views with <strong>plotly</strong>, making their combination a powerful toolkit for linking views on the web from R. <strong>Shiny</strong> itself provides a way to access events with static graphics made with any of the following R packages: <strong>graphics</strong>, <strong>ggplot2</strong>, and <strong>lattice</strong>. These pac are very mature, fully-featured, well-tested, and support a incredibly wide range of graphics. Comparatively speaking, <strong>plotly</strong> does not have the same range and history. However, interacting with static graphics can lead to a poor user experience because everytime a static graphic needs to be updated, <strong>shiny</strong> must make a round-trip to the server and regenerate an entirely new image. On the other hand, since <strong>plotly</strong> is inherently web-based, it allows for more control over how the graphics update in response to user input (e.g., change the color of a few points instead of redrawing the entire image). This idea is explored in more depth in section <a href="updating-views.html#updating-views">6.3</a>.</p>
-<p>This chapter teaches you how to link both static R and <strong>plotly</strong> graphics inside <strong>shiny</strong>, how to get those graphics communicating with other types of data views, and how to do it all efficiently. Section <a href="hello-shiny.html#hello-shiny">6.1</a> provides an introduction to <strong>shiny</strong> it’s reactive programming model, Section <a href="shiny-inputs.html#shiny-inputs">6.2</a> shows how to access user input to both <strong>plotly</strong> and static graphics in <strong>shiny</strong>, Section <a href="updating-views.html#updating-views">6.3</a> shows how to update views based on these user input events, Section <a href="targeting-views.html#targeting-views">6.4</a> shows how to target specific views, and Section <a href="#advanced-applications"><strong>??</strong></a> demonstrates some advanced applications.</p> 
+<p>When linking graphics in a web application, there are tradeoffs to consider when using static R plots over web-based graphics. As it turns out, those tradeoffs complement nicely with the relative strengths and weaknesses of linking views with <strong>plotly</strong>, making their combination a powerful toolkit for linking views on the web from R. <strong>Shiny</strong> itself provides a way to access events with static graphics made with any of the following R packages: <strong>graphics</strong>, <strong>ggplot2</strong>, and <strong>lattice</strong>. These packages are very mature, fully-featured, well-tested, and support a incredibly wide range of graphics, but since they must be regenerated on the server, they are fundamentally limited from an interactive graphics perspective. Comparatively speaking, <strong>plotly</strong> does not have the same range and history, but it does provide more options and control over interactivity. More specifically, because <strong>plotly</strong> is inherently web-based, it allows for more control over how the graphics update in response to user input (e.g., change the color of a few points instead of redrawing the entire image). This idea is explored in more depth in section <a href="updating-views.html#updating-views">6.3</a>.</p>
+<p>This chapter teaches you how to use <strong>plotly</strong> graphs inside <strong>shiny</strong>, how to get those graphics communicating with other types of data views, and how to do it all efficiently. Section <a href="hello-shiny.html#hello-shiny">6.1</a> provides an introduction to <strong>shiny</strong> it’s reactive programming model, Section <a href="shiny-plotly-inputs.html#shiny-plotly-inputs">6.2</a> shows how to access user input to both <strong>plotly</strong>, Section <a href="updating-views.html#updating-views">6.3</a> shows how to inform other views, Section <a href="shiny-performance.html#proxies">6.4.1</a> shows how to perform updates efficiently, and Section <a href="advanced-applications.html#advanced-applications">6.5</a> demonstrates some advanced applications.</p> 
 </div>
 <h3>References</h3>
 <div id="refs" class="references">
@@ -298,6 +305,10 @@ gitbook.start({
 "edit": {
 "link": "https://github.com/cpsievert/plotly_book/edit/master/linked-views-shiny.Rmd",
 "text": "Edit"
+},
+"history": {
+"link": null,
+"text": null
 },
 "download": null,
 "toc": {

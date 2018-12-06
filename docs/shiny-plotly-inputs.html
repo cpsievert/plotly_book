@@ -1,0 +1,654 @@
+<!DOCTYPE html>
+<html >
+
+<head>
+
+  <meta charset="UTF-8">
+  <meta http-equiv="X-UA-Compatible" content="IE=edge">
+  <title>6.2 Accessing plotly input events | plotly for R</title>
+  <meta name="description" content="An overview of the R package plotly">
+  <meta name="generator" content="bookdown  and GitBook 2.6.7">
+
+  <meta property="og:title" content="6.2 Accessing plotly input events | plotly for R />
+  <meta property="og:type" content="book" />
+  <meta property="og:url" content="http://ropensci.github.io/plotly/" />
+  <meta property="og:image" content="http://ropensci.github.io/plotly/images/plotly.png" />
+  <meta property="og:description" content="An overview of the R package plotly" />
+  <meta name="github-repo" content="ropensci/plotly" />
+
+  <meta name="twitter:card" content="summary" />
+  <meta name="twitter:title" content="6.2 Accessing plotly input events | plotly for R />
+  <meta name="twitter:site" content="@cpsievert" />
+  <meta name="twitter:description" content="An overview of the R package plotly" />
+  <meta name="twitter:image" content="http://ropensci.github.io/plotly/images/plotly.png" />
+
+<meta name="author" content="Carson Sievert">
+
+
+
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <meta name="apple-mobile-web-app-capable" content="yes">
+  <meta name="apple-mobile-web-app-status-bar-style" content="black">
+  
+  
+<link rel="prev" href="hello-shiny.html">
+<link rel="next" href="updating-views.html">
+<script src="libs/jquery/jquery.min.js"></script>
+<link href="libs/gitbook/css/style.css" rel="stylesheet" />
+<link href="libs/gitbook/css/plugin-table.css" rel="stylesheet" />
+<link href="libs/gitbook/css/plugin-bookdown.css" rel="stylesheet" />
+<link href="libs/gitbook/css/plugin-highlight.css" rel="stylesheet" />
+<link href="libs/gitbook/css/plugin-search.css" rel="stylesheet" />
+<link href="libs/gitbook/css/plugin-fontsettings.css" rel="stylesheet" />
+
+
+
+
+
+
+
+<script src="libs/htmlwidgets/htmlwidgets.js"></script>
+<script src="libs/plotly-binding/plotly.js"></script>
+<script src="libs/typedarray/typedarray.min.js"></script>
+<link href="libs/crosstalk/css/crosstalk.css" rel="stylesheet" />
+<script src="libs/crosstalk/js/crosstalk.min.js"></script>
+<link href="libs/plotly-htmlwidgets-css/plotly-htmlwidgets.css" rel="stylesheet" />
+<script src="libs/plotly-main/plotly-latest.min.js"></script>
+<link href="libs/jsoneditor/jsoneditor.min.css" rel="stylesheet" />
+<script src="libs/jsoneditor/jsoneditor.min.js"></script>
+<script src="libs/jsonedit-binding/jsonedit.js"></script>
+<link href="libs/selectize/selectize.bootstrap3.css" rel="stylesheet" />
+<script src="libs/selectize/selectize.min.js"></script>
+<link href="libs/colourpicker/colourpicker.min.css" rel="stylesheet" />
+<script src="libs/colourpicker/colourpicker.min.js"></script>
+<meta name="viewport" content="width=device-width, initial-scale=1" />
+<link href="libs/bootstrap/css/bootstrap.min.css" rel="stylesheet" />
+<script src="libs/bootstrap/js/bootstrap.min.js"></script>
+<link href="libs/ionrangeslider/css/ion.rangeSlider.css" rel="stylesheet" />
+<link href="libs/ionrangeslider/css/ion.rangeSlider.skinShiny.css" rel="stylesheet" />
+<script src="libs/ionrangeslider/js/ion.rangeSlider.min.js"></script>
+<script src="libs/strftime/strftime-min.js"></script>
+
+
+<style type="text/css">
+a.sourceLine { display: inline-block; line-height: 1.25; }
+a.sourceLine { pointer-events: none; color: inherit; text-decoration: inherit; }
+a.sourceLine:empty { height: 1.2em; }
+.sourceCode { overflow: visible; }
+code.sourceCode { white-space: pre; position: relative; }
+div.sourceCode { margin: 1em 0; }
+pre.sourceCode { margin: 0; }
+@media screen {
+div.sourceCode { overflow: auto; }
+}
+@media print {
+code.sourceCode { white-space: pre-wrap; }
+a.sourceLine { text-indent: -1em; padding-left: 1em; }
+}
+pre.numberSource a.sourceLine
+  { position: relative; left: -4em; }
+pre.numberSource a.sourceLine::before
+  { content: attr(title);
+    position: relative; left: -1em; text-align: right; vertical-align: baseline;
+    border: none; pointer-events: all; display: inline-block;
+    -webkit-touch-callout: none; -webkit-user-select: none;
+    -khtml-user-select: none; -moz-user-select: none;
+    -ms-user-select: none; user-select: none;
+    padding: 0 4px; width: 4em;
+    color: #aaaaaa;
+  }
+pre.numberSource { margin-left: 3em; border-left: 1px solid #aaaaaa;  padding-left: 4px; }
+div.sourceCode
+  {  }
+@media screen {
+a.sourceLine::before { text-decoration: underline; }
+}
+code span.al { color: #ff0000; font-weight: bold; } /* Alert */
+code span.an { color: #60a0b0; font-weight: bold; font-style: italic; } /* Annotation */
+code span.at { color: #7d9029; } /* Attribute */
+code span.bn { color: #40a070; } /* BaseN */
+code span.bu { } /* BuiltIn */
+code span.cf { color: #007020; font-weight: bold; } /* ControlFlow */
+code span.ch { color: #4070a0; } /* Char */
+code span.cn { color: #880000; } /* Constant */
+code span.co { color: #60a0b0; font-style: italic; } /* Comment */
+code span.cv { color: #60a0b0; font-weight: bold; font-style: italic; } /* CommentVar */
+code span.do { color: #ba2121; font-style: italic; } /* Documentation */
+code span.dt { color: #902000; } /* DataType */
+code span.dv { color: #40a070; } /* DecVal */
+code span.er { color: #ff0000; font-weight: bold; } /* Error */
+code span.ex { } /* Extension */
+code span.fl { color: #40a070; } /* Float */
+code span.fu { color: #06287e; } /* Function */
+code span.im { } /* Import */
+code span.in { color: #60a0b0; font-weight: bold; font-style: italic; } /* Information */
+code span.kw { color: #007020; font-weight: bold; } /* Keyword */
+code span.op { color: #666666; } /* Operator */
+code span.ot { color: #007020; } /* Other */
+code span.pp { color: #bc7a00; } /* Preprocessor */
+code span.sc { color: #4070a0; } /* SpecialChar */
+code span.ss { color: #bb6688; } /* SpecialString */
+code span.st { color: #4070a0; } /* String */
+code span.va { color: #19177c; } /* Variable */
+code span.vs { color: #4070a0; } /* VerbatimString */
+code span.wa { color: #60a0b0; font-weight: bold; font-style: italic; } /* Warning */
+</style>
+
+<link rel="stylesheet" href="css/plotly.css" type="text/css" />
+<link rel="stylesheet" href="css/style.css" type="text/css" />
+</head>
+
+<body>
+
+
+
+  <div class="book without-animation with-summary font-size-2 font-family-1" data-basepath=".">
+
+    <div class="book-summary">
+      <nav role="navigation">
+
+<ul class="summary">
+<li class="chapter" data-level="" data-path="index.html"><a href="index.html"><i class="fa fa-check"></i>Overview</a><ul>
+<li class="chapter" data-level="" data-path="installation.html"><a href="installation.html"><i class="fa fa-check"></i>Installation</a></li>
+<li class="chapter" data-level="" data-path="get-started.html"><a href="get-started.html"><i class="fa fa-check"></i>Get started</a></li>
+<li class="chapter" data-level="" data-path="plot-ly-for-collaboration.html"><a href="plot-ly-for-collaboration.html"><i class="fa fa-check"></i>plot.ly for collaboration</a></li>
+</ul></li>
+<li class="chapter" data-level="1" data-path="two-approaches-one-object.html"><a href="two-approaches-one-object.html"><i class="fa fa-check"></i><b>1</b> Two approaches, one object</a><ul>
+<li class="chapter" data-level="1.1" data-path="txhousing-case-study.html"><a href="txhousing-case-study.html"><i class="fa fa-check"></i><b>1.1</b> A case study of housing sales in Texas</a><ul>
+<li class="chapter" data-level="1.1.1" data-path="txhousing-case-study.html"><a href="txhousing-case-study.html#ggplotly"><i class="fa fa-check"></i><b>1.1.1</b> The <code>ggplotly()</code> function</a></li>
+<li class="chapter" data-level="1.1.2" data-path="txhousing-case-study.html"><a href="txhousing-case-study.html#the-plot_ly-interface"><i class="fa fa-check"></i><b>1.1.2</b> The <code>plot_ly()</code> interface</a></li>
+</ul></li>
+<li class="chapter" data-level="1.2" data-path="extending-ggplotly.html"><a href="extending-ggplotly.html"><i class="fa fa-check"></i><b>1.2</b> Extending <code>ggplotly()</code></a><ul>
+<li class="chapter" data-level="1.2.1" data-path="extending-ggplotly.html"><a href="extending-ggplotly.html#customizing-the-layout"><i class="fa fa-check"></i><b>1.2.1</b> Customizing the layout</a></li>
+<li class="chapter" data-level="1.2.2" data-path="extending-ggplotly.html"><a href="extending-ggplotly.html#modifying-layers"><i class="fa fa-check"></i><b>1.2.2</b> Modifying layers</a></li>
+<li class="chapter" data-level="1.2.3" data-path="extending-ggplotly.html"><a href="extending-ggplotly.html#leveraging-statistical-output"><i class="fa fa-check"></i><b>1.2.3</b> Leveraging statistical output</a></li>
+</ul></li>
+</ul></li>
+<li class="chapter" data-level="2" data-path="the-plotly-cookbook.html"><a href="the-plotly-cookbook.html"><i class="fa fa-check"></i><b>2</b> The plotly cookbook</a><ul>
+<li class="chapter" data-level="2.1" data-path="scatter-traces.html"><a href="scatter-traces.html"><i class="fa fa-check"></i><b>2.1</b> Scatter traces</a><ul>
+<li class="chapter" data-level="2.1.1" data-path="scatter-traces.html"><a href="scatter-traces.html#scatterplots"><i class="fa fa-check"></i><b>2.1.1</b> Scatterplots</a></li>
+<li class="chapter" data-level="2.1.2" data-path="scatter-traces.html"><a href="scatter-traces.html#dotplots-error-bars"><i class="fa fa-check"></i><b>2.1.2</b> Dotplots &amp; error bars</a></li>
+<li class="chapter" data-level="2.1.3" data-path="scatter-traces.html"><a href="scatter-traces.html#line-plots"><i class="fa fa-check"></i><b>2.1.3</b> Line plots</a></li>
+<li class="chapter" data-level="2.1.4" data-path="scatter-traces.html"><a href="scatter-traces.html#segments"><i class="fa fa-check"></i><b>2.1.4</b> Segments</a></li>
+<li class="chapter" data-level="2.1.5" data-path="scatter-traces.html"><a href="scatter-traces.html#ribbons"><i class="fa fa-check"></i><b>2.1.5</b> Ribbons</a></li>
+<li class="chapter" data-level="2.1.6" data-path="scatter-traces.html"><a href="scatter-traces.html#polygons"><i class="fa fa-check"></i><b>2.1.6</b> Polygons</a></li>
+</ul></li>
+<li class="chapter" data-level="2.2" data-path="maps.html"><a href="maps.html"><i class="fa fa-check"></i><b>2.2</b> Maps</a><ul>
+<li class="chapter" data-level="2.2.1" data-path="maps.html"><a href="maps.html#using-scatter-traces"><i class="fa fa-check"></i><b>2.2.1</b> Using scatter traces</a></li>
+<li class="chapter" data-level="2.2.2" data-path="maps.html"><a href="maps.html#choropleths"><i class="fa fa-check"></i><b>2.2.2</b> Choropleths</a></li>
+<li class="chapter" data-level="2.2.3" data-path="maps.html"><a href="maps.html#using-geom_sf"><i class="fa fa-check"></i><b>2.2.3</b> Using <code>geom_sf()</code></a></li>
+<li class="chapter" data-level="2.2.4" data-path="maps.html"><a href="maps.html#using-ggmap"><i class="fa fa-check"></i><b>2.2.4</b> Using ggmap</a></li>
+</ul></li>
+<li class="chapter" data-level="2.3" data-path="bars-histograms.html"><a href="bars-histograms.html"><i class="fa fa-check"></i><b>2.3</b> Bars &amp; histograms</a><ul>
+<li class="chapter" data-level="2.3.1" data-path="bars-histograms.html"><a href="bars-histograms.html#multiple-numeric-distributions"><i class="fa fa-check"></i><b>2.3.1</b> Multiple numeric distributions</a></li>
+<li class="chapter" data-level="2.3.2" data-path="bars-histograms.html"><a href="bars-histograms.html#multiple-discrete-distributions"><i class="fa fa-check"></i><b>2.3.2</b> Multiple discrete distributions</a></li>
+</ul></li>
+<li class="chapter" data-level="2.4" data-path="boxplots.html"><a href="boxplots.html"><i class="fa fa-check"></i><b>2.4</b> Boxplots</a></li>
+<li class="chapter" data-level="2.5" data-path="d-frequencies.html"><a href="d-frequencies.html"><i class="fa fa-check"></i><b>2.5</b> 2D frequencies</a><ul>
+<li class="chapter" data-level="2.5.1" data-path="d-frequencies.html"><a href="d-frequencies.html#rectangular-binning-in-plotly.js"><i class="fa fa-check"></i><b>2.5.1</b> Rectangular binning in plotly.js</a></li>
+<li class="chapter" data-level="2.5.2" data-path="d-frequencies.html"><a href="d-frequencies.html#rectangular-binning-in-r"><i class="fa fa-check"></i><b>2.5.2</b> Rectangular binning in R</a></li>
+<li class="chapter" data-level="2.5.3" data-path="d-frequencies.html"><a href="d-frequencies.html#categorical-axes"><i class="fa fa-check"></i><b>2.5.3</b> Categorical axes</a></li>
+</ul></li>
+<li class="chapter" data-level="2.6" data-path="other-3d-plots.html"><a href="other-3d-plots.html"><i class="fa fa-check"></i><b>2.6</b> Other 3D plots</a></li>
+<li class="chapter" data-level="2.7" data-path="raster-images.html"><a href="raster-images.html"><i class="fa fa-check"></i><b>2.7</b> Raster images</a></li>
+</ul></li>
+<li class="chapter" data-level="3" data-path="whats-a-data-view.html"><a href="whats-a-data-view.html"><i class="fa fa-check"></i><b>3</b> What’s a data view?</a></li>
+<li class="chapter" data-level="4" data-path="arranging-multiple-views.html"><a href="arranging-multiple-views.html"><i class="fa fa-check"></i><b>4</b> Arranging multiple views</a><ul>
+<li class="chapter" data-level="4.1" data-path="arranging-htmlwidgets.html"><a href="arranging-htmlwidgets.html"><i class="fa fa-check"></i><b>4.1</b> Arranging htmlwidgets</a></li>
+<li class="chapter" data-level="4.2" data-path="merging-plotly-objects.html"><a href="merging-plotly-objects.html"><i class="fa fa-check"></i><b>4.2</b> Merging plotly objects</a><ul>
+<li class="chapter" data-level="4.2.1" data-path="merging-plotly-objects.html"><a href="merging-plotly-objects.html#recursive-subplots"><i class="fa fa-check"></i><b>4.2.1</b> Recursive subplots</a></li>
+<li class="chapter" data-level="4.2.2" data-path="merging-plotly-objects.html"><a href="merging-plotly-objects.html#ggplot2-subplots"><i class="fa fa-check"></i><b>4.2.2</b> ggplot2 subplots</a></li>
+</ul></li>
+<li class="chapter" data-level="4.3" data-path="navigating-many-views.html"><a href="navigating-many-views.html"><i class="fa fa-check"></i><b>4.3</b> Navigating many views</a></li>
+</ul></li>
+<li class="chapter" data-level="5" data-path="linking-views-client-side.html"><a href="linking-views-client-side.html"><i class="fa fa-check"></i><b>5</b> Linking views client-side</a><ul>
+<li class="chapter" data-level="5.1" data-path="graphical-queries.html"><a href="graphical-queries.html"><i class="fa fa-check"></i><b>5.1</b> Graphical queries</a></li>
+<li class="chapter" data-level="5.2" data-path="filter.html"><a href="filter.html"><i class="fa fa-check"></i><b>5.2</b> Highlight versus filter events</a></li>
+<li class="chapter" data-level="5.3" data-path="querying-examples.html"><a href="querying-examples.html"><i class="fa fa-check"></i><b>5.3</b> Examples</a><ul>
+<li class="chapter" data-level="5.3.1" data-path="querying-examples.html"><a href="querying-examples.html#trellis-linking"><i class="fa fa-check"></i><b>5.3.1</b> Querying facetted charts</a></li>
+<li class="chapter" data-level="5.3.2" data-path="querying-examples.html"><a href="querying-examples.html#statistical-queries"><i class="fa fa-check"></i><b>5.3.2</b> Statistical queries</a></li>
+<li class="chapter" data-level="5.3.3" data-path="querying-examples.html"><a href="querying-examples.html#statistical-queries-ggplot"><i class="fa fa-check"></i><b>5.3.3</b> Statistical queries with <code>ggplotly()</code></a></li>
+<li class="chapter" data-level="5.3.4" data-path="querying-examples.html"><a href="querying-examples.html#geo-spatial-queries"><i class="fa fa-check"></i><b>5.3.4</b> Geo-spatial queries</a></li>
+<li class="chapter" data-level="5.3.5" data-path="querying-examples.html"><a href="querying-examples.html#linking-with-other-htmlwidgets"><i class="fa fa-check"></i><b>5.3.5</b> Linking with other htmlwidgets</a></li>
+<li class="chapter" data-level="5.3.6" data-path="querying-examples.html"><a href="querying-examples.html#generalized-pairs-plots"><i class="fa fa-check"></i><b>5.3.6</b> Generalized pairs plots</a></li>
+<li class="chapter" data-level="5.3.7" data-path="querying-examples.html"><a href="querying-examples.html#querying-diagnostic-plots"><i class="fa fa-check"></i><b>5.3.7</b> Querying diagnostic plots</a></li>
+</ul></li>
+<li class="chapter" data-level="5.4" data-path="limitations.html"><a href="limitations.html"><i class="fa fa-check"></i><b>5.4</b> Limitations</a></li>
+</ul></li>
+<li class="chapter" data-level="6" data-path="linking-server-side.html"><a href="linking-server-side.html"><i class="fa fa-check"></i><b>6</b> Linking views server-side</a><ul>
+<li class="chapter" data-level="6.1" data-path="hello-shiny.html"><a href="hello-shiny.html"><i class="fa fa-check"></i><b>6.1</b> Embedding plotly in shiny</a><ul>
+<li class="chapter" data-level="6.1.1" data-path="hello-shiny.html"><a href="hello-shiny.html#your-first-shiny-app"><i class="fa fa-check"></i><b>6.1.1</b> Your first shiny app</a></li>
+<li class="chapter" data-level="6.1.2" data-path="hello-shiny.html"><a href="hello-shiny.html#hiding-and-redrawing-on-resize"><i class="fa fa-check"></i><b>6.1.2</b> Hiding and redrawing on resize</a></li>
+</ul></li>
+<li class="chapter" data-level="6.2" data-path="shiny-plotly-inputs.html"><a href="shiny-plotly-inputs.html"><i class="fa fa-check"></i><b>6.2</b> Accessing plotly input events</a><ul>
+<li class="chapter" data-level="6.2.1" data-path="shiny-plotly-inputs.html"><a href="shiny-plotly-inputs.html#dragging-events"><i class="fa fa-check"></i><b>6.2.1</b> Dragging events</a></li>
+<li class="chapter" data-level="6.2.2" data-path="shiny-plotly-inputs.html"><a href="shiny-plotly-inputs.html#d-events"><i class="fa fa-check"></i><b>6.2.2</b> 3D events</a></li>
+<li class="chapter" data-level="6.2.3" data-path="shiny-plotly-inputs.html"><a href="shiny-plotly-inputs.html#mapping-events-to-input-data"><i class="fa fa-check"></i><b>6.2.3</b> Mapping events to input data</a></li>
+<li class="chapter" data-level="6.2.4" data-path="shiny-plotly-inputs.html"><a href="shiny-plotly-inputs.html#accessing-edit-events"><i class="fa fa-check"></i><b>6.2.4</b> Accessing edit events</a></li>
+</ul></li>
+<li class="chapter" data-level="6.3" data-path="updating-views.html"><a href="updating-views.html"><i class="fa fa-check"></i><b>6.3</b> Responding to input events</a></li>
+<li class="chapter" data-level="6.4" data-path="shiny-performance.html"><a href="shiny-performance.html"><i class="fa fa-check"></i><b>6.4</b> Improving performance</a><ul>
+<li class="chapter" data-level="6.4.1" data-path="shiny-performance.html"><a href="shiny-performance.html#proxies"><i class="fa fa-check"></i><b>6.4.1</b> Partial plotly updates</a></li>
+<li class="chapter" data-level="6.4.2" data-path="shiny-performance.html"><a href="shiny-performance.html#partial-update-examples"><i class="fa fa-check"></i><b>6.4.2</b> Partial update examples</a></li>
+</ul></li>
+<li class="chapter" data-level="6.5" data-path="advanced-applications.html"><a href="advanced-applications.html"><i class="fa fa-check"></i><b>6.5</b> Advanced applications</a><ul>
+<li class="chapter" data-level="6.5.1" data-path="advanced-applications.html"><a href="advanced-applications.html#drill-down"><i class="fa fa-check"></i><b>6.5.1</b> Drill-down</a></li>
+<li class="chapter" data-level="6.5.2" data-path="advanced-applications.html"><a href="advanced-applications.html#cross-filter"><i class="fa fa-check"></i><b>6.5.2</b> Cross-filter</a></li>
+</ul></li>
+<li class="chapter" data-level="6.6" data-path="discussion.html"><a href="discussion.html"><i class="fa fa-check"></i><b>6.6</b> Discussion</a></li>
+</ul></li>
+<li class="chapter" data-level="7" data-path="animating-views.html"><a href="animating-views.html"><i class="fa fa-check"></i><b>7</b> Animating views</a><ul>
+<li class="chapter" data-level="7.1" data-path="key-frame-animations.html"><a href="key-frame-animations.html"><i class="fa fa-check"></i><b>7.1</b> Key frame animations</a></li>
+<li class="chapter" data-level="7.2" data-path="linking-animated-views.html"><a href="linking-animated-views.html"><i class="fa fa-check"></i><b>7.2</b> Linking animated views</a></li>
+</ul></li>
+<li class="chapter" data-level="8" data-path="advanced-topics.html"><a href="advanced-topics.html"><i class="fa fa-check"></i><b>8</b> Advanced topics</a><ul>
+<li class="chapter" data-level="8.1" data-path="javascript.html"><a href="javascript.html"><i class="fa fa-check"></i><b>8.1</b> Custom behavior via JavaScript</a></li>
+<li class="chapter" data-level="8.2" data-path="translating-custom-ggplot2-geoms.html"><a href="translating-custom-ggplot2-geoms.html"><i class="fa fa-check"></i><b>8.2</b> Translating custom ggplot2 geoms</a></li>
+<li class="chapter" data-level="8.3" data-path="designing-an-htmlwidget-interface.html"><a href="designing-an-htmlwidget-interface.html"><i class="fa fa-check"></i><b>8.3</b> Designing an htmlwidget interface</a></li>
+</ul></li>
+<li class="chapter" data-level="" data-path="references.html"><a href="references.html"><i class="fa fa-check"></i>References</a></li>
+</ul>
+
+      </nav>
+    </div>
+
+    <div class="book-body">
+      <div class="body-inner">
+        <div class="book-header" role="navigation">
+          <h1>
+            <i class="fa fa-circle-o-notch fa-spin"></i><a href="./">plotly for R</a>
+          </h1>
+        </div>
+
+        <div class="page-wrapper" tabindex="-1" role="main">
+          <div class="page-inner">
+
+            <section class="normal" id="section-">
+<div id="shiny-plotly-inputs" class="section level2">
+<h2><span class="header-section-number">6.2</span> Accessing plotly input events</h2>
+<p>Section <a href="hello-shiny.html#fig:shiny-intro">6.1</a> covered how to render <strong>shiny</strong> output widgets (e.g., <code>plotlyOutput()</code>) that depend on a input widget, but what about having an output act like an input to another output? For example, say we’d like to dynamically generate a bar chart (i.e., and output) based on a point clicked on a scatter-plot (i.e., an input event tied to an output widget). In addition to <strong>shiny</strong>’s static graph and image rendering functions (e.g., <code>plotOutput()</code>/<code>imageOutput()</code>), there are a handful of other R packages that expose user interaction with “output” widget(s) as input value(s). <span class="citation">Cheng (<a href="#ref-leaflet-shiny">2018</a><a href="#ref-leaflet-shiny">c</a>)</span> and <span class="citation">Xie (<a href="#ref-DT-shiny">2018</a>)</span> describe the interface for the <strong>leaflet</strong> and <strong>DT</strong> packages. This section outlines the interface for <code>plotlyOutput()</code>. This sort of functionality plays a vital role in linking of views through direct manipulation, similar to what we’ve already seen in section <a href="graphical-queries.html#graphical-queries">5.1</a>, but having access to these events on a <strong>shiny</strong> server allows great flexibility on how we choose to respond in other views.</p>
+<p>The <code>event_data()</code> function is the most straight-forward way to access a <strong>plotly</strong> input events in <strong>shiny</strong>. Although <code>event_data()</code> is function, it returns a <strong>shiny</strong> input value, so <code>event_data()</code> needs to be used inside a reactive context. Most of these available events are data-specific traces (e.g., <code>"plotly_hover"</code>, <code>"plotly_click"</code>, <code>"plotly_selected"</code>, etc), but there are also some that are layout-specific (e.g., <code>"plotly_relayout"</code>). Most plotly.js events<a href="#fn23" class="footnote-ref" id="fnref23"><sup>23</sup></a> are accessible through this interface – for a complete list see the <code>help(event_data)</code> documentation page.</p>
+<p>The <strong>shiny</strong> app in Figure <a href="shiny-plotly-inputs.html#fig:plotlyEvents">6.3</a> shows you how to access common trace events and print the corresponding data verbatim via <code>renderPrint()</code>. When using these events to inform another view of the data, it’s often necessary to know what portion of data was queried in the event (i.e., the <code>x</code>/<code>y</code> positions alone may not be enough to uniquely identify the information of interest). For this reason, it’s often a good idea to supply a <code>key</code> (or <code>customdata</code>) attribute, so that you can map the event data back to the original data (the next section gives a few examples of how to perform the mapping). The <code>key</code> attribute is only supported in <strong>shiny</strong>, but <code>customdata</code> is officially supported by plotly.js, and thus can also be used to attach meta-information to event – see section <a href="javascript.html#javascript">8.1</a> for more details.</p>
+<div id="dragging-events" class="section level3">
+<h3><span class="header-section-number">6.2.1</span> Dragging events</h3>
+<p>There are currently four different modes for mouse click+drag behavior (i.e., <code>dragmode</code>) in plotly.js: zoom, pan, rectangular selection, and lasso selection. This mode may be changed interactively via the modebar that appears above a <strong>plotly</strong> graph, but the default mode can also be set from the command-line. The default <code>dragmode</code> in Figure <a href="shiny-plotly-inputs.html#fig:plotlyEvents">6.3</a> is set to <code>'select'</code>, so that dragging draws a rectangular box which highlights markers. When in this mode, or in the lasso selection mode, information about the drag event can be accessed in four different ways: <code>"plotly_selecting"</code>, <code>"plotly_selected"</code>, <code>"plotly_brushing"</code>, and <code>"plotly_brushed"</code>. Both the <code>"plotly_selecting"</code> and <code>"plotly_selected"</code> events emit information about trace(s) appearing within the interior of the brush – the only difference is that <code>"plotly_selecting"</code> fires repeatedly <em>during</em> drag events, whereas <code>"plotly_selected"</code> fires <em>after</em> drag events (i.e., after the mouse has been released). The semantics behind <code>"plotly_brushing"</code> and <code>"plotly_brushed"</code> are similar, but these emit the x/y limits of the selection brush. As for the other two dragging modes (zoom and pan), since they modify the range of the x/y axes, information about these events can be accessed through <code>"plotly_relayout"</code>. Sections <a href="shiny-performance.html#proxies">6.4.1</a> and <a href="advanced-applications.html#advanced-applications">6.5</a> both have advanced applications of these dragging events.</p>
+<pre class="sourceCode r"><code class="sourceCode r"><span class="kw">library</span>(shiny)
+
+ui &lt;-<span class="st"> </span><span class="kw">fluidPage</span>(
+  <span class="kw">radioButtons</span>(<span class="st">&quot;plotType&quot;</span>, <span class="st">&quot;Plot Type:&quot;</span>, <span class="dt">choices =</span> <span class="kw">c</span>(<span class="st">&quot;ggplotly&quot;</span>, <span class="st">&quot;plotly&quot;</span>)),
+  <span class="kw">plotlyOutput</span>(<span class="st">&quot;plot&quot;</span>),
+  <span class="kw">verbatimTextOutput</span>(<span class="st">&quot;selecting&quot;</span>),
+  <span class="kw">verbatimTextOutput</span>(<span class="st">&quot;brushing&quot;</span>),
+  <span class="kw">verbatimTextOutput</span>(<span class="st">&quot;relayout&quot;</span>)
+)
+
+server &lt;-<span class="st"> </span><span class="cf">function</span>(input, output, session) {
+    
+  nms &lt;-<span class="st"> </span><span class="kw">row.names</span>(mtcars)
+    
+  output<span class="op">$</span>plot &lt;-<span class="st"> </span><span class="kw">renderPlotly</span>({
+    p &lt;-<span class="st"> </span><span class="cf">if</span> (<span class="kw">identical</span>(input<span class="op">$</span>plotType, <span class="st">&quot;ggplotly&quot;</span>)) {
+      <span class="kw">ggplotly</span>(<span class="kw">ggplot</span>(mtcars, <span class="kw">aes</span>(<span class="dt">x =</span> mpg, <span class="dt">y =</span> wt, <span class="dt">key =</span> nms)) <span class="op">+</span><span class="st"> </span><span class="kw">geom_point</span>())
+    } <span class="cf">else</span> {
+      <span class="kw">plot_ly</span>(mtcars, <span class="dt">x =</span> <span class="op">~</span>mpg, <span class="dt">y =</span> <span class="op">~</span>wt, <span class="dt">key =</span> nms)
+    }
+    <span class="kw">layout</span>(p, <span class="dt">dragmode =</span> <span class="st">&quot;select&quot;</span>)
+  })
+  
+  output<span class="op">$</span>selecting &lt;-<span class="st"> </span><span class="kw">renderPrint</span>({
+    d &lt;-<span class="st"> </span><span class="kw">event_data</span>(<span class="st">&quot;plotly_selecting&quot;</span>)
+    <span class="cf">if</span> (<span class="kw">is.null</span>(d)) <span class="st">&quot;Selected data appears here&quot;</span> <span class="cf">else</span> d
+  })
+  
+  output<span class="op">$</span>brushing &lt;-<span class="st"> </span><span class="kw">renderPrint</span>({
+    d &lt;-<span class="st"> </span><span class="kw">event_data</span>(<span class="st">&quot;plotly_brushing&quot;</span>)
+    <span class="cf">if</span> (<span class="kw">is.null</span>(d)) <span class="st">&quot;Selection brush limits appear here&quot;</span> <span class="cf">else</span> d
+  })
+  
+  output<span class="op">$</span>relayout &lt;-<span class="st"> </span><span class="kw">renderPrint</span>({
+    d &lt;-<span class="st"> </span><span class="kw">event_data</span>(<span class="st">&quot;plotly_relayout&quot;</span>)
+    <span class="cf">if</span> (<span class="kw">is.null</span>(d)) <span class="st">&quot;Zoom and pan info appears here&quot;</span> <span class="cf">else</span> d
+  })
+    
+}
+
+<span class="kw">shinyApp</span>(ui, server)</code></pre>
+<div class="figure"><span id="fig:plotlyEvents"></span>
+<img src="https://i.imgur.com/9UABTzN.gif" alt="Accessing event data from click and drag events." width="100%" />
+<p class="caption">
+Figure 6.3: Accessing event data from click and drag events.
+</p>
+</div>
+</div>
+<div id="d-events" class="section level3">
+<h3><span class="header-section-number">6.2.2</span> 3D events</h3>
+<p>Drag selection events (i.e., <code>"plotly_selecting"</code>) are currently only available for 2D charts, but other common events are generally supported for any type of graph, including 3D charts. Figure <a href="shiny-plotly-inputs.html#fig:3Devents">6.4</a> accesses various events in 3D including: <code>"plotly_hover"</code>, <code>"plotly_click"</code>, <code>"plotly_legendclick"</code>, <code>"plotly_legenddoubleclick"</code>, and <code>"plotly_relayout"</code>. The data emitted via <code>"plotly_hover"</code> and <code>"plotly_click"</code> is structured similarly to data emitted from <code>"plotly_selecting"</code>/<code>"plotly_selected"</code>. Figure <a href="shiny-plotly-inputs.html#fig:3Devents">6.4</a> also demonstrates how one can react to particular components of a conflated event like <code>"plotly_relayout"</code>. That is, <code>"plotly_relayout"</code> will fire whenever <em>any</em> part of the layout has changed, so if we want to trigger behavior if and only if there are changes to the camera eye, one could first check if the information emitted contains information about the camera eye.</p>
+<pre class="sourceCode r"><code class="sourceCode r"><span class="kw">library</span>(shiny)
+
+ui &lt;-<span class="st"> </span><span class="kw">fluidPage</span>(
+  <span class="kw">plotlyOutput</span>(<span class="st">&quot;plot&quot;</span>),
+  <span class="kw">verbatimTextOutput</span>(<span class="st">&quot;hover&quot;</span>),
+  <span class="kw">verbatimTextOutput</span>(<span class="st">&quot;click&quot;</span>),
+  <span class="kw">verbatimTextOutput</span>(<span class="st">&quot;legendclick&quot;</span>),
+  <span class="kw">verbatimTextOutput</span>(<span class="st">&quot;legend2click&quot;</span>),
+  <span class="kw">verbatimTextOutput</span>(<span class="st">&quot;relayout&quot;</span>)
+)
+
+server &lt;-<span class="st"> </span><span class="cf">function</span>(input, output, session) {
+  
+  output<span class="op">$</span>plot &lt;-<span class="st"> </span><span class="kw">renderPlotly</span>({
+    <span class="kw">plot_ly</span>(mtcars, <span class="dt">x =</span> <span class="op">~</span>wt, <span class="dt">y =</span> <span class="op">~</span>mpg, <span class="dt">z =</span> <span class="op">~</span>disp, <span class="dt">color =</span> <span class="op">~</span><span class="kw">factor</span>(cyl))
+  })
+  
+  output<span class="op">$</span>hover &lt;-<span class="st"> </span><span class="kw">renderPrint</span>({
+    d &lt;-<span class="st"> </span><span class="kw">event_data</span>(<span class="st">&quot;plotly_hover&quot;</span>)
+    <span class="cf">if</span> (<span class="kw">is.null</span>(d)) <span class="st">&quot;Hover events appear here&quot;</span> <span class="cf">else</span> d
+  })
+  
+  output<span class="op">$</span>click &lt;-<span class="st"> </span><span class="kw">renderPrint</span>({
+    d &lt;-<span class="st"> </span><span class="kw">event_data</span>(<span class="st">&quot;plotly_click&quot;</span>)
+    <span class="cf">if</span> (<span class="kw">is.null</span>(d)) <span class="st">&quot;Click events appear here&quot;</span> <span class="cf">else</span> d
+  })
+  
+  output<span class="op">$</span>legendclick &lt;-<span class="st"> </span><span class="kw">renderPrint</span>({
+    d &lt;-<span class="st"> </span><span class="kw">event_data</span>(<span class="st">&quot;plotly_legendclick&quot;</span>)<span class="op">$</span>name
+    <span class="cf">if</span> (<span class="kw">is.null</span>(d)) <span class="st">&quot;Legend click&quot;</span> <span class="cf">else</span> d
+  })
+  
+  output<span class="op">$</span>legend2click &lt;-<span class="st"> </span><span class="kw">renderPrint</span>({
+    d &lt;-<span class="st"> </span><span class="kw">event_data</span>(<span class="st">&quot;plotly_legenddoubleclick&quot;</span>)<span class="op">$</span>name
+    <span class="cf">if</span> (<span class="kw">is.null</span>(d)) <span class="st">&quot;Legend double-click&quot;</span> <span class="cf">else</span> d
+  })
+  
+  output<span class="op">$</span>relayout &lt;-<span class="st"> </span><span class="kw">renderPrint</span>({
+    d &lt;-<span class="st"> </span><span class="kw">event_data</span>(<span class="st">&quot;plotly_relayout&quot;</span>)<span class="op">$</span>scene.camera<span class="op">$</span>eye
+    <span class="cf">if</span> (<span class="kw">is.null</span>(d)) <span class="st">&quot;Camera eye info&quot;</span> <span class="cf">else</span> d
+  })
+  
+}
+
+<span class="kw">shinyApp</span>(ui, server)</code></pre>
+<div class="figure"><span id="fig:3Devents"></span>
+<img src="https://i.imgur.com/ta2FNhg.gif" alt="Accessing 3D events." width="100%" />
+<p class="caption">
+Figure 6.4: Accessing 3D events.
+</p>
+</div>
+</div>
+<div id="mapping-events-to-input-data" class="section level3">
+<h3><span class="header-section-number">6.2.3</span> Mapping events to input data</h3>
+<p>The positional information that events emit is always numeric, so if you have a plot with discrete axes, you might want to know how to map that numeric value back to the relevant input data category. In some cases, you can avoid the problem by assigning the discrete variable of interest to the <code>key</code>/<code>customdata</code> attribute, but you might also want to reserve that attribute to encode other information, like a <code>fill</code> aesthetic. Figure <a href="shiny-plotly-inputs.html#fig:discrete-event-data">6.5</a> shows how to map the numerical <code>x</code> value emitted in a click event back to the discrete variable that it corresponds to (<code>mpg$class</code>) and leverages <code>customdata</code> to encode the <code>fill</code> mapping allowing us to display the data records a clicked bar corresponds to. In both <code>ggplotly()</code> and <code>plot_ly()</code>, categories associated with a character vector are always alphabetized, so if you <code>sort()</code> the <code>unique()</code> character values, then the vector indices will match the <code>x</code> event data values. On the other hand, if <code>x</code> were a factor variable, the <code>x</code> event data would match the ordering of the <code>levels()</code> attribute.</p>
+<pre class="sourceCode r"><code class="sourceCode r"><span class="kw">library</span>(shiny)
+<span class="kw">library</span>(dplyr)
+
+ui &lt;-<span class="st"> </span><span class="kw">fluidPage</span>(
+  <span class="kw">plotlyOutput</span>(<span class="st">&quot;bars&quot;</span>),
+  <span class="kw">verbatimTextOutput</span>(<span class="st">&quot;click&quot;</span>)
+)
+
+classes &lt;-<span class="st"> </span><span class="kw">sort</span>(<span class="kw">unique</span>(mpg<span class="op">$</span>class))
+
+server &lt;-<span class="st"> </span><span class="cf">function</span>(input, output, session) {
+  
+  output<span class="op">$</span>bars &lt;-<span class="st"> </span><span class="kw">renderPlotly</span>({
+    <span class="kw">ggplot</span>(mpg, <span class="kw">aes</span>(class, <span class="dt">fill =</span> drv, <span class="dt">customdata =</span> drv)) <span class="op">+</span><span class="st"> </span><span class="kw">geom_bar</span>()
+  })
+  
+  output<span class="op">$</span>click &lt;-<span class="st"> </span><span class="kw">renderPrint</span>({
+    d &lt;-<span class="st"> </span><span class="kw">event_data</span>(<span class="st">&quot;plotly_click&quot;</span>)
+    <span class="cf">if</span> (<span class="kw">is.null</span>(d)) <span class="kw">return</span>(<span class="st">&quot;Click a bar&quot;</span>)
+    mpg <span class="op">%&gt;%</span>
+<span class="st">      </span><span class="kw">filter</span>(drv <span class="op">%in%</span><span class="st"> </span>d<span class="op">$</span>key) <span class="op">%&gt;%</span>
+<span class="st">      </span><span class="kw">filter</span>(class <span class="op">%in%</span><span class="st"> </span>classes[d<span class="op">$</span>x])
+  })
+  
+}
+
+<span class="kw">shinyApp</span>(ui, server)</code></pre>
+<div class="figure"><span id="fig:discrete-event-data"></span>
+<img src="https://i.imgur.com/cZcTFe1.gif" alt="Retrieving the data observations that correspond to a particular bar in a stacked bar chart." width="100%" />
+<p class="caption">
+Figure 6.5: Retrieving the data observations that correspond to a particular bar in a stacked bar chart.
+</p>
+</div>
+</div>
+<div id="accessing-edit-events" class="section level3">
+<h3><span class="header-section-number">6.2.4</span> Accessing edit events</h3>
+<p>A little known fact about <strong>plotly</strong> is that you can directly manipulate annotations, title, shapes (e.g., circle, lines, rectangles), legends, and more by simply adding <code>config(p, editable = TRUE)</code> to a plot <code>p</code>. Moreover, since these are all components of the layout, we can access information about these ‘edit events’, by listening to the <code>"plotly_relayout"</code> events. Figure <a href="shiny-plotly-inputs.html#fig:shiny-edit-annotations">6.6</a> demonstrates how to access</p>
+<pre class="sourceCode r"><code class="sourceCode r"><span class="kw">library</span>(shiny)
+
+ui &lt;-<span class="st"> </span><span class="kw">fluidPage</span>(
+  <span class="kw">plotlyOutput</span>(<span class="st">&quot;p&quot;</span>),
+  <span class="kw">verbatimTextOutput</span>(<span class="st">&quot;info&quot;</span>)
+)
+
+server &lt;-<span class="st"> </span><span class="cf">function</span>(input, output, session) {
+  
+  output<span class="op">$</span>p &lt;-<span class="st"> </span><span class="kw">renderPlotly</span>({
+    <span class="kw">plot_ly</span>() <span class="op">%&gt;%</span>
+<span class="st">      </span><span class="kw">add_annotations</span>(
+        <span class="dt">text =</span> <span class="st">&quot;🔥&quot;</span>,
+        <span class="dt">x =</span> <span class="fl">0.5</span>, 
+        <span class="dt">y =</span> <span class="fl">0.5</span>, 
+        <span class="dt">xref =</span> <span class="st">&quot;paper&quot;</span>,
+        <span class="dt">yref =</span> <span class="st">&quot;paper&quot;</span>,
+        <span class="dt">showarrow =</span> <span class="ot">FALSE</span>
+      ) <span class="op">%&gt;%</span>
+<span class="st">      </span><span class="kw">add_annotations</span>(
+        <span class="dt">text =</span> <span class="st">&quot;fire&quot;</span>,
+        <span class="dt">x =</span> <span class="fl">0.5</span>, 
+        <span class="dt">y =</span> <span class="fl">0.5</span>, 
+        <span class="dt">xref =</span> <span class="st">&quot;paper&quot;</span>,
+        <span class="dt">yref =</span> <span class="st">&quot;paper&quot;</span>
+      ) <span class="op">%&gt;%</span>
+<span class="st">      </span><span class="kw">config</span>(<span class="dt">editable =</span> <span class="ot">TRUE</span>)
+  })
+  
+  output<span class="op">$</span>info &lt;-<span class="st"> </span><span class="kw">renderPrint</span>({
+    <span class="kw">event_data</span>(<span class="st">&quot;plotly_relayout&quot;</span>)
+  })
+  
+}
+
+<span class="kw">shinyApp</span>(ui, server)</code></pre>
+<div class="figure"><span id="fig:shiny-edit-annotations"></span>
+<img src="https://i.imgur.com/cZcTFe1.gif" alt="Accessing information about annotation edits." width="100%" />
+<p class="caption">
+Figure 6.6: Accessing information about annotation edits.
+</p>
+</div>
+<p>One trace type that does not support any of these events is <code>parcoords</code> – it’s overall design is quite different from the others in that it natively supports brushing lines along an axis dimension. However, as Figure <a href="shiny-plotly-inputs.html#fig:shiny-parcoords">6.7</a> demonstrates, these brush events emit a <code>plotly_restyle</code> event with the range(s) of the highlighted dimension.<a href="#fn24" class="footnote-ref" id="fnref24"><sup>24</sup></a></p>
+<pre class="sourceCode r"><code class="sourceCode r"><span class="kw">library</span>(plotly)
+<span class="kw">library</span>(shiny)
+
+ui &lt;-<span class="st"> </span><span class="kw">fluidPage</span>(
+  <span class="kw">plotlyOutput</span>(<span class="st">&quot;parcoords&quot;</span>),
+  <span class="kw">verbatimTextOutput</span>(<span class="st">&quot;info&quot;</span>)
+)
+
+server &lt;-<span class="st"> </span><span class="cf">function</span>(input, output, session) {
+  
+  output<span class="op">$</span>parcoords &lt;-<span class="st"> </span><span class="kw">renderPlotly</span>({
+    <span class="kw">plot_ly</span>(iris) <span class="op">%&gt;%</span>
+<span class="st">      </span><span class="kw">add_parcoords</span>()
+  })
+  
+  output<span class="op">$</span>info &lt;-<span class="st"> </span><span class="kw">renderPrint</span>({
+    d &lt;-<span class="st"> </span><span class="kw">event_data</span>(<span class="st">&quot;plotly_restyle&quot;</span>)
+    <span class="cf">if</span> (<span class="kw">is.null</span>(d)) <span class="st">&quot;Brush along a dimension&quot;</span> <span class="cf">else</span> d
+  })
+  
+}
+
+<span class="kw">shinyApp</span>(ui, server)</code></pre>
+<div class="figure"><span id="fig:shiny-parcoords"></span>
+<img src="https://i.imgur.com/2f7MGCd.gif" alt="Using the `plotly_restyle` event to access brushed dimensions of a parallel coordinates plot." width="100%" />
+<p class="caption">
+Figure 6.7: Using the <code>plotly_restyle</code> event to access brushed dimensions of a parallel coordinates plot.
+</p>
+</div>
+<p>Beyond the <code>parcoords</code> edge case, the <code>"plotly_restyle"</code> and <code>"plotly_relayout"</code> events can also be used to detect any changes to plotly.js traces (restyle) and layout (relayout). More specifically, these events are emitted whenever the plotly.js functions <code>Plotly.restyle()</code> or <code>Plotly.relayout()</code> are called. As shown in section <a href="shiny-performance.html#proxies">6.4.1</a>, these functions are handy for partially modifying an existing plot (i.e., avoid performing a full redraw), and we can leverage them from R in a <strong>shiny</strong> app. As it turns out, sometimes these events are fired as a part of another, higher-order task, like dragging shapes.</p>
+<p>Figure <a href="shiny-plotly-inputs.html#fig:shiny-drag-circle">6.8</a> demonstrates dragging a circle shape and accessing the new positions of the circle though the <code>plotly_relayout</code> event. The ability to drag shapes can be enabled through the <code>config()</code> function through the <code>edits</code> attribute. This attribute allows you enable direct manipulation of certain aspects of the layout (note that traces can not be edited). In this case, we only want to drag shapes, but one could use <code>config(p, editable = TRUE)</code> to make everything in the layout editable (e.g. the plot and axis titles).</p>
+<pre class="sourceCode r"><code class="sourceCode r"><span class="kw">library</span>(shiny)
+<span class="kw">library</span>(plotly)
+
+ui &lt;-<span class="st"> </span><span class="kw">fluidPage</span>(
+  <span class="kw">plotlyOutput</span>(<span class="st">&quot;p&quot;</span>),
+  <span class="kw">verbatimTextOutput</span>(<span class="st">&quot;event&quot;</span>)
+)
+
+server &lt;-<span class="st"> </span><span class="cf">function</span>(input, output, session) {
+  
+  output<span class="op">$</span>p &lt;-<span class="st"> </span><span class="kw">renderPlotly</span>({
+    <span class="kw">plot_ly</span>() <span class="op">%&gt;%</span>
+<span class="st">      </span><span class="kw">layout</span>(
+        <span class="dt">xaxis =</span> <span class="kw">list</span>(<span class="dt">range =</span> <span class="kw">c</span>(<span class="op">-</span><span class="dv">10</span>, <span class="dv">10</span>)),
+        <span class="dt">yaxis =</span> <span class="kw">list</span>(<span class="dt">range =</span> <span class="kw">c</span>(<span class="op">-</span><span class="dv">10</span>, <span class="dv">10</span>)),
+        <span class="dt">shapes =</span> <span class="kw">list</span>(
+          <span class="dt">type =</span> <span class="st">&quot;circle&quot;</span>, 
+          <span class="dt">fillcolor =</span> <span class="st">&quot;gray&quot;</span>,
+          <span class="dt">line =</span> <span class="kw">list</span>(<span class="dt">color =</span> <span class="st">&quot;gray&quot;</span>),
+          <span class="dt">x0 =</span> <span class="dv">-10</span>, <span class="dt">x1 =</span> <span class="dv">10</span>,
+          <span class="dt">y0 =</span> <span class="dv">-10</span>, <span class="dt">y1 =</span> <span class="dv">10</span>,
+          <span class="dt">xsizemode =</span> <span class="st">&quot;pixel&quot;</span>, 
+          <span class="dt">ysizemode =</span> <span class="st">&quot;pixel&quot;</span>,
+          <span class="dt">xanchor =</span> <span class="dv">0</span>, <span class="dt">yanchor =</span> <span class="dv">0</span>
+        )
+      ) <span class="op">%&gt;%</span>
+<span class="st">      </span><span class="kw">config</span>(<span class="dt">edits =</span> <span class="kw">list</span>(<span class="dt">shapePosition =</span> <span class="ot">TRUE</span>))
+  })
+  
+  output<span class="op">$</span>event &lt;-<span class="st"> </span><span class="kw">renderPrint</span>({
+    <span class="kw">event_data</span>(<span class="st">&quot;plotly_relayout&quot;</span>)
+  })
+  
+}
+
+<span class="kw">shinyApp</span>(ui, server)</code></pre>
+<div class="figure"><span id="fig:shiny-drag-circle"></span>
+<img src="https://i.imgur.com/FUxQXbY.gif" alt="Dragging a circle shape and accessing the positions in **shiny** via `event_data('plotly_relayout')`" width="100%" />
+<p class="caption">
+Figure 6.8: Dragging a circle shape and accessing the positions in <strong>shiny</strong> via <code>event_data('plotly_relayout')</code>
+</p>
+</div>
+<p>Figure <a href="shiny-plotly-inputs.html#fig:shiny-drag-line">6.9</a> uses the ability to react to the dragging of shapes to snap a vertical line shape to the closest point in a sequence of x values. It also places on a marker at the intersection of this vertical line shape and a line chart of random y values. Notice how, by accessing <code>event_data()</code> in this way (i.e., the source and target view of the event is the same), the chart is actually fully redrawn every time the line shape moves. If performance were an issue (i.e., we were dealing with lots of lines), this type of interaction likely won’t be very responsive. In that case, you can use <code>event_data()</code> to trigger side-effects (i.e., partially modify the plot) which is covered in <a href="shiny-performance.html#proxies">6.4.1</a>.</p>
+<pre class="sourceCode r"><code class="sourceCode r"><span class="kw">library</span>(shiny)
+<span class="kw">library</span>(plotly)
+
+ui &lt;-<span class="st"> </span><span class="kw">fluidPage</span>(
+  <span class="kw">plotlyOutput</span>(<span class="st">&quot;p&quot;</span>),
+  <span class="kw">verbatimTextOutput</span>(<span class="st">&quot;event&quot;</span>)
+)
+
+x &lt;-<span class="st"> </span><span class="kw">seq</span>(<span class="op">-</span><span class="dv">10</span>, <span class="dv">10</span>)
+y &lt;-<span class="st"> </span><span class="kw">rnorm</span>(<span class="kw">length</span>(x))
+
+server &lt;-<span class="st"> </span><span class="cf">function</span>(input, output, session) {
+  
+  output<span class="op">$</span>p &lt;-<span class="st"> </span><span class="kw">renderPlotly</span>({
+    d &lt;-<span class="st"> </span><span class="kw">event_data</span>(<span class="st">&quot;plotly_relayout&quot;</span>)
+    selected_point &lt;-<span class="st"> </span><span class="cf">if</span> (<span class="op">!</span><span class="kw">is.null</span>(d[[<span class="st">&quot;shapes[0].x0&quot;</span>]])) {
+      <span class="co"># &#39;snap&#39; the x-position from the event to the closest `x` value</span>
+      xint &lt;-<span class="st"> </span>d[[<span class="st">&quot;shapes[0].x0&quot;</span>]]
+      xpt &lt;-<span class="st"> </span>x[<span class="kw">which.min</span>(<span class="kw">abs</span>(x <span class="op">-</span><span class="st"> </span>xint))]
+      <span class="kw">list</span>(<span class="dt">x =</span> xpt, <span class="dt">y =</span> y[<span class="kw">which</span>(x <span class="op">==</span><span class="st"> </span>xpt)])
+    } <span class="cf">else</span> {
+      <span class="co"># default to </span>
+      <span class="kw">list</span>(<span class="dt">x =</span> <span class="dv">1</span>, <span class="dt">y =</span> y[<span class="kw">which</span>(x <span class="op">==</span><span class="st"> </span><span class="dv">1</span>)])
+    }
+    
+    <span class="kw">plot_ly</span>(<span class="dt">color =</span> <span class="kw">I</span>(<span class="st">&quot;red&quot;</span>)) <span class="op">%&gt;%</span>
+<span class="st">      </span><span class="kw">add_lines</span>(<span class="dt">x =</span> x, <span class="dt">y =</span> y) <span class="op">%&gt;%</span>
+<span class="st">      </span><span class="kw">add_markers</span>(<span class="dt">x =</span> selected_point<span class="op">$</span>x, <span class="dt">y =</span> selected_point<span class="op">$</span>y) <span class="op">%&gt;%</span>
+<span class="st">      </span><span class="kw">layout</span>(
+        <span class="dt">shapes =</span> <span class="kw">list</span>(
+          <span class="dt">type =</span> <span class="st">&quot;line&quot;</span>, 
+          <span class="dt">line =</span> <span class="kw">list</span>(<span class="dt">color =</span> <span class="st">&quot;gray&quot;</span>, <span class="dt">dash =</span> <span class="st">&quot;dot&quot;</span>),
+          <span class="dt">x0 =</span> selected_point<span class="op">$</span>x, 
+          <span class="dt">x1 =</span> selected_point<span class="op">$</span>x,
+          <span class="dt">y0 =</span> <span class="dv">0</span>,
+          <span class="dt">y1 =</span> <span class="dv">1</span>,
+          <span class="dt">yref =</span> <span class="st">&quot;paper&quot;</span>
+        )
+      ) <span class="op">%&gt;%</span>
+<span class="st">      </span><span class="kw">config</span>(<span class="dt">editable =</span> <span class="ot">TRUE</span>)
+  })
+  
+}
+
+<span class="kw">shinyApp</span>(ui, server)</code></pre>
+<div class="figure"><span id="fig:shiny-drag-line"></span>
+<img src="https://i.imgur.com/JhrM5US.gif" alt="Dragging a vertical line shape and 'snapping' the line to match the closest provided `x` value." width="100%" />
+<p class="caption">
+Figure 6.9: Dragging a vertical line shape and ‘snapping’ the line to match the closest provided <code>x</code> value.
+</p>
+</div>
+<p>In summary, it’s possible to obtain information about direct manipulation events with a <strong>plotly</strong> graph through referencing <code>event_data()</code> in a <strong>shiny</strong> reactive expression. The next section covers how to use and manage numerous these events to inform other views in a <strong>shiny</strong> application.</p>
+<!--
+### Accessing static plot events {#static-inputs}
+
+The **shiny** package provides access to direct manipulation events made with plots generated with the R graphics device as well any raster-based image. The model for providing access is substaintially different from **plotly** 
+-->
+</div>
+</div>
+<h3>References</h3>
+<div id="refs" class="references">
+<div id="ref-leaflet-shiny">
+<p>Cheng, Joe. 2018c. <em>Using Leaflet with Shiny</em>. Blog. <a href="https://rstudio.github.io/leaflet/shiny.html">https://rstudio.github.io/leaflet/shiny.html</a>.</p>
+</div>
+<div id="ref-DT-shiny">
+<p>Xie, Yihui. 2018. <em>Using Leaflet with Shiny</em>. Blog. <a href="https://rstudio.github.io/DT/shiny.html">https://rstudio.github.io/DT/shiny.html</a>.</p>
+</div>
+</div>
+<div class="footnotes">
+<hr />
+<ol start="23">
+<li id="fn23"><p>These events are documented at <a href="https://plot.ly/javascript/plotlyjs-events/" class="uri">https://plot.ly/javascript/plotlyjs-events/</a><a href="shiny-plotly-inputs.html#fnref23" class="footnote-back">↩</a></p></li>
+<li id="fn24"><p>To see how to map these ranges back to the highlighted observations, see the example <code>plotly_example("shiny", "event_data_parcoords")</code><a href="shiny-plotly-inputs.html#fnref24" class="footnote-back">↩</a></p></li>
+</ol>
+</div>
+            </section>
+
+          </div>
+        </div>
+      </div>
+<a href="hello-shiny.html" class="navigation navigation-prev " aria-label="Previous page"><i class="fa fa-angle-left"></i></a>
+<a href="updating-views.html" class="navigation navigation-next " aria-label="Next page"><i class="fa fa-angle-right"></i></a>
+    </div>
+  </div>
+<script src="libs/gitbook/js/app.min.js"></script>
+<script src="libs/gitbook/js/lunr.js"></script>
+<script src="libs/gitbook/js/plugin-search.js"></script>
+<script src="libs/gitbook/js/plugin-sharing.js"></script>
+<script src="libs/gitbook/js/plugin-fontsettings.js"></script>
+<script src="libs/gitbook/js/plugin-bookdown.js"></script>
+<script src="libs/gitbook/js/jquery.highlight.js"></script>
+<script>
+gitbook.require(["gitbook"], function(gitbook) {
+gitbook.start({
+"sharing": false,
+"fontsettings": {
+"theme": "white",
+"family": "sans",
+"size": 2
+},
+"edit": {
+"link": "https://github.com/cpsievert/plotly_book/edit/master/linked-views-shiny.Rmd",
+"text": "Edit"
+},
+"history": {
+"link": null,
+"text": null
+},
+"download": null,
+"toc": {
+"collapse": "subsection"
+}
+});
+});
+</script>
+
+<script>(function(i,s,o,g,r,a,m){i['GoogleAnalyticsObject']=r;i[r]=i[r]||function(){(i[r].q=i[r].q||[]).push(arguments)},i[r].l=1*new Date();a=s.createElement(o),m=s.getElementsByTagName(o)[0];a.async=1;a.src=g;m.parentNode.insertBefore(a,m)})(window,document,'script','https://www.google-analytics.com/analytics.js','ga');ga('create', 'UA-39373211-1', 'auto');ga('send', 'pageview');</script>
+</body>
+
+</html>

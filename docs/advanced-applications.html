@@ -1,0 +1,654 @@
+<!DOCTYPE html>
+<html >
+
+<head>
+
+  <meta charset="UTF-8">
+  <meta http-equiv="X-UA-Compatible" content="IE=edge">
+  <title>6.5 Advanced applications | plotly for R</title>
+  <meta name="description" content="An overview of the R package plotly">
+  <meta name="generator" content="bookdown  and GitBook 2.6.7">
+
+  <meta property="og:title" content="6.5 Advanced applications | plotly for R />
+  <meta property="og:type" content="book" />
+  <meta property="og:url" content="http://ropensci.github.io/plotly/" />
+  <meta property="og:image" content="http://ropensci.github.io/plotly/images/plotly.png" />
+  <meta property="og:description" content="An overview of the R package plotly" />
+  <meta name="github-repo" content="ropensci/plotly" />
+
+  <meta name="twitter:card" content="summary" />
+  <meta name="twitter:title" content="6.5 Advanced applications | plotly for R />
+  <meta name="twitter:site" content="@cpsievert" />
+  <meta name="twitter:description" content="An overview of the R package plotly" />
+  <meta name="twitter:image" content="http://ropensci.github.io/plotly/images/plotly.png" />
+
+<meta name="author" content="Carson Sievert">
+
+
+
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <meta name="apple-mobile-web-app-capable" content="yes">
+  <meta name="apple-mobile-web-app-status-bar-style" content="black">
+  
+  
+<link rel="prev" href="shiny-performance.html">
+<link rel="next" href="discussion.html">
+<script src="libs/jquery/jquery.min.js"></script>
+<link href="libs/gitbook/css/style.css" rel="stylesheet" />
+<link href="libs/gitbook/css/plugin-table.css" rel="stylesheet" />
+<link href="libs/gitbook/css/plugin-bookdown.css" rel="stylesheet" />
+<link href="libs/gitbook/css/plugin-highlight.css" rel="stylesheet" />
+<link href="libs/gitbook/css/plugin-search.css" rel="stylesheet" />
+<link href="libs/gitbook/css/plugin-fontsettings.css" rel="stylesheet" />
+
+
+
+
+
+
+
+<script src="libs/htmlwidgets/htmlwidgets.js"></script>
+<script src="libs/plotly-binding/plotly.js"></script>
+<script src="libs/typedarray/typedarray.min.js"></script>
+<link href="libs/crosstalk/css/crosstalk.css" rel="stylesheet" />
+<script src="libs/crosstalk/js/crosstalk.min.js"></script>
+<link href="libs/plotly-htmlwidgets-css/plotly-htmlwidgets.css" rel="stylesheet" />
+<script src="libs/plotly-main/plotly-latest.min.js"></script>
+<link href="libs/jsoneditor/jsoneditor.min.css" rel="stylesheet" />
+<script src="libs/jsoneditor/jsoneditor.min.js"></script>
+<script src="libs/jsonedit-binding/jsonedit.js"></script>
+<link href="libs/selectize/selectize.bootstrap3.css" rel="stylesheet" />
+<script src="libs/selectize/selectize.min.js"></script>
+<link href="libs/colourpicker/colourpicker.min.css" rel="stylesheet" />
+<script src="libs/colourpicker/colourpicker.min.js"></script>
+<meta name="viewport" content="width=device-width, initial-scale=1" />
+<link href="libs/bootstrap/css/bootstrap.min.css" rel="stylesheet" />
+<script src="libs/bootstrap/js/bootstrap.min.js"></script>
+<link href="libs/ionrangeslider/css/ion.rangeSlider.css" rel="stylesheet" />
+<link href="libs/ionrangeslider/css/ion.rangeSlider.skinShiny.css" rel="stylesheet" />
+<script src="libs/ionrangeslider/js/ion.rangeSlider.min.js"></script>
+<script src="libs/strftime/strftime-min.js"></script>
+
+
+<style type="text/css">
+a.sourceLine { display: inline-block; line-height: 1.25; }
+a.sourceLine { pointer-events: none; color: inherit; text-decoration: inherit; }
+a.sourceLine:empty { height: 1.2em; }
+.sourceCode { overflow: visible; }
+code.sourceCode { white-space: pre; position: relative; }
+div.sourceCode { margin: 1em 0; }
+pre.sourceCode { margin: 0; }
+@media screen {
+div.sourceCode { overflow: auto; }
+}
+@media print {
+code.sourceCode { white-space: pre-wrap; }
+a.sourceLine { text-indent: -1em; padding-left: 1em; }
+}
+pre.numberSource a.sourceLine
+  { position: relative; left: -4em; }
+pre.numberSource a.sourceLine::before
+  { content: attr(title);
+    position: relative; left: -1em; text-align: right; vertical-align: baseline;
+    border: none; pointer-events: all; display: inline-block;
+    -webkit-touch-callout: none; -webkit-user-select: none;
+    -khtml-user-select: none; -moz-user-select: none;
+    -ms-user-select: none; user-select: none;
+    padding: 0 4px; width: 4em;
+    color: #aaaaaa;
+  }
+pre.numberSource { margin-left: 3em; border-left: 1px solid #aaaaaa;  padding-left: 4px; }
+div.sourceCode
+  {  }
+@media screen {
+a.sourceLine::before { text-decoration: underline; }
+}
+code span.al { color: #ff0000; font-weight: bold; } /* Alert */
+code span.an { color: #60a0b0; font-weight: bold; font-style: italic; } /* Annotation */
+code span.at { color: #7d9029; } /* Attribute */
+code span.bn { color: #40a070; } /* BaseN */
+code span.bu { } /* BuiltIn */
+code span.cf { color: #007020; font-weight: bold; } /* ControlFlow */
+code span.ch { color: #4070a0; } /* Char */
+code span.cn { color: #880000; } /* Constant */
+code span.co { color: #60a0b0; font-style: italic; } /* Comment */
+code span.cv { color: #60a0b0; font-weight: bold; font-style: italic; } /* CommentVar */
+code span.do { color: #ba2121; font-style: italic; } /* Documentation */
+code span.dt { color: #902000; } /* DataType */
+code span.dv { color: #40a070; } /* DecVal */
+code span.er { color: #ff0000; font-weight: bold; } /* Error */
+code span.ex { } /* Extension */
+code span.fl { color: #40a070; } /* Float */
+code span.fu { color: #06287e; } /* Function */
+code span.im { } /* Import */
+code span.in { color: #60a0b0; font-weight: bold; font-style: italic; } /* Information */
+code span.kw { color: #007020; font-weight: bold; } /* Keyword */
+code span.op { color: #666666; } /* Operator */
+code span.ot { color: #007020; } /* Other */
+code span.pp { color: #bc7a00; } /* Preprocessor */
+code span.sc { color: #4070a0; } /* SpecialChar */
+code span.ss { color: #bb6688; } /* SpecialString */
+code span.st { color: #4070a0; } /* String */
+code span.va { color: #19177c; } /* Variable */
+code span.vs { color: #4070a0; } /* VerbatimString */
+code span.wa { color: #60a0b0; font-weight: bold; font-style: italic; } /* Warning */
+</style>
+
+<link rel="stylesheet" href="css/plotly.css" type="text/css" />
+<link rel="stylesheet" href="css/style.css" type="text/css" />
+</head>
+
+<body>
+
+
+
+  <div class="book without-animation with-summary font-size-2 font-family-1" data-basepath=".">
+
+    <div class="book-summary">
+      <nav role="navigation">
+
+<ul class="summary">
+<li class="chapter" data-level="" data-path="index.html"><a href="index.html"><i class="fa fa-check"></i>Overview</a><ul>
+<li class="chapter" data-level="" data-path="installation.html"><a href="installation.html"><i class="fa fa-check"></i>Installation</a></li>
+<li class="chapter" data-level="" data-path="get-started.html"><a href="get-started.html"><i class="fa fa-check"></i>Get started</a></li>
+<li class="chapter" data-level="" data-path="plot-ly-for-collaboration.html"><a href="plot-ly-for-collaboration.html"><i class="fa fa-check"></i>plot.ly for collaboration</a></li>
+</ul></li>
+<li class="chapter" data-level="1" data-path="two-approaches-one-object.html"><a href="two-approaches-one-object.html"><i class="fa fa-check"></i><b>1</b> Two approaches, one object</a><ul>
+<li class="chapter" data-level="1.1" data-path="txhousing-case-study.html"><a href="txhousing-case-study.html"><i class="fa fa-check"></i><b>1.1</b> A case study of housing sales in Texas</a><ul>
+<li class="chapter" data-level="1.1.1" data-path="txhousing-case-study.html"><a href="txhousing-case-study.html#ggplotly"><i class="fa fa-check"></i><b>1.1.1</b> The <code>ggplotly()</code> function</a></li>
+<li class="chapter" data-level="1.1.2" data-path="txhousing-case-study.html"><a href="txhousing-case-study.html#the-plot_ly-interface"><i class="fa fa-check"></i><b>1.1.2</b> The <code>plot_ly()</code> interface</a></li>
+</ul></li>
+<li class="chapter" data-level="1.2" data-path="extending-ggplotly.html"><a href="extending-ggplotly.html"><i class="fa fa-check"></i><b>1.2</b> Extending <code>ggplotly()</code></a><ul>
+<li class="chapter" data-level="1.2.1" data-path="extending-ggplotly.html"><a href="extending-ggplotly.html#customizing-the-layout"><i class="fa fa-check"></i><b>1.2.1</b> Customizing the layout</a></li>
+<li class="chapter" data-level="1.2.2" data-path="extending-ggplotly.html"><a href="extending-ggplotly.html#modifying-layers"><i class="fa fa-check"></i><b>1.2.2</b> Modifying layers</a></li>
+<li class="chapter" data-level="1.2.3" data-path="extending-ggplotly.html"><a href="extending-ggplotly.html#leveraging-statistical-output"><i class="fa fa-check"></i><b>1.2.3</b> Leveraging statistical output</a></li>
+</ul></li>
+</ul></li>
+<li class="chapter" data-level="2" data-path="the-plotly-cookbook.html"><a href="the-plotly-cookbook.html"><i class="fa fa-check"></i><b>2</b> The plotly cookbook</a><ul>
+<li class="chapter" data-level="2.1" data-path="scatter-traces.html"><a href="scatter-traces.html"><i class="fa fa-check"></i><b>2.1</b> Scatter traces</a><ul>
+<li class="chapter" data-level="2.1.1" data-path="scatter-traces.html"><a href="scatter-traces.html#scatterplots"><i class="fa fa-check"></i><b>2.1.1</b> Scatterplots</a></li>
+<li class="chapter" data-level="2.1.2" data-path="scatter-traces.html"><a href="scatter-traces.html#dotplots-error-bars"><i class="fa fa-check"></i><b>2.1.2</b> Dotplots &amp; error bars</a></li>
+<li class="chapter" data-level="2.1.3" data-path="scatter-traces.html"><a href="scatter-traces.html#line-plots"><i class="fa fa-check"></i><b>2.1.3</b> Line plots</a></li>
+<li class="chapter" data-level="2.1.4" data-path="scatter-traces.html"><a href="scatter-traces.html#segments"><i class="fa fa-check"></i><b>2.1.4</b> Segments</a></li>
+<li class="chapter" data-level="2.1.5" data-path="scatter-traces.html"><a href="scatter-traces.html#ribbons"><i class="fa fa-check"></i><b>2.1.5</b> Ribbons</a></li>
+<li class="chapter" data-level="2.1.6" data-path="scatter-traces.html"><a href="scatter-traces.html#polygons"><i class="fa fa-check"></i><b>2.1.6</b> Polygons</a></li>
+</ul></li>
+<li class="chapter" data-level="2.2" data-path="maps.html"><a href="maps.html"><i class="fa fa-check"></i><b>2.2</b> Maps</a><ul>
+<li class="chapter" data-level="2.2.1" data-path="maps.html"><a href="maps.html#using-scatter-traces"><i class="fa fa-check"></i><b>2.2.1</b> Using scatter traces</a></li>
+<li class="chapter" data-level="2.2.2" data-path="maps.html"><a href="maps.html#choropleths"><i class="fa fa-check"></i><b>2.2.2</b> Choropleths</a></li>
+<li class="chapter" data-level="2.2.3" data-path="maps.html"><a href="maps.html#using-geom_sf"><i class="fa fa-check"></i><b>2.2.3</b> Using <code>geom_sf()</code></a></li>
+<li class="chapter" data-level="2.2.4" data-path="maps.html"><a href="maps.html#using-ggmap"><i class="fa fa-check"></i><b>2.2.4</b> Using ggmap</a></li>
+</ul></li>
+<li class="chapter" data-level="2.3" data-path="bars-histograms.html"><a href="bars-histograms.html"><i class="fa fa-check"></i><b>2.3</b> Bars &amp; histograms</a><ul>
+<li class="chapter" data-level="2.3.1" data-path="bars-histograms.html"><a href="bars-histograms.html#multiple-numeric-distributions"><i class="fa fa-check"></i><b>2.3.1</b> Multiple numeric distributions</a></li>
+<li class="chapter" data-level="2.3.2" data-path="bars-histograms.html"><a href="bars-histograms.html#multiple-discrete-distributions"><i class="fa fa-check"></i><b>2.3.2</b> Multiple discrete distributions</a></li>
+</ul></li>
+<li class="chapter" data-level="2.4" data-path="boxplots.html"><a href="boxplots.html"><i class="fa fa-check"></i><b>2.4</b> Boxplots</a></li>
+<li class="chapter" data-level="2.5" data-path="d-frequencies.html"><a href="d-frequencies.html"><i class="fa fa-check"></i><b>2.5</b> 2D frequencies</a><ul>
+<li class="chapter" data-level="2.5.1" data-path="d-frequencies.html"><a href="d-frequencies.html#rectangular-binning-in-plotly.js"><i class="fa fa-check"></i><b>2.5.1</b> Rectangular binning in plotly.js</a></li>
+<li class="chapter" data-level="2.5.2" data-path="d-frequencies.html"><a href="d-frequencies.html#rectangular-binning-in-r"><i class="fa fa-check"></i><b>2.5.2</b> Rectangular binning in R</a></li>
+<li class="chapter" data-level="2.5.3" data-path="d-frequencies.html"><a href="d-frequencies.html#categorical-axes"><i class="fa fa-check"></i><b>2.5.3</b> Categorical axes</a></li>
+</ul></li>
+<li class="chapter" data-level="2.6" data-path="other-3d-plots.html"><a href="other-3d-plots.html"><i class="fa fa-check"></i><b>2.6</b> Other 3D plots</a></li>
+<li class="chapter" data-level="2.7" data-path="raster-images.html"><a href="raster-images.html"><i class="fa fa-check"></i><b>2.7</b> Raster images</a></li>
+</ul></li>
+<li class="chapter" data-level="3" data-path="whats-a-data-view.html"><a href="whats-a-data-view.html"><i class="fa fa-check"></i><b>3</b> What’s a data view?</a></li>
+<li class="chapter" data-level="4" data-path="arranging-multiple-views.html"><a href="arranging-multiple-views.html"><i class="fa fa-check"></i><b>4</b> Arranging multiple views</a><ul>
+<li class="chapter" data-level="4.1" data-path="arranging-htmlwidgets.html"><a href="arranging-htmlwidgets.html"><i class="fa fa-check"></i><b>4.1</b> Arranging htmlwidgets</a></li>
+<li class="chapter" data-level="4.2" data-path="merging-plotly-objects.html"><a href="merging-plotly-objects.html"><i class="fa fa-check"></i><b>4.2</b> Merging plotly objects</a><ul>
+<li class="chapter" data-level="4.2.1" data-path="merging-plotly-objects.html"><a href="merging-plotly-objects.html#recursive-subplots"><i class="fa fa-check"></i><b>4.2.1</b> Recursive subplots</a></li>
+<li class="chapter" data-level="4.2.2" data-path="merging-plotly-objects.html"><a href="merging-plotly-objects.html#ggplot2-subplots"><i class="fa fa-check"></i><b>4.2.2</b> ggplot2 subplots</a></li>
+</ul></li>
+<li class="chapter" data-level="4.3" data-path="navigating-many-views.html"><a href="navigating-many-views.html"><i class="fa fa-check"></i><b>4.3</b> Navigating many views</a></li>
+</ul></li>
+<li class="chapter" data-level="5" data-path="linking-views-client-side.html"><a href="linking-views-client-side.html"><i class="fa fa-check"></i><b>5</b> Linking views client-side</a><ul>
+<li class="chapter" data-level="5.1" data-path="graphical-queries.html"><a href="graphical-queries.html"><i class="fa fa-check"></i><b>5.1</b> Graphical queries</a></li>
+<li class="chapter" data-level="5.2" data-path="filter.html"><a href="filter.html"><i class="fa fa-check"></i><b>5.2</b> Highlight versus filter events</a></li>
+<li class="chapter" data-level="5.3" data-path="querying-examples.html"><a href="querying-examples.html"><i class="fa fa-check"></i><b>5.3</b> Examples</a><ul>
+<li class="chapter" data-level="5.3.1" data-path="querying-examples.html"><a href="querying-examples.html#trellis-linking"><i class="fa fa-check"></i><b>5.3.1</b> Querying facetted charts</a></li>
+<li class="chapter" data-level="5.3.2" data-path="querying-examples.html"><a href="querying-examples.html#statistical-queries"><i class="fa fa-check"></i><b>5.3.2</b> Statistical queries</a></li>
+<li class="chapter" data-level="5.3.3" data-path="querying-examples.html"><a href="querying-examples.html#statistical-queries-ggplot"><i class="fa fa-check"></i><b>5.3.3</b> Statistical queries with <code>ggplotly()</code></a></li>
+<li class="chapter" data-level="5.3.4" data-path="querying-examples.html"><a href="querying-examples.html#geo-spatial-queries"><i class="fa fa-check"></i><b>5.3.4</b> Geo-spatial queries</a></li>
+<li class="chapter" data-level="5.3.5" data-path="querying-examples.html"><a href="querying-examples.html#linking-with-other-htmlwidgets"><i class="fa fa-check"></i><b>5.3.5</b> Linking with other htmlwidgets</a></li>
+<li class="chapter" data-level="5.3.6" data-path="querying-examples.html"><a href="querying-examples.html#generalized-pairs-plots"><i class="fa fa-check"></i><b>5.3.6</b> Generalized pairs plots</a></li>
+<li class="chapter" data-level="5.3.7" data-path="querying-examples.html"><a href="querying-examples.html#querying-diagnostic-plots"><i class="fa fa-check"></i><b>5.3.7</b> Querying diagnostic plots</a></li>
+</ul></li>
+<li class="chapter" data-level="5.4" data-path="limitations.html"><a href="limitations.html"><i class="fa fa-check"></i><b>5.4</b> Limitations</a></li>
+</ul></li>
+<li class="chapter" data-level="6" data-path="linking-server-side.html"><a href="linking-server-side.html"><i class="fa fa-check"></i><b>6</b> Linking views server-side</a><ul>
+<li class="chapter" data-level="6.1" data-path="hello-shiny.html"><a href="hello-shiny.html"><i class="fa fa-check"></i><b>6.1</b> Embedding plotly in shiny</a><ul>
+<li class="chapter" data-level="6.1.1" data-path="hello-shiny.html"><a href="hello-shiny.html#your-first-shiny-app"><i class="fa fa-check"></i><b>6.1.1</b> Your first shiny app</a></li>
+<li class="chapter" data-level="6.1.2" data-path="hello-shiny.html"><a href="hello-shiny.html#hiding-and-redrawing-on-resize"><i class="fa fa-check"></i><b>6.1.2</b> Hiding and redrawing on resize</a></li>
+</ul></li>
+<li class="chapter" data-level="6.2" data-path="shiny-plotly-inputs.html"><a href="shiny-plotly-inputs.html"><i class="fa fa-check"></i><b>6.2</b> Accessing plotly input events</a><ul>
+<li class="chapter" data-level="6.2.1" data-path="shiny-plotly-inputs.html"><a href="shiny-plotly-inputs.html#dragging-events"><i class="fa fa-check"></i><b>6.2.1</b> Dragging events</a></li>
+<li class="chapter" data-level="6.2.2" data-path="shiny-plotly-inputs.html"><a href="shiny-plotly-inputs.html#d-events"><i class="fa fa-check"></i><b>6.2.2</b> 3D events</a></li>
+<li class="chapter" data-level="6.2.3" data-path="shiny-plotly-inputs.html"><a href="shiny-plotly-inputs.html#mapping-events-to-input-data"><i class="fa fa-check"></i><b>6.2.3</b> Mapping events to input data</a></li>
+<li class="chapter" data-level="6.2.4" data-path="shiny-plotly-inputs.html"><a href="shiny-plotly-inputs.html#accessing-edit-events"><i class="fa fa-check"></i><b>6.2.4</b> Accessing edit events</a></li>
+</ul></li>
+<li class="chapter" data-level="6.3" data-path="updating-views.html"><a href="updating-views.html"><i class="fa fa-check"></i><b>6.3</b> Responding to input events</a></li>
+<li class="chapter" data-level="6.4" data-path="shiny-performance.html"><a href="shiny-performance.html"><i class="fa fa-check"></i><b>6.4</b> Improving performance</a><ul>
+<li class="chapter" data-level="6.4.1" data-path="shiny-performance.html"><a href="shiny-performance.html#proxies"><i class="fa fa-check"></i><b>6.4.1</b> Partial plotly updates</a></li>
+<li class="chapter" data-level="6.4.2" data-path="shiny-performance.html"><a href="shiny-performance.html#partial-update-examples"><i class="fa fa-check"></i><b>6.4.2</b> Partial update examples</a></li>
+</ul></li>
+<li class="chapter" data-level="6.5" data-path="advanced-applications.html"><a href="advanced-applications.html"><i class="fa fa-check"></i><b>6.5</b> Advanced applications</a><ul>
+<li class="chapter" data-level="6.5.1" data-path="advanced-applications.html"><a href="advanced-applications.html#drill-down"><i class="fa fa-check"></i><b>6.5.1</b> Drill-down</a></li>
+<li class="chapter" data-level="6.5.2" data-path="advanced-applications.html"><a href="advanced-applications.html#cross-filter"><i class="fa fa-check"></i><b>6.5.2</b> Cross-filter</a></li>
+</ul></li>
+<li class="chapter" data-level="6.6" data-path="discussion.html"><a href="discussion.html"><i class="fa fa-check"></i><b>6.6</b> Discussion</a></li>
+</ul></li>
+<li class="chapter" data-level="7" data-path="animating-views.html"><a href="animating-views.html"><i class="fa fa-check"></i><b>7</b> Animating views</a><ul>
+<li class="chapter" data-level="7.1" data-path="key-frame-animations.html"><a href="key-frame-animations.html"><i class="fa fa-check"></i><b>7.1</b> Key frame animations</a></li>
+<li class="chapter" data-level="7.2" data-path="linking-animated-views.html"><a href="linking-animated-views.html"><i class="fa fa-check"></i><b>7.2</b> Linking animated views</a></li>
+</ul></li>
+<li class="chapter" data-level="8" data-path="advanced-topics.html"><a href="advanced-topics.html"><i class="fa fa-check"></i><b>8</b> Advanced topics</a><ul>
+<li class="chapter" data-level="8.1" data-path="javascript.html"><a href="javascript.html"><i class="fa fa-check"></i><b>8.1</b> Custom behavior via JavaScript</a></li>
+<li class="chapter" data-level="8.2" data-path="translating-custom-ggplot2-geoms.html"><a href="translating-custom-ggplot2-geoms.html"><i class="fa fa-check"></i><b>8.2</b> Translating custom ggplot2 geoms</a></li>
+<li class="chapter" data-level="8.3" data-path="designing-an-htmlwidget-interface.html"><a href="designing-an-htmlwidget-interface.html"><i class="fa fa-check"></i><b>8.3</b> Designing an htmlwidget interface</a></li>
+</ul></li>
+<li class="chapter" data-level="" data-path="references.html"><a href="references.html"><i class="fa fa-check"></i>References</a></li>
+</ul>
+
+      </nav>
+    </div>
+
+    <div class="book-body">
+      <div class="body-inner">
+        <div class="book-header" role="navigation">
+          <h1>
+            <i class="fa fa-circle-o-notch fa-spin"></i><a href="./">plotly for R</a>
+          </h1>
+        </div>
+
+        <div class="page-wrapper" tabindex="-1" role="main">
+          <div class="page-inner">
+
+            <section class="normal" id="section-">
+<div id="advanced-applications" class="section level2">
+<h2><span class="header-section-number">6.5</span> Advanced applications</h2>
+<p>This section combines concepts from prior sections in linking views with shiny and applies them towards some popular use cases.</p>
+<div id="drill-down" class="section level3">
+<h3><span class="header-section-number">6.5.1</span> Drill-down</h3>
+<p>The so-called ‘drill-down’ chart tends to include a vague grouping of interactive graphics that allow one to generate new views based on interesting subset(s) of the data. In Figure <a href="advanced-applications.html#fig:shiny-drill-down">6.20</a>, the first bar chart shows store sales broked down by their main categories. By clicking on a bar, one can drill-down into that category to see the breakdown of sub-categories within that category. From there, one may pick a sub-category to populate a time series of the corresponding sales; and futhermore, click on a particular date to see the actual sales records for that day.</p>
+<p>In a drill-down chart, a change in the top-level category should trigger changes to sub-categories, so to handle this logic correctly, you’ll want to store selections in reactive values and update those values accordingly when relevant events occur. For example, note how in Figure <a href="advanced-applications.html#fig:shiny-drill-down">6.20</a>, a click of a category clears the sub-category and order-date. Moreover, a change in a sub-category will clear the order-date, but doesn’t change the category.</p>
+<pre class="sourceCode r"><code class="sourceCode r"><span class="kw">library</span>(shiny)
+<span class="kw">library</span>(plotly)
+<span class="kw">library</span>(dplyr)
+
+<span class="co"># </span><span class="al">TODO</span><span class="co">: provide public URL link</span>
+sales &lt;-<span class="st"> </span>readr<span class="op">::</span><span class="kw">read_csv</span>(<span class="st">&quot;data/sales.csv&quot;</span>)
+
+ui &lt;-<span class="st"> </span><span class="kw">fluidPage</span>(
+  <span class="kw">plotlyOutput</span>(<span class="st">&quot;category&quot;</span>, <span class="dt">height =</span> <span class="dv">200</span>),
+  <span class="kw">plotlyOutput</span>(<span class="st">&quot;sub_category&quot;</span>, <span class="dt">height =</span> <span class="dv">200</span>),
+  <span class="kw">plotlyOutput</span>(<span class="st">&quot;sales&quot;</span>, <span class="dt">height =</span> <span class="dv">300</span>),
+  <span class="kw">dataTableOutput</span>(<span class="st">&quot;datatable&quot;</span>)
+)
+
+<span class="co"># avoid repeating this code</span>
+axis_titles &lt;-<span class="st"> </span>. <span class="op">%&gt;%</span>
+<span class="st">  </span><span class="kw">layout</span>(
+    <span class="dt">xaxis =</span> <span class="kw">list</span>(<span class="dt">title =</span> <span class="st">&quot;&quot;</span>),
+    <span class="dt">yaxis =</span> <span class="kw">list</span>(<span class="dt">title =</span> <span class="st">&quot;Sales&quot;</span>)
+  )
+
+server &lt;-<span class="st"> </span><span class="cf">function</span>(input, output, session) {
+  
+  <span class="co"># for maintaining the state of drill-down variables</span>
+  category &lt;-<span class="st"> </span><span class="kw">reactiveVal</span>()
+  sub_category &lt;-<span class="st"> </span><span class="kw">reactiveVal</span>()
+  order_date &lt;-<span class="st"> </span><span class="kw">reactiveVal</span>()
+  
+  <span class="co"># when clicking on a category, </span>
+  <span class="kw">observeEvent</span>(<span class="kw">event_data</span>(<span class="st">&quot;plotly_click&quot;</span>, <span class="dt">source =</span> <span class="st">&quot;category&quot;</span>), {
+    <span class="kw">category</span>(<span class="kw">event_data</span>(<span class="st">&quot;plotly_click&quot;</span>, <span class="dt">source =</span> <span class="st">&quot;category&quot;</span>)<span class="op">$</span>x)
+    <span class="kw">sub_category</span>(<span class="ot">NULL</span>)
+    <span class="kw">order_date</span>(<span class="ot">NULL</span>)
+  })
+  
+  <span class="kw">observeEvent</span>(<span class="kw">event_data</span>(<span class="st">&quot;plotly_click&quot;</span>, <span class="dt">source =</span> <span class="st">&quot;sub_category&quot;</span>), {
+    <span class="kw">sub_category</span>(<span class="kw">event_data</span>(<span class="st">&quot;plotly_click&quot;</span>, <span class="dt">source =</span> <span class="st">&quot;sub_category&quot;</span>)<span class="op">$</span>x)
+    <span class="kw">order_date</span>(<span class="ot">NULL</span>)
+  })
+  
+  <span class="kw">observeEvent</span>(<span class="kw">event_data</span>(<span class="st">&quot;plotly_click&quot;</span>, <span class="dt">source =</span> <span class="st">&quot;order_date&quot;</span>), {
+    <span class="kw">order_date</span>(<span class="kw">event_data</span>(<span class="st">&quot;plotly_click&quot;</span>, <span class="dt">source =</span> <span class="st">&quot;order_date&quot;</span>)<span class="op">$</span>x)
+  })
+  
+  output<span class="op">$</span>category &lt;-<span class="st"> </span><span class="kw">renderPlotly</span>({
+    sales <span class="op">%&gt;%</span>
+<span class="st">      </span><span class="kw">count</span>(category, <span class="dt">wt =</span> sales) <span class="op">%&gt;%</span>
+<span class="st">      </span><span class="kw">plot_ly</span>(<span class="dt">x =</span> <span class="op">~</span>category, <span class="dt">y =</span> <span class="op">~</span>n, <span class="dt">source =</span> <span class="st">&quot;category&quot;</span>) <span class="op">%&gt;%</span>
+<span class="st">      </span><span class="kw">axis_titles</span>() <span class="op">%&gt;%</span><span class="st"> </span>
+<span class="st">      </span><span class="kw">layout</span>(<span class="dt">title =</span> <span class="st">&quot;Sales by category&quot;</span>)
+  })
+  
+  output<span class="op">$</span>sub_category &lt;-<span class="st"> </span><span class="kw">renderPlotly</span>({
+    <span class="cf">if</span> (<span class="kw">is.null</span>(<span class="kw">category</span>())) <span class="kw">return</span>(<span class="ot">NULL</span>)
+    
+    sales <span class="op">%&gt;%</span>
+<span class="st">      </span><span class="kw">filter</span>(category <span class="op">%in%</span><span class="st"> </span><span class="kw">category</span>()) <span class="op">%&gt;%</span>
+<span class="st">      </span><span class="kw">count</span>(sub_category, <span class="dt">wt =</span> sales) <span class="op">%&gt;%</span>
+<span class="st">      </span><span class="kw">plot_ly</span>(<span class="dt">x =</span> <span class="op">~</span>sub_category, <span class="dt">y =</span> <span class="op">~</span>n, <span class="dt">source =</span> <span class="st">&quot;sub_category&quot;</span>) <span class="op">%&gt;%</span>
+<span class="st">      </span><span class="kw">axis_titles</span>() <span class="op">%&gt;%</span>
+<span class="st">      </span><span class="kw">layout</span>(<span class="dt">title =</span> <span class="kw">category</span>())
+  })
+  
+  output<span class="op">$</span>sales &lt;-<span class="st"> </span><span class="kw">renderPlotly</span>({
+    <span class="cf">if</span> (<span class="kw">is.null</span>(<span class="kw">sub_category</span>())) <span class="kw">return</span>(<span class="ot">NULL</span>)
+    
+    sales <span class="op">%&gt;%</span>
+<span class="st">      </span><span class="kw">filter</span>(sub_category <span class="op">%in%</span><span class="st"> </span><span class="kw">sub_category</span>()) <span class="op">%&gt;%</span>
+<span class="st">      </span><span class="kw">count</span>(order_date, <span class="dt">wt =</span> sales) <span class="op">%&gt;%</span>
+<span class="st">      </span><span class="kw">plot_ly</span>(<span class="dt">x =</span> <span class="op">~</span>order_date, <span class="dt">y =</span> <span class="op">~</span>n, <span class="dt">source =</span> <span class="st">&quot;order_date&quot;</span>) <span class="op">%&gt;%</span>
+<span class="st">      </span><span class="kw">add_lines</span>() <span class="op">%&gt;%</span>
+<span class="st">      </span><span class="kw">axis_titles</span>() <span class="op">%&gt;%</span>
+<span class="st">      </span><span class="kw">layout</span>(<span class="dt">title =</span> <span class="kw">paste</span>(<span class="kw">sub_category</span>(), <span class="st">&quot;sales over time&quot;</span>))
+  })
+  
+  output<span class="op">$</span>datatable &lt;-<span class="st"> </span><span class="kw">renderDataTable</span>({
+    <span class="cf">if</span> (<span class="kw">is.null</span>(<span class="kw">order_date</span>())) <span class="kw">return</span>(<span class="ot">NULL</span>)
+    
+    sales <span class="op">%&gt;%</span>
+<span class="st">      </span><span class="kw">filter</span>(
+        sub_category <span class="op">%in%</span><span class="st"> </span><span class="kw">sub_category</span>(),
+        <span class="kw">as.Date</span>(order_date) <span class="op">%in%</span><span class="st"> </span><span class="kw">as.Date</span>(<span class="kw">order_date</span>())
+      )
+  })
+  
+}
+
+<span class="kw">shinyApp</span>(ui, server)</code></pre>
+<div class="figure"><span id="fig:shiny-drill-down"></span>
+<img src="https://i.imgur.com/BQrA1fp.gif" alt="Using a drill-down approach to navigating through sales data by category, sub-category, and order date." width="100%" />
+<p class="caption">
+Figure 6.20: Using a drill-down approach to navigating through sales data by category, sub-category, and order date.
+</p>
+</div>
+</div>
+<div id="cross-filter" class="section level3">
+<h3><span class="header-section-number">6.5.2</span> Cross-filter</h3>
+<p>Related to the drill-down chart is so-called ‘cross-filter’ chart. The main difference between drill-down and cross-filter is that, with cross-filter, the visualizations are typically fixed and selection(s) impose a filter on the data shown in those fixed views. The typical cross-filter implementation allows multiple brushes (i.e., filters) and uses the intersection of those filters to the dataset portrayed in those views. Figure <a href="advanced-applications.html#fig:shiny-crossfilter">6.21</a> demonstrates how one could apply this technique to a set of histograms using the <code>flights</code> dataset from the <strong>nycflights13</strong> package <span class="citation">(Wickham <a href="#ref-nycflights13">2018</a>)</span>. The brush range for each view in stored and maintained in a <code>reactiveValues()</code> variable, named <code>brush_ranges</code>. Since the actual bar heights reflect only the active filters in other views, the <code>d_filter()</code> function is called for each view using only the <code>brush_ranges</code> from the other views.</p>
+<pre class="sourceCode r"><code class="sourceCode r"><span class="kw">library</span>(shiny)
+<span class="kw">library</span>(dplyr)
+<span class="kw">library</span>(nycflights13)
+<span class="co"># install from https://github.com/hadley/ggstat</span>
+<span class="kw">library</span>(ggstat)
+
+<span class="co"># Collect numeric variables to be shown as histograms in the crossfilter</span>
+d &lt;-<span class="st"> </span><span class="kw">select</span>(flights, arr_time, dep_time, arr_delay, dep_delay, air_time, distance)
+
+<span class="co"># Generate an output container per variable</span>
+ui &lt;-<span class="st"> </span><span class="kw">fluidPage</span>(
+  <span class="kw">lapply</span>(<span class="kw">names</span>(d), <span class="cf">function</span>(nm) <span class="kw">plotlyOutput</span>(nm, <span class="dt">height =</span> <span class="dv">200</span>, <span class="dt">width =</span> <span class="st">&quot;49%&quot;</span>, <span class="dt">inline =</span> <span class="ot">TRUE</span>))
+)
+
+server &lt;-<span class="st"> </span><span class="cf">function</span>(input, output, session) {
+  
+  <span class="co"># These reactive values track the set of active brushes </span>
+  <span class="co"># Each reactive value corresponds to a different variable </span>
+  brush_ranges &lt;-<span class="st"> </span><span class="kw">reactiveValues</span>()
+  
+  <span class="co"># Filter the dataset based on every active brush range except for one (var)</span>
+  d_filter &lt;-<span class="st"> </span><span class="cf">function</span>(d, <span class="dt">var =</span> <span class="st">&quot;arr_time&quot;</span>) {
+    <span class="cf">for</span> (nm <span class="cf">in</span> <span class="kw">setdiff</span>(<span class="kw">names</span>(d), var)) {
+      rng &lt;-<span class="st"> </span>brush_ranges[[nm]]
+      <span class="cf">if</span> (<span class="kw">is.null</span>(rng)) <span class="cf">next</span>
+      d &lt;-<span class="st"> </span><span class="kw">filter</span>(d, <span class="kw">between</span>(d[[nm]], <span class="kw">min</span>(rng), <span class="kw">max</span>(rng)))
+    }
+    d
+  }
+  
+  <span class="co"># Implement same render logic for each variable</span>
+  <span class="kw">lapply</span>(<span class="kw">names</span>(d), <span class="cf">function</span>(nm) {
+    
+    counts &lt;-<span class="st"> </span>d[[nm]] <span class="op">%&gt;%</span>
+<span class="st">      </span><span class="kw">bin_fixed</span>(<span class="dt">bins =</span> <span class="dv">150</span>) <span class="op">%&gt;%</span>
+<span class="st">      </span><span class="kw">compute_stat</span>(d[[nm]]) <span class="op">%&gt;%</span>
+<span class="st">      </span><span class="kw">filter</span>(<span class="op">!</span><span class="kw">is.na</span>(xmin_)) <span class="op">%&gt;%</span>
+<span class="st">      </span><span class="kw">mutate</span>(<span class="dt">xmid =</span> (xmin_ <span class="op">+</span><span class="st"> </span>xmax_) <span class="op">/</span><span class="st"> </span><span class="dv">2</span>)
+    
+    output[[nm]] &lt;-<span class="st"> </span><span class="kw">renderPlotly</span>({
+      
+      <span class="kw">plot_ly</span>(counts, <span class="dt">source =</span> nm) <span class="op">%&gt;%</span>
+<span class="st">        </span><span class="kw">add_bars</span>(<span class="dt">x =</span> <span class="op">~</span>xmid, <span class="dt">y =</span> <span class="op">~</span>count_) <span class="op">%&gt;%</span>
+<span class="st">        </span><span class="kw">layout</span>(
+          <span class="dt">dragmode =</span> <span class="st">&quot;select&quot;</span>, 
+          <span class="dt">selectdirection =</span> <span class="st">&quot;h&quot;</span>,
+          <span class="dt">xaxis =</span> <span class="kw">list</span>(
+            <span class="dt">title =</span> nm,
+            <span class="dt">range =</span> <span class="kw">range</span>(d[[nm]], <span class="dt">na.rm =</span> <span class="ot">TRUE</span>)
+          ),
+          <span class="dt">yaxis =</span> <span class="kw">list</span>(<span class="dt">title =</span> <span class="st">&quot;&quot;</span>)
+        )
+    })
+    
+    <span class="kw">observeEvent</span>(<span class="kw">event_data</span>(<span class="st">&quot;plotly_brushing&quot;</span>, <span class="dt">source =</span> nm), <span class="dt">ignoreNULL =</span> <span class="ot">FALSE</span>, {
+      
+      <span class="co"># inform the world about the new brush range</span>
+      brush_ranges[[nm]] &lt;-<span class="st"> </span><span class="kw">event_data</span>(<span class="st">&quot;plotly_brushing&quot;</span>, <span class="dt">source =</span> nm)<span class="op">$</span>x
+      
+      <span class="co"># update the bar heights of every view (except for the one being brushed)</span>
+      <span class="cf">for</span> (var <span class="cf">in</span> <span class="kw">setdiff</span>(<span class="kw">names</span>(d), nm)) {
+        
+        <span class="co"># views respect every brush except for their own </span>
+        d_filtered &lt;-<span class="st"> </span><span class="kw">d_filter</span>(d, var)
+        
+        <span class="co"># bin the filtered data based on the global binning definition</span>
+        counts_filter &lt;-<span class="st"> </span>d[[var]] <span class="op">%&gt;%</span>
+<span class="st">          </span><span class="kw">bin_fixed</span>(<span class="dt">bins =</span> <span class="dv">150</span>) <span class="op">%&gt;%</span>
+<span class="st">          </span><span class="kw">compute_stat</span>(d_filtered[[var]]) <span class="op">%&gt;%</span>
+<span class="st">          </span><span class="kw">filter</span>(<span class="op">!</span><span class="kw">is.na</span>(xmin_)) <span class="op">%&gt;%</span>
+<span class="st">          </span><span class="kw">mutate</span>(<span class="dt">xmid =</span> (xmin_ <span class="op">+</span><span class="st"> </span>xmax_) <span class="op">/</span><span class="st"> </span><span class="dv">2</span>)
+        
+        <span class="co"># finally, update the bar heights</span>
+        <span class="kw">plotlyProxy</span>(var, session) <span class="op">%&gt;%</span>
+<span class="st">          </span><span class="kw">plotlyProxyInvoke</span>(<span class="st">&quot;restyle&quot;</span>, <span class="st">&quot;y&quot;</span>, <span class="kw">list</span>(counts_filter<span class="op">$</span>count_), <span class="dv">0</span>) 
+      }
+    })
+    
+  })
+  
+}
+
+<span class="kw">shinyApp</span>(ui, server)</code></pre>
+<div class="figure"><span id="fig:shiny-crossfilter"></span>
+<img src="https://i.imgur.com/UNcCw2m.gif" alt="Crossfiltering flights data from the **nycflights13** package [@nycflights13]. Even though the filtering and binning logic occurs server-side, a very minimal amount of data is sent between server and client (just the brush range and bar heights). Moreover, to perform the UI update, the client only has to tweak existing bar heights, so the overall user experience is quite responsive." width="100%" />
+<p class="caption">
+Figure 6.21: Crossfiltering flights data from the <strong>nycflights13</strong> package <span class="citation">(Wickham <a href="#ref-nycflights13">2018</a>)</span>. Even though the filtering and binning logic occurs server-side, a very minimal amount of data is sent between server and client (just the brush range and bar heights). Moreover, to perform the UI update, the client only has to tweak existing bar heights, so the overall user experience is quite responsive.
+</p>
+</div>
+<p>One weakness of a typical crossfilter interface like Figure <a href="advanced-applications.html#fig:shiny-crossfilter">6.21</a> is that it’s difficult to make visual comparisons. That is, when a filter is applied, you lose a visual reference to the overall distribution and/or prior filter, making difficult to make meaningful comparisons. Figure <a href="advanced-applications.html#fig:shiny-crossfilter">6.21</a> modifies the logic of Figure <a href="advanced-applications.html#fig:shiny-crossfilter-compare">6.22</a> to enable filter comparisons by adding the ability to change the color of the brush. Moreover, for sake of demonstration and simplicity, it also allows for only one active filter per color (i.e., brushing within color is transient). One could borrow logic from Figure <a href="advanced-applications.html#fig:shiny-crossfilter">6.21</a> to allow multiple filters for each color, but this would require multiple <code>brush_ranges</code>.</p>
+<p>Since brushing within color is transient, in constrast to Figure <a href="advanced-applications.html#fig:shiny-crossfilter">6.21</a>, Figure <a href="advanced-applications.html#fig:shiny-crossfilter-compare">6.22</a> doesn’t have to track the state of all the active brushes. It does, however, need to display <em>relative</em> rather than absolute frequencies to facilitate comparison of small filter range(s) to the overall distribution. This particular implementation takes the overall distribution as a “base layer” that remains fixed and overlays a handful of “selection layers” – one for each possible brush color. These selection layers begin with a height of 0, but when the relevant brush fires the heights of the bars for the relevant layer is modified. This approach may seem like a hack, but it leads to a fluid user experience because it’s not much work to adjust the height of a bar that already exists.</p>
+<pre class="sourceCode r"><code class="sourceCode r"><span class="kw">library</span>(shiny)
+<span class="kw">library</span>(dplyr)
+<span class="kw">library</span>(nycflights13)
+<span class="kw">library</span>(colourpicker)
+<span class="co"># install from https://github.com/hadley/ggstat</span>
+<span class="kw">library</span>(ggstat)
+
+<span class="co"># Select all the (numeric) variables to be shown as histograms</span>
+<span class="co"># in the crossfilter</span>
+d &lt;-<span class="st"> </span><span class="kw">select</span>(flights, arr_time, dep_time, arr_delay, dep_delay, air_time, distance)
+
+<span class="co"># Determing a color palette for the brush</span>
+n_colors &lt;-<span class="st"> </span><span class="dv">5</span>
+color_codes &lt;-<span class="st"> </span>RColorBrewer<span class="op">::</span><span class="kw">brewer.pal</span>(n_colors, <span class="st">&quot;Dark2&quot;</span>)
+
+<span class="co"># Generate an output container per variable</span>
+ui &lt;-<span class="st"> </span><span class="kw">fluidPage</span>(
+  <span class="kw">fluidRow</span>(
+    tags<span class="op">$</span><span class="kw">div</span>(
+      <span class="dt">style =</span> <span class="st">&quot;display:inline-block; max-width:150px; margin-left:50px&quot;</span>,
+      <span class="kw">colourInput</span>(<span class="st">&quot;brush_color&quot;</span>, <span class="st">&quot;Pick a brush color&quot;</span>, color_codes[<span class="dv">1</span>], <span class="dt">palette =</span> <span class="st">&quot;limited&quot;</span>, <span class="dt">allowedCols =</span> color_codes)
+    ),
+    tags<span class="op">$</span><span class="kw">div</span>(
+      <span class="dt">style =</span> <span class="st">&quot;display:inline-block&quot;</span>,
+      <span class="kw">actionButton</span>(<span class="st">&quot;clear&quot;</span>, <span class="st">&quot;Clear Selection&quot;</span>)
+    )
+  ),
+  <span class="kw">lapply</span>(<span class="kw">names</span>(d), <span class="cf">function</span>(nm) <span class="kw">plotlyOutput</span>(nm, <span class="dt">height =</span> <span class="dv">200</span>, <span class="dt">width =</span> <span class="st">&quot;49%&quot;</span>, <span class="dt">inline =</span> <span class="ot">TRUE</span>))
+)
+
+server &lt;-<span class="st"> </span><span class="cf">function</span>(input, output, session) {
+  
+  <span class="co"># Implement same render logic for each variable</span>
+  <span class="kw">lapply</span>(<span class="kw">names</span>(d), <span class="cf">function</span>(nm) {
+    
+    <span class="co"># By letting R handle the binning, there is less data to send over the</span>
+    <span class="co"># wire (and, thus, a more responsive app over back connections)</span>
+    counts &lt;-<span class="st"> </span>d[[nm]] <span class="op">%&gt;%</span>
+<span class="st">      </span><span class="kw">bin_fixed</span>(<span class="dt">bins =</span> <span class="dv">150</span>) <span class="op">%&gt;%</span>
+<span class="st">      </span><span class="kw">compute_stat</span>(d[[nm]]) <span class="op">%&gt;%</span>
+<span class="st">      </span><span class="kw">filter</span>(<span class="op">!</span><span class="kw">is.na</span>(xmin_)) <span class="op">%&gt;%</span>
+<span class="st">      </span><span class="kw">mutate</span>(
+        <span class="dt">xmid =</span> (xmin_ <span class="op">+</span><span class="st"> </span>xmax_) <span class="op">/</span><span class="st"> </span><span class="dv">2</span>,
+        <span class="dt">prop_ =</span> count_ <span class="op">/</span><span class="st"> </span><span class="kw">sum</span>(count_), 
+        <span class="dt">zeros =</span> <span class="dv">0</span>
+      )
+    
+    output[[nm]] &lt;-<span class="st"> </span><span class="kw">renderPlotly</span>({
+      
+      <span class="co"># Draw two layers of bars, one for the overall (black)</span>
+      <span class="co"># distribution, and one for the filtered data (red)</span>
+      p &lt;-<span class="st"> </span><span class="kw">plot_ly</span>(
+        counts, <span class="dt">x =</span> <span class="op">~</span>xmid, <span class="dt">alpha =</span> <span class="kw">I</span>(<span class="fl">0.5</span>), 
+        <span class="dt">source =</span> nm, <span class="dt">unselected =</span> <span class="kw">list</span>(<span class="dt">marker =</span> <span class="kw">list</span>(<span class="dt">opacity =</span> <span class="dv">1</span>))
+      ) <span class="op">%&gt;%</span>
+<span class="st">        </span><span class="kw">add_bars</span>(<span class="dt">y =</span> <span class="op">~</span>prop_, <span class="dt">color =</span> <span class="kw">I</span>(<span class="st">&quot;black&quot;</span>)) <span class="op">%&gt;%</span>
+<span class="st">        </span><span class="kw">layout</span>(
+          <span class="dt">dragmode =</span> <span class="st">&quot;select&quot;</span>, 
+          <span class="dt">selectdirection =</span> <span class="st">&quot;h&quot;</span>,
+          <span class="dt">xaxis =</span> <span class="kw">list</span>(
+            <span class="dt">title =</span> nm,
+            <span class="dt">range =</span> <span class="kw">range</span>(d[[nm]], <span class="dt">na.rm =</span> <span class="ot">TRUE</span>) 
+          ),
+          <span class="dt">yaxis =</span> <span class="kw">list</span>(
+            <span class="dt">title =</span> <span class="st">&quot;&quot;</span>,
+            <span class="dt">showticks =</span> <span class="ot">FALSE</span>, 
+            <span class="dt">showticklabels =</span> <span class="ot">FALSE</span>, 
+            <span class="dt">showgrid =</span> <span class="ot">FALSE</span>
+          ),
+          <span class="dt">barmode =</span> <span class="st">&quot;overlay&quot;</span>,
+          <span class="dt">showlegend =</span> <span class="ot">FALSE</span>
+        )
+      
+      <span class="cf">for</span> (col <span class="cf">in</span> color_codes) {
+        p &lt;-<span class="st"> </span><span class="kw">add_bars</span>(p, <span class="dt">y =</span> <span class="op">~</span>zeros, <span class="dt">color =</span> <span class="kw">I</span>(col))
+      }
+      
+      p
+    })
+    
+    <span class="co"># when the selection is cleared, return the selection layer bars to 0</span>
+    <span class="kw">observeEvent</span>(input<span class="op">$</span>clear, {
+      <span class="kw">plotlyProxy</span>(nm, session) <span class="op">%&gt;%</span>
+<span class="st">        </span><span class="kw">plotlyProxyInvoke</span>(<span class="st">&quot;restyle&quot;</span>, <span class="st">&quot;y&quot;</span>, <span class="kw">list</span>(counts<span class="op">$</span>zeros), <span class="kw">seq_along</span>(color_codes))
+    })
+    
+    <span class="co"># each brush color code corresponds to a different trace index</span>
+    trace_index &lt;-<span class="st"> </span><span class="kw">reactive</span>(<span class="kw">match</span>(input<span class="op">$</span>brush_color, color_codes))
+    
+    <span class="kw">observe</span>({
+      b &lt;-<span class="st"> </span><span class="kw">event_data</span>(<span class="st">&quot;plotly_brushing&quot;</span>, <span class="dt">source =</span> nm)<span class="op">$</span>x
+      in_bounds &lt;-<span class="st"> </span><span class="kw">between</span>(d[[nm]], <span class="kw">min</span>(b), <span class="kw">max</span>(b))
+      
+      <span class="kw">lapply</span>(<span class="kw">names</span>(d), <span class="cf">function</span>(var) {
+        p &lt;-<span class="st"> </span><span class="kw">plotlyProxy</span>(var, session)
+        
+        <span class="cf">if</span> (<span class="kw">is.null</span>(b)) {
+          
+          <span class="co"># brush has been cleared, return the selection bars to a zero height</span>
+          <span class="kw">plotlyProxyInvoke</span>(p, <span class="st">&quot;restyle&quot;</span>, <span class="st">&quot;y&quot;</span>, <span class="kw">list</span>(counts<span class="op">$</span>zeros), <span class="kw">trace_index</span>())
+          
+        } <span class="cf">else</span> {
+          
+          <span class="co"># if the brush originates from the proxy target</span>
+          <span class="co"># then don&#39;t compute a new marginal distribution, </span>
+          <span class="co"># just highlight the range of interest</span>
+          props &lt;-<span class="st"> </span><span class="cf">if</span> (nm <span class="op">==</span><span class="st"> </span>var) {
+            <span class="kw">if_else</span>(
+              <span class="kw">between</span>(counts<span class="op">$</span>xmin_, <span class="kw">min</span>(b), <span class="kw">max</span>(b)) <span class="op">&amp;</span><span class="st"> </span>
+<span class="st">                </span><span class="kw">between</span>(counts<span class="op">$</span>xmax_, <span class="kw">min</span>(b), <span class="kw">max</span>(b)),
+              counts<span class="op">$</span>prop_,
+              <span class="dv">0</span>
+            )
+          } <span class="cf">else</span> {
+            d[[var]] <span class="op">%&gt;%</span>
+<span class="st">              </span><span class="kw">bin_fixed</span>(<span class="dt">bins =</span> <span class="dv">150</span>) <span class="op">%&gt;%</span>
+<span class="st">              </span><span class="kw">compute_stat</span>(d[[var]][in_bounds]) <span class="op">%&gt;%</span>
+<span class="st">              </span><span class="kw">filter</span>(<span class="op">!</span><span class="kw">is.na</span>(xmin_)) <span class="op">%&gt;%</span>
+<span class="st">              </span><span class="kw">mutate</span>(<span class="dt">prop_ =</span> count_ <span class="op">/</span><span class="st"> </span><span class="kw">sum</span>(count_)) <span class="op">%&gt;%</span>
+<span class="st">              </span><span class="kw">pull</span>(prop_)
+          }
+          
+          <span class="kw">plotlyProxyInvoke</span>(p, <span class="st">&quot;restyle&quot;</span>, <span class="st">&quot;y&quot;</span>, <span class="kw">list</span>(props), <span class="kw">trace_index</span>())
+        }
+      })
+      
+    })
+    
+  })
+  
+}
+
+<span class="kw">shinyApp</span>(ui, server)</code></pre>
+<div class="figure"><span id="fig:shiny-crossfilter-compare"></span>
+<img src="https://i.imgur.com/YSRZ6iU.gif" alt="Comparing filters with a dynamic color brush. This particular example compares 'red eye' flights (in green) to early morning flights (in orange). This makes it easier to see that delays occur more often for 'red eye' flights." width="100%" />
+<p class="caption">
+Figure 6.22: Comparing filters with a dynamic color brush. This particular example compares ‘red eye’ flights (in green) to early morning flights (in orange). This makes it easier to see that delays occur more often for ‘red eye’ flights.
+</p>
+</div>
+</div>
+</div>
+<h3>References</h3>
+<div id="refs" class="references">
+<div id="ref-nycflights13">
+<p>Wickham, Hadley. 2018. <em>Nycflights13: Flights That Departed Nyc in 2013</em>. <a href="https://CRAN.R-project.org/package=nycflights13">https://CRAN.R-project.org/package=nycflights13</a>.</p>
+</div>
+</div>
+            </section>
+
+          </div>
+        </div>
+      </div>
+<a href="shiny-performance.html" class="navigation navigation-prev " aria-label="Previous page"><i class="fa fa-angle-left"></i></a>
+<a href="discussion.html" class="navigation navigation-next " aria-label="Next page"><i class="fa fa-angle-right"></i></a>
+    </div>
+  </div>
+<script src="libs/gitbook/js/app.min.js"></script>
+<script src="libs/gitbook/js/lunr.js"></script>
+<script src="libs/gitbook/js/plugin-search.js"></script>
+<script src="libs/gitbook/js/plugin-sharing.js"></script>
+<script src="libs/gitbook/js/plugin-fontsettings.js"></script>
+<script src="libs/gitbook/js/plugin-bookdown.js"></script>
+<script src="libs/gitbook/js/jquery.highlight.js"></script>
+<script>
+gitbook.require(["gitbook"], function(gitbook) {
+gitbook.start({
+"sharing": false,
+"fontsettings": {
+"theme": "white",
+"family": "sans",
+"size": 2
+},
+"edit": {
+"link": "https://github.com/cpsievert/plotly_book/edit/master/linked-views-shiny.Rmd",
+"text": "Edit"
+},
+"history": {
+"link": null,
+"text": null
+},
+"download": null,
+"toc": {
+"collapse": "subsection"
+}
+});
+});
+</script>
+
+<script>(function(i,s,o,g,r,a,m){i['GoogleAnalyticsObject']=r;i[r]=i[r]||function(){(i[r].q=i[r].q||[]).push(arguments)},i[r].l=1*new Date();a=s.createElement(o),m=s.getElementsByTagName(o)[0];a.async=1;a.src=g;m.parentNode.insertBefore(a,m)})(window,document,'script','https://www.google-analytics.com/analytics.js','ga');ga('create', 'UA-39373211-1', 'auto');ga('send', 'pageview');</script>
+</body>
+
+</html>

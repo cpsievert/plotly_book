@@ -5,11 +5,11 @@
 
   <meta charset="UTF-8">
   <meta http-equiv="X-UA-Compatible" content="IE=edge">
-  <title>plotly for R</title>
+  <title>6.1 Embedding plotly in shiny | plotly for R</title>
   <meta name="description" content="An overview of the R package plotly">
-  <meta name="generator" content="bookdown 0.7 and GitBook 2.6.7">
+  <meta name="generator" content="bookdown  and GitBook 2.6.7">
 
-  <meta property="og:title" content="plotly for R" />
+  <meta property="og:title" content="6.1 Embedding plotly in shiny | plotly for R />
   <meta property="og:type" content="book" />
   <meta property="og:url" content="http://ropensci.github.io/plotly/" />
   <meta property="og:image" content="http://ropensci.github.io/plotly/images/plotly.png" />
@@ -17,7 +17,7 @@
   <meta name="github-repo" content="ropensci/plotly" />
 
   <meta name="twitter:card" content="summary" />
-  <meta name="twitter:title" content="plotly for R" />
+  <meta name="twitter:title" content="6.1 Embedding plotly in shiny | plotly for R />
   <meta name="twitter:site" content="@cpsievert" />
   <meta name="twitter:description" content="An overview of the R package plotly" />
   <meta name="twitter:image" content="http://ropensci.github.io/plotly/images/plotly.png" />
@@ -32,9 +32,10 @@
   
   
 <link rel="prev" href="linking-server-side.html">
-<link rel="next" href="shiny-inputs.html">
+<link rel="next" href="shiny-plotly-inputs.html">
 <script src="libs/jquery/jquery.min.js"></script>
 <link href="libs/gitbook/css/style.css" rel="stylesheet" />
+<link href="libs/gitbook/css/plugin-table.css" rel="stylesheet" />
 <link href="libs/gitbook/css/plugin-bookdown.css" rel="stylesheet" />
 <link href="libs/gitbook/css/plugin-highlight.css" rel="stylesheet" />
 <link href="libs/gitbook/css/plugin-search.css" rel="stylesheet" />
@@ -219,16 +220,22 @@ code span.wa { color: #60a0b0; font-weight: bold; font-style: italic; } /* Warni
 <li class="chapter" data-level="6.1.1" data-path="hello-shiny.html"><a href="hello-shiny.html#your-first-shiny-app"><i class="fa fa-check"></i><b>6.1.1</b> Your first shiny app</a></li>
 <li class="chapter" data-level="6.1.2" data-path="hello-shiny.html"><a href="hello-shiny.html#hiding-and-redrawing-on-resize"><i class="fa fa-check"></i><b>6.1.2</b> Hiding and redrawing on resize</a></li>
 </ul></li>
-<li class="chapter" data-level="6.2" data-path="shiny-inputs.html"><a href="shiny-inputs.html"><i class="fa fa-check"></i><b>6.2</b> Using graphical output as a shiny input</a><ul>
-<li class="chapter" data-level="6.2.1" data-path="shiny-inputs.html"><a href="shiny-inputs.html#plotly-inputs"><i class="fa fa-check"></i><b>6.2.1</b> Accessing plotly input events</a></li>
+<li class="chapter" data-level="6.2" data-path="shiny-plotly-inputs.html"><a href="shiny-plotly-inputs.html"><i class="fa fa-check"></i><b>6.2</b> Accessing plotly input events</a><ul>
+<li class="chapter" data-level="6.2.1" data-path="shiny-plotly-inputs.html"><a href="shiny-plotly-inputs.html#dragging-events"><i class="fa fa-check"></i><b>6.2.1</b> Dragging events</a></li>
+<li class="chapter" data-level="6.2.2" data-path="shiny-plotly-inputs.html"><a href="shiny-plotly-inputs.html#d-events"><i class="fa fa-check"></i><b>6.2.2</b> 3D events</a></li>
+<li class="chapter" data-level="6.2.3" data-path="shiny-plotly-inputs.html"><a href="shiny-plotly-inputs.html#mapping-events-to-input-data"><i class="fa fa-check"></i><b>6.2.3</b> Mapping events to input data</a></li>
+<li class="chapter" data-level="6.2.4" data-path="shiny-plotly-inputs.html"><a href="shiny-plotly-inputs.html#accessing-edit-events"><i class="fa fa-check"></i><b>6.2.4</b> Accessing edit events</a></li>
 </ul></li>
-<li class="chapter" data-level="6.3" data-path="updating-views.html"><a href="updating-views.html"><i class="fa fa-check"></i><b>6.3</b> Updating views</a></li>
-<li class="chapter" data-level="6.4" data-path="targeting-views.html"><a href="targeting-views.html"><i class="fa fa-check"></i><b>6.4</b> Targeting views</a></li>
-<li class="chapter" data-level="6.5" data-path="shiny-performance.html"><a href="shiny-performance.html"><i class="fa fa-check"></i><b>6.5</b> Improving performance</a><ul>
-<li class="chapter" data-level="6.5.1" data-path="shiny-performance.html"><a href="shiny-performance.html#proxies"><i class="fa fa-check"></i><b>6.5.1</b> Partial plotly updates</a></li>
-<li class="chapter" data-level="6.5.2" data-path="shiny-performance.html"><a href="shiny-performance.html#partial-update-examples"><i class="fa fa-check"></i><b>6.5.2</b> Partial update examples</a></li>
-<li class="chapter" data-level="6.5.3" data-path="shiny-performance.html"><a href="shiny-performance.html#other-considerations"><i class="fa fa-check"></i><b>6.5.3</b> Other considerations</a></li>
+<li class="chapter" data-level="6.3" data-path="updating-views.html"><a href="updating-views.html"><i class="fa fa-check"></i><b>6.3</b> Responding to input events</a></li>
+<li class="chapter" data-level="6.4" data-path="shiny-performance.html"><a href="shiny-performance.html"><i class="fa fa-check"></i><b>6.4</b> Improving performance</a><ul>
+<li class="chapter" data-level="6.4.1" data-path="shiny-performance.html"><a href="shiny-performance.html#proxies"><i class="fa fa-check"></i><b>6.4.1</b> Partial plotly updates</a></li>
+<li class="chapter" data-level="6.4.2" data-path="shiny-performance.html"><a href="shiny-performance.html#partial-update-examples"><i class="fa fa-check"></i><b>6.4.2</b> Partial update examples</a></li>
 </ul></li>
+<li class="chapter" data-level="6.5" data-path="advanced-applications.html"><a href="advanced-applications.html"><i class="fa fa-check"></i><b>6.5</b> Advanced applications</a><ul>
+<li class="chapter" data-level="6.5.1" data-path="advanced-applications.html"><a href="advanced-applications.html#drill-down"><i class="fa fa-check"></i><b>6.5.1</b> Drill-down</a></li>
+<li class="chapter" data-level="6.5.2" data-path="advanced-applications.html"><a href="advanced-applications.html#cross-filter"><i class="fa fa-check"></i><b>6.5.2</b> Cross-filter</a></li>
+</ul></li>
+<li class="chapter" data-level="6.6" data-path="discussion.html"><a href="discussion.html"><i class="fa fa-check"></i><b>6.6</b> Discussion</a></li>
 </ul></li>
 <li class="chapter" data-level="7" data-path="animating-views.html"><a href="animating-views.html"><i class="fa fa-check"></i><b>7</b> Animating views</a><ul>
 <li class="chapter" data-level="7.1" data-path="key-frame-animations.html"><a href="key-frame-animations.html"><i class="fa fa-check"></i><b>7.1</b> Key frame animations</a></li>
@@ -268,31 +275,31 @@ code span.wa { color: #60a0b0; font-weight: bold; font-style: italic; } /* Warni
 <li>The <em>server</em> function, <code>server</code>, defines a mapping from input values to output widgets. More specifically, the <strong>shiny</strong> <code>server</code> is an R <code>function()</code> between <code>input</code> values on the client and <code>output</code>s generated on the web server.</li>
 </ol>
 <p>Every input widget, including the <code>selectizeInput()</code> in Figure <a href="hello-shiny.html#fig:shiny-intro">6.1</a>, is tied to a input value that can be accesssed on the server inside a reactive expression. <strong>Shiny</strong>’s reactive expressions build a dependency graph between outputs (aka, reactive endpoints) and inputs (aka, reactive sources). The true power of reactive expressions lies in their ability to chain together and cache computations, but let’s first focus on generating outputs. In order to generate an output, you have to choose a suitable function for rendering the result of a reactive expression.</p>
-<p>Figure <a href="hello-shiny.html#fig:shiny-intro">6.1</a> uses the <code>renderPlotly()</code> function to render a reactive expression that generates a <strong>plotly</strong> graph. This expression depends in the input value <code>input$cities</code> (i.e., the input value tied to the input widget with an <code>inputId</code> of <code>&quot;cities&quot;</code>) and stores the output as <code>output$p</code>. This instructs <strong>shiny</strong> to insert the reactive graph into the <code>plotlyOutput(outputId = &quot;p&quot;)</code> container defined in the user interface.</p>
-<div class="sourceCode" id="cb102"><pre class="sourceCode r"><code class="sourceCode r"><a class="sourceLine" id="cb102-1" title="1"><span class="kw">library</span>(shiny)</a>
-<a class="sourceLine" id="cb102-2" title="2"><span class="kw">library</span>(plotly)</a>
-<a class="sourceLine" id="cb102-3" title="3"></a>
-<a class="sourceLine" id="cb102-4" title="4">ui &lt;-<span class="st"> </span><span class="kw">fluidPage</span>(</a>
-<a class="sourceLine" id="cb102-5" title="5">  <span class="kw">selectizeInput</span>(</a>
-<a class="sourceLine" id="cb102-6" title="6">    <span class="dt">inputId =</span> <span class="st">&quot;cities&quot;</span>, </a>
-<a class="sourceLine" id="cb102-7" title="7">    <span class="dt">label =</span> <span class="st">&quot;Select a city&quot;</span>, </a>
-<a class="sourceLine" id="cb102-8" title="8">    <span class="dt">choices =</span> <span class="kw">unique</span>(txhousing<span class="op">$</span>city), </a>
-<a class="sourceLine" id="cb102-9" title="9">    <span class="dt">selected =</span> <span class="st">&quot;Abilene&quot;</span>,</a>
-<a class="sourceLine" id="cb102-10" title="10">    <span class="dt">multiple =</span> <span class="ot">TRUE</span></a>
-<a class="sourceLine" id="cb102-11" title="11">  ),</a>
-<a class="sourceLine" id="cb102-12" title="12">  <span class="kw">plotlyOutput</span>(<span class="dt">outputId =</span> <span class="st">&quot;p&quot;</span>)</a>
-<a class="sourceLine" id="cb102-13" title="13">)</a>
-<a class="sourceLine" id="cb102-14" title="14"></a>
-<a class="sourceLine" id="cb102-15" title="15">server &lt;-<span class="st"> </span><span class="cf">function</span>(input, output, ...) {</a>
-<a class="sourceLine" id="cb102-16" title="16">  output<span class="op">$</span>p &lt;-<span class="st"> </span><span class="kw">renderPlotly</span>({</a>
-<a class="sourceLine" id="cb102-17" title="17">    <span class="kw">plot_ly</span>(txhousing, <span class="dt">x =</span> <span class="op">~</span>date, <span class="dt">y =</span> <span class="op">~</span>median) <span class="op">%&gt;%</span></a>
-<a class="sourceLine" id="cb102-18" title="18"><span class="st">      </span><span class="kw">filter</span>(city <span class="op">%in%</span><span class="st"> </span>input<span class="op">$</span>cities) <span class="op">%&gt;%</span></a>
-<a class="sourceLine" id="cb102-19" title="19"><span class="st">      </span><span class="kw">group_by</span>(city) <span class="op">%&gt;%</span></a>
-<a class="sourceLine" id="cb102-20" title="20"><span class="st">      </span><span class="kw">add_lines</span>()</a>
-<a class="sourceLine" id="cb102-21" title="21">  })</a>
-<a class="sourceLine" id="cb102-22" title="22">}</a>
-<a class="sourceLine" id="cb102-23" title="23"></a>
-<a class="sourceLine" id="cb102-24" title="24"><span class="kw">shinyApp</span>(ui, server)</a></code></pre></div>
+<p>Figure <a href="hello-shiny.html#fig:shiny-intro">6.1</a> uses the <code>renderPlotly()</code> function to render a reactive expression that generates a <strong>plotly</strong> graph. This expression depends in the input value <code>input$cities</code> (i.e., the input value tied to the input widget with an <code>inputId</code> of <code>"cities"</code>) and stores the output as <code>output$p</code>. This instructs <strong>shiny</strong> to insert the reactive graph into the <code>plotlyOutput(outputId = "p")</code> container defined in the user interface.</p>
+<pre class="sourceCode r"><code class="sourceCode r"><span class="kw">library</span>(shiny)
+<span class="kw">library</span>(plotly)
+
+ui &lt;-<span class="st"> </span><span class="kw">fluidPage</span>(
+  <span class="kw">selectizeInput</span>(
+    <span class="dt">inputId =</span> <span class="st">&quot;cities&quot;</span>, 
+    <span class="dt">label =</span> <span class="st">&quot;Select a city&quot;</span>, 
+    <span class="dt">choices =</span> <span class="kw">unique</span>(txhousing<span class="op">$</span>city), 
+    <span class="dt">selected =</span> <span class="st">&quot;Abilene&quot;</span>,
+    <span class="dt">multiple =</span> <span class="ot">TRUE</span>
+  ),
+  <span class="kw">plotlyOutput</span>(<span class="dt">outputId =</span> <span class="st">&quot;p&quot;</span>)
+)
+
+server &lt;-<span class="st"> </span><span class="cf">function</span>(input, output, ...) {
+  output<span class="op">$</span>p &lt;-<span class="st"> </span><span class="kw">renderPlotly</span>({
+    <span class="kw">plot_ly</span>(txhousing, <span class="dt">x =</span> <span class="op">~</span>date, <span class="dt">y =</span> <span class="op">~</span>median) <span class="op">%&gt;%</span>
+<span class="st">      </span><span class="kw">filter</span>(city <span class="op">%in%</span><span class="st"> </span>input<span class="op">$</span>cities) <span class="op">%&gt;%</span>
+<span class="st">      </span><span class="kw">group_by</span>(city) <span class="op">%&gt;%</span>
+<span class="st">      </span><span class="kw">add_lines</span>()
+  })
+}
+
+<span class="kw">shinyApp</span>(ui, server)</code></pre>
 <div class="figure"><span id="fig:shiny-intro"></span>
 <img src="https://i.imgur.com/Qxf5bxP.gif" alt="Using a **shiny** input widget to control which time series are shown on a **plotly** graph." width="100%" />
 <p class="caption">
@@ -311,45 +318,45 @@ Figure 6.1: Using a <strong>shiny</strong> input widget to control which time se
 <li><code>fileInput()</code> for uploading files.</li>
 <li><code>checkboxInput()</code>/<code>checkboxGroupInput()</code>/<code>radioButtons()</code> for choosing a list of options.</li>
 </ul>
-<p>Going forward our focus is to link multiple graphs in <strong>shiny</strong> through direct manipulation, so we focus less on using these input widgets, and more on using <strong>plotly</strong> and static R graphics as inputs to other output widgets. Section <a href="shiny-inputs.html#shiny-inputs">6.2</a> provides an introduction to this idea, but before we learn how to access these input events, you may want to know a bit more about rendering <strong>plotly</strong> inside <strong>shiny</strong>.</p>
+<p>Going forward our focus is to link multiple graphs in <strong>shiny</strong> through direct manipulation, so we focus less on using these input widgets, and more on using <strong>plotly</strong> and static R graphics as inputs to other output widgets. Section <a href="shiny-plotly-inputs.html#shiny-plotly-inputs">6.2</a> provides an introduction to this idea, but before we learn how to access these input events, you may want to know a bit more about rendering <strong>plotly</strong> inside <strong>shiny</strong>.</p>
 </div>
 <div id="hiding-and-redrawing-on-resize" class="section level3">
 <h3><span class="header-section-number">6.1.2</span> Hiding and redrawing on resize</h3>
 <p>The <code>renderPlotly()</code> function renders anything that the <code>plotly_build()</code> function understands, including <code>plot_ly()</code>, <code>ggplotly()</code>, and <strong>ggplot2</strong> objects.<a href="#fn21" class="footnote-ref" id="fnref21"><sup>21</sup></a> It also renders <code>NULL</code> as an empty HTML div, which is handy for certain cases where it doesn’t make sense to render a graph. Figure <a href="hello-shiny.html#fig:shiny-ggplotly">6.2</a> leverages these features to render an empty div while <code>selectizeInput()</code>’s placeholder is shown, but then render a <strong>plotly</strong> graph via <code>ggplotly()</code> once cities have been selected. Figure <a href="hello-shiny.html#fig:shiny-ggplotly">6.2</a> also shows how to make the <strong>plotly</strong> output depend on the size of the container that holds the <strong>plotly</strong> graph. By default, when a browser is resized, the graph size is changed purely client-side, but this reactive expression will re-execute when the browser window is resized. Due to technical reasons this can improve <code>ggplotly()</code> resizing behavior<a href="#fn22" class="footnote-ref" id="fnref22"><sup>22</sup></a>, but should be used with caution when handling large data and long render times.</p>
-<div class="sourceCode" id="cb103"><pre class="sourceCode r"><code class="sourceCode r"><a class="sourceLine" id="cb103-1" title="1"><span class="kw">library</span>(shiny)</a>
-<a class="sourceLine" id="cb103-2" title="2"><span class="kw">library</span>(plotly)</a>
-<a class="sourceLine" id="cb103-3" title="3"></a>
-<a class="sourceLine" id="cb103-4" title="4">cities &lt;-<span class="st"> </span><span class="kw">unique</span>(txhousing<span class="op">$</span>city)</a>
-<a class="sourceLine" id="cb103-5" title="5"></a>
-<a class="sourceLine" id="cb103-6" title="6">ui &lt;-<span class="st"> </span><span class="kw">fluidPage</span>(</a>
-<a class="sourceLine" id="cb103-7" title="7">  <span class="kw">selectizeInput</span>(</a>
-<a class="sourceLine" id="cb103-8" title="8">    <span class="dt">inputId =</span> <span class="st">&quot;cities&quot;</span>, </a>
-<a class="sourceLine" id="cb103-9" title="9">    <span class="dt">label =</span> <span class="ot">NULL</span>,</a>
-<a class="sourceLine" id="cb103-10" title="10">    <span class="co"># placeholder prompt is triggered when first choice is an empty string</span></a>
-<a class="sourceLine" id="cb103-11" title="11">    <span class="dt">choices =</span> <span class="kw">c</span>(<span class="st">&quot;Please choose a city&quot;</span> =<span class="st"> &quot;&quot;</span>, cities), </a>
-<a class="sourceLine" id="cb103-12" title="12">    <span class="dt">multiple =</span> <span class="ot">TRUE</span></a>
-<a class="sourceLine" id="cb103-13" title="13">  ),</a>
-<a class="sourceLine" id="cb103-14" title="14">  <span class="kw">plotlyOutput</span>(<span class="dt">outputId =</span> <span class="st">&quot;p&quot;</span>)</a>
-<a class="sourceLine" id="cb103-15" title="15">)</a>
-<a class="sourceLine" id="cb103-16" title="16"></a>
-<a class="sourceLine" id="cb103-17" title="17">server &lt;-<span class="st"> </span><span class="cf">function</span>(input, output, session, ...) {</a>
-<a class="sourceLine" id="cb103-18" title="18">  output<span class="op">$</span>p &lt;-<span class="st"> </span><span class="kw">renderPlotly</span>({</a>
-<a class="sourceLine" id="cb103-19" title="19">    <span class="kw">req</span>(input<span class="op">$</span>cities)</a>
-<a class="sourceLine" id="cb103-20" title="20">    <span class="cf">if</span> (<span class="kw">identical</span>(input<span class="op">$</span>cities, <span class="st">&quot;&quot;</span>)) <span class="kw">return</span>(<span class="ot">NULL</span>)</a>
-<a class="sourceLine" id="cb103-21" title="21">    p &lt;-<span class="st"> </span><span class="kw">ggplot</span>(<span class="dt">data =</span> <span class="kw">filter</span>(txhousing, city <span class="op">%in%</span><span class="st"> </span>input<span class="op">$</span>cities)) <span class="op">+</span><span class="st"> </span></a>
-<a class="sourceLine" id="cb103-22" title="22"><span class="st">      </span><span class="kw">geom_line</span>(<span class="kw">aes</span>(date, median, <span class="dt">group =</span> city))</a>
-<a class="sourceLine" id="cb103-23" title="23">    <span class="kw">ggplotly</span>(p, <span class="dt">height =</span> session<span class="op">$</span>clientData<span class="op">$</span>output_p_height, <span class="dt">width =</span> session<span class="op">$</span>clientData<span class="op">$</span>output_p_width)</a>
-<a class="sourceLine" id="cb103-24" title="24">  })</a>
-<a class="sourceLine" id="cb103-25" title="25">}</a>
-<a class="sourceLine" id="cb103-26" title="26"></a>
-<a class="sourceLine" id="cb103-27" title="27"><span class="kw">shinyApp</span>(ui, server)</a></code></pre></div>
+<pre class="sourceCode r"><code class="sourceCode r"><span class="kw">library</span>(shiny)
+<span class="kw">library</span>(plotly)
+
+cities &lt;-<span class="st"> </span><span class="kw">unique</span>(txhousing<span class="op">$</span>city)
+
+ui &lt;-<span class="st"> </span><span class="kw">fluidPage</span>(
+  <span class="kw">selectizeInput</span>(
+    <span class="dt">inputId =</span> <span class="st">&quot;cities&quot;</span>, 
+    <span class="dt">label =</span> <span class="ot">NULL</span>,
+    <span class="co"># placeholder prompt is triggered when first choice is an empty string</span>
+    <span class="dt">choices =</span> <span class="kw">c</span>(<span class="st">&quot;Please choose a city&quot;</span> =<span class="st"> &quot;&quot;</span>, cities), 
+    <span class="dt">multiple =</span> <span class="ot">TRUE</span>
+  ),
+  <span class="kw">plotlyOutput</span>(<span class="dt">outputId =</span> <span class="st">&quot;p&quot;</span>)
+)
+
+server &lt;-<span class="st"> </span><span class="cf">function</span>(input, output, session, ...) {
+  output<span class="op">$</span>p &lt;-<span class="st"> </span><span class="kw">renderPlotly</span>({
+    <span class="kw">req</span>(input<span class="op">$</span>cities)
+    <span class="cf">if</span> (<span class="kw">identical</span>(input<span class="op">$</span>cities, <span class="st">&quot;&quot;</span>)) <span class="kw">return</span>(<span class="ot">NULL</span>)
+    p &lt;-<span class="st"> </span><span class="kw">ggplot</span>(<span class="dt">data =</span> <span class="kw">filter</span>(txhousing, city <span class="op">%in%</span><span class="st"> </span>input<span class="op">$</span>cities)) <span class="op">+</span><span class="st"> </span>
+<span class="st">      </span><span class="kw">geom_line</span>(<span class="kw">aes</span>(date, median, <span class="dt">group =</span> city))
+    <span class="kw">ggplotly</span>(p, <span class="dt">height =</span> session<span class="op">$</span>clientData<span class="op">$</span>output_p_height, <span class="dt">width =</span> session<span class="op">$</span>clientData<span class="op">$</span>output_p_width)
+  })
+}
+
+<span class="kw">shinyApp</span>(ui, server)</code></pre>
 <div class="figure"><span id="fig:shiny-ggplotly"></span>
 <img src="https://i.imgur.com/1yzHLF2.gif" alt="Rendering a **plotly** graph in **shiny** if and only if the `selectizeInput()`'s dropdown is non-empty. When the graph is present, and the window is resized, then the reactive expression is re-evaluated." width="100%" />
 <p class="caption">
 Figure 6.2: Rendering a <strong>plotly</strong> graph in <strong>shiny</strong> if and only if the <code>selectizeInput()</code>’s dropdown is non-empty. When the graph is present, and the window is resized, then the reactive expression is re-evaluated.
 </p>
 </div>
-<p>When a reactive expression inside <code>renderPlotly()</code> is re-executes, it triggers a full redraw of the <strong>plotly</strong> graph on the client. Generally speaking, this makes your <strong>shiny</strong> app logic easy to reason about, but it’s not always performant enough. For example, say you have a scatterplot with 10s of thousands of points, and you just want to add a fitted line to those points (in respond to input event)? Instead of redrawing the whole plot from scratch, it can be way more performant to partially modify/add/remove things from the plot. Techniques for this use case are covered in section <a href="#performance"><strong>??</strong></a>.</p>
+<p>When a reactive expression inside <code>renderPlotly()</code> is re-executes, it triggers a full redraw of the <strong>plotly</strong> graph on the client. Generally speaking, this makes your <strong>shiny</strong> app logic easy to reason about, but it’s not always performant enough. For example, say you have a scatterplot with 10s of thousands of points, and you just want to add a fitted line to those points (in respond to input event)? Instead of redrawing the whole plot from scratch, it can be way more performant to partially update specific components of the visual. Section <a href="shiny-performance.html#proxies">6.4.1</a> covers this idea through a handful of examples.</p>
 <!--
 The `renderPlotly()` function anticipates a reactive expression that generates a **plotly** object. **Shiny** itself provides a handful of similar functions that anticipate more "standard" R outputs, like data frames (`renderTable()` or `renderDataTable()`), output from the R graphics device (`renderPlot()`), and things printed to the R console (`renderPrint()` or `renderText()`). Other R packages sometimes provide a custom reactive for a custom R object, and in fact, the **htmlwidgets** package provides a standard way to scaffold this reactive glue which **plotly** implements with `renderPlotly()` and **leaflet** implements with `renderLeaflet()`.
 
@@ -381,7 +388,7 @@ Once a reactive expression generates a value, it needs to know where on the user
         </div>
       </div>
 <a href="linking-server-side.html" class="navigation navigation-prev " aria-label="Previous page"><i class="fa fa-angle-left"></i></a>
-<a href="shiny-inputs.html" class="navigation navigation-next " aria-label="Next page"><i class="fa fa-angle-right"></i></a>
+<a href="shiny-plotly-inputs.html" class="navigation navigation-next " aria-label="Next page"><i class="fa fa-angle-right"></i></a>
     </div>
   </div>
 <script src="libs/gitbook/js/app.min.js"></script>
@@ -403,6 +410,10 @@ gitbook.start({
 "edit": {
 "link": "https://github.com/cpsievert/plotly_book/edit/master/linked-views-shiny.Rmd",
 "text": "Edit"
+},
+"history": {
+"link": null,
+"text": null
 },
 "download": null,
 "toc": {
