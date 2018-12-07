@@ -220,20 +220,24 @@ code span.wa { color: #60a0b0; font-weight: bold; font-style: italic; } /* Warni
 <li class="chapter" data-level="6.1.1" data-path="hello-shiny.html"><a href="hello-shiny.html#your-first-shiny-app"><i class="fa fa-check"></i><b>6.1.1</b> Your first shiny app</a></li>
 <li class="chapter" data-level="6.1.2" data-path="hello-shiny.html"><a href="hello-shiny.html#hiding-and-redrawing-on-resize"><i class="fa fa-check"></i><b>6.1.2</b> Hiding and redrawing on resize</a></li>
 </ul></li>
-<li class="chapter" data-level="6.2" data-path="shiny-plotly-inputs.html"><a href="shiny-plotly-inputs.html"><i class="fa fa-check"></i><b>6.2</b> Accessing plotly input events</a><ul>
+<li class="chapter" data-level="6.2" data-path="shiny-plotly-inputs.html"><a href="shiny-plotly-inputs.html"><i class="fa fa-check"></i><b>6.2</b> Leveraging plotly input events</a><ul>
 <li class="chapter" data-level="6.2.1" data-path="shiny-plotly-inputs.html"><a href="shiny-plotly-inputs.html#dragging-events"><i class="fa fa-check"></i><b>6.2.1</b> Dragging events</a></li>
 <li class="chapter" data-level="6.2.2" data-path="shiny-plotly-inputs.html"><a href="shiny-plotly-inputs.html#d-events"><i class="fa fa-check"></i><b>6.2.2</b> 3D events</a></li>
-<li class="chapter" data-level="6.2.3" data-path="shiny-plotly-inputs.html"><a href="shiny-plotly-inputs.html#mapping-events-to-input-data"><i class="fa fa-check"></i><b>6.2.3</b> Mapping events to input data</a></li>
-<li class="chapter" data-level="6.2.4" data-path="shiny-plotly-inputs.html"><a href="shiny-plotly-inputs.html#accessing-edit-events"><i class="fa fa-check"></i><b>6.2.4</b> Accessing edit events</a></li>
+<li class="chapter" data-level="6.2.3" data-path="shiny-plotly-inputs.html"><a href="shiny-plotly-inputs.html#edit-events"><i class="fa fa-check"></i><b>6.2.3</b> Edit events</a></li>
+<li class="chapter" data-level="6.2.4" data-path="shiny-plotly-inputs.html"><a href="shiny-plotly-inputs.html#relayout-vs-restyle-events"><i class="fa fa-check"></i><b>6.2.4</b> Relayout vs restyle events</a></li>
+<li class="chapter" data-level="6.2.5" data-path="shiny-plotly-inputs.html"><a href="shiny-plotly-inputs.html#scoping-events"><i class="fa fa-check"></i><b>6.2.5</b> Scoping events</a></li>
 </ul></li>
-<li class="chapter" data-level="6.3" data-path="updating-views.html"><a href="updating-views.html"><i class="fa fa-check"></i><b>6.3</b> Responding to input events</a></li>
+<li class="chapter" data-level="6.3" data-path="event-priority.html"><a href="event-priority.html"><i class="fa fa-check"></i><b>6.3</b> Event priority</a><ul>
+<li class="chapter" data-level="6.3.1" data-path="event-priority.html"><a href="event-priority.html#handling-discrete-axes"><i class="fa fa-check"></i><b>6.3.1</b> Handling discrete axes</a></li>
+<li class="chapter" data-level="6.3.2" data-path="event-priority.html"><a href="event-priority.html#reactive-vals"><i class="fa fa-check"></i><b>6.3.2</b> Accumulating and managing event data</a></li>
+</ul></li>
 <li class="chapter" data-level="6.4" data-path="shiny-performance.html"><a href="shiny-performance.html"><i class="fa fa-check"></i><b>6.4</b> Improving performance</a><ul>
 <li class="chapter" data-level="6.4.1" data-path="shiny-performance.html"><a href="shiny-performance.html#proxies"><i class="fa fa-check"></i><b>6.4.1</b> Partial plotly updates</a></li>
 <li class="chapter" data-level="6.4.2" data-path="shiny-performance.html"><a href="shiny-performance.html#partial-update-examples"><i class="fa fa-check"></i><b>6.4.2</b> Partial update examples</a></li>
 </ul></li>
 <li class="chapter" data-level="6.5" data-path="advanced-applications.html"><a href="advanced-applications.html"><i class="fa fa-check"></i><b>6.5</b> Advanced applications</a><ul>
 <li class="chapter" data-level="6.5.1" data-path="advanced-applications.html"><a href="advanced-applications.html#drill-down"><i class="fa fa-check"></i><b>6.5.1</b> Drill-down</a></li>
-<li class="chapter" data-level="6.5.2" data-path="advanced-applications.html"><a href="advanced-applications.html#cross-filter"><i class="fa fa-check"></i><b>6.5.2</b> Cross-filter</a></li>
+<li class="chapter" data-level="6.5.2" data-path="advanced-applications.html"><a href="advanced-applications.html#crossfilter"><i class="fa fa-check"></i><b>6.5.2</b> Cross-filter</a></li>
 </ul></li>
 <li class="chapter" data-level="6.6" data-path="discussion.html"><a href="discussion.html"><i class="fa fa-check"></i><b>6.6</b> Discussion</a></li>
 </ul></li>
@@ -266,7 +270,7 @@ code span.wa { color: #60a0b0; font-weight: bold; font-style: italic; } /* Warni
             <section class="normal" id="section-">
 <div id="translating-custom-ggplot2-geoms" class="section level2">
 <h2><span class="header-section-number">8.2</span> Translating custom ggplot2 geoms</h2>
-<p>Version 2.0.0 of <strong>ggplot2</strong> introduced a way for other R packages to implement custom geoms. Some great examples include: <strong>ggrepel</strong>, <strong>ggalt</strong>, <strong>ggraph</strong>, <strong>geomnet</strong>, <strong>ggmosaic</strong> and <strong>ggtern</strong> <span class="citation">(Rudis <a href="#ref-ggalt">2016</a>)</span>; <span class="citation">(Pedersen <a href="#ref-ggraph">2016</a>)</span>; <span class="citation">(Tyner and Hofmann <a href="#ref-geomnet">2016</a>)</span>; <span class="citation">(Jeppson, Hofmann, and Cook <a href="#ref-ggmosaic">2016</a>)</span>; <span class="citation">(Hamilton <a href="#ref-ggtern">2016</a>)</span>.<a href="#fn27" class="footnote-ref" id="fnref27"><sup>27</sup></a> Although the <code>ggplotly()</code> function translates most of the geoms bundled with the <strong>ggplot2</strong> package, it has no way of knowing about the rendering rules for custom geoms. The <strong>plotly</strong> package does, however, provide 2 generic functions based on the S3 scheme that can leveraged to inform <code>ggplotly()</code> about these rules <span class="citation">(Chambers <a href="#ref-S3">1992</a>)</span>.<a href="#fn28" class="footnote-ref" id="fnref28"><sup>28</sup></a> To date, the <strong>ggmosaic</strong> and <strong>ggalt</strong> packages have taken advantage of this infrastructure to provide translations of their custom geoms to plotly.</p>
+<p>Version 2.0.0 of <strong>ggplot2</strong> introduced a way for other R packages to implement custom geoms. Some great examples include: <strong>ggrepel</strong>, <strong>ggalt</strong>, <strong>ggraph</strong>, <strong>geomnet</strong>, <strong>ggmosaic</strong> and <strong>ggtern</strong> <span class="citation">(Rudis <a href="#ref-ggalt">2016</a>)</span>; <span class="citation">(Pedersen <a href="#ref-ggraph">2016</a>)</span>; <span class="citation">(Tyner and Hofmann <a href="#ref-geomnet">2016</a>)</span>; <span class="citation">(Jeppson, Hofmann, and Cook <a href="#ref-ggmosaic">2016</a>)</span>; <span class="citation">(Hamilton <a href="#ref-ggtern">2016</a>)</span>.<a href="#fn25" class="footnote-ref" id="fnref25"><sup>25</sup></a> Although the <code>ggplotly()</code> function translates most of the geoms bundled with the <strong>ggplot2</strong> package, it has no way of knowing about the rendering rules for custom geoms. The <strong>plotly</strong> package does, however, provide 2 generic functions based on the S3 scheme that can leveraged to inform <code>ggplotly()</code> about these rules <span class="citation">(Chambers <a href="#ref-S3">1992</a>)</span>.<a href="#fn26" class="footnote-ref" id="fnref26"><sup>26</sup></a> To date, the <strong>ggmosaic</strong> and <strong>ggalt</strong> packages have taken advantage of this infrastructure to provide translations of their custom geoms to plotly.</p>
 <p>In <strong>ggplot2</strong>, many geoms are special cases of other geoms. For example, <code>geom_line()</code> is equivalent to <code>geom_path()</code> once the data is sorted by the x variable. For cases like this, when a geom can be reduced to another lower-level (i.e., basic) geom, authors just have to write a method for the <code>to_basic()</code> generic function in <strong>plotly</strong>. In fact, within the package itself, the <code>to_basic()</code> function has a <code>GeomLine</code> method which simply sorts the data by the x variable then returns it with a class of <code>GeomPath</code> prefixed.</p>
 <pre class="sourceCode r"><code class="sourceCode r"><span class="kw">getS3method</span>(<span class="st">&quot;to_basic&quot;</span>, <span class="st">&quot;GeomLine&quot;</span>)
 <span class="co">#&gt; function (data, prestats_data, layout, params, p, ...) </span>
@@ -332,9 +336,9 @@ Figure 8.2: Converting GeomXspline from the <strong>ggalt</strong> package to pl
 </div>
 <div class="footnotes">
 <hr />
-<ol start="27">
-<li id="fn27"><p>There are many other useful extension packages that are listed on this website – <a href="https://www.ggplot2-exts.org" class="uri">https://www.ggplot2-exts.org</a><a href="translating-custom-ggplot2-geoms.html#fnref27" class="footnote-back">↩</a></p></li>
-<li id="fn28"><p>For those new to S3, <a href="http://adv-r.had.co.nz/S3.html" class="uri">http://adv-r.had.co.nz/S3.html</a> provides an approachable introduction and overview <span class="citation">(Wickham <a href="#ref-adv-r">2014</a>)</span>.<a href="translating-custom-ggplot2-geoms.html#fnref28" class="footnote-back">↩</a></p></li>
+<ol start="25">
+<li id="fn25"><p>There are many other useful extension packages that are listed on this website – <a href="https://www.ggplot2-exts.org" class="uri">https://www.ggplot2-exts.org</a><a href="translating-custom-ggplot2-geoms.html#fnref25" class="footnote-back">↩</a></p></li>
+<li id="fn26"><p>For those new to S3, <a href="http://adv-r.had.co.nz/S3.html" class="uri">http://adv-r.had.co.nz/S3.html</a> provides an approachable introduction and overview <span class="citation">(Wickham <a href="#ref-adv-r">2014</a>)</span>.<a href="translating-custom-ggplot2-geoms.html#fnref26" class="footnote-back">↩</a></p></li>
 </ol>
 </div>
             </section>

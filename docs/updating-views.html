@@ -220,11 +220,14 @@ code span.wa { color: #60a0b0; font-weight: bold; font-style: italic; } /* Warni
 <li class="chapter" data-level="6.1.1" data-path="hello-shiny.html"><a href="hello-shiny.html#your-first-shiny-app"><i class="fa fa-check"></i><b>6.1.1</b> Your first shiny app</a></li>
 <li class="chapter" data-level="6.1.2" data-path="hello-shiny.html"><a href="hello-shiny.html#hiding-and-redrawing-on-resize"><i class="fa fa-check"></i><b>6.1.2</b> Hiding and redrawing on resize</a></li>
 </ul></li>
-<li class="chapter" data-level="6.2" data-path="shiny-plotly-inputs.html"><a href="shiny-plotly-inputs.html"><i class="fa fa-check"></i><b>6.2</b> Accessing plotly input events</a><ul>
+<li class="chapter" data-level="6.2" data-path="shiny-plotly-inputs.html"><a href="shiny-plotly-inputs.html"><i class="fa fa-check"></i><b>6.2</b> Leveraging plotly input events</a><ul>
 <li class="chapter" data-level="6.2.1" data-path="shiny-plotly-inputs.html"><a href="shiny-plotly-inputs.html#dragging-events"><i class="fa fa-check"></i><b>6.2.1</b> Dragging events</a></li>
 <li class="chapter" data-level="6.2.2" data-path="shiny-plotly-inputs.html"><a href="shiny-plotly-inputs.html#d-events"><i class="fa fa-check"></i><b>6.2.2</b> 3D events</a></li>
-<li class="chapter" data-level="6.2.3" data-path="shiny-plotly-inputs.html"><a href="shiny-plotly-inputs.html#mapping-events-to-input-data"><i class="fa fa-check"></i><b>6.2.3</b> Mapping events to input data</a></li>
-<li class="chapter" data-level="6.2.4" data-path="shiny-plotly-inputs.html"><a href="shiny-plotly-inputs.html#accessing-edit-events"><i class="fa fa-check"></i><b>6.2.4</b> Accessing edit events</a></li>
+<li class="chapter" data-level="6.2.3" data-path="shiny-plotly-inputs.html"><a href="shiny-plotly-inputs.html#edit-events"><i class="fa fa-check"></i><b>6.2.3</b> Edit events</a></li>
+<li class="chapter" data-level="6.2.4" data-path="shiny-plotly-inputs.html"><a href="shiny-plotly-inputs.html#relayout-vs-restyle-events"><i class="fa fa-check"></i><b>6.2.4</b> Relayout vs restyle events</a></li>
+<li class="chapter" data-level="6.2.5" data-path="shiny-plotly-inputs.html"><a href="shiny-plotly-inputs.html#event-priority"><i class="fa fa-check"></i><b>6.2.5</b> Event priority</a></li>
+<li class="chapter" data-level="6.2.6" data-path="shiny-plotly-inputs.html"><a href="shiny-plotly-inputs.html#handling-discrete-axes"><i class="fa fa-check"></i><b>6.2.6</b> Handling discrete axes</a></li>
+<li class="chapter" data-level="6.2.7" data-path="shiny-plotly-inputs.html"><a href="shiny-plotly-inputs.html#reactive-vals"><i class="fa fa-check"></i><b>6.2.7</b> Accumulating and managing event data</a></li>
 </ul></li>
 <li class="chapter" data-level="6.3" data-path="updating-views.html"><a href="updating-views.html"><i class="fa fa-check"></i><b>6.3</b> Responding to input events</a></li>
 <li class="chapter" data-level="6.4" data-path="shiny-performance.html"><a href="shiny-performance.html"><i class="fa fa-check"></i><b>6.4</b> Improving performance</a><ul>
@@ -233,7 +236,7 @@ code span.wa { color: #60a0b0; font-weight: bold; font-style: italic; } /* Warni
 </ul></li>
 <li class="chapter" data-level="6.5" data-path="advanced-applications.html"><a href="advanced-applications.html"><i class="fa fa-check"></i><b>6.5</b> Advanced applications</a><ul>
 <li class="chapter" data-level="6.5.1" data-path="advanced-applications.html"><a href="advanced-applications.html#drill-down"><i class="fa fa-check"></i><b>6.5.1</b> Drill-down</a></li>
-<li class="chapter" data-level="6.5.2" data-path="advanced-applications.html"><a href="advanced-applications.html#cross-filter"><i class="fa fa-check"></i><b>6.5.2</b> Cross-filter</a></li>
+<li class="chapter" data-level="6.5.2" data-path="advanced-applications.html"><a href="advanced-applications.html#crossfilter"><i class="fa fa-check"></i><b>6.5.2</b> Cross-filter</a></li>
 </ul></li>
 <li class="chapter" data-level="6.6" data-path="discussion.html"><a href="discussion.html"><i class="fa fa-check"></i><b>6.6</b> Discussion</a></li>
 </ul></li>
@@ -266,7 +269,8 @@ code span.wa { color: #60a0b0; font-weight: bold; font-style: italic; } /* Warni
             <section class="normal" id="section-">
 <div id="updating-views" class="section level2">
 <h2><span class="header-section-number">6.3</span> Responding to input events</h2>
-<p>This section leverages the interface for <em>accessing</em> <strong>plotly</strong> input events introduced in section <a href="shiny-plotly-inputs.html#shiny-plotly-inputs">6.2</a> to inform other data views about those events. Figure <a href="updating-views.html#fig:shiny-corrplot">6.10</a> allows one to click on a cell of correlation heatmap to generate a scatterplot of the two corresponding variables – allowing for a closer look at their relationship. In the case of a heatmap, the event data tied to a <code>plotly_click</code> event contains the relevant <code>x</code> and <code>y</code> categories (e.g., the names of the data variables of interest) and the <code>z</code> value (e.g., the pearson correlation between those variables). In order to obtain click data from the heatmap, and only the heatmap, it’s important that the <code>source</code> argument of the <code>event_data()</code> function matches the <code>source</code> argument of <code>plot_ly()</code>. Generally speaking, the <code>source</code> argument is useful for scoping event listeners to specific plots (note that <code>ggplotly()</code> also has a <code>source</code> argument).</p>
+<p>This section leverages the interface for accessing <strong>plotly</strong> input events introduced in section <a href="shiny-plotly-inputs.html#shiny-plotly-inputs">6.2</a> to inform other data views about those events. When managing multiple views that communicate with one another, you’ll need to be aware of which views are a <em>source</em> of interaction and which are a <em>target</em> (a view can be both, at once!). The <code>event_data()</code> function provides a <code>source</code> argument to help refine which view(s) serve as the source of an event. The <code>source</code> argument takes a string ID, and when that ID matches the <code>source</code> of a <code>plot_ly()</code>/<code>ggplotly()</code> graph, then the <code>event_data()</code> is “scoped” to that view. To get a better idea of how this works, consider Figure <a href="updating-views.html#fig:shiny-corrplot">6.14</a></p>
+<p>Figure <a href="updating-views.html#fig:shiny-corrplot">6.14</a> allows one to click on a cell of correlation heatmap to generate a scatterplot of the two corresponding variables – allowing for a closer look at their relationship. In the case of a heatmap, the event data tied to a <code>plotly_click</code> event contains the relevant <code>x</code> and <code>y</code> categories (e.g., the names of the data variables of interest) and the <code>z</code> value (e.g., the pearson correlation between those variables). In order to obtain click data from the heatmap, and only the heatmap, it’s important that the <code>source</code> argument of the <code>event_data()</code> function matches the <code>source</code> argument of <code>plot_ly()</code>. Otherwise, if the <code>source</code> argument was not specified <code>event_data("plotly_click")</code> would also fire if and when the user clicked on the scatterplot, likely causing an error.</p>
 <pre class="sourceCode r"><code class="sourceCode r"><span class="kw">library</span>(shiny)
 
 <span class="co"># cache computation of the correlation matrix</span>
@@ -315,10 +319,10 @@ server &lt;-<span class="st"> </span><span class="cf">function</span>(input, out
 <div class="figure"><span id="fig:shiny-corrplot"></span>
 <img src="https://i.imgur.com/3uDh0Dr.gif" alt="Linking each cell of a correlation heatmap to their corresponding scatterplots." width="100%" />
 <p class="caption">
-Figure 6.10: Linking each cell of a correlation heatmap to their corresponding scatterplots.
+Figure 6.14: Linking each cell of a correlation heatmap to their corresponding scatterplots.
 </p>
 </div>
-<p>Instead of generating an entirely new view in response to a user event, sometimes you simply want to update already existing view(s). If those existing views require a lot of data, you may want to consider partially modifying the <strong>plotly</strong> graph (see section <a href="shiny-performance.html#proxies">6.4.1</a>), but in some cases (e.g., Figure <a href="updating-views.html#fig:shiny-ag">6.11</a>), a full re-render of the graph is responsive enough. Note how in Figure <a href="updating-views.html#fig:shiny-ag">6.11</a>, when a group of states are selected, it causes the container of density plots to gray out for a split second while re-drawing both the original density (representing the entire US) and the dotted density (representing the new selection). Section <a href="shiny-performance.html#proxies">6.4.1</a> covers techniques that would allow one to avoid a full re-draw and simply add the dotted line, but it also introduces significant complexity to the implementation.</p>
+<p>Instead of generating an entirely new view in response to a user event, sometimes you simply want to update already existing view(s). If those existing views require a lot of data, you may want to consider partially modifying the <strong>plotly</strong> graph (see section <a href="shiny-performance.html#proxies">6.4.1</a>), but in some cases (e.g., Figure <a href="updating-views.html#fig:shiny-ag">6.15</a>), a full re-render of the graph is responsive enough. Note how in Figure <a href="updating-views.html#fig:shiny-ag">6.15</a>, when a group of states are selected, it causes the container of density plots to gray out for a split second while re-drawing both the original density (representing the entire US) and the dotted density (representing the new selection). Section <a href="shiny-performance.html#proxies">6.4.1</a> covers techniques that would allow one to avoid a full re-draw and simply add the dotted line, but it also introduces significant complexity to the implementation.</p>
 <pre class="sourceCode r"><code class="sourceCode r"><span class="kw">library</span>(shiny)
 <span class="kw">library</span>(dplyr)
 
@@ -383,88 +387,10 @@ server &lt;-<span class="st"> </span><span class="cf">function</span>(input, out
 <div class="figure"><span id="fig:shiny-ag"></span>
 <img src="https://i.imgur.com/OxbMlBQ.gif" alt="Linking a choropleth map of US total agricultural exports to a density plot of each export." width="100%" />
 <p class="caption">
-Figure 6.11: Linking a choropleth map of US total agricultural exports to a density plot of each export.
+Figure 6.15: Linking a choropleth map of US total agricultural exports to a density plot of each export.
 </p>
 </div>
-<p>The updating logic behind Figure <a href="updating-views.html#fig:shiny-corrplot">6.10</a> and <a href="updating-views.html#fig:shiny-ag">6.11</a> are <em>transient</em>, meaning that when a new selection event occurs, it doesn’t need to know about previous events. Sometimes it’s desirable to retain information about previous selections, or in the verbage of section <a href="graphical-queries.html#graphical-queries">5.1</a>, perform <em>persistent</em> selection. In order to implement persistent selection, you’ll need a mechanism to store, selectively update, and clear information on the <strong>shiny</strong> server (i.e., a mechanism to maintain state in your app). The general mechanism that <strong>shiny</strong> provides for doing this is <code>reactiveVal()</code> or <code>reactiveValues()</code>, which provide a way of manually creating and updating reactive values.</p>
-<p>Figure <a href="updating-views.html#fig:shiny-hover-persist">6.12</a> demonstrates a shiny app that keeps track of which points (i.e., cars) have been hovered upon, and paints the hovered points in red. Every time a hover event is triggered, the relevant car is added to the set of selected cars</p>
-<pre class="sourceCode r"><code class="sourceCode r"><span class="kw">library</span>(shiny)
-
-ui &lt;-<span class="st"> </span><span class="kw">fluidPage</span>(
-  <span class="kw">plotlyOutput</span>(<span class="st">&quot;p&quot;</span>),
-  <span class="kw">tableOutput</span>(<span class="st">&quot;table&quot;</span>)
-)
-
-server &lt;-<span class="st"> </span><span class="cf">function</span>(input, output, session) {
-  
-  <span class="co"># keep track of which cars have been hovered on</span>
-  cars &lt;-<span class="st"> </span><span class="kw">reactiveVal</span>()
-  
-  <span class="co"># On hover, the key field of the event data contains the car name</span>
-  <span class="co"># Add that name to the set of all &quot;selected&quot; cars</span>
-  <span class="kw">observeEvent</span>(<span class="kw">event_data</span>(<span class="st">&quot;plotly_hover&quot;</span>), {
-    car &lt;-<span class="st"> </span><span class="kw">event_data</span>(<span class="st">&quot;plotly_hover&quot;</span>)<span class="op">$</span>key
-    cars_old_new &lt;-<span class="st"> </span><span class="kw">c</span>(<span class="kw">cars</span>(), car)
-    <span class="kw">cars</span>(<span class="kw">unique</span>(cars_old_new))
-  })
-  
-  <span class="co"># clear the set of cars when a double-click occurs</span>
-  <span class="kw">observeEvent</span>(<span class="kw">event_data</span>(<span class="st">&quot;plotly_doubleclick&quot;</span>), {
-    <span class="kw">cars</span>(<span class="ot">NULL</span>)
-  })
-  
-  output<span class="op">$</span>p &lt;-<span class="st"> </span><span class="kw">renderPlotly</span>({
-    
-    <span class="co"># if the car is selected, paint it red</span>
-    cols &lt;-<span class="st"> </span><span class="kw">ifelse</span>(<span class="kw">row.names</span>(mtcars) <span class="op">%in%</span><span class="st"> </span><span class="kw">cars</span>(), <span class="st">&quot;red&quot;</span>, <span class="st">&quot;black&quot;</span>)
-    
-    mtcars <span class="op">%&gt;%</span>
-<span class="st">      </span><span class="kw">plot_ly</span>(
-        <span class="dt">x =</span> <span class="op">~</span>wt, <span class="dt">y =</span> <span class="op">~</span>mpg, 
-        <span class="dt">key =</span> <span class="kw">row.names</span>(mtcars), 
-        <span class="dt">color =</span> <span class="kw">I</span>(cols)
-      ) <span class="op">%&gt;%</span>
-<span class="st">      </span><span class="kw">add_markers</span>()
-  })
-  
-  output<span class="op">$</span>table &lt;-<span class="st"> </span><span class="kw">renderTable</span>({
-    <span class="kw">filter</span>(mtcars, <span class="kw">row.names</span>(mtcars) <span class="op">%in%</span><span class="st"> </span><span class="kw">cars</span>())
-  })
-  
-}
-
-<span class="kw">shinyApp</span>(ui, server)</code></pre>
-<div class="figure"><span id="fig:shiny-hover-persist"></span>
-<img src="https://i.imgur.com/JGEDiOU.gif" alt="Using `reactiveVals()` to enable a persistent brush via mouse hover. In this example, the brush can be cleared through a double-click event." width="100%" />
-<p class="caption">
-Figure 6.12: Using <code>reactiveVals()</code> to enable a persistent brush via mouse hover. In this example, the brush can be cleared through a double-click event.
-</p>
-</div>
-<p>Everytime the <code>cars()</code> reactive value changes, it forces a full redraw of the plot in Figure <a href="updating-views.html#fig:shiny-hover-persist">6.12</a>. The section discusses techniques for performing partial updates to <strong>plotly</strong> graphs in a <strong>shiny</strong> application. In particular, the techniques outlined in <a href="shiny-performance.html#restyle">6.4.2.1</a> could be used to improve the user experience in Figure <a href="updating-views.html#fig:shiny-hover-persist">6.12</a> by just modifying the color of the relevant marker.</p>
-<!--
-Once we know how to access a **plotly** input event in **shiny** (section \@ref(shiny-plotly-inputs)), how can we use the data to inform other data view(s)? As mentioned in section \@ref(graphical-queries), many linked data views can be expressed as a database query. Let's start by recreating the direct manipulation functionality of Figure \@ref(fig:txmissing-linked) from section \@ref(graphical-queries). This example 
-
-
-TODO: 
-
-(1) rewrite and perhaps incorporate https://github.com/cpsievert/apps/blob/master/shiny/apps/plotlyAg/app.R
--->
-<p>Obtaining data from a plotly event is easy, but updating view(s) based on the result of an event can be difficult. To start with something fairly easy, consider two scatterplots showing the same observations, but on different axes (i.e., a subset of a scatterplot matrix). Figure <a href="updating-views.html#fig:plotlyLinkedBrushEasy">6.13</a> shows a linked lasso brush between two scatterplots. The main idea is that we first plot all the observations in black, then highlight the selection by adding an additional layer of selected points in red using the data returned by <code>event_data()</code>. In order to guarantee that we can uniquely identify observations in the event data, it is also crucial that we attach a <code>key</code> attribute to each observation (here the rownames of the data), which we can then use to filter the original data down to the selected observations.</p>
-<p>Figure <a href="updating-views.html#fig:plotlyLinkedBrushEasy">6.13</a> consciously updates the source of the selection (the top plot) to match the visual characteristics of the target (the bottom plot). In general, whenever linking views to display graphical selection(s), matching the visual characteristics of the selection both the source and target(s) can aide interpretation, especially when using interactive graphics to present results to others. Although the update rule in Figure <a href="updating-views.html#fig:plotlyLinkedBrushEasy">6.13</a> is to simply layer on additional points, a full redraw is performed during the update, which can impact performance when dealing with a large amount of graphical elements.</p>
-<p>Figure <a href="updating-views.html#fig:plotlyLinkedBrushEasy">6.13</a> could be made slightly more efficient by just changing the color of selected points, or dimming the non-selected points, rather than plotting an extra layer of points. However, this technique does not work for chart types that display aggregate values (e.g., how do you dim non-selected values in a box plot?). For this reason, in <a href="#linking-views-without-shiny">Linking views without shiny</a>, selections are implemented as an additional layer, but avoid the full redraw required when updating plot via <strong>shiny</strong> reactive framework.<a href="#fn25" class="footnote-ref" id="fnref25"><sup>25</sup></a></p>
-<div class="figure"><span id="fig:plotlyLinkedBrushEasy"></span>
-<img src="images/plotlyLinkedBrushEasy.gif" alt="A video demonstration of linked brushing in a shiny app. The video can be accessed [here](http://i.imgur.com/rUroUHT.gif) and the code to run the example is [here](https://gist.github.com/cpsievert/5934f173cafffb8dfb4f23d5488cd185)" width="100%" />
-<p class="caption">
-Figure 6.13: A video demonstration of linked brushing in a shiny app. The video can be accessed <a href="http://i.imgur.com/rUroUHT.gif">here</a> and the code to run the example is <a href="https://gist.github.com/cpsievert/5934f173cafffb8dfb4f23d5488cd185">here</a>
-</p>
-</div>
-<p>Since the update rule is the same for each view in Figure <a href="updating-views.html#fig:plotlyLinkedBrushEasy">6.13</a>, we end up with a lot of redundant code that can be made more modular, as shown <a href="https://gist.github.com/cpsievert/6fc17f4dc6d43c88dd214c12bb1a0324">here</a>. Making code more modular not only makes for less reading, but it leaves you less prone to making mistakes. Since the only difference between the two plots is the x/y variables, we can write a function that accepts x/y variables as input, and output a plotly object. Since this function outputs a plotly object, and is dependent upon <code>event_data()</code>, which can only be called within a reactive expression, this function can only be called within the <code>renderPlotly()</code> function in the <strong>plotly</strong> package.</p>
-</div>
-<div class="footnotes">
-<hr />
-<ol start="25">
-<li id="fn25"><p>To my knowledge, the <strong>leaflet</strong> package is the only R package which provides a way to update a plot in a shiny app without a full redraw.<a href="updating-views.html#fnref25" class="footnote-back">↩</a></p></li>
-</ol>
+<p>The updating logic behind Figure <a href="updating-views.html#fig:shiny-corrplot">6.14</a> and <a href="updating-views.html#fig:shiny-ag">6.15</a> are <em>transient</em>, meaning that when a new selection event occurs, it doesn’t need to know about previous events. Sometimes it’s desirable to retain information about previous selections, or in the verbage of section <a href="graphical-queries.html#graphical-queries">5.1</a>, perform <em>persistent</em> selection. In order to implement persistent selection, you’ll need a mechanism to store, selectively update, and clear information on the <strong>shiny</strong> server (i.e., a mechanism to maintain state in your app). The general mechanism that <strong>shiny</strong> provides for doing this is <code>reactiveVal()</code> or <code>reactiveValues()</code>, which provide a way of manually creating and updating reactive values.</p>
 </div>
             </section>
 
@@ -507,6 +433,12 @@ gitbook.start({
 });
 </script>
 
+<script>(function(i,s,o,g,r,a,m){i['GoogleAnalyticsObject']=r;i[r]=i[r]||function(){(i[r].q=i[r].q||[]).push(arguments)},i[r].l=1*new Date();a=s.createElement(o),m=s.getElementsByTagName(o)[0];a.async=1;a.src=g;m.parentNode.insertBefore(a,m)})(window,document,'script','https://www.google-analytics.com/analytics.js','ga');ga('create', 'UA-39373211-1', 'auto');ga('send', 'pageview');</script>
+<script>(function(i,s,o,g,r,a,m){i['GoogleAnalyticsObject']=r;i[r]=i[r]||function(){(i[r].q=i[r].q||[]).push(arguments)},i[r].l=1*new Date();a=s.createElement(o),m=s.getElementsByTagName(o)[0];a.async=1;a.src=g;m.parentNode.insertBefore(a,m)})(window,document,'script','https://www.google-analytics.com/analytics.js','ga');ga('create', 'UA-39373211-1', 'auto');ga('send', 'pageview');</script>
+<script>(function(i,s,o,g,r,a,m){i['GoogleAnalyticsObject']=r;i[r]=i[r]||function(){(i[r].q=i[r].q||[]).push(arguments)},i[r].l=1*new Date();a=s.createElement(o),m=s.getElementsByTagName(o)[0];a.async=1;a.src=g;m.parentNode.insertBefore(a,m)})(window,document,'script','https://www.google-analytics.com/analytics.js','ga');ga('create', 'UA-39373211-1', 'auto');ga('send', 'pageview');</script>
+<script>(function(i,s,o,g,r,a,m){i['GoogleAnalyticsObject']=r;i[r]=i[r]||function(){(i[r].q=i[r].q||[]).push(arguments)},i[r].l=1*new Date();a=s.createElement(o),m=s.getElementsByTagName(o)[0];a.async=1;a.src=g;m.parentNode.insertBefore(a,m)})(window,document,'script','https://www.google-analytics.com/analytics.js','ga');ga('create', 'UA-39373211-1', 'auto');ga('send', 'pageview');</script>
+<script>(function(i,s,o,g,r,a,m){i['GoogleAnalyticsObject']=r;i[r]=i[r]||function(){(i[r].q=i[r].q||[]).push(arguments)},i[r].l=1*new Date();a=s.createElement(o),m=s.getElementsByTagName(o)[0];a.async=1;a.src=g;m.parentNode.insertBefore(a,m)})(window,document,'script','https://www.google-analytics.com/analytics.js','ga');ga('create', 'UA-39373211-1', 'auto');ga('send', 'pageview');</script>
+<script>(function(i,s,o,g,r,a,m){i['GoogleAnalyticsObject']=r;i[r]=i[r]||function(){(i[r].q=i[r].q||[]).push(arguments)},i[r].l=1*new Date();a=s.createElement(o),m=s.getElementsByTagName(o)[0];a.async=1;a.src=g;m.parentNode.insertBefore(a,m)})(window,document,'script','https://www.google-analytics.com/analytics.js','ga');ga('create', 'UA-39373211-1', 'auto');ga('send', 'pageview');</script>
 <script>(function(i,s,o,g,r,a,m){i['GoogleAnalyticsObject']=r;i[r]=i[r]||function(){(i[r].q=i[r].q||[]).push(arguments)},i[r].l=1*new Date();a=s.createElement(o),m=s.getElementsByTagName(o)[0];a.async=1;a.src=g;m.parentNode.insertBefore(a,m)})(window,document,'script','https://www.google-analytics.com/analytics.js','ga');ga('create', 'UA-39373211-1', 'auto');ga('send', 'pageview');</script>
 </body>
 

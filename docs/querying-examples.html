@@ -220,20 +220,24 @@ code span.wa { color: #60a0b0; font-weight: bold; font-style: italic; } /* Warni
 <li class="chapter" data-level="6.1.1" data-path="hello-shiny.html"><a href="hello-shiny.html#your-first-shiny-app"><i class="fa fa-check"></i><b>6.1.1</b> Your first shiny app</a></li>
 <li class="chapter" data-level="6.1.2" data-path="hello-shiny.html"><a href="hello-shiny.html#hiding-and-redrawing-on-resize"><i class="fa fa-check"></i><b>6.1.2</b> Hiding and redrawing on resize</a></li>
 </ul></li>
-<li class="chapter" data-level="6.2" data-path="shiny-plotly-inputs.html"><a href="shiny-plotly-inputs.html"><i class="fa fa-check"></i><b>6.2</b> Accessing plotly input events</a><ul>
+<li class="chapter" data-level="6.2" data-path="shiny-plotly-inputs.html"><a href="shiny-plotly-inputs.html"><i class="fa fa-check"></i><b>6.2</b> Leveraging plotly input events</a><ul>
 <li class="chapter" data-level="6.2.1" data-path="shiny-plotly-inputs.html"><a href="shiny-plotly-inputs.html#dragging-events"><i class="fa fa-check"></i><b>6.2.1</b> Dragging events</a></li>
 <li class="chapter" data-level="6.2.2" data-path="shiny-plotly-inputs.html"><a href="shiny-plotly-inputs.html#d-events"><i class="fa fa-check"></i><b>6.2.2</b> 3D events</a></li>
-<li class="chapter" data-level="6.2.3" data-path="shiny-plotly-inputs.html"><a href="shiny-plotly-inputs.html#mapping-events-to-input-data"><i class="fa fa-check"></i><b>6.2.3</b> Mapping events to input data</a></li>
-<li class="chapter" data-level="6.2.4" data-path="shiny-plotly-inputs.html"><a href="shiny-plotly-inputs.html#accessing-edit-events"><i class="fa fa-check"></i><b>6.2.4</b> Accessing edit events</a></li>
+<li class="chapter" data-level="6.2.3" data-path="shiny-plotly-inputs.html"><a href="shiny-plotly-inputs.html#edit-events"><i class="fa fa-check"></i><b>6.2.3</b> Edit events</a></li>
+<li class="chapter" data-level="6.2.4" data-path="shiny-plotly-inputs.html"><a href="shiny-plotly-inputs.html#relayout-vs-restyle-events"><i class="fa fa-check"></i><b>6.2.4</b> Relayout vs restyle events</a></li>
+<li class="chapter" data-level="6.2.5" data-path="shiny-plotly-inputs.html"><a href="shiny-plotly-inputs.html#scoping-events"><i class="fa fa-check"></i><b>6.2.5</b> Scoping events</a></li>
 </ul></li>
-<li class="chapter" data-level="6.3" data-path="updating-views.html"><a href="updating-views.html"><i class="fa fa-check"></i><b>6.3</b> Responding to input events</a></li>
+<li class="chapter" data-level="6.3" data-path="event-priority.html"><a href="event-priority.html"><i class="fa fa-check"></i><b>6.3</b> Event priority</a><ul>
+<li class="chapter" data-level="6.3.1" data-path="event-priority.html"><a href="event-priority.html#handling-discrete-axes"><i class="fa fa-check"></i><b>6.3.1</b> Handling discrete axes</a></li>
+<li class="chapter" data-level="6.3.2" data-path="event-priority.html"><a href="event-priority.html#reactive-vals"><i class="fa fa-check"></i><b>6.3.2</b> Accumulating and managing event data</a></li>
+</ul></li>
 <li class="chapter" data-level="6.4" data-path="shiny-performance.html"><a href="shiny-performance.html"><i class="fa fa-check"></i><b>6.4</b> Improving performance</a><ul>
 <li class="chapter" data-level="6.4.1" data-path="shiny-performance.html"><a href="shiny-performance.html#proxies"><i class="fa fa-check"></i><b>6.4.1</b> Partial plotly updates</a></li>
 <li class="chapter" data-level="6.4.2" data-path="shiny-performance.html"><a href="shiny-performance.html#partial-update-examples"><i class="fa fa-check"></i><b>6.4.2</b> Partial update examples</a></li>
 </ul></li>
 <li class="chapter" data-level="6.5" data-path="advanced-applications.html"><a href="advanced-applications.html"><i class="fa fa-check"></i><b>6.5</b> Advanced applications</a><ul>
 <li class="chapter" data-level="6.5.1" data-path="advanced-applications.html"><a href="advanced-applications.html#drill-down"><i class="fa fa-check"></i><b>6.5.1</b> Drill-down</a></li>
-<li class="chapter" data-level="6.5.2" data-path="advanced-applications.html"><a href="advanced-applications.html#cross-filter"><i class="fa fa-check"></i><b>6.5.2</b> Cross-filter</a></li>
+<li class="chapter" data-level="6.5.2" data-path="advanced-applications.html"><a href="advanced-applications.html#crossfilter"><i class="fa fa-check"></i><b>6.5.2</b> Cross-filter</a></li>
 </ul></li>
 <li class="chapter" data-level="6.6" data-path="discussion.html"><a href="discussion.html"><i class="fa fa-check"></i><b>6.6</b> Discussion</a></li>
 </ul></li>
@@ -458,7 +462,7 @@ crosstalk<span class="op">::</span><span class="kw">bscols</span>(histograms, ma
 Figure 5.21: Querying earthquakes by location and displaying their a histogram of their magnitude and number of stations.
 </p>
 </div>
-<p>Every 2D mapping approach in <strong>plotly</strong> (e.g., <code>plot_mapbox()</code>, <code>plot_ly()</code>, <code>geom_sf()</code>) has a special understanding of the simple features data structure provided by the <strong>sf</strong> package. <span class="citation">Sievert (<a href="#ref-ggplotly-blog-post">2018</a><a href="#ref-ggplotly-blog-post">a</a>)</span> and <span class="citation">Sievert (<a href="#ref-sf-blog-post">2018</a><a href="#ref-sf-blog-post">b</a>)</span> goes more in depth about simple features support in <strong>plotly</strong> and provides more examples of graphical queries and animation with simple features, but Figure <a href="querying-examples.html#fig:mapbox-bars">5.22</a> demonstrates a clever ‘trick’ to get bi-directional brushing between polygon centroids and a histogram showing a numerical summary of the polygons. The main idea is to leverage the <code>st_centroid()</code> function from <strong>sf</strong> to get the polygons centroids, then link those points to the histogram via <code>highlight_key()</code>.</p>
+<p>Every 2D mapping approach in <strong>plotly</strong> (e.g., <code>plot_mapbox()</code>, <code>plot_ly()</code>, <code>geom_sf()</code>) has a special understanding of the simple features data structure provided by the <strong>sf</strong> package. <span class="citation">Sievert (<a href="#ref-ggplotly-blog-post">2018</a><a href="#ref-ggplotly-blog-post">b</a>)</span> and <span class="citation">Sievert (<a href="#ref-sf-blog-post">2018</a><a href="#ref-sf-blog-post">c</a>)</span> goes more in depth about simple features support in <strong>plotly</strong> and provides more examples of graphical queries and animation with simple features, but Figure <a href="querying-examples.html#fig:mapbox-bars">5.22</a> demonstrates a clever ‘trick’ to get bi-directional brushing between polygon centroids and a histogram showing a numerical summary of the polygons. The main idea is to leverage the <code>st_centroid()</code> function from <strong>sf</strong> to get the polygons centroids, then link those points to the histogram via <code>highlight_key()</code>.</p>
 <pre class="sourceCode r"><code class="sourceCode r"><span class="kw">library</span>(sf)
 nc &lt;-<span class="st"> </span><span class="kw">st_read</span>(<span class="kw">system.file</span>(<span class="st">&quot;shape/nc.shp&quot;</span>, <span class="dt">package =</span> <span class="st">&quot;sf&quot;</span>), <span class="dt">quiet =</span> <span class="ot">TRUE</span>)
 nc_query &lt;-<span class="st"> </span><span class="kw">highlight_key</span>(nc, <span class="dt">group =</span> <span class="st">&quot;sf-rocks&quot;</span>)
@@ -650,10 +654,10 @@ The code to generate Figure \@ref(fig:tour-USArrests), as well as a few other ex
 <p>Curley, James. 2016. <em>Engsoccerdata: English and European Soccer Results 1871-2016</em>. <a href="https://CRAN.R-project.org/package=engsoccerdata">https://CRAN.R-project.org/package=engsoccerdata</a>.</p>
 </div>
 <div id="ref-ggplotly-blog-post">
-<p>Sievert, Carson. 2018a. “Learning from and Improving Upon Ggplotly Conversions.” Blog. <a href="https://blog.cpsievert.me/2018/01/30/learning-improving-ggplotly-geom-sf/">https://blog.cpsievert.me/2018/01/30/learning-improving-ggplotly-geom-sf/</a>.</p>
+<p>Sievert, Carson. 2018b. “Learning from and Improving Upon Ggplotly Conversions.” Blog. <a href="https://blog.cpsievert.me/2018/01/30/learning-improving-ggplotly-geom-sf/">https://blog.cpsievert.me/2018/01/30/learning-improving-ggplotly-geom-sf/</a>.</p>
 </div>
 <div id="ref-sf-blog-post">
-<p>Sievert, Carson. 2018b. “Visualizing Geo-Spatial Data with Sf and Plotly.” Blog. <a href="https://blog.cpsievert.me/2018/03/30/visualizing-geo-spatial-data-with-sf-and-plotly/">https://blog.cpsievert.me/2018/03/30/visualizing-geo-spatial-data-with-sf-and-plotly/</a>.</p>
+<p>Sievert, Carson. 2018c. “Visualizing Geo-Spatial Data with Sf and Plotly.” Blog. <a href="https://blog.cpsievert.me/2018/03/30/visualizing-geo-spatial-data-with-sf-and-plotly/">https://blog.cpsievert.me/2018/03/30/visualizing-geo-spatial-data-with-sf-and-plotly/</a>.</p>
 </div>
 <div id="ref-grand-tour">
 <p>Asimov, Daniel. 1985. “The Grand Tour: A Tool for Viewing Multidimensional Data.” <em>SIAM J. Sci. Stat. Comput.</em> 6 (1): 128–43. <a href="https://doi.org/10.1137/0906011">https://doi.org/10.1137/0906011</a>.</p>
@@ -662,7 +666,7 @@ The code to generate Figure \@ref(fig:tour-USArrests), as well as a few other ex
 <div class="footnotes">
 <hr />
 <ol start="17">
-<li id="fn17"><p><span class="citation">Sievert (<a href="#ref-sf-blog-post">2018</a><a href="#ref-sf-blog-post">b</a>)</span> outlines the relative strengths and weaknesses of each approach.<a href="querying-examples.html#fnref17" class="footnote-back">↩</a></p></li>
+<li id="fn17"><p><span class="citation">Sievert (<a href="#ref-sf-blog-post">2018</a><a href="#ref-sf-blog-post">c</a>)</span> outlines the relative strengths and weaknesses of each approach.<a href="querying-examples.html#fnref17" class="footnote-back">↩</a></p></li>
 <li id="fn18"><p>Typically statistical models are diagnosed by visualizing data in the model space rather than model(s) in the data space. As <span class="citation">Wickham, Cook, and Hofmann (<a href="#ref-model-vis-paper">2015</a>)</span> points, the latter approach can be a very effective way to better understand and diagnosis statistical models.<a href="querying-examples.html#fnref18" class="footnote-back">↩</a></p></li>
 </ol>
 </div>
