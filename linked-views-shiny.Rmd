@@ -1,4 +1,4 @@
-# Linking views server-side {#linking-server-side}
+# Linking views server-side with shiny {#linking-server-side}
 
 Section \@ref(graphical-queries) covers an approach to linking views client-side with graphical database queries, but not every linked data view can be reasonably framed as a database query. If you need more control, you have at least two more options: add custom JavaScript (covered in section \@ref(javascript)) and/or link views server-side via a web application. Some concepts useful for the former approach are covered in \@ref(javascript), but this chapter is all about the latter approach.
 
@@ -255,7 +255,7 @@ server <- function(input, output, session) {
       layout(
         annotations = list(
           list(
-            text = "🔥",
+            text = emo::ji("fire"),
             x = 0.5, 
             y = 0.5, 
             xref = "paper",
@@ -269,7 +269,7 @@ server <- function(input, output, session) {
             xref = "paper",
             yref = "paper"
           )
-      ) %>%
+      )) %>%
       config(editable = TRUE)
   })
   
@@ -431,7 +431,7 @@ plotly_example("shiny", "event_data_parcoords")
 knitr::include_graphics("https://i.imgur.com/dFOUCSU.gif")
 ```
 
-### Scoping events
+### Scoping events {#scoping-events}
 
 This section leverages the interface for accessing **plotly** input events introduced in section \@ref(shiny-plotly-inputs) to inform other data views about those events. When managing multiple views that communicate with one another, you'll need to be aware of which views are a *source* of interaction and which are a *target* (a view can be both, at once!). The `event_data()` function provides a `source` argument to help refine which view(s) serve as the source of an event. The `source` argument takes a string ID, and when that ID matches the `source` of a `plot_ly()`/`ggplotly()` graph, then the `event_data()` is "scoped" to that view. To get a better idea of how this works, consider Figure \@ref(fig:shiny-corrplot)
 
@@ -489,88 +489,7 @@ shinyApp(ui, server)
 knitr::include_graphics("https://i.imgur.com/3uDh0Dr.gif")
 ```
 
-I### New section?
-
-nstead of generating an entirely new view in response to a user event, sometimes you simply want to update already existing view(s). If those existing views require a lot of data, you may want to consider partially modifying the **plotly** graph (see section \@ref(proxies)), but in some cases (e.g., Figure \@ref(fig:shiny-ag)), a full re-render of the graph is responsive enough. Note how in Figure \@ref(fig:shiny-ag), when a group of states are selected, it causes the container of density plots to gray out for a split second while re-drawing both the original density (representing the entire US) and the dotted density (representing the new selection). Section \@ref(proxies) covers techniques that would allow one to avoid a full re-draw and simply add the dotted line, but it also introduces significant complexity to the implementation.
-
-```r
-library(shiny)
-library(dplyr)
-
-csv <- "https://raw.githubusercontent.com/plotly/datasets/master/2011_us_ag_exports.csv"
-
-d <- read.csv(csv) %>%
-  select(-category)
-
-dmelt <- d %>%
-  select(-code) %>%
-  tidyr::gather(variable, value, -state)
-
-# specify some map projection/options
-g <- list(
-  scope = 'usa',
-  projection = list(type = 'albers usa'),
-  showlakes = TRUE,
-  lakecolor = toRGB('white')
-)
-
-ui <- fluidPage(
-  fluidRow(plotlyOutput("map")),
-  plotlyOutput("hist", width = "100%")
-)
-
-server <- function(input, output, session) {
-  
-  output$map <- renderPlotly({
-    plot_geo(
-      d, z = ~total.exports, key = ~state, type = "choropleth",
-      locations = ~code, locationmode = 'USA-states', 
-      color = ~total.exports, 
-      # give state boundaries a white border
-      marker = list(line = list(color = toRGB("white"), width = 2)),
-      colorbar = list(title = "Total ag exports \n (millions USD)")
-    ) %>%
-      layout(
-        title = "Click and drag to query state(s)",
-        geo = g, dragmode = "lasso"
-      )
-  })
-  
-  output$hist <- renderPlotly({
-    ed <- event_data("plotly_selected")
-    p <- ggplot(dmelt, aes(sqrt(value))) + 
-      geom_density() + 
-      facet_wrap(~variable, scales = "free", ncol = 3) +
-      labs(x = NULL, y = NULL) +
-      theme_minimal() +
-      theme(
-        axis.title = element_blank(),
-        axis.text = element_blank(),
-        axis.ticks = element_blank()
-      )
-    if (!is.null(ed)) p <- p + geom_density(data = dmelt[dmelt$state %in% ed$key, ], lty = 3)
-    ggplotly(p, dynamicTicks = TRUE)
-  })
-  
-}
-
-shinyApp(ui, server)
-```
-
-```{r shiny-ag, echo=FALSE, fig.cap="Linking a choropleth map of US total agricultural exports to a density plot of each export."}
-knitr::include_graphics("https://i.imgur.com/OxbMlBQ.gif")
-```
-
-The updating logic behind Figure \@ref(fig:shiny-corrplot) and \@ref(fig:shiny-ag) are *transient*, meaning that when a new selection event occurs, it doesn't need to know about previous events. Sometimes it's desirable to retain information about previous selections, or in the verbage of section \@ref(graphical-queries), perform *persistent* selection. In order to implement persistent selection, you'll need a mechanism to store, selectively update, and clear information on the **shiny** server (i.e., a mechanism to maintain state in your app). The general mechanism that **shiny** provides for doing this is `reactiveVal()` or `reactiveValues()`, which provide a way of manually creating and updating reactive values.
-
-
-#Figures \@ref(fig:shiny-corrplot) and \@ref(fig:shiny-ag) are both examples of *transient* selection, meaning that previous selections are not retained. That is, in Figure \@ref(fig:shiny-ag), when the south is selected (after the midwest), the density plots display only the densities for the south (compared to overall). The graphical querying framework makes it easy to adopt persistent selections (i.e., selections that accumulate), but implementing similar logic in a **shiny** app can be tricky. Anytime your app needs to remember what a user has done in the past, it needs someway to maintain state; and moreover, it needs to know how to resolve a sequence of selections. 
-
-
-
-
-
-## Event priority
+### Event priority
 
 By default, `event_data()` only invalidates a reactive expression when the value of it's corresponding **shiny** input changes. Sometimes, you might want a particular event, say `"plotly_click"`, to _always_ invalidate a reactive expression. Figure \@ref(fig:event-priority) shows the difference between this default behavior versus setting `priority = 'event'`. By default, repeatedly clicking the same marker won't update the clock, but when setting the `priority` argument to event, repeatedly clicking the same marker will update the clock (i.e., it will invalidate the reactive expression).
 
@@ -1085,7 +1004,7 @@ library(shiny)
 library(plotly)
 library(dplyr)
 
-# TODO: provide public URL link
+# CSV available from https://github.com/cpsievert/plotly_book
 sales <- readr::read_csv("data/sales.csv")
 
 ui <- fluidPage(
@@ -1419,7 +1338,7 @@ knitr::include_graphics("https://i.imgur.com/YSRZ6iU.gif")
 
 ## Discussion
 
-Compared to the linking framework covered in section \@ref(graphical-queries), the ability to link views server-side with **shiny** opens the door to many new possibilities. This chapter focuses mostly on using just **plotly** within **shiny**, but the **shiny** ecosystem is vast and these techniques can of course be used to inform other views, such as static plots, other **htmlwidgets** packages (e.g., **leaflet**, **DT**, **network3D**, etc), and other custom **shiny** bindings. In fact, I have a numerous **shiny** apps publically available via an R package that use numerous tools to provide exploratory interfaces to a variety of domain-specific problems, including `zikar::explore()` for exploring Zika virus reports, `eechidna::launch()` for exploring Australian election and census data, and `bcviz::launch()` for exploring housing and census information in British Colombia [@zikar]; [@ecehidna]; [@bcviz]. These complex applications also serve as a reference as to how can use the client-side linking framework (i.e., **crosstalk**) inside a large appllication. See this video for an example:
+Compared to the linking framework covered in section \@ref(graphical-queries), the ability to link views server-side with **shiny** opens the door to many new possibilities. This chapter focuses mostly on using just **plotly** within **shiny**, but the **shiny** ecosystem is vast and these techniques can of course be used to inform other views, such as static plots, other **htmlwidgets** packages (e.g., **leaflet**, **DT**, **network3D**, etc), and other custom **shiny** bindings. In fact, I have a numerous **shiny** apps publically available via an R package that use numerous tools to provide exploratory interfaces to a variety of domain-specific problems, including `zikar::explore()` for exploring Zika virus reports, `eechidna::launch()` for exploring Australian election and census data, and `bcviz::launch()` for exploring housing and census information in British Colombia [@zikar]; [@eechidna]; [@bcviz]. These complex applications also serve as a reference as to how can use the client-side linking framework (i.e., **crosstalk**) inside a large appllication. See this video for an example:
 
 <iframe src="https://player.vimeo.com/video/207379729" width="640" height="358" frameborder="0" webkitallowfullscreen mozallowfullscreen allowfullscreen></iframe>
 
