@@ -1,0 +1,76 @@
+---
+title: "Volcano plot with the ability to query snp codes"
+output: html_document
+---
+
+```{r setup, include=FALSE}
+knitr::opts_chunk$set(echo = TRUE)
+```
+
+```{r}
+library(plotly)
+library(htmlwidgets)
+
+vline <- function(x = 1) {
+  list(
+    type = "line",
+    x1 = x, x0 = x, xref = "x", 
+    y0 = 0, y1 = 1, yref = "paper",
+    line = list(dash = "dash")
+  )
+}
+
+hline <- function(y = 4) {
+  list(
+    type = "line", 
+    y0 = y, y1 = y, yref = "y",
+    x1 = 0, x0 = 1, xref = "paper",
+    line = list(dash = "dash")
+  )
+}
+
+data(HapMap, package = "manhattanly")
+
+HapMap %>%
+  mutate(P2 = -log10(P)) %>%
+  plot_ly(
+    x = ~EFFECTSIZE, y = ~ P2, text = ~SNP, hoverinfo = "text",
+    customdata = ~paste0("https://www.ncbi.nlm.nih.gov/snp/?term=", SNP)
+  ) %>%
+  add_markers(color = I("black"), alpha = 0.1) %>%
+  # add annotations for the upper-right quadrant
+  add_fun(
+    function(plot) {
+      plot %>% 
+        filter(EFFECTSIZE > 1 & P2 > 2) %>% 
+        add_markers(color = I("red")) %>%
+        add_annotations(text = ~SNP)
+    }
+  ) %>%
+  # add annotations for the upper-left quadrant
+  add_fun(
+    function(plot) {
+      plot %>% 
+        filter(EFFECTSIZE < -1 & P2 > 2) %>%
+        add_markers(color = I("blue")) %>%
+        add_annotations(text = ~SNP)
+    }
+  ) %>%
+  toWebGL() %>% # webgl renders many points much more efficiently!
+  layout(
+    showlegend = FALSE,
+    shapes = list(
+      vline(-1),
+      vline(1),
+      hline(2)
+    ),
+    xaxis = list(zeroline = FALSE),
+    yaxis = list(zeroline = FALSE)
+  ) %>%
+  onRender("function(el, x) {
+    el.on('plotly_click', function(d) {
+      var url = d.points[0].customdata;
+      window.open(url);
+    });
+  }")
+```

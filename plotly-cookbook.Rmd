@@ -545,8 +545,8 @@ The functions `add_histogram()`, `add_histogram2contour()`, and `add_heatmap()` 
 Figure \@ref(fig:correlation) uses `add_heatmap()` to display a correlation matrix. Notice how the `limits` arguments in the `colorbar()` function can be used to expand the limits of the color scale to reflect the range of possible correlations (something that is not easily done in plotly.js).
 
 ```{r correlation, fig.cap = "Displaying a correlation matrix with `add_heatmap()` and controling the scale limits with `colorbar()`.", screenshot.alt = "screenshots/correlation"}
-corr <- cor(diamonds[vapply(diamonds, is.numeric, logical(1))])
-plot_ly(x = rownames(corr), y = colnames(corr), z = corr) %>%
+corr <- cor(dplyr::select_if(diamonds, is.numeric))
+plot_ly(x = rownames(corr), y = colnames(corr), z = corr, colors = "RdBu") %>%
   add_heatmap() %>%
   colorbar(limits = c(-1, 1))
 ```

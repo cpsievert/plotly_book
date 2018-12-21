@@ -1,0 +1,573 @@
+<!DOCTYPE html>
+<html >
+
+<head>
+
+  <meta charset="UTF-8">
+  <meta http-equiv="X-UA-Compatible" content="IE=edge">
+  <title>8.3 Supplying custom data | Interactive web-based data visualization with R, plotly, and shiny</title>
+  <meta name="description" content="A book example for a Chapman &amp; Hall book.">
+  <meta name="generator" content="bookdown  and GitBook 2.6.7">
+
+  <meta property="og:title" content="8.3 Supplying custom data | Interactive web-based data visualization with R, plotly, and shiny" />
+  <meta property="og:type" content="book" />
+  
+  
+  <meta property="og:description" content="A book example for a Chapman &amp; Hall book." />
+  <meta name="github-repo" content="ropensci/plotly" />
+
+  <meta name="twitter:card" content="summary" />
+  <meta name="twitter:title" content="8.3 Supplying custom data | Interactive web-based data visualization with R, plotly, and shiny" />
+  <meta name="twitter:site" content="@cpsievert" />
+  <meta name="twitter:description" content="A book example for a Chapman &amp; Hall book." />
+  
+
+<meta name="author" content="Carson Sievert">
+
+
+<meta name="date" content="2018-12-21">
+
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <meta name="apple-mobile-web-app-capable" content="yes">
+  <meta name="apple-mobile-web-app-status-bar-style" content="black">
+  
+  
+<link rel="prev" href="js-event-handlers.html">
+<link rel="next" href="incorporating-other-client-side-tools.html">
+<script src="libs/jquery/jquery.min.js"></script>
+<link href="libs/gitbook/css/style.css" rel="stylesheet" />
+<link href="libs/gitbook/css/plugin-table.css" rel="stylesheet" />
+<link href="libs/gitbook/css/plugin-bookdown.css" rel="stylesheet" />
+<link href="libs/gitbook/css/plugin-highlight.css" rel="stylesheet" />
+<link href="libs/gitbook/css/plugin-search.css" rel="stylesheet" />
+<link href="libs/gitbook/css/plugin-fontsettings.css" rel="stylesheet" />
+
+
+
+
+
+
+
+<script src="libs/htmlwidgets/htmlwidgets.js"></script>
+<script src="libs/plotly-binding/plotly.js"></script>
+<script src="libs/typedarray/typedarray.min.js"></script>
+<link href="libs/crosstalk/css/crosstalk.css" rel="stylesheet" />
+<script src="libs/crosstalk/js/crosstalk.min.js"></script>
+<link href="libs/plotly-htmlwidgets-css/plotly-htmlwidgets.css" rel="stylesheet" />
+<script src="libs/plotly-main/plotly-latest.min.js"></script>
+<link href="libs/jsoneditor/jsoneditor.min.css" rel="stylesheet" />
+<script src="libs/jsoneditor/jsoneditor.min.js"></script>
+<script src="libs/jsonedit-binding/jsonedit.js"></script>
+<link href="libs/selectize/selectize.bootstrap3.css" rel="stylesheet" />
+<script src="libs/selectize/selectize.min.js"></script>
+<link href="libs/colourpicker/colourpicker.min.css" rel="stylesheet" />
+<script src="libs/colourpicker/colourpicker.min.js"></script>
+<meta name="viewport" content="width=device-width, initial-scale=1" />
+<link href="libs/bootstrap/css/bootstrap.min.css" rel="stylesheet" />
+<script src="libs/bootstrap/js/bootstrap.min.js"></script>
+<link href="libs/ionrangeslider/css/ion.rangeSlider.css" rel="stylesheet" />
+<link href="libs/ionrangeslider/css/ion.rangeSlider.skinShiny.css" rel="stylesheet" />
+<script src="libs/ionrangeslider/js/ion.rangeSlider.min.js"></script>
+<script src="libs/strftime/strftime-min.js"></script>
+
+
+<style type="text/css">
+a.sourceLine { display: inline-block; line-height: 1.25; }
+a.sourceLine { pointer-events: none; color: inherit; text-decoration: inherit; }
+a.sourceLine:empty { height: 1.2em; }
+.sourceCode { overflow: visible; }
+code.sourceCode { white-space: pre; position: relative; }
+div.sourceCode { margin: 1em 0; }
+pre.sourceCode { margin: 0; }
+@media screen {
+div.sourceCode { overflow: auto; }
+}
+@media print {
+code.sourceCode { white-space: pre-wrap; }
+a.sourceLine { text-indent: -1em; padding-left: 1em; }
+}
+pre.numberSource a.sourceLine
+  { position: relative; left: -4em; }
+pre.numberSource a.sourceLine::before
+  { content: attr(title);
+    position: relative; left: -1em; text-align: right; vertical-align: baseline;
+    border: none; pointer-events: all; display: inline-block;
+    -webkit-touch-callout: none; -webkit-user-select: none;
+    -khtml-user-select: none; -moz-user-select: none;
+    -ms-user-select: none; user-select: none;
+    padding: 0 4px; width: 4em;
+    color: #aaaaaa;
+  }
+pre.numberSource { margin-left: 3em; border-left: 1px solid #aaaaaa;  padding-left: 4px; }
+div.sourceCode
+  {  }
+@media screen {
+a.sourceLine::before { text-decoration: underline; }
+}
+code span.al { color: #ff0000; font-weight: bold; } /* Alert */
+code span.an { color: #60a0b0; font-weight: bold; font-style: italic; } /* Annotation */
+code span.at { color: #7d9029; } /* Attribute */
+code span.bn { color: #40a070; } /* BaseN */
+code span.bu { } /* BuiltIn */
+code span.cf { color: #007020; font-weight: bold; } /* ControlFlow */
+code span.ch { color: #4070a0; } /* Char */
+code span.cn { color: #880000; } /* Constant */
+code span.co { color: #60a0b0; font-style: italic; } /* Comment */
+code span.cv { color: #60a0b0; font-weight: bold; font-style: italic; } /* CommentVar */
+code span.do { color: #ba2121; font-style: italic; } /* Documentation */
+code span.dt { color: #902000; } /* DataType */
+code span.dv { color: #40a070; } /* DecVal */
+code span.er { color: #ff0000; font-weight: bold; } /* Error */
+code span.ex { } /* Extension */
+code span.fl { color: #40a070; } /* Float */
+code span.fu { color: #06287e; } /* Function */
+code span.im { } /* Import */
+code span.in { color: #60a0b0; font-weight: bold; font-style: italic; } /* Information */
+code span.kw { color: #007020; font-weight: bold; } /* Keyword */
+code span.op { color: #666666; } /* Operator */
+code span.ot { color: #007020; } /* Other */
+code span.pp { color: #bc7a00; } /* Preprocessor */
+code span.sc { color: #4070a0; } /* SpecialChar */
+code span.ss { color: #bb6688; } /* SpecialString */
+code span.st { color: #4070a0; } /* String */
+code span.va { color: #19177c; } /* Variable */
+code span.vs { color: #4070a0; } /* VerbatimString */
+code span.wa { color: #60a0b0; font-weight: bold; font-style: italic; } /* Warning */
+</style>
+
+<link rel="stylesheet" href="css/plotly.css" type="text/css" />
+<link rel="stylesheet" href="css/style.css" type="text/css" />
+</head>
+
+<body>
+
+
+
+  <div class="book without-animation with-summary font-size-2 font-family-1" data-basepath=".">
+
+    <div class="book-summary">
+      <nav role="navigation">
+
+<ul class="summary">
+<li class="chapter" data-level="" data-path="index.html"><a href="index.html"><i class="fa fa-check"></i>Overview</a><ul>
+<li class="chapter" data-level="" data-path="follow-along-on-rstudio-cloud.html"><a href="follow-along-on-rstudio-cloud.html"><i class="fa fa-check"></i>Follow along on RStudio Cloud</a></li>
+<li class="chapter" data-level="" data-path="plot-ly-for-collaboration.html"><a href="plot-ly-for-collaboration.html"><i class="fa fa-check"></i>plot.ly for collaboration</a></li>
+</ul></li>
+<li class="chapter" data-level="1" data-path="two-approaches-one-object.html"><a href="two-approaches-one-object.html"><i class="fa fa-check"></i><b>1</b> Two approaches, one object</a><ul>
+<li class="chapter" data-level="1.1" data-path="txhousing-case-study.html"><a href="txhousing-case-study.html"><i class="fa fa-check"></i><b>1.1</b> A case study of housing sales in Texas</a><ul>
+<li class="chapter" data-level="1.1.1" data-path="txhousing-case-study.html"><a href="txhousing-case-study.html#ggplotly"><i class="fa fa-check"></i><b>1.1.1</b> The <code>ggplotly()</code> function</a></li>
+<li class="chapter" data-level="1.1.2" data-path="txhousing-case-study.html"><a href="txhousing-case-study.html#the-plot_ly-interface"><i class="fa fa-check"></i><b>1.1.2</b> The <code>plot_ly()</code> interface</a></li>
+</ul></li>
+<li class="chapter" data-level="1.2" data-path="extending-ggplotly.html"><a href="extending-ggplotly.html"><i class="fa fa-check"></i><b>1.2</b> Extending <code>ggplotly()</code></a><ul>
+<li class="chapter" data-level="1.2.1" data-path="extending-ggplotly.html"><a href="extending-ggplotly.html#customizing-the-layout"><i class="fa fa-check"></i><b>1.2.1</b> Customizing the layout</a></li>
+<li class="chapter" data-level="1.2.2" data-path="extending-ggplotly.html"><a href="extending-ggplotly.html#modifying-layers"><i class="fa fa-check"></i><b>1.2.2</b> Modifying layers</a></li>
+<li class="chapter" data-level="1.2.3" data-path="extending-ggplotly.html"><a href="extending-ggplotly.html#leveraging-statistical-output"><i class="fa fa-check"></i><b>1.2.3</b> Leveraging statistical output</a></li>
+</ul></li>
+</ul></li>
+<li class="chapter" data-level="2" data-path="the-plotly-cookbook.html"><a href="the-plotly-cookbook.html"><i class="fa fa-check"></i><b>2</b> The plotly cookbook</a><ul>
+<li class="chapter" data-level="2.1" data-path="scatter-traces.html"><a href="scatter-traces.html"><i class="fa fa-check"></i><b>2.1</b> Scatter traces</a><ul>
+<li class="chapter" data-level="2.1.1" data-path="scatter-traces.html"><a href="scatter-traces.html#scatterplots"><i class="fa fa-check"></i><b>2.1.1</b> Scatterplots</a></li>
+<li class="chapter" data-level="2.1.2" data-path="scatter-traces.html"><a href="scatter-traces.html#dotplots-error-bars"><i class="fa fa-check"></i><b>2.1.2</b> Dotplots &amp; error bars</a></li>
+<li class="chapter" data-level="2.1.3" data-path="scatter-traces.html"><a href="scatter-traces.html#line-plots"><i class="fa fa-check"></i><b>2.1.3</b> Line plots</a></li>
+<li class="chapter" data-level="2.1.4" data-path="scatter-traces.html"><a href="scatter-traces.html#segments"><i class="fa fa-check"></i><b>2.1.4</b> Segments</a></li>
+<li class="chapter" data-level="2.1.5" data-path="scatter-traces.html"><a href="scatter-traces.html#ribbons"><i class="fa fa-check"></i><b>2.1.5</b> Ribbons</a></li>
+<li class="chapter" data-level="2.1.6" data-path="scatter-traces.html"><a href="scatter-traces.html#polygons"><i class="fa fa-check"></i><b>2.1.6</b> Polygons</a></li>
+</ul></li>
+<li class="chapter" data-level="2.2" data-path="maps.html"><a href="maps.html"><i class="fa fa-check"></i><b>2.2</b> Maps</a><ul>
+<li class="chapter" data-level="2.2.1" data-path="maps.html"><a href="maps.html#using-scatter-traces"><i class="fa fa-check"></i><b>2.2.1</b> Using scatter traces</a></li>
+<li class="chapter" data-level="2.2.2" data-path="maps.html"><a href="maps.html#choropleths"><i class="fa fa-check"></i><b>2.2.2</b> Choropleths</a></li>
+<li class="chapter" data-level="2.2.3" data-path="maps.html"><a href="maps.html#using-geom_sf"><i class="fa fa-check"></i><b>2.2.3</b> Using <code>geom_sf()</code></a></li>
+<li class="chapter" data-level="2.2.4" data-path="maps.html"><a href="maps.html#using-ggmap"><i class="fa fa-check"></i><b>2.2.4</b> Using ggmap</a></li>
+</ul></li>
+<li class="chapter" data-level="2.3" data-path="bars-histograms.html"><a href="bars-histograms.html"><i class="fa fa-check"></i><b>2.3</b> Bars &amp; histograms</a><ul>
+<li class="chapter" data-level="2.3.1" data-path="bars-histograms.html"><a href="bars-histograms.html#multiple-numeric-distributions"><i class="fa fa-check"></i><b>2.3.1</b> Multiple numeric distributions</a></li>
+<li class="chapter" data-level="2.3.2" data-path="bars-histograms.html"><a href="bars-histograms.html#multiple-discrete-distributions"><i class="fa fa-check"></i><b>2.3.2</b> Multiple discrete distributions</a></li>
+</ul></li>
+<li class="chapter" data-level="2.4" data-path="boxplots.html"><a href="boxplots.html"><i class="fa fa-check"></i><b>2.4</b> Boxplots</a></li>
+<li class="chapter" data-level="2.5" data-path="d-frequencies.html"><a href="d-frequencies.html"><i class="fa fa-check"></i><b>2.5</b> 2D frequencies</a><ul>
+<li class="chapter" data-level="2.5.1" data-path="d-frequencies.html"><a href="d-frequencies.html#rectangular-binning-in-plotly.js"><i class="fa fa-check"></i><b>2.5.1</b> Rectangular binning in plotly.js</a></li>
+<li class="chapter" data-level="2.5.2" data-path="d-frequencies.html"><a href="d-frequencies.html#rectangular-binning-in-r"><i class="fa fa-check"></i><b>2.5.2</b> Rectangular binning in R</a></li>
+<li class="chapter" data-level="2.5.3" data-path="d-frequencies.html"><a href="d-frequencies.html#categorical-axes"><i class="fa fa-check"></i><b>2.5.3</b> Categorical axes</a></li>
+</ul></li>
+<li class="chapter" data-level="2.6" data-path="other-3d-plots.html"><a href="other-3d-plots.html"><i class="fa fa-check"></i><b>2.6</b> Other 3D plots</a></li>
+<li class="chapter" data-level="2.7" data-path="raster-images.html"><a href="raster-images.html"><i class="fa fa-check"></i><b>2.7</b> Raster images</a></li>
+</ul></li>
+<li class="chapter" data-level="3" data-path="whats-a-data-view.html"><a href="whats-a-data-view.html"><i class="fa fa-check"></i><b>3</b> What’s a data view?</a></li>
+<li class="chapter" data-level="4" data-path="arranging-multiple-views.html"><a href="arranging-multiple-views.html"><i class="fa fa-check"></i><b>4</b> Arranging multiple views</a><ul>
+<li class="chapter" data-level="4.1" data-path="arranging-htmlwidgets.html"><a href="arranging-htmlwidgets.html"><i class="fa fa-check"></i><b>4.1</b> Arranging htmlwidgets</a></li>
+<li class="chapter" data-level="4.2" data-path="merging-plotly-objects.html"><a href="merging-plotly-objects.html"><i class="fa fa-check"></i><b>4.2</b> Merging plotly objects</a><ul>
+<li class="chapter" data-level="4.2.1" data-path="merging-plotly-objects.html"><a href="merging-plotly-objects.html#recursive-subplots"><i class="fa fa-check"></i><b>4.2.1</b> Recursive subplots</a></li>
+<li class="chapter" data-level="4.2.2" data-path="merging-plotly-objects.html"><a href="merging-plotly-objects.html#ggplot2-subplots"><i class="fa fa-check"></i><b>4.2.2</b> ggplot2 subplots</a></li>
+</ul></li>
+<li class="chapter" data-level="4.3" data-path="navigating-many-views.html"><a href="navigating-many-views.html"><i class="fa fa-check"></i><b>4.3</b> Navigating many views</a></li>
+</ul></li>
+<li class="chapter" data-level="5" data-path="linking-views-client-side.html"><a href="linking-views-client-side.html"><i class="fa fa-check"></i><b>5</b> Linking views client-side</a><ul>
+<li class="chapter" data-level="5.1" data-path="graphical-queries.html"><a href="graphical-queries.html"><i class="fa fa-check"></i><b>5.1</b> Graphical queries</a></li>
+<li class="chapter" data-level="5.2" data-path="filter.html"><a href="filter.html"><i class="fa fa-check"></i><b>5.2</b> Highlight versus filter events</a></li>
+<li class="chapter" data-level="5.3" data-path="querying-examples.html"><a href="querying-examples.html"><i class="fa fa-check"></i><b>5.3</b> Examples</a><ul>
+<li class="chapter" data-level="5.3.1" data-path="querying-examples.html"><a href="querying-examples.html#trellis-linking"><i class="fa fa-check"></i><b>5.3.1</b> Querying facetted charts</a></li>
+<li class="chapter" data-level="5.3.2" data-path="querying-examples.html"><a href="querying-examples.html#statistical-queries"><i class="fa fa-check"></i><b>5.3.2</b> Statistical queries</a></li>
+<li class="chapter" data-level="5.3.3" data-path="querying-examples.html"><a href="querying-examples.html#statistical-queries-ggplot"><i class="fa fa-check"></i><b>5.3.3</b> Statistical queries with <code>ggplotly()</code></a></li>
+<li class="chapter" data-level="5.3.4" data-path="querying-examples.html"><a href="querying-examples.html#geo-spatial-queries"><i class="fa fa-check"></i><b>5.3.4</b> Geo-spatial queries</a></li>
+<li class="chapter" data-level="5.3.5" data-path="querying-examples.html"><a href="querying-examples.html#linking-with-other-htmlwidgets"><i class="fa fa-check"></i><b>5.3.5</b> Linking with other htmlwidgets</a></li>
+<li class="chapter" data-level="5.3.6" data-path="querying-examples.html"><a href="querying-examples.html#generalized-pairs-plots"><i class="fa fa-check"></i><b>5.3.6</b> Generalized pairs plots</a></li>
+<li class="chapter" data-level="5.3.7" data-path="querying-examples.html"><a href="querying-examples.html#querying-diagnostic-plots"><i class="fa fa-check"></i><b>5.3.7</b> Querying diagnostic plots</a></li>
+</ul></li>
+<li class="chapter" data-level="5.4" data-path="limitations.html"><a href="limitations.html"><i class="fa fa-check"></i><b>5.4</b> Limitations</a></li>
+</ul></li>
+<li class="chapter" data-level="6" data-path="animating-views.html"><a href="animating-views.html"><i class="fa fa-check"></i><b>6</b> Animating views</a><ul>
+<li class="chapter" data-level="6.1" data-path="key-frame-animations.html"><a href="key-frame-animations.html"><i class="fa fa-check"></i><b>6.1</b> Key frame animations</a></li>
+<li class="chapter" data-level="6.2" data-path="linking-animated-views.html"><a href="linking-animated-views.html"><i class="fa fa-check"></i><b>6.2</b> Linking animated views</a></li>
+</ul></li>
+<li class="chapter" data-level="7" data-path="linking-server-side.html"><a href="linking-server-side.html"><i class="fa fa-check"></i><b>7</b> Linking views server-side with shiny</a><ul>
+<li class="chapter" data-level="7.1" data-path="hello-shiny.html"><a href="hello-shiny.html"><i class="fa fa-check"></i><b>7.1</b> Embedding plotly in shiny</a><ul>
+<li class="chapter" data-level="7.1.1" data-path="hello-shiny.html"><a href="hello-shiny.html#your-first-shiny-app"><i class="fa fa-check"></i><b>7.1.1</b> Your first shiny app</a></li>
+<li class="chapter" data-level="7.1.2" data-path="hello-shiny.html"><a href="hello-shiny.html#hiding-and-redrawing-on-resize"><i class="fa fa-check"></i><b>7.1.2</b> Hiding and redrawing on resize</a></li>
+</ul></li>
+<li class="chapter" data-level="7.2" data-path="shiny-plotly-inputs.html"><a href="shiny-plotly-inputs.html"><i class="fa fa-check"></i><b>7.2</b> Leveraging plotly input events</a><ul>
+<li class="chapter" data-level="7.2.1" data-path="shiny-plotly-inputs.html"><a href="shiny-plotly-inputs.html#dragging-events"><i class="fa fa-check"></i><b>7.2.1</b> Dragging events</a></li>
+<li class="chapter" data-level="7.2.2" data-path="shiny-plotly-inputs.html"><a href="shiny-plotly-inputs.html#d-events"><i class="fa fa-check"></i><b>7.2.2</b> 3D events</a></li>
+<li class="chapter" data-level="7.2.3" data-path="shiny-plotly-inputs.html"><a href="shiny-plotly-inputs.html#edit-events"><i class="fa fa-check"></i><b>7.2.3</b> Edit events</a></li>
+<li class="chapter" data-level="7.2.4" data-path="shiny-plotly-inputs.html"><a href="shiny-plotly-inputs.html#relayout-vs-restyle-events"><i class="fa fa-check"></i><b>7.2.4</b> Relayout vs restyle events</a></li>
+<li class="chapter" data-level="7.2.5" data-path="shiny-plotly-inputs.html"><a href="shiny-plotly-inputs.html#scoping-events"><i class="fa fa-check"></i><b>7.2.5</b> Scoping events</a></li>
+<li class="chapter" data-level="7.2.6" data-path="shiny-plotly-inputs.html"><a href="shiny-plotly-inputs.html#event-priority"><i class="fa fa-check"></i><b>7.2.6</b> Event priority</a></li>
+<li class="chapter" data-level="7.2.7" data-path="shiny-plotly-inputs.html"><a href="shiny-plotly-inputs.html#handling-discrete-axes"><i class="fa fa-check"></i><b>7.2.7</b> Handling discrete axes</a></li>
+<li class="chapter" data-level="7.2.8" data-path="shiny-plotly-inputs.html"><a href="shiny-plotly-inputs.html#reactive-vals"><i class="fa fa-check"></i><b>7.2.8</b> Accumulating and managing event data</a></li>
+</ul></li>
+<li class="chapter" data-level="7.3" data-path="shiny-performance.html"><a href="shiny-performance.html"><i class="fa fa-check"></i><b>7.3</b> Improving performance</a><ul>
+<li class="chapter" data-level="7.3.1" data-path="shiny-performance.html"><a href="shiny-performance.html#proxies"><i class="fa fa-check"></i><b>7.3.1</b> Partial plotly updates</a></li>
+<li class="chapter" data-level="7.3.2" data-path="shiny-performance.html"><a href="shiny-performance.html#partial-update-examples"><i class="fa fa-check"></i><b>7.3.2</b> Partial update examples</a></li>
+</ul></li>
+<li class="chapter" data-level="7.4" data-path="advanced-applications.html"><a href="advanced-applications.html"><i class="fa fa-check"></i><b>7.4</b> Advanced applications</a><ul>
+<li class="chapter" data-level="7.4.1" data-path="advanced-applications.html"><a href="advanced-applications.html#drill-down"><i class="fa fa-check"></i><b>7.4.1</b> Drill-down</a></li>
+<li class="chapter" data-level="7.4.2" data-path="advanced-applications.html"><a href="advanced-applications.html#crossfilter"><i class="fa fa-check"></i><b>7.4.2</b> Cross-filter</a></li>
+</ul></li>
+<li class="chapter" data-level="7.5" data-path="discussion.html"><a href="discussion.html"><i class="fa fa-check"></i><b>7.5</b> Discussion</a></li>
+</ul></li>
+<li class="chapter" data-level="8" data-path="javascript.html"><a href="javascript.html"><i class="fa fa-check"></i><b>8</b> Extending plotly with JavaScript</a><ul>
+<li class="chapter" data-level="8.1" data-path="json.html"><a href="json.html"><i class="fa fa-check"></i><b>8.1</b> Working with JSON</a><ul>
+<li class="chapter" data-level="8.1.1" data-path="json.html"><a href="json.html#assignment-subsetting-and-iteration"><i class="fa fa-check"></i><b>8.1.1</b> Assignment, subsetting, and iteration</a></li>
+<li class="chapter" data-level="8.1.2" data-path="json.html"><a href="json.html#mapping-r-to-json"><i class="fa fa-check"></i><b>8.1.2</b> Mapping R to JSON</a></li>
+</ul></li>
+<li class="chapter" data-level="8.2" data-path="js-event-handlers.html"><a href="js-event-handlers.html"><i class="fa fa-check"></i><b>8.2</b> Adding custom event handlers</a></li>
+<li class="chapter" data-level="8.3" data-path="supplying-custom-data.html"><a href="supplying-custom-data.html"><i class="fa fa-check"></i><b>8.3</b> Supplying custom data</a></li>
+<li class="chapter" data-level="8.4" data-path="incorporating-other-client-side-tools.html"><a href="incorporating-other-client-side-tools.html"><i class="fa fa-check"></i><b>8.4</b> Incorporating other client-side tools</a></li>
+</ul></li>
+<li class="chapter" data-level="9" data-path="developer-facing-topics.html"><a href="developer-facing-topics.html"><i class="fa fa-check"></i><b>9</b> Developer-facing topics</a><ul>
+<li class="chapter" data-level="9.1" data-path="translating-custom-ggplot2-geoms.html"><a href="translating-custom-ggplot2-geoms.html"><i class="fa fa-check"></i><b>9.1</b> Translating custom ggplot2 geoms</a></li>
+<li class="chapter" data-level="9.2" data-path="designing-an-htmlwidget-interface.html"><a href="designing-an-htmlwidget-interface.html"><i class="fa fa-check"></i><b>9.2</b> Designing an htmlwidget interface</a></li>
+</ul></li>
+<li class="chapter" data-level="" data-path="references.html"><a href="references.html"><i class="fa fa-check"></i>References</a></li>
+</ul>
+
+      </nav>
+    </div>
+
+    <div class="book-body">
+      <div class="body-inner">
+        <div class="book-header" role="navigation">
+          <h1>
+            <i class="fa fa-circle-o-notch fa-spin"></i><a href="./">Interactive web-based data visualization with R, plotly, and shiny</a>
+          </h1>
+        </div>
+
+        <div class="page-wrapper" tabindex="-1" role="main">
+          <div class="page-inner">
+
+            <section class="normal" id="section-">
+<div id="supplying-custom-data" class="section level2">
+<h2><span class="header-section-number">8.3</span> Supplying custom data</h2>
+<p>As covered in section <a href="shiny-plotly-inputs.html#shiny-plotly-inputs">7.2</a>, it’s often useful to supply meta-information (i.e. custom data) to graphical marker(s) and use that information when responding to a event. For example, suppose we’d like each point in a scatterplot to act like a hyperlink to a different webpage. In order to do so, we can supply a url to each point (as metadata) and instruct the browser to open the relevant hyperlink on a click event. Figure <a href="supplying-custom-data.html#fig:click-open">8.4</a> does exactly this by supplying urls to each point in R through the <code>customdata</code> attribute and defining a custom JS event to <code>window.open()</code> the relevant <code>url</code> upon a click event. In this case, since each point represents one row of data, the <code>d.point</code> is an array of length 1, so we may obtain the <code>url</code> of the clicked point with <code>d.points[0].customdata</code>.</p>
+<pre class="sourceCode r"><code class="sourceCode r"><span class="kw">library</span>(htmlwidgets)
+
+p &lt;-<span class="st"> </span><span class="kw">plot_ly</span>(mtcars, <span class="dt">x =</span> <span class="op">~</span>wt, <span class="dt">y =</span> <span class="op">~</span>mpg) <span class="op">%&gt;%</span>
+<span class="st">  </span><span class="kw">add_markers</span>(
+    <span class="dt">text =</span> <span class="kw">rownames</span>(mtcars),
+    <span class="dt">customdata =</span> <span class="kw">paste0</span>(<span class="st">&quot;http://google.com/#q=&quot;</span>, <span class="kw">rownames</span>(mtcars))
+  )
+  
+<span class="kw">onRender</span>(
+  p, <span class="st">&quot;</span>
+<span class="st">  function(el) {</span>
+<span class="st">    el.on(&#39;plotly_click&#39;, function(d) {</span>
+<span class="st">      var url = d.points[0].customdata;</span>
+<span class="st">      window.open(url);</span>
+<span class="st">    });</span>
+<span class="st">  }</span>
+<span class="st">&quot;</span>)</code></pre>
+<div class="figure"><span id="fig:click-open"></span>
+<iframe src="https://player.vimeo.com/video/307598425?title=0&amp;byline=0&amp;portrait=0" width="100%" height="400" frameborder="0" seamless="seamless" webkitAllowFullScreen mozallowfullscreen allowFullScreen>
+</iframe>
+<p class="caption">
+FIGURE 8.4: Attaching hyperlinks to each point in a scatterplot and using a custom JS event to open that Google search query upon clicking a point.
+</p>
+</div>
+<p>In addition to using <code>window.open()</code> to open the <code>url</code>, we could also add it to the plot as an annotation using the plotly.js function <code>Plotly.relayout()</code>, as done in Figure <a href="supplying-custom-data.html#fig:click-annotate">8.5</a>. Moreover, since plotly annotations support HTML markup, we can also treat that url as a true HTML hyperlink by wrapping it in an HTML <code>&lt;a&gt;</code> tag. In cases where your JS function starts to get complex, it can help to put that JS function in its own file, then use the R function <code>readLines()</code> to read it in as a string and pass along <code>onRender()</code> as done below:</p>
+<pre class="sourceCode r"><code class="sourceCode r"><span class="kw">onRender</span>(p, <span class="kw">readLines</span>(<span class="st">&quot;js/hover-hyperlink.js&quot;</span>))</code></pre>
+<details>
+<p><summary>Click to show the ‘js/hover-hyperlink.js’ file</summary></p>
+<pre class="sourceCode js"><code class="sourceCode javascript"><span class="kw">function</span>(el) <span class="op">{</span>
+  <span class="va">el</span>.<span class="at">on</span>(<span class="st">&#39;plotly_hover&#39;</span><span class="op">,</span> <span class="kw">function</span>(d) <span class="op">{</span>
+    <span class="kw">var</span> url <span class="op">=</span> <span class="va">d</span>.<span class="at">points</span>[<span class="dv">0</span>].<span class="at">customdata</span><span class="op">;</span>
+    <span class="kw">var</span> ann <span class="op">=</span> <span class="op">{</span>
+      <span class="dt">text</span><span class="op">:</span> <span class="st">&quot;&lt;a href=&#39;&quot;</span> <span class="op">+</span> url <span class="op">+</span> <span class="st">&quot;&#39;&gt;&quot;</span> <span class="op">+</span> url <span class="op">+</span> <span class="st">&quot;&lt;/a&gt;&quot;</span><span class="op">,</span>
+      <span class="dt">x</span><span class="op">:</span> <span class="dv">0</span><span class="op">,</span>
+      <span class="dt">y</span><span class="op">:</span> <span class="dv">0</span><span class="op">,</span>
+      <span class="dt">xref</span><span class="op">:</span> <span class="st">&quot;paper&quot;</span><span class="op">,</span>
+      <span class="dt">yref</span><span class="op">:</span> <span class="st">&quot;paper&quot;</span><span class="op">,</span>
+      <span class="dt">yshift</span><span class="op">:</span> <span class="dv">-40</span><span class="op">,</span>
+      <span class="dt">showarrow</span><span class="op">:</span> <span class="kw">false</span>
+    <span class="op">};</span>
+    <span class="va">Plotly</span>.<span class="at">relayout</span>(<span class="va">el</span>.<span class="at">id</span><span class="op">,</span> <span class="op">{</span><span class="dt">annotations</span><span class="op">:</span> [ann]<span class="op">}</span>)<span class="op">;</span>
+ <span class="op">}</span>)<span class="op">;</span>
+<span class="op">}</span></code></pre>
+</details>
+<div class="figure"><span id="fig:click-annotate"></span>
+<iframe src="https://player.vimeo.com/video/307598266?title=0&amp;byline=0&amp;portrait=0" width="100%" height="400" frameborder="0" seamless="seamless" webkitAllowFullScreen mozallowfullscreen allowFullScreen>
+</iframe>
+<p class="caption">
+FIGURE 8.5: Using <code>Plotly.relayout()</code> to add and change hyperlink in response to hover events.
+</p>
+</div>
+<div class="rmdtip">
+<p>
+When using <code>Plotly.relayout()</code>, or any other plotly.js function to modify a plot, you’ll need to know the id attribute of the relevant DOM instance that you want to manipulate. When working with a single object, you can simply use <code>el.id</code> to access the id attribute of that DOM instance. However, when trying to target another object, it gets trickier because id attributes are randomly generated by <strong>htmlwidgets</strong>. In that case, you likely want to pre-specify the id attribute so you can reference it client-side. You can pre-specify the id for any <strong>htmlwidgets</strong> object, say <code>widget</code>, by doing <code>widget$elementId &lt;- “myID”</code>.
+</p>
+</div>
+<p>On the JS side, the <code>customdata</code> attribute is designed to support <em>any</em> JS array of appropriate length, so if you need to supply numerous custom values to particular marker(s), list-columns in R provides a nice way to do so. Figure <a href="supplying-custom-data.html#fig:tx-annotate">8.6</a> leverages this idea to bind both the <code>city</code> and <code>sales</code> values to each point along a time series and display those values on hover. It also demonstrates how one can use the graphical querying framework from section <a href="graphical-queries.html#graphical-queries">5.1</a> in tandem with a custom JS event. That is, <code>highlight_key()</code> and <code>highlight()</code> control the highlighting of the time series, while the custom JS event adds the plot annotation (all based on the same <code>"plotly_hover"</code> event). In this case, the highlighting, annotations, and circle shapes are triggered by a <code>"plotly_hover"</code> event and they all work in tandem because event handlers are cumulative. That means, if you wanted, you could register multiple custom handlers for a particular event.</p>
+<pre class="sourceCode r"><code class="sourceCode r"><span class="kw">library</span>(purrr)
+
+sales_hover &lt;-<span class="st"> </span>txhousing <span class="op">%&gt;%</span>
+<span class="st">  </span><span class="kw">group_by</span>(city) <span class="op">%&gt;%</span>
+<span class="st">  </span><span class="kw">highlight_key</span>(<span class="op">~</span>city) <span class="op">%&gt;%</span>
+<span class="st">  </span><span class="kw">plot_ly</span>(<span class="dt">x =</span> <span class="op">~</span>date, <span class="dt">y =</span> <span class="op">~</span>median, <span class="dt">hoverinfo =</span> <span class="st">&quot;name&quot;</span>) <span class="op">%&gt;%</span>
+<span class="st">  </span><span class="kw">add_lines</span>(<span class="dt">customdata =</span> <span class="op">~</span><span class="kw">map2</span>(city, sales, <span class="op">~</span><span class="kw">list</span>(.x, .y))) <span class="op">%&gt;%</span>
+<span class="st">  </span><span class="kw">highlight</span>(<span class="st">&quot;plotly_hover&quot;</span>)
+
+<span class="kw">onRender</span>(sales_hover, <span class="kw">readLines</span>(<span class="st">&quot;js/tx-annotate.js&quot;</span>))</code></pre>
+<details>
+<p><summary>Click to show the ‘js/tx-annotate.js’ file</summary></p>
+<pre class="sourceCode js"><code class="sourceCode javascript"><span class="kw">function</span>(el) <span class="op">{</span>
+  <span class="va">el</span>.<span class="at">on</span>(<span class="st">&quot;plotly_hover&quot;</span><span class="op">,</span> <span class="kw">function</span>(d) <span class="op">{</span>
+    <span class="kw">var</span> pt <span class="op">=</span> <span class="va">d</span>.<span class="at">points</span>[<span class="dv">0</span>]<span class="op">;</span>
+    <span class="kw">var</span> cd <span class="op">=</span> <span class="va">pt</span>.<span class="at">customdata</span><span class="op">;</span>
+    <span class="kw">var</span> num <span class="op">=</span> cd[<span class="dv">1</span>] <span class="op">?</span> cd[<span class="dv">1</span>] : <span class="st">&quot;No&quot;</span><span class="op">;</span>
+    <span class="kw">var</span> ann <span class="op">=</span> <span class="op">{</span>
+      <span class="dt">text</span><span class="op">:</span> num <span class="op">+</span> <span class="st">&quot; homes were sold in &quot;</span> <span class="op">+</span> cd[<span class="dv">0</span>] <span class="op">+</span> <span class="st">&quot;, TX in this month&quot;</span><span class="op">,</span>
+      <span class="dt">x</span><span class="op">:</span> <span class="fl">0.5</span><span class="op">,</span>
+      <span class="dt">y</span><span class="op">:</span> <span class="dv">1</span><span class="op">,</span>
+      <span class="dt">xref</span><span class="op">:</span> <span class="st">&quot;paper&quot;</span><span class="op">,</span>
+      <span class="dt">yref</span><span class="op">:</span> <span class="st">&quot;paper&quot;</span><span class="op">,</span>
+      <span class="dt">xanchor</span><span class="op">:</span> <span class="st">&quot;middle&quot;</span><span class="op">,</span>
+      <span class="dt">showarrow</span><span class="op">:</span> <span class="kw">false</span>
+    <span class="op">};</span>
+    <span class="kw">var</span> circle <span class="op">=</span> <span class="op">{</span>
+      <span class="dt">type</span><span class="op">:</span> <span class="st">&quot;circle&quot;</span><span class="op">,</span>
+      <span class="dt">xanchor</span><span class="op">:</span> <span class="va">pt</span>.<span class="at">x</span><span class="op">,</span>
+      <span class="dt">yanchor</span><span class="op">:</span> <span class="va">pt</span>.<span class="at">y</span><span class="op">,</span>
+      <span class="dt">x0</span><span class="op">:</span> <span class="dv">-6</span><span class="op">,</span>
+      <span class="dt">x1</span><span class="op">:</span> <span class="dv">6</span><span class="op">,</span>
+      <span class="dt">y0</span><span class="op">:</span> <span class="dv">-6</span><span class="op">,</span>
+      <span class="dt">y1</span><span class="op">:</span> <span class="dv">6</span><span class="op">,</span>
+      <span class="dt">xsizemode</span><span class="op">:</span> <span class="st">&quot;pixel&quot;</span><span class="op">,</span>
+      <span class="dt">ysizemode</span><span class="op">:</span> <span class="st">&quot;pixel&quot;</span>
+    <span class="op">};</span>
+    <span class="va">Plotly</span>.<span class="at">relayout</span>(<span class="va">el</span>.<span class="at">id</span><span class="op">,</span> <span class="op">{</span><span class="dt">annotations</span><span class="op">:</span> [ann]<span class="op">,</span> <span class="dt">shapes</span><span class="op">:</span> [circle]<span class="op">}</span>)<span class="op">;</span>
+  <span class="op">}</span>)<span class="op">;</span>
+<span class="op">}</span></code></pre>
+</details>
+<div class="figure"><span id="fig:tx-annotate"></span>
+<iframe src="https://player.vimeo.com/video/307597956?title=0&amp;byline=0&amp;portrait=0" width="100%" height="400" frameborder="0" seamless="seamless" webkitAllowFullScreen mozallowfullscreen allowFullScreen>
+</iframe>
+<p class="caption">
+FIGURE 8.6: Combining the graphical querying framework from <a href="graphical-queries.html#graphical-queries">5.1</a> with the ability to define custom JS event handlers. This example also leverages the fact that <code>customdata</code> supports list-columns to effectively bind both the city name and number of houses sold on a particular day.
+</p>
+</div>
+<p>Sometimes supplying and accessing <code>customdata</code> alone is not quite enough for the task at hand. For instance, what if we wish to add the average monthly sales to the annotation for the city of interest in Figure <a href="supplying-custom-data.html#fig:tx-annotate">8.6</a>? In cases like this, we may need to use <code>customdata</code> to query a portion of the plot’s input data, like Figure <a href="supplying-custom-data.html#fig:tx-annotate">8.6</a> does to compute and display average sales for a given city. This implementation leverages the fact that each selected point (<code>pt</code>) contains a reference to the entire trace it derives from (<code>pt.data</code>). As discussion behind Figure <a href="txhousing-case-study.html#fig:houston">1.2</a> noted, this particular plot has a <em>single trace</em> and uses missing values to create separate lines for each city. As a result, <code>pt.data.customdata</code> contains all the <code>customdata</code> we supplied from the R side, so to get all the <code>sales</code> for a given city, we first need to filter that array down to only the elements that are belong to that city (while being careful of missing values!).</p>
+<pre class="sourceCode r"><code class="sourceCode r"><span class="kw">onRender</span>(sales_hover, <span class="kw">readLines</span>(<span class="st">&quot;js/tx-mean-sales.js&quot;</span>))</code></pre>
+<details>
+<p><summary>Click to show the ‘js/tx-mean-sales.js’ file</summary></p>
+<pre class="sourceCode js"><code class="sourceCode javascript"><span class="kw">function</span>(el) <span class="op">{</span>
+  <span class="va">el</span>.<span class="at">on</span>(<span class="st">&quot;plotly_hover&quot;</span><span class="op">,</span> <span class="kw">function</span>(d) <span class="op">{</span>
+    <span class="kw">var</span> pt <span class="op">=</span> <span class="va">d</span>.<span class="at">points</span>[<span class="dv">0</span>]<span class="op">;</span>
+    <span class="kw">var</span> city <span class="op">=</span> <span class="va">pt</span>.<span class="at">customdata</span>[<span class="dv">0</span>]<span class="op">;</span>
+
+    <span class="co">// filter the full custom data array down to just the elements</span>
+    <span class="co">// from the city of interest</span>
+    <span class="kw">var</span> cityInfo <span class="op">=</span> <span class="va">pt</span>.<span class="va">data</span>.<span class="va">customdata</span>.<span class="at">filter</span>(<span class="kw">function</span>(cd) <span class="op">{</span>
+      <span class="cf">return</span> cd <span class="op">?</span> cd[<span class="dv">0</span>] <span class="op">==</span> city : <span class="kw">false</span><span class="op">;</span>
+    <span class="op">}</span>)<span class="op">;</span>
+    
+    <span class="co">// from the filtered data, get just the sales</span>
+    <span class="kw">var</span> sales <span class="op">=</span> <span class="va">cityInfo</span>.<span class="at">map</span>(<span class="kw">function</span>(cd) <span class="op">{</span> <span class="cf">return</span> cd[<span class="dv">1</span>] <span class="op">}</span>)<span class="op">;</span>
+
+    <span class="co">// plotly.js bundles d3 which you can access via Plotly.d3</span>
+    <span class="kw">var</span> avgsales <span class="op">=</span> <span class="va">Math</span>.<span class="at">round</span>(<span class="va">Plotly</span>.<span class="va">d3</span>.<span class="at">mean</span>(sales))<span class="op">;</span>
+
+    <span class="co">// Display the mean sales for the clicked city</span>
+    <span class="kw">var</span> ann <span class="op">=</span> <span class="op">{</span>
+      <span class="dt">text</span><span class="op">:</span> <span class="st">&quot;Mean monthly sales for &quot;</span> <span class="op">+</span> city <span class="op">+</span> <span class="st">&quot; is &quot;</span> <span class="op">+</span> avgsales<span class="op">,</span>
+      <span class="dt">x</span><span class="op">:</span> <span class="fl">0.5</span><span class="op">,</span>
+      <span class="dt">y</span><span class="op">:</span> <span class="dv">1</span><span class="op">,</span>
+      <span class="dt">xref</span><span class="op">:</span> <span class="st">&quot;paper&quot;</span><span class="op">,</span>
+      <span class="dt">yref</span><span class="op">:</span> <span class="st">&quot;paper&quot;</span><span class="op">,</span>
+      <span class="dt">xanchor</span><span class="op">:</span> <span class="st">&quot;middle&quot;</span><span class="op">,</span>
+      <span class="dt">showarrow</span><span class="op">:</span> <span class="kw">false</span>
+    <span class="op">};</span>
+    <span class="va">Plotly</span>.<span class="at">relayout</span>(<span class="va">el</span>.<span class="at">id</span><span class="op">,</span> <span class="op">{</span><span class="dt">annotations</span><span class="op">:</span> [ann]<span class="op">}</span>)<span class="op">;</span>
+  <span class="op">}</span>)<span class="op">;</span>
+<span class="op">}</span></code></pre>
+</details>
+<div class="figure"><span id="fig:tx-mean-sales"></span>
+<iframe src="https://player.vimeo.com/video/307598016?title=0&amp;byline=0&amp;portrait=0" width="100%" height="400" frameborder="0" seamless="seamless" webkitAllowFullScreen mozallowfullscreen allowFullScreen>
+</iframe>
+<p class="caption">
+FIGURE 8.7: Displaying the average monthly sales for a city of interest on hover. This implementation supplies all the raw sales figures, then uses the hovered <code>customdata</code> value to query sales for the given city and display the average.
+</p>
+</div>
+<p>Figure <a href="supplying-custom-data.html#fig:tx-inset-plot">8.8</a> uses the same <code>customdata</code> supplied to Figure <a href="supplying-custom-data.html#fig:tx-mean-sales">8.7</a> in order to display a histogram of monthly sales for the relevant city on hover. In addition, it displays a vertical line on the histogram to reflect the monthly sales for the point closest to the mouse cursor. To do all this efficiently, it’s best to add the histogram trace on the first hover event using <code>Plotly.addTraces()</code>, then supply different <code>sales</code> data via <code>Plotly.restyle()</code> (generally speaking, <code>restyle()</code> is way less expensive than <code>addTraces()</code>). That’s why the implementation leverages the fact that the DOM element (<code>el</code>) contains a reference to the current graph data (<code>el.data</code>). If the current graph has a trace with type of histogram, then it adds a histogram trace; otherwise, it supplies new <code>x</code> values to the histogram.</p>
+<pre class="sourceCode r"><code class="sourceCode r">sales_hover <span class="op">%&gt;%</span>
+<span class="st">  </span><span class="kw">onRender</span>(<span class="kw">readLines</span>(<span class="st">&quot;js/tx-annotate.js&quot;</span>)) <span class="op">%&gt;%</span>
+<span class="st">  </span><span class="kw">onRender</span>(<span class="kw">readLines</span>(<span class="st">&quot;js/tx-inset-plot.js&quot;</span>))</code></pre>
+<details>
+<p><summary>Click to show the ‘js/tx-inset-plot.js’ file</summary></p>
+<pre class="sourceCode js"><code class="sourceCode javascript"><span class="kw">function</span>(el) <span class="op">{</span>
+  <span class="va">el</span>.<span class="at">on</span>(<span class="st">&quot;plotly_hover&quot;</span><span class="op">,</span> <span class="kw">function</span>(d) <span class="op">{</span>
+    <span class="kw">var</span> pt <span class="op">=</span> <span class="va">d</span>.<span class="at">points</span>[<span class="dv">0</span>]<span class="op">;</span>
+    <span class="kw">var</span> city <span class="op">=</span> <span class="va">pt</span>.<span class="at">customdata</span>[<span class="dv">0</span>]<span class="op">;</span>
+
+    <span class="co">// get the sales for the clicked city</span>
+    <span class="kw">var</span> cityInfo <span class="op">=</span> <span class="va">pt</span>.<span class="va">data</span>.<span class="va">customdata</span>.<span class="at">filter</span>(<span class="kw">function</span>(cd) <span class="op">{</span>
+      <span class="cf">return</span> cd <span class="op">?</span> cd[<span class="dv">0</span>] <span class="op">==</span> city : <span class="kw">false</span><span class="op">;</span>
+    <span class="op">}</span>)<span class="op">;</span>
+    <span class="kw">var</span> sales <span class="op">=</span> <span class="va">cityInfo</span>.<span class="at">map</span>(<span class="kw">function</span>(cd) <span class="op">{</span> <span class="cf">return</span> cd[<span class="dv">1</span>] <span class="op">}</span>)<span class="op">;</span>
+
+    <span class="co">// Collect all the trace types in this plot</span>
+    <span class="kw">var</span> types <span class="op">=</span> <span class="va">el</span>.<span class="va">data</span>.<span class="at">map</span>(<span class="kw">function</span>(trace) <span class="op">{</span> <span class="cf">return</span> <span class="va">trace</span>.<span class="at">type</span><span class="op">;</span> <span class="op">}</span>)<span class="op">;</span>
+    <span class="co">// Find the array index of the histogram trace</span>
+    <span class="kw">var</span> hasHistogram <span class="op">=</span> <span class="va">types</span>.<span class="at">includes</span>(<span class="st">&quot;histogram&quot;</span>)<span class="op">;</span>
+
+    <span class="co">// If the histogram trace already exists, just supply new x values</span>
+    <span class="cf">if</span> (hasHistogram) <span class="op">{</span>
+
+      <span class="va">Plotly</span>.<span class="at">restyle</span>(<span class="va">el</span>.<span class="at">id</span><span class="op">,</span> <span class="st">&quot;x&quot;</span><span class="op">,</span> [sales]<span class="op">,</span> <span class="va">types</span>.<span class="at">indexOf</span>(<span class="st">&quot;histogram&quot;</span>))<span class="op">;</span>
+
+    <span class="op">}</span> <span class="cf">else</span> <span class="op">{</span>
+
+      <span class="co">// create the histogram</span>
+      <span class="kw">var</span> trace <span class="op">=</span> <span class="op">{</span>
+        <span class="dt">x</span><span class="op">:</span> sales<span class="op">,</span>
+        <span class="dt">type</span><span class="op">:</span> <span class="st">&quot;histogram&quot;</span><span class="op">,</span>
+        <span class="dt">marker</span><span class="op">:</span> <span class="op">{</span><span class="dt">color</span><span class="op">:</span> <span class="st">&quot;#1f77b4&quot;</span><span class="op">},</span>
+        <span class="dt">xaxis</span><span class="op">:</span> <span class="st">&quot;x2&quot;</span><span class="op">,</span>
+        <span class="dt">yaxis</span><span class="op">:</span> <span class="st">&quot;y2&quot;</span>
+      <span class="op">};</span>
+      <span class="va">Plotly</span>.<span class="at">addTraces</span>(<span class="va">el</span>.<span class="at">id</span><span class="op">,</span> trace)<span class="op">;</span>
+
+      <span class="co">// place it on &quot;inset&quot; axes</span>
+      <span class="kw">var</span> x <span class="op">=</span> <span class="op">{</span>
+        <span class="dt">domain</span><span class="op">:</span> [<span class="fl">0.05</span><span class="op">,</span> <span class="fl">0.4</span>]<span class="op">,</span>
+        <span class="dt">anchor</span><span class="op">:</span> <span class="st">&quot;y2&quot;</span>
+      <span class="op">};</span>
+      <span class="kw">var</span> y <span class="op">=</span> <span class="op">{</span>
+        <span class="dt">domain</span><span class="op">:</span> [<span class="fl">0.6</span><span class="op">,</span> <span class="fl">0.9</span>]<span class="op">,</span>
+        <span class="dt">anchor</span><span class="op">:</span> <span class="st">&quot;x2&quot;</span>
+      <span class="op">};</span>
+      <span class="va">Plotly</span>.<span class="at">relayout</span>(<span class="va">el</span>.<span class="at">id</span><span class="op">,</span> <span class="op">{</span><span class="dt">xaxis2</span><span class="op">:</span> x<span class="op">,</span> <span class="dt">yaxis2</span><span class="op">:</span> y<span class="op">}</span>)<span class="op">;</span>
+
+    <span class="op">}</span>
+
+    <span class="co">// Add a title for the histogram</span>
+    <span class="kw">var</span> ann <span class="op">=</span> <span class="op">{</span>
+      <span class="dt">text</span><span class="op">:</span> <span class="st">&quot;Monthly house sales in &quot;</span> <span class="op">+</span> city <span class="op">+</span> <span class="st">&quot;, TX&quot;</span><span class="op">,</span>
+      <span class="dt">x</span><span class="op">:</span> <span class="dv">2003</span><span class="op">,</span>
+      <span class="dt">y</span><span class="op">:</span> <span class="dv">300000</span><span class="op">,</span>
+      <span class="dt">xanchor</span><span class="op">:</span> <span class="st">&quot;middle&quot;</span><span class="op">,</span>
+      <span class="dt">showarrow</span><span class="op">:</span> <span class="kw">false</span>
+    <span class="op">};</span>
+    <span class="va">Plotly</span>.<span class="at">relayout</span>(<span class="va">el</span>.<span class="at">id</span><span class="op">,</span> <span class="op">{</span><span class="dt">annotations</span><span class="op">:</span> [ann]<span class="op">}</span>)<span class="op">;</span>
+
+    <span class="co">// Add a vertical line reflecting sales for the hovered point</span>
+    <span class="kw">var</span> line <span class="op">=</span> <span class="op">{</span>
+      <span class="dt">type</span><span class="op">:</span> <span class="st">&quot;line&quot;</span><span class="op">,</span>
+      <span class="dt">x0</span><span class="op">:</span> <span class="va">pt</span>.<span class="at">customdata</span>[<span class="dv">1</span>]<span class="op">,</span>
+      <span class="dt">x1</span><span class="op">:</span> <span class="va">pt</span>.<span class="at">customdata</span>[<span class="dv">1</span>]<span class="op">,</span>
+      <span class="dt">y0</span><span class="op">:</span> <span class="fl">0.6</span><span class="op">,</span>
+      <span class="dt">y1</span><span class="op">:</span> <span class="fl">0.9</span><span class="op">,</span>
+      <span class="dt">xref</span><span class="op">:</span> <span class="st">&quot;x2&quot;</span><span class="op">,</span>
+      <span class="dt">yref</span><span class="op">:</span> <span class="st">&quot;paper&quot;</span><span class="op">,</span>
+      <span class="dt">line</span><span class="op">:</span> <span class="op">{</span><span class="dt">color</span><span class="op">:</span> <span class="st">&quot;black&quot;</span><span class="op">}</span>
+    <span class="op">};</span>
+    <span class="va">Plotly</span>.<span class="at">relayout</span>(<span class="va">el</span>.<span class="at">id</span><span class="op">,</span> <span class="op">{</span><span class="st">&#39;shapes[1]&#39;</span><span class="op">:</span> line<span class="op">}</span>)<span class="op">;</span>
+  <span class="op">}</span>)<span class="op">;</span>
+<span class="op">}</span></code></pre>
+</details>
+<div class="figure"><span id="fig:tx-inset-plot"></span>
+<iframe src="https://player.vimeo.com/video/307598624?title=0&amp;byline=0&amp;portrait=0" width="100%" height="400" frameborder="0" seamless="seamless" webkitAllowFullScreen mozallowfullscreen allowFullScreen>
+</iframe>
+<p class="caption">
+FIGURE 8.8: Adding another event handler to Figure <a href="supplying-custom-data.html#fig:tx-annotate">8.6</a> to draw an inset plot showing the distribution of monthly house sales.
+</p>
+</div>
+</div>
+<script>
+  var header = document.querySelector(".book-header h1");
+
+  var img = document.createElement("img");
+  img.src = "images/rstudioCloud.svg";
+  img.width = 200;
+  img.align = "right";
+  img.style = "margin-top: 10px";
+
+  var a = document.createElement("a");
+  a.href = "https://rstudio.cloud/project/156701";
+  a.target = "_blank";
+  a.appendChild(img);
+
+  header.appendChild(a);
+</script>
+<script>(function(i,s,o,g,r,a,m){i['GoogleAnalyticsObject']=r;i[r]=i[r]||function(){(i[r].q=i[r].q||[]).push(arguments)},i[r].l=1*new Date();a=s.createElement(o),m=s.getElementsByTagName(o)[0];a.async=1;a.src=g;m.parentNode.insertBefore(a,m)})(window,document,'script','https://www.google-analytics.com/analytics.js','ga');ga('create', 'UA-39373211-1', 'auto');ga('send', 'pageview');</script>
+            </section>
+
+          </div>
+        </div>
+      </div>
+<a href="js-event-handlers.html" class="navigation navigation-prev " aria-label="Previous page"><i class="fa fa-angle-left"></i></a>
+<a href="incorporating-other-client-side-tools.html" class="navigation navigation-next " aria-label="Next page"><i class="fa fa-angle-right"></i></a>
+    </div>
+  </div>
+<script src="libs/gitbook/js/app.min.js"></script>
+<script src="libs/gitbook/js/lunr.js"></script>
+<script src="libs/gitbook/js/plugin-search.js"></script>
+<script src="libs/gitbook/js/plugin-sharing.js"></script>
+<script src="libs/gitbook/js/plugin-fontsettings.js"></script>
+<script src="libs/gitbook/js/plugin-bookdown.js"></script>
+<script src="libs/gitbook/js/jquery.highlight.js"></script>
+<script>
+gitbook.require(["gitbook"], function(gitbook) {
+gitbook.start({
+"sharing": false,
+"fontsettings": {
+"theme": "white",
+"family": "sans",
+"size": 2
+},
+"edit": {
+"link": "https://github.com/cpsievert/plotly_book/edit/master/javascript.Rmd",
+"text": "Edit"
+},
+"history": {
+"link": null,
+"text": null
+},
+"download": null,
+"toc": {
+"collapse": "subsection"
+}
+});
+});
+</script>
+
+</body>
+
+</html>

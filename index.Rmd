@@ -1,17 +1,19 @@
 --- 
-title: "plotly for R"
+title: "Interactive web-based data visualization with R, plotly, and shiny"
 author: "Carson Sievert"
-description: "An overview of the R package plotly"
-knit: "bookdown::render_book"
+date: "`r Sys.Date()`"
+documentclass: krantz
 bibliography: [book.bib, packages.bib]
 biblio-style: apalike
 link-citations: yes
-url: 'http\://ropensci.github.io/plotly/'
+colorlinks: yes
+lot: yes
+lof: yes
+site: bookdown::bookdown_site
+description: "A book example for a Chapman & Hall book."
 github-repo: ropensci/plotly
 twitter-handle: cpsievert
-cover-image: images/plotly.png
-site: bookdown::bookdown_site
-documentclass: book
+#cover-image: images/plotly.png
 always_allow_html: yes
 ---
 
@@ -19,21 +21,35 @@ always_allow_html: yes
 
 ```{r setup, include=FALSE}
 library(knitr)
+# global chunk options
 opts_chunk$set(
   message = FALSE, 
   warning = FALSE, 
   comment = "#>",
   collapse = TRUE,
   cache = TRUE,
-  fig.show = "hold",
-  # https://github.com/hafen/lazyrmd
-  lazy = TRUE
+  fig.show = "hold"
 )
-out_format <- opts_knit$get("rmarkdown.pandoc.to")
-isHTML <- grepl("html", out_format)
-isPDF <- grepl("pdf", out_format)
-if (isHTML) opts_chunk$set(out.width = "100%")
-if (isPDF) opts_chunk$set(out.width = "\\textwidth", fig.width = 8, fig.asp = 0.618)
+
+# conditionally global chunk options
+if (knitr::is_latex_output()) {
+  opts_chunk$set(out.width = "\\textwidth", fig.width = 8, fig.asp = 0.618)
+}
+if (knitr::is_html_output()) {
+  # https://github.com/hafen/lazyrmd
+  opts_chunk$set(out.width = "100%", lazy = TRUE)
+  
+  knit_hooks$set(summary = function(before, options, envir) {
+    if (length(options$summary)) {
+      if (before) {
+        return(sprintf("<details><summary>%s</summary>\n", options$summary))
+      } else {
+        return("\n</details>")
+      }
+    }
+  })
+}
+
 
 options(
   dplyr.print_min = 6, dplyr.print_max = 6, 
@@ -41,46 +57,16 @@ options(
 )
 ```
 
-```{r, echo=FALSE, include=isHTML, out.width=220, out.height=245}
-include_graphics('images/plotly.png')
-```
-
 This website explains and partially documents the R package **plotly**, a high-level interface to the open source JavaScript graphing library [plotly.js](https://github.com/plotly/plotly.js) (which powers [plot.ly](https://plot.ly/)). The R package already has numerous examples and documentation on <https://plot.ly/r> and <https://plot.ly/ggplot2>, but this website provides more of a cohesive narrative to help explain fundamental concepts and recent developments. By reading from start to finish, readers new to R and plotly should be able to get up and running fairly quickly. That being said, advanced R and plotly users should still find the majority of this material useful and informative. I highly recommend copying/pasting examples into your R console, and modifying them as you read along, to aid the learning process.
 
 This work is licensed under the [Creative Commons Attribution-NonCommercial-NoDerivs 3.0](http://creativecommons.org/licenses/by-nc-nd/3.0/us/) United States License. 
 
-## Installation {-}
+## Follow along on RStudio Cloud {-}
 
-If you have [R](https://cran.r-project.org/) installed, you can install the stable release of **plotly** by typing this in your R console:
+[This RStudio Cloud instance](https://rstudio.cloud/project/156701) provides a computing environment that you can use to follow along with the book. This book contains many code blocks that produce an interactive graphic, but the interactive graphics themselves are not always included. Sometimes, instead of the interactive, a video is included to demonstrate the interactive capabilities.
 
-```{r, eval = FALSE}
-install.packages("plotly")
-```
-
-Or you can install the development release via the devtools package:
-
-```{r, eval = FALSE}
-if (!require("devtools")) install.packages("devtools")
-devtools::install_github("ropensci/plotly")
-```
-
-The version of the R package used to build this site is:
-
-```{r}
-packageVersion("plotly")
-```
-
-## Get started {-}
-
-To ensure plotly is installed correctly, try loading the package and creating this example by pasting the code inside your R console.
-
-```{r}
-library(plotly)
-plot_ly(z = ~volcano)
-```
-
-```{block, type='rmdtip'}
-**plotly** uses the [htmlwidget](http://www.htmlwidgets.org/) framework, which allows plots to work seamlessly and consistently in various contexts (e.g., R Markdown documents, shiny apps, inside RStudio, or any other R command prompt) without an internet connection. IPython/Jupyter notebook users should wrap plots with the `embed_notebook()` function to embed them inline inside a notebook.
+```{r, echo=FALSE, fig.link="https://rstudio.cloud/project/156701"}
+knitr::include_graphics("https://t1.daumcdn.net/cfile/tistory/99C3553F5BB0414A2A")
 ```
 
 
@@ -92,7 +78,7 @@ plot_ly(z = ~volcano)
 As long as you can view a plot hosted on <http://plot.ly>, you can bring the data behind with plot into R via the `get_figure()` function. This makes it easy to access and modify plots created with _any_ plotly.js interface (e.g., Python, MATLAB, Julia, Scala, etc) from your R console.
 ```
 
-```{r, echo = FALSE, include=isHTML, results='hide'}
+```{r, echo = FALSE, include=knitr::is_html_output(), results='hide'}
 knitr::include_graphics("http://i.imgur.com/4406JoA.gif")
 ```
 
@@ -104,6 +90,6 @@ Not only is this web-based user-interface to plotly.js useful for collaborating 
 <br />
 <br />
 
-```{r, echo = FALSE, include=isHTML}
+```{r, echo = FALSE, include=knitr::is_html_output()}
 knitr::include_graphics("http://i.imgur.com/hl5hsq2.gif")
 ```
