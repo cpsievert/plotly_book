@@ -5,11 +5,11 @@
 
   <meta charset="UTF-8">
   <meta http-equiv="X-UA-Compatible" content="IE=edge">
-  <title>plotly for R</title>
+  <title>plot.ly for collaboration | plotly for R</title>
   <meta name="description" content="An overview of the R package plotly">
-  <meta name="generator" content="bookdown 0.7 and GitBook 2.6.7">
+  <meta name="generator" content="bookdown  and GitBook 2.6.7">
 
-  <meta property="og:title" content="plotly for R" />
+  <meta property="og:title" content="plot.ly for collaboration | plotly for R" />
   <meta property="og:type" content="book" />
   <meta property="og:url" content="http://ropensci.github.io/plotly/" />
   <meta property="og:image" content="http://ropensci.github.io/plotly/images/plotly.png" />
@@ -17,7 +17,7 @@
   <meta name="github-repo" content="ropensci/plotly" />
 
   <meta name="twitter:card" content="summary" />
-  <meta name="twitter:title" content="plotly for R" />
+  <meta name="twitter:title" content="plot.ly for collaboration | plotly for R" />
   <meta name="twitter:site" content="@cpsievert" />
   <meta name="twitter:description" content="An overview of the R package plotly" />
   <meta name="twitter:image" content="http://ropensci.github.io/plotly/images/plotly.png" />
@@ -35,6 +35,7 @@
 <link rel="next" href="two-approaches-one-object.html">
 <script src="libs/jquery/jquery.min.js"></script>
 <link href="libs/gitbook/css/style.css" rel="stylesheet" />
+<link href="libs/gitbook/css/plugin-table.css" rel="stylesheet" />
 <link href="libs/gitbook/css/plugin-bookdown.css" rel="stylesheet" />
 <link href="libs/gitbook/css/plugin-highlight.css" rel="stylesheet" />
 <link href="libs/gitbook/css/plugin-search.css" rel="stylesheet" />
@@ -80,7 +81,7 @@ a.sourceLine { text-indent: -1em; padding-left: 1em; }
 pre.numberSource a.sourceLine
   { position: relative; left: -4em; }
 pre.numberSource a.sourceLine::before
-  { content: attr(data-line-number);
+  { content: attr(title);
     position: relative; left: -1em; text-align: right; vertical-align: baseline;
     border: none; pointer-events: all; display: inline-block;
     -webkit-touch-callout: none; -webkit-user-select: none;
@@ -172,7 +173,6 @@ code span.wa { color: #60a0b0; font-weight: bold; font-style: italic; } /* Warni
 <li class="chapter" data-level="2.2.1" data-path="maps.html"><a href="maps.html#using-scatter-traces"><i class="fa fa-check"></i><b>2.2.1</b> Using scatter traces</a></li>
 <li class="chapter" data-level="2.2.2" data-path="maps.html"><a href="maps.html#choropleths"><i class="fa fa-check"></i><b>2.2.2</b> Choropleths</a></li>
 <li class="chapter" data-level="2.2.3" data-path="maps.html"><a href="maps.html#using-geom_sf"><i class="fa fa-check"></i><b>2.2.3</b> Using <code>geom_sf()</code></a></li>
-<li class="chapter" data-level="2.2.4" data-path="maps.html"><a href="maps.html#using-ggmap"><i class="fa fa-check"></i><b>2.2.4</b> Using ggmap</a></li>
 </ul></li>
 <li class="chapter" data-level="2.3" data-path="bars-histograms.html"><a href="bars-histograms.html"><i class="fa fa-check"></i><b>2.3</b> Bars &amp; histograms</a><ul>
 <li class="chapter" data-level="2.3.1" data-path="bars-histograms.html"><a href="bars-histograms.html#multiple-numeric-distributions"><i class="fa fa-check"></i><b>2.3.1</b> Multiple numeric distributions</a></li>
@@ -251,11 +251,13 @@ code span.wa { color: #60a0b0; font-weight: bold; font-style: italic; } /* Warni
 As long as you can view a plot hosted on <a href="http://plot.ly" class="uri">http://plot.ly</a>, you can bring the data behind with plot into R via the <code>get_figure()</code> function. This makes it easy to access and modify plots created with <em>any</em> plotly.js interface (e.g., Python, MATLAB, Julia, Scala, etc) from your R console.
 </p>
 </div>
+<p><img src="http://i.imgur.com/4406JoA.gif" width="100%" /></p>
 <p><br />
 <br /></p>
 <p>Not only is this web-based user-interface to plotly.js useful for collaborating with others, but it is also useful for completing tasks that are cumbersome to do at the command-line. For instance, annotations can be added to any plot via a point-and-click interface:</p>
 <p><br />
 <br /></p>
+<p><img src="http://i.imgur.com/hl5hsq2.gif" width="100%" /></p>
 
 </div>
 <!-- </div> -->
@@ -265,6 +267,15 @@ As long as you can view a plot hosted on <a href="http://plot.ly" class="uri">ht
 <li id="fn1"><p>If you need privacy or customer support, <a href="https://plot.ly/products/cloud/">pricing options</a><a href="plot-ly-for-collaboration.html#fnref1" class="footnote-back">↩</a></p></li>
 </ol>
 </div>
+<!-- Global site tag (gtag.js) - Google Analytics -->
+<script async src="https://www.googletagmanager.com/gtag/js?id=UA-60116966-3"></script>
+<script>
+  window.dataLayer = window.dataLayer || [];
+  function gtag(){dataLayer.push(arguments);}
+  gtag('js', new Date());
+
+  gtag('config', 'UA-60116966-3');
+</script>
             </section>
 
           </div>
@@ -294,6 +305,10 @@ gitbook.start({
 "link": "https://github.com/cpsievert/plotly_book/edit/master/index.Rmd",
 "text": "Edit"
 },
+"history": {
+"link": null,
+"text": null
+},
 "download": null,
 "toc": {
 "collapse": "subsection"
@@ -308,14 +323,13 @@ gitbook.start({
     var script = document.createElement("script");
     script.type = "text/javascript";
     var src = "true";
-    if (src === "" || src === "true") src = "https://cdn.bootcss.com/mathjax/2.7.1/MathJax.js?config=TeX-MML-AM_CHTML";
+    if (src === "" || src === "true") src = "https://mathjax.rstudio.com/latest/MathJax.js?config=TeX-MML-AM_CHTML";
     if (location.protocol !== "file:" && /^https?:/.test(src))
       src = src.replace(/^https?:/, '');
     script.src = src;
     document.getElementsByTagName("head")[0].appendChild(script);
   })();
 </script>
-<script>(function(i,s,o,g,r,a,m){i['GoogleAnalyticsObject']=r;i[r]=i[r]||function(){(i[r].q=i[r].q||[]).push(arguments)},i[r].l=1*new Date();a=s.createElement(o),m=s.getElementsByTagName(o)[0];a.async=1;a.src=g;m.parentNode.insertBefore(a,m)})(window,document,'script','https://www.google-analytics.com/analytics.js','ga');ga('create', 'UA-39373211-1', 'auto');ga('send', 'pageview');</script>
 </body>
 
 </html>

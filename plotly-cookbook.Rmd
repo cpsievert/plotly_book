@@ -351,16 +351,6 @@ ggplotly(p)
 
 The most brilliant thing about **sf** is that it stores [geo-spatial structures](https://cran.r-project.org/web/packages/sf/vignettes/sf1.html#sfg-simple-feature-geometry) in a special [list-column](https://jennybc.github.io/purrr-tutorial/ls13_list-columns.html) of a data frame. This allows each row to represent the real unit of observation/interest -- whether be a polygon, multi-polygon, point, line, or even a collection of these features -- and as a result, supports workflows that leverage [tidy-data](https://cran.r-project.org/web/packages/tidyr/vignettes/tidy-data.html) principles. This is way more intuitive compared to older workflows based on, say using `ggplot2::fortify()` to obtain a data structure where a row to represents particular point along a feature and having another column track which point belongs to each feature ([for example](https://gis.stackexchange.com/questions/165974/r-fortify-causing-polygons-to-tear)).
 
-### Using ggmap
-
-Since plotly has the ability to embed [raster-based images](#raster-images), it's also possible convert maps generated via the [ggmap](https://cran.r-project.org/package=ggmap) package [@ggmap].
-
-```{r}
-library(ggmap)
-basemap <- get_map(maptype = "satellite", zoom = 8)
-ggplotly(ggmap(basemap))
-```
-
 
 ## Bars & histograms
 

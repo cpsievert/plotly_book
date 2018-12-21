@@ -15,15 +15,3 @@ for (fmt in formats) {
   if (!travis && fmt == 'bookdown::epub_book')
     bookdown::calibre('_book/bookdown.epub', 'mobi')
 }
-
-# insert google analytics
-ga <- readLines("includes/ga.html")
-for (f in list.files('docs', '[.]html$', full.names = TRUE)) {
-  x <- readLines(f)
-  n <- length(x)
-  i <- grep('^\\s*</body>\\s*$', x)
-  writeLines(
-    c(x[seq.int(1, i-1)], ga, x[seq.int(i, n)]),
-    f
-  )
-}

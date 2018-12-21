@@ -5,11 +5,11 @@
 
   <meta charset="UTF-8">
   <meta http-equiv="X-UA-Compatible" content="IE=edge">
-  <title>plotly for R</title>
+  <title>4.1 Linking views with shiny | plotly for R</title>
   <meta name="description" content="An overview of the R package plotly">
-  <meta name="generator" content="bookdown 0.7 and GitBook 2.6.7">
+  <meta name="generator" content="bookdown  and GitBook 2.6.7">
 
-  <meta property="og:title" content="plotly for R" />
+  <meta property="og:title" content="4.1 Linking views with shiny | plotly for R" />
   <meta property="og:type" content="book" />
   <meta property="og:url" content="http://ropensci.github.io/plotly/" />
   <meta property="og:image" content="http://ropensci.github.io/plotly/images/plotly.png" />
@@ -17,7 +17,7 @@
   <meta name="github-repo" content="ropensci/plotly" />
 
   <meta name="twitter:card" content="summary" />
-  <meta name="twitter:title" content="plotly for R" />
+  <meta name="twitter:title" content="4.1 Linking views with shiny | plotly for R" />
   <meta name="twitter:site" content="@cpsievert" />
   <meta name="twitter:description" content="An overview of the R package plotly" />
   <meta name="twitter:image" content="http://ropensci.github.io/plotly/images/plotly.png" />
@@ -35,6 +35,7 @@
 <link rel="next" href="linking-views-without-shiny.html">
 <script src="libs/jquery/jquery.min.js"></script>
 <link href="libs/gitbook/css/style.css" rel="stylesheet" />
+<link href="libs/gitbook/css/plugin-table.css" rel="stylesheet" />
 <link href="libs/gitbook/css/plugin-bookdown.css" rel="stylesheet" />
 <link href="libs/gitbook/css/plugin-highlight.css" rel="stylesheet" />
 <link href="libs/gitbook/css/plugin-search.css" rel="stylesheet" />
@@ -80,7 +81,7 @@ a.sourceLine { text-indent: -1em; padding-left: 1em; }
 pre.numberSource a.sourceLine
   { position: relative; left: -4em; }
 pre.numberSource a.sourceLine::before
-  { content: attr(data-line-number);
+  { content: attr(title);
     position: relative; left: -1em; text-align: right; vertical-align: baseline;
     border: none; pointer-events: all; display: inline-block;
     -webkit-touch-callout: none; -webkit-user-select: none;
@@ -172,7 +173,6 @@ code span.wa { color: #60a0b0; font-weight: bold; font-style: italic; } /* Warni
 <li class="chapter" data-level="2.2.1" data-path="maps.html"><a href="maps.html#using-scatter-traces"><i class="fa fa-check"></i><b>2.2.1</b> Using scatter traces</a></li>
 <li class="chapter" data-level="2.2.2" data-path="maps.html"><a href="maps.html#choropleths"><i class="fa fa-check"></i><b>2.2.2</b> Choropleths</a></li>
 <li class="chapter" data-level="2.2.3" data-path="maps.html"><a href="maps.html#using-geom_sf"><i class="fa fa-check"></i><b>2.2.3</b> Using <code>geom_sf()</code></a></li>
-<li class="chapter" data-level="2.2.4" data-path="maps.html"><a href="maps.html#using-ggmap"><i class="fa fa-check"></i><b>2.2.4</b> Using ggmap</a></li>
 </ul></li>
 <li class="chapter" data-level="2.3" data-path="bars-histograms.html"><a href="bars-histograms.html"><i class="fa fa-check"></i><b>2.3</b> Bars &amp; histograms</a><ul>
 <li class="chapter" data-level="2.3.1" data-path="bars-histograms.html"><a href="bars-histograms.html#multiple-numeric-distributions"><i class="fa fa-check"></i><b>2.3.1</b> Multiple numeric distributions</a></li>
@@ -247,12 +247,12 @@ code span.wa { color: #60a0b0; font-weight: bold; font-style: italic; } /* Warni
 <h2><span class="header-section-number">4.1</span> Linking views with shiny</h2>
 <div id="accessing-events-in-shiny" class="section level3">
 <h3><span class="header-section-number">4.1.1</span> Accessing events in shiny</h3>
-<p>The plotly.js library emits custom events when a user interacts directly with a graph. The <code>event_data()</code> function provides a mechanism for accessing the data corresponding to those events within a shiny app. The shiny app in Figure <a href="linking-views-with-shiny.html#fig:plotlyEvents">3.13</a> is designed to demonstrate the most useful plotly events one may access via <code>event_data()</code>: mouse hover (<code>&quot;plotly_hover&quot;</code>), click (<code>&quot;plotly_click&quot;</code>), and click+drag (<code>&quot;plotly_selected&quot;</code>). All of these events return selections on the data scale, not on a pixel scale, which is useful for <a href="linking-views-with-shiny.html#updating-views">updating views</a>.</p>
-<p>There are currently four different modes for click+drag interactions in plotly.js, but only two will trigger a <code>&quot;plotly_selected&quot;</code> event: rectangular and lasso selection. The other two drag modes, zoom and pan, both emit a <code>&quot;plotly_relayout&quot;</code> event which could be useful for say, providing global context in relation to a zoom event and/or recomputing a model based on new x/y limits. In Figure <a href="linking-views-with-shiny.html#fig:plotlyEvents">3.13</a>, the default click+drag mode was set to rectangular selection set via the <a href="https://plot.ly/r/reference/#layout-dragmode">dragmode</a> attribute, but the mode can also be changed interactively via the mode bar at the top of the graph.</p>
+<p>The plotly.js library emits custom events when a user interacts directly with a graph. The <code>event_data()</code> function provides a mechanism for accessing the data corresponding to those events within a shiny app. The shiny app in Figure <a href="linking-views-with-shiny.html#fig:plotlyEvents">3.13</a> is designed to demonstrate the most useful plotly events one may access via <code>event_data()</code>: mouse hover (<code>"plotly_hover"</code>), click (<code>"plotly_click"</code>), and click+drag (<code>"plotly_selected"</code>). All of these events return selections on the data scale, not on a pixel scale, which is useful for <a href="linking-views-with-shiny.html#updating-views">updating views</a>.</p>
+<p>There are currently four different modes for click+drag interactions in plotly.js, but only two will trigger a <code>"plotly_selected"</code> event: rectangular and lasso selection. The other two drag modes, zoom and pan, both emit a <code>"plotly_relayout"</code> event which could be useful for say, providing global context in relation to a zoom event and/or recomputing a model based on new x/y limits. In Figure <a href="linking-views-with-shiny.html#fig:plotlyEvents">3.13</a>, the default click+drag mode was set to rectangular selection set via the <a href="https://plot.ly/r/reference/#layout-dragmode">dragmode</a> attribute, but the mode can also be changed interactively via the mode bar at the top of the graph.</p>
 <p>The video in Figure <a href="linking-views-with-shiny.html#fig:plotlyEvents">3.13</a> helps demonstrate how different user events cause different blocks of code to be evaluated on the R server.<a href="#fn13" class="footnote-ref" id="fnref13"><sup>13</sup></a> Conceptually, you can think of events as different inputs that becomes invalidated when the event is triggered by plotly.js. Moreover, similar to restrictions placed on references to input value(s) in shiny, <code>event_data()</code> has to be called <em>within</em> a reactive expressions. As RStudio’s <a href="http://web.archive.org/web/20160405081516/http://shiny.rstudio.com/tutorial/lesson6/">lesson on reactive expressions</a> points out: “A reactive expression is an R expression that uses widget input [(e.g., <code>event_data()</code>)] and returns a value.”</p>
 <p>Any of the <code>render*()</code> functions in <strong>shiny</strong> turn a regular R expression into a reactive expression. In Figure <a href="linking-views-with-shiny.html#fig:plotlyEvents">3.13</a>, every use of <code>event_data()</code> appears within <code>renderPrint()</code> since we only need to display the result of the event on the user interface with <code>verbatimTextOutput()</code>. In the next section, we use the return result of <code>event_data()</code> to display more interesting and informative views of user events.</p>
 <div class="figure"><span id="fig:plotlyEvents"></span>
-<img src="images/plotlyEvents.gif" alt="A video demonstration of plotly events in shiny. The video can be accessed [here](http://i.imgur.com/SJVIBvW.gif)"  />
+<img src="images/plotlyEvents.gif" alt="A video demonstration of plotly events in shiny. The video can be accessed [here](http://i.imgur.com/SJVIBvW.gif)" width="100%" />
 <p class="caption">
 Figure 3.13: A video demonstration of plotly events in shiny. The video can be accessed <a href="http://i.imgur.com/SJVIBvW.gif">here</a>
 </p>
@@ -264,7 +264,7 @@ Figure 3.13: A video demonstration of plotly events in shiny. The video can be a
 <p>Figure <a href="linking-views-with-shiny.html#fig:plotlyLinkedBrushEasy">3.14</a> consciously updates the source of the selection (the top plot) to match the visual characteristics of the target (the bottom plot). In general, whenever linking views to display graphical selection(s), matching the visual characteristics of the selection both the source and target(s) can aide interpretation, especially when using interactive graphics to present results to others. Although the update rule in Figure <a href="linking-views-with-shiny.html#fig:plotlyLinkedBrushEasy">3.14</a> is to simply layer on additional points, a full redraw is performed during the update, which can impact performance when dealing with a large amount of graphical elements.</p>
 <p>Figure <a href="linking-views-with-shiny.html#fig:plotlyLinkedBrushEasy">3.14</a> could be made slightly more efficient by just changing the color of selected points, or dimming the non-selected points, rather than plotting an extra layer of points. However, this technique does not work for chart types that display aggregate values (e.g., how do you dim non-selected values in a box plot?). For this reason, in <a href="linking-views-without-shiny.html#linking-views-without-shiny">Linking views without shiny</a>, selections are implemented as an additional layer, but avoid the full redraw required when updating plot via <strong>shiny</strong> reactive framework.<a href="#fn14" class="footnote-ref" id="fnref14"><sup>14</sup></a></p>
 <div class="figure"><span id="fig:plotlyLinkedBrushEasy"></span>
-<img src="images/plotlyLinkedBrushEasy.gif" alt="A video demonstration of linked brushing in a shiny app. The video can be accessed [here](http://i.imgur.com/rUroUHT.gif) and the code to run the example is [here](https://gist.github.com/cpsievert/5934f173cafffb8dfb4f23d5488cd185)"  />
+<img src="images/plotlyLinkedBrushEasy.gif" alt="A video demonstration of linked brushing in a shiny app. The video can be accessed [here](http://i.imgur.com/rUroUHT.gif) and the code to run the example is [here](https://gist.github.com/cpsievert/5934f173cafffb8dfb4f23d5488cd185)" width="100%" />
 <p class="caption">
 Figure 3.14: A video demonstration of linked brushing in a shiny app. The video can be accessed <a href="http://i.imgur.com/rUroUHT.gif">here</a> and the code to run the example is <a href="https://gist.github.com/cpsievert/5934f173cafffb8dfb4f23d5488cd185">here</a>
 </p>
@@ -273,10 +273,10 @@ Figure 3.14: A video demonstration of linked brushing in a shiny app. The video 
 </div>
 <div id="targeting-views" class="section level3">
 <h3><span class="header-section-number">4.1.3</span> Targeting views</h3>
-<p>The linked brushing example in Figure <a href="linking-views-with-shiny.html#fig:plotlyLinkedBrushEasy">3.14</a> has bi-directional communication – a <code>&quot;plotly_selected&quot;</code> event deriving from either view impacts the other view. In other words, each view can be either the source or target of the selection. Often times, we want <em>one</em> view to be the source of a selection, and related view(s) to be the target. Figure <a href="linking-views-with-shiny.html#fig:plotlyLinkedClick">3.15</a> shows a heatmap of a correlation matrix (the source of a selection) linked to a scatterplot (the target of a selection). By clicking on a cell in the correlation matrix, a scatterplot of the two variables is displayed below the matrix.</p>
-<p>To update the scatterplot view, Figure <a href="linking-views-with-shiny.html#fig:plotlyLinkedClick">3.15</a> accesses <code>&quot;plotly_click&quot;</code> events via the <code>event_data()</code> function, but it also careful to not access click events triggered from the scatterplot. By strategically matching the value of the <code>source</code> argument in the <code>plot_ly()</code> and <code>event_data()</code> functions, Figure <a href="linking-views-with-shiny.html#fig:plotlyLinkedClick">3.15</a> effectively restricts the scope of events to a specific plot (the heatmap).</p>
+<p>The linked brushing example in Figure <a href="linking-views-with-shiny.html#fig:plotlyLinkedBrushEasy">3.14</a> has bi-directional communication – a <code>"plotly_selected"</code> event deriving from either view impacts the other view. In other words, each view can be either the source or target of the selection. Often times, we want <em>one</em> view to be the source of a selection, and related view(s) to be the target. Figure <a href="linking-views-with-shiny.html#fig:plotlyLinkedClick">3.15</a> shows a heatmap of a correlation matrix (the source of a selection) linked to a scatterplot (the target of a selection). By clicking on a cell in the correlation matrix, a scatterplot of the two variables is displayed below the matrix.</p>
+<p>To update the scatterplot view, Figure <a href="linking-views-with-shiny.html#fig:plotlyLinkedClick">3.15</a> accesses <code>"plotly_click"</code> events via the <code>event_data()</code> function, but it also careful to not access click events triggered from the scatterplot. By strategically matching the value of the <code>source</code> argument in the <code>plot_ly()</code> and <code>event_data()</code> functions, Figure <a href="linking-views-with-shiny.html#fig:plotlyLinkedClick">3.15</a> effectively restricts the scope of events to a specific plot (the heatmap).</p>
 <div class="figure"><span id="fig:plotlyLinkedClick"></span>
-<img src="images/plotlyLinkedClick.gif" alt="A video demonstration of clicking on a cell in a correlation matrix to view the corresponding scatterplot. The video can be accessed [here](http://i.imgur.com/2pNZejk.gif) and the code to run the example is [here](https://gist.github.com/cpsievert/ece4741967baf1840843ecc44c1bb677)"  />
+<img src="images/plotlyLinkedClick.gif" alt="A video demonstration of clicking on a cell in a correlation matrix to view the corresponding scatterplot. The video can be accessed [here](http://i.imgur.com/2pNZejk.gif) and the code to run the example is [here](https://gist.github.com/cpsievert/ece4741967baf1840843ecc44c1bb677)" width="100%" />
 <p class="caption">
 Figure 3.15: A video demonstration of clicking on a cell in a correlation matrix to view the corresponding scatterplot. The video can be accessed <a href="http://i.imgur.com/2pNZejk.gif">here</a> and the code to run the example is <a href="https://gist.github.com/cpsievert/ece4741967baf1840843ecc44c1bb677">here</a>
 </p>
@@ -287,10 +287,19 @@ Figure 3.15: A video demonstration of clicking on a cell in a correlation matrix
 <div class="footnotes">
 <hr />
 <ol start="13">
-<li id="fn13"><p>You can also run the example yourself using the following code – <code>shiny::runApp(system.file(&quot;examples&quot;, &quot;plotlyEvents&quot;, package = &quot;plotly&quot;))</code><a href="linking-views-with-shiny.html#fnref13" class="footnote-back">↩</a></p></li>
+<li id="fn13"><p>You can also run the example yourself using the following code – <code>shiny::runApp(system.file("examples", "plotlyEvents", package = "plotly"))</code><a href="linking-views-with-shiny.html#fnref13" class="footnote-back">↩</a></p></li>
 <li id="fn14"><p>To my knowledge, the <strong>leaflet</strong> package is the only R package which provides a way to update a plot in a shiny app without a full redraw.<a href="linking-views-with-shiny.html#fnref14" class="footnote-back">↩</a></p></li>
 </ol>
 </div>
+<!-- Global site tag (gtag.js) - Google Analytics -->
+<script async src="https://www.googletagmanager.com/gtag/js?id=UA-60116966-3"></script>
+<script>
+  window.dataLayer = window.dataLayer || [];
+  function gtag(){dataLayer.push(arguments);}
+  gtag('js', new Date());
+
+  gtag('config', 'UA-60116966-3');
+</script>
             </section>
 
           </div>
@@ -320,6 +329,10 @@ gitbook.start({
 "link": "https://github.com/cpsievert/plotly_book/edit/master/linked-views.Rmd",
 "text": "Edit"
 },
+"history": {
+"link": null,
+"text": null
+},
 "download": null,
 "toc": {
 "collapse": "subsection"
@@ -334,14 +347,13 @@ gitbook.start({
     var script = document.createElement("script");
     script.type = "text/javascript";
     var src = "true";
-    if (src === "" || src === "true") src = "https://cdn.bootcss.com/mathjax/2.7.1/MathJax.js?config=TeX-MML-AM_CHTML";
+    if (src === "" || src === "true") src = "https://mathjax.rstudio.com/latest/MathJax.js?config=TeX-MML-AM_CHTML";
     if (location.protocol !== "file:" && /^https?:/.test(src))
       src = src.replace(/^https?:/, '');
     script.src = src;
     document.getElementsByTagName("head")[0].appendChild(script);
   })();
 </script>
-<script>(function(i,s,o,g,r,a,m){i['GoogleAnalyticsObject']=r;i[r]=i[r]||function(){(i[r].q=i[r].q||[]).push(arguments)},i[r].l=1*new Date();a=s.createElement(o),m=s.getElementsByTagName(o)[0];a.async=1;a.src=g;m.parentNode.insertBefore(a,m)})(window,document,'script','https://www.google-analytics.com/analytics.js','ga');ga('create', 'UA-39373211-1', 'auto');ga('send', 'pageview');</script>
 </body>
 
 </html>

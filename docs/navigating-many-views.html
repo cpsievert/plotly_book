@@ -5,11 +5,11 @@
 
   <meta charset="UTF-8">
   <meta http-equiv="X-UA-Compatible" content="IE=edge">
-  <title>plotly for R</title>
+  <title>3.3 Navigating many views | plotly for R</title>
   <meta name="description" content="An overview of the R package plotly">
-  <meta name="generator" content="bookdown 0.7 and GitBook 2.6.7">
+  <meta name="generator" content="bookdown  and GitBook 2.6.7">
 
-  <meta property="og:title" content="plotly for R" />
+  <meta property="og:title" content="3.3 Navigating many views | plotly for R" />
   <meta property="og:type" content="book" />
   <meta property="og:url" content="http://ropensci.github.io/plotly/" />
   <meta property="og:image" content="http://ropensci.github.io/plotly/images/plotly.png" />
@@ -17,7 +17,7 @@
   <meta name="github-repo" content="ropensci/plotly" />
 
   <meta name="twitter:card" content="summary" />
-  <meta name="twitter:title" content="plotly for R" />
+  <meta name="twitter:title" content="3.3 Navigating many views | plotly for R" />
   <meta name="twitter:site" content="@cpsievert" />
   <meta name="twitter:description" content="An overview of the R package plotly" />
   <meta name="twitter:image" content="http://ropensci.github.io/plotly/images/plotly.png" />
@@ -35,6 +35,7 @@
 <link rel="next" href="multiple-linked-views.html">
 <script src="libs/jquery/jquery.min.js"></script>
 <link href="libs/gitbook/css/style.css" rel="stylesheet" />
+<link href="libs/gitbook/css/plugin-table.css" rel="stylesheet" />
 <link href="libs/gitbook/css/plugin-bookdown.css" rel="stylesheet" />
 <link href="libs/gitbook/css/plugin-highlight.css" rel="stylesheet" />
 <link href="libs/gitbook/css/plugin-search.css" rel="stylesheet" />
@@ -80,7 +81,7 @@ a.sourceLine { text-indent: -1em; padding-left: 1em; }
 pre.numberSource a.sourceLine
   { position: relative; left: -4em; }
 pre.numberSource a.sourceLine::before
-  { content: attr(data-line-number);
+  { content: attr(title);
     position: relative; left: -1em; text-align: right; vertical-align: baseline;
     border: none; pointer-events: all; display: inline-block;
     -webkit-touch-callout: none; -webkit-user-select: none;
@@ -172,7 +173,6 @@ code span.wa { color: #60a0b0; font-weight: bold; font-style: italic; } /* Warni
 <li class="chapter" data-level="2.2.1" data-path="maps.html"><a href="maps.html#using-scatter-traces"><i class="fa fa-check"></i><b>2.2.1</b> Using scatter traces</a></li>
 <li class="chapter" data-level="2.2.2" data-path="maps.html"><a href="maps.html#choropleths"><i class="fa fa-check"></i><b>2.2.2</b> Choropleths</a></li>
 <li class="chapter" data-level="2.2.3" data-path="maps.html"><a href="maps.html#using-geom_sf"><i class="fa fa-check"></i><b>2.2.3</b> Using <code>geom_sf()</code></a></li>
-<li class="chapter" data-level="2.2.4" data-path="maps.html"><a href="maps.html#using-ggmap"><i class="fa fa-check"></i><b>2.2.4</b> Using ggmap</a></li>
 </ul></li>
 <li class="chapter" data-level="2.3" data-path="bars-histograms.html"><a href="bars-histograms.html"><i class="fa fa-check"></i><b>2.3</b> Bars &amp; histograms</a><ul>
 <li class="chapter" data-level="2.3.1" data-path="bars-histograms.html"><a href="bars-histograms.html#multiple-numeric-distributions"><i class="fa fa-check"></i><b>2.3.1</b> Multiple numeric distributions</a></li>
@@ -252,16 +252,16 @@ code span.wa { color: #60a0b0; font-weight: bold; font-style: italic; } /* Warni
 <p>In fact, Figure <a href="linking-views-with-shiny.html#fig:plotlyLinkedClick">3.15</a> from that section provides an example of this mantra put into practice. The correlation matrix provides an overview of the correlation structure between all the variables, and by clicking a cell, it populates a scatterplot between those two specific variables. This works fine with tens or hundreds or variables, but once you have thousands or tens-of-thousands of variables, this technique begins to fall apart. At that point, you may be better off defining a range of correlations that you’re interested in exploring, or better yet, incorporating another measure (e.g., a test statistic), then focusing on views that match a certain criteria.</p>
 <p><span class="citation">Tukey and Tukey (<a href="#ref-scagnostics-tukey">n.d.</a>)</span> first described the idea of using quantitative measurements of scatterplot characteristics (e.g. correlation) to help guide exploratory analysis of many variables. This idea, coined scagnostics (short for scatterplot diagnostics), has since been made explicit, and many measures have been explored, even measures specifically useful for time-series have been proposed <span class="citation">(Wilkinson, Anand, and Grossman <a href="#ref-Wilkinson:2005b">2005</a>)</span>; <span class="citation">(Wilkinson and Wills <a href="#ref-Wilkinson:2008">2008</a>)</span>; <span class="citation">(Dang and Wilkinson <a href="#ref-Wilkinson:2012">2012</a>)</span>. Probably the most universally useful scagnostic is the outlying measure which helps identify projections of the data space that contain outlying observations. Of course, the idea of associating quantitative measures with a graphical display of data can be generalized to include more that just scatterplots, and in this more general case, these measures are sometimes referred to as cognostics.</p>
 <p>The same problems and principles that inspired scagnostics has inspired work on more general divide &amp; recombine technique(s) for working with navigating through many statistical artifacts <span class="citation">(Cleveland and Hafen <a href="#ref-divide-recombine">2014</a>)</span>; <span class="citation">(Saptarshi Guha and Cleveland <a href="#ref-RHIPE">2012</a>)</span>, including visualizations <span class="citation">(Hafen et al. <a href="#ref-trelliscope">2013</a>)</span>. The <strong>trelliscope</strong> package provides a system for computing arbitrary cognostics on each panel of a trellis display as well as an interactive graphical user interface for defining (and navigating through) interesting panels based on those cognostics <span class="citation">(Hafen <a href="#ref-trelliscope-pkg">2016</a>)</span>. This system also allows users to define the graphical method for displaying each panel, so <strong>plotly</strong> graphs can easily be embedded. The <strong>trelliscope</strong> package is currently built upon <strong>shiny</strong>, but as Figure <a href="navigating-many-views.html#fig:trelliscope">3.12</a> demonstrates, the <strong>trelliscopejs</strong> package provides lower-level tools that allow one to create trelliscope displays without <strong>shiny</strong> <span class="citation">(Hafen and Schloerke, <a href="#ref-trelliscopejs">n.d.</a>)</span>.</p>
-<div class="sourceCode" id="cb71"><pre class="sourceCode r"><code class="sourceCode r"><a class="sourceLine" id="cb71-1" data-line-number="1"><span class="kw">library</span>(trelliscopejs)</a>
-<a class="sourceLine" id="cb71-2" data-line-number="2"></a>
-<a class="sourceLine" id="cb71-3" data-line-number="3"><span class="kw">qplot</span>(cty, hwy, <span class="dt">data =</span> mpg) <span class="op">+</span></a>
-<a class="sourceLine" id="cb71-4" data-line-number="4"><span class="st">  </span><span class="kw">xlim</span>(<span class="dv">7</span>, <span class="dv">37</span>) <span class="op">+</span><span class="st"> </span><span class="kw">ylim</span>(<span class="dv">9</span>, <span class="dv">47</span>) <span class="op">+</span><span class="st"> </span><span class="kw">theme_bw</span>() <span class="op">+</span></a>
-<a class="sourceLine" id="cb71-5" data-line-number="5"><span class="st">  </span><span class="kw">facet_trelliscope</span>(</a>
-<a class="sourceLine" id="cb71-6" data-line-number="6">    <span class="op">~</span><span class="st"> </span>manufacturer <span class="op">+</span><span class="st"> </span>class, <span class="dt">nrow =</span> <span class="dv">2</span>, <span class="dt">ncol =</span> <span class="dv">4</span>, </a>
-<a class="sourceLine" id="cb71-7" data-line-number="7">    <span class="dt">as_plotly =</span> <span class="ot">TRUE</span>, <span class="dt">plotly_args =</span> <span class="kw">list</span>(<span class="dt">dynamicTicks =</span> T)</a>
-<a class="sourceLine" id="cb71-8" data-line-number="8">  )</a></code></pre></div>
+<pre class="sourceCode r"><code class="sourceCode r"><span class="kw">library</span>(trelliscopejs)
+
+<span class="kw">qplot</span>(cty, hwy, <span class="dt">data =</span> mpg) <span class="op">+</span>
+<span class="st">  </span><span class="kw">xlim</span>(<span class="dv">7</span>, <span class="dv">37</span>) <span class="op">+</span><span class="st"> </span><span class="kw">ylim</span>(<span class="dv">9</span>, <span class="dv">47</span>) <span class="op">+</span><span class="st"> </span><span class="kw">theme_bw</span>() <span class="op">+</span>
+<span class="st">  </span><span class="kw">facet_trelliscope</span>(
+    <span class="op">~</span><span class="st"> </span>manufacturer <span class="op">+</span><span class="st"> </span>class, <span class="dt">nrow =</span> <span class="dv">2</span>, <span class="dt">ncol =</span> <span class="dv">4</span>, 
+    <span class="dt">as_plotly =</span> <span class="ot">TRUE</span>, <span class="dt">plotly_args =</span> <span class="kw">list</span>(<span class="dt">dynamicTicks =</span> T)
+  )</code></pre>
 <div class="figure"><span id="fig:trelliscope"></span>
-<img src="images/trelliscope" alt="Using plotly within a trelliscope"  />
+<img src="images/trelliscope" alt="Using plotly within a trelliscope" width="100%" />
 <p class="caption">
 Figure 3.12: Using plotly within a trelliscope
 </p>
@@ -278,7 +278,7 @@ Figure 3.12: Using plotly within a trelliscope
 <p>Tukey, J. W., and P. A. Tukey. n.d. “Computer Graphics and Exploratory Data Analysis: An Introduction.” In <em>In Proceedings of the Sixth Annual Conference and Exposition: Computer Graphics85</em>.</p>
 </div>
 <div id="ref-Wilkinson:2005b">
-<p>Wilkinson, Leland, Anushka Anand, and Robert Grossman. 2005. “Graph-Theoretic Scagnostics.” In <em>Proceedings of the Proceedings of the 2005 Ieee Symposium on Information Visualization</em>, 21. INFOVIS ’05. Washington, DC, USA: IEEE Computer Society. <a href="https://doi.org/10.1109/INFOVIS.2005.14" class="uri">https://doi.org/10.1109/INFOVIS.2005.14</a>.</p>
+<p>Wilkinson, Leland, Anushka Anand, and Robert Grossman. 2005. “Graph-Theoretic Scagnostics.” In <em>Proceedings of the Proceedings of the 2005 Ieee Symposium on Information Visualization</em>, 21. INFOVIS ’05. Washington, DC, USA: IEEE Computer Society. <a href="https://doi.org/10.1109/INFOVIS.2005.14">https://doi.org/10.1109/INFOVIS.2005.14</a>.</p>
 </div>
 <div id="ref-Wilkinson:2008">
 <p>Wilkinson, Leland, and Graham Wills. 2008. “Scagnostics Distributions.” <em>Journal of Computational and Graphical Statistics</em>, no. 2: 473–91.</p>
@@ -293,15 +293,24 @@ Figure 3.12: Using plotly within a trelliscope
 <p>Saptarshi Guha, Jeremiah Rounds, Ryan Hafen, and William S. Cleveland. 2012. “Large Complex Data: Divide and Recombine (d&amp;R) with Rhipe.” <em>The ISI’s Journal for the Rapid Dissemination of Statistics Research</em>, August, 53–67.</p>
 </div>
 <div id="ref-trelliscope">
-<p>Hafen, R., L. Gosink, J. McDermott, K. Rodland, K. K. V. Dam, and W. S. Cleveland. 2013. “Trelliscope: A System for Detailed Visualization in the Deep Analysis of Large Complex Data.” In <em>Large-Scale Data Analysis and Visualization (Ldav), 2013 Ieee Symposium on</em>, 105–12. <a href="https://doi.org/10.1109/LDAV.2013.6675164" class="uri">https://doi.org/10.1109/LDAV.2013.6675164</a>.</p>
+<p>Hafen, R., L. Gosink, J. McDermott, K. Rodland, K. K. V. Dam, and W. S. Cleveland. 2013. “Trelliscope: A System for Detailed Visualization in the Deep Analysis of Large Complex Data.” In <em>Large-Scale Data Analysis and Visualization (Ldav), 2013 Ieee Symposium on</em>, 105–12. <a href="https://doi.org/10.1109/LDAV.2013.6675164">https://doi.org/10.1109/LDAV.2013.6675164</a>.</p>
 </div>
 <div id="ref-trelliscope-pkg">
-<p>Hafen, Ryan. 2016. <em>Trelliscope: Create and Navigate Large Multi-Panel Visual Displays</em>. <a href="https://CRAN.R-project.org/package=trelliscope" class="uri">https://CRAN.R-project.org/package=trelliscope</a>.</p>
+<p>Hafen, Ryan. 2016. <em>Trelliscope: Create and Navigate Large Multi-Panel Visual Displays</em>. <a href="https://CRAN.R-project.org/package=trelliscope">https://CRAN.R-project.org/package=trelliscope</a>.</p>
 </div>
 <div id="ref-trelliscopejs">
-<p>Hafen, Ryan, and Barret Schloerke. n.d. <em>Trelliscopejs: Create Interactive Trelliscope Displays</em>. <a href="https://github.com/hafen/trelliscopejs" class="uri">https://github.com/hafen/trelliscopejs</a>.</p>
+<p>Hafen, Ryan, and Barret Schloerke. n.d. <em>Trelliscopejs: Create Interactive Trelliscope Displays</em>. <a href="https://github.com/hafen/trelliscopejs">https://github.com/hafen/trelliscopejs</a>.</p>
 </div>
 </div>
+<!-- Global site tag (gtag.js) - Google Analytics -->
+<script async src="https://www.googletagmanager.com/gtag/js?id=UA-60116966-3"></script>
+<script>
+  window.dataLayer = window.dataLayer || [];
+  function gtag(){dataLayer.push(arguments);}
+  gtag('js', new Date());
+
+  gtag('config', 'UA-60116966-3');
+</script>
             </section>
 
           </div>
@@ -331,6 +340,10 @@ gitbook.start({
 "link": "https://github.com/cpsievert/plotly_book/edit/master/arranging.Rmd",
 "text": "Edit"
 },
+"history": {
+"link": null,
+"text": null
+},
 "download": null,
 "toc": {
 "collapse": "subsection"
@@ -345,14 +358,13 @@ gitbook.start({
     var script = document.createElement("script");
     script.type = "text/javascript";
     var src = "true";
-    if (src === "" || src === "true") src = "https://cdn.bootcss.com/mathjax/2.7.1/MathJax.js?config=TeX-MML-AM_CHTML";
+    if (src === "" || src === "true") src = "https://mathjax.rstudio.com/latest/MathJax.js?config=TeX-MML-AM_CHTML";
     if (location.protocol !== "file:" && /^https?:/.test(src))
       src = src.replace(/^https?:/, '');
     script.src = src;
     document.getElementsByTagName("head")[0].appendChild(script);
   })();
 </script>
-<script>(function(i,s,o,g,r,a,m){i['GoogleAnalyticsObject']=r;i[r]=i[r]||function(){(i[r].q=i[r].q||[]).push(arguments)},i[r].l=1*new Date();a=s.createElement(o),m=s.getElementsByTagName(o)[0];a.async=1;a.src=g;m.parentNode.insertBefore(a,m)})(window,document,'script','https://www.google-analytics.com/analytics.js','ga');ga('create', 'UA-39373211-1', 'auto');ga('send', 'pageview');</script>
 </body>
 
 </html>

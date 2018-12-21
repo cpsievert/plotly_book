@@ -5,11 +5,11 @@
 
   <meta charset="UTF-8">
   <meta http-equiv="X-UA-Compatible" content="IE=edge">
-  <title>plotly for R</title>
+  <title>6.3 Designing an htmlwidget interface | plotly for R</title>
   <meta name="description" content="An overview of the R package plotly">
-  <meta name="generator" content="bookdown 0.7 and GitBook 2.6.7">
+  <meta name="generator" content="bookdown  and GitBook 2.6.7">
 
-  <meta property="og:title" content="plotly for R" />
+  <meta property="og:title" content="6.3 Designing an htmlwidget interface | plotly for R" />
   <meta property="og:type" content="book" />
   <meta property="og:url" content="http://ropensci.github.io/plotly/" />
   <meta property="og:image" content="http://ropensci.github.io/plotly/images/plotly.png" />
@@ -17,7 +17,7 @@
   <meta name="github-repo" content="ropensci/plotly" />
 
   <meta name="twitter:card" content="summary" />
-  <meta name="twitter:title" content="plotly for R" />
+  <meta name="twitter:title" content="6.3 Designing an htmlwidget interface | plotly for R" />
   <meta name="twitter:site" content="@cpsievert" />
   <meta name="twitter:description" content="An overview of the R package plotly" />
   <meta name="twitter:image" content="http://ropensci.github.io/plotly/images/plotly.png" />
@@ -35,6 +35,7 @@
 <link rel="next" href="references.html">
 <script src="libs/jquery/jquery.min.js"></script>
 <link href="libs/gitbook/css/style.css" rel="stylesheet" />
+<link href="libs/gitbook/css/plugin-table.css" rel="stylesheet" />
 <link href="libs/gitbook/css/plugin-bookdown.css" rel="stylesheet" />
 <link href="libs/gitbook/css/plugin-highlight.css" rel="stylesheet" />
 <link href="libs/gitbook/css/plugin-search.css" rel="stylesheet" />
@@ -80,7 +81,7 @@ a.sourceLine { text-indent: -1em; padding-left: 1em; }
 pre.numberSource a.sourceLine
   { position: relative; left: -4em; }
 pre.numberSource a.sourceLine::before
-  { content: attr(data-line-number);
+  { content: attr(title);
     position: relative; left: -1em; text-align: right; vertical-align: baseline;
     border: none; pointer-events: all; display: inline-block;
     -webkit-touch-callout: none; -webkit-user-select: none;
@@ -172,7 +173,6 @@ code span.wa { color: #60a0b0; font-weight: bold; font-style: italic; } /* Warni
 <li class="chapter" data-level="2.2.1" data-path="maps.html"><a href="maps.html#using-scatter-traces"><i class="fa fa-check"></i><b>2.2.1</b> Using scatter traces</a></li>
 <li class="chapter" data-level="2.2.2" data-path="maps.html"><a href="maps.html#choropleths"><i class="fa fa-check"></i><b>2.2.2</b> Choropleths</a></li>
 <li class="chapter" data-level="2.2.3" data-path="maps.html"><a href="maps.html#using-geom_sf"><i class="fa fa-check"></i><b>2.2.3</b> Using <code>geom_sf()</code></a></li>
-<li class="chapter" data-level="2.2.4" data-path="maps.html"><a href="maps.html#using-ggmap"><i class="fa fa-check"></i><b>2.2.4</b> Using ggmap</a></li>
 </ul></li>
 <li class="chapter" data-level="2.3" data-path="bars-histograms.html"><a href="bars-histograms.html"><i class="fa fa-check"></i><b>2.3</b> Bars &amp; histograms</a><ul>
 <li class="chapter" data-level="2.3.1" data-path="bars-histograms.html"><a href="bars-histograms.html#multiple-numeric-distributions"><i class="fa fa-check"></i><b>2.3.1</b> Multiple numeric distributions</a></li>
@@ -249,7 +249,7 @@ code span.wa { color: #60a0b0; font-weight: bold; font-style: italic; } /* Warni
 <p>Although it can be complicated to implement, R interfaces to JavaScript graphing libraries should leverage R’s strong resources for computing on the language to design a more expressive interface <span class="citation">(Wickham <a href="#ref-adv-r">2014</a>)</span>. It should also look and feel like (and work well with!) other commonly used interfaces in R. A good way to do this is to embrace (pure and predictable) functional programming. Most importantly, this implies that every function <em>modifies</em> a central type of object – meaning that every function input and output the same type of object (predictable). Furthermore, if the output of a function can be determined completely by the input (i.e., pure), it removes any need to search for other code that may be affecting the output. In the case of providing an interface to a JavaScript graphing library, there are a number of reasons why the central object should inherit from the central object provided by the <strong>htmlwidgets</strong> package.</p>
 <p>The idea of interfacing R with JavaScript libraries via JSON data transfer has been popular approach for quite some time <span class="citation">(Vaidyanathan <a href="#ref-rCharts">2013</a>)</span>; <span class="citation">(Hocking, VanderPlas, and Sievert <a href="#ref-animint">2015</a>)</span>; <span class="citation">(Sievert and Shirley <a href="#ref-Sievert:2014b">2014</a>)</span>. The R package <strong>htmlwidgets</strong> standardized this bridge, and provides some additional infrastructure for making sure the HTML output works as expected in multiple contexts (in the R console or RStudio, within <strong>rmarkdown</strong> documents, and even embedded inside <strong>shiny</strong> apps). The <strong>htmlwidgets</strong> package itself is opinionated about the data structure used to represent the widget in R since it needs to retain meta-information about the widget, such as the sizing policy. To avoid surprise, widget authors should strive to have all functions in their interface modify this data structure.<a href="#fn21" class="footnote-ref" id="fnref21"><sup>21</sup></a></p>
 <p>JavaScript graphing libraries usually have strong requirements about the JSON structure used to create a plot. In some cases, the R interface needs to know about these requirements in order to faithfully translate R objects to JSON. For example, in plotly.js some attributes must <em>always</em> be an array (e.g. x/y), even if they are length 1, while other attributes cannot be an array must be a literal constant (e.g. name). This leads to a situation where the translation rules from R to JSON cannot be simply “box all vectors of length 1 into an array (or not)”:</p>
-<div class="sourceCode" id="cb97"><pre class="sourceCode javascript"><code class="sourceCode javascript"><a class="sourceLine" id="cb97-1" data-line-number="1"><span class="at">list</span>(x <span class="op">=</span> <span class="dv">1</span><span class="op">,</span> y <span class="op">=</span> <span class="dv">1</span><span class="op">,</span> name <span class="op">=</span> <span class="st">&quot;A point&quot;</span>) <span class="op">=&gt;</span> <span class="op">{</span><span class="dt">x</span><span class="op">:</span> [<span class="dv">1</span>]<span class="op">,</span> <span class="dt">y</span><span class="op">:</span> [<span class="dv">1</span>]<span class="op">,</span> <span class="dt">name</span><span class="op">:</span> <span class="st">&quot;A point&quot;</span><span class="op">}</span></a></code></pre></div>
+<pre class="sourceCode javascript"><code class="sourceCode javascript"><span class="at">list</span>(x <span class="op">=</span> <span class="dv">1</span><span class="op">,</span> y <span class="op">=</span> <span class="dv">1</span><span class="op">,</span> name <span class="op">=</span> <span class="st">&quot;A point&quot;</span>) <span class="op">=&gt;</span> <span class="op">{</span><span class="dt">x</span><span class="op">:</span> [<span class="dv">1</span>]<span class="op">,</span> <span class="dt">y</span><span class="op">:</span> [<span class="dv">1</span>]<span class="op">,</span> <span class="dt">name</span><span class="op">:</span> <span class="st">&quot;A point&quot;</span><span class="op">}</span></code></pre>
 <p>Thankfully plotly.js provides a plot schema which declares types for each attribute that <strong>plotly</strong> leverages internally. If necessary, <strong>plotly</strong> tries to coerce each attribute to its expected type at print time, and also searches for any unsupported attributes that may have been specified by the user (and throws a warning that the attribute will be ignored). This helps</p>
 <!-- TODO:
 * using R's data types to provide smart defaults that simply aren't possible with JSON
@@ -262,22 +262,22 @@ The **htmlwidgets** package also provides ways for both widget authors and users
 <h3>References</h3>
 <div id="refs" class="references">
 <div id="ref-RJSONIO">
-<p>Temple Lang, Duncan. 2014. <em>RJSONIO: Serialize R Objects to Json, Javascript Object Notation</em>. <a href="http://CRAN.R-project.org/package=RJSONIO" class="uri">http://CRAN.R-project.org/package=RJSONIO</a>.</p>
+<p>Temple Lang, Duncan. 2014. <em>RJSONIO: Serialize R Objects to Json, Javascript Object Notation</em>. <a href="http://CRAN.R-project.org/package=RJSONIO">http://CRAN.R-project.org/package=RJSONIO</a>.</p>
 </div>
 <div id="ref-jsonlite">
-<p>Ooms, Jeroen. 2014. “The Jsonlite Package: A Practical and Consistent Mapping Between Json Data and R Objects.” <em>arXiv:1403.2805 [stat.CO]</em>. <a href="http://arxiv.org/abs/1403.2805" class="uri">http://arxiv.org/abs/1403.2805</a>.</p>
+<p>Ooms, Jeroen. 2014. “The Jsonlite Package: A Practical and Consistent Mapping Between Json Data and R Objects.” <em>arXiv:1403.2805 [stat.CO]</em>. <a href="http://arxiv.org/abs/1403.2805">http://arxiv.org/abs/1403.2805</a>.</p>
 </div>
 <div id="ref-adv-r">
 <p>Wickham, Hadley. 2014. <em>Advanced R</em>. Chapman &amp; Hall.</p>
 </div>
 <div id="ref-rCharts">
-<p>Vaidyanathan, Ramnath. 2013. <em>RCharts: Interactive Charts Using Javascript Visualization Libraries</em>. <a href="https://github.com/ramnathv/rCharts/" class="uri">https://github.com/ramnathv/rCharts/</a>.</p>
+<p>Vaidyanathan, Ramnath. 2013. <em>RCharts: Interactive Charts Using Javascript Visualization Libraries</em>. <a href="https://github.com/ramnathv/rCharts/">https://github.com/ramnathv/rCharts/</a>.</p>
 </div>
 <div id="ref-animint">
 <p>Hocking, Toby Dylan, Susan VanderPlas, and Carson Sievert. 2015. <em>Animint: Interactive Animations</em>.</p>
 </div>
 <div id="ref-Sievert:2014b">
-<p>Sievert, Carson, and Kenneth E Shirley. 2014. “LDAvis: A method for visualizing and interpreting topics.” <em>Proceedings of the Workshop on Interactive Language Learning, Visualization, and Interfaces</em>, June, 1–8. <a href="http://nlp.stanford.edu/events/illvi2014/papers/sievert-illvi2014.pdf" class="uri">http://nlp.stanford.edu/events/illvi2014/papers/sievert-illvi2014.pdf</a>.</p>
+<p>Sievert, Carson, and Kenneth E Shirley. 2014. “LDAvis: A method for visualizing and interpreting topics.” <em>Proceedings of the Workshop on Interactive Language Learning, Visualization, and Interfaces</em>, June, 1–8. <a href="http://nlp.stanford.edu/events/illvi2014/papers/sievert-illvi2014.pdf">http://nlp.stanford.edu/events/illvi2014/papers/sievert-illvi2014.pdf</a>.</p>
 </div>
 </div>
 <div class="footnotes">
@@ -286,6 +286,15 @@ The **htmlwidgets** package also provides ways for both widget authors and users
 <li id="fn21"><p>The <strong>plotly</strong> package initially fought this advice and represented plotly objects using a special data frame with a special print method to enable the <a href="#data-plot-pipeline">data-plot-pipeline</a>. I have since changed my mind and decided special methods for popular generic functions should be provided instead.<a href="designing-an-htmlwidget-interface.html#fnref21" class="footnote-back">↩</a></p></li>
 </ol>
 </div>
+<!-- Global site tag (gtag.js) - Google Analytics -->
+<script async src="https://www.googletagmanager.com/gtag/js?id=UA-60116966-3"></script>
+<script>
+  window.dataLayer = window.dataLayer || [];
+  function gtag(){dataLayer.push(arguments);}
+  gtag('js', new Date());
+
+  gtag('config', 'UA-60116966-3');
+</script>
             </section>
 
           </div>
@@ -315,6 +324,10 @@ gitbook.start({
 "link": "https://github.com/cpsievert/plotly_book/edit/master/advanced.Rmd",
 "text": "Edit"
 },
+"history": {
+"link": null,
+"text": null
+},
 "download": null,
 "toc": {
 "collapse": "subsection"
@@ -329,14 +342,13 @@ gitbook.start({
     var script = document.createElement("script");
     script.type = "text/javascript";
     var src = "true";
-    if (src === "" || src === "true") src = "https://cdn.bootcss.com/mathjax/2.7.1/MathJax.js?config=TeX-MML-AM_CHTML";
+    if (src === "" || src === "true") src = "https://mathjax.rstudio.com/latest/MathJax.js?config=TeX-MML-AM_CHTML";
     if (location.protocol !== "file:" && /^https?:/.test(src))
       src = src.replace(/^https?:/, '');
     script.src = src;
     document.getElementsByTagName("head")[0].appendChild(script);
   })();
 </script>
-<script>(function(i,s,o,g,r,a,m){i['GoogleAnalyticsObject']=r;i[r]=i[r]||function(){(i[r].q=i[r].q||[]).push(arguments)},i[r].l=1*new Date();a=s.createElement(o),m=s.getElementsByTagName(o)[0];a.async=1;a.src=g;m.parentNode.insertBefore(a,m)})(window,document,'script','https://www.google-analytics.com/analytics.js','ga');ga('create', 'UA-39373211-1', 'auto');ga('send', 'pageview');</script>
 </body>
 
 </html>

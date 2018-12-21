@@ -5,11 +5,11 @@
 
   <meta charset="UTF-8">
   <meta http-equiv="X-UA-Compatible" content="IE=edge">
-  <title>plotly for R</title>
+  <title>6.1 Custom behavior via JavaScript | plotly for R</title>
   <meta name="description" content="An overview of the R package plotly">
-  <meta name="generator" content="bookdown 0.7 and GitBook 2.6.7">
+  <meta name="generator" content="bookdown  and GitBook 2.6.7">
 
-  <meta property="og:title" content="plotly for R" />
+  <meta property="og:title" content="6.1 Custom behavior via JavaScript | plotly for R" />
   <meta property="og:type" content="book" />
   <meta property="og:url" content="http://ropensci.github.io/plotly/" />
   <meta property="og:image" content="http://ropensci.github.io/plotly/images/plotly.png" />
@@ -17,7 +17,7 @@
   <meta name="github-repo" content="ropensci/plotly" />
 
   <meta name="twitter:card" content="summary" />
-  <meta name="twitter:title" content="plotly for R" />
+  <meta name="twitter:title" content="6.1 Custom behavior via JavaScript | plotly for R" />
   <meta name="twitter:site" content="@cpsievert" />
   <meta name="twitter:description" content="An overview of the R package plotly" />
   <meta name="twitter:image" content="http://ropensci.github.io/plotly/images/plotly.png" />
@@ -35,6 +35,7 @@
 <link rel="next" href="translating-custom-ggplot2-geoms.html">
 <script src="libs/jquery/jquery.min.js"></script>
 <link href="libs/gitbook/css/style.css" rel="stylesheet" />
+<link href="libs/gitbook/css/plugin-table.css" rel="stylesheet" />
 <link href="libs/gitbook/css/plugin-bookdown.css" rel="stylesheet" />
 <link href="libs/gitbook/css/plugin-highlight.css" rel="stylesheet" />
 <link href="libs/gitbook/css/plugin-search.css" rel="stylesheet" />
@@ -80,7 +81,7 @@ a.sourceLine { text-indent: -1em; padding-left: 1em; }
 pre.numberSource a.sourceLine
   { position: relative; left: -4em; }
 pre.numberSource a.sourceLine::before
-  { content: attr(data-line-number);
+  { content: attr(title);
     position: relative; left: -1em; text-align: right; vertical-align: baseline;
     border: none; pointer-events: all; display: inline-block;
     -webkit-touch-callout: none; -webkit-user-select: none;
@@ -172,7 +173,6 @@ code span.wa { color: #60a0b0; font-weight: bold; font-style: italic; } /* Warni
 <li class="chapter" data-level="2.2.1" data-path="maps.html"><a href="maps.html#using-scatter-traces"><i class="fa fa-check"></i><b>2.2.1</b> Using scatter traces</a></li>
 <li class="chapter" data-level="2.2.2" data-path="maps.html"><a href="maps.html#choropleths"><i class="fa fa-check"></i><b>2.2.2</b> Choropleths</a></li>
 <li class="chapter" data-level="2.2.3" data-path="maps.html"><a href="maps.html#using-geom_sf"><i class="fa fa-check"></i><b>2.2.3</b> Using <code>geom_sf()</code></a></li>
-<li class="chapter" data-level="2.2.4" data-path="maps.html"><a href="maps.html#using-ggmap"><i class="fa fa-check"></i><b>2.2.4</b> Using ggmap</a></li>
 </ul></li>
 <li class="chapter" data-level="2.3" data-path="bars-histograms.html"><a href="bars-histograms.html"><i class="fa fa-check"></i><b>2.3</b> Bars &amp; histograms</a><ul>
 <li class="chapter" data-level="2.3.1" data-path="bars-histograms.html"><a href="bars-histograms.html#multiple-numeric-distributions"><i class="fa fa-check"></i><b>2.3.1</b> Multiple numeric distributions</a></li>
@@ -246,28 +246,37 @@ code span.wa { color: #60a0b0; font-weight: bold; font-style: italic; } /* Warni
 <div id="custom-behavior-via-javascript" class="section level2">
 <h2><span class="header-section-number">6.1</span> Custom behavior via JavaScript</h2>
 <p>The section on <a href="linking-views-with-shiny.html#linking-views-with-shiny">linking views with shiny</a> shows how to acquire data tied to plotly.js events from a <strong>shiny</strong> app. Since <strong>shiny</strong> adds a lot of additional infrastructure, <strong>plotly</strong> also provides a way to <a href="linking-views-without-shiny.html#linking-views-without-shiny">link views without shiny</a>, but this definitely does not encompass every type of interactivity. Thankfully the <strong>htmlwidgets</strong> package provides a way to invoke a JavaScript function on the widget element (after it is done rendering) from R via the <code>onRender()</code> function <span class="citation">(Vaidyanathan et al. <a href="#ref-htmlwidgets">2016</a>)</span>. The JavaScript function should have at least two arguments: (1) the DOM element containing the htmlwidget (<code>el</code>) and (2) the data passed from R (<code>x</code>). This enables, for instance, the ability to author custom behavior tied to a particular plotly.js event. Figure <a href="#fig:click-open"><strong>??</strong></a> uses <code>onRender()</code> to open a relevant Google search upon clicking a point.</p>
-<div class="sourceCode" id="cb93"><pre class="sourceCode r"><code class="sourceCode r"><a class="sourceLine" id="cb93-1" data-line-number="1"><span class="kw">library</span>(plotly)</a>
-<a class="sourceLine" id="cb93-2" data-line-number="2"><span class="kw">library</span>(htmlwidgets)</a>
-<a class="sourceLine" id="cb93-3" data-line-number="3"></a>
-<a class="sourceLine" id="cb93-4" data-line-number="4">mtcars<span class="op">$</span>url &lt;-<span class="st"> </span><span class="kw">paste0</span>(<span class="st">&quot;http://google.com/#q=&quot;</span>, <span class="kw">rownames</span>(mtcars))</a>
-<a class="sourceLine" id="cb93-5" data-line-number="5"></a>
-<a class="sourceLine" id="cb93-6" data-line-number="6">p &lt;-<span class="st"> </span><span class="kw">plot_ly</span>(mtcars, <span class="dt">x =</span> <span class="op">~</span>wt, <span class="dt">y =</span> <span class="op">~</span>mpg) <span class="op">%&gt;%</span></a>
-<a class="sourceLine" id="cb93-7" data-line-number="7"><span class="st">  </span><span class="kw">add_markers</span>(<span class="dt">text =</span> <span class="kw">rownames</span>(mtcars), <span class="dt">customdata =</span> <span class="op">~</span>url) <span class="op">%&gt;%</span></a>
-<a class="sourceLine" id="cb93-8" data-line-number="8"><span class="st">  </span><span class="kw">onRender</span>(<span class="st">&quot;</span></a>
-<a class="sourceLine" id="cb93-9" data-line-number="9"><span class="st">    function(el, x) {</span></a>
-<a class="sourceLine" id="cb93-10" data-line-number="10"><span class="st">      el.on(&#39;plotly_click&#39;, function(d) {</span></a>
-<a class="sourceLine" id="cb93-11" data-line-number="11"><span class="st">        var url = d.points[0].customdata;</span></a>
-<a class="sourceLine" id="cb93-12" data-line-number="12"><span class="st">        window.open(url);</span></a>
-<a class="sourceLine" id="cb93-13" data-line-number="13"><span class="st">      });</span></a>
-<a class="sourceLine" id="cb93-14" data-line-number="14"><span class="st">    }</span></a>
-<a class="sourceLine" id="cb93-15" data-line-number="15"><span class="st">  &quot;</span>)</a></code></pre></div>
+<pre class="sourceCode r"><code class="sourceCode r"><span class="kw">library</span>(plotly)
+<span class="kw">library</span>(htmlwidgets)
+
+mtcars<span class="op">$</span>url &lt;-<span class="st"> </span><span class="kw">paste0</span>(<span class="st">&quot;http://google.com/#q=&quot;</span>, <span class="kw">rownames</span>(mtcars))
+
+p &lt;-<span class="st"> </span><span class="kw">plot_ly</span>(mtcars, <span class="dt">x =</span> <span class="op">~</span>wt, <span class="dt">y =</span> <span class="op">~</span>mpg) <span class="op">%&gt;%</span>
+<span class="st">  </span><span class="kw">add_markers</span>(<span class="dt">text =</span> <span class="kw">rownames</span>(mtcars), <span class="dt">customdata =</span> <span class="op">~</span>url) <span class="op">%&gt;%</span>
+<span class="st">  </span><span class="kw">onRender</span>(<span class="st">&quot;</span>
+<span class="st">    function(el, x) {</span>
+<span class="st">      el.on(&#39;plotly_click&#39;, function(d) {</span>
+<span class="st">        var url = d.points[0].customdata;</span>
+<span class="st">        window.open(url);</span>
+<span class="st">      });</span>
+<span class="st">    }</span>
+<span class="st">  &quot;</span>)</code></pre>
 </div>
 <h3>References</h3>
 <div id="refs" class="references">
 <div id="ref-htmlwidgets">
-<p>Vaidyanathan, Ramnath, Yihui Xie, JJ Allaire, Joe Cheng, and Kenton Russell. 2016. <em>Htmlwidgets: HTML Widgets for R</em>. <a href="https://CRAN.R-project.org/package=htmlwidgets" class="uri">https://CRAN.R-project.org/package=htmlwidgets</a>.</p>
+<p>Vaidyanathan, Ramnath, Yihui Xie, JJ Allaire, Joe Cheng, and Kenton Russell. 2016. <em>Htmlwidgets: HTML Widgets for R</em>. <a href="https://CRAN.R-project.org/package=htmlwidgets">https://CRAN.R-project.org/package=htmlwidgets</a>.</p>
 </div>
 </div>
+<!-- Global site tag (gtag.js) - Google Analytics -->
+<script async src="https://www.googletagmanager.com/gtag/js?id=UA-60116966-3"></script>
+<script>
+  window.dataLayer = window.dataLayer || [];
+  function gtag(){dataLayer.push(arguments);}
+  gtag('js', new Date());
+
+  gtag('config', 'UA-60116966-3');
+</script>
             </section>
 
           </div>
@@ -297,6 +306,10 @@ gitbook.start({
 "link": "https://github.com/cpsievert/plotly_book/edit/master/advanced.Rmd",
 "text": "Edit"
 },
+"history": {
+"link": null,
+"text": null
+},
 "download": null,
 "toc": {
 "collapse": "subsection"
@@ -311,14 +324,13 @@ gitbook.start({
     var script = document.createElement("script");
     script.type = "text/javascript";
     var src = "true";
-    if (src === "" || src === "true") src = "https://cdn.bootcss.com/mathjax/2.7.1/MathJax.js?config=TeX-MML-AM_CHTML";
+    if (src === "" || src === "true") src = "https://mathjax.rstudio.com/latest/MathJax.js?config=TeX-MML-AM_CHTML";
     if (location.protocol !== "file:" && /^https?:/.test(src))
       src = src.replace(/^https?:/, '');
     script.src = src;
     document.getElementsByTagName("head")[0].appendChild(script);
   })();
 </script>
-<script>(function(i,s,o,g,r,a,m){i['GoogleAnalyticsObject']=r;i[r]=i[r]||function(){(i[r].q=i[r].q||[]).push(arguments)},i[r].l=1*new Date();a=s.createElement(o),m=s.getElementsByTagName(o)[0];a.async=1;a.src=g;m.parentNode.insertBefore(a,m)})(window,document,'script','https://www.google-analytics.com/analytics.js','ga');ga('create', 'UA-39373211-1', 'auto');ga('send', 'pageview');</script>
 </body>
 
 </html>

@@ -19,21 +19,33 @@ always_allow_html: yes
 
 ```{r setup, include=FALSE}
 library(knitr)
+# global chunk options
 opts_chunk$set(
   message = FALSE, 
   warning = FALSE, 
   comment = "#>",
   collapse = TRUE,
   cache = TRUE,
-  fig.width = 6, 
-  fig.asp = 0.618,
   fig.show = "hold"
 )
-switch(
-  knitr:::pandoc_to(),
-  html = opts_chunk$set(out.width = 700, out.extra = 'align:"center"'),
-  pdf = opts_chunk$set(out.width = "0.5\\textwidth", fig.width = 8)
-)
+
+if (knitr::is_latex_output()) {
+  opts_chunk$set(out.width = "0.5\\textwidth", fig.width = 8)
+}
+if (knitr::is_html_output()) {
+  # https://github.com/hafen/lazyrmd
+  opts_chunk$set(out.width = "100%", lazy = TRUE)
+  
+  knit_hooks$set(summary = function(before, options, envir) {
+    if (length(options$summary)) {
+      if (before) {
+        return(sprintf("<details><summary>%s</summary>\n", options$summary))
+      } else {
+        return("\n</details>")
+      }
+    }
+  })
+}
 
 options(
   dplyr.print_min = 6, dplyr.print_max = 6, 
@@ -41,7 +53,7 @@ options(
 )
 ```
 
-```{r, echo=FALSE, include=identical(knitr:::pandoc_to(), 'html'), out.width=220, out.height=245}
+```{r, echo=FALSE, include=knitr::is_html_output(), out.width=220, out.height=245}
 include_graphics('images/plotly.png')
 ```
 
