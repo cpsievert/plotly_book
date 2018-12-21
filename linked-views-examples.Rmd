@@ -13,7 +13,7 @@ demo("crosstalk-highlight-epl-2", package = "plotly")
 ```
 
 ```{r epl, echo = FALSE, fig.cap = "Graphical querying in a facetted display of English Premier League standings over time. The combination of direct and indirect manipulation with the dynamic color brush makes it easy to make comparisons between good and/or bad teams relative to their known rivals."}
-knitr::include_graphics("https://i.imgur.com/Id2nVFG.gif")
+include_vimeo("307598973")
 ```
 
 The demo above requires some fairly advanced data pre-processing, so to learn how to implement graphical queries in trellis displays, let's work with more minimal examples. Figure \@ref(fig:trellis-txhousing) gives us yet another look at the `txhousing` dataset. This time we focus on just four cities and give each city it's own panel in the trellis display by leveraging `facet_wrap()` from **ggplot2**. Within each panel, we'll wrap the house price time series by year by putting the month on the x-axis and grouping by year. Then, to link these panels, we can ulitize year as a querying variable. As a result, not only do we have the ability to analyze annual trends within city, but we can also query specific years to compare unusual or interesting years both within and across cities.
@@ -70,7 +70,7 @@ demo("crosstalk-highlight-binned-target-a", package = "plotly")
 ```
 
 ```{r 2-way-anova, echo = FALSE, fig.cap = "Linking a (jittered) dotplot of engine displacement by number of cylinders with boxplots of miles per gallon split by class and a bar chart of Dynamic 2-way ANOVA."}
-knitr::include_graphics("https://i.imgur.com/yKAlCs0.gif")
+include_vimeo("307580944")
 ```
 
 When using a statistical trace type with graphical queries, it's often desirable to set the querying variable as the row index. That's because, with a statistical trace, numerous data values are attached to each graphical mark; and in that case, it's most intuitive if each value queries just one observation. Figure \@ref(fig:mpg-linked-bars) gives a simple example of linking a (dynamic) bar chart with a scatterplot in this way to allow us to query interesting regions of the data space defined by engine displacement (`disp`), miles per gallon highway (`hwy`), and the class of car (`class`). Notice how selections can derive from either view, and since we've specified `"plotly_selected"` as the `on` event, either rectangular or lasso selections can be used to trigger the query.
@@ -90,7 +90,7 @@ subplot(
 ```
 
 ```{r mpg-linked-bars, echo = FALSE, fig.cap = "Linking a bar chart with a scatterplot to query interesting regions of the data space defined by engine displacement (`disp`), miles per gallon highway (`hwy`), and the class of car (`class`). Notice how, by using `add_histogram()`, the number of cars within each class is dynamically computed by plotly.js."}
-knitr::include_graphics("https://i.imgur.com/SxpkwQa.gif")
+include_vimeo("307598219")
 ```
 
 Figure \@ref(fig:mpg-linked) adds two more statistical trace types to Figure \@ref(fig:mpg-linked-bars) to further explore how miles per gallon highway is related to fuel type (`fl`) and front/rear/4 wheel drive (`drv`). In particular, one can effectively condition on these discrete variables to see how the other distributions respond by brushing and dragging over markers. For example, in Figure \@ref(fig:mpg-linked), front-wheel drive cars are highlighted in red, then 4-wheel drive cars in blue, and as a result, we can see that the main effect of going from 4 to front wheel-drive is are also large interaction effect sizes with regular and diesel fuel types.
@@ -115,7 +115,7 @@ subplot(
 ```
 
 ```{r mpg-linked, echo = FALSE, fig.cap = "Using statistical queries to perform a 2-way ANOVA on the `mpg` dataset. Cars with front-wheel drive are highlighted in red and 4-wheel drive highlighted in blue. The dynamically rendered boxplots by fuel type indicate significant interaction effects."}
-knitr::include_graphics("https://i.imgur.com/1oKqiRB.gif")
+include_vimeo("307597640")
 ```
 
 ### Statistical queries with `ggplotly()` {#statistical-queries-ggplot}
@@ -133,7 +133,7 @@ ggplotly(p) %>% highlight("plotly_hover")
 ```
 
 ```{r smooth-highlight, echo = FALSE, fig.cap = "Engine displacement versus highway miles per gallon by class of car. The linear model for each class, as well as the individual observations, can be selected by hovering over the line of fitted values. An individual observation can also be selected by hovering over the relevant point."}
-knitr::include_graphics("images/smooth-highlight.gif")
+include_vimeo("307788164")
 ```
 
 Figure \@ref(fig:smooth-highlight) demonstrates highlighting in a single view when the querying variable is the row index, but the linking could also be done by matching the querying variable with the **ggplot2** group of interest, as is done in Figure \@ref(fig:ggplotly-linked-densities). This way, when a user highlights an individual point, it highlights the entire group instead of just that point. 
@@ -146,7 +146,7 @@ subplot(p1, p2) %>% hide_legend() %>% highlight("plotly_hover")
 ```
 
 ```{r ggplotly-linked-densities, echo = FALSE, fig.cap = "Clicking on a density estimate to highlight all the raw observations that went into that estimate."}
-knitr::include_graphics("https://i.imgur.com/we2E76e.gif")
+include_vimeo("307597927")
 ```
 
 In summary, we've learned numerous things about statistical queries:
@@ -164,7 +164,7 @@ demo("sf-plotly-3D-globe", package = "plotly")
 ```
 
 ```{r storms, echo = FALSE, fig.cap="Linking a 3D globe with tropical storm paths to a 2D view of the storm altitude versus distance traveled. "}
-knitr::include_graphics("https://i.imgur.com/3wl38E2.gif")
+include_vimeo("257149623")
 ```
 
 A more widely used approach to geo-spatial data visualization is to render lat/lon data on a basemap layer that updates in response to zoom events. The `plot_mapbox()` function from **plotly** does this via integration with [mapbox](https://www.mapbox.com/). Figure \@ref(fig:mapbox-quakes) uses `plot_mapbox()` highlighting earthquakes west of Fiji to compare the relative frequency of their magnitude and number of reporting stations (to the overall relative frequency).
@@ -199,7 +199,7 @@ crosstalk::bscols(histograms, map)
 ```
 
 ```{r mapbox-quakes, echo = FALSE, fig.cap = "Querying earthquakes by location and displaying their a histogram of their magnitude and number of stations."}
-knitr::include_graphics("http://i.imgur.com/l61zu6R.gif")
+include_vimeo("307597784")
 ```
 
 Every 2D mapping approach in **plotly** (e.g., `plot_mapbox()`, `plot_ly()`, `geom_sf()`) has a special understanding of the simple features data structure provided by the **sf** package. @ggplotly-blog-post and @sf-blog-post goes more in depth about simple features support in **plotly** and provides more examples of graphical queries and animation with simple features, but Figure \@ref(fig:mapbox-bars) demonstrates a clever 'trick' to get bi-directional brushing between polygon centroids and a histogram showing a numerical summary of the polygons. The main idea is to leverage the `st_centroid()` function from **sf** to get the polygons centroids, then link those points to the histogram via `highlight_key()`. 
@@ -228,7 +228,7 @@ crosstalk::bscols(widths = 12, map, hist)
 ```
 
 ```{r mapbox-bars, echo = FALSE, fig.cap = "Graphically querying North Carolina by location and area"}
-knitr::include_graphics("https://i.imgur.com/vfKJnSo.gif")
+include_vimeo("307598178")
 ```
 
 ### Linking with other htmlwidgets
@@ -241,7 +241,7 @@ demo("sf-dt", package = "plotly")
 
 
 ```{r sf-dt, echo = FALSE, fig.cap = "Linking a `plot_ly()`-based map with a `datatable()` from the **DT** package."}
-knitr::include_graphics("https://i.imgur.com/SJhjCQR.gif")
+include_vimeo("307597509")
 ```
 
 As already shown in section \@ref(filter), **plotly** can share graphical queries with **leaflet**. Some of the more advanced features (e.g., persistent selection with dynamic color brush) are not yet officially supported, but you can still leverage these experimental features by installing the experimental versions of **leaflet** referenced in the code below. For example, in Figure \@ref(fig:leaflet-persistent), persistent selection with dynamic colors allows one to first highlight earthquakes with a magnitude of 5 or higher in red, then earthquakes with a magnitude of 4.5 or lower, and the corresponding earthquakes are highlighted in the leaflet map. This reveals an interesting relationship in magnitude and geographic location, and **leaflet** provides the ability to zoom and pan on the map to investigate regions that have a high density of quakes. 
@@ -268,8 +268,8 @@ withr::with_options(
 )
 ```
 
-```{r leaflet-persistent, echo = FALSE, fig.cap = "Linking views between plotly and leaflet to explore the relation between magnitude and geographic location of earthquakes around Fiji. The video may be accessed [here](http://i.imgur.com/hd0tG0r.gif)"}
-knitr::include_graphics("images/plotlyLeaflet.gif")
+```{r leaflet-persistent, echo = FALSE, fig.cap = "Linking views between plotly and leaflet to explore the relation between magnitude and geographic location of earthquakes around Fiji."}
+include_vimeo("307787997")
 ```
 
 Figure \@ref(fig:leaflet-polygons) uses another experimental feature of querying **leaflet** polygons in response to direct manipulation of a **plotly** graph.
@@ -305,7 +305,7 @@ crosstalk::bscols(map, p)
 ```
 
 ```{r leaflet-polygons, echo = FALSE, fig.cap = "Querying polygons on a **leaflet** map in response to direct manipulation of a **plotly** graph."}
-knitr::include_graphics("https://i.imgur.com/CIjLEnU.gif")
+include_vimeo("307598814")
 ```
 
 
@@ -321,7 +321,7 @@ highlight_key(iris) %>%
 ```
 
 ```{r linked-ggally, echo = FALSE, fig.cap = "Brushing a scatterplot matrix via the `ggpairs()` function in the **GGally** package. A video demonstrating the graphical queries can be viewed here"}
-knitr::include_graphics("images/plotlyGGally.gif")
+include_vimeo("307788027")
 ```
 
 ### Querying diagnostic plots
@@ -341,7 +341,7 @@ mtcars %>%
 ```
 
 ```{r ggnostic, echo = FALSE, fig.cap="Graphical queries applied to multiple diagnostic plots of a linear model. The `ggplotly()` function has a special method for `ggnostic()` that adds graphical queries automatically with support for both individual observations (e.g. points) as well as meaningful groups (e.g., automatic vs manual)."}
-knitr::include_graphics("images/ggnostic.gif")
+include_vimeo("307788157")
 ```
 
 Injecting interactivity into `ggnostic()` via `ggplotly()` enhances the diagnostic plot in at least two ways. Coloring by a factor variable in the model allows us to highlight that region of the design matrix by selecting a relevant statistical summary, which can help avoid overplotting when dealing with numerous factor levels. For example, in Figure \@ref(fig:ggnostic), the user first highlights diagnostics for cars with manual transmission (in blue), then cars with automatic transmission (in red). Perhaps more widely useful is the ability to highlight individual observations since most of these diagnostics are designed to identify highly influential or unusual observations.
@@ -366,7 +366,7 @@ highlight_key(d, ~key) %>%
 ```
 
 ```{r list-column-simple, echo = FALSE, fig.cap = "A simple example of subset queries via a list-column"}
-knitr::include_graphics("images/hierarchical.gif")
+include_vimeo("307788086")
 ```
 
 One compelling use case for subset queries is dendograms. In fact, **plotly** provides a `plot_dendro()` function for making dendrograms with support for subset queries. Figure \@ref(fig:dendro) gives an example of brushing a branch of a dendrogram to query leafs that are similar in some sense. Any dendrogram object can be provided to `plot_dendro()`, but this particular example visualizes the similarity of US states in terms of their arrest statistics via a hierarchical clustering model on the `USArrests` dataset. 
@@ -380,7 +380,7 @@ plot_dendro(dend1, height = 600) %>%
 ```
 
 ```{r dendro, echo = FALSE, fig.cap = "Leveraging hierarchical selection and persistent brushing to paint branches of a dendrogram."}
-knitr::include_graphics("images/dendro.gif")
+include_vimeo("307788070")
 ```
 
 Figure \@ref(fig:tour-USArrests) links the dendrogram from Figure \@ref(fig:dendro) to a map of the US and a grand tour of the arrest statistics to better understand and diagnose a hierarchical clustering methodology. By highlighting branches of the dendrogram, we can effectively choose a partitioning of the states into similar groups, and see how that model choice projects to the data space^[Typically statistical models are diagnosed by visualizing data in the model space rather than model(s) in the data space. As @model-vis-paper points, the latter approach can be a very effective way to better understand and diagnosis statistical models.] through a grand tour. The grand tour is a special kind of animation that interpolates between random 2D projections of numeric data allowing the viewer to perceive the shape of a high-dimensional point cloud [@grand-tour]. Note how the grouping portrayed in Figure \@ref(fig:tour-USArrests) does a fairly good job of staying separated in the grand tour.
@@ -390,7 +390,7 @@ demo("animation-tour-USArrests", package = "plotly")
 ```
 
 ```{r tour-USArrests, echo = FALSE, fig.cap = "Linking a dendrogram to a grand tour and map of the `USArrests` data to visualize a classification in 5 dimensions."}
-knitr::include_graphics("images/tour-USArrests.gif")
+include_vimeo("307788058")
 ```
 
 <!--

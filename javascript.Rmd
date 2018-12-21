@@ -11,22 +11,6 @@ plot_ly(z = ~volcano) %>%
 ```
 
 ```{r console-log, echo = FALSE, fig.cap="Using `htmlwidgets::onRender()` to inspect the relevant DOM instance containing the **plotly** graph and information related to it's current display. The `_fullData` and `_fullLayout` attributes bound to the element are 'internal' (meaning relying on this information in production code is discouraged), but do provide a useful description of the chart's current state, especially if you need access to computations done by plotly.js (e.g., axis tick placement)."}
-include_vimeo <- function(id, width = "100%", height = "400") {
-  url <- sprintf("https://player.vimeo.com/video/%s?title=0&byline=0&portrait=0", id)
-  # This would be nice -- send PR to support shiny.tag objects? 
-  #htmltools::tags$iframe(
-  #  src = url, 
-  #  width = width, 
-  #  height = height, 
-  #  frameborder = "0", 
-  #  seamless = "seamless",
-  #  webkitAllowFullScreen = NA, 
-  #  mozallowfullscreen = NA, 
-  #  allowFullScreen = NA
-  #)
-  knitr::include_url(url, height = height)
-}
-
 include_vimeo("307598574", height = "700")
 ```
 

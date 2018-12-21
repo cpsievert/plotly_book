@@ -59,7 +59,7 @@ base %>%
 The section [linking views without shiny](#linking-views-without-shiny) details a framework for linking views through direct manipulation. This same framework can be leveraged to highlight objects as they progress through an animation, or even link objects between animations. Figure \@ref(fig:gapminder-highlight-animation) extends Figure \@ref(fig:animation-ggplotly) by layering on linear models specific to each frame and specifying `continent` as a key variable. As a result, one may interactively highlight any continent they wish, and track the relationship through the animation. In the animated version of Figure \@ref(fig:animation-ggplotly), the user highlights the Americas, which makes it much easier to see that the relationship between GDP per capita and life expectancy was very strong starting in the 1950s, but progressively weakened throughout the years.
 
 ```{r gapminder-highlight-animation, echo = FALSE, fig.cap = "Highlighting the relationship between GDP per capita and life expectancy in the Americas and tracking that relationship through several decades."}
-knitr::include_graphics("images/gapminder-highlight-animation.gif")
+include_vimeo("307789187")
 ```
 
 ```{r gapminder-highlight-animation-fake, include = knitr:::is_html_output()}
@@ -77,7 +77,7 @@ In addition to highlighting objects within an animation, objects may also be lin
 For example, in Figure \@ref(fig:animation-gapminder), countries below the 50th percentile in terms of population density are highlighted in blue, then the animation is played again to reveal a fairly interesting difference in these groups. From 1952 to 1977, countries with a low population density seem to enjoy large increases in GDP per capita and moderate increases in life expectancy, then in the early 80s, their GPD seems to decrease while the life expectancy greatly increases. In comparison, the high density countries seems to enjoy a more consistent and steady increase in both GDP and life expectancy. Of course, there are a handful of exceptions to the overall trend, such as the noticeable drop in life expectancy for a handful of countries during the nineties, which are mostly African countries feeling the affects of war.
 
 ```{r animation-gapminder, echo = FALSE, fig.cap = "Comparing the evolution in the relationship between per capita GDP and life expectancy in countries with large populations (red) and small populations (blue)."}
-knitr::include_graphics("images/animation-gapminder.gif")
+include_vimeo("307789070")
 ```
 
 The `gapminder` data used thus far does not include surface area information, so Figure \@ref(fig:animation-gapminder) leverages a list of countries by area on Wikipedia. The R script used to obtain and clean that list is [here](https://gist.github.com/cpsievert/d4a4ccb7ce61e2cfaecf9736de4f67fa), but the cleaned version is directly available, plus add the areas to the `gapminder` data with the following code:
