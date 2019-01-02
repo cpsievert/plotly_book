@@ -139,7 +139,7 @@ plot_ly(txhousing, x = ~date, y = ~median) %>%
   add_lines(color = ~city, colors = "black", alpha = 0.2)
 ```
 
-Generally speaking, it's hard to perceive more than 8 different colors/linetypes/symbols in a given plot, so sometimes we have to filter data to use these effectively. Here we use the **dplyr** package to find the top 5 cities in terms of average monthly sales (`top5`), then effectively filter the original data to contain just these cities via `semi_join()`. As Figure \@ref(fig:linetypes) demonstrates, once we have the data is filtered, mapping city to `color` or `linetype` is trivial. The color palette can be altered via the `colors` argument, and follows the same rules as [scatterplots](#scatterplots). The linetype palette can be altered via the `linetypes` argument, and accepts R's [`lty` values](https://github.com/wch/r-source/blob/e5b21d0397c607883ff25cca379687b86933d730/src/library/graphics/man/par.Rd#L726-L743) or plotly.js [dash values](https://plot.ly/r/reference/#scatter-line-dash).
+Generally speaking, it's hard to perceive more than 8 different colors/linetypes/symbols in a given plot, so sometimes we have to filter data to use these effectively. Here we use the **dplyr** package to find the top 5 cities in terms of average monthly sales (`top5`), then effectively filter the original data to contain just these cities via `semi_join()`. As Figure \@ref(fig:linetypes) demonstrates, once we have the data filtered, mapping city to `color` or `linetype` is trivial. The color palette can be altered via the `colors` argument, and follows the same rules as [scatterplots](#scatterplots). The linetype palette can be altered via the `linetypes` argument, and accepts R's [`lty` values](https://github.com/wch/r-source/blob/e5b21d0397c607883ff25cca379687b86933d730/src/library/graphics/man/par.Rd#L726-L743) or plotly.js [dash values](https://plot.ly/r/reference/#scatter-line-dash).
 
 ```{r linetypes, fig.cap = "Using `color` and/or `linetype` to differentiate groups of lines.", screenshot.alt = "screenshots/linetypes"}
 library(dplyr)
@@ -161,7 +161,7 @@ subplot(
 
 #### Density plots
 
-In [Bars & histograms](#bars-histograms), we leveraged a number of algorithms in R for computing the "optimal" number of bins for a histogram, via `hist()`, and routing those results to `add_bars()`. We can leverage the `density()` function for computing kernel density estimates in a similar way, and routing the results to `add_lines()`, as is done in \@ref(fig:densities).
+In [Bars & histograms](#bars-histograms), we leverage a number of algorithms in R for computing the "optimal" number of bins for a histogram, via `hist()`, and routing those results to `add_bars()`. We can leverage the `density()` function for computing kernel density estimates in a similar way, and route the results to `add_lines()`, as is done in \@ref(fig:densities).
 
 ```{r densities, fig.cap = "Various kernel density estimates.", screenshot.alt = "screenshots/densities"}
 kerns <- c("gaussian", "epanechnikov", "rectangular", 
@@ -190,7 +190,7 @@ p
 
 #### Parallel Coordinates
 
-One very useful, but often overlooked, visualization technique is the parallel coordinates plot. Parallel coordinates provide a way to compare values along a common (or non-aligned) positional scale(s) -- the most basic of all perceptual tasks -- in more than 3 dimensions [@graphical-perception]. Usually each line represents every measurement for a given row (or observation) in a data set. When measurements are on very different scales, some care must be taken, and variables must transformed to be put on a common scale. As Figure \@ref(fig:pcp-common) shows, even when variables are measured on a similar scale, it can still be a informative to transform variables in different ways.
+One very useful, but often overlooked, visualization technique is the parallel coordinates plot. Parallel coordinates provide a way to compare values along a common (or non-aligned) positional scale(s) -- the most basic of all perceptual tasks -- in more than 3 dimensions [@graphical-perception]. Usually each line represents every measurement for a given row (or observation) in a data set. When measurements are on very different scales, some care must be taken, and variables must transformed to be put on a common scale. As Figure \@ref(fig:pcp-common) shows, even when variables are measured on a similar scale, it can still be informative to transform variables in different ways.
 
 ```{r pcp-common, fig.width = 8, fig.cap = "Parallel coordinates plots of the Iris dataset. On the left is the raw measurements. In the middle, each variable is scaled to have mean of 0 and standard deviation of 1. On the right, each variable is scaled to have a minimum of 0 and a maximum of 1.", screenshot.alt = "screenshots/pcp-common"}
 iris$obs <- seq_len(nrow(iris))
@@ -263,7 +263,7 @@ broom::augment(m) %>%
 
 ### Polygons
 
-The `add_polygons()` function is essentially equivalent to `add_paths()` with the [fill](https://plot.ly/r/reference/#scatter-fill) attribute set to "toself". Polygons from the basis for other, higher-level, geometries such as `add_ribbons()`, but can be useful in their own right. 
+The `add_polygons()` function is essentially equivalent to `add_paths()` with the [fill](https://plot.ly/r/reference/#scatter-fill) attribute set to "toself". Polygons form the basis for other, higher-level, geometries such as `add_ribbons()`, but can be useful in their own right. 
 
 ```{r map-canada, fig.cap = "A map of Canada using the default cartesian coordinate system.", screenshot.alt = "screenshots/map-canada"}
 map_data("world", "canada") %>%
@@ -349,7 +349,7 @@ p <- ggplot(nc) + geom_sf(aes(fill = AREA))
 ggplotly(p)
 ```
 
-The most brilliant thing about **sf** is that it stores [geo-spatial structures](https://cran.r-project.org/web/packages/sf/vignettes/sf1.html#sfg-simple-feature-geometry) in a special [list-column](https://jennybc.github.io/purrr-tutorial/ls13_list-columns.html) of a data frame. This allows each row to represent the real unit of observation/interest -- whether be a polygon, multi-polygon, point, line, or even a collection of these features -- and as a result, supports workflows that leverage [tidy-data](https://cran.r-project.org/web/packages/tidyr/vignettes/tidy-data.html) principles. This is way more intuitive compared to older workflows based on, say using `ggplot2::fortify()` to obtain a data structure where a row to represents particular point along a feature and having another column track which point belongs to each feature ([for example](https://gis.stackexchange.com/questions/165974/r-fortify-causing-polygons-to-tear)).
+The most brilliant thing about **sf** is that it stores [geo-spatial structures](https://cran.r-project.org/web/packages/sf/vignettes/sf1.html#sfg-simple-feature-geometry) in a special [list-column](https://jennybc.github.io/purrr-tutorial/ls13_list-columns.html) of a data frame. This allows each row to represent the real unit of observation/interest -- a polygon, multi-polygon, point, line, or even a collection of these features -- and as a result, supports workflows that leverage [tidy-data](https://cran.r-project.org/web/packages/tidyr/vignettes/tidy-data.html) principles. This is way more intuitive compared to older workflows based on, say using `ggplot2::fortify()` to obtain a data structure where a row to represents particular point along a feature and having another column track which point belongs to each feature ([for example](https://gis.stackexchange.com/questions/165974/r-fortify-causing-polygons-to-tear)).
 
 
 ## Bars & histograms
@@ -429,7 +429,7 @@ cc2 %>%
   layout(barmode = "stack")
 ```
 
-This type of plot, also known as a spine plot, is a special case of a mosaic plot. In a mosaic plot, you can scale both bar widths and heights according to discrete distributions. For mosaic plots, I recommend using the **ggmosaic** package [@ggmosaic], which implements a custom **ggplot2** geom designed for mosaic plots, which we can convert to plotly via `ggplotly()`. Figure \@ref(fig:ggmosaic) show a mosaic plot of cut by clarity. Notice how the bar widths are scaled proportional to the cut frequency.
+This type of plot, also known as a spine plot, is a special case of a mosaic plot. In a mosaic plot, you can scale both bar widths and heights according to discrete distributions. For mosaic plots, I recommend using the **ggmosaic** package [@ggmosaic], which implements a custom **ggplot2** geom designed for mosaic plots, which we can convert to plotly via `ggplotly()`. Figure \@ref(fig:ggmosaic) shows a mosaic plot of cut by clarity. Notice how the bar widths are scaled proportional to the cut frequency.
 
 ```{r ggmosaic, fig.cap = "Using ggmosaic and ggplotly() to create advanced interactive visualizations of categorical data", screenshot.alt = "screenshots/ggmosaic", eval = FALSE}
 library(ggmosaic)
