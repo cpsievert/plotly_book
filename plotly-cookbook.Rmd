@@ -355,17 +355,6 @@ ggplotly(p)
 
 The most brilliant thing about **sf** is that it stores [geo-spatial structures](https://cran.r-project.org/web/packages/sf/vignettes/sf1.html#sfg-simple-feature-geometry) in a special [list-column](https://jennybc.github.io/purrr-tutorial/ls13_list-columns.html) of a data frame. This allows each row to represent the real unit of observation/interest -- whether be a polygon, multi-polygon, point, line, or even a collection of these features -- and as a result, supports workflows that leverage [tidy-data](https://cran.r-project.org/web/packages/tidyr/vignettes/tidy-data.html) principles. This is way more intuitive compared to older workflows based on, say using `ggplot2::fortify()` to obtain a data structure where a row to represents particular point along a feature and having another column track which point belongs to each feature ([for example](https://gis.stackexchange.com/questions/165974/r-fortify-causing-polygons-to-tear)).
 
-### Using ggmap
-
-Since plotly has the ability to embed [raster-based images](#raster-images), it's also possible convert maps generated via the [ggmap](https://cran.r-project.org/package=ggmap) package [@ggmap].
-
-```{r}
-#library(ggmap)
-#basemap <- get_map(maptype = "satellite", zoom = 8)
-#ggplotly(ggmap(basemap))
-```
-
-
 ## Bars & histograms
 
 The `add_bars()` and `add_histogram()` functions wrap the [bar](https://plot.ly/r/reference/#bar) and [histogram](https://plot.ly/r/reference/#histogram) plotly.js trace types. The main difference between them is that bar traces require bar heights (both `x` and `y`), whereas histogram traces require just a single variable, and plotly.js handles binning in the browser.^[This has some interesting applications for [linked highlighting](#linked-highlighting) as it allows for summary statistics to be computed on-the-fly based on a selection] And perhaps confusingly, both of these functions can be used to visualize the distribution of either a numeric or a discrete variable. So, essentially, the only difference between them is where the binning occurs.
@@ -386,7 +375,7 @@ subplot(
 )
 ```
 
-Figure \@ref(fig:discrete) demonstrates two ways of creating a basic bar chart. Although the visual results are the same, its worth noting the difference in implementation. The `add_histogram()` function sends all of the observed values to the browser and lets plotly.js perform the binning. It takes more human effort to perform the binning in R, but doing so has the benefit of sending less data, and requiring less computation work of the web browser. In this case, we have only about 50,000 records, so there is much of a difference in page load times or page size. However, with 1 Million records, page load time more than doubles and page size nearly doubles.^[These tests were run on Google Chrome and loaded a page with a single bar chart. [Here](https://www.webpagetest.org/result/160924_DP_JBX/) are the results for `add_histogram()` and [here](https://www.webpagetest.org/result/160924_QG_JA1/) are the results for `add_bars()` ]
+Figure \@ref(fig:discrete) demonstrates two ways of creating a basic bar chart. Although the visual results are the same, its worth noting the difference in implementation. The `add_histogram()` function sends all of the observed values to the browser and lets plotly.js perform the binning. It takes more human effort to perform the binning in R, but doing so has the benefit of sending less data, and requiring less computation work of the web browser. In this case, we have only about 50,000 records, so there is not much of a difference in page load times or page size. However, with 1 Million records, page load time more than doubles and page size nearly doubles.^[These tests were run on Google Chrome and loaded a page with a single bar chart. [Here](https://www.webpagetest.org/result/160924_DP_JBX/) are the results for `add_histogram()` and [here](https://www.webpagetest.org/result/160924_QG_JA1/) are the results for `add_bars()` ]
 
 ```{r discrete, fig.cap = "Number of diamonds by cut.", screenshot.alt = "screenshots/discrete-bars"}
 p1 <- plot_ly(diamonds, x = ~cut) %>% add_histogram()
@@ -500,7 +489,7 @@ Similar to `add_histogram()`, `add_boxplot()` sends the raw data to the browser,
 
 ### Rectangular binning in plotly.js
 
-The **plotly** package provides two functions for displaying rectangular bins: `add_heatmap()` and `add_histogram2d()`. For numeric data, the `add_heatmap()` function is a 2D analog of `add_bars()` (bins must be pre-computed), and the `add_histogram2d()` function is a 2D analog of `add_histogram()` (bins can be computed in the browser). Thus, I recommend `add_histogram2d()` for exploratory purposes, since you don't have to think about how to perform binning. It also provides a useful [`zsmooth`](https://plot.ly/r/reference/#histogram2d-zsmooth) attribute for effectively increasing the number of bins (currently, "best" performs a [bi-linear interpolation](https://en.wikipedia.org/wiki/Bilinear_interpolation), a type of nearest neighbors algorithm), and [nbinsx](https://plot.ly/r/reference/#histogram2d-nbinsx)/[nbinsy](https://plot.ly/r/reference/#histogram2d-nbinsy) attributes to set the number of bins in the x and/or y directions. Figure \@ref(fig:histogram2d) compares three different uses of `add_histogram()`: (1) plotly.js' default binning algorithm, (2) the default plus smoothing, (3) setting the number of bins in the x and y directions. Its also worth noting that filled contours, instead of bins, can be used in any of these cases by using `histogram2dcontour()` instead of `histogram2d()`.
+The **plotly** package provides two functions for displaying rectangular bins: `add_heatmap()` and `add_histogram2d()`. For numeric data, the `add_heatmap()` function is a 2D analog of `add_bars()` (bins must be pre-computed), and the `add_histogram2d()` function is a 2D analog of `add_histogram()` (bins can be computed in the browser). Thus, I recommend `add_histogram2d()` for exploratory purposes, since you don't have to think about how to perform binning. It also provides a useful [`zsmooth`](https://plot.ly/r/reference/#histogram2d-zsmooth) attribute for effectively increasing the number of bins (currently, "best" performs a [bi-linear interpolation](https://en.wikipedia.org/wiki/Bilinear_interpolation), a type of nearest neighbors algorithm), and [`nbinsx`](https://plot.ly/r/reference/#histogram2d-nbinsx)/[`nbinsy`](https://plot.ly/r/reference/#histogram2d-nbinsy) attributes to set the number of bins in the x and/or y directions. Figure \@ref(fig:histogram2d) compares three different uses of `add_histogram()`: (1) plotly.js' default binning algorithm, (2) the default plus smoothing, (3) setting the number of bins in the x and y directions. Its also worth noting that filled contours, instead of bins, can be used in any of these cases by using `histogram2dcontour()` instead of `histogram2d()`.
 
 ```{r histogram2d, fig.cap = "Three different uses of `histogram2d()`", screenshot.alt = "screenshots/histogram2d"}
 p <- plot_ly(diamonds, x = ~log(carat), y = ~log(price))
