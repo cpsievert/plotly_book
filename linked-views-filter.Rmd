@@ -14,7 +14,7 @@ class(highlight_key(mtcars))
 
 Figure \@ref(fig:filter-highlight) demonstrates the main difference in logic between filter and highlight events. Notice how, in the code implementation, the 'querying variable' definition for filter events is part of the filter widget. That is, `city` is defined as the variable of interest in `filter_select()`, not in the creation of `tx`. That is (intentionally) different from the approach for highlight events, where the 'querying variable' is a property of the dataset behind the graphical elements. 
 
-```{r, eval = FALSE}
+```r
 library(crosstalk)
 
 # generally speaking, use a "unique" key for filter, 
@@ -43,7 +43,7 @@ include_vimeo("307598256")
 
 When using multiple filter widgets to filter the same dataset, as done in Figure \@ref(fig:multiple-filter-widgets), you should avoid referencing a non-unique querying variable (i.e., key-column) in the `SharedData` object used to populate the filter widgets. Remember that the default behavior of `highlight_key()` and `SharedData$new()` is to use the row-index (which is unique). This ensures the intersection of multiple filtering widgets queries the correct subset of data.
 
-```{r}
+```r
 library(crosstalk)
 tx <- highlight_key(txhousing)
 widgets <- bscols(
@@ -65,7 +65,7 @@ include_vimeo("307598347")
 
 As Figure \@ref(fig:plotly-leaflet-filter) demonstrates, filter and highlight events can work in conjunction with various **htmlwidgets**. In fact, since the semantics of filter are more well-defined than highlight, linking filter events across **htmlwidgets** via **crosstalk** should generally be more well-supported.^[All R packages with **crosstalk** support are currently listed here -- https://rstudio.github.io/crosstalk/widgets.html]
 
-```{r, eval = FALSE}
+```r
 library(leaflet)
 
 eqs <- highlight_key(quakes)
@@ -91,7 +91,7 @@ include_vimeo("307597495")
 
 When combining filter and highlight events, one (current) limitation to be aware of is that the highlighting variable has to be nested inside filter variable(s). For example, in Figure \@ref(fig:gapminder-filter-highlight), we can filter by continent and highlight by country, but there is currently no way to highlight by contintent and filter by country.
 
-```{r, eval = FALSE}
+```r
 library(gapminder)
 g <- highlight_key(gapminder, ~country)
 continent_filter <- filter_select("filter", "Select a country", g, ~continent)

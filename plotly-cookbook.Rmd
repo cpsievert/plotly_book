@@ -6,6 +6,11 @@ knitr::opts_chunk$set(lazy = TRUE)
 
 This chapter demonstrates the rendering capabilities of `plot_ly()` through a series of examples. The `plot_ly()` function provides a direct interface to plotly.js, so anything in [the figure reference](https://plot.ly/r/reference/) can be specified via `plot_ly()`, but this chapter will focus more on the special semantics unique to the R package that can't be found on the figure reference. Along the way, we will touch on some best practices in visualization.
 
+## Traces and other plotly.js lingo
+
+* What is a trace?
+* What is a figure?
+
 ## Scatter traces
 
 A plotly visualization is composed of one (or more) trace(s), and every trace has a `type`. The default trace type, "scatter", can be used to draw a large amount of geometries, and actually powers many of the `add_*()` functions such as `add_markers()`, `add_lines()`, `add_paths()`, `add_segments()`, `add_ribbons()`, and `add_polygons()`. Among other things, these functions make assumptions about the [mode](https://plot.ly/r/reference/#scatter-mode) of the scatter trace, but any valid attribute(s) listed under the [scatter section of the figure reference](https://plot.ly/r/reference/#scatter) may be used to override defaults.
@@ -14,7 +19,7 @@ The `plot_ly()` function has a number of arguments that make it easier to scale 
 
 ### Scatterplots
 
-The scatterplot is useful for visualizing the correlation between two quantitative variables. If you supply a numeric vector for x and y in `plot_ly()`, it defaults to a scatterplot, but you can also be explicit about adding a layer of markers/points via the `add_markers()` function. A common problem with scatterplots is overplotting, meaning that there are multiple observations occupying the same (or similar) x/y locations. There are a few ways to combat overplotting including: alpha transparency, hollow symbols, and [2D density estimation](#rectangular-binning-in-R). Figure \@ref(fig:scatterplots) shows how alpha transparency and hollow symbols can provide an improvement over the default. 
+The scatterplot is commonly used to assess the association between two quantitative variables. In addition, as @unwin-graphical-analysis notes, scatterplots can be useful for exposing other important features including: casual relationships, outliers, clusters, gaps, barriers, and conditional relationships. If you supply a numeric vector for x and y in `plot_ly()`, it defaults to a scatterplot, but you can also be explicit about adding a layer of markers/points via the `add_markers()` function. A common problem with scatterplots is overplotting, meaning that there are multiple observations occupying the same (or similar) x/y locations. There are a few ways to combat overplotting including: alpha transparency, hollow symbols, and [2D density estimation](#rectangular-binning-in-R). Figure \@ref(fig:scatterplots) shows how alpha transparency and hollow symbols can provide an improvement over the default. 
 
 ```{r scatterplots, fig.cap = "Three versions of a basic scatterplot", screenshot.alt = "screenshots/scatterplots"}
 subplot(
@@ -434,7 +439,7 @@ cc2 %>%
 
 This type of plot, also known as a spine plot, is a special case of a mosaic plot. In a mosaic plot, you can scale both bar widths and heights according to discrete distributions. For mosaic plots, I recommend using the **ggmosaic** package [@ggmosaic], which implements a custom **ggplot2** geom designed for mosaic plots, which we can convert to plotly via `ggplotly()`. Figure \@ref(fig:ggmosaic) shows a mosaic plot of cut by clarity. Notice how the bar widths are scaled proportional to the cut frequency.
 
-```{r ggmosaic, fig.cap = "Using ggmosaic and ggplotly() to create advanced interactive visualizations of categorical data", screenshot.alt = "screenshots/ggmosaic", eval = FALSE}
+```{r ggmosaic, fig.cap = "Using ggmosaic and ggplotly() to create advanced interactive visualizations of categorical data", screenshot.alt = "screenshots/ggmosaic"}
 library(ggmosaic)
 p <- ggplot(data = cc) +
   geom_mosaic(aes(weight = n, x = product(cut), fill = clarity))
