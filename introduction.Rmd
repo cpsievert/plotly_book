@@ -1,0 +1,79 @@
+# Introduction
+
+## What you will learn
+
+## How this book is organized
+
+* Chapter 1 designed to help **ggplot2** users transfer knowledge to `plot_ly()`. 
+
+## What you won't learn
+
+### Web technologies
+
+Although this book is fundamentally about creating web graphics, it does not aim to teach you web technologies (e.g., HTML, SVG, CSS, JavaScript, etc). It's true that becoming a competent web developer gives you the power and freedom to create more types of visuals, but the opporunities costs involved with learning all the relevant tools is not worth it for most data analysts. Moreover, most web programming tools are not well-suited for the exploratory phase of a data science workflow where iteration between data visualization, transformation, and modeling is a necessary task that often impedes hypothesis generation and sense-making (more on this in \@ref(why-web-graphics). As a result, even if you do become web developer, you'll find the cognitive burden required to create a web graphic will hamper your ability to derive new insights from data. 
+
+* d3js
+
+The JavaScript library D3 is a great tool for data visualization assuming you're familiar with web technologies and are primarily interested in expository (not exploratory) visualization. 
+
+* ggplot2
+
+The book does contain some **ggplot2** code examples (which are then converted to **plotly** via `ggplotly()`), but it's not designed to teach you **ggplot2**. For those looking to learn **ggplot2**, I recommend using the learning materials listed at <https://ggplot2.tidyverse.org>.
+
+* Graphical data analysis
+
+How to perform data analysis via graphics (carefully, correctly, and creatively) is a topic unto itself. Although this book does have hints and examples of graphical data analysis, it does not aim to provide a comprehensive foundation. For a nice resource on graphical data analysis topic, see [@unwin-graphical-analysis].
+
+## Prerequisites
+
+For those new to R and/or data visualization, [R for Data Science](https://r4ds.had.co.nz/) provides a nice foundation for understanding concepts in this book [@r4ds]. In particular, the chapter on [data visualization](https://r4ds.had.co.nz/data-visualisation.html) is essentially assumed knowledge during some portions of this book.
+
+## Run code examples
+
+While reading this book, it can be helpful to run the code examples. A computing environment with all the required software to run these examples is available at <http://bit.ly/plotly-book-cloud>. 
+
+[This RStudio Cloud project](https://rstudio.cloud/project/156701) provides a computing environment that you can use to follow along with the book. Most examples produce an interactive graphic, but the interactives themselves are not always included. Sometimes, instead of the interactive, a video is included to demonstrate the interactive capabilities. In those cases, you can copy/paste code in RStudio Cloud to get at the interactive plot.
+
+```{r, echo=FALSE, fig.link="https://rstudio.cloud/project/156701", fig.align='center'}
+knitr::include_graphics("images/rstudioCloud.svg")
+```
+
+```r
+if (!require(remotes)) install.packages("remotes")
+remotes::install_github("cpsievert/plotly_book")
+```
+
+## Getting help and learning more
+
+## Acknowledgements
+
+* Toby Dylan Hocking and the original plotly authors
+* Heike Hofmann and Di Cook
+* Joe Cheng for **crosstalk**, inspiring section \@ref(graphical-queries), and many useful conversations.
+* Hadley Wickham and the ggplot2 team
+* Anthony Unwin for helpful feedback and suggestions
+* plotly.js developers
+
+## Colophon
+  
+  
+  
+
+# Why interactive web graphics in R? {#why-web-graphics}
+
+* Data science workflow
+* Interactivity augments exploration
+    * Some historical context and examples (https://talks.cpsievert.me/20180202/#7)
+    * "Interactive graphics enable the analyst to pursue follow-up questions" -- Cook & Swayne, GGobi book, p15
+    * A case study of US election data
+* GUI and command-line - conflict or synergy? https://talks.cpsievert.me/20180305/#12
+* Web-based visualization
+    * New capabilites (e.g. easy sharing, portability) brings new set of concerns (e.g., client-server, security, etc)
+    * Great tools for expository vis (d3.js, vega, plotly.js)
+    * Lack of tools for exploratory vis (i.e. tools for iteration)
+* Why **plotly**?
+  * FOSS tool built with plotly.js and htmlwidgets
+    * Perhaps mention the plotly.js development pace
+    * Users can opt into plotly cloud 
+    * Mention orca? 
+  * Transfer existing **ggplot2** knowledge
