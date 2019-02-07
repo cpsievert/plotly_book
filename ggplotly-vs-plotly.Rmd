@@ -24,10 +24,6 @@ txhousing
 
 In attempt to understand house price behavior over time, we could plot `date` on x, `median` on y, and group the lines connecting these x/y pairs by `city`. Using **ggplot2**, we can _initiate_ a ggplot object with the `ggplot()` function which accepts a data frame and a mapping from data variables to visual aesthetics. By just initiating the object, **ggplot2** won't know how to geometrically represent the mapping until we add a layer to the plot via one of `geom_*()` (or `stat_*()`) functions (in this case, we want `geom_line()`). In this case, it is also a good idea to specify alpha transparency so that 5 lines plotted on top of each other appear as solid black, to help avoid overplotting.
 
-```{block, type='rmdtip'}
-If you're new to **ggplot2**, the [ggplot2 cheatsheet](https://www.rstudio.com/wp-content/uploads/2015/12/ggplot2-cheatsheet-2.0.pdf) provides a nice quick overview. The [online docs](http://docs.ggplot2.org/current/) or [R graphics cookbook](http://www.cookbook-r.com/Graphs/) are helpful for learning by example, and the [ggplot2 book](https://github.com/hadley/ggplot2-book) provides a nice overview of the conceptual underpinnings.
-```
-
 ```{r}
 p <- ggplot(txhousing, aes(date, median)) +
   geom_line(aes(group = city), alpha = 0.2)
@@ -35,7 +31,7 @@ p <- ggplot(txhousing, aes(date, median)) +
 
 ### The `ggplotly()` function {#ggplotly}
 
-Now that we have a valid **ggplot2** object, `p`, the **plotly** package provides the `ggplotly()` function which converts a ggplot object to a plotly object. By default, it supplies the entire aesthetic mapping to the tooltip, but the `tooltip` argument provides a way to restrict tooltip info to a subset of that mapping. Furthermore, in cases where the statistic of a layer is something other than the identity function (e.g., `geom_bin2d()` and `geom_hex()`), relevant "intermediate" variables generated in the process are also supplied to the tooltip. This provides a nice mechanism for decoding visual aesthetics (e.g., color) used to represent a measure of interest (e.g, count/value). Figure \@ref(fig:ggsubplot) demonstrates tooltip functionality for a number of scenarios, and uses `subplot()` function from the **plotly** package (discussed in more detail in [Arranging multiple views](#arranging-multiple-views)) to concisely display numerous interactive versions of ggplot objects.
+Now that we have a valid **ggplot2** object, `p`, the **plotly** package provides the `ggplotly()` function which converts a ggplot object to a plotly object. By default, it supplies the entire aesthetic mapping to the tooltip, but the `tooltip` argument provides a way to restrict tooltip info to a subset of that mapping. Furthermore, in cases where the statistic of a layer is something other than the identity function (e.g., `geom_bin2d()` and `geom_hex()`), relevant calculated values are also supplied to the tooltip. This provides a nice mechanism for decoding visual aesthetics (e.g., color) used to represent a measure of interest (e.g, count/value). Figure \@ref(fig:ggsubplot) demonstrates tooltip functionality for a number of scenarios, and uses `subplot()` function from the **plotly** package (discussed in more detail in [Arranging multiple views](#arranging-multiple-views)) to concisely display numerous interactive versions of ggplot objects.
 
 ```{r ggsubplot, fig.width = 8, fig.cap = "Monthly median house price in the state of Texas. The top row displays the raw data (by city) and the bottom row shows 2D binning on the raw data. The binning is helpful for showing the overall trend, but hovering on the lines in the top row helps reveal more detailed information about each city.", screenshot.alt = "screenshots/ggsubplot"}
 subplot(
@@ -45,10 +41,6 @@ subplot(
   nrows = 2, shareX = TRUE, shareY = TRUE,
   titleY = FALSE, titleX = FALSE
 )
-```
-
-```{block, type='rmdtip'}
-Although **ggplot2** does not have a `text` aesthetic, the `ggplotly()` function recognizes this aesthetic and displays it in the tooltip by default. In addition to providing a way to supply "meta" information, it also provides a way to customize your tooltips (do this by restricting the tooltip to the text aesthetic -- `ggplotly(p, tooltip = "text")`)
 ```
 
 The `ggplotly()` function translates most things that you can do in **ggplot2**, but not quite everything. To help demonstrate the coverage, I've built a [plotly version of the ggplot2 docs](http://ropensci.github.io/plotly/ggplot2). This version of the docs displays the `ggplotly()` version of each plot in a static form (to reduce page loading time), but you can click any plot to view its interactive version. The next section demonstrates how to create plotly.js visualizations via the R package, without **ggplot2**, via the `plot_ly()` function. We'll then leverage those concepts to [extend `ggplotly()`](#extending-ggplotly).
@@ -85,91 +77,7 @@ The **plotly** package has a collection of `add_*()` functions, all of which inh
 
 In the first layer of Figure \@ref(fig:houston), there is one line per city, but all these lines belong a single trace. We _could have_ produced one trace for each line, but this is way more computationally expensive because, among other things, each trace produces a legend entry and tries to display meaningful hover information. It is much more efficient to render this layer as a single trace with missing values to differentiate groups. In fact, this is exactly how the group aesthetic is translated in `ggplotly()`; otherwise, layers with many groups (e.g., `geom_map()`) would be slow to render.
 
-#### The data-plot-pipeline
 
-Since every **plotly** function modifies a plotly object (or the data underlying that object), we can express complex multi-layer plots as a sequence (or, more specifically, a directed acyclic graph) of data manipulations and mappings to the visual space. Moreover, **plotly** functions are designed to take a plotly object as input, and return a modified plotly object, making it easy to chain together operations via the pipe operator (`%>%`) from the **magrittr** package [@magrittr]. Consequently, we can re-express Figure \@ref(fig:houston) in a much more readable and understandable fashion.
-
-```{r houston2, screenshot.alt = "screenshots/houston"}
-allCities <- txhousing %>%
-  group_by(city) %>%
-  plot_ly(x = ~date, y = ~median) %>%
-  add_lines(alpha = 0.2, name = "Texan Cities", hoverinfo = "none")
-
-allCities %>%
-  filter(city == "Houston") %>%
-  add_lines(name = "Houston")
-```
-
-Sometimes the directed acyclic graph property of a pipeline can be too restrictive for certain types of plots. In this example, after filtering the data down to Houston, there is no way to recover the original data inside the pipeline. The `add_fun()` function helps to work-around this restriction^[Credit to Winston Chang and Hadley Wickham for this idea. The `add_fun()` is very much like `layer_f()` function in **ggvis**.] -- it works by applying a function to the plotly object, but does not affect the data associated with the plotly object. This effectively provides a way to isolate data transformations within the pipeline^[Also, effectively putting a [pipeline inside a pipeline](http://www.memecreator.org/meme/yo-dawg-i-heard-u-like-pipelines-so-we-put-a-pipeline-in-your-pipeline)]. Figure \@ref(fig:houston-vs-sa) uses this idea to highlight both Houston and San Antonio.
-
-```{r houston-vs-sa, fig.cap = "Monthly median house price in Houston and San Antonio in comparison to other Texan cities.", screenshot.alt = "screenshots/houston-vs-sa"}
-allCities %>%
-  add_fun(function(plot) {
-    plot %>% filter(city == "Houston") %>% add_lines(name = "Houston")
-  }) %>%
-  add_fun(function(plot) {
-    plot %>% filter(city == "San Antonio") %>% 
-      add_lines(name = "San Antonio")
-  })
-```
-
-It is useful to think of the function supplied to `add_fun()` as a "layer" function -- a function that accepts a plot object as input, possibly applies a transformation to the data, and maps that data to visual objects. To make layering functions more modular, flexible, and expressive, the `add_fun()` allows you to pass additional arguments to a layer function. Figure \@ref(fig:summary) makes use of this pattern, by creating a reusable function for layering both a particular city as well as the first, second, and third quartile of median monthly house sales (by city).
-
-```{r summary, fig.cap = "First, second, and third quartile of median monthly house price in Texas.", screenshot.alt = "screenshots/summary"}
-# reusable function for highlighting a particular city
-layer_city <- function(plot, name) {
-  plot %>% filter(city == name) %>% add_lines(name = name)
-}
-
-# reusable function for plotting overall median & IQR
-layer_iqr <- function(plot) {
-  plot %>%
-    group_by(date) %>% 
-    summarise(
-      q1 = quantile(median, 0.25, na.rm = TRUE),
-      m = median(median, na.rm = TRUE),
-      q3 = quantile(median, 0.75, na.rm = TRUE)
-    ) %>%
-    add_lines(y = ~m, name = "median", color = I("black")) %>%
-    add_ribbons(ymin = ~q1, ymax = ~q3, name = "IQR", color = I("black"))
-}
-
-allCities %>%
-  add_fun(layer_iqr) %>%
-  add_fun(layer_city, "Houston") %>%
-  add_fun(layer_city, "San Antonio")
-```
-
-A layering function does not have to be a data-plot-pipeline itself. Its only requirement on a layering function is that the first argument is a plot object and it returns a plot object. This provides an opportunity to say, fit a model to the plot data, extract the model components you desire, and map those components to visuals. Furthermore, since **plotly**'s `add_*()` functions don't require a data.frame, you can supply those components directly to attributes (as long as they are well-defined), as done in Figure \@ref(fig:forecast) via the **forecast** package [@forecast].
-
-```{r forecast, fig.cap = "Layering on a 4-year forecast from a exponential smoothing state space model.", screenshot.alt = "screenshots/forecast"}
-library(forecast)
-layer_forecast <- function(plot) {
-  d <- plotly_data(plot)
-  series <- with(d, 
-    ts(median, frequency = 12, start = c(2000, 1), end = c(2015, 7))
-  )
-  fore <- forecast(ets(series), h = 48, level = c(80, 95))
-  plot %>%
-    add_ribbons(x = time(fore$mean), ymin = fore$lower[, 2],
-                ymax = fore$upper[, 2], color = I("gray95"), 
-                name = "95% confidence", inherit = FALSE) %>%
-    add_ribbons(x = time(fore$mean), ymin = fore$lower[, 1],
-                ymax = fore$upper[, 1], color = I("gray80"), 
-                name = "80% confidence", inherit = FALSE) %>%
-    add_lines(x = time(fore$mean), y = fore$mean, color = I("blue"), 
-              name = "prediction")
-}
-
-txhousing %>%
-  group_by(city) %>%
-  plot_ly(x = ~date, y = ~median) %>%
-  add_lines(alpha = 0.2, name = "Texan Cities", hoverinfo = "none") %>%
-  add_fun(layer_iqr) %>%
-  add_fun(layer_forecast)
-```
-
-In summary, the "data-plot-pipeline" is desirable for a number of reasons: (1) makes your code easier to read and understand, (2) encourages you to think of both your data and plots using a single, uniform data structure, which (3) makes it easy to combine and reuse transformations. As it turns out, we can even use these ideas when creating a plotly object via `ggplotly()`, as discussed in the next section [Extending `ggplotly()`](#extending-ggplotly).
 
 ## Extending `ggplotly()`
 

@@ -1,4 +1,6 @@
-# Arranging multiple views
+# (PART) Combining multiple views {-}
+
+# Arranging views
 
 One technique essential to high-dimensional data analysis is the ability to arrange multiple views. Ideally, these views are linked in some way to foster comparisons (the next chapter discusses linking techniques). The next section, [Arranging htmlwidgets](#arranging-htmlwidgets) describes techniques for arranging htmlwidget objects, which many R packages for creating web-based data visualizations build upon, including **plotly**. Typically interactivity is isolated _within_ an htmlwidget object, but [Linking views without shiny](#linking-views-without-shiny) explores some more recent work on enabling interactivity _across_ htmlwidget objects. The following section, [Subplots](#subplots) describes the `subplot()` function, which is useful for _merging_ multiple plotly objects into a single htmlwidget object. The main benefit of merging (rather than arranging) plotly objects is that it gives us the ability to synchronize zoom and pan events across multiple axes. The last section, [Navigating many views](#navigating-many-views) discusses some useful tools for restricting focus on interesting views when there are more views than you can possibly digest visually.
 
@@ -96,7 +98,7 @@ economics %>%
 Conceptually, `subplot()` provides a way to place a collection of plots into a table with a given number of rows and columns. The number of rows (and, by consequence, the number of columns) is specified via the `nrows` argument. By default each row/column shares an equal proportion of the overall height/width, but as shown in Figure \@ref(fig:proportions) the default can be changed via the `heights` and `widths` arguments.
 
 ```{r proportions, echo = FALSE, fig.cap = "A visual diagram of controling the `heights` of rows and `widths` of columns."}
-knitr::include_graphics("images/proportions")
+knitr::include_graphics("images/proportions.png")
 ```
 
 This flexibility is quite useful for a number of visualizations, for example, as shown in Figure \@ref(fig:joint), a joint density plot is really of subplot of joint and marginal densities. The **heatmaply** package is great example of leveraging `subplot()` in a similar way to create interactive dendrograms [@heatmaply].
@@ -197,5 +199,5 @@ qplot(cty, hwy, data = mpg) +
 ```
 
 ```{r trelliscope, echo = FALSE, fig.cap = "Using plotly within a trelliscope"}
-knitr::include_graphics("images/trelliscope")
+knitr::include_graphics("images/trelliscope.png")
 ```

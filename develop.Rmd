@@ -1,0 +1,65 @@
+# (PART) Developer-facing topics {-}
+
+This part describes some advanced topics some R developers may want to know regarding the **plotly** package. Some of the content found here may be useful for the following people:
+
+* R developers that have authored a custom __ggplot2__ geom and want to inform `ggplotly()` about the rendering rules of their geom.
+* R developers that want to build a similar interface to another JavaScript graphing library.
+
+# Translating custom ggplot2 geoms
+
+Version 2.0.0 of __ggplot2__ introduced a way for other R packages to implement custom geoms. Some great examples include: __ggrepel__, __ggalt__, __ggraph__, __geomnet__, __ggmosaic__ and __ggtern__ [@ggalt]; [@ggraph]; [@geomnet]; [@ggmosaic]; [@ggtern].^[There are many other useful extension packages that are listed on this website -- <https://www.ggplot2-exts.org>] Although the `ggplotly()` function translates most of the geoms bundled with the __ggplot2__ package, it has no way of knowing about the rendering rules for custom geoms. The __plotly__ package does, however, provide 2 generic functions based on the S3 scheme that can leveraged to inform `ggplotly()` about these rules [@S3].^[For those new to S3, <http://adv-r.had.co.nz/S3.html> provides an approachable introduction and overview [@adv-r].] To date, the __ggmosaic__ and __ggalt__ packages have taken advantage of this infrastructure to provide translations of their custom geoms to plotly.
+
+In __ggplot2__, many geoms are special cases of other geoms. For example, `geom_line()` is equivalent to `geom_path()` once the data is sorted by the x variable. For cases like this, when a geom can be reduced to another lower-level (i.e., basic) geom, authors just have to write a method for the `to_basic()` generic function in __plotly__. In fact, within the package itself, the `to_basic()` function has a `GeomLine` method which simply sorts the data by the x variable then returns it with a class of `GeomPath` prefixed.
+
+```{r}
+getS3method("to_basic", "GeomLine")
+```
+
+If you have implemented a custom geom, say `GeomCustom`, rest assured that the data passed to `to_basic()` will be of class `GeomCustom` when `ggplotly()` is called on a plot with your geom. And assuming `GeomCustom` may be reduced to another lower-level geom support by plotly, a `to_basic.GeomCustom()` method that transforms the data into a form suitable for that lower-level geom is sufficient for adding support. Moreover, note that the data passed to `to_basic()` is essentially the last form of the data _before_ the render stage and _after_ statistics have been performed. This makes it trivial to add support for geoms like `GeomXspline` from the __ggalt__ package.
+
+```{r}
+# devtools::install_github("hrbrmstr/ggalt")
+library(ggalt)
+getS3method("to_basic", "GeomXspline")
+```
+
+As shown in Figure \@ref(fig:xspline), once the conversion has been provided. Users can call `ggplotly()` on the ggplot object containing the custom geom just like any other ggplot object.
+
+```{r xspline, error = TRUE, fig.cap = "Converting GeomXspline from the **ggalt** package to plotly.js via `ggplotly()`.", screenshot.alt = "screenshots/xspline"}
+# example from `help(geom_xspline)`
+set.seed(1492)
+dat <- data.frame(
+  x = c(1:10, 1:10, 1:10),
+  y = c(sample(15:30, 10), 2 * sample(15:30, 10), 3 * sample(15:30, 10)),
+  group = factor(c(rep(1, 10), rep(2, 10), rep(3, 10)))
+)
+p <- ggplot(dat, aes(x, y, group = group, color = factor(group))) +
+  geom_point(color = "black") +
+  geom_smooth(se = FALSE, linetype = "dashed", size = 0.5) +
+  geom_xspline(spline_shape = 1, size = 0.5)
+ggplotly(p) %>% hide_legend()
+```
+
+In more complicated cases, where your custom geom can not be converted to a lower level geom, a custom method for the `geom2trace()` generic is required (`methods(geom2trace)` lists all the basic geoms that we natively support). This method should involve a conversion from a data frame to a list-like object conforming to the [plotly.js figure reference](https://plot.ly/r/reference).
+
+# Designing an htmlwidget interface
+
+The plotly.js library, as with many other JavaScript graphing libraries, strives to describe any plot through a plot specification defined via JavaScript Object Notation (JSON). JSON is a language independent data-interchange format that was originally designed for JavaScript, but parsers for many different languages now exist, including R [@RJSONIO]; [@jsonlite]. JSON is a recursive key-value data structure (similar to a list in R), and essentially any valid JavaScript value has a natural R equivalent (e.g., `NULL`/`null`). As a result, any JSON object can be created from an appropriate R list, meaning that theoretically any plotly.js plot can be described via an R list. However, simply providing a bridge between R lists and JSON does not guarantee a powerful or usable interface, especially for a general purpose graphing library. 
+
+Although it can be complicated to implement, R interfaces to JavaScript graphing libraries should leverage R's strong resources for computing on the language to design a more expressive interface [@adv-r]. It should also look and feel like (and work well with!) other commonly used interfaces in R. A good way to do this is to embrace (pure and predictable) functional programming. Most importantly, this implies that every function _modifies_ a central type of object -- meaning that every function input and output the same type of object (predictable). Furthermore, if the output of a function can be determined completely by the input (i.e., pure), it removes any need to search for other code that may be affecting the output. In the case of providing an interface to a JavaScript graphing library, there are a number of reasons why the central object should inherit from the central object provided by the **htmlwidgets** package.
+
+The idea of interfacing R with JavaScript libraries via JSON data transfer has been popular approach for quite some time [@rCharts]; [@animint]; [@Sievert:2014b]. The R package **htmlwidgets** standardized this bridge, and provides some additional infrastructure for making sure the HTML output works as expected in multiple contexts (in the R console or RStudio, within **rmarkdown** documents, and even embedded inside **shiny** apps). The **htmlwidgets** package itself is opinionated about the data structure used to represent the widget in R since it needs to retain meta-information about the widget, such as the sizing policy. To avoid surprise, widget authors should strive to have all functions in their interface modify this data structure.^[The __plotly__ package initially fought this advice and represented plotly objects using a special data frame with a special print method to enable the [data-plot-pipeline](#data-plot-pipeline). I have since changed my mind and decided special methods for popular generic functions should be provided instead.]
+
+JavaScript graphing libraries usually have strong requirements about the JSON structure used to create a plot. In some cases, the R interface needs to know about these requirements in order to faithfully translate R objects to JSON. For example, in plotly.js some attributes must _always_ be an array (e.g. x/y), even if they are length 1, while other attributes cannot be an array must be a literal constant (e.g. name). This leads to a situation where the translation rules from R to JSON cannot be simply "box all vectors of length 1 into an array (or not)":
+
+```javascript
+list(x = 1, y = 1, name = "A point") => {x: [1], y: [1], name: "A point"}
+```
+
+Thankfully plotly.js provides a plot schema which declares types for each attribute that __plotly__ leverages internally. If necessary, __plotly__ tries to coerce each attribute to its expected type at print time, and also searches for any unsupported attributes that may have been specified by the user (and throws a warning that the attribute will be ignored). This helps 
+
+<!-- TODO:
+* using R's data types to provide smart defaults that simply aren't possible with JSON
+
+The **htmlwidgets** package also provides ways for both widget authors and users to extend the functionality of the underlying JavaScript library. In fact, the **plotly** package uses this mechanism to extend the plotly.js graphing library and enable all the material in [Advanced interactive techniques](advanced-interactive-techniques). 
+-->

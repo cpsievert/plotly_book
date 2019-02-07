@@ -1,0 +1,60 @@
+# (PART) Scaling views {-}
+
+# Introduction {#scaling}
+
+Scaling visualization to large amounts of information requires a combination of engineering, statistics, creativity, and critical thinking. All too often, people decide they want to look at all the raw data before having any look at any statistical summaries. Unfortunately, this can lead to wasted time on interesting engineering problems that generate un-satistifying analytical results. That being said, even if you've thought carefully about leveraging summaries, having a good grasp on the technical landscape for doing large-scale visualization on the web can still be useful.
+
+Part \@ref(scaling) covered linked views and demonstrated some techniques which can help put the famous infovis mantra into practice: "Overview first, then zoom and filter, then details on demand". In other words, don't try to show all the raw data in a single -- show interesting summaries, then provide interactive tools to extract more information. From a statistical perspective, this mantra tends to work well, because, as Hadley Wickham says: "Visualization surprise, but don't scale well. Models (i.e. summaries) scale well, but don't surprise". In other words, a model helps to reduce the amount of information to display, but it can not point out what important information it does not capture. By providing interactive tools that can reveal the information behind a particular summary, you provide a better framework for questioning the assumption inherent in your summarized overview of the data.  
+
+Of course, when dealing with non-trivial models (i.e. summaries), it can be quite useful to leverage a statistical computing environment. 
+
+These are helpful concepts to keep in mind when designing an exploratory interface to large scale data, and you'll see several figures re-inforce these concepts, but for now we focus on the limitations in terms of rendering lots of graphical elements on a page.
+
+
+
+Whether you’re printing the result of `ggplotly()`, `plot_ly()`, or more generally any R htmlwidget, there are two classes of efficiency to be aware of: print-time (i.e. build) and run-time (i.e. render) efficiency. 
+
+Roughly speaking, the bulk of the time  translates R code to an R list. 
+
+That list is then serialized as JSON (via `jsonlite::toJSON()`) and should match a JSON specification (i.e. schema) defined by the JavaScript library (which uses the JSON to render the widget). 
+
+# Run-time efficiency
+
+* SVG vs Web-GL
+  * Draw comparison to pdf/png
+  * Borrow examples from workshop
+
+A quick and easy way to try and improve render performance is to use canvas-based rendering (instead of vector-based SVG) with `toWebGL(p)`. Switching from vector to canvas is generally a good idea when dealing with >30,000 vectors, but in this case, we’re only dealing with a couple hundred vector paths, so switching from vector to canvas for our map won’t significantly improve rendering performance, and in fact, we’ll lose some nice SVG exclusive features (the plotly.js team is getting close to eliminating these limitations!). Instead, what we could (and should!) do is reduce the amount of points along to each path (technically speaking, we’ll reduce the complexity of the SVG d attribute).
+
+# Print-time efficiency
+
+* profvis
+* Data summary/simplification
+
+
+
+What's in a plotly object?
+What happens at print-time?
+Build-time versus render time
+Build time
+profvis
+Render time
+SVG vs Web-GL rendering
+Data summary/simplification
+
+
+
+If you’ve ever found `ggplotly()` slow to print, chances are, the bulk of the time is spent building the R list and sending the JSON to plotly.js. For many htmlwidgets, the build time is negligible, but for more complex widgets like plotly, a lot of things need to happen, especially for ggplotly() since we call ggplot2::ggplot_build(), then crawl and map that data structure to plotly.js. In a **shiny** app, both the build and render stages are required on initial load, but the new `plotlyProxy()` interface provides a way to ‘cache’ expensive build (and render!) operation and update a graph by modifying just specific components of the figure (via plotly.js functions). Outside of a ‘reactive context’ like shiny, you could use `htmlwidgets::saveWidget()` to ‘cache’ the results of the build step to disk, send the file to someone else (or host it online somewhere), then only the render step is required to view the graph.
+
+
+
+# A case study with cranlogs
+
+```{r}
+
+```
+
+
+
+
+

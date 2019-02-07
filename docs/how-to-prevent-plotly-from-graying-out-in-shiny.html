@@ -1,0 +1,394 @@
+<!DOCTYPE html>
+<html >
+
+<head>
+
+  <meta charset="UTF-8">
+  <meta http-equiv="X-UA-Compatible" content="IE=edge">
+  <title>37 How to prevent plotly from graying-out in shiny? | Interactive web-based data visualization with R, plotly, and shiny</title>
+  <meta name="description" content="A book example for a Chapman &amp; Hall book.">
+  <meta name="generator" content="bookdown  and GitBook 2.6.7">
+
+  <meta property="og:title" content="37 How to prevent plotly from graying-out in shiny? | Interactive web-based data visualization with R, plotly, and shiny" />
+  <meta property="og:type" content="book" />
+  
+  
+  <meta property="og:description" content="A book example for a Chapman &amp; Hall book." />
+  <meta name="github-repo" content="ropensci/plotly" />
+
+  <meta name="twitter:card" content="summary" />
+  <meta name="twitter:title" content="37 How to prevent plotly from graying-out in shiny? | Interactive web-based data visualization with R, plotly, and shiny" />
+  <meta name="twitter:site" content="@cpsievert" />
+  <meta name="twitter:description" content="A book example for a Chapman &amp; Hall book." />
+  
+
+<meta name="author" content="Carson Sievert">
+
+
+<meta name="date" content="2019-01-24">
+
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <meta name="apple-mobile-web-app-capable" content="yes">
+  <meta name="apple-mobile-web-app-status-bar-style" content="black">
+  
+  
+<link rel="prev" href="r-file-size-so-big.html">
+<link rel="next" href="why-am-i-getting-a-blank-plot.html">
+<script src="libs/jquery/jquery.min.js"></script>
+<link href="libs/gitbook/css/style.css" rel="stylesheet" />
+<link href="libs/gitbook/css/plugin-table.css" rel="stylesheet" />
+<link href="libs/gitbook/css/plugin-bookdown.css" rel="stylesheet" />
+<link href="libs/gitbook/css/plugin-highlight.css" rel="stylesheet" />
+<link href="libs/gitbook/css/plugin-search.css" rel="stylesheet" />
+<link href="libs/gitbook/css/plugin-fontsettings.css" rel="stylesheet" />
+
+
+
+
+
+
+
+<script src="libs/htmlwidgets/htmlwidgets.js"></script>
+<script src="libs/plotly-binding/plotly.js"></script>
+<script src="libs/typedarray/typedarray.min.js"></script>
+<link href="libs/crosstalk/css/crosstalk.css" rel="stylesheet" />
+<script src="libs/crosstalk/js/crosstalk.min.js"></script>
+<link href="libs/plotly-htmlwidgets-css/plotly-htmlwidgets.css" rel="stylesheet" />
+<script src="libs/plotly-main/plotly-latest.min.js"></script>
+<link href="libs/selectize/selectize.bootstrap3.css" rel="stylesheet" />
+<script src="libs/selectize/selectize.min.js"></script>
+<link href="libs/colourpicker/colourpicker.min.css" rel="stylesheet" />
+<script src="libs/colourpicker/colourpicker.min.js"></script>
+<link href="libs/datatables-css/datatables-crosstalk.css" rel="stylesheet" />
+<script src="libs/datatables-binding/datatables.js"></script>
+<link href="libs/dt-core/css/jquery.dataTables.min.css" rel="stylesheet" />
+<link href="libs/dt-core/css/jquery.dataTables.extra.css" rel="stylesheet" />
+<script src="libs/dt-core/js/jquery.dataTables.min.js"></script>
+
+
+<style type="text/css">
+a.sourceLine { display: inline-block; line-height: 1.25; }
+a.sourceLine { pointer-events: none; color: inherit; text-decoration: inherit; }
+a.sourceLine:empty { height: 1.2em; }
+.sourceCode { overflow: visible; }
+code.sourceCode { white-space: pre; position: relative; }
+div.sourceCode { margin: 1em 0; }
+pre.sourceCode { margin: 0; }
+@media screen {
+div.sourceCode { overflow: auto; }
+}
+@media print {
+code.sourceCode { white-space: pre-wrap; }
+a.sourceLine { text-indent: -1em; padding-left: 1em; }
+}
+pre.numberSource a.sourceLine
+  { position: relative; left: -4em; }
+pre.numberSource a.sourceLine::before
+  { content: attr(title);
+    position: relative; left: -1em; text-align: right; vertical-align: baseline;
+    border: none; pointer-events: all; display: inline-block;
+    -webkit-touch-callout: none; -webkit-user-select: none;
+    -khtml-user-select: none; -moz-user-select: none;
+    -ms-user-select: none; user-select: none;
+    padding: 0 4px; width: 4em;
+    color: #aaaaaa;
+  }
+pre.numberSource { margin-left: 3em; border-left: 1px solid #aaaaaa;  padding-left: 4px; }
+div.sourceCode
+  {  }
+@media screen {
+a.sourceLine::before { text-decoration: underline; }
+}
+code span.al { color: #ff0000; font-weight: bold; } /* Alert */
+code span.an { color: #60a0b0; font-weight: bold; font-style: italic; } /* Annotation */
+code span.at { color: #7d9029; } /* Attribute */
+code span.bn { color: #40a070; } /* BaseN */
+code span.bu { } /* BuiltIn */
+code span.cf { color: #007020; font-weight: bold; } /* ControlFlow */
+code span.ch { color: #4070a0; } /* Char */
+code span.cn { color: #880000; } /* Constant */
+code span.co { color: #60a0b0; font-style: italic; } /* Comment */
+code span.cv { color: #60a0b0; font-weight: bold; font-style: italic; } /* CommentVar */
+code span.do { color: #ba2121; font-style: italic; } /* Documentation */
+code span.dt { color: #902000; } /* DataType */
+code span.dv { color: #40a070; } /* DecVal */
+code span.er { color: #ff0000; font-weight: bold; } /* Error */
+code span.ex { } /* Extension */
+code span.fl { color: #40a070; } /* Float */
+code span.fu { color: #06287e; } /* Function */
+code span.im { } /* Import */
+code span.in { color: #60a0b0; font-weight: bold; font-style: italic; } /* Information */
+code span.kw { color: #007020; font-weight: bold; } /* Keyword */
+code span.op { color: #666666; } /* Operator */
+code span.ot { color: #007020; } /* Other */
+code span.pp { color: #bc7a00; } /* Preprocessor */
+code span.sc { color: #4070a0; } /* SpecialChar */
+code span.ss { color: #bb6688; } /* SpecialString */
+code span.st { color: #4070a0; } /* String */
+code span.va { color: #19177c; } /* Variable */
+code span.vs { color: #4070a0; } /* VerbatimString */
+code span.wa { color: #60a0b0; font-weight: bold; font-style: italic; } /* Warning */
+</style>
+
+<link rel="stylesheet" href="css/plotly.css" type="text/css" />
+<link rel="stylesheet" href="css/style.css" type="text/css" />
+<link rel="stylesheet" href="css/summary-fix.css" type="text/css" />
+</head>
+
+<body>
+
+
+
+  <div class="book without-animation with-summary font-size-2 font-family-1" data-basepath=".">
+
+    <div class="book-summary">
+      <nav role="navigation">
+
+<ul class="summary">
+<li class="chapter" data-level="" data-path="index.html"><a href="index.html"><i class="fa fa-check"></i>Welcome</a></li>
+<li class="chapter" data-level="1" data-path="introduction.html"><a href="introduction.html"><i class="fa fa-check"></i><b>1</b> Introduction</a><ul>
+<li class="chapter" data-level="1.1" data-path="introduction.html"><a href="introduction.html#what-you-will-learn"><i class="fa fa-check"></i><b>1.1</b> What you will learn</a></li>
+<li class="chapter" data-level="1.2" data-path="introduction.html"><a href="introduction.html#how-this-book-is-organized"><i class="fa fa-check"></i><b>1.2</b> How this book is organized</a></li>
+<li class="chapter" data-level="1.3" data-path="introduction.html"><a href="introduction.html#what-you-wont-learn"><i class="fa fa-check"></i><b>1.3</b> What you won’t learn</a><ul>
+<li class="chapter" data-level="1.3.1" data-path="introduction.html"><a href="introduction.html#web-technologies"><i class="fa fa-check"></i><b>1.3.1</b> Web technologies</a></li>
+<li class="chapter" data-level="1.3.2" data-path="introduction.html"><a href="introduction.html#d3js"><i class="fa fa-check"></i><b>1.3.2</b> d3js</a></li>
+<li class="chapter" data-level="1.3.3" data-path="introduction.html"><a href="introduction.html#ggplot2"><i class="fa fa-check"></i><b>1.3.3</b> ggplot2</a></li>
+<li class="chapter" data-level="1.3.4" data-path="introduction.html"><a href="introduction.html#graphical-data-analysis"><i class="fa fa-check"></i><b>1.3.4</b> Graphical data analysis</a></li>
+<li class="chapter" data-level="1.3.5" data-path="introduction.html"><a href="introduction.html#data-visualization-best-practices"><i class="fa fa-check"></i><b>1.3.5</b> Data visualization best practices</a></li>
+</ul></li>
+<li class="chapter" data-level="1.4" data-path="introduction.html"><a href="introduction.html#prerequisites"><i class="fa fa-check"></i><b>1.4</b> Prerequisites</a></li>
+<li class="chapter" data-level="1.5" data-path="introduction.html"><a href="introduction.html#run-code-examples"><i class="fa fa-check"></i><b>1.5</b> Run code examples</a></li>
+<li class="chapter" data-level="1.6" data-path="introduction.html"><a href="introduction.html#getting-help-and-learning-more"><i class="fa fa-check"></i><b>1.6</b> Getting help and learning more</a></li>
+<li class="chapter" data-level="1.7" data-path="introduction.html"><a href="introduction.html#acknowledgements"><i class="fa fa-check"></i><b>1.7</b> Acknowledgements</a></li>
+<li class="chapter" data-level="1.8" data-path="introduction.html"><a href="introduction.html#colophon"><i class="fa fa-check"></i><b>1.8</b> Colophon</a></li>
+</ul></li>
+<li class="chapter" data-level="2" data-path="why-web-graphics.html"><a href="why-web-graphics.html"><i class="fa fa-check"></i><b>2</b> Why interactive web graphics in R?</a></li>
+<li class="part"><span><b>I Creating views</b></span></li>
+<li class="chapter" data-level="3" data-path="introduction-1.html"><a href="introduction-1.html"><i class="fa fa-check"></i><b>3</b> Introduction</a></li>
+<li class="chapter" data-level="4" data-path="scatter-traces.html"><a href="scatter-traces.html"><i class="fa fa-check"></i><b>4</b> Scatter traces</a><ul>
+<li class="chapter" data-level="4.1" data-path="scatter-traces.html"><a href="scatter-traces.html#scatterplots"><i class="fa fa-check"></i><b>4.1</b> Scatterplots</a><ul>
+<li class="chapter" data-level="4.1.1" data-path="scatter-traces.html"><a href="scatter-traces.html#d-scatterplots"><i class="fa fa-check"></i><b>4.1.1</b> 3D scatterplots</a></li>
+<li class="chapter" data-level="4.1.2" data-path="scatter-traces.html"><a href="scatter-traces.html#scatterplot-matrices"><i class="fa fa-check"></i><b>4.1.2</b> Scatterplot matrices</a></li>
+<li class="chapter" data-level="4.1.3" data-path="scatter-traces.html"><a href="scatter-traces.html#dotplots-error-bars"><i class="fa fa-check"></i><b>4.1.3</b> Dotplots &amp; error bars</a></li>
+</ul></li>
+<li class="chapter" data-level="4.2" data-path="scatter-traces.html"><a href="scatter-traces.html#line-plots"><i class="fa fa-check"></i><b>4.2</b> Line plots</a><ul>
+<li class="chapter" data-level="4.2.1" data-path="scatter-traces.html"><a href="scatter-traces.html#density-plots"><i class="fa fa-check"></i><b>4.2.1</b> Density plots</a></li>
+<li class="chapter" data-level="4.2.2" data-path="scatter-traces.html"><a href="scatter-traces.html#parallel-coordinates"><i class="fa fa-check"></i><b>4.2.2</b> Parallel Coordinates</a></li>
+<li class="chapter" data-level="4.2.3" data-path="scatter-traces.html"><a href="scatter-traces.html#d-paths"><i class="fa fa-check"></i><b>4.2.3</b> 3D paths</a></li>
+</ul></li>
+<li class="chapter" data-level="4.3" data-path="scatter-traces.html"><a href="scatter-traces.html#segments"><i class="fa fa-check"></i><b>4.3</b> Segments</a></li>
+<li class="chapter" data-level="4.4" data-path="scatter-traces.html"><a href="scatter-traces.html#ribbons"><i class="fa fa-check"></i><b>4.4</b> Ribbons</a></li>
+<li class="chapter" data-level="4.5" data-path="scatter-traces.html"><a href="scatter-traces.html#polygons"><i class="fa fa-check"></i><b>4.5</b> Polygons</a></li>
+</ul></li>
+<li class="chapter" data-level="5" data-path="maps.html"><a href="maps.html"><i class="fa fa-check"></i><b>5</b> Maps</a><ul>
+<li class="chapter" data-level="5.1" data-path="maps.html"><a href="maps.html#using-scatter-traces"><i class="fa fa-check"></i><b>5.1</b> Using scatter traces</a></li>
+<li class="chapter" data-level="5.2" data-path="maps.html"><a href="maps.html#choropleths"><i class="fa fa-check"></i><b>5.2</b> Choropleths</a></li>
+<li class="chapter" data-level="5.3" data-path="maps.html"><a href="maps.html#using-geom_sf"><i class="fa fa-check"></i><b>5.3</b> Using <code>geom_sf()</code></a></li>
+</ul></li>
+<li class="chapter" data-level="6" data-path="bars-histograms.html"><a href="bars-histograms.html"><i class="fa fa-check"></i><b>6</b> Bars &amp; histograms</a><ul>
+<li class="chapter" data-level="6.1" data-path="bars-histograms.html"><a href="bars-histograms.html#multiple-numeric-distributions"><i class="fa fa-check"></i><b>6.1</b> Multiple numeric distributions</a></li>
+<li class="chapter" data-level="6.2" data-path="bars-histograms.html"><a href="bars-histograms.html#multiple-discrete-distributions"><i class="fa fa-check"></i><b>6.2</b> Multiple discrete distributions</a></li>
+</ul></li>
+<li class="chapter" data-level="7" data-path="boxplots.html"><a href="boxplots.html"><i class="fa fa-check"></i><b>7</b> Boxplots</a></li>
+<li class="chapter" data-level="8" data-path="d-frequencies.html"><a href="d-frequencies.html"><i class="fa fa-check"></i><b>8</b> 2D frequencies</a><ul>
+<li class="chapter" data-level="8.1" data-path="d-frequencies.html"><a href="d-frequencies.html#rectangular-binning-in-plotly.js"><i class="fa fa-check"></i><b>8.1</b> Rectangular binning in plotly.js</a></li>
+<li class="chapter" data-level="8.2" data-path="d-frequencies.html"><a href="d-frequencies.html#rectangular-binning-in-r"><i class="fa fa-check"></i><b>8.2</b> Rectangular binning in R</a></li>
+<li class="chapter" data-level="8.3" data-path="d-frequencies.html"><a href="d-frequencies.html#categorical-axes"><i class="fa fa-check"></i><b>8.3</b> Categorical axes</a></li>
+</ul></li>
+<li class="chapter" data-level="9" data-path="other-3d-plots.html"><a href="other-3d-plots.html"><i class="fa fa-check"></i><b>9</b> Other 3D plots</a></li>
+<li class="chapter" data-level="10" data-path="raster-images.html"><a href="raster-images.html"><i class="fa fa-check"></i><b>10</b> Raster images</a></li>
+<li class="part"><span><b>II Publishing views</b></span></li>
+<li class="chapter" data-level="11" data-path="introduction-2.html"><a href="introduction-2.html"><i class="fa fa-check"></i><b>11</b> Introduction</a></li>
+<li class="chapter" data-level="12" data-path="saving-and-embedding-html.html"><a href="saving-and-embedding-html.html"><i class="fa fa-check"></i><b>12</b> Saving and embedding HTML</a></li>
+<li class="chapter" data-level="13" data-path="exporting-static-images.html"><a href="exporting-static-images.html"><i class="fa fa-check"></i><b>13</b> Exporting static images</a><ul>
+<li class="chapter" data-level="13.1" data-path="exporting-static-images.html"><a href="exporting-static-images.html#with-code"><i class="fa fa-check"></i><b>13.1</b> With code</a></li>
+<li class="chapter" data-level="13.2" data-path="exporting-static-images.html"><a href="exporting-static-images.html#from-a-browser"><i class="fa fa-check"></i><b>13.2</b> From a browser</a></li>
+<li class="chapter" data-level="13.3" data-path="exporting-static-images.html"><a href="exporting-static-images.html#sizing-exports"><i class="fa fa-check"></i><b>13.3</b> Sizing exports</a></li>
+</ul></li>
+<li class="chapter" data-level="14" data-path="editing-views-for-publishing.html"><a href="editing-views-for-publishing.html"><i class="fa fa-check"></i><b>14</b> Editing views for publishing</a></li>
+<li class="part"><span><b>III Combining multiple views</b></span></li>
+<li class="chapter" data-level="15" data-path="arranging-views.html"><a href="arranging-views.html"><i class="fa fa-check"></i><b>15</b> Arranging views</a><ul>
+<li class="chapter" data-level="15.1" data-path="arranging-views.html"><a href="arranging-views.html#arranging-htmlwidgets"><i class="fa fa-check"></i><b>15.1</b> Arranging htmlwidgets</a></li>
+<li class="chapter" data-level="15.2" data-path="arranging-views.html"><a href="arranging-views.html#merging-plotly-objects"><i class="fa fa-check"></i><b>15.2</b> Merging plotly objects</a><ul>
+<li class="chapter" data-level="15.2.1" data-path="arranging-views.html"><a href="arranging-views.html#recursive-subplots"><i class="fa fa-check"></i><b>15.2.1</b> Recursive subplots</a></li>
+<li class="chapter" data-level="15.2.2" data-path="arranging-views.html"><a href="arranging-views.html#ggplot2-subplots"><i class="fa fa-check"></i><b>15.2.2</b> ggplot2 subplots</a></li>
+</ul></li>
+<li class="chapter" data-level="15.3" data-path="arranging-views.html"><a href="arranging-views.html#navigating-many-views"><i class="fa fa-check"></i><b>15.3</b> Navigating many views</a></li>
+</ul></li>
+<li class="chapter" data-level="16" data-path="animating-views.html"><a href="animating-views.html"><i class="fa fa-check"></i><b>16</b> Animating views</a></li>
+<li class="part"><span><b>IV Linking multiple views</b></span></li>
+<li class="chapter" data-level="17" data-path="introduction-3.html"><a href="introduction-3.html"><i class="fa fa-check"></i><b>17</b> Introduction</a></li>
+<li class="chapter" data-level="18" data-path="client-side-linking.html"><a href="client-side-linking.html"><i class="fa fa-check"></i><b>18</b> Client-side linking</a><ul>
+<li class="chapter" data-level="18.1" data-path="client-side-linking.html"><a href="client-side-linking.html#graphical-queries"><i class="fa fa-check"></i><b>18.1</b> Graphical queries</a></li>
+<li class="chapter" data-level="18.2" data-path="client-side-linking.html"><a href="client-side-linking.html#filter"><i class="fa fa-check"></i><b>18.2</b> Highlight versus filter events</a></li>
+<li class="chapter" data-level="18.3" data-path="client-side-linking.html"><a href="client-side-linking.html#linking-animated-views"><i class="fa fa-check"></i><b>18.3</b> Linking animated views</a></li>
+<li class="chapter" data-level="18.4" data-path="client-side-linking.html"><a href="client-side-linking.html#querying-examples"><i class="fa fa-check"></i><b>18.4</b> Examples</a><ul>
+<li class="chapter" data-level="18.4.1" data-path="client-side-linking.html"><a href="client-side-linking.html#trellis-linking"><i class="fa fa-check"></i><b>18.4.1</b> Querying facetted charts</a></li>
+<li class="chapter" data-level="18.4.2" data-path="client-side-linking.html"><a href="client-side-linking.html#statistical-queries"><i class="fa fa-check"></i><b>18.4.2</b> Statistical queries</a></li>
+<li class="chapter" data-level="18.4.3" data-path="client-side-linking.html"><a href="client-side-linking.html#statistical-queries-ggplot"><i class="fa fa-check"></i><b>18.4.3</b> Statistical queries with <code>ggplotly()</code></a></li>
+<li class="chapter" data-level="18.4.4" data-path="client-side-linking.html"><a href="client-side-linking.html#geo-spatial-queries"><i class="fa fa-check"></i><b>18.4.4</b> Geo-spatial queries</a></li>
+<li class="chapter" data-level="18.4.5" data-path="client-side-linking.html"><a href="client-side-linking.html#linking-with-other-htmlwidgets"><i class="fa fa-check"></i><b>18.4.5</b> Linking with other htmlwidgets</a></li>
+<li class="chapter" data-level="18.4.6" data-path="client-side-linking.html"><a href="client-side-linking.html#generalized-pairs-plots"><i class="fa fa-check"></i><b>18.4.6</b> Generalized pairs plots</a></li>
+<li class="chapter" data-level="18.4.7" data-path="client-side-linking.html"><a href="client-side-linking.html#querying-diagnostic-plots"><i class="fa fa-check"></i><b>18.4.7</b> Querying diagnostic plots</a></li>
+</ul></li>
+<li class="chapter" data-level="18.5" data-path="client-side-linking.html"><a href="client-side-linking.html#limitations"><i class="fa fa-check"></i><b>18.5</b> Limitations</a></li>
+</ul></li>
+<li class="chapter" data-level="19" data-path="linking-server-side.html"><a href="linking-server-side.html"><i class="fa fa-check"></i><b>19</b> Server-side linking with shiny</a><ul>
+<li class="chapter" data-level="19.1" data-path="linking-server-side.html"><a href="linking-server-side.html#hello-shiny"><i class="fa fa-check"></i><b>19.1</b> Embedding plotly in shiny</a><ul>
+<li class="chapter" data-level="19.1.1" data-path="linking-server-side.html"><a href="linking-server-side.html#your-first-shiny-app"><i class="fa fa-check"></i><b>19.1.1</b> Your first shiny app</a></li>
+<li class="chapter" data-level="19.1.2" data-path="linking-server-side.html"><a href="linking-server-side.html#hiding-and-redrawing-on-resize"><i class="fa fa-check"></i><b>19.1.2</b> Hiding and redrawing on resize</a></li>
+</ul></li>
+<li class="chapter" data-level="19.2" data-path="linking-server-side.html"><a href="linking-server-side.html#shiny-plotly-inputs"><i class="fa fa-check"></i><b>19.2</b> Leveraging plotly input events</a><ul>
+<li class="chapter" data-level="19.2.1" data-path="linking-server-side.html"><a href="linking-server-side.html#dragging-events"><i class="fa fa-check"></i><b>19.2.1</b> Dragging events</a></li>
+<li class="chapter" data-level="19.2.2" data-path="linking-server-side.html"><a href="linking-server-side.html#d-events"><i class="fa fa-check"></i><b>19.2.2</b> 3D events</a></li>
+<li class="chapter" data-level="19.2.3" data-path="linking-server-side.html"><a href="linking-server-side.html#edit-events"><i class="fa fa-check"></i><b>19.2.3</b> Edit events</a></li>
+<li class="chapter" data-level="19.2.4" data-path="linking-server-side.html"><a href="linking-server-side.html#relayout-vs-restyle-events"><i class="fa fa-check"></i><b>19.2.4</b> Relayout vs restyle events</a></li>
+<li class="chapter" data-level="19.2.5" data-path="linking-server-side.html"><a href="linking-server-side.html#scoping-events"><i class="fa fa-check"></i><b>19.2.5</b> Scoping events</a></li>
+<li class="chapter" data-level="19.2.6" data-path="linking-server-side.html"><a href="linking-server-side.html#event-priority"><i class="fa fa-check"></i><b>19.2.6</b> Event priority</a></li>
+<li class="chapter" data-level="19.2.7" data-path="linking-server-side.html"><a href="linking-server-side.html#handling-discrete-axes"><i class="fa fa-check"></i><b>19.2.7</b> Handling discrete axes</a></li>
+<li class="chapter" data-level="19.2.8" data-path="linking-server-side.html"><a href="linking-server-side.html#reactive-vals"><i class="fa fa-check"></i><b>19.2.8</b> Accumulating and managing event data</a></li>
+</ul></li>
+<li class="chapter" data-level="19.3" data-path="linking-server-side.html"><a href="linking-server-side.html#shiny-performance"><i class="fa fa-check"></i><b>19.3</b> Improving performance</a><ul>
+<li class="chapter" data-level="19.3.1" data-path="linking-server-side.html"><a href="linking-server-side.html#proxies"><i class="fa fa-check"></i><b>19.3.1</b> Partial plotly updates</a></li>
+<li class="chapter" data-level="19.3.2" data-path="linking-server-side.html"><a href="linking-server-side.html#partial-update-examples"><i class="fa fa-check"></i><b>19.3.2</b> Partial update examples</a></li>
+</ul></li>
+<li class="chapter" data-level="19.4" data-path="linking-server-side.html"><a href="linking-server-side.html#advanced-applications"><i class="fa fa-check"></i><b>19.4</b> Advanced applications</a><ul>
+<li class="chapter" data-level="19.4.1" data-path="linking-server-side.html"><a href="linking-server-side.html#drill-down"><i class="fa fa-check"></i><b>19.4.1</b> Drill-down</a></li>
+<li class="chapter" data-level="19.4.2" data-path="linking-server-side.html"><a href="linking-server-side.html#crossfilter"><i class="fa fa-check"></i><b>19.4.2</b> Cross-filter</a></li>
+</ul></li>
+<li class="chapter" data-level="19.5" data-path="linking-server-side.html"><a href="linking-server-side.html#discussion"><i class="fa fa-check"></i><b>19.5</b> Discussion</a></li>
+</ul></li>
+<li class="chapter" data-level="20" data-path="javascript.html"><a href="javascript.html"><i class="fa fa-check"></i><b>20</b> Extending plotly with JavaScript</a><ul>
+<li class="chapter" data-level="20.1" data-path="javascript.html"><a href="javascript.html#json"><i class="fa fa-check"></i><b>20.1</b> Working with JSON</a><ul>
+<li class="chapter" data-level="20.1.1" data-path="javascript.html"><a href="javascript.html#assignment-subsetting-and-iteration"><i class="fa fa-check"></i><b>20.1.1</b> Assignment, subsetting, and iteration</a></li>
+<li class="chapter" data-level="20.1.2" data-path="javascript.html"><a href="javascript.html#mapping-r-to-json"><i class="fa fa-check"></i><b>20.1.2</b> Mapping R to JSON</a></li>
+</ul></li>
+<li class="chapter" data-level="20.2" data-path="javascript.html"><a href="javascript.html#js-event-handlers"><i class="fa fa-check"></i><b>20.2</b> Adding custom event handlers</a></li>
+<li class="chapter" data-level="20.3" data-path="javascript.html"><a href="javascript.html#supplying-custom-data"><i class="fa fa-check"></i><b>20.3</b> Supplying custom data</a></li>
+<li class="chapter" data-level="20.4" data-path="javascript.html"><a href="javascript.html#incorporating-other-client-side-tools"><i class="fa fa-check"></i><b>20.4</b> Incorporating other client-side tools</a></li>
+</ul></li>
+<li class="part"><span><b>V Various special topics</b></span></li>
+<li class="chapter" data-level="21" data-path="is-plotly-free.html"><a href="is-plotly-free.html"><i class="fa fa-check"></i><b>21</b> Is plotly free?</a></li>
+<li class="chapter" data-level="22" data-path="is-my-data-secure.html"><a href="is-my-data-secure.html"><i class="fa fa-check"></i><b>22</b> Is my data secure?</a></li>
+<li class="chapter" data-level="23" data-path="tooltip-text.html"><a href="tooltip-text.html"><i class="fa fa-check"></i><b>23</b> Control tooltip text</a></li>
+<li class="chapter" data-level="24" data-path="tooltip-text-ggplotly.html"><a href="tooltip-text-ggplotly.html"><i class="fa fa-check"></i><b>24</b> Control <code>ggplotly()</code> tooltips</a></li>
+<li class="chapter" data-level="25" data-path="control-tooltip-styling.html"><a href="control-tooltip-styling.html"><i class="fa fa-check"></i><b>25</b> Control tooltip styling</a></li>
+<li class="chapter" data-level="26" data-path="working-with-colors.html"><a href="working-with-colors.html"><i class="fa fa-check"></i><b>26</b> Working with colors</a></li>
+<li class="chapter" data-level="27" data-path="working-with-symbols-glyphs.html"><a href="working-with-symbols-glyphs.html"><i class="fa fa-check"></i><b>27</b> Working with symbols &amp; glyphs</a></li>
+<li class="chapter" data-level="28" data-path="working-with-line-types.html"><a href="working-with-line-types.html"><i class="fa fa-check"></i><b>28</b> Working with line-types</a></li>
+<li class="chapter" data-level="29" data-path="control-the-modebar.html"><a href="control-the-modebar.html"><i class="fa fa-check"></i><b>29</b> Control the modebar</a><ul>
+<li class="chapter" data-level="29.1" data-path="control-the-modebar.html"><a href="control-the-modebar.html#remove-the-entire-modebar"><i class="fa fa-check"></i><b>29.1</b> Remove the entire modebar</a></li>
+<li class="chapter" data-level="29.2" data-path="control-the-modebar.html"><a href="control-the-modebar.html#remove-the-plotly-logo"><i class="fa fa-check"></i><b>29.2</b> Remove the plotly logo</a></li>
+<li class="chapter" data-level="29.3" data-path="control-the-modebar.html"><a href="control-the-modebar.html#remove-modebar-buttons"><i class="fa fa-check"></i><b>29.3</b> Remove modebar buttons</a></li>
+<li class="chapter" data-level="29.4" data-path="control-the-modebar.html"><a href="control-the-modebar.html#add-custom-modebar-buttons"><i class="fa fa-check"></i><b>29.4</b> Add custom modebar buttons</a></li>
+</ul></li>
+<li class="chapter" data-level="30" data-path="facetted-subplot.html"><a href="facetted-subplot.html"><i class="fa fa-check"></i><b>30</b> Facetted <code>subplot()</code></a></li>
+<li class="chapter" data-level="31" data-path="language-support.html"><a href="language-support.html"><i class="fa fa-check"></i><b>31</b> Language support</a></li>
+<li class="chapter" data-level="32" data-path="latex-rendering.html"><a href="latex-rendering.html"><i class="fa fa-check"></i><b>32</b> LaTeX rendering</a><ul>
+<li class="chapter" data-level="32.1" data-path="latex-rendering.html"><a href="latex-rendering.html#mathjax-caveats"><i class="fa fa-check"></i><b>32.1</b> MathJax caveats</a></li>
+</ul></li>
+<li class="chapter" data-level="33" data-path="control-axes.html"><a href="control-axes.html"><i class="fa fa-check"></i><b>33</b> Control axes</a></li>
+<li class="chapter" data-level="34" data-path="why-does-my-line-plot-appear-blank-i-e-malformed-group-definition.html"><a href="why-does-my-line-plot-appear-blank-i-e-malformed-group-definition.html"><i class="fa fa-check"></i><b>34</b> Why does my line plot appear blank (i.e., malformed group definition)?</a></li>
+<li class="chapter" data-level="35" data-path="improving-performance.html"><a href="improving-performance.html"><i class="fa fa-check"></i><b>35</b> Improving performance</a></li>
+<li class="chapter" data-level="36" data-path="r-file-size-so-big.html"><a href="r-file-size-so-big.html"><i class="fa fa-check"></i><b>36</b> R file size so big?</a></li>
+<li class="chapter" data-level="37" data-path="how-to-prevent-plotly-from-graying-out-in-shiny.html"><a href="how-to-prevent-plotly-from-graying-out-in-shiny.html"><i class="fa fa-check"></i><b>37</b> How to prevent plotly from graying-out in shiny?</a></li>
+<li class="chapter" data-level="38" data-path="why-am-i-getting-a-blank-plot.html"><a href="why-am-i-getting-a-blank-plot.html"><i class="fa fa-check"></i><b>38</b> Why am I getting a blank plot?</a></li>
+<li class="chapter" data-level="39" data-path="learn-how-to-fish-plotly-js.html"><a href="learn-how-to-fish-plotly-js.html"><i class="fa fa-check"></i><b>39</b> Learn how to fish (plotly.js)</a></li>
+<li class="chapter" data-level="40" data-path="how-can-i-report-a-bug.html"><a href="how-can-i-report-a-bug.html"><i class="fa fa-check"></i><b>40</b> How can I report a bug?</a></li>
+<li class="chapter" data-level="41" data-path="what-advantages-does-plotlyshiny-have-over-dash.html"><a href="what-advantages-does-plotlyshiny-have-over-dash.html"><i class="fa fa-check"></i><b>41</b> What advantages does plotly+shiny have over dash?</a></li>
+<li class="part"><span><b>VI Developer-facing topics</b></span></li>
+<li class="chapter" data-level="42" data-path="translating-custom-ggplot2-geoms.html"><a href="translating-custom-ggplot2-geoms.html"><i class="fa fa-check"></i><b>42</b> Translating custom ggplot2 geoms</a></li>
+<li class="chapter" data-level="43" data-path="designing-an-htmlwidget-interface.html"><a href="designing-an-htmlwidget-interface.html"><i class="fa fa-check"></i><b>43</b> Designing an htmlwidget interface</a></li>
+<li class="chapter" data-level="" data-path="references.html"><a href="references.html"><i class="fa fa-check"></i>References</a></li>
+</ul>
+
+      </nav>
+    </div>
+
+    <div class="book-body">
+      <div class="body-inner">
+        <div class="book-header" role="navigation">
+          <h1>
+            <i class="fa fa-circle-o-notch fa-spin"></i><a href="./">Interactive web-based data visualization with R, plotly, and shiny</a>
+          </h1>
+        </div>
+
+        <div class="page-wrapper" tabindex="-1" role="main">
+          <div class="page-inner">
+
+            <section class="normal" id="section-">
+<div id="how-to-prevent-plotly-from-graying-out-in-shiny" class="section level1">
+<h1><span class="header-section-number">37</span> How to prevent plotly from graying-out in shiny?</h1>
+<ul>
+<li>Point to shiny performance section</li>
+</ul>
+</div>
+<script>
+  var header = document.querySelector(".book-header h1");
+
+  var img = document.createElement("img");
+  img.src = "images/rstudioCloud.svg";
+  img.width = 200;
+  img.align = "right";
+  img.style = "margin-top: 10px";
+
+  var a = document.createElement("a");
+  a.href = "https://rstudio.cloud/project/156701";
+  a.target = "_blank";
+  a.appendChild(img);
+
+  header.appendChild(a);
+</script>
+<!-- Global site tag (gtag.js) - Google Analytics -->
+<script async src="https://www.googletagmanager.com/gtag/js?id=UA-60116966-3"></script>
+<script>
+  window.dataLayer = window.dataLayer || [];
+  function gtag(){dataLayer.push(arguments);}
+  gtag('js', new Date());
+
+  gtag('config', 'UA-60116966-3');
+</script>
+            </section>
+
+          </div>
+        </div>
+      </div>
+<a href="r-file-size-so-big.html" class="navigation navigation-prev " aria-label="Previous page"><i class="fa fa-angle-left"></i></a>
+<a href="why-am-i-getting-a-blank-plot.html" class="navigation navigation-next " aria-label="Next page"><i class="fa fa-angle-right"></i></a>
+    </div>
+  </div>
+<script src="libs/gitbook/js/app.min.js"></script>
+<script src="libs/gitbook/js/lunr.js"></script>
+<script src="libs/gitbook/js/plugin-search.js"></script>
+<script src="libs/gitbook/js/plugin-sharing.js"></script>
+<script src="libs/gitbook/js/plugin-fontsettings.js"></script>
+<script src="libs/gitbook/js/plugin-bookdown.js"></script>
+<script src="libs/gitbook/js/jquery.highlight.js"></script>
+<script>
+gitbook.require(["gitbook"], function(gitbook) {
+gitbook.start({
+"sharing": false,
+"fontsettings": {
+"theme": "white",
+"family": "sans",
+"size": 2
+},
+"edit": {
+"link": "https://github.com/cpsievert/plotly_book/edit/master/topics.Rmd",
+"text": "Edit"
+},
+"history": {
+"link": null,
+"text": null
+},
+"download": null,
+"toc": {
+"collapse": "section"
+}
+});
+});
+</script>
+
+</body>
+
+</html>

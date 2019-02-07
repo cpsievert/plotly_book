@@ -1,7 +1,5 @@
 # Animating views
 
-## Key frame animations
-
 Both `plot_ly()` and `ggplotly()` support [key frame](https://en.wikipedia.org/wiki/Key_frame) animations through the `frame` attribute/aesthetic. They also support an `ids` attribute/aesthetic to ensure smooth transitions between objects with the same id (which helps facilitate [object constancy](https://bost.ocks.org/mike/constancy/)). Figure \@ref(fig:animation-ggplotly) recreates the famous gapminder animation of the evolution in the relationship between GDP per capita and life expectancy evolved over time [@gapminder]. The data is recorded on a yearly basis, so the year is assigned to `frame`, and each point in the scatterplot represents a country, so the country is assigned to `ids`, ensuring a smooth transition from year to year for a given country.
 
 ```{r animation-ggplotly, fig.cap = "Animation of the evolution in the relationship between GDP per capita and life expectancy in numerous countries.", screenshot.alt = "screenshots/animation-ggplotly"}
@@ -53,73 +51,3 @@ base %>%
   add_markers(color = ~continent, frame = ~year, ids = ~country) %>%
   animation_opts(1000, redraw = FALSE)
 ```
-
-## Linking animated views
-
-The section [linking views without shiny](#linking-views-without-shiny) details a framework for linking views through direct manipulation. This same framework can be leveraged to highlight objects as they progress through an animation, or even link objects between animations. Figure \@ref(fig:gapminder-highlight-animation) extends Figure \@ref(fig:animation-ggplotly) by layering on linear models specific to each frame and specifying `continent` as a key variable. As a result, one may interactively highlight any continent they wish, and track the relationship through the animation. In the animated version of Figure \@ref(fig:animation-ggplotly), the user highlights the Americas, which makes it much easier to see that the relationship between GDP per capita and life expectancy was very strong starting in the 1950s, but progressively weakened throughout the years.
-
-```{r gapminder-highlight-animation, echo = FALSE, fig.cap = "Highlighting the relationship between GDP per capita and life expectancy in the Americas and tracking that relationship through several decades."}
-include_vimeo("307789187")
-```
-
-```{r gapminder-highlight-animation-fake, include = knitr:::is_html_output()}
-g <- crosstalk::SharedData$new(gapminder, ~continent)
-gg <- ggplot(g, aes(gdpPercap, lifeExp, color = continent, frame = year)) +
-  geom_point(aes(size = pop, ids = country)) +
-  geom_smooth(se = FALSE, method = "lm") +
-  scale_x_log10()
-ggplotly(gg) %>% 
-  highlight("plotly_hover")
-```
-
-In addition to highlighting objects within an animation, objects may also be linked between animations. Figure \@ref(fig:animation-gapminder) links two animated views: on the left-hand side is population density by country and on the right-hand side is GDP per capita versus life expectancy. By default, all of the years are shown in black and the current year is shown in red. By pressing play to animate through the years, we can see that all three of these variables have increased (on average) fairly consistently over time. By linking the animated layers, we may condition on an interesting region of this data space to make comparisons in the overall relationship over time. 
-
-For example, in Figure \@ref(fig:animation-gapminder), countries below the 50th percentile in terms of population density are highlighted in blue, then the animation is played again to reveal a fairly interesting difference in these groups. From 1952 to 1977, countries with a low population density seem to enjoy large increases in GDP per capita and moderate increases in life expectancy, then in the early 80s, their GPD seems to decrease while the life expectancy greatly increases. In comparison, the high density countries seems to enjoy a more consistent and steady increase in both GDP and life expectancy. Of course, there are a handful of exceptions to the overall trend, such as the noticeable drop in life expectancy for a handful of countries during the nineties, which are mostly African countries feeling the affects of war.
-
-```{r animation-gapminder, echo = FALSE, fig.cap = "Comparing the evolution in the relationship between per capita GDP and life expectancy in countries with large populations (red) and small populations (blue)."}
-include_vimeo("307789070")
-```
-
-The `gapminder` data used thus far does not include surface area information, so Figure \@ref(fig:animation-gapminder) leverages a list of countries by area on Wikipedia. The R script used to obtain and clean that list is [here](https://gist.github.com/cpsievert/d4a4ccb7ce61e2cfaecf9736de4f67fa), but the cleaned version is directly available, plus add the areas to the `gapminder` data with the following code:
-
-```{r}
-countryByArea <- read.table(
-  "https://bit.ly/2h6vscu",
-  header = TRUE, stringsAsFactors = FALSE
-)
-
-gap <- gapminder %>%
-  dplyr::left_join(countryByArea, by = "country") %>%
-  transform(popDen = pop / area) %>%
-  transform(country = forcats::fct_reorder(country, popDen))
-```
-
-The enhanced version of the `gapminder` data, `gap`, includes population density (population per square kilometer) and is used for the background layer (i.e., black points) in Figure \@ref(fig:animation-gapminder). In order to link the animated layers (i.e., red points), we need another version of `gap` that marks the country variable as the link between the plots (`gapKey`). The `new()` method for the `SharedData` class from the **crosstalk** package provides one way to define this link.^[You can also use the `key`/`set` attributes when linking views within **plotly**. The `set` attribute is equivalent to the `group` argument in the `SharedData$new()` function.]
-
-```{r animation-gapminder-fake, include = knitr:::is_html_output()}
-gapKey <- crosstalk::SharedData$new(gap, ~country)
-
-p1 <- plot_ly(gap, y = ~country, x = ~popDen, hoverinfo = "x") %>%
-  add_markers(alpha = 0.1, color = I("black")) %>%
-  add_markers(data = gapKey, frame = ~year, ids = ~country, color = I("red")) %>%
-  layout(xaxis = list(type = "log"))
-
-p2 <- plot_ly(gap, x = ~gdpPercap, y = ~lifeExp, size = ~popDen, 
-              text = ~country, hoverinfo = "text") %>%
-  add_markers(color = I("black"), alpha = 0.1) %>%
-  add_markers(data = gapKey, frame = ~year, ids = ~country, color = I("red")) %>%
-  layout(xaxis = list(type = "log"))
-
-subplot(p1, p2, nrows = 1, widths = c(0.3, 0.7), titleX = TRUE) %>%
-  hide_legend() %>%
-  animation_opts(1000, redraw = FALSE) %>%
-  layout(hovermode = "y", margin = list(l = 100)) %>%
-  highlight("plotly_selected", color = "blue", opacityDim = 1, hoverinfo = "none")
-```
-
-
-<!--
-IDEAS:
-  * Grand tour
-  * Demonstrate high variance in density estimation via binning (i.e., same data and different anchor points for the bins can result in very different values for the binned frequencies)
-  -->

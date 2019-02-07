@@ -1,4 +1,6 @@
-# Extending plotly with JavaScript {#javascript}
+# (PART) Extending functionality {-}
+
+# Introduction {#javascript}
 
 The same plotly.js events that we accessed in **shiny** through `event_data()` in section \@ref(shiny-plotly-inputs) can also be leveraged purely client-side with some custom JavaScript (JS). That means, by knowing a little bit about JS and the plotly.js library, we can extend graphs created with the R package to have custom behavior without requiring a client-server application. This portion of the book focuses on writing custom responses to commonly used plotly.js events, but a lot of the same tools and techniques could be used to extend these graphs in other ways as well.
 
@@ -17,13 +19,13 @@ include_vimeo("307598574", height = "700")
 If you're completely new to JavaScript and JSON, section \@ref(json) provides a foundation for understanding the subsequent sections, but those already familiar can skip ahead to section \@ref(js-event-handlers).
 
 
-## Working with JSON {#json}
+# Working with JSON {#json}
 
 JavaScript and other web technologies are intimidating and time-consuming to learn, but by borrowing some knowledge of R's data structures^[If you'd like a nice succinct overview on the topic, see http://adv-r.had.co.nz/Data-structures.html], we can get up and running with useful examples fairly quickly. JavaScript Object Notation (JSON) is a popular data-interchange format that JavaScript uses to work with data. As turns out, working with JSON in JS is somewhat similar to working with `list()`s in R -- both are recursive and heterogenous data structures that have similar semantics for accessing values. In JSON, there are three basic building blocks: objects, arrays, and primitive data types (e.g., number, string, boolean, `null`, `undefined`). 
 
 Loosely speaking, a JSON array is similar to a un-named `list()` in R and a JSON object is similar to an un-named `list()`. In fact, if you're already comfortable creating and subsetting named and un-named `list()`s in R, you can transfer some of that knowledge to JSON arrays and objects. 
 
-### Assignment, subsetting, and iteration
+## Assignment, subsetting, and iteration
 
 In R, the `<-` operator assigns a value to a name, and the `[[` operator extracts a list element by index:
 
@@ -102,7 +104,7 @@ arr.filter(function(item) { return typeof item == "string"; });
 ```
 
 
-### Mapping R to JSON
+## Mapping R to JSON
 
 In R, unlike JSON, there is no distinction between scalars and vectors of length 1. That means there is ambiguity as to what a vector of length 1 in R should map to in JSON. The **jsonlite** package defaults to an array of length 1, but this can be avoided by setting `auto_unbox = TRUE`. 
 
@@ -139,7 +141,7 @@ jsonlite::toJSON(list(1, "a", TRUE), auto_unbox = TRUE)
 
 
 
-## Adding custom event handlers {#js-event-handlers}
+# Adding custom event handlers {#js-event-handlers}
 
 When using `onRender()` to provide a JS function to be called upon static render of a **plotly** object, the relevant DOM element (`el`) has an `on()` method that accepts a function to be called whenever a plotly.js (or DOM) event occurs on that DOM element. Currently all plotly.js event handlers accept a function with a single argument, and that argument either contains nothing (e.g. `"plotly_afterplot"`, etc) or a single object with all the relevant information about the event (e.g. `"plotly_hover"`, `"plotly_selected"`, etc). Figure \@ref(fig:console-log-event) logs and inspects data (`d`) emitted during the `"plotly_hover"`, `"plotly_click"`, and `"plotly_selected"` events. The object emitted for these events includes a key, named `points`, with information tying the selection back to the input data. The `points` key is always an array of object(s) where each object represents a different data point. This object contains any supplied `customdata`, the relevant `x`/`y` location, and a reference back to the input `data`.
 
@@ -159,7 +161,7 @@ plot_ly(mtcars, x = ~wt, y = ~mpg) %>%
 include_vimeo("307597974", height = "700")
 ```
 
-## Supplying custom data
+# Supplying custom data
 
 As covered in section \@ref(shiny-plotly-inputs), it's often useful to supply meta-information (i.e. custom data) to graphical marker(s) and use that information when responding to a event. For example, suppose we'd like each point in a scatterplot to act like a hyperlink to a different webpage. In order to do so, we can supply a url to each point (as metadata) and instruct the browser to open the relevant hyperlink on a click event. Figure \@ref(fig:click-open) does exactly this by supplying urls to each point in R through the `customdata` attribute and defining a custom JS event to `window.open()` the relevant `url` upon a click event. In this case, since each point represents one row of data, the `d.point` is an array of length 1, so we may obtain the `url` of the clicked point with `d.points[0].customdata`.
 
@@ -193,22 +195,7 @@ In addition to using `window.open()` to open the `url`, we could also add it to 
 onRender(p, readLines("js/hover-hyperlink.js"))
 ```
 
-```{js, eval = FALSE, summary = "Click to show the 'js/hover-hyperlink.js' file"}
-function(el) {
-  el.on('plotly_hover', function(d) {
-    var url = d.points[0].customdata;
-    var ann = {
-      text: "<a href='" + url + "'>" + url + "</a>",
-      x: 0,
-      y: 0,
-      xref: "paper",
-      yref: "paper",
-      yshift: -40,
-      showarrow: false
-    };
-    Plotly.relayout(el.id, {annotations: [ann]});
- });
-}
+```{js, eval = FALSE, summary = "Click to show the 'js/hover-hyperlink.js' file", code = readLines("js/hover-hyperlink.js")}
 ```
 
 
@@ -218,6 +205,39 @@ include_vimeo("307598266")
 
 ```{block, type='rmdtip'}
 When using `Plotly.relayout()`, or any other plotly.js function to modify a plot, you'll need to know the id attribute of the relevant DOM instance that you want to manipulate. When working with a single object, you can simply use `el.id` to access the id attribute of that DOM instance. However, when trying to target another object, it gets trickier because id attributes are randomly generated by **htmlwidgets**.  In that case, you likely want to pre-specify the id attribute so you can reference it client-side. You can pre-specify the id for any **htmlwidgets** object, say `widget`, by doing `widget$elementId <- "myID"`.
+```
+
+The `customdata` attribute can hold any R object that can be serialized as JSON, so you could, for example, attach complex data to markers/lines/text/etc using base64 strings. This could be useful for a number of things such as displaying an image on hover or click. For security reasons, plotly.js doesn't allow inserting images in the tooltip, but you can always define your own tooltip by hiding the tooltip (`hoverinfo='none'`), then populating your own tooltip with suitable manipulation of the DOM in response to `"plotly_hover"`/`"plotly_unhover"` events. Figure \@ref(fig:tooltip-image) demonstrates how to leverage this infrastructure to display a png image in the top-left corner of a graph whenever a text label is hovered upon.^[As long as your not allowing down-stream users to input paths to the input files (e.g., in a **shiny** app), you shouldn't need to worry about the security of this example] 
+
+```r
+x <- 1:3 
+y <- 1:3
+logos <- c("r-logo", "penguin", "rstudio")
+# base64 encoded string of each image
+uris <- purrr::map_chr(logos, ~ base64enc::dataURI(file = sprintf("images/%s.png", .x)))
+# hoverinfo = "none" will hide the plotly.js tooltip, but the 'plotly_hover' event will still fire
+plot_ly(hoverinfo = "none") %>%
+  add_text(x = x, y = y, customdata = uris, text = logos) %>%
+  htmlwidgets::onRender(readLines("js/tooltip-image.js"))
+```
+
+```{js, eval = FALSE, summary = "Click to show the 'js/tooltip-image.js' file", code = readLines("js/tooltip-image.js")}
+```
+
+```{r tooltip-image, echo = FALSE, fig.cap = "Displaying an image on hover in a scatterplot."}
+include_vimeo("310463565")
+```
+
+It's worth noting that the JavaScript that powers Figure \@ref(fig:tooltip-image) works for other cartesian charts, even `heatmap` (as shown in Figure \@ref(fig:tooltip-image-heatmap)), but it would need to be adapted for 3D charts types.
+
+```r
+plot_ly(hoverinfo = "none") %>%
+  add_heatmap(z = matrix(1:9, nrow = 3), customdata = matrix(uris, nrow = 3, ncol = 3)) %>%
+  htmlwidgets::onRender(readLines("js/tooltip-image.js"))
+```
+
+```{r tooltip-image-heatmap, echo = FALSE, fig.cap = "Displaying an image on hover in a heatmap."}
+include_vimeo("310466116")
 ```
 
 On the JS side, the `customdata` attribute is designed to support _any_ JS array of appropriate length, so if you need to supply numerous custom values to particular marker(s), list-columns in R provides a nice way to do so. Figure \@ref(fig:tx-annotate) leverages this idea to  bind both the `city` and `sales` values to each point along a time series and display those values on hover. It also demonstrates how one can use the graphical querying framework from section \@ref(graphical-queries) in tandem with a custom JS event. That is, `highlight_key()` and `highlight()` control the highlighting of the time series, while the custom JS event adds the plot annotation (all based on the same `"plotly_hover"` event). In this case, the highlighting, annotations, and circle shapes are triggered by a `"plotly_hover"` event and they all work in tandem because event handlers are cumulative. That means, if you wanted, you could register multiple custom handlers for a particular event.
@@ -235,35 +255,7 @@ sales_hover <- txhousing %>%
 onRender(sales_hover, readLines("js/tx-annotate.js"))
 ```
 
-```{js, eval = FALSE, summary = "Click to show the 'js/tx-annotate.js' file"}
-function(el) {
-  el.on("plotly_hover", function(d) {
-    var pt = d.points[0];
-    var cd = pt.customdata;
-    var num = cd[1] ? cd[1] : "No";
-    var ann = {
-      text: num + " homes were sold in " + cd[0] + ", TX in this month",
-      x: 0.5,
-      y: 1,
-      xref: "paper",
-      yref: "paper",
-      xanchor: "middle",
-      showarrow: false
-    };
-    var circle = {
-      type: "circle",
-      xanchor: pt.x,
-      yanchor: pt.y,
-      x0: -6,
-      x1: 6,
-      y0: -6,
-      y1: 6,
-      xsizemode: "pixel",
-      ysizemode: "pixel"
-    };
-    Plotly.relayout(el.id, {annotations: [ann], shapes: [circle]});
-  });
-}
+```{js, eval = FALSE, summary = "Click to show the 'js/tx-annotate.js' file", code = readLines("js/tx-annotate.js")}
 ```
 
 ```{r tx-annotate, echo = FALSE, fig.cap ="Combining the graphical querying framework from \\@ref(graphical-queries) with the ability to define custom JS event handlers. This example also leverages the fact that `customdata` supports list-columns to effectively bind both the city name and number of houses sold on a particular day."}
@@ -276,37 +268,7 @@ Sometimes supplying and accessing `customdata` alone is not quite enough for the
 onRender(sales_hover, readLines("js/tx-mean-sales.js"))
 ```
 
-```{js, eval = FALSE, summary = "Click to show the 'js/tx-mean-sales.js' file"}
-function(el) {
-  el.on("plotly_hover", function(d) {
-    var pt = d.points[0];
-    var city = pt.customdata[0];
-
-    // filter the full custom data array down to just the elements
-    // from the city of interest
-    var cityInfo = pt.data.customdata.filter(function(cd) {
-      return cd ? cd[0] == city : false;
-    });
-    
-    // from the filtered data, get just the sales
-    var sales = cityInfo.map(function(cd) { return cd[1] });
-
-    // plotly.js bundles d3 which you can access via Plotly.d3
-    var avgsales = Math.round(Plotly.d3.mean(sales));
-
-    // Display the mean sales for the clicked city
-    var ann = {
-      text: "Mean monthly sales for " + city + " is " + avgsales,
-      x: 0.5,
-      y: 1,
-      xref: "paper",
-      yref: "paper",
-      xanchor: "middle",
-      showarrow: false
-    };
-    Plotly.relayout(el.id, {annotations: [ann]});
-  });
-}
+```{js, eval = FALSE, summary = "Click to show the 'js/tx-mean-sales.js' file", code = readLines("js/tx-mean-sales.js")}
 ```
 
 
@@ -322,77 +284,7 @@ sales_hover %>%
   onRender(readLines("js/tx-inset-plot.js"))
 ```
 
-```{js, eval = FALSE, summary = "Click to show the 'js/tx-inset-plot.js' file"}
-function(el) {
-  el.on("plotly_hover", function(d) {
-    var pt = d.points[0];
-    var city = pt.customdata[0];
-
-    // get the sales for the clicked city
-    var cityInfo = pt.data.customdata.filter(function(cd) {
-      return cd ? cd[0] == city : false;
-    });
-    var sales = cityInfo.map(function(cd) { return cd[1] });
-
-    // Collect all the trace types in this plot
-    var types = el.data.map(function(trace) { return trace.type; });
-    // Find the array index of the histogram trace
-    var hasHistogram = types.includes("histogram");
-
-    // If the histogram trace already exists, just supply new x values
-    if (hasHistogram) {
-
-      Plotly.restyle(el.id, "x", [sales], types.indexOf("histogram"));
-
-    } else {
-
-      // create the histogram
-      var trace = {
-        x: sales,
-        type: "histogram",
-        marker: {color: "#1f77b4"},
-        xaxis: "x2",
-        yaxis: "y2"
-      };
-      Plotly.addTraces(el.id, trace);
-
-      // place it on "inset" axes
-      var x = {
-        domain: [0.05, 0.4],
-        anchor: "y2"
-      };
-      var y = {
-        domain: [0.6, 0.9],
-        anchor: "x2"
-      };
-      Plotly.relayout(el.id, {xaxis2: x, yaxis2: y});
-
-    }
-
-    // Add a title for the histogram
-    var ann = {
-      text: "Monthly house sales in " + city + ", TX",
-      x: 2003,
-      y: 300000,
-      xanchor: "middle",
-      showarrow: false
-    };
-    Plotly.relayout(el.id, {annotations: [ann]});
-
-    // Add a vertical line reflecting sales for the hovered point
-    var line = {
-      type: "line",
-      x0: pt.customdata[1],
-      x1: pt.customdata[1],
-      y0: 0.6,
-      y1: 0.9,
-      xref: "x2",
-      yref: "paper",
-      line: {color: "black"}
-    };
-    Plotly.relayout(el.id, {'shapes[1]': line});
-  });
-}
+```{js, eval = FALSE, summary = "Click to show the 'js/tx-inset-plot.js' file", code = readLines("js/tx-inset-plot.js")}
 ```
 
 
@@ -400,7 +292,7 @@ function(el) {
 include_vimeo("307598624")
 ```
 
-## Incorporating other client-side tools
+# Leveraging web technologies from R {#client-side}
 
 Sometimes supplying `customdata` isn't the best way to acheive a particular interactive feature. In those cases, you likely want to leverage other R interfaces to client-side technologies. Recall from section \@ref(arranging-htmlwidgets) that **htmlwidgets** objects are a special case of **htmltools** tags. That means, you can always complement your widget(s) with arbitrary HTML content by adding additional tags. Figure \@ref(fig:correlation-client-side) leverages this idea to place an empty HTML `<div>` container below the correlation heatmap which is then populated with a **plotly** scatterplot upon clicking a cell. As it turns out, you *could* implement Figure \@ref(fig:correlation-client-side) by binding x/y data to each heatmap cell via `customdata`, but that would require the browser to store twice the amount of data as what's required here. Instead, this approach seralizes the input data (`mtcars`) into a JSON file via **jsonlite** so the webpage can read and parse the full dataset once and select just the two required columns when required (on click). There are a lot of ways to read JSON in JavaScript, but here we use the d3.js library's `d3.json()` since **plotly** already comes bundled with the library [@d3js]. Also, since the HTML file is reading the JSON from disk, most browsers won't render the HTML file directly (at least, by default, for security reasons). To get around that, we can start up a simple web server from R using **servr** to serve both the HTML and JSON in way that your browser will deem safe to run [@servr].
 
@@ -449,6 +341,81 @@ include_vimeo("307598118", height = "700")
 ```
 
 
-<!--
-TODO: perhaps find an example with V8 and/or sass?
--->
+
+All the JavaScript we've seen thus far is natively supported by modern web browsers, but for larger projects, you may want to leverage modern versions of JS (e.g, ES6) and modern JS development tools for compiling said JS to code that all browsers can support (e.g. Babel, Webpack, etc). The current landscape of JS development tooling is large, complex, fragmented, difficult for non-experts to navigate, and mostly beyond the scope of this book. Thankfully, popular JS libraries often provide a 'standalone' JS bundle which allows direct use their library without having to install and learn a bunch of new technology. Moreover, these bundles are likely available through a CDN service like <https://unpkg.com/>, <https://www.cloudflare.com/cdn>, etc.
+
+The R package **runpkg** makes it easy to download files from <https://unpkg.com/> and include them in web pages generated through the **htmltools** package [@runpkg]. It does this by returning a `htmltools::htmlDependency()` object which encapsulates the downloaded files and includes the JS scripts (or CSS stylesheets) into any page that depends on that object. Here we use it to download a standalone bundle of a popular React library for rendering all sort of different video formats, called `react-player`.  React is hugely popular JavaScript framework that makes it easy to bundle and re-use components, so this same general idea could be reused to leverage other components.^[Here's a nice list of popular components <https://github.com/brillout/awesome-react-components>.]
+
+```r
+library(runpkg)
+react_player <- download_files("react-player", "dist/ReactPlayer.standalone.js")
+```
+
+This `react-player` library provides a function called `renderReactPlayer()` that requires a placeholder (i.e., a DOM element) for inserting the video as well as a url (or file path) to the video. 
+
+```r
+library(htmltools)
+
+# the video placeholder
+video <- tags$div(id = "video")
+
+# upon clicking the marker, populate a video 
+# in the DOM element with an id of 'video'
+p <- plot_ly(x = 1, y = 1, size = I(50)) %>% 
+  add_text(
+    text = "🤣",
+    customdata = "https://www.youtube.com/watch?v=oHg5SJYRHA0",
+    hovertext = "Click me!",
+    hoverinfo = "text"
+  ) %>%
+  onRender(
+    "function(gd) { 
+       var container = document.getElementById('video');
+       gd.on('plotly_click', function(d) {
+         var url = d.points[0].customdata;
+         renderReactPlayer(container, {url: url, playing: true});
+       })
+    }"
+  )
+
+# create the HTML page
+browsable(tagList(p, video, react_player))
+```
+
+```{r react-player, echo = FALSE, fig.cap ="Populating a video in response to a `'plotly_click'` event."}
+include_vimeo("315308561", height = "700")
+```
+
+If you're not lucky enough to be working with a JS library that provides a standalone library and/or if you want to leverage some of the features of modern JS (e.g., namespacing, tree-shaking, async+await, etc), then you may have to dive into node.js (i.e., server-side JavaScript) command-line tools like `npm`, `yarn`, and `webpack`. As it turns out, though, R packages like **V8** and **reactR** are making it easier to leverage server-side JavaScript from R with minimal fuss. The **V8** package provides a low-level interface to a JS runtime that allows you run server-side JavaScript from R [@V8]. **V8** provides a foundation for packages like **reactR** to provide functions like `babel_transform()` which compile modern JS (e.g., ES6, ES2017, etc) code to a version of JavaScript that all browsers support (e.g., ES5) [@reactR]. For a simple example, Figure \@ref(fig:babel) demonstrates how one could leverage ES6, React, and JSX syntax to populate a `<h1>` title filled with a `customdata` message in response to a `'plotly_click'` event. 
+
+```r
+library(reactR)
+
+# a message placeholder
+msg <- tags$div(id = "msg")
+
+p <- plot_ly(x = 1, y = 1) %>% 
+  add_markers(customdata = "Powered by React") %>%
+  onRender(babel_transform(
+    "gd => { 
+      gd.on('plotly_click', d => {
+        let msg = d.points[0].customdata;
+        ReactDOM.render(
+          <h1>{msg}</h1>, 
+          document.getElementById('msg')
+        );
+      });
+    }"
+  ), validate = TRUE)
+
+# create the HTML page
+browsable(tagList(
+  p, msg, 
+  html_dependency_corejs(), 
+  html_dependency_react()
+))
+```
+
+```{r babel, echo = FALSE, fig.cap ="Using `babel_transform()` to leverage ES6, React, and JSX."}
+include_vimeo("315309034")
+```

@@ -1,0 +1,688 @@
+# (PART) Various special topics {-}
+
+# Is plotly free?
+
+Yes! Both the R package and the underlying JavaScript library (plotly.js) are MIT licensed. That means you are free to distribute and commericalize anything you create with **plotly**. Optionally, you can sign up for a <https://plot.ly> account and use the `api_create()` function to upload **plotly** graphs to your account, but _a <https://plot.ly> account is not required to use **plotly**_.
+
+# Is my data secure?
+
+Yes! The data behind a **plotly** graph won't leave your computer unless you:
+
+* You sign up for a [plotly cloud](https://plot.ly/products/cloud/) account and use the `api_create()` function to upload your graph or data. This service is free for public-facing graphs, but private hosting costs money.
+* You add the 'send data to cloud' modebar button. By default, this button is not included, but you can add it by doing `config(p, cloud = TRUE)`.
+
+In other words, unless you specifically request otherwise, your graph runs entirely offline (i.e. no requests to external services are made). That means you can be confident that your data is not being shared with anyone/anything without your knowledge.
+
+# Control tooltip text {#tooltip-text}
+
+There are two main approaches to controlling the tooltip: `hoverinfo` and `hovertemplate`. I suggest starting with the former approach since it's simpler, more mature, and enjoys universal support across trace types. On the other hand, `hovertemplate` does offer a convenient approach for flexible control over tooltip text, so it can be useful as well.
+
+The `hoverinfo` attribute controls what other plot attributes are shown into the tooltip text. The default value of `hoverinfo` is `x+y+text+name` (you can verify this with `schema()`), meaning that plotly.js will use the relevant values of `x`, `y`, `text`, and `name` to populate the tooltip text. As in Figure \@ref(fig:custom-tooltip-plotly) shows, you can supply custom text (without the other 'calculated values') by supplying a character string `text` and setting `hoverinfo = "text"`. The character string can include Glyphs, unicode characters, a some (white-listed) HTML entities and tags.^[If you find a tag or entity that you want isn't supported, please request it to be added in the plotly.js repo <https://github.com/plotly/plotly.js/issues/new>] At least currently, plotly.js doesn't support rendering of [LaTeX](https://github.com/plotly/plotly.js/issues/559) or images in the tooltip, but as demonstrated in Figure \@ref(fig:tooltip-image), if you know some HTML/JavaScript, you can always build your own custom tooltip. 
+
+
+```r
+library(tibble)
+library(forcats)
+
+tooltip_data <- tibble(
+  x = " ",
+  y = 1,
+  categories = as_factor(c("Glyphs", "HTML tags", "Unicode", "HTML entities",  "A combination")),
+  text = c(
+    "👋 glyphs ಠ_ಠ",
+    "Hello <span style='color:red'><sup>1</sup>⁄<sub>2</sub></span> fraction",
+    "\U0001f44b unicode \U00AE \U00B6 \U00BF",
+    "&mu; &plusmn; &amp; &lt; &gt; &nbsp; &times; &plusmn; &deg;",
+    paste("<b>Wow</b> <i>much</i> options", emo::ji("dog2"), "(╯°□°）╯︵ ┻┻")
+  )
+)
+
+plot_ly(tooltip_data, hoverinfo = "text") %>%
+  add_bars(
+    x = ~x,
+    y = ~y,
+    color = ~fct_rev(categories), 
+    text = ~text
+  ) %>% 
+  layout(
+    barmode ="stack", 
+    hovermode = "x"
+  )
+```
+
+```{r custom-tooltip-plotly, echo = FALSE, fig.cap = "Customizing the tooltip by supplying glyphs, Unicode, HTML markup to the `text` attributes and restricting displayed attributes with `hoverinfo='text'`."}
+knitr::include_graphics("images/custom-tooltip-plotly.png")
+```
+
+Whenever a `fill` is relevant (e.g., `add_sf()`, `add_polygons()`, `add_ribbons()`, etc), you have the option of using the `hoveron` attribute to generate a tooltip for the supplied data points, the filled polygon that those points define, or both. As Figure \@ref(fig:hoveron-fill-points) demonstrates, if you want a tooltip attached to a fill, you probably want `text` to be of length 1 for a given trace. On the other hand, if you want to each point along a fill to have a tooltip, you probably want `text` to have numerous strings.
+
+```r
+p <- plot_ly(
+  x = c(1, 2, 3),
+  y = c(1, 2, 1),
+  fill = "toself",
+  mode = "markers+lines",
+  hoverinfo = "text"
+)
+
+subplot(
+  add_trace(p, text = "triangle", hoveron = "fills"),
+  add_trace(p, text = paste0("point", 1:3), hoveron = "points")
+)
+```
+
+```{r hoveron-fill-points, echo = FALSE, fig.cap = "Using the `hoveron` attribute to control whether a tooltip is attached to fill or each point along that fill."}
+knitr::include_graphics("images/hoveron-fill-points.png")
+```
+
+You can't supply custom text in this way to a statistical aggregation, but there are ways to control the formatting of values computed and displayed by plotly.js (e.g. `x`, `y`, and `z`). If the value that you'd like to format corresponds to an axis, you can use `*axis.hoverformat`. The syntax behind `hoverformat` follows d3js' format conventions. For numbers, see: <https://github.com/d3/d3-format/blob/master/README.md#locale_format> and for dates see: <https://github.com/d3/d3-time-format/blob/master/README.md#locale_format>
+
+```r
+set.seed(1000)
+plot_ly(x = rnorm(100), name = " ") %>% 
+  add_boxplot(hoverinfo = "x") %>%
+  layout(xaxis = list(hoverformat = ".2f"))
+```
+
+```{r tooltip-format-boxplot, echo = FALSE, fig.cap = "Using `xaxis.hoverformat` to round aggregated values displayed in the tooltip to two decimal places."}
+knitr::include_graphics("images/tooltip-format-boxplot.png")
+```
+
+Computed values that don't have a corresponding axis likely have a `*hoverformat` trace attribute. Probably the most common example is the `z` attribute in a `heatmap` or `histogram2d` chart. Figure \@ref(fig:tooltip-format-heatmap) shows how to format `z` values to have one decimal.
+
+```r
+plot_ly(z = ~volcano) %>%
+  add_heatmap(zhoverformat = ".1f") %>%
+  layout(xaxis = list(hoverformat = ".2f"))
+```
+
+```{r tooltip-format-heatmap, echo = FALSE, fig.cap = "Formatting the displayed `z` values in a heatmap using `zhoverformat`."}
+knitr::include_graphics("images/tooltip-format-heatmap.png")
+```
+
+It's admittedly difficult to remember where to specify these `hoverformat` attributes, so if you want a combination of custom text and formatting of computed values you can use `hovertemplate`, which overrides `hoverinfo` and allows you to fully specify the tooltip in one consistent location. For a full description of this attribute, see <https://plot.ly/r/reference/#scatter-hovertemplate>.
+
+```r
+set.seed(10)
+plot_ly(x = rnorm(100, 0, 1e5)) %>%
+  add_histogram(
+    histnorm = "density",
+    hovertemplate = "The height is %{y:.1e} <extra>That's very small!</extra>"
+  )
+```
+
+```{r hovertemplate, echo = FALSE, fig.cap = "Using the `hovertemplate` attribute to reference computed variables and their display format inside a custom string."}
+knitr::include_graphics("images/hovertemplate.png")
+```
+
+If you need really specific control over the tooltip, you might consider hiding the tooltip altogether (using `hoverinfo='none'`) and defining your own tooltip. Defining your own tooltip, however, will require knowledge of HTML and JavaScript -- see Figure \@ref(fig:tooltip-image) for an example of how to display an image on hover instead of a tooltip.
+
+
+# Control `ggplotly()` tooltips {#tooltip-text-ggplotly}
+
+Similar to how you can use the `text` attribute to supply a custom string in `plot_ly()` (see Section \@ref(tooltip-text)), you can supply a `text` aesthetic to your **ggplot2** graph, as shown in \@ref(fig:ggplotly-text):
+
+```r
+p <- ggplot(mtcars, aes(wt, mpg, text = row.names(mtcars))) + geom_point()
+ggplotly(p)
+```
+
+```{r ggplotly-text, echo = FALSE, fig.cap = "Using the `text` **ggplot2** aesthetic to supply custom tooltip text to "}
+knitr::include_graphics("images/ggplotly-text.png")
+```
+
+By default, `ggplotly()` will display all relevant aesthetic mappings (or computed values), but you can restrict what aesthetics are used to populate the tooltip, as shown in Figure \@ref(fig:ggplotly-text-tooltip):
+
+```r
+ggplotly(p, tooltip = "text")
+```
+
+```{r ggplotly-text-tooltip, echo = FALSE, fig.cap = "Using the `tooltip` arugment in `ggplotly()` to only display the `text` aesthetic."}
+knitr::include_graphics("images/ggplotly-text-tooltip.png")
+```
+
+When constructing the text to display, `ggplotly()` runs `format()` on the computed values. Since some parameters of the `format()` function can be controlled through global `options()`, you can use these `options()` to control the displayed text. This includes the `digits` option for controlling the number of significant digits used for numerical values as well as `scipen` for setting a penalty for deciding whether scientific or fixed notation is used for displaying. Figure \@ref(fig:format-options) shows how you can temporarily set these options (i.e., avoid altering of your global environment) using the **withr** package [@withr].
+
+```r
+library(withr)
+p <- ggplot(faithfuld, aes(waiting, eruptions)) +
+    geom_raster(aes(fill = density))
+subplot(
+  with_options(list(digits = 1), ggplotly(p)),
+  with_options(list(digits = 6, scipen = 20), ggplotly(p))
+)
+```
+
+```{r format-options, echo = FALSE, fig.cap="Leveraging global R options for controlling the displayed values in a `ggplotly()` tooltip."}
+knitr::include_graphics("images/format-options.png")
+```
+
+These global options are nice for specifying significant/scientific notation, but what about more sophisicated formatting? Sometimes a clever use of the `text` aesthetic provides a sufficient workaround. Specifically, as Figure \@ref(fig:text-clever) shows, if one wanted to control a displayed aesthetic value (e.g., `y`), one could generate a custom string from that variable and supply it to `text`, then essentially replace `text` for `y` in the tooltip:
+
+```r
+library(scales)
+p <- ggplot(txhousing, aes(date, median)) + 
+  geom_line(aes(group = city, text = paste("median:", number_si(median))))
+ggplotly(p, tooltip = c("text", "x", "city"))
+```
+
+```{r text-clever, echo = FALSE, fig.cap="Using the `text` aesthetic to replace an auto-generated aesthetic (`y`)."}
+knitr::include_graphics("images/text-clever.png")
+```
+
+The approach depicted in Figure \@ref(fig:text-clever) works for computed values that pertain to raw data values, but what about sophisicated formatting of a summary statistics generated by **ggplot2**? In this case, you'll have to use the return value of `ggplotly()` which, remember, is a **plotly** object that conforms to the plotly.js spec. That means you can identify trace attribute(s) that contain relevant info (**note:** the `plotly_json()` function is incredibly for helping to find that information), then use that info to populate a `text` attribute. Figure \@ref(fig:custom-predict-text) applies this technique to customize the text that appears when hovering over a `geom_smooth()` line.
+
+```r
+# Add a smooth to the previous figure and convert to plotly
+w <- ggplotly(p + geom_smooth(se = FALSE))
+
+# This plotly object has two traces: one for
+# the raw time series and one for the smooth. 
+# Try using `plotly_json(w)` to confirm the 2nd
+# trace is the smooth line.
+length(w$x$data)
+
+# use the `y` attribute of the smooth line 
+# to generate a custom string (to appear in tooltip)
+text_y <- number_si(
+  w$x$data[[2]]$y, 
+  prefix = "Typical median house price: $"
+)
+
+# suppress the tooltip on the raw time series 
+# and supply custom text to the smooth line
+w %>%
+  style(hoverinfo = "skip", traces = 1) %>%
+  style(text = text_y, traces = 2)
+```
+
+```{r custom-predict-text, echo = FALSE, fig.cap="Using the return value of `ggplotly()` to populate a custom `text` attribute."}
+knitr::include_graphics("images/custom-predict-text.png")
+```
+
+
+# Control tooltip styling
+
+There is currently one main attribute for controlling the style of a tooltip: `hoverlabel`. With this attribute you can currently set the background color (`bgcolor`), border color (`bordercolor`), and font family/size/color. Figure \@ref(fig:tooltip-style) demonstrates how to use it with `plot_ly()` (basically any chart type you use should support it):  
+
+```r
+font <- list(
+  family = "Roboto Condensed",
+  size = 15,
+  color = "white"
+)
+label <- list(
+  bgcolor = "#232F34",
+  bordercolor = "transparent",
+  font = font
+)
+plot_ly(x = iris$Petal.Length, hoverlabel = label)
+```
+
+```{r tooltip-style, echo = FALSE, fig.cap="Using the `hoverlabel` attribute to customize the color and font of the tooltip."}
+knitr::include_graphics("images/tooltip-style.png")
+```
+
+On the other hand, when using `ggplotly()`, you have to modfy the `hoverlabel` attribute via `style()` as shown in Figure \@ref(fig:tooltip-style-ggplotly)
+
+```r
+qplot(x = Petal.Length, data = iris) %>%
+  ggplotly() %>%
+  style(hoverlabel = label, marker.color = "#232F34") %>%
+  layout(font = font)
+```
+
+```{r tooltip-style-ggplotly, echo = FALSE, fig.cap="Using the `hoverlabel` attribute with `ggplotly()`."}
+knitr::include_graphics("images/tooltip-style-ggplotly.png")
+```
+
+As shown in sections \@ref(tooltip-text) and \@ref(tooltip-text-ggplotly) the approach to customized the actual text of a tooltip is slightly different depending on whether you're using `ggplotly()` or `plot_ly()`, but styling the appearance of the tooltip is more or less the same in either approach.
+
+# Control axis labels
+
+TODO: 
+  * using factors to control ordering of axis labels 
+  * specifying your own tickvals/ticktext?
+    * discuss pros and cons
+    
+# Language support {#locales}
+
+The `locale` argument of the `config()` function allows one to render on-graph text using another language. Figure \@ref(fig:localization) shows how setting `locale='ja'` will render text in Japanese.
+
+```r
+today <- Sys.Date()
+x <- seq.Date(today, today + 360, by = "day")
+plot_ly(x = x, y = rnorm(length(x))) %>%
+  add_lines() %>%
+  config(locale = "ja")
+```
+
+```{r localization, echo = FALSE, fig.cap="Using the `locale` argument of the `config()` function to render on-graph text in another language."}
+knitr::include_graphics("images/localization.png")
+```
+
+Table \@ref(tab:locale-codes) contains a list of all the supported locale codes and the language they correspond to:
+
+```{r locale-codes, echo = FALSE, results='asis'}
+locales <- list.files(system.file("htmlwidgets/lib/plotlyjs/locales", package = "plotly"))
+locale_codes <- tibble::tibble(
+  Code = tools::file_path_sans_ext(locales)
+)
+
+readr::read_csv("data/locale-table.csv") %>%
+  dplyr::select(Language = Locale, Code = Languagecode) %>%
+  dplyr::semi_join(locale_codes) %>%
+  DT::datatable(rownames = FALSE)
+
+cat("<table>",paste0("<caption>", "(#tab:locale-codes)", "Language support in plotly. To use one of these languages, supply the locale code to the <code>locale</code> argument in the <code>config()</code> function.", "</caption>"),"</table>", sep ="\n")
+```
+
+
+# LaTeX rendering {#mathjax}
+
+LaTeX rendering via MathJax is possible via the `TeX()` function which flags a character vector as LaTeX. To load MathJaX externally (meaning an internet connection is needed for TeX rendering), set the new `mathjax` argument in `config()` to `"cdn"`. Figure \@ref(fig:mathjax) demonstrates how to render LaTeX in the plot and axis titles.
+
+```r
+library(plotly)
+data(co2, package = "datasets")
+
+plot_ly() %>%
+  add_lines(x = zoo::index(co2), y = co2) %>%
+  layout(
+    title = TeX("CO_2 \\text{measured in } \\frac{parts}{million}"),
+    xaxis = list(title = "Time"),
+    yaxis = list(title = TeX("\\text{Atmospheric concentraion of CO}_2"))
+  ) %>%
+  config(mathjax = "cdn")
+```
+
+```{r mathjax, echo = FALSE, fig.cap="Rendering LaTeX in the plot and axis titles."}
+knitr::include_graphics("images/mathjax.png")
+```
+
+Figure \@ref(fig:mathjax2) demonstrates how to render LaTeX with on-graph text. There are two ways to draw on-graph text: `add_text()` which is a scatter trace with a mode of text and `add_annotations()` which is part of the graph's layout. The main difference is that `add_text()` is able to display tooltips and `add_annotations()` is able to display arrows.
+
+```r
+plotly_empty(showlegend = FALSE, hoverinfo = "x+y") %>%
+  add_annotations(x = 1, y = 2, text = TeX("\\text{The sample mean:} \\sum_{i=1}^n x_i \\text{ where}"), showarrow = FALSE) %>%
+  add_text(x = 1, y = 1, text = TeX("x_i \\sim N(\\mu, \\sigma)"), size = I(100)) %>%
+  add_annotations(x = 1, y = 0, text = TeX("E[x_i]")) %>%
+  add_text(x = 1, y = 0, text = TeX("\\mu"), textposition = "bottom") %>%
+  config(mathjax = "cdn")
+```
+
+```{r mathjax2, echo = FALSE, fig.cap="Rendering LaTeX using `add_text()` and `add_annotations()`. "}
+knitr::include_graphics("images/mathjax2.png")
+```
+
+To use a local version of MathJax (so that your graphs will render without an internet connection), you need to inform **plotly** where it's located. If you don't already have MathJax locally, I recommend downloading the official MathJax git repo. Here's how to do that using terminal commands:
+
+```shell
+$ git clone https://github.com/mathjax/MathJax.git
+$ cd MathJax
+```
+
+Now set the `PLOTLY_MATHJAX_PATH` environment variable so that **plotly** knows where that MathJax folder lives. I recommend setting this variable in you `.Rprofile` so you don't have to reset it everytime you restart R:
+
+```shell
+$ export PLOTLY_MATHJAX_PATH=`pwd`
+$ echo "Sys.setenv('PLOTLY_MATHJAX_PATH' = '$PLOTLY_MATHJAX_PATH')" >> ~/.Rprofile
+```
+
+Finally, once `PLOTLY_MATHJAX_PATH` is set, specify `mathjax="local"` in `config()`:
+
+```r
+config(last_plot(), mathjax="local")
+```
+
+## MathJax caveats
+
+1. MathJax rendering in tooltips [currently isn't supported](https://github.com/plotly/plotly.js/issues/559).
+
+2. At least currently, plotly.js requires SVG-based rendering which doesn't play nicely with HTML-based rendering (e.g. **rmarkdown** documents and **shiny** apps) . If you need both the SVG and HTML rendering, consider `<iframe>`-ing your plotly graph(s) into the larger document (see [here](https://github.com/ropensci/plotly/blob/master/inst/examples/rmd/MathJax/index.Rmd) for an example).
+
+3. Due to the size and nature of MathJax, using `htmlwidget::saveWidget()` with `selfcontained = TRUE` won't work. At least for now, when you need to save a plotly graph (`p`) with local MathJax, do `htmlwidget::saveWidget(p, selfcontained = FALSE)`
+
+# Working with colors {#working-with-colors}
+
+The JavaScript library underlying **plotly** (plotly.js) has it's own support for specifying colors, which is different from how R specifies colors. It currently supports:
+
+* hex (e.g. `"#FF0000"`)
+* rgb (e.g. `"rgb(255, 0, 0)"`)
+* rgba (e.g. `"rgba(255, 0, 0, 1)"`)
+* hsl (e.g. `'hsl(0, 100%, 50%)'`)
+* hsv (e.g. `'hsv(0, 100%, 50%)'`)
+* Named CSS3 colors <http://www.w3.org/TR/css3-color/#svg-color>
+
+If you use `plot_ly()` and directly specify a plotly.js color attribute (e.g. `marker.color`), you can use any of these formats. Figure \@ref(fig:color-plotly-js) uses the the hsl format:
+
+```r
+plot_ly(x = iris$Petal.Length, marker = list(color = "hsl(0, 100%, 50%)"))
+```
+
+```{r color-plotly-js, echo = FALSE, fig.cap="Specifying a color in plotly.js' supported format"}
+knitr::include_graphics("images/color-plotly-js.png")
+```
+
+If you're doing something specific to R, like using `ggplotly()` and/or the top-level `color`/`stroke` argument in `plot_ly()`, you'll need to be careful to about specifying colors in way that R and **plotly** can understand. For example, at least currently, you can't specify an hsl string in this way:
+
+```{r, error = TRUE}
+plot_ly(x = 1, y = 1, color = I("hsl(0, 100%, 50%)"))
+```
+
+Just like in **ggplot2**, you'll have to specify a color in one of the following ways:
+
+* A hexadecimal string of the form "#rrggbb" or "#rrggbbaa".
+* Named colors (e.g. "blue"). All supported names are listed in `colors()`.
+* An `NA` for transparent.
+
+This doesn't imply that you can't work in other colorspaces though (e.g. rgb, rgba, hsl, or hsl). The **colorspace** package provides a nice way to create colors in any of these colorspaces and provides a `hex()` function that you can use to convert any color to a hexidecimal format [@colorspace].
+
+```r
+library(colorspace)
+red <- hex(HLS(0, 0.5, 1))
+plot_ly(x = iris$Petal.Length, color = I(red))
+```
+
+If you'd like to learn more about how to use the `color` argument as well as specify different types of color palettes, see Section \@ref(scatter-traces).
+
+# Working with symbols & glyphs
+
+The JavaScript library underlying **plotly** (plotly.js) has it's own special support for specifying marker symbols by name. As Figure \@ref(fig:symbols-all) shows, there are currently many acceptable `marker.symbol` values, and all the acceptable values can be accessed through plotly.js' `schema()`.
+
+```{r symbols-all, fig.cap = "All marker symbols currently supported by **plotly**.", screenshot.alt = "images/symbols-all"}
+s <- schema()
+vals <- grep("-", s$traces$scatter$attributes$marker$symbol$values, value = T)
+plot_ly() %>%
+  add_markers(
+    x = rep(1:12, each = 11, length.out = length(vals)), 
+    y = rep(1:11, times = 12, length.out = length(vals)), 
+    text = vals, 
+    hoverinfo = "text",
+    marker = list(
+      symbol = vals,
+      size = 30,
+      line = list(
+        color = "black",
+        width = 2
+      )
+    )
+  )
+```
+
+In addition to these marker symbols, you can also use `add_text()` to encode data with on-graph text. Moreover, the `add_text()` function (i.e. a scatter trace with `mode="markers"`) enjoys a lot of the same properties as `add_markers()` (i.e. a scatter trace with `mode="text"`). As Figure \@ref(fig:glyphs) shows, similar to how we can supply typographical glyphs and/or unicode in a custom tooltip, you can supply a character vector of similar content to `add_text()` (i.e. a scatter trace with `mode='text'`) which renders on-graph text. Furthermore, when using `text` to render on-graph text, one can leverage the `hovertext` attribute to display some different text on hover.
+
+```{r glyphs, fig.cap = "Using `add_text()` to render on-graph text with typographical glyphs and/or unicode.", screenshot.alt = "images/glyphs"}
+plot_ly() %>% 
+  add_text(
+    x = rep(2, 2), 
+    y = 1:2, 
+    size = I(15),
+    text = c(
+      "Glyphs: Ѳ, （╯°□°）╯ ┻━┻",
+      "Unicode: \U00AE \U00B6 \U00BF"
+    ),
+    hovertext = c(
+      "glyphs",
+      "unicode"
+    ),
+    textposition = "left center",
+    hoverinfo = "text"
+  )
+```
+
+Having the ability to encode data with unicode means that we have a virtually endless number of ways to encode data in symbols/glyphs. Just for fun, Figure \@ref(fig:emojis) demonstrates how you could plot all the activity emojis using the **emo** package and display the name of the emoji on hover [@emo].
+
+```{r emojis, fig.cap = "Using `add_text()` to plot all the activity emojis and leveraging `hovertext` to place the emoji names in the tooltip text.", screenshot.alt = "images/emojis"}
+library(emo)
+set.seed(100)
+jis %>%
+  filter(group == "Activities") %>%
+  plot_ly(x = runif(nrow(.)), y = runif(nrow(.))) %>%
+  add_text(
+    text = ~emoji,
+    hovertext = ~name,
+    hoverinfo = "text",
+    size = I(20)
+  )
+```
+
+# Customize the modebar
+
+By default, the modebar appears in the top right-hand side of a **plotly** graph on mouse hover, and can lead to poor user-experience on small displays. Fortunately, the modebar can be completely customized via the `config()` function. The `config()` function can be helpful for a lot of things: language support (Section \@ref(locales)), enabling mathjax (Section \@ref(mathjax)), suppressing tip dialogs (e.g., `showTips`), when to scroll on zoom, etc. However, this topic is all about options related to the modebar. To see a complete list of `config()` options, as well as their description, see the config section of the plotly.js `schema()`.
+
+## Remove the entire modebar
+
+The `displayModeBar` option makes it quick and easy to remove the entire modebar.
+
+```r
+plot_ly() %>%
+  config(displayModeBar = FALSE)
+```
+
+## Remove the plotly logo
+
+The `displaylogo` option makes it quick and easy to remove the entire modebar.
+
+```r
+plot_ly() %>%
+  config(displaylogo = FALSE)
+```
+
+```{r displaylogo, echo = FALSE, fig.cap = "Removing the plotly logo from the modebar."}
+knitr::include_graphics("images/displaylogo.png")
+```
+
+## Remove modebar buttons by name
+
+Any modebar buttons can be removed by name via `modeBarButtonsToRemove`. The current list of modebar buttons can be found at <https://github.com/plotly/plotly.js/blob/master/src/components/modebar/buttons.js>
+
+```r
+plot_ly() %>%
+  config(modeBarButtonsToRemove = c("zoomIn2d", "zoomOut2d"))
+```
+
+```{r modeBarButtonsToRemove, echo = FALSE, fig.cap = "Removing the 'zoomIn2d' and 'zoomOut2d' modebar buttons by name."}
+knitr::include_graphics("images/modeBarButtonsToRemove.png")
+```
+
+## Add custom modebar buttons
+
+It is possible to supply your own modebar button icon that triggers a custom JavaScript function when clicked. You must provide a `name` for the icon and either a SVG `path` (with just the d attribute) or a full SVG element (to `svg`). Nowadays, there are a number of free websites that allow you to search icons and download their corresponding SVG information. When supplying `path`, as in Figure \@ref(fig:modeBarButtonsToAdd), you can also define an SVG `transform` to help size and position the icon. To define a JavaScript function to call upon clicking the icon, you can provide a string to `htmlwidgets::JS()`. The interactive version of Figure \@ref(fig:modeBarButtonsToAdd) adds on-graph text everytime the octocat icon is clicked. To learn more about how to leverage JavaScript from R, see Section \@ref(javascript).
+
+```r
+octocat <- list(
+  name = "octocat",
+  icon = list(
+    path = "M24.92 12.183c0-1.586-.604-2.864-1.585-3.83.172-.547.398-1.763-.229-3.321 0 0-1.114-.348-3.628 1.315a12.695 12.695 0 0 0-3.081-.366c-1.154 0-2.322.143-3.409.44-2.596-1.747-3.74-1.391-3.74-1.391-.748 1.847-.287 3.215-.145 3.554-.883.936-1.414 2.133-1.414 3.594 0 1.111.128 2.099.44 2.964l.325.732c.879 1.614 2.606 2.655 5.677 2.983-.434.289-.885.779-1.062 1.612-.594.28-2.475.966-3.603-.944 0 0-.633-1.148-1.842-1.235 0 0-1.174-.017-.08.722 0 0 .782.367 1.326 1.738 0 0 .705 2.342 4.114 1.593v2.417s-.076.857-.867 1.143c0 0-.469.312.034.497 0 0 2.205.174 2.205-1.604v-2.643s-.09-1.047.429-1.404v4.332s-.032 1.031-.576 1.421c0 0-.362.646.433.468 0 0 1.517-.211 1.584-1.967l.035-4.383h.363l.033 4.383c.076 1.748 1.59 1.967 1.59 1.967.793.179.429-.468.429-.468-.54-.389-.579-1.421-.579-1.421v-4.297c.52.402.436 1.369.436 1.369v2.643c0 1.777 2.2 1.604 2.2 1.604.505-.186.036-.498.036-.498-.793-.286-.867-1.143-.867-1.143v-3.461c0-1.346-.574-2.056-1.137-2.435 3.277-.318 4.845-1.368 5.572-2.99-.015.027.26-.726.26-.726.25-.859.325-1.855.325-2.963h-.002z",
+    transform = 'matrix(1 0 0 1 -2 -2) scale(0.7)'
+  ),
+  click = htmlwidgets::JS(
+    "function(gd) {
+       var txt = {x: [1], y: [1], text: 'Octocat!', mode: 'text'};
+       Plotly.addTraces(gd, txt);
+    }"
+  )
+)
+
+plot_ly() %>%
+  config(modeBarButtonsToAdd = list(octocat))
+```
+
+```{r modeBarButtonsToAdd, echo = FALSE, fig.cap = "Supplying a custom modebar button with custom behavior."}
+knitr::include_graphics("images/modeBarButtonsToAdd.png")
+```
+
+Note that you can also use `modeBarButtons` to completely specify which buttons to include in the modebar. With this option, you can supply existing button names and/or your own custom buttons:
+
+```r
+plot_ly() %>%
+  config(modeBarButtons = list(list("zoomIn2d"), list(octocat)))
+```
+
+```{r modeBarButtons, echo = FALSE, fig.cap = "Specifying the full list of modebar buttons."}
+knitr::include_graphics("images/modeBarButtons.png")
+```
+
+## Control image downloads
+
+By default, the `toImage` modebar button downloads a png file using the current size and state of the graph. With `toImageButtonOptions`, one can specify different sizes and filetypes, which is particularly useful for obtaining a static pdf/webp/jpeg/etc image of the plot *after* components have been directly manipulated, as leveraged in Figure \@ref(fig:edit-county-labels). Here's a basic example of configuring the `'toImage'` button to download an svg file that's 200 x 100 pixels:
+
+```r
+plot_ly() %>%
+  config(
+    toImageButtonOptions = list(
+      format = "svg",
+      width = 200,
+      height = 100
+    )
+  )
+```
+
+After downloading the svg file, you can convert it to pdf using the `rsvg_pdf()` function from the **rsvg** package [@rsvg].
+
+## The data-plot-pipeline
+
+Since every **plotly** function modifies a plotly object (or the data underlying that object), we can express complex multi-layer plots as a sequence (or, more specifically, a directed acyclic graph) of data manipulations and mappings to the visual space. Moreover, **plotly** functions are designed to take a plotly object as input, and return a modified plotly object, making it easy to chain together operations via the pipe operator (`%>%`) from the **magrittr** package [@magrittr]. Consequently, we can re-express Figure \@ref(fig:houston) in a much more readable and understandable fashion.
+
+```{r houston2, screenshot.alt = "screenshots/houston"}
+allCities <- txhousing %>%
+  group_by(city) %>%
+  plot_ly(x = ~date, y = ~median) %>%
+  add_lines(alpha = 0.2, name = "Texan Cities", hoverinfo = "none")
+
+allCities %>%
+  filter(city == "Houston") %>%
+  add_lines(name = "Houston")
+```
+
+Sometimes the directed acyclic graph property of a pipeline can be too restrictive for certain types of plots. In this example, after filtering the data down to Houston, there is no way to recover the original data inside the pipeline. The `add_fun()` function helps to work-around this restriction^[Credit to Winston Chang and Hadley Wickham for this idea. The `add_fun()` is very much like `layer_f()` function in **ggvis**.] -- it works by applying a function to the plotly object, but does not affect the data associated with the plotly object. This effectively provides a way to isolate data transformations within the pipeline^[Also, effectively putting a [pipeline inside a pipeline](http://www.memecreator.org/meme/yo-dawg-i-heard-u-like-pipelines-so-we-put-a-pipeline-in-your-pipeline)]. Figure \@ref(fig:houston-vs-sa) uses this idea to highlight both Houston and San Antonio.
+
+```{r houston-vs-sa, fig.cap = "Monthly median house price in Houston and San Antonio in comparison to other Texan cities.", screenshot.alt = "screenshots/houston-vs-sa"}
+allCities %>%
+  add_fun(function(plot) {
+    plot %>% filter(city == "Houston") %>% add_lines(name = "Houston")
+  }) %>%
+  add_fun(function(plot) {
+    plot %>% filter(city == "San Antonio") %>% 
+      add_lines(name = "San Antonio")
+  })
+```
+
+It is useful to think of the function supplied to `add_fun()` as a "layer" function -- a function that accepts a plot object as input, possibly applies a transformation to the data, and maps that data to visual objects. To make layering functions more modular, flexible, and expressive, the `add_fun()` allows you to pass additional arguments to a layer function. Figure \@ref(fig:summary) makes use of this pattern, by creating a reusable function for layering both a particular city as well as the first, second, and third quartile of median monthly house sales (by city).
+
+```{r summary, fig.cap = "First, second, and third quartile of median monthly house price in Texas.", screenshot.alt = "screenshots/summary"}
+# reusable function for highlighting a particular city
+layer_city <- function(plot, name) {
+  plot %>% filter(city == name) %>% add_lines(name = name)
+}
+
+# reusable function for plotting overall median & IQR
+layer_iqr <- function(plot) {
+  plot %>%
+    group_by(date) %>% 
+    summarise(
+      q1 = quantile(median, 0.25, na.rm = TRUE),
+      m = median(median, na.rm = TRUE),
+      q3 = quantile(median, 0.75, na.rm = TRUE)
+    ) %>%
+    add_lines(y = ~m, name = "median", color = I("black")) %>%
+    add_ribbons(ymin = ~q1, ymax = ~q3, name = "IQR", color = I("black"))
+}
+
+allCities %>%
+  add_fun(layer_iqr) %>%
+  add_fun(layer_city, "Houston") %>%
+  add_fun(layer_city, "San Antonio")
+```
+
+A layering function does not have to be a data-plot-pipeline itself. Its only requirement on a layering function is that the first argument is a plot object and it returns a plot object. This provides an opportunity to say, fit a model to the plot data, extract the model components you desire, and map those components to visuals. Furthermore, since **plotly**'s `add_*()` functions don't require a data.frame, you can supply those components directly to attributes (as long as they are well-defined), as done in Figure \@ref(fig:forecast) via the **forecast** package [@forecast].
+
+```{r forecast, fig.cap = "Layering on a 4-year forecast from a exponential smoothing state space model.", screenshot.alt = "screenshots/forecast"}
+library(forecast)
+layer_forecast <- function(plot) {
+  d <- plotly_data(plot)
+  series <- with(d, 
+    ts(median, frequency = 12, start = c(2000, 1), end = c(2015, 7))
+  )
+  fore <- forecast(ets(series), h = 48, level = c(80, 95))
+  plot %>%
+    add_ribbons(x = time(fore$mean), ymin = fore$lower[, 2],
+                ymax = fore$upper[, 2], color = I("gray95"), 
+                name = "95% confidence", inherit = FALSE) %>%
+    add_ribbons(x = time(fore$mean), ymin = fore$lower[, 1],
+                ymax = fore$upper[, 1], color = I("gray80"), 
+                name = "80% confidence", inherit = FALSE) %>%
+    add_lines(x = time(fore$mean), y = fore$mean, color = I("blue"), 
+              name = "prediction")
+}
+
+txhousing %>%
+  group_by(city) %>%
+  plot_ly(x = ~date, y = ~median) %>%
+  add_lines(alpha = 0.2, name = "Texan Cities", hoverinfo = "none") %>%
+  add_fun(layer_iqr) %>%
+  add_fun(layer_forecast)
+```
+
+In summary, the "data-plot-pipeline" is desirable for a number of reasons: (1) makes your code easier to read and understand, (2) encourages you to think of both your data and plots using a single, uniform data structure, which (3) makes it easy to combine and reuse transformations. As it turns out, we can even use these ideas when creating a plotly object via `ggplotly()`, as discussed in the next section [Extending `ggplotly()`](#extending-ggplotly).
+
+# Facets with `subplot()`
+
+```r
+library(plotly)
+library(dplyr)
+
+my_plot <- . %>% 
+  plot_ly(x = ~date, y = ~value) %>%
+  add_annotations(
+    text = ~unique(variable),
+    x = 0.5,
+    y = 1,
+    yref = "paper",
+    xref = "paper",
+    xanchor = "middle",
+    yanchor = "top",
+    showarrow = FALSE,
+    font = list(size = 15)
+  ) %>%
+  layout(
+    shapes = list(
+      type = "rect",
+      x = 0,
+      x = 1
+    )
+  )
+
+economics_long %>%
+  group_by(variable) %>%
+  do(p = my_plot(.)) %>%
+  subplot(nrows = NROW(.), shareX = TRUE)
+```
+
+
+
+# Control axes
+
+Anything better to say than <https://plot.ly/r/axes/>?
+
+
+# Improving performance (optimizing views?)
+
+Define print-time vs run-time performance.
+
+### SVG vs WebGL
+
+* Borrow examples from workshop?
+* Borrow from maps blog post?
+
+### Reducing runtime dependencies
+
+* Point to `partial_bundle()` use in publishing
+
+# Why is my plot blank?
+
+There are numerous reasons why your plot may not render. 
+
+* Malformed group definition
+* Talk about WebGL compatibility in browsers (e.g. RStudio)

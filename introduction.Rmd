@@ -2,6 +2,8 @@
 
 ## What you will learn
 
+This book provides the foundation necessary to create highly interactive and scalable 
+
 ## How this book is organized
 
 * Chapter 1 designed to help **ggplot2** users transfer knowledge to `plot_ly()`. 
@@ -10,19 +12,23 @@
 
 ### Web technologies
 
-Although this book is fundamentally about creating web graphics, it does not aim to teach you web technologies (e.g., HTML, SVG, CSS, JavaScript, etc). It's true that becoming a competent web developer gives you the power and freedom to create more types of visuals, but the opporunities costs involved with learning all the relevant tools is not worth it for most data analysts. Moreover, most web programming tools are not well-suited for the exploratory phase of a data science workflow where iteration between data visualization, transformation, and modeling is a necessary task that often impedes hypothesis generation and sense-making (more on this in \@ref(why-web-graphics). As a result, even if you do become web developer, you'll find the cognitive burden required to create a web graphic will hamper your ability to derive new insights from data. 
+Although this book is fundamentally about creating web graphics, it does not aim to teach you web technologies (e.g., HTML, SVG, CSS, JavaScript, etc). It's true that becoming a competent web developer gives you the power and freedom to create more types of visuals, but the opporunities costs involved with learning all the relevant tools is not worth it for most data analysts. Moreover, most web programming tools are not well-suited for the exploratory phase of a data science workflow where iteration between data visualization, transformation, and modeling is a necessary task that often impedes hypothesis generation and sense-making (more on this in section \@ref(why-web-graphics)). As a result, even if you do become web developer, you'll find the cognitive burden required to create a web graphic will hamper your ability to derive new insights from data. 
 
-* d3js
+### d3js
 
-The JavaScript library D3 is a great tool for data visualization assuming you're familiar with web technologies and are primarily interested in expository (not exploratory) visualization. 
+The JavaScript library D3 is a great tool for data visualization assuming you're familiar with web technologies and are primarily interested in expository (not exploratory) visualization. There are already lots of great resources for learning D3, including the numerous books [@murray-d3]; [@meeks-d3].
 
-* ggplot2
+### ggplot2
 
 The book does contain some **ggplot2** code examples (which are then converted to **plotly** via `ggplotly()`), but it's not designed to teach you **ggplot2**. For those looking to learn **ggplot2**, I recommend using the learning materials listed at <https://ggplot2.tidyverse.org>.
 
-* Graphical data analysis
+### Graphical data analysis
 
-How to perform data analysis via graphics (carefully, correctly, and creatively) is a topic unto itself. Although this book does have hints and examples of graphical data analysis, it does not aim to provide a comprehensive foundation. For a nice resource on graphical data analysis topic, see [@unwin-graphical-analysis].
+How to perform data analysis via graphics (carefully, correctly, and creatively) is a large topic unto itself. Although this book does have hints and examples of graphical data analysis, it does not aim to provide a comprehensive foundation. For a nice resource on graphical data analysis topic, see [@unwin-graphical-analysis].
+
+### Data visualization best practices
+
+Encoding information in a graphic (concisely and effectively) is a large topic unto itself. Although this book does have some ramblings related to best practices in data visualization, it does not aim to provide a comprehensive foundation. For some approachable and fun resources on the topic, see [@tufte-dataviz]; [@yau-dataviz]; [@healey-dataviz]; [@claus-dataviz].
 
 ## Prerequisites
 
@@ -45,18 +51,32 @@ remotes::install_github("cpsievert/plotly_book")
 
 ## Getting help and learning more
 
+<https://community.rstudio.com/tags/plotly>
+
+
 ## Acknowledgements
 
-* Toby Dylan Hocking and the original plotly authors
-* Heike Hofmann and Di Cook
-* Joe Cheng for **crosstalk**, inspiring section \@ref(graphical-queries), and many useful conversations.
-* Hadley Wickham and the ggplot2 team
-* Anthony Unwin for helpful feedback and suggestions
-* plotly.js developers
+This book wouldn't be possible without the generous assistance and mentorship of many people:
+
+* Toby Dylan Hocking for many helpful conversations, his mentorship in the R packages **animint** and **plotly**, and laying the original foundation behind `ggplotly()`.
+* Heike Hofmann and Di Cook for many helpful conversations about interactive graphics.
+* Joe Cheng for many helpful conversations and inspiring section \@ref(graphical-queries).
+* Étienne Tétreault-Pinard, Alex Johnson, and the other plotly.js core developers for responding to my feature requests and bug reports.
+* Yihui Xie for his work on **knitr**, **rmarkdown**, **bookdown**, and responding to my feature requests. Without **bookdown**, this book would never have happened.
+* Hadley Wickham and the **ggplot2** team for maintaining **ggplot2**.
+* Anthony Unwin for helpful feedback and suggestions.
+* Hadley Wickham and Garret Grolemund for writing _R for Data Science_ and allowing me to model this introduction after their introduction. 
+
 
 ## Colophon
-  
-  
+
+An online version of this book is available at https://plotly-book.cpsievert.me. It will continue to evolve in between reprints of the physical book. The source of the book is available at https://github.com/cpsievert/plotly_book. The book is powered by https://bookdown.org which makes it easy to turn R markdown files into HTML, PDF, and EPUB.
+
+This book was built with the following computing environment:
+
+```{r}
+devtools::session_info("plotly")
+```
   
 
 # Why interactive web graphics in R? {#why-web-graphics}
@@ -71,9 +91,14 @@ remotes::install_github("cpsievert/plotly_book")
     * New capabilites (e.g. easy sharing, portability) brings new set of concerns (e.g., client-server, security, etc)
     * Great tools for expository vis (d3.js, vega, plotly.js)
     * Lack of tools for exploratory vis (i.e. tools for iteration)
-* Why **plotly**?
-  * FOSS tool built with plotly.js and htmlwidgets
+* Why **plotly** for R?
+  * MIT-licensed software built with plotly.js and htmlwidgets
     * Perhaps mention the plotly.js development pace
     * Users can opt into plotly cloud 
     * Mention orca? 
-  * Transfer existing **ggplot2** knowledge
+  * Built on sound visualization and programming principles:
+    * The Grammar of Graphics
+    * Pure functional programming
+    * Two approaches, one object
+  * Works well with the tidyverse
+    
