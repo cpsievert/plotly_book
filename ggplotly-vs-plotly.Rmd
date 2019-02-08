@@ -9,10 +9,6 @@ knitr::opts_chunk$set(
 
 There are two main ways to initiate a plotly object in R. The `plot_ly()` function transforms _data_ into a plotly object, while the `ggplotly()` function transforms a _ggplot object_ into a plotly object [@ggplot2]; [@plotly]. Regardless of how a plotly object is created, printing it results in an interactive web-based visualization with tooltips, zooming, and panning enabled by default. The R package also has special semantics for [arranging](#arranging-multiple-views), [linking](#multiple-linked-views), and [animating](#animating-views) plotly objects. This chapter discusses some of the philosophy behind each approach, explores some of their similarities, and explains why understanding both approaches is extremely powerful.
 
-The initial inspiration for the `plot_ly()` function was to support [plotly.js](https://github.com/plotly/plotly.js) chart types that **ggplot2** doesn't support, such as 3D surface and mesh plots. Over time, this effort snowballed into an interface to the entire plotly.js graphing library with additional abstractions inspired by the grammar of graphics [@Wilkinson:2005]. This newer "non-ggplot2" interface to plotly.js is currently not, and may never be, as fully featured as **ggplot2**. Since we can already translate a fairly large amount of ggplot objects to plotly objects, I'd rather not reinvent those same abstractions, and advance our ability to [link multiple views](#multiple-linked-views).
-
-The next section uses a case study to introduce some of the similarities between `ggplotly()`/`plot_ly()`, introduces the concept of a [data-plot-pipeline](#the-data-plot-pipeline), and also demonstrates how to [extend `ggplotly()`](#extending-ggplotly) with functions that can modify plotly objects.
-
 ## A case study of housing sales in Texas {#txhousing-case-study}
 
 The **plotly** package depends on **ggplot2** which bundles a data set on monthly housing sales in Texan cities acquired from the [TAMU real estate center](http://recenter.tamu.edu/). After the loading the package, the data is "lazily loaded" into your session, so you may reference it by name:

@@ -1,0 +1,609 @@
+<!DOCTYPE html>
+<html >
+
+<head>
+
+  <meta charset="UTF-8">
+  <meta http-equiv="X-UA-Compatible" content="IE=edge">
+  <title>3 Overview | Interactive web-based data visualization with R, plotly, and shiny</title>
+  <meta name="description" content="A book example for a Chapman &amp; Hall book.">
+  <meta name="generator" content="bookdown  and GitBook 2.6.7">
+
+  <meta property="og:title" content="3 Overview | Interactive web-based data visualization with R, plotly, and shiny" />
+  <meta property="og:type" content="book" />
+  
+  
+  <meta property="og:description" content="A book example for a Chapman &amp; Hall book." />
+  <meta name="github-repo" content="ropensci/plotly" />
+
+  <meta name="twitter:card" content="summary" />
+  <meta name="twitter:title" content="3 Overview | Interactive web-based data visualization with R, plotly, and shiny" />
+  <meta name="twitter:site" content="@cpsievert" />
+  <meta name="twitter:description" content="A book example for a Chapman &amp; Hall book." />
+  
+
+<meta name="author" content="Carson Sievert">
+
+
+<meta name="date" content="2019-02-07">
+
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <meta name="apple-mobile-web-app-capable" content="yes">
+  <meta name="apple-mobile-web-app-status-bar-style" content="black">
+  
+  
+<link rel="prev" href="why-web-graphics.html">
+<link rel="next" href="scatter-traces.html">
+<script src="libs/jquery/jquery.min.js"></script>
+<link href="libs/gitbook/css/style.css" rel="stylesheet" />
+<link href="libs/gitbook/css/plugin-table.css" rel="stylesheet" />
+<link href="libs/gitbook/css/plugin-bookdown.css" rel="stylesheet" />
+<link href="libs/gitbook/css/plugin-highlight.css" rel="stylesheet" />
+<link href="libs/gitbook/css/plugin-search.css" rel="stylesheet" />
+<link href="libs/gitbook/css/plugin-fontsettings.css" rel="stylesheet" />
+
+
+
+
+
+
+
+<script src="libs/htmlwidgets/htmlwidgets.js"></script>
+<script src="libs/plotly-binding/plotly.js"></script>
+<script src="libs/typedarray/typedarray.min.js"></script>
+<link href="libs/crosstalk/css/crosstalk.css" rel="stylesheet" />
+<script src="libs/crosstalk/js/crosstalk.min.js"></script>
+<link href="libs/plotly-htmlwidgets-css/plotly-htmlwidgets.css" rel="stylesheet" />
+<script src="libs/plotly-main/plotly-latest.min.js"></script>
+<link href="libs/selectize/selectize.bootstrap3.css" rel="stylesheet" />
+<script src="libs/selectize/selectize.min.js"></script>
+<link href="libs/colourpicker/colourpicker.min.css" rel="stylesheet" />
+<script src="libs/colourpicker/colourpicker.min.js"></script>
+<link href="libs/datatables-css/datatables-crosstalk.css" rel="stylesheet" />
+<script src="libs/datatables-binding/datatables.js"></script>
+<link href="libs/dt-core/css/jquery.dataTables.min.css" rel="stylesheet" />
+<link href="libs/dt-core/css/jquery.dataTables.extra.css" rel="stylesheet" />
+<script src="libs/dt-core/js/jquery.dataTables.min.js"></script>
+
+
+<style type="text/css">
+a.sourceLine { display: inline-block; line-height: 1.25; }
+a.sourceLine { pointer-events: none; color: inherit; text-decoration: inherit; }
+a.sourceLine:empty { height: 1.2em; }
+.sourceCode { overflow: visible; }
+code.sourceCode { white-space: pre; position: relative; }
+div.sourceCode { margin: 1em 0; }
+pre.sourceCode { margin: 0; }
+@media screen {
+div.sourceCode { overflow: auto; }
+}
+@media print {
+code.sourceCode { white-space: pre-wrap; }
+a.sourceLine { text-indent: -1em; padding-left: 1em; }
+}
+pre.numberSource a.sourceLine
+  { position: relative; left: -4em; }
+pre.numberSource a.sourceLine::before
+  { content: attr(title);
+    position: relative; left: -1em; text-align: right; vertical-align: baseline;
+    border: none; pointer-events: all; display: inline-block;
+    -webkit-touch-callout: none; -webkit-user-select: none;
+    -khtml-user-select: none; -moz-user-select: none;
+    -ms-user-select: none; user-select: none;
+    padding: 0 4px; width: 4em;
+    color: #aaaaaa;
+  }
+pre.numberSource { margin-left: 3em; border-left: 1px solid #aaaaaa;  padding-left: 4px; }
+div.sourceCode
+  {  }
+@media screen {
+a.sourceLine::before { text-decoration: underline; }
+}
+code span.al { color: #ff0000; font-weight: bold; } /* Alert */
+code span.an { color: #60a0b0; font-weight: bold; font-style: italic; } /* Annotation */
+code span.at { color: #7d9029; } /* Attribute */
+code span.bn { color: #40a070; } /* BaseN */
+code span.bu { } /* BuiltIn */
+code span.cf { color: #007020; font-weight: bold; } /* ControlFlow */
+code span.ch { color: #4070a0; } /* Char */
+code span.cn { color: #880000; } /* Constant */
+code span.co { color: #60a0b0; font-style: italic; } /* Comment */
+code span.cv { color: #60a0b0; font-weight: bold; font-style: italic; } /* CommentVar */
+code span.do { color: #ba2121; font-style: italic; } /* Documentation */
+code span.dt { color: #902000; } /* DataType */
+code span.dv { color: #40a070; } /* DecVal */
+code span.er { color: #ff0000; font-weight: bold; } /* Error */
+code span.ex { } /* Extension */
+code span.fl { color: #40a070; } /* Float */
+code span.fu { color: #06287e; } /* Function */
+code span.im { } /* Import */
+code span.in { color: #60a0b0; font-weight: bold; font-style: italic; } /* Information */
+code span.kw { color: #007020; font-weight: bold; } /* Keyword */
+code span.op { color: #666666; } /* Operator */
+code span.ot { color: #007020; } /* Other */
+code span.pp { color: #bc7a00; } /* Preprocessor */
+code span.sc { color: #4070a0; } /* SpecialChar */
+code span.ss { color: #bb6688; } /* SpecialString */
+code span.st { color: #4070a0; } /* String */
+code span.va { color: #19177c; } /* Variable */
+code span.vs { color: #4070a0; } /* VerbatimString */
+code span.wa { color: #60a0b0; font-weight: bold; font-style: italic; } /* Warning */
+</style>
+
+<link rel="stylesheet" href="css/plotly.css" type="text/css" />
+<link rel="stylesheet" href="css/style.css" type="text/css" />
+<link rel="stylesheet" href="css/summary-fix.css" type="text/css" />
+</head>
+
+<body>
+
+
+
+  <div class="book without-animation with-summary font-size-2 font-family-1" data-basepath=".">
+
+    <div class="book-summary">
+      <nav role="navigation">
+
+<ul class="summary">
+<li class="chapter" data-level="" data-path="index.html"><a href="index.html"><i class="fa fa-check"></i>Welcome</a></li>
+<li class="chapter" data-level="1" data-path="introduction.html"><a href="introduction.html"><i class="fa fa-check"></i><b>1</b> Introduction</a><ul>
+<li class="chapter" data-level="1.1" data-path="introduction.html"><a href="introduction.html#what-you-will-learn"><i class="fa fa-check"></i><b>1.1</b> What you will learn</a></li>
+<li class="chapter" data-level="1.2" data-path="introduction.html"><a href="introduction.html#how-this-book-is-organized"><i class="fa fa-check"></i><b>1.2</b> How this book is organized</a></li>
+<li class="chapter" data-level="1.3" data-path="introduction.html"><a href="introduction.html#what-you-wont-learn"><i class="fa fa-check"></i><b>1.3</b> What you won’t learn</a><ul>
+<li class="chapter" data-level="1.3.1" data-path="introduction.html"><a href="introduction.html#web-technologies"><i class="fa fa-check"></i><b>1.3.1</b> Web technologies</a></li>
+<li class="chapter" data-level="1.3.2" data-path="introduction.html"><a href="introduction.html#d3js"><i class="fa fa-check"></i><b>1.3.2</b> d3js</a></li>
+<li class="chapter" data-level="1.3.3" data-path="introduction.html"><a href="introduction.html#ggplot2"><i class="fa fa-check"></i><b>1.3.3</b> ggplot2</a></li>
+<li class="chapter" data-level="1.3.4" data-path="introduction.html"><a href="introduction.html#graphical-data-analysis"><i class="fa fa-check"></i><b>1.3.4</b> Graphical data analysis</a></li>
+<li class="chapter" data-level="1.3.5" data-path="introduction.html"><a href="introduction.html#data-visualization-best-practices"><i class="fa fa-check"></i><b>1.3.5</b> Data visualization best practices</a></li>
+</ul></li>
+<li class="chapter" data-level="1.4" data-path="introduction.html"><a href="introduction.html#prerequisites"><i class="fa fa-check"></i><b>1.4</b> Prerequisites</a></li>
+<li class="chapter" data-level="1.5" data-path="introduction.html"><a href="introduction.html#run-code-examples"><i class="fa fa-check"></i><b>1.5</b> Run code examples</a></li>
+<li class="chapter" data-level="1.6" data-path="introduction.html"><a href="introduction.html#getting-help-and-learning-more"><i class="fa fa-check"></i><b>1.6</b> Getting help and learning more</a></li>
+<li class="chapter" data-level="1.7" data-path="introduction.html"><a href="introduction.html#acknowledgements"><i class="fa fa-check"></i><b>1.7</b> Acknowledgements</a></li>
+<li class="chapter" data-level="1.8" data-path="introduction.html"><a href="introduction.html#colophon"><i class="fa fa-check"></i><b>1.8</b> Colophon</a></li>
+</ul></li>
+<li class="chapter" data-level="2" data-path="why-web-graphics.html"><a href="why-web-graphics.html"><i class="fa fa-check"></i><b>2</b> Why interactive web graphics in R?</a></li>
+<li class="part"><span><b>I Creating views</b></span></li>
+<li class="chapter" data-level="3" data-path="overview.html"><a href="overview.html"><i class="fa fa-check"></i><b>3</b> Overview</a><ul>
+<li class="chapter" data-level="3.1" data-path="overview.html"><a href="overview.html#intro-plotly"><i class="fa fa-check"></i><b>3.1</b> Intro to <code>plot_ly()</code></a></li>
+<li class="chapter" data-level="3.2" data-path="overview.html"><a href="overview.html#intro-plotly-js"><i class="fa fa-check"></i><b>3.2</b> Intro to plotly.js</a></li>
+<li class="chapter" data-level="3.3" data-path="overview.html"><a href="overview.html#intro-to-ggplotly"><i class="fa fa-check"></i><b>3.3</b> Intro to <code>ggplotly()</code></a></li>
+<li class="chapter" data-level="3.4" data-path="overview.html"><a href="overview.html#plot_ly-vs-ggplotly"><i class="fa fa-check"></i><b>3.4</b> <code>plot_ly()</code> vs <code>ggplotly()</code></a></li>
+</ul></li>
+<li class="chapter" data-level="4" data-path="scatter-traces.html"><a href="scatter-traces.html"><i class="fa fa-check"></i><b>4</b> Scatter traces</a><ul>
+<li class="chapter" data-level="4.1" data-path="scatter-traces.html"><a href="scatter-traces.html#scatterplots"><i class="fa fa-check"></i><b>4.1</b> Scatterplots</a><ul>
+<li class="chapter" data-level="4.1.1" data-path="scatter-traces.html"><a href="scatter-traces.html#d-scatterplots"><i class="fa fa-check"></i><b>4.1.1</b> 3D scatterplots</a></li>
+<li class="chapter" data-level="4.1.2" data-path="scatter-traces.html"><a href="scatter-traces.html#scatterplot-matrices"><i class="fa fa-check"></i><b>4.1.2</b> Scatterplot matrices</a></li>
+<li class="chapter" data-level="4.1.3" data-path="scatter-traces.html"><a href="scatter-traces.html#dotplots-error-bars"><i class="fa fa-check"></i><b>4.1.3</b> Dotplots &amp; error bars</a></li>
+</ul></li>
+<li class="chapter" data-level="4.2" data-path="scatter-traces.html"><a href="scatter-traces.html#line-plots"><i class="fa fa-check"></i><b>4.2</b> Line plots</a><ul>
+<li class="chapter" data-level="4.2.1" data-path="scatter-traces.html"><a href="scatter-traces.html#density-plots"><i class="fa fa-check"></i><b>4.2.1</b> Density plots</a></li>
+<li class="chapter" data-level="4.2.2" data-path="scatter-traces.html"><a href="scatter-traces.html#parallel-coordinates"><i class="fa fa-check"></i><b>4.2.2</b> Parallel Coordinates</a></li>
+<li class="chapter" data-level="4.2.3" data-path="scatter-traces.html"><a href="scatter-traces.html#d-paths"><i class="fa fa-check"></i><b>4.2.3</b> 3D paths</a></li>
+</ul></li>
+<li class="chapter" data-level="4.3" data-path="scatter-traces.html"><a href="scatter-traces.html#segments"><i class="fa fa-check"></i><b>4.3</b> Segments</a></li>
+<li class="chapter" data-level="4.4" data-path="scatter-traces.html"><a href="scatter-traces.html#ribbons"><i class="fa fa-check"></i><b>4.4</b> Ribbons</a></li>
+<li class="chapter" data-level="4.5" data-path="scatter-traces.html"><a href="scatter-traces.html#polygons"><i class="fa fa-check"></i><b>4.5</b> Polygons</a></li>
+</ul></li>
+<li class="chapter" data-level="5" data-path="maps.html"><a href="maps.html"><i class="fa fa-check"></i><b>5</b> Maps</a><ul>
+<li class="chapter" data-level="5.1" data-path="maps.html"><a href="maps.html#using-scatter-traces"><i class="fa fa-check"></i><b>5.1</b> Using scatter traces</a></li>
+<li class="chapter" data-level="5.2" data-path="maps.html"><a href="maps.html#choropleths"><i class="fa fa-check"></i><b>5.2</b> Choropleths</a></li>
+<li class="chapter" data-level="5.3" data-path="maps.html"><a href="maps.html#using-geom_sf"><i class="fa fa-check"></i><b>5.3</b> Using <code>geom_sf()</code></a></li>
+</ul></li>
+<li class="chapter" data-level="6" data-path="bars-histograms.html"><a href="bars-histograms.html"><i class="fa fa-check"></i><b>6</b> Bars &amp; histograms</a><ul>
+<li class="chapter" data-level="6.1" data-path="bars-histograms.html"><a href="bars-histograms.html#multiple-numeric-distributions"><i class="fa fa-check"></i><b>6.1</b> Multiple numeric distributions</a></li>
+<li class="chapter" data-level="6.2" data-path="bars-histograms.html"><a href="bars-histograms.html#multiple-discrete-distributions"><i class="fa fa-check"></i><b>6.2</b> Multiple discrete distributions</a></li>
+</ul></li>
+<li class="chapter" data-level="7" data-path="boxplots.html"><a href="boxplots.html"><i class="fa fa-check"></i><b>7</b> Boxplots</a></li>
+<li class="chapter" data-level="8" data-path="d-frequencies.html"><a href="d-frequencies.html"><i class="fa fa-check"></i><b>8</b> 2D frequencies</a><ul>
+<li class="chapter" data-level="8.1" data-path="d-frequencies.html"><a href="d-frequencies.html#rectangular-binning-in-plotly.js"><i class="fa fa-check"></i><b>8.1</b> Rectangular binning in plotly.js</a></li>
+<li class="chapter" data-level="8.2" data-path="d-frequencies.html"><a href="d-frequencies.html#rectangular-binning-in-r"><i class="fa fa-check"></i><b>8.2</b> Rectangular binning in R</a></li>
+<li class="chapter" data-level="8.3" data-path="d-frequencies.html"><a href="d-frequencies.html#categorical-axes"><i class="fa fa-check"></i><b>8.3</b> Categorical axes</a></li>
+</ul></li>
+<li class="chapter" data-level="9" data-path="other-3d-plots.html"><a href="other-3d-plots.html"><i class="fa fa-check"></i><b>9</b> Other 3D plots</a></li>
+<li class="chapter" data-level="10" data-path="raster-images.html"><a href="raster-images.html"><i class="fa fa-check"></i><b>10</b> Raster images</a></li>
+<li class="chapter" data-level="11" data-path="other-chart-types.html"><a href="other-chart-types.html"><i class="fa fa-check"></i><b>11</b> Other chart types</a></li>
+<li class="chapter" data-level="12" data-path="leveraging-ggplotly.html"><a href="leveraging-ggplotly.html"><i class="fa fa-check"></i><b>12</b> Leveraging <code>ggplotly()</code></a><ul>
+<li class="chapter" data-level="12.1" data-path="leveraging-ggplotly.html"><a href="leveraging-ggplotly.html#a-case-study-comparing-ggplotly-to-plot_ly"><i class="fa fa-check"></i><b>12.1</b> A case study comparing <code>ggplotly()</code> to <code>plot_ly()</code></a></li>
+</ul></li>
+<li class="part"><span><b>II Publishing views</b></span></li>
+<li class="chapter" data-level="13" data-path="introduction-1.html"><a href="introduction-1.html"><i class="fa fa-check"></i><b>13</b> Introduction</a></li>
+<li class="chapter" data-level="14" data-path="saving-and-embedding-html.html"><a href="saving-and-embedding-html.html"><i class="fa fa-check"></i><b>14</b> Saving and embedding HTML</a></li>
+<li class="chapter" data-level="15" data-path="exporting-static-images.html"><a href="exporting-static-images.html"><i class="fa fa-check"></i><b>15</b> Exporting static images</a><ul>
+<li class="chapter" data-level="15.1" data-path="exporting-static-images.html"><a href="exporting-static-images.html#with-code"><i class="fa fa-check"></i><b>15.1</b> With code</a></li>
+<li class="chapter" data-level="15.2" data-path="exporting-static-images.html"><a href="exporting-static-images.html#from-a-browser"><i class="fa fa-check"></i><b>15.2</b> From a browser</a></li>
+<li class="chapter" data-level="15.3" data-path="exporting-static-images.html"><a href="exporting-static-images.html#sizing-exports"><i class="fa fa-check"></i><b>15.3</b> Sizing exports</a></li>
+</ul></li>
+<li class="chapter" data-level="16" data-path="editing-views-for-publishing.html"><a href="editing-views-for-publishing.html"><i class="fa fa-check"></i><b>16</b> Editing views for publishing</a></li>
+<li class="part"><span><b>III Combining multiple views</b></span></li>
+<li class="chapter" data-level="17" data-path="arranging-views.html"><a href="arranging-views.html"><i class="fa fa-check"></i><b>17</b> Arranging views</a><ul>
+<li class="chapter" data-level="17.1" data-path="arranging-views.html"><a href="arranging-views.html#arranging-htmlwidgets"><i class="fa fa-check"></i><b>17.1</b> Arranging htmlwidgets</a></li>
+<li class="chapter" data-level="17.2" data-path="arranging-views.html"><a href="arranging-views.html#merging-plotly-objects"><i class="fa fa-check"></i><b>17.2</b> Merging plotly objects</a><ul>
+<li class="chapter" data-level="17.2.1" data-path="arranging-views.html"><a href="arranging-views.html#recursive-subplots"><i class="fa fa-check"></i><b>17.2.1</b> Recursive subplots</a></li>
+<li class="chapter" data-level="17.2.2" data-path="arranging-views.html"><a href="arranging-views.html#ggplot2-subplots"><i class="fa fa-check"></i><b>17.2.2</b> ggplot2 subplots</a></li>
+</ul></li>
+<li class="chapter" data-level="17.3" data-path="arranging-views.html"><a href="arranging-views.html#navigating-many-views"><i class="fa fa-check"></i><b>17.3</b> Navigating many views</a></li>
+</ul></li>
+<li class="chapter" data-level="18" data-path="animating-views.html"><a href="animating-views.html"><i class="fa fa-check"></i><b>18</b> Animating views</a></li>
+<li class="part"><span><b>IV Linking multiple views</b></span></li>
+<li class="chapter" data-level="19" data-path="introduction-2.html"><a href="introduction-2.html"><i class="fa fa-check"></i><b>19</b> Introduction</a></li>
+<li class="chapter" data-level="20" data-path="client-side-linking.html"><a href="client-side-linking.html"><i class="fa fa-check"></i><b>20</b> Client-side linking</a><ul>
+<li class="chapter" data-level="20.1" data-path="client-side-linking.html"><a href="client-side-linking.html#graphical-queries"><i class="fa fa-check"></i><b>20.1</b> Graphical queries</a></li>
+<li class="chapter" data-level="20.2" data-path="client-side-linking.html"><a href="client-side-linking.html#filter"><i class="fa fa-check"></i><b>20.2</b> Highlight versus filter events</a></li>
+<li class="chapter" data-level="20.3" data-path="client-side-linking.html"><a href="client-side-linking.html#linking-animated-views"><i class="fa fa-check"></i><b>20.3</b> Linking animated views</a></li>
+<li class="chapter" data-level="20.4" data-path="client-side-linking.html"><a href="client-side-linking.html#querying-examples"><i class="fa fa-check"></i><b>20.4</b> Examples</a><ul>
+<li class="chapter" data-level="20.4.1" data-path="client-side-linking.html"><a href="client-side-linking.html#trellis-linking"><i class="fa fa-check"></i><b>20.4.1</b> Querying facetted charts</a></li>
+<li class="chapter" data-level="20.4.2" data-path="client-side-linking.html"><a href="client-side-linking.html#statistical-queries"><i class="fa fa-check"></i><b>20.4.2</b> Statistical queries</a></li>
+<li class="chapter" data-level="20.4.3" data-path="client-side-linking.html"><a href="client-side-linking.html#statistical-queries-ggplot"><i class="fa fa-check"></i><b>20.4.3</b> Statistical queries with <code>ggplotly()</code></a></li>
+<li class="chapter" data-level="20.4.4" data-path="client-side-linking.html"><a href="client-side-linking.html#geo-spatial-queries"><i class="fa fa-check"></i><b>20.4.4</b> Geo-spatial queries</a></li>
+<li class="chapter" data-level="20.4.5" data-path="client-side-linking.html"><a href="client-side-linking.html#linking-with-other-htmlwidgets"><i class="fa fa-check"></i><b>20.4.5</b> Linking with other htmlwidgets</a></li>
+<li class="chapter" data-level="20.4.6" data-path="client-side-linking.html"><a href="client-side-linking.html#generalized-pairs-plots"><i class="fa fa-check"></i><b>20.4.6</b> Generalized pairs plots</a></li>
+<li class="chapter" data-level="20.4.7" data-path="client-side-linking.html"><a href="client-side-linking.html#querying-diagnostic-plots"><i class="fa fa-check"></i><b>20.4.7</b> Querying diagnostic plots</a></li>
+</ul></li>
+<li class="chapter" data-level="20.5" data-path="client-side-linking.html"><a href="client-side-linking.html#limitations"><i class="fa fa-check"></i><b>20.5</b> Limitations</a></li>
+</ul></li>
+<li class="chapter" data-level="21" data-path="linking-server-side.html"><a href="linking-server-side.html"><i class="fa fa-check"></i><b>21</b> Server-side linking with shiny</a><ul>
+<li class="chapter" data-level="21.1" data-path="linking-server-side.html"><a href="linking-server-side.html#hello-shiny"><i class="fa fa-check"></i><b>21.1</b> Embedding plotly in shiny</a><ul>
+<li class="chapter" data-level="21.1.1" data-path="linking-server-side.html"><a href="linking-server-side.html#your-first-shiny-app"><i class="fa fa-check"></i><b>21.1.1</b> Your first shiny app</a></li>
+<li class="chapter" data-level="21.1.2" data-path="linking-server-side.html"><a href="linking-server-side.html#hiding-and-redrawing-on-resize"><i class="fa fa-check"></i><b>21.1.2</b> Hiding and redrawing on resize</a></li>
+</ul></li>
+<li class="chapter" data-level="21.2" data-path="linking-server-side.html"><a href="linking-server-side.html#shiny-plotly-inputs"><i class="fa fa-check"></i><b>21.2</b> Leveraging plotly input events</a><ul>
+<li class="chapter" data-level="21.2.1" data-path="linking-server-side.html"><a href="linking-server-side.html#dragging-events"><i class="fa fa-check"></i><b>21.2.1</b> Dragging events</a></li>
+<li class="chapter" data-level="21.2.2" data-path="linking-server-side.html"><a href="linking-server-side.html#d-events"><i class="fa fa-check"></i><b>21.2.2</b> 3D events</a></li>
+<li class="chapter" data-level="21.2.3" data-path="linking-server-side.html"><a href="linking-server-side.html#edit-events"><i class="fa fa-check"></i><b>21.2.3</b> Edit events</a></li>
+<li class="chapter" data-level="21.2.4" data-path="linking-server-side.html"><a href="linking-server-side.html#relayout-vs-restyle-events"><i class="fa fa-check"></i><b>21.2.4</b> Relayout vs restyle events</a></li>
+<li class="chapter" data-level="21.2.5" data-path="linking-server-side.html"><a href="linking-server-side.html#scoping-events"><i class="fa fa-check"></i><b>21.2.5</b> Scoping events</a></li>
+<li class="chapter" data-level="21.2.6" data-path="linking-server-side.html"><a href="linking-server-side.html#event-priority"><i class="fa fa-check"></i><b>21.2.6</b> Event priority</a></li>
+<li class="chapter" data-level="21.2.7" data-path="linking-server-side.html"><a href="linking-server-side.html#handling-discrete-axes"><i class="fa fa-check"></i><b>21.2.7</b> Handling discrete axes</a></li>
+<li class="chapter" data-level="21.2.8" data-path="linking-server-side.html"><a href="linking-server-side.html#reactive-vals"><i class="fa fa-check"></i><b>21.2.8</b> Accumulating and managing event data</a></li>
+</ul></li>
+<li class="chapter" data-level="21.3" data-path="linking-server-side.html"><a href="linking-server-side.html#shiny-performance"><i class="fa fa-check"></i><b>21.3</b> Improving performance</a><ul>
+<li class="chapter" data-level="21.3.1" data-path="linking-server-side.html"><a href="linking-server-side.html#proxies"><i class="fa fa-check"></i><b>21.3.1</b> Partial plotly updates</a></li>
+<li class="chapter" data-level="21.3.2" data-path="linking-server-side.html"><a href="linking-server-side.html#partial-update-examples"><i class="fa fa-check"></i><b>21.3.2</b> Partial update examples</a></li>
+</ul></li>
+<li class="chapter" data-level="21.4" data-path="linking-server-side.html"><a href="linking-server-side.html#advanced-applications"><i class="fa fa-check"></i><b>21.4</b> Advanced applications</a><ul>
+<li class="chapter" data-level="21.4.1" data-path="linking-server-side.html"><a href="linking-server-side.html#drill-down"><i class="fa fa-check"></i><b>21.4.1</b> Drill-down</a></li>
+<li class="chapter" data-level="21.4.2" data-path="linking-server-side.html"><a href="linking-server-side.html#crossfilter"><i class="fa fa-check"></i><b>21.4.2</b> Cross-filter</a></li>
+</ul></li>
+<li class="chapter" data-level="21.5" data-path="linking-server-side.html"><a href="linking-server-side.html#discussion"><i class="fa fa-check"></i><b>21.5</b> Discussion</a></li>
+</ul></li>
+<li class="part"><span><b>V Scaling views</b></span></li>
+<li class="chapter" data-level="22" data-path="scaling.html"><a href="scaling.html"><i class="fa fa-check"></i><b>22</b> Introduction</a></li>
+<li class="chapter" data-level="23" data-path="run-time-efficiency.html"><a href="run-time-efficiency.html"><i class="fa fa-check"></i><b>23</b> Run-time efficiency</a></li>
+<li class="chapter" data-level="24" data-path="print-time-efficiency.html"><a href="print-time-efficiency.html"><i class="fa fa-check"></i><b>24</b> Print-time efficiency</a></li>
+<li class="chapter" data-level="25" data-path="a-case-study-with-cranlogs.html"><a href="a-case-study-with-cranlogs.html"><i class="fa fa-check"></i><b>25</b> A case study with cranlogs</a></li>
+<li class="part"><span><b>VI Custom behavior with JavaScript</b></span></li>
+<li class="chapter" data-level="26" data-path="javascript.html"><a href="javascript.html"><i class="fa fa-check"></i><b>26</b> Introduction</a></li>
+<li class="chapter" data-level="27" data-path="json.html"><a href="json.html"><i class="fa fa-check"></i><b>27</b> Working with JSON</a><ul>
+<li class="chapter" data-level="27.1" data-path="json.html"><a href="json.html#assignment-subsetting-and-iteration"><i class="fa fa-check"></i><b>27.1</b> Assignment, subsetting, and iteration</a></li>
+<li class="chapter" data-level="27.2" data-path="json.html"><a href="json.html#mapping-r-to-json"><i class="fa fa-check"></i><b>27.2</b> Mapping R to JSON</a></li>
+</ul></li>
+<li class="chapter" data-level="28" data-path="js-event-handlers.html"><a href="js-event-handlers.html"><i class="fa fa-check"></i><b>28</b> Adding custom event handlers</a></li>
+<li class="chapter" data-level="29" data-path="supplying-custom-data.html"><a href="supplying-custom-data.html"><i class="fa fa-check"></i><b>29</b> Supplying custom data</a></li>
+<li class="chapter" data-level="30" data-path="client-side.html"><a href="client-side.html"><i class="fa fa-check"></i><b>30</b> Leveraging web technologies from R</a></li>
+<li class="part"><span><b>VII Various special topics</b></span></li>
+<li class="chapter" data-level="31" data-path="is-plotly-free.html"><a href="is-plotly-free.html"><i class="fa fa-check"></i><b>31</b> Is plotly free?</a></li>
+<li class="chapter" data-level="32" data-path="is-my-data-secure.html"><a href="is-my-data-secure.html"><i class="fa fa-check"></i><b>32</b> Is my data secure?</a></li>
+<li class="chapter" data-level="33" data-path="tooltip-text.html"><a href="tooltip-text.html"><i class="fa fa-check"></i><b>33</b> Control tooltip text</a></li>
+<li class="chapter" data-level="34" data-path="tooltip-text-ggplotly.html"><a href="tooltip-text-ggplotly.html"><i class="fa fa-check"></i><b>34</b> Control <code>ggplotly()</code> tooltips</a></li>
+<li class="chapter" data-level="35" data-path="control-tooltip-styling.html"><a href="control-tooltip-styling.html"><i class="fa fa-check"></i><b>35</b> Control tooltip styling</a></li>
+<li class="chapter" data-level="36" data-path="control-axis-labels.html"><a href="control-axis-labels.html"><i class="fa fa-check"></i><b>36</b> Control axis labels</a></li>
+<li class="chapter" data-level="37" data-path="locales.html"><a href="locales.html"><i class="fa fa-check"></i><b>37</b> Language support</a></li>
+<li class="chapter" data-level="38" data-path="mathjax.html"><a href="mathjax.html"><i class="fa fa-check"></i><b>38</b> LaTeX rendering</a><ul>
+<li class="chapter" data-level="38.1" data-path="mathjax.html"><a href="mathjax.html#mathjax-caveats"><i class="fa fa-check"></i><b>38.1</b> MathJax caveats</a></li>
+</ul></li>
+<li class="chapter" data-level="39" data-path="working-with-colors.html"><a href="working-with-colors.html"><i class="fa fa-check"></i><b>39</b> Working with colors</a></li>
+<li class="chapter" data-level="40" data-path="working-with-symbols-glyphs.html"><a href="working-with-symbols-glyphs.html"><i class="fa fa-check"></i><b>40</b> Working with symbols &amp; glyphs</a></li>
+<li class="chapter" data-level="41" data-path="customize-the-modebar.html"><a href="customize-the-modebar.html"><i class="fa fa-check"></i><b>41</b> Customize the modebar</a><ul>
+<li class="chapter" data-level="41.1" data-path="customize-the-modebar.html"><a href="customize-the-modebar.html#remove-the-entire-modebar"><i class="fa fa-check"></i><b>41.1</b> Remove the entire modebar</a></li>
+<li class="chapter" data-level="41.2" data-path="customize-the-modebar.html"><a href="customize-the-modebar.html#remove-the-plotly-logo"><i class="fa fa-check"></i><b>41.2</b> Remove the plotly logo</a></li>
+<li class="chapter" data-level="41.3" data-path="customize-the-modebar.html"><a href="customize-the-modebar.html#remove-modebar-buttons-by-name"><i class="fa fa-check"></i><b>41.3</b> Remove modebar buttons by name</a></li>
+<li class="chapter" data-level="41.4" data-path="customize-the-modebar.html"><a href="customize-the-modebar.html#add-custom-modebar-buttons"><i class="fa fa-check"></i><b>41.4</b> Add custom modebar buttons</a></li>
+<li class="chapter" data-level="41.5" data-path="customize-the-modebar.html"><a href="customize-the-modebar.html#control-image-downloads"><i class="fa fa-check"></i><b>41.5</b> Control image downloads</a></li>
+<li class="chapter" data-level="41.6" data-path="customize-the-modebar.html"><a href="customize-the-modebar.html#the-data-plot-pipeline"><i class="fa fa-check"></i><b>41.6</b> The data-plot-pipeline</a></li>
+</ul></li>
+<li class="chapter" data-level="42" data-path="facets-with-subplot.html"><a href="facets-with-subplot.html"><i class="fa fa-check"></i><b>42</b> Facets with <code>subplot()</code></a></li>
+<li class="chapter" data-level="43" data-path="control-axes.html"><a href="control-axes.html"><i class="fa fa-check"></i><b>43</b> Control axes</a></li>
+<li class="chapter" data-level="44" data-path="improving-performance-optimizing-views.html"><a href="improving-performance-optimizing-views.html"><i class="fa fa-check"></i><b>44</b> Improving performance (optimizing views?)</a><ul>
+<li class="chapter" data-level="44.0.1" data-path="improving-performance-optimizing-views.html"><a href="improving-performance-optimizing-views.html#svg-vs-webgl"><i class="fa fa-check"></i><b>44.0.1</b> SVG vs WebGL</a></li>
+<li class="chapter" data-level="44.0.2" data-path="improving-performance-optimizing-views.html"><a href="improving-performance-optimizing-views.html#reducing-runtime-dependencies"><i class="fa fa-check"></i><b>44.0.2</b> Reducing runtime dependencies</a></li>
+</ul></li>
+<li class="chapter" data-level="45" data-path="why-is-my-plot-blank.html"><a href="why-is-my-plot-blank.html"><i class="fa fa-check"></i><b>45</b> Why is my plot blank?</a></li>
+<li class="part"><span><b>VIII Developer-facing topics</b></span></li>
+<li class="chapter" data-level="46" data-path="translating-custom-ggplot2-geoms.html"><a href="translating-custom-ggplot2-geoms.html"><i class="fa fa-check"></i><b>46</b> Translating custom ggplot2 geoms</a></li>
+<li class="chapter" data-level="47" data-path="designing-an-htmlwidget-interface.html"><a href="designing-an-htmlwidget-interface.html"><i class="fa fa-check"></i><b>47</b> Designing an htmlwidget interface</a></li>
+<li class="chapter" data-level="" data-path="references.html"><a href="references.html"><i class="fa fa-check"></i>References</a></li>
+</ul>
+
+      </nav>
+    </div>
+
+    <div class="book-body">
+      <div class="body-inner">
+        <div class="book-header" role="navigation">
+          <h1>
+            <i class="fa fa-circle-o-notch fa-spin"></i><a href="./">Interactive web-based data visualization with R, plotly, and shiny</a>
+          </h1>
+        </div>
+
+        <div class="page-wrapper" tabindex="-1" role="main">
+          <div class="page-inner">
+
+            <section class="normal" id="section-">
+<div id="overview" class="section level1">
+<h1><span class="header-section-number">3</span> Overview</h1>
+<p>This part of the book teaches you how to leverage the <strong>plotly</strong> R package to create a variety of interactive graphics. There are two main ways to creating a <strong>plotly</strong> object: either by transforming a <strong>ggplot2</strong> object (via <code>ggplotly()</code>) into a <strong>plotly</strong> object or by directly initializing a <strong>plotly</strong> object with <code>plot_ly()</code>/<code>plot_geo()</code>/<code>plot_mapbox()</code>. Both approaches have somewhat complementary strengths and weaknesses, so it can pay off to learn both approaches. Moreover, both approaches are an implementation of the Grammar of Graphics and both are powered by the JavaScript graphing library plotly.js, so many of the same concepts and tools you learn for one interface can be reused in the other.</p>
+<p>The subsequent chapters within this ‘Creating views’ part dive into specific examples and use cases, but this introductory chapter outlines some over-arching concepts related to <strong>plotly</strong> in general. It also provides definitions for terminology used throughout the book and introduces some concepts useful for understanding the infrastructure behind any <strong>plotly</strong> object. Most of these details aren’t necessarily required to get started with <strong>plotly</strong>, but it will envitably help you get ‘un-stuck’, write better code, and do more advanced things with <strong>plotly</strong>.</p>
+<div id="intro-plotly" class="section level2">
+<h2><span class="header-section-number">3.1</span> Intro to <code>plot_ly()</code></h2>
+<p>Any graph made with the <strong>plotly</strong> R package is powered by the JavaScript library <a href="https://github.com/plotly/plotly.js">plotly.js</a>. The <code>plot_ly()</code> function provides a ‘direct’ interface to plotly.js with some additional abstractions to help reduce typing. These abstractions, inspired by the Grammar of Graphics and <strong>ggplot2</strong>, make it much faster to iterate from one graphic to another, making it easier to discover interesting features in the data <span class="citation">(Wilkinson <a href="#ref-Wilkinson:2005">2005</a>)</span>; <span class="citation">(Wickham <a href="#ref-ggplot2">2009</a>)</span>. To demonstrate, we’ll use <code>plot_ly()</code> to explore the <code>diamonds</code> dataset from <strong>ggplot2</strong> and learn a bit how <strong>plotly</strong> and plotly.js work along the way.</p>
+<pre class="sourceCode r"><code class="sourceCode r"><span class="co"># load the plotly R package</span>
+<span class="kw">library</span>(plotly)
+
+<span class="co"># load the diamonds dataset from the ggplot2 package</span>
+<span class="kw">data</span>(diamonds, <span class="dt">package =</span> <span class="st">&quot;ggplot2&quot;</span>)
+diamonds
+<span class="co">#&gt; # A tibble: 53,940 x 10</span>
+<span class="co">#&gt;   carat cut       color clarity depth table price     x     y     z</span>
+<span class="co">#&gt;   &lt;dbl&gt; &lt;ord&gt;     &lt;ord&gt; &lt;ord&gt;   &lt;dbl&gt; &lt;dbl&gt; &lt;int&gt; &lt;dbl&gt; &lt;dbl&gt; &lt;dbl&gt;</span>
+<span class="co">#&gt; 1 0.23  Ideal     E     SI2      61.5    55   326  3.95  3.98  2.43</span>
+<span class="co">#&gt; 2 0.21  Premium   E     SI1      59.8    61   326  3.89  3.84  2.31</span>
+<span class="co">#&gt; 3 0.23  Good      E     VS1      56.9    65   327  4.05  4.07  2.31</span>
+<span class="co">#&gt; 4 0.290 Premium   I     VS2      62.4    58   334  4.2   4.23  2.63</span>
+<span class="co">#&gt; 5 0.31  Good      J     SI2      63.3    58   335  4.34  4.35  2.75</span>
+<span class="co">#&gt; 6 0.24  Very Good J     VVS2     62.8    57   336  3.94  3.96  2.48</span>
+<span class="co">#&gt; # … with 5.393e+04 more rows</span></code></pre>
+<p>If we assign variable names (e.g., <code>cut</code>, <code>clarity</code>, etc) to visual properties (e.g., <code>x</code>, <code>y</code>, <code>color</code>, etc) within <code>plot_ly()</code>, as done in Figure <a href="overview.html#fig:intro-defaults">3.1</a>, it tries to find a sensible geometric representation of that information for us. Shortly we’ll cover how to specify these geometric representations (as well as other visual encodings) to create different kinds of charts.</p>
+<pre class="sourceCode r"><code class="sourceCode r"><span class="co"># create three visualizations of the diamonds dataset</span>
+<span class="kw">plot_ly</span>(diamonds, <span class="dt">x =</span> <span class="op">~</span>cut)
+<span class="kw">plot_ly</span>(diamonds, <span class="dt">x =</span> <span class="op">~</span>cut, <span class="dt">y =</span> <span class="op">~</span>clarity)
+<span class="kw">plot_ly</span>(diamonds, <span class="dt">x =</span> <span class="op">~</span>cut, <span class="dt">color =</span> <span class="op">~</span>clarity, <span class="dt">colors =</span> <span class="st">&quot;Accent&quot;</span>)</code></pre>
+<div class="rmdtip">
+<p>
+The <code>~</code> operator is only needed when refering to a column name in <code>data</code> (the first argument to <code>plot_ly()</code>). Moreover, the <code>data</code> argument is optional, meaning you can also provide column(s) directly to <code>plot_ly(x = diamonds$cut)</code>
+</p>
+</div>
+<div class="figure" style="text-align: center"><span id="fig:intro-defaults"></span>
+<img src="images/intro-defaults.svg" alt="Three examples of visualizing categorical data with `plot_ly()`: (top) mapping `cut` to `x` yields a bar chart, (middle) mapping `cut` &amp; `clarity` to `x` &amp; `y` yields a heatmap, and (c) mapping `cut` &amp; `clarity` to `x` &amp; `color` yields a dodged bar chart." width="100%" />
+<p class="caption">
+FIGURE 3.1: Three examples of visualizing categorical data with <code>plot_ly()</code>: (top) mapping <code>cut</code> to <code>x</code> yields a bar chart, (middle) mapping <code>cut</code> &amp; <code>clarity</code> to <code>x</code> &amp; <code>y</code> yields a heatmap, and (c) mapping <code>cut</code> &amp; <code>clarity</code> to <code>x</code> &amp; <code>color</code> yields a dodged bar chart.
+</p>
+</div>
+<p>The <code>plot_ly()</code> function has numerous arguments that are unique to the R package (e.g., <code>color</code>, <code>stroke</code>, <code>span</code>, <code>symbol</code>, <code>linetype</code>, etc) and make it easier to encode data as visual properties. By default, these arguments map values to a visual range defined by the plural form of the argument (e.g., <code>colors</code>, <code>strokes</code>, <code>spans</code>, <code>symbols</code>, <code>linetypes</code>, etc). Figure <a href="overview.html#fig:color-mapping">3.2</a> depicts how the combination of <code>color</code> (e.g., <code>clarity</code> levels) and <code>colors</code> (e.g., the <code>"Accent"</code> color palette from the <strong>RColorBrewer</strong> package) can be used to specify a mapping from data values to color codes. Besides providing a palette by name, one may also provide their own mapping function (e.g., <code>colorRamp()</code>), or even a set of custom color codes. See Chapter <a href="scatter-traces.html#scatter-traces">4</a> for many more examples and Chapter <a href="working-with-colors.html#working-with-colors">39</a> for more details about working with colors.</p>
+<div class="figure" style="text-align: center"><span id="fig:color-mapping"></span>
+<img src="images/color-mapping.svg" alt="Mapping data values to a visual color range." width="35%" />
+<p class="caption">
+FIGURE 3.2: Mapping data values to a visual color range.
+</p>
+</div>
+<p>Since these arguments, by default, map values to a visual range, you will obtain unexpected results if you try to specify the visual range directly, as in the top portion of Figure <a href="overview.html#fig:intro-range">3.3</a>. If you want to specify the visual range directly, use the <code>I()</code> function to declare this value to be taken ‘AsIs’, as in the bottom portion of Figure <a href="overview.html#fig:intro-range">3.3</a>. As discussed in more detail in section <a href="overview.html#intro-plotly-js">3.2</a>, these ‘aesthetic mapping’ arguments are not officially part of plotly.js, but the R package transform this information into valid plotly.js figures. Many other examples in the book will leverage these arguments, especially Chapter <a href="scatter-traces.html#scatter-traces">4</a>. Another resource to learn more details about these arguments (especially their defaults) is the R documentation page available by entering <code>help(plot_ly)</code> in your R console.</p>
+<pre class="sourceCode r"><code class="sourceCode r"><span class="co"># doesn&#39;t produce black bars</span>
+<span class="kw">plot_ly</span>(diamonds, <span class="dt">x =</span> <span class="op">~</span>cut, <span class="dt">color =</span> <span class="st">&quot;black&quot;</span>)
+<span class="co"># produces red bars with black outline</span>
+<span class="kw">plot_ly</span>(diamonds, <span class="dt">x =</span> <span class="op">~</span>cut, <span class="dt">color =</span> <span class="kw">I</span>(<span class="st">&quot;red&quot;</span>), <span class="dt">stroke =</span> <span class="kw">I</span>(<span class="st">&quot;black&quot;</span>), <span class="dt">span =</span> <span class="kw">I</span>(<span class="dv">2</span>))</code></pre>
+<div class="figure" style="text-align: center"><span id="fig:intro-range"></span>
+<img src="images/intro-range.svg" alt="Using `I()` to supply visual properties directly instead of mapping values to a visual range. In the top portion of this figure, the value `'black'` is being mapped to a visual range spanned by `colors` (which, for discrete data, defaults to `'Set2'`)." width="100%" />
+<p class="caption">
+FIGURE 3.3: Using <code>I()</code> to supply visual properties directly instead of mapping values to a visual range. In the top portion of this figure, the value <code>'black'</code> is being mapped to a visual range spanned by <code>colors</code> (which, for discrete data, defaults to <code>'Set2'</code>).
+</p>
+</div>
+<p>The <strong>plotly</strong> package takes a purely functional approach to a layered grammar of graphics <span class="citation">(Wickham <a href="#ref-ggplot2-paper">2010</a>)</span>.<a href="#fn2" class="footnote-ref" id="fnref2"><sup>2</sup></a> The purely functional part means, (almost) every function anticipates a <strong>plotly</strong> object as input to it’s first argument and returns a modified version of that <strong>plotly</strong> object. Furthermore, that modification is completely determined by the input values to the function (i.e., it doesn’t rely on any side-effects, unlike, for example, base R graphics). For a quick example, the <code>layout()</code> function anticipates a <strong>plotly</strong> object in it’s first argument and it’s other arguments add and/or modify various layout components of that object (e.g., the title):</p>
+<pre class="sourceCode r"><code class="sourceCode r"><span class="kw">layout</span>(
+  <span class="kw">plot_ly</span>(diamonds, <span class="dt">x =</span> <span class="op">~</span>cut),
+  <span class="dt">title =</span> <span class="st">&quot;My beatiful histogram&quot;</span>
+)</code></pre>
+<p>For more complex plots that modify a <strong>plotly</strong> graph many times over, code written in this way can become cumbersome to read. In particular, we have to search for the inner-most part of the R expression, then work outwards towards the end result. The <code>%&gt;%</code> operator from the <strong>magrittr</strong> package allows us to re-arrange this code so that we can read the sequence of modifications from left-to-right rather than inside-out <span class="citation">(Bache and Wickham <a href="#ref-magrittr">2014</a>)</span>. The <code>%&gt;%</code> operator enable this by placing the object on the left-hand side of the <code>%&gt;%</code> into the first argument of the function of the right-hand side.</p>
+<pre class="sourceCode r"><code class="sourceCode r">diamonds <span class="op">%&gt;%</span>
+<span class="st">  </span><span class="kw">plot_ly</span>(<span class="dt">x =</span> <span class="op">~</span>cut) <span class="op">%&gt;%</span>
+<span class="st">  </span><span class="kw">layout</span>(<span class="dt">title =</span> <span class="st">&quot;My beatiful histogram&quot;</span>)</code></pre>
+<p>In addition to <code>layout()</code> for adding/modifying part(s) of the graphs’s layout, there are also a family of <code>add_*()</code> functions (e.g., <code>add_histogram()</code>, <code>add_lines()</code>, etc) that define how to render data into geometric objects. Borrowing terminology from the layered grammar of graphics, these functions add a graphical layer to a plot. A <em>layer</em> can be thought of as a group of graphical elements that can be sufficiently described using only 5 components: data, aethestic mappings (e.g., assigning <code>clarity</code> to <code>color</code>), a geometric representation (e.g. rectangles, circles, etc), statistical transformations (e.g., sum, mean, etc), and positional adjustments (e.g., dodge, stack, etc). If you’re paying attention, you’ll notice that in the examples thus far, we have not specified a layer! The layer has been added for us automatically by <code>plot_ly()</code>. To be explicit about what <code>plot_ly(diamonds, x = ~cut)</code> generates, we should add a <code>add_histogram()</code> layer:</p>
+<pre class="sourceCode r"><code class="sourceCode r">diamonds <span class="op">%&gt;%</span>
+<span class="st">  </span><span class="kw">plot_ly</span>() <span class="op">%&gt;%</span><span class="st"> </span>
+<span class="st">  </span><span class="kw">add_histogram</span>(<span class="dt">x =</span> <span class="op">~</span>cut)</code></pre>
+<p>As you’ll learn more about in Section <a href="bars-histograms.html#bars-histograms">6</a>, <strong>plotly</strong> has both <code>add_histogram()</code> and <code>add_bars()</code>. The difference is that <code>add_histogram()</code> performs <em>statistics</em> (i.e., a binning algorithm) dynamically in the web browser, whereas <code>add_bars()</code> requires the bar heights to be pre-specified. That means, to replicate the last example with <code>add_bars()</code>, the number of observations must be computed ahead-of-time.</p>
+<pre class="sourceCode r"><code class="sourceCode r">diamonds <span class="op">%&gt;%</span>
+<span class="st">  </span>dplyr<span class="op">::</span><span class="kw">count</span>(cut) <span class="op">%&gt;%</span>
+<span class="st">  </span><span class="kw">plot_ly</span>() <span class="op">%&gt;%</span><span class="st"> </span>
+<span class="st">  </span><span class="kw">add_bars</span>(<span class="dt">x =</span> <span class="op">~</span>cut, <span class="dt">y =</span> <span class="op">~</span>n)</code></pre>
+<p>There are numerous other <code>add_*()</code> functions that calculate statistics in the browser (e.g., <code>add_histogram2d()</code>, <code>add_contour()</code>, <code>add_boxplot()</code>, etc), but most other functions aren’t considered statistical. Making the distinction might not seem useful now, but they have their own respective trade-offs when it comes to speed and interactivity. Generally speaking, non-statistical layers will be faster and more responsive at run-time (since they require less computational work), whereas the statistical layers allow for more flexibility when it comes to client-side interactivity, as covered in section <a href="client-side-linking.html#client-side-linking">20</a>. Practically speaking, the difference in performance is often negligible – the more common bottleneck occurs when attempting to render lots of graphical elements at a time (e.g., a scatterplot with a million points). In those scenarios, you likely want to render your plot in Canvas rather than SVG (the default) via <code>toWebGL()</code> – for more information on scaling views, see <a href="scaling.html#scaling">22</a>.</p>
+<p>In many scenarios, it can be useful to combine multiple graphical layers into a single plot. In this case, it becomes useful to know a few things about <code>plot_ly()</code>:</p>
+<ul>
+<li>Arguments specified in <code>plot_ly()</code> are <em>global</em>, meaning that any downstream <code>add_*()</code> functions inherit these arguments (unless <code>inherit = FALSE</code>).</li>
+<li>Data manipulation verbs from the <strong>dplyr</strong> package may be used to transform the <code>data</code> underlying a <strong>plotly</strong> object.<a href="#fn3" class="footnote-ref" id="fnref3"><sup>3</sup></a></li>
+</ul>
+<p>Using these two properties of <code>plot_ly()</code>, Figure <a href="overview.html#fig:intro-dplyr">3.4</a> demonstrates how we could leverage these properties of <code>plot_ly()</code> to do the following:</p>
+<ol style="list-style-type: decimal">
+<li><em>Globally</em> assign <code>cut</code> to <code>x</code>.</li>
+<li>Add a histogram layer (inherits the <code>x</code> from <code>plot_ly()</code>).</li>
+<li>Use <strong>dplyr</strong> verbs to modify the <code>data</code> underlying the <strong>plotly</strong> object. Here we just count the number of diamonds in each <code>cut</code> category.</li>
+<li>Add a layer of text using the summarized counts. Note that the global <code>x</code> mapping, as well as the other mappings local to this text layer (<code>text</code> and <code>y</code>), reflect data values from step 3.</li>
+</ol>
+<pre class="sourceCode r"><code class="sourceCode r"><span class="kw">library</span>(dplyr)
+
+diamonds <span class="op">%&gt;%</span>
+<span class="st">  </span><span class="kw">plot_ly</span>(<span class="dt">x =</span> <span class="op">~</span>cut) <span class="op">%&gt;%</span><span class="st"> </span>
+<span class="st">  </span><span class="kw">add_histogram</span>() <span class="op">%&gt;%</span>
+<span class="st">  </span><span class="kw">group_by</span>(cut) <span class="op">%&gt;%</span>
+<span class="st">  </span><span class="kw">summarise</span>(<span class="dt">n =</span> <span class="kw">n</span>()) <span class="op">%&gt;%</span>
+<span class="st">  </span><span class="kw">add_text</span>(
+    <span class="dt">text =</span> <span class="op">~</span>scales<span class="op">::</span><span class="kw">comma</span>(n), <span class="dt">y =</span> <span class="op">~</span>n, 
+    <span class="dt">textposition =</span> <span class="st">&quot;top middle&quot;</span>, 
+    <span class="dt">cliponaxis =</span> <span class="ot">FALSE</span>
+  )</code></pre>
+<div class="figure" style="text-align: center"><span id="fig:intro-dplyr"></span>
+<img src="images/intro-dplyr.png" alt="Using `add_histogram()`, `add_text()`, and **dplyr** verbs to compose a plot that leverages a raw form of the data (e.g., histogram) as well as a summarized version (e.g., text labels)." width="100%" />
+<p class="caption">
+FIGURE 3.4: Using <code>add_histogram()</code>, <code>add_text()</code>, and <strong>dplyr</strong> verbs to compose a plot that leverages a raw form of the data (e.g., histogram) as well as a summarized version (e.g., text labels).
+</p>
+</div>
+<p>Before using multiple <code>add_*()</code> in a single plot, make sure that you actually want to show those layers of information on the same set of axes. If it makes sense to display the information on the same axes, consider making multiple <strong>plotly</strong> objects and combining them into as grid-like layout using <code>subplot()</code>, as described in section <a href="arranging-views.html#arranging-views">17</a>. Also, when using <strong>dplyr</strong> verbs to modify the <code>data</code> underlying the <strong>plotly</strong> object, you can use the <code>plotly_data()</code> function to obtain the data at any point in time. This can be helpful for finding why something has</p>
+<pre class="sourceCode r"><code class="sourceCode r">diamonds <span class="op">%&gt;%</span>
+<span class="st">  </span><span class="kw">plot_ly</span>(<span class="dt">x =</span> <span class="op">~</span>cut) <span class="op">%&gt;%</span><span class="st"> </span>
+<span class="st">  </span><span class="kw">add_histogram</span>() <span class="op">%&gt;%</span>
+<span class="st">  </span><span class="kw">group_by</span>(cut) <span class="op">%&gt;%</span>
+<span class="st">  </span><span class="kw">summarise</span>(<span class="dt">n =</span> <span class="kw">n</span>()) <span class="op">%&gt;%</span><span class="st"> </span>
+<span class="st">  </span><span class="kw">plotly_data</span>()
+<span class="co">#&gt; # A tibble: 5 x 2</span>
+<span class="co">#&gt;   cut           n</span>
+<span class="co">#&gt;   &lt;ord&gt;     &lt;int&gt;</span>
+<span class="co">#&gt; 1 Fair       1610</span>
+<span class="co">#&gt; 2 Good       4906</span>
+<span class="co">#&gt; 3 Very Good 12082</span>
+<span class="co">#&gt; 4 Premium   13791</span>
+<span class="co">#&gt; 5 Ideal     21551</span></code></pre>
+<p>This introduction to <code>plot_ly()</code> has mainly focused on concepts unique to the R package <strong>plotly</strong> that are generally useful for creating most kinds of data views. The section outlines how <strong>plotly</strong> generates plotly.js figures and how to inspect the underlying data structure that plotly.js uses to render the graph. Not only is this information useful for debugging, but it’s also a nice way to learn how to work with plotly.js directly, which you may need to improve performance in <strong>shiny</strong> apps (Chapter <a href="linking-server-side.html#proxies">21.3.1</a>) and/or for adding custom behavior with JavaScript (Chapter @ref()).</p>
+</div>
+<div id="intro-plotly-js" class="section level2">
+<h2><span class="header-section-number">3.2</span> Intro to plotly.js</h2>
+<p>To recreate the plots in Figure <a href="overview.html#fig:intro-defaults">3.1</a> using plotly.js <em>directly</em>, it would take significantly more code and knowledge of plotly.js. That being said, learning how <strong>plotly</strong> generates the underlying plotly.js figure is a useful introduction to plotly.js itself, and knowledge of plotly.js becomes useful when you need more flexible control over <strong>plotly</strong>. As Figure <a href="overview.html#fig:intro-printing">3.5</a> illustrates, when you print any <strong>plotly</strong> object, the <code>plotly_build()</code> function is applied to that object, and that generates an R list which adheres to a syntax that plotly.js understands. This syntax is a JavaScript Object Notation (JSON) specification that plotly.js uses to represent, seralize, and render web graphics. A lot of documentation you’ll find online about plotly (e.g., the online <a href="https://plot.ly/r/reference/">figure reference</a>) implictly refers to this JSON specification, so it can helpful to know how to “work backwards” from that documentation (i.e., translate JSON into to R code). If you’d like to learn details about mapping between R and JSON, section <a href="json.html#json">27</a> provides an introduction aimed at R programmers, and <span class="citation">Ooms (<a href="#ref-jsonlite">2014</a>)</span> provides a cohesive overview of the <strong>jsonlite</strong> package, which is what <strong>plotly</strong> uses to map between R and JSON.</p>
+<div class="figure" style="text-align: center"><span id="fig:intro-printing"></span>
+<img src="images/printing.svg" alt="A diagram of what happens when you print a **plotly** graph." width="100%" />
+<p class="caption">
+FIGURE 3.5: A diagram of what happens when you print a <strong>plotly</strong> graph.
+</p>
+</div>
+<p>For illustration purposes, Figure <a href="overview.html#fig:intro-printing">3.5</a> shows how this workflow applies to a simple bar graph (with values directly supplied instead of a data column name reference like Figure <a href="overview.html#fig:intro-defaults">3.1</a>), but the same concept applies for any graph created via <strong>plotly</strong>. As the diagram suggests, both the <code>plotly_build()</code> and <code>plotly_json()</code> functions can be used to inspect the underlying data structure on both the R and JSON side of things. For example, Figure <a href="overview.html#fig:intro-json">3.6</a> shows the <code>data</code> portion of the JSON created for the last graph in Figure <a href="overview.html#fig:intro-json">3.6</a>.</p>
+<pre class="sourceCode r"><code class="sourceCode r">p &lt;-<span class="st"> </span><span class="kw">plot_ly</span>(diamonds, <span class="dt">x =</span> <span class="op">~</span>cut, <span class="dt">color =</span> <span class="op">~</span>clarity, <span class="dt">colors =</span> <span class="st">&quot;Accent&quot;</span>)
+<span class="kw">plotly_json</span>(p)</code></pre>
+<div class="figure" style="text-align: center"><span id="fig:intro-json"></span>
+<img src="images/intro-json.png" alt="A portion of the JSON data behind the bottom plot of Figure \@ref(fig:intro-defaults). This dodged bar chart has 8 layers of data (i.e., 8 traces) -- one for each level of `clarity`." width="70%" />
+<p class="caption">
+FIGURE 3.6: A portion of the JSON data behind the bottom plot of Figure <a href="overview.html#fig:intro-defaults">3.1</a>. This dodged bar chart has 8 layers of data (i.e., 8 traces) – one for each level of <code>clarity</code>.
+</p>
+</div>
+<p>In plotly.js terminology, a <em>figure</em> has two key components: <code>data</code> (aka, traces) and a <code>layout</code>. A <em>trace</em> defines a mapping from data and visuals.<a href="#fn4" class="footnote-ref" id="fnref4"><sup>4</sup></a> Every trace has a <em>type</em> (e.g., histogram, pie, scatter, etc) and the type determines what other attributes are allowed to define the mapping. That is, not every trace attribute (e.g. <code>x</code>, <code>type</code>, <code>name</code>) is available to every trace type, but many attributes (e.g., the <code>name</code> of the trace) are available in every trace type and serve a similar purpose. From Figure <a href="overview.html#fig:intro-json">3.6</a> we can see that it takes multiple traces to generate the dodged bar chart, but instead of clicking through JSON viewer, sometimes it’s easier to use <code>plotly_build()</code> and compute on the plotly.js figure definition to verify certain things exist. Since <strong>plotly</strong> uses the <strong>htmlwidgets</strong> standard<a href="#fn5" class="footnote-ref" id="fnref5"><sup>5</sup></a>, the actual plotly.js figure definition appears under a list element named <code>x</code> <span class="citation">(Vaidyanathan et al. <a href="#ref-htmlwidgets">2016</a>)</span>.</p>
+<pre class="sourceCode r"><code class="sourceCode r"><span class="co"># use plotly_build() to get at the plotly.js definition</span>
+<span class="co"># behind *any* plotly object</span>
+b &lt;-<span class="st"> </span><span class="kw">plotly_build</span>(p)
+
+<span class="co"># Confirm there 8 traces</span>
+<span class="kw">length</span>(b<span class="op">$</span>x<span class="op">$</span>data)
+<span class="co">#&gt; [1] 8</span>
+
+<span class="co"># Extract the `name` of each trace. plotly.js uses `name` to populate legend entries and tooltips</span>
+purrr<span class="op">::</span><span class="kw">map_chr</span>(b<span class="op">$</span>x<span class="op">$</span>data, <span class="st">&quot;name&quot;</span>)
+<span class="co">#&gt; [1] &quot;IF&quot; &quot;VVS1&quot; &quot;VVS2&quot; &quot;VS1&quot; &quot;VS2&quot; &quot;SI1&quot; &quot;SI2&quot; &quot;I1&quot; </span>
+
+<span class="co"># Every trace has a type of histogram</span>
+<span class="kw">unique</span>(purrr<span class="op">::</span><span class="kw">map_chr</span>(b<span class="op">$</span>x<span class="op">$</span>data, <span class="st">&quot;type&quot;</span>))
+<span class="co">#&gt; [1] &quot;histogram&quot;</span></code></pre>
+<p>Here we’ve learned that <strong>plotly</strong> creates 8 histogram traces to generate the dodged bar chart: one trace for each level of <code>clarity</code>.<a href="#fn6" class="footnote-ref" id="fnref6"><sup>6</sup></a> Why one trace per category? As illustrated in Figure <a href="overview.html#fig:intro-show-hide">3.7</a> there are two main reasons: to populate a tooltip and legend entry for each level of <code>clarity</code> level.</p>
+<div class="figure" style="text-align: center"><span id="fig:intro-show-hide"></span>
+<iframe src="https://player.vimeo.com/video/315707813?title=0&amp;byline=0&amp;portrait=0" width="100%" height="400" frameborder="0" seamless="seamless" webkitAllowFullScreen mozallowfullscreen allowFullScreen></iframe>
+<p class="caption">
+FIGURE 3.7: Leveraging two interactive features that require one trace per level of <code>clarity</code>: (1) Using ‘Compare data on hover’ mode to get counts for every level of <code>clarity</code> for a given level of <code>cut</code> and (2) Using the ability to hide/show clarity levels via their legend entries.
+</p>
+</div>
+<p>If we investigated further, we’d notice that <code>color</code> and <code>colors</code> are not officially part of the plotly.js figure definition – the <code>plotly_build()</code> function has effectively transformed that information into a sensible plotly.js figure definition (e.g., <code>marker.color</code> contains the actual bar color codes). In fact, the <code>color</code> argument in <code>plot_ly()</code> is just one example of an abstraction the R package has built on top of plotly.js to make it easier to map data values to visual attributes, and many of these are covered in Section <a href="scatter-traces.html#scatter-traces">4</a>.</p>
+</div>
+<div id="intro-to-ggplotly" class="section level2">
+<h2><span class="header-section-number">3.3</span> Intro to <code>ggplotly()</code></h2>
+</div>
+<div id="plot_ly-vs-ggplotly" class="section level2">
+<h2><span class="header-section-number">3.4</span> <code>plot_ly()</code> vs <code>ggplotly()</code></h2>
+<p>TODO: table of strengths and weaknesses</p>
+<!--
+This chapter demonstrates the rendering capabilities of `plot_ly()` through a series of examples. The `plot_ly()` function provides a direct interface to plotly.js, so anything in [the figure reference](https://plot.ly/r/reference/) can be specified via `plot_ly()`, but this chapter will focus more on the special semantics unique to the R package that can't be found on the figure reference. Along the way, we will touch on some best practices in visualization.
+-->
+</div>
+</div>
+<h3>References</h3>
+<div id="refs" class="references">
+<div id="ref-Wilkinson:2005">
+<p>Wilkinson, Leland. 2005. <em>The Grammar of Graphics (Statistics and Computing)</em>. Secaucus, NJ, USA: Springer-Verlag New York, Inc.</p>
+</div>
+<div id="ref-ggplot2">
+<p>Wickham, Hadley. 2009. <em>Ggplot2: Elegant Graphics for Data Analysis</em>. Springer-Verlag New York. <a href="http://ggplot2.org">http://ggplot2.org</a>.</p>
+</div>
+<div id="ref-ggplot2-paper">
+<p>Wickham, Hadley. 2010. “A Layered Grammar of Graphics.” <em>Journal of Computational and Graphical Statistics</em> 19 (1): 3–28.</p>
+</div>
+<div id="ref-magrittr">
+<p>Bache, Stefan Milton, and Hadley Wickham. 2014. <em>Magrittr: A Forward-Pipe Operator for R</em>. <a href="https://CRAN.R-project.org/package=magrittr">https://CRAN.R-project.org/package=magrittr</a>.</p>
+</div>
+<div id="ref-jsonlite">
+<p>Ooms, Jeroen. 2014. “The Jsonlite Package: A Practical and Consistent Mapping Between Json Data and R Objects.” <em>arXiv:1403.2805 [stat.CO]</em>. <a href="http://arxiv.org/abs/1403.2805">http://arxiv.org/abs/1403.2805</a>.</p>
+</div>
+<div id="ref-htmlwidgets">
+<p>Vaidyanathan, Ramnath, Yihui Xie, JJ Allaire, Joe Cheng, and Kenton Russell. 2016. <em>Htmlwidgets: HTML Widgets for R</em>. <a href="https://CRAN.R-project.org/package=htmlwidgets">https://CRAN.R-project.org/package=htmlwidgets</a>.</p>
+</div>
+</div>
+<div class="footnotes">
+<hr />
+<ol start="2">
+<li id="fn2"><p>If you aren’t already familiar with the grammar of graphics or <strong>ggplot2</strong>, we recommend reading the Data Visualization chapter from the <em>R for Data Science</em> book. <a href="https://r4ds.had.co.nz/data-visualisation.html" class="uri">https://r4ds.had.co.nz/data-visualisation.html</a><a href="overview.html#fnref2" class="footnote-back">↩</a></p></li>
+<li id="fn3"><p>Technically speaking, these <strong>dplyr</strong> verbs are S3 generic functions that <strong>plotly</strong> has a defined a custom method for. In nearly every case, that custom method simply queries the data underlying the <strong>plotly</strong> object, applies the <strong>dplyr</strong> function, then adds the transformed data back into the resulting <strong>plotly</strong> object<a href="overview.html#fnref3" class="footnote-back">↩</a></p></li>
+<li id="fn4"><p>A trace is similar in concept to a layer (as defined in Section <a href="overview.html#intro-plotly">3.1</a>, but it’s not quite the same. In many cases, like the bottom panel of Figure <a href="#fig:intro-default"><strong>??</strong></a>, it makes sense to implement a single layer as multiple traces. This is due to the design of plotly.js and how traces are tied to legends and hover behavior.<a href="overview.html#fnref4" class="footnote-back">↩</a></p></li>
+<li id="fn5"><p>The <strong>htmlwidgets</strong> package provides a foundation for other packages to implement R bindings to JavaScript libraries so that those bindings work in various contexts (e.g. the R console, RStudio, inside <strong>rmarkdown</strong> documents, <strong>shiny</strong> apps, etc). For more info and examples, see the website <a href="http://www.htmlwidgets.org" class="uri">http://www.htmlwidgets.org</a>.<a href="overview.html#fnref5" class="footnote-back">↩</a></p></li>
+<li id="fn6"><p>Although the x-axis is discrete, plotly.js still considers this a histogram because it’s generating it generates counts in the browser. Learn more about the difference between histograms and bar charts in section <a href="bars-histograms.html#bars-histograms">6</a>.<a href="overview.html#fnref6" class="footnote-back">↩</a></p></li>
+</ol>
+</div>
+<script>
+  var header = document.querySelector(".book-header h1");
+
+  var img = document.createElement("img");
+  img.src = "images/rstudioCloud.svg";
+  img.width = 200;
+  img.align = "right";
+  img.style = "margin-top: 10px";
+
+  var a = document.createElement("a");
+  a.href = "https://rstudio.cloud/project/156701";
+  a.target = "_blank";
+  a.appendChild(img);
+
+  header.appendChild(a);
+</script>
+<!-- Global site tag (gtag.js) - Google Analytics -->
+<script async src="https://www.googletagmanager.com/gtag/js?id=UA-60116966-3"></script>
+<script>
+  window.dataLayer = window.dataLayer || [];
+  function gtag(){dataLayer.push(arguments);}
+  gtag('js', new Date());
+
+  gtag('config', 'UA-60116966-3');
+</script>
+            </section>
+
+          </div>
+        </div>
+      </div>
+<a href="why-web-graphics.html" class="navigation navigation-prev " aria-label="Previous page"><i class="fa fa-angle-left"></i></a>
+<a href="scatter-traces.html" class="navigation navigation-next " aria-label="Next page"><i class="fa fa-angle-right"></i></a>
+    </div>
+  </div>
+<script src="libs/gitbook/js/app.min.js"></script>
+<script src="libs/gitbook/js/lunr.js"></script>
+<script src="libs/gitbook/js/plugin-search.js"></script>
+<script src="libs/gitbook/js/plugin-sharing.js"></script>
+<script src="libs/gitbook/js/plugin-fontsettings.js"></script>
+<script src="libs/gitbook/js/plugin-bookdown.js"></script>
+<script src="libs/gitbook/js/jquery.highlight.js"></script>
+<script>
+gitbook.require(["gitbook"], function(gitbook) {
+gitbook.start({
+"sharing": false,
+"fontsettings": {
+"theme": "white",
+"family": "sans",
+"size": 2
+},
+"edit": {
+"link": "https://github.com/cpsievert/plotly_book/edit/master/creating.Rmd",
+"text": "Edit"
+},
+"history": {
+"link": null,
+"text": null
+},
+"download": null,
+"toc": {
+"collapse": "section"
+}
+});
+});
+</script>
+
+</body>
+
+</html>
