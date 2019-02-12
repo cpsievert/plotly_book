@@ -60,6 +60,17 @@ p2 <- plotly_empty() %>%
     ax = -100,
     ay = 0
   ) %>%
+  add_annotations(
+    text = cols,
+    x = 0.85,
+    y = y,
+    xref = "paper",
+    yref = "paper",
+    xanchor = "left",
+    yanchor = "middle",
+    showarrow = FALSE,
+    font = list(size = 8)
+  ) %>%
   layout(
     shapes = rects
   )
@@ -91,7 +102,7 @@ p3 <- plotly_empty() %>%
 p <- subplot(p1, p2, p3, nrows = 3, heights = c(0.1, 0.8, 0.1)) %>%
   layout(
     height = 450,
-    width = 250,
+    width = 290,
     margin = list(l = 0, b = 0, t = 0, r = 0)
   )
 

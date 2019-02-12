@@ -23,7 +23,7 @@ Every input widget, including the `selectizeInput()` in Figure \@ref(fig:shiny-i
 
 Figure \@ref(fig:shiny-intro) uses the `renderPlotly()` function to render a reactive expression that generates a **plotly** graph. This expression depends in the input value `input$cities` (i.e., the input value tied to the input widget with an `inputId` of `"cities"`) and stores the output as `output$p`. This instructs **shiny** to insert the reactive graph into the `plotlyOutput(outputId = "p")` container defined in the user interface.
 
-```r
+```{r eval = FALSE, summary = "Click to show/hide the code"}
 library(shiny)
 library(plotly)
 
@@ -73,7 +73,7 @@ Going forward our focus is to link multiple graphs in **shiny** through direct m
 
 The `renderPlotly()` function renders anything that the `plotly_build()` function understands, including `plot_ly()`, `ggplotly()`, and **ggplot2** objects.^[The `plotly_build()` function is an S3 generic, so you can list all relevant the methods with `methods(plotly_build)`, and write you're own method to translate a custom object to **plotly**.] It also renders `NULL` as an empty HTML div, which is handy for certain cases where it doesn't make sense to render a graph. Figure \@ref(fig:shiny-ggplotly) leverages these features to render an empty div while `selectizeInput()`'s placeholder is shown, but then render a **plotly** graph via `ggplotly()` once cities have been selected. Figure \@ref(fig:shiny-ggplotly) also shows how to make the **plotly** output depend on the size of the container that holds the **plotly** graph. By default, when a browser is resized, the graph size is changed purely client-side, but this reactive expression will re-execute when the browser window is resized. Due to technical reasons this can improve `ggplotly()` resizing behavior^[In order to convert **grid** grobs that are relatively sized, the `ggplotly()` function uses the size of the current graphics device at print-time, meaning that resizing the browser window without a hook back to R can create wonky sizes.], but should be used with caution when handling large data and long render times.
 
-```r
+```{r eval = FALSE, summary = "Click to show/hide the code"}
 library(shiny)
 library(plotly)
 
@@ -128,7 +128,7 @@ Numerous Figures in the following sections show how to access common **plotly** 
 
 There are currently four different modes for mouse click+drag behavior (i.e., `dragmode`) in plotly.js: zoom, pan, rectangular selection, and lasso selection. This mode may be changed interactively via the modebar that appears above a **plotly** graph, but the default mode can also be set from the command-line. The default `dragmode` in Figure \@ref(fig:plotlyEvents) is set to `'select'`, so that dragging draws a rectangular box which highlights markers. When in this mode, or in the lasso selection mode, information about the drag event can be accessed in four different ways: `"plotly_selecting"`, `"plotly_selected"`, `"plotly_brushing"`, and `"plotly_brushed"`. Both the `"plotly_selecting"` and `"plotly_selected"` events emit information about trace(s) appearing within the interior of the brush -- the only difference is that `"plotly_selecting"` fires repeatedly *during* drag events, whereas `"plotly_selected"` fires *after* drag events (i.e., after the mouse has been released). The semantics behind `"plotly_brushing"` and `"plotly_brushed"` are similar, but these emit the x/y limits of the selection brush. As for the other two dragging modes (zoom and pan), since they modify the range of the x/y axes, information about these events can be accessed through `"plotly_relayout"`. Sections \@ref(proxies) and \@ref(advanced-applications) both have advanced applications of these dragging events.
 
-```r
+```{r, eval = FALSE, summary = "Click to show/hide the code"}
 library(shiny)
 
 ui <- fluidPage(
@@ -182,7 +182,7 @@ include_vimeo("307597427", height = 500)
 Drag selection events (i.e., `"plotly_selecting"`) are currently only available for 2D charts, but other common events are generally supported for any type of graph, including 3D charts. Figure \@ref(fig:3Devents) accesses various events in 3D including: `"plotly_hover"`, `"plotly_click"`, `"plotly_legendclick"`, `"plotly_legenddoubleclick"`, and `"plotly_relayout"`. The data emitted via `"plotly_hover"` and `"plotly_click"` is structured similarly to data emitted from `"plotly_selecting"`/`"plotly_selected"`. Figure \@ref(fig:3Devents) also demonstrates how one can react to particular components of a conflated event like `"plotly_relayout"`. That is, `"plotly_relayout"` will fire whenever _any_ part of the layout has changed, so if we want to trigger behavior if and only if there are changes to the camera eye, one could first check if the information emitted contains information about the camera eye.
 
 
-```r
+```{r eval = FALSE, summary = "Click to show/hide the code"}
 library(shiny)
 
 ui <- fluidPage(
@@ -240,7 +240,7 @@ include_vimeo("307598025", height = 500)
 A little known fact about **plotly** is that you can directly manipulate annotations, title, shapes (e.g., circle, lines, rectangles), legends, and more by simply adding `config(p, editable = TRUE)` to a plot `p`. Moreover, since these are all layout components, we can access information about these 'edit events', by listening to the `"plotly_relayout"` events. Figure \@ref(fig:shiny-edit-annotations) just how easy it is to access information about changes in annotation positioning and content.
 
 
-```r
+```{r eval = FALSE, summary = "Click to show/hide the code"}
 library(shiny)
 
 ui <- fluidPage(
@@ -289,7 +289,7 @@ include_vimeo("307597631")
 
 Figure \@ref(fig:shiny-drag-circle) demonstrates directly manipulating a circle shape and accessing the new positions of the circle. In constrast to Figure \@ref(fig:shiny-edit-annotations), which made everything (e.g. the plot and axis titles) editable via `config(p, editable = TRUE)`, note how Figure \@ref(fig:shiny-drag-circle) makes use of the `edits` argument to make only the shapes editable. 
 
-```r
+```{r eval = FALSE, summary = "Click to show/hide the code"}
 library(shiny)
 library(plotly)
 
@@ -334,7 +334,7 @@ include_vimeo("307598919")
 
 Figure \@ref(fig:shiny-drag-line) uses an ediatble vertical line and the `plotly_relayout` event data to 'snap' the line to the closest point in a sequence of `x` values. It also places a marker on the intersection between the vertical line shape and the line chart of `y` values. Notice how, by accessing `event_data()` in this way (i.e., the source and target view of the event is the same), the chart is actually fully redrawn every time the line shape moves. If performance were an issue (i.e., we were dealing with lots of lines), this type of interaction likely won't be very responsive. In that case, you can use `event_data()` to trigger side-effects (i.e., partially modify the plot) which is covered in \@ref(proxies).
 
-```r
+```{r eval = FALSE, summary = "Click to show/hide the code"}
 library(shiny)
 library(plotly)
 
@@ -391,7 +391,7 @@ include_vimeo("307597984")
 
 Remember every **graph** has two critical components: data (i.e., traces) and layout. Similar to how `"plotly_relayout"` reports partial modifications to the layout, the `"plotly_restyle"` event reports partial modification to traces. Compared to `"plotly_relayout"`, there aren't very many native direct manipulation events that would trigger a `"plotly_restyle"` event. For example, zoom/pan events, camera changes, editing annotations/shapes/etc all trigger a `"plotly_relayout"` event, but not many traces allow you to directly manipulate their properties. One notable exception is the `"parcoords"` trace type which has native support for brushing lines along an axis dimension(s). As Figure \@ref(fig:shiny-parcoords) demonstrates, these brush events emit a `"plotly_restyle"` event with the range(s) of the highlighted dimension.
 
-```r
+```{r eval = FALSE, summary = "Click to show/hide the code"}
 library(plotly)
 library(shiny)
 
@@ -437,7 +437,7 @@ This section leverages the interface for accessing **plotly** input events intro
 
 Figure \@ref(fig:shiny-corrplot) allows one to click on a cell of correlation heatmap to generate a scatterplot of the two corresponding variables -- allowing for a closer look at their relationship. In the case of a heatmap, the event data tied to a `plotly_click` event contains the relevant `x` and `y` categories (e.g., the names of the data variables of interest) and the `z` value (e.g., the pearson correlation between those variables). In order to obtain click data from the heatmap, and only the heatmap, it's important that the `source` argument of the `event_data()` function matches the `source` argument of `plot_ly()`. Otherwise, if the `source` argument was not specified `event_data("plotly_click")` would also fire if and when the user clicked on the scatterplot, likely causing an error.
 
-```r
+```{r eval = FALSE, summary = "Click to show/hide the code"}
 library(shiny)
 
 # cache computation of the correlation matrix
@@ -493,7 +493,7 @@ include_vimeo("307597728")
 
 By default, `event_data()` only invalidates a reactive expression when the value of it's corresponding **shiny** input changes. Sometimes, you might want a particular event, say `"plotly_click"`, to _always_ invalidate a reactive expression. Figure \@ref(fig:event-priority) shows the difference between this default behavior versus setting `priority = 'event'`. By default, repeatedly clicking the same marker won't update the clock, but when setting the `priority` argument to event, repeatedly clicking the same marker will update the clock (i.e., it will invalidate the reactive expression).
 
-```r
+```{r eval = FALSE, summary = "Click to show/hide the code"}
 library(shiny)
 
 ui <- fluidPage(
@@ -534,7 +534,7 @@ There are numerous events accessible through `event_data()` that don't contain a
 
 For events that are trace-specific (e.g. `"plotly_click"`, `"plotly_hover"`, `"plotly_selecting"`, etc), the positional data (e.g., `x`/`y`/`z`) is always numeric, so if you have a plot with discrete axes, you might want to know how to map that numeric value back to the relevant input data category. In some cases, you can avoid the problem by assigning the discrete variable of interest to the `key`/`customdata` attribute, but you might also want to reserve that attribute to encode other information, like a `fill` aesthetic. Figure \@ref(fig:discrete-event-data) shows how to map the numerical `x` value emitted in a click event back to the discrete variable that it corresponds to (`mpg$class`) and leverages `customdata` to encode the `fill` mapping allowing us to display the data records a clicked bar corresponds to. In both `ggplotly()` and `plot_ly()`, categories associated with a character vector are always alphabetized, so if you `sort()` the `unique()` character values, then the vector indices will match the `x` event data values. On the other hand, if `x` were a factor variable, the `x` event data would match the ordering of the `levels()` attribute.
 
-```r
+```{r eval = FALSE, summary = "Click to show/hide the code"}
 library(shiny)
 library(dplyr)
 
@@ -575,7 +575,7 @@ Currently all the events accessible through `event_data()` are *transient*. This
 
 Figure \@ref(fig:shiny-hover-persist) demonstrates a shiny app that accumulates hover information and paints the hovered points in red. Every time a hover event is triggered, the corresponding car name is added to the set of selected cars, and everytime the plot is double-clicked that set is cleared. This general pattern of initializing a reactive value (i.e., `cars <- reactiveVal()`), updating that value upon a suitable `observeEvent()` event with relevant `customdata`, and clearing that reactive value (i.e., `cars(NULL)`) in response to another event is a very useful pattern to can support essentially any sort of linked views paradigm because the logic behind the resolution of selection sequences is under your complete control in R. For example, \@ref(fig:shiny-hover-persist) simply adds accumulates the event data from `"plotly_hover"` (which is like a logical `OR` operations), but for other applications, you may need different logic, like the `AND`, `XOR`, etc.
 
-```r
+```{r eval = FALSE, summary = "Click to show/hide the code"}
 library(shiny)
 
 ui <- fluidPage(
@@ -667,7 +667,7 @@ By default, when `renderPlotly()` renders a new **plotly** graph it's essentiall
 On initial page load, **plotly** graphs must be drawn from stratch, but when responding to certain user events, often times a partial update to an existing plot is sufficient and more responsive. Take, for instance, the difference between Figure \@ref(fig:shiny-scatterplot), which does a full redraw on every update, and Figure \@ref(fig:shiny-scatterplot-performant), which does a partial update after initial load. Both of these **shiny** apps display a scatterplot with 100,000 points and allow a user to overlay a fitted line through a checkbox. The key difference is that in Figure \@ref(fig:shiny-scatterplot), the **plotly** graph is regenerated from scratch everytime the value of `input$smooth` changes, whereas in Figure \@ref(fig:shiny-scatterplot-performant) only the fitted line is added/removed from the **plotly**. Since the main bottleneck lies in redrawing the points, Figure \@ref(fig:shiny-scatterplot-performant) can add/remove the fitted line is a much more responsive fashion.
 
 
-```r
+```{r eval = FALSE, summary = "Click to show/hide the code"}
 library(shiny)
 library(plotly)
 
@@ -716,7 +716,7 @@ include_vimeo("307597740")
 In terms of the implementation behind Figure \@ref(fig:shiny-scatterplot) and \@ref(fig:shiny-scatterplot-performant), the only difference resides in the `server` definition. In Figure \@ref(fig:shiny-scatterplot-performant), the `renderPlotly()` statement no longer has a dependency on input values, so that code is only executed once (on page load) to generate the initial view of the scatterplot. The logic behind adding and removing the fitted line is handled through an `observe()` block -- this reactive expression watches the `input$smooth` input value and modifies the `output$scatterplot` widget whenever it changes. To trigger a modification of a **plotly** output widget, you must create a proxy object with `plotlyProxy()` that references the relevant output ID. Once a proxy object is created, you can invoke any sequence of [plotly.js function(s)](https://plot.ly/javascript/plotlyjs-function-reference/#plotlymaketemplate) on it with `plotlyProxyInvoke()`. Invoking a method with the correct arguments can be tricky and requires knowledge of plotly.js because `plotlyProxyInvoke()` will send these arguments directly to the plotly.js method and therefore doesn't support the same 'high-level' semantics that `plot_ly()` does.
 
 
-```r
+```{r eval = FALSE, summary = "Click to show/hide the code"}
 server <- function(input, output, session) {
   
   output$scatterplot <- renderPlotly({
@@ -770,7 +770,7 @@ The last section explains why you may want to leverage partial **plotly** update
 
 All **plotly** figures have two main components: traces (i.e., mapping from data to visuals) and layout. The plotly.js function `Plotly.restyle()` is for modifying any existing traces. In addition to being a performant way to modify existing data and/or visual properties, it also has the added benefit of not affecting the current layout of the graph. Notice how, in Figure \@ref(fig:shiny-partial-restyle) for example, when the size of the marker/path changes, it doesn't change the camera's view of the 3D plot that the user altered after initial draw. If these input widgets triggered a full redraw of the plot, the camera would be reset to it's initial state.
 
-```r
+```{r eval = FALSE, summary = "Click to show/hide the code"}
 library(shiny)
 library(plotly)
 
@@ -823,7 +823,7 @@ One un-intuitive thing about `Plotly.restyle()` is that it fully replaces object
 
 All **plotly** figures have two main components: traces (i.e., mapping from data to visuals) and layout. The plotly.js function `Plotly.relayout()` modifies the layout component, so it can control a wide variety of things such titles, axis definitions, annotations, shapes, and many other things. It can even be used to change the basemap layer of a Mapbox-powered layout, as in Figure \@ref(fig:shiny-mapbox-relayout). Note how this example uses `schema()` to grab all the pre-packaged basemap layers and create a dropdown of those options, but you can also provide a URL to a [custom basemap style](https://www.mapbox.com/help/create-a-custom-style/).
 
-```r
+```{r eval = FALSE, summary = "Click to show/hide the code"}
 library(shiny)
 library(plotly)
 
@@ -860,7 +860,7 @@ include_vimeo("307598178")
 
 Figure \@ref(fig:shiny-rangeslider-relayout) demonstrates a clever use of `Plotly.relayout()` to set the y-axis range in response to changes in the x-axis range.
 
-```r
+```{r eval = FALSE, summary = "Click to show/hide the code"}
 library(shiny)
 library(plotly)
 
@@ -920,7 +920,7 @@ The implementation behind Figure \@ref(fig:shiny-stream), an elementary example 
 Even if the app is not streaming, there is still constant client/server communication because of the use of `invalidateLater()` inside the `observe()`. This effectively tells **shiny** to re-evaluate the `observe()` block every 100 milliseconds. If the app isn't in streaming mode, then it exits early without doing anything. If the app is streaming, then we first use `sample()` to randomly draw either -1 or 1 (with equal probability) and use the result to update the most recent (x, y) state. This is done by assigning a new value to the reactive values `rv$y` and `rv$n` within an `isolate()`d context -- if this assignment happened outside of an `isolate()`d context it would cause the reactive expression to be invalidated and cause an infinite loop! Once we have the new (x, y) point stored away, `Plotly.extendTraces()` can be used to add the new point to the plotly graph.
 
 
-```r
+```{r eval = FALSE, summary = "Click to show/hide the code"}
 library(shiny)
 library(plotly)
 
@@ -999,7 +999,7 @@ The so-called 'drill-down' chart tends to include a vague grouping of interactiv
 
 In a drill-down chart, a change in the top-level category should trigger changes to sub-categories, so to handle this logic correctly, you'll want to store selections in reactive values and update those values accordingly when relevant events occur. For example, note how in Figure \@ref(fig:shiny-drill-down), a click of a category clears the sub-category and order-date. Moreover, a change in a sub-category will clear the order-date, but doesn't change the category.
 
-```r
+```{r eval = FALSE, summary = "Click to show/hide the code"}
 library(shiny)
 library(plotly)
 library(dplyr)
@@ -1100,7 +1100,7 @@ include_vimeo("307597838")
 
 Related to the drill-down chart is so-called 'cross-filter' chart. The main difference between drill-down and cross-filter is that, with cross-filter, the visualizations are typically fixed and selection(s) impose a filter on the data shown in those fixed views. The typical cross-filter implementation allows multiple brushes (i.e., filters) and uses the intersection of those filters to the dataset portrayed in those views. Figure \@ref(fig:shiny-crossfilter) demonstrates how one could apply this technique to a set of histograms using the `flights` dataset from the **nycflights13** package [@nycflights13]. The brush range for each view in stored and maintained in a `reactiveValues()` variable, named `brush_ranges`. Since the actual bar heights reflect only the active filters in other views, the `d_filter()` function is called for each view using only the `brush_ranges` from the other views.
 
-```r
+```{r eval = FALSE, summary = "Click to show/hide the code"}
 library(shiny)
 library(dplyr)
 library(nycflights13)
@@ -1194,7 +1194,7 @@ One weakness of a typical crossfilter interface like Figure \@ref(fig:shiny-cros
 
 Since brushing within color is transient, in constrast to Figure \@ref(fig:shiny-crossfilter), Figure \@ref(fig:shiny-crossfilter-compare) doesn't have to track the state of all the active brushes. It does, however, need to display *relative* rather than absolute frequencies to facilitate comparison of small filter range(s) to the overall distribution. This particular implementation takes the overall distribution as a "base layer" that remains fixed and overlays a handful of "selection layers" -- one for each possible brush color. These selection layers begin with a height of 0, but when the relevant brush fires the heights of the bars for the relevant layer is modified. This approach may seem like a hack, but it leads to a fluid user experience because it's not much work to adjust the height of a bar that already exists. 
 
-```r
+```{r eval = FALSE, summary = "Click to show/hide the code"}
 library(shiny)
 library(dplyr)
 library(nycflights13)
@@ -1338,15 +1338,15 @@ include_vimeo("307598246")
 
 ## Discussion
 
-Compared to the linking framework covered in section \@ref(graphical-queries), the ability to link views server-side with **shiny** opens the door to many new possibilities. This chapter focuses mostly on using just **plotly** within **shiny**, but the **shiny** ecosystem is vast and these techniques can of course be used to inform other views, such as static plots, other **htmlwidgets** packages (e.g., **leaflet**, **DT**, **network3D**, etc), and other custom **shiny** bindings. In fact, I have a numerous **shiny** apps publically available via an R package that use numerous tools to provide exploratory interfaces to a variety of domain-specific problems, including `zikar::explore()` for exploring Zika virus reports, `eechidna::launch()` for exploring Australian election and census data, and `bcviz::launch()` for exploring housing and census information in British Colombia [@zikar]; [@eechidna]; [@bcviz]. These complex applications also serve as a reference as to how can use the client-side linking framework (i.e., **crosstalk**) inside a large appllication. See this video for an example:
+Compared to the linking framework covered in section \@ref(graphical-queries), the ability to link views server-side with **shiny** opens the door to many new possibilities. This chapter focuses mostly on using just **plotly** within **shiny**, but the **shiny** ecosystem is vast and these techniques can of course be used to inform other views, such as static plots, other **htmlwidgets** packages (e.g., **leaflet**, **DT**, **network3D**, etc), and other custom **shiny** bindings. In fact, I have a numerous **shiny** apps publically available via an R package that use numerous tools to provide exploratory interfaces to a variety of domain-specific problems, including `zikar::explore()` for exploring Zika virus reports, `eechidna::launch()` for exploring Australian election and census data, and `bcviz::launch()` for exploring housing and census information in British Colombia [@zikar]; [@eechidna]; [@bcviz]. These complex applications also serve as a reference as to how can use the client-side linking framework (i.e., **crosstalk**) inside a larger **shiny** application. See this video for an example:
 
 
 ```{r shiny-crosstalk-examples, echo=FALSE, fig.cap="Example of a **shiny** app that has **crosstalk** functionality embedded."}
 include_vimeo("207379729")
 ```
 
-Sometimes **shiny** gets a bad wrap for being too slow or unresponsive, but as we learned in sections \@ref(proxies) and \@ref(advanced-applications), we can still have very advanced functionality as well as a good user experience -- it just takes a bit more effort to optimize performance in some cases. In fact, one could argue that a server-client approach to crossfiltering, as done in Figure \@ref(fig:shiny-crossfilter) is more scalable than a purely client-side approach since the client wouldn't need to know about the raw data -- just the summary statistics. Nevertheless, sometimes linking views server side simply isn't an option for you or your organization.
+Sometimes **shiny** gets a bad rap for being too slow or unresponsive, but as we learned in sections \@ref(proxies) and \@ref(advanced-applications), we can still have very advanced functionality as well as a good user experience -- it just takes a bit more effort to optimize performance in some cases. In fact, one could argue that a server-client approach to crossfiltering, as done in Figure \@ref(fig:shiny-crossfilter) is more scalable than a purely client-side approach since the client wouldn't need to know about the raw data -- just the summary statistics. Nevertheless, sometimes linking views server side simply isn't an option for you or your organization.
 
-Maybe your IT administrator simply won't allow you to distribute your work outside of a standalone HTML file. Figure \@ref(fig:shiny-corrplot) is just one example of a linked graphic that *could* be replicated using the graphical querying framework from section \@ref(graphical-queries), but it would require pre-computing every possible view (which becomes un-manageable when there are many possible selections) and posing the update logic as a database query. When users are only allowed to select (e.g. click/hover) a single element at a time, the number of possible selections increases linearly with the number of elements, but when users are allowed to select any subset of elements (e.g., scatterplot brushing), the number of possible selection explodes (increases at a factorial rate). For example, adding a cell to Figure \@ref(fig:shiny-corrplot) only adds one possible selection, but if we added more states to Figure \@ref(fig:shiny-corrplot), the number of possible states goes from 50! to 51!
+Maybe your IT administrator simply won't allow you to distribute your work outside of a standalone HTML file. Figure \@ref(fig:shiny-corrplot) is just one example of a linked graphic that *could* be replicated using the graphical querying framework from section \@ref(graphical-queries), but it would require pre-computing every possible view (which becomes un-manageable when there are many possible selections) and posing the update logic as a database query. When users are only allowed to select (e.g. click/hover) a single element at a time, the number of possible selections increases linearly with the number of elements, but when users are allowed to select any subset of elements (e.g., scatterplot brushing), the number of possible selection explodes (increases at a factorial rate). For example, adding a cell to Figure \@ref(fig:shiny-corrplot) only adds one possible selection, but if we added more states to Figure \@ref(fig:shiny-corrplot), the number of possible states goes from 50! to 51!.
 
-Even in the case that you need a standalone HTML file and the R API that **plotly** provides doesn't support the type of interactivity that you desire, you can always layer on additional JavaScript to hopefully achieve the functionality you desire. This can be useful for something as simple as opening a hyperlink when clicking on marker of a plotly graph -- this topic is covered in section \@ref(javascript).
+Even in the case that you need a standalone HTML file and the R API that **plotly** provides doesn't support the type of interactivity that you desire, you can always layer on additional JavaScript to hopefully achieve the functionality you desire. This can be useful for something as simple as opening a hyperlink when clicking on marker of a plotly graph -- this topic is covered introduced in Chapter \@ref(javascript).

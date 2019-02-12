@@ -7,7 +7,7 @@ opts_chunk$set(lazy = TRUE)
 
 # Overview
 
-This part of the book teaches you how to leverage the **plotly** R package to create a variety of interactive graphics. There are two main ways to creating a **plotly** object: either by transforming a **ggplot2** object (via `ggplotly()`) into a **plotly** object or by directly initializing a **plotly** object with `plot_ly()`/`plot_geo()`/`plot_mapbox()`. Both approaches have somewhat complementary strengths and weaknesses, so it can pay off to learn both approaches. Moreover, both approaches are an implementation of the Grammar of Graphics and both are powered by the JavaScript graphing library plotly.js, so many of the same concepts and tools you learn for one interface can be reused in the other.
+This part of the book teaches you how to leverage the **plotly** R package to create a variety of interactive graphics. There are two main ways to creating a **plotly** object: either by transforming a **ggplot2** object (via `ggplotly()`) into a **plotly** object or by directly initializing a **plotly** object with `plot_ly()`/`plot_geo()`/`plot_mapbox()`. Both approaches have somewhat complementary strengths and weaknesses, so it can pay off to learn both approaches. Moreover, both approaches are an implementation of the Grammar of Graphics and both are powered by the JavaScript graphing library plotly.js, so many of the same concepts and tools that you learn for one interface can be reused in the other.
 
 The subsequent chapters within this 'Creating views' part dive into specific examples and use cases, but this introductory chapter outlines some over-arching concepts related to **plotly** in general. It also provides definitions for terminology used throughout the book and introduces some concepts useful for understanding the infrastructure behind any **plotly** object. Most of these details aren't necessarily required to get started with **plotly**, but it will envitably help you get 'un-stuck', write better code, and do more advanced things with **plotly**.
 
@@ -159,7 +159,7 @@ plotly_json(p)
 knitr::include_graphics("images/intro-json.png")
 ```
 
-In plotly.js terminology, a *figure* has two key components: `data` (aka, traces) and a `layout`. A *trace* defines a mapping from data and visuals.^[A trace is similar in concept to a layer (as defined in Section \@ref(intro-plotly), but it's not quite the same. In many cases, like the bottom panel of Figure \@ref(fig:intro-default), it makes sense to implement a single layer as multiple traces. This is due to the design of plotly.js and how traces are tied to legends and hover behavior.] Every trace has a *type* (e.g., histogram, pie, scatter, etc) and the type determines what other attributes are allowed to define the mapping. That is, not every trace attribute (e.g. `x`, `type`, `name`) is available to every trace type, but many attributes (e.g., the `name` of the trace) are available in every trace type and serve a similar purpose. From Figure \@ref(fig:intro-json) we can see that it takes multiple traces to generate the dodged bar chart, but instead of clicking through JSON viewer, sometimes it's easier to use `plotly_build()` and compute on the plotly.js figure definition to verify certain things exist. Since **plotly** uses the **htmlwidgets** standard^[The **htmlwidgets** package provides a foundation for other packages to implement R bindings to JavaScript libraries so that those bindings work in various contexts (e.g. the R console, RStudio, inside **rmarkdown** documents, **shiny** apps, etc). For more info and examples, see the website <http://www.htmlwidgets.org>.], the actual plotly.js figure definition appears under a list element named `x` [@htmlwidgets].
+In plotly.js terminology, a *figure* has two key components: `data` (aka, traces) and a `layout`. A *trace* defines a mapping from data and visuals.^[A trace is similar in concept to a layer (as defined in Section \@ref(intro-plotly), but it's not quite the same. In many cases, like the bottom panel of Figure \@ref(fig:intro-default), it makes sense to implement a single layer as multiple traces. This is due to the design of plotly.js and how traces are tied to legends and hover behavior.] Every trace has a *type* (e.g., histogram, pie, scatter, etc) and the trace type determines what other attributes (i.e., visual and/or interactive properties, like `x`, `hoverinfo`, `name`) are available to control the trace mapping. That is, not every trace attribute is available to every trace type, but many attributes (e.g., the `name` of the trace) are available in every trace type and serve a similar purpose. From Figure \@ref(fig:intro-json) we can see that it takes multiple traces to generate the dodged bar chart, but instead of clicking through JSON viewer, sometimes it's easier to use `plotly_build()` and compute on the plotly.js figure definition to verify certain things exist. Since **plotly** uses the **htmlwidgets** standard^[The **htmlwidgets** package provides a foundation for other packages to implement R bindings to JavaScript libraries so that those bindings work in various contexts (e.g. the R console, RStudio, inside **rmarkdown** documents, **shiny** apps, etc). For more info and examples, see the website <http://www.htmlwidgets.org>.], the actual plotly.js figure definition appears under a list element named `x` [@htmlwidgets].
 
 ```r
 # use plotly_build() to get at the plotly.js definition
@@ -189,7 +189,11 @@ If we investigated further, we'd notice that `color` and `colors` are not offici
 
 ## Intro to `ggplotly()`
 
+* Talk generally about what things **ggplot2** makes easy
+  * That is, when to use `ggplotly()` over `plot_ly()`?
 
+* Cover ggplot2 geoms that fill a void left by `plot_ly()`
+  * `geom_freqpoly()`
 
 
 ## `plot_ly()` vs `ggplotly()`
@@ -202,51 +206,110 @@ This chapter demonstrates the rendering capabilities of `plot_ly()` through a se
 -->
 
 
-# Scatter traces {#scatter-traces}
+# Scattered foundations {#scatter-traces}
 
-A plotly visualization is composed of one (or more) trace(s), and every trace has a `type`. The default trace type, "scatter", can be used to draw a large amount of geometries, and actually powers many of the `add_*()` functions such as `add_markers()`, `add_lines()`, `add_paths()`, `add_segments()`, `add_ribbons()`, and `add_polygons()`. Among other things, these functions make assumptions about the [mode](https://plot.ly/r/reference/#scatter-mode) of the scatter trace, but any valid attribute(s) listed under the [scatter section of the figure reference](https://plot.ly/r/reference/#scatter) may be used to override defaults.
+As we learned in Section \@ref(intro-plotly-js), a plotly.js figure contains one (or more) trace(s), and every trace has a type. The trace type scatter is great for drawing low-level geometries (e.g., points, lines, text, and polygons) and provides the foundation for many `add_*()` functions (e.g., `add_markers()`, `add_lines()`, `add_paths()`, `add_segments()`, `add_ribbons()`, `add_area()`, and `add_polygons()`) as well as many `ggplotly()` charts. These scatter-based layers provide a more convenient interface to special cases of the scatter trace by doing a bit of data wrangling and transformation under-the-hood before mapping to scatter trace(s). For a simple example, `add_lines()` ensures lines are drawn according to the ordering of `x`, which is desirable for a time series plotting. This behavior is subtly different than `add_paths()` which uses row ordering instead.
 
-The `plot_ly()` function has a number of arguments that make it easier to scale data values to visual aesthetics (e.g., `color`/`colors`, `symbol`/`symbols`, `linetype`/`linetypes`, `size`/`sizes`). These arguments are unique to the R package and dynamically determine what objects in the figure reference to populate (e.g., [`marker.color`](https://plot.ly/r/reference/#scatter-marker-color) vs [`line.color`](https://plot.ly/r/reference/#scatter)). Generally speaking, the singular form of the argument defines the domain of the scale (data) and the plural form defines the range of the scale (visuals). To make it easier to alter default visual aesthetics (e.g., change all points from blue to black), "AsIs" values (values wrapped with the `I()` function) are interpreted as values that already live in visual space, and thus do not need to be scaled. The next section on scatterplots explores detailed use of the `color`/`colors`, `symbol`/`symbols`, & `size`/`sizes` arguments. The section on [lineplots](#line-plots) explores detailed use of the `linetype`/`linetypes`.
+```r
+library(plotly)
+data(economics, package = "ggplot2")
+
+# sort economics by psavert, just to 
+# show difference between paths and lines
+p <- economics %>%
+  arrange(psavert) %>%
+  plot_ly(x = ~date, y = ~psavert)
+
+add_paths(p)
+add_lines(p)
+```
+
+```{r scatter-intro, echo = FALSE, fig.cap="The difference between `add_paths()` and `add_lines()`: the top panel connects observations according to the ordering of `psavert` (personal savings rate), whereas the bottom panel connects observations according to the ordering of `x` (the date)."}
+knitr::include_graphics("images/scatter-intro.svg")
+```
+
+Section \@ref(intro-plotly) introduced 'aesthetic mapping' arguments (unique to the R package) which make it easier to map data to visual properties (e.g., `color`, `linetype`, etc). In addition to these arguments, **dplyr** groupings can be used to ensure there is at least one geometry per group. The top panel of Figure \@ref(fig:scatter-intro) demonstrates how `group_by()` could be used to effectively wrap the time series from Figure \@ref(fig:scatter-intro) by year, which can be useful for visualizing annual seasonality. Another approach to generating at least one geometry per 'group' is to use a sensible categorical aesthetic mapping (i.e., assign a factor/character to `color`, `linetype`, etc), as shown in the bottom panel of Figure \@ref(fig:scatter-intro).
+
+```r
+library(lubridate)
+econ <- economics %>%
+  mutate(yr = year(date), mnth = month(date))
+
+# one trace (more performant, but less interactive)
+econ %>%
+  group_by(yr) %>%
+  plot_ly(x = ~mnth, y = ~uempmed) %>%
+  add_lines(text = ~yr)
+
+# multiple traces (less performant, but more interactive)
+plot_ly(econ, x = ~mnth, y = ~uempmed) %>%
+  add_lines(color = ~ordered(yr))
+```
+
+```{r scatter-lines, echo = FALSE, fig.cap="Drawing multiple lines using **dplyr** groups (top panel) versus a categorical `color` mapping (bottom panel). Comparatively speaking, the bottom panel has more interactive capabilites (e.g., legend-based filtering and multiple tooltips), but it does not scale as well with many lines."}
+include_vimeo("316679591")
+```
+
+Not only do these approaches differ in static visual properties, they also differ in interactive capabilties and computational performance. That's because, the grouping approach (top panel of Figure \@ref(fig:scatter-lines)) uses just one plotly.js trace (more performant, less interactive), whereas the `color` approach (bottom panel of Figure \@ref(fig:scatter-lines)) generates one trace per line/year. In this case, the benefit of having multiple traces is that we can perform interactive filtering via the legend and compare multiple y-values at a given x. The cost of having those capabilities is that plots starts to be become sluggish after a few hundred traces, whereas thousands of lines can be rendered fairly easily in one trace. See section \@ref(scaling) for more details on scaling and performance.
+
+These features make it easier to get started using plotly.js, but it still pays off to learn how to use plotly.js directly. You won't find plotly.js attributes listed as explicit arguments in any **plotly** function (except for the special `type` attribute), but they are passed along verbatim to the plotly.js figure definition through the `...` operator. The scatter-based layers in this chapter fix the `type` plotly.js attribute to `"scatter"` as well as the [`mode`](https://plot.ly/r/reference/#scatter-mode) (e.g., `add_markers()` uses `mode='markers'` etc), but you could also use the lower-level `add_trace()` to work more directly with plotly.js. For example, Figure \@ref(fig:tooltip-praise) shows how to render markers, lines, and text in the same scatter trace. It also demonstrates how to leverage *nested* plotly.js attributes, like [`textfont`](https://plot.ly/r/reference/#scatter-textfont) and [`xaxis`](https://plot.ly/r/reference/#layout-xaxis) -- these attributes contain other attributes, so you need to supply a suitable named list to these arguments.
+
+```r
+set.seed(99)
+plot_ly() %>%
+ add_trace(
+   type = "scatter",
+   mode = "markers+lines+text",
+   x = 4:6, 
+   y = 4:6,
+   text = replicate(3, praise::praise("You are ${adjective}! 🙌")),
+   textposition = "right",
+   hoverinfo = "text",
+   textfont = list(family = "Roboto Condensed", size = 16)
+ ) %>%
+ layout(xaxis = list(range = c(3, 8)))
+```
+
+```{r tooltip-praise, echo = FALSE, fig.cap="Using the generic `add_trace()` function to render markers, lines, and text in a single scatter trace. This `add_trace()` function, as well as any `add_*()` function allows you to directly specify plotly.js attributes."}
+knitr::include_graphics("images/tooltip-praise.png")
+```
+
+
+If you are new to plotly.js, I recommend taking a bit of time to look through the plotly.js attributes that are available to the scatter trace type and think how you might be able to use them. Most of these attributes work for other trace types as well, so learning an attribute once for a specific plot can pay off in other contexts as well. The online plotly.js figure reference, <https://plot.ly/r/reference/#scatter>, is a decent place to search and learn about the attributes, but I recommend using the `schema()` function instead for a few reasons:
+
+* `schema()` provides a bit more information than the online docs (e.g., value types, default values, acceptable ranges, etc).
+* The interface makes it a bit easier to traverse and discover new attributes.
+* You can be absolutely sure it matches the version used in the R package (the online docs might use a different – probably older – version).
+
+```r
+schema()
+```
+
+```{r schema, echo = FALSE, fig.cap="Using `schema()` function to traverse through the attributes available to a given trace type (e.g., scatter)", out.width = "40%"}
+knitr::include_graphics("images/schema.png")
+```
+
+The sections that follow in this chapter demonstrate various type of data views that are powered by the scatter trace.
 
 ## Scatterplots
 
-The scatterplot is commonly used to assess the association between two quantitative variables. In addition, as @unwin-graphical-analysis notes, scatterplots can be useful for exposing other important features including: casual relationships, outliers, clusters, gaps, barriers, and conditional relationships. If you supply a numeric vector for x and y in `plot_ly()`, it defaults to a scatterplot, but you can also be explicit about adding a layer of markers/points via the `add_markers()` function. A common problem with scatterplots is overplotting, meaning that there are multiple observations occupying the same (or similar) x/y locations. There are a few ways to combat overplotting including: alpha transparency, hollow symbols, and [2D density estimation](#rectangular-binning-in-R). Figure \@ref(fig:scatterplots) shows how alpha transparency and hollow symbols can provide an improvement over the default. 
+The scatterplot is commonly used to assess the association between two quantitative variables. In addition, as @unwin-graphical-analysis notes, scatterplots can be useful for exposing other important features including: casual relationships, outliers, clusters, gaps, barriers, and conditional relationships. If you supply a numeric vector for x and y in `plot_ly()`, it defaults to a scatterplot, but you can also be explicit about adding a layer of markers/points via the `add_markers()` function. 
 
-```{r scatterplots, fig.cap = "Three versions of a basic scatterplot", screenshot.alt = "screenshots/scatterplots"}
+A common problem with scatterplots is overplotting, meaning that there are multiple observations occupying the same (or similar) x/y locations. Figure \@ref(fig:scatterplots) demonstrates one way to combat overplotting via alpha blending. When dealing with tens of thousands of points (or more), you should consider using `toWebGL()` to render plots using Canvas rather than SVG (more in section \@ref(scaling)), or performing 2D density estimation (section \@ref(rectangular-binning-in-R)).
+
+```r
 subplot(
   plot_ly(mpg, x = ~cty, y = ~hwy, name = "default"),
   plot_ly(mpg, x = ~cty, y = ~hwy) %>% 
-    add_markers(alpha = 0.2, name = "alpha"),
-  plot_ly(mpg, x = ~cty, y = ~hwy) %>% 
-    add_markers(symbol = I(1), name = "hollow")
+    add_markers(alpha = 0.2, name = "alpha")
 )
 ```
 
-In Figure \@ref(fig:scatterplots), hollow circles are specified via `symbol = I(1)`. By default, the `symbol` argument (as well as the `color`/`size`/`linetype` arguments) assumes value(s) are "data", which need to be mapped to a visual palette (provided by `symbols`). Wrapping values with the `I()` function notifies `plot_ly()` that these values should be taken "AsIs". If you compare the result of `plot(1:25, 1:25, pch = 1:25)` to Figure \@ref(fig:pch), you'll see that `plot_ly()` can translate R's plotting characters (pch), but you can also use [plotly.js' symbol syntax](https://plot.ly/r/reference/#scatter-marker-symbol), if you desire.
-
-```{r pch, fig.cap = "Specifying symbol in a scatterplot", screenshot.alt = "screenshots/pch"}
-subplot(
-  plot_ly(x = 1:25, y = 1:25, symbol = I(1:25), name = "pch"),
-  plot_ly(mpg, x = ~cty, y = ~hwy, symbol = ~cyl, 
-          symbols = 1:3, name = "cyl")
-)
+```{r scatterplots, fig.cap = "Combating overplotting in a scatterplot with alpha blending."}
+knitr::include_graphics("images/scatterplots")
 ```
 
-When mapping a numeric variable to `symbol`, it creates only one trace, so no legend is generated. If you do want one trace per symbol, make sure the variable you're mapping is a factor, as Figure \@ref(fig:symbol-factor) demonstrates. When plotting multiple traces, the default plotly.js color scale will apply, but you can set the color of every trace generated from this layer with `color = I("black")`, or similar.
-
-```{r symbol-factor, fig.cap = "Mapping symbol to a factor", screenshot.alt = "screenshots/symbol-factor"}
-p <- plot_ly(mpg, x = ~cty, y = ~hwy, alpha = 0.3) 
-subplot(
-  add_markers(p, symbol = ~cyl, name = "A single trace"),
-  add_markers(p, symbol = ~factor(cyl), color = I("black"))
-)
-```
-
-The `color` argument adheres to similar rules as `symbol`:
-
-* If numeric, `color` produces one trace, but [colorbar](https://plot.ly/r/reference/#scatter-marker-colorbar) is also generated to aide the decoding of colors back to data values. The `colorbar()` function can be used to customize the appearance of this automatically generated guide. The default colorscale is viridis, a perceptually-uniform colorscale (even when converted to black-and-white), and perceivable even to those with common forms of color blindness [@viridis].
-
-* If discrete, `color` produces one trace per value, meaning a [legend](https://plot.ly/r/reference/#layout-legend) is generated. If an ordered factor, the default colorscale is viridis [@viridisLite]; otherwise, it is the "Set2" palette from the __RColorBrewer__ package [@RColorBrewer]
+As discussed in \@ref(intro-plotly-js), mapping a discrete variable to `color` produces one trace per category, which is desirable for it's legend and hover properties. On the other hand, mapping a *numeric* variable to `color` produces one trace, as well as a [colorbar](https://plot.ly/r/reference/#scatter-marker-colorbar) guide for visually decoding colors back to data values. The `colorbar()` function can be used to customize the appearance of this automatically generated guide. The default colorscale is viridis, a perceptually-uniform colorscale (even when converted to black-and-white), and perceivable even to those with common forms of color blindness [@viridis]. Viridis is also the default colorscale for ordered factors.
 
 ```{r color-types, fig.cap = "Variations on a numeric color mapping.", screenshot.alt = "screenshots/color-types"}
 p <- plot_ly(mpg, x = ~cty, y = ~hwy, alpha = 0.5)
@@ -257,7 +320,7 @@ subplot(
 )
 ```
 
-There are a number of ways to alter the default colorscale via the `colors` argument. This argument excepts: (1) a color brewer palette name (see the row names of `RColorBrewer::brewer.pal.info` for valid names), (2) a vector of colors to interpolate, or (3) a color interpolation function like `colorRamp()` or `scales::colour_ramp()`. Although this grants a lot of flexibility, one should be conscious of using a sequential colorscale for numeric variables (& ordered factors) as shown in \@ref(fig:color-numeric), and a qualitative colorscale for discrete variables as shown in \@ref(fig:color-discrete).
+There are a number of ways to alter the default colorscale via the `colors` argument. This argument excepts one of the following: (1) a color brewer palette name (see the row names of `RColorBrewer::brewer.pal.info` for valid names), (2) a vector of colors to interpolate, or (3) a color interpolation function like `colorRamp()` or `scales::colour_ramp()`. Although this grants a lot of flexibility, one should be conscious of using a sequential colorscale for numeric variables (& ordered factors) as shown in \@ref(fig:color-numeric), and a qualitative colorscale for discrete variables as shown in \@ref(fig:color-discrete).
 
 ```{r color-numeric, fig.cap = "Three variations on a numeric color mapping", screenshot.alt = "screenshots/color-numeric"}
 col1 <- c("#132B43", "#56B1F7")
@@ -293,6 +356,20 @@ subplot(
 )
 ```
 
+TODO: fit this in?
+
+When mapping a numeric variable to `symbol`, it creates only one trace, so no legend is generated. If you do want one trace per symbol, make sure the variable you're mapping is a factor, as Figure \@ref(fig:symbol-factor) demonstrates. When plotting multiple traces, the default plotly.js color scale will apply, but you can set the color of every trace generated from this layer with `color = I("black")`, or similar.
+
+```{r symbol-factor, fig.cap = "Mapping symbol to a factor", screenshot.alt = "screenshots/symbol-factor"}
+p <- plot_ly(mpg, x = ~cty, y = ~hwy, alpha = 0.3) 
+subplot(
+  add_markers(p, symbol = ~cyl, name = "A single trace"),
+  add_markers(p, symbol = ~factor(cyl), color = I("black"))
+)
+```
+
+
+
 ### 3D scatterplots
 
 To make a 3D scatterplot, just add a `z` attribute:
@@ -324,8 +401,7 @@ d <- broom::tidy(m) %>%
   arrange(desc(estimate)) %>%
   mutate(term = factor(term, levels = term))
 plot_ly(d, x = ~estimate, y = ~term) %>%
-  add_markers(error_x = ~list(value = std.error)) %>%
-  layout(margin = list(l = 200))
+  add_markers(error_x = ~list(value = std.error))
 ```
 
 ## Line plots
@@ -747,45 +823,3 @@ x <- seq_len(nrow(volcano)) + 100
 y <- seq_len(ncol(volcano)) + 500
 plot_ly() %>% add_surface(x = ~x, y = ~y, z = ~volcano)
 ```
-
-# Raster images
-
-In R, there is native support for [raster](https://en.wikipedia.org/wiki/Raster_graphics) objects which encode bitmap images as essentially a matrix of color codes.
-
-```{r}
-m <- matrix(hcl(0, 80, seq(50, 80, 10)), nrow = 4, ncol = 5)
-(r <- as.raster(m))
-plot(r)
-```
-
-The `raster2uri()` function converts raster objects to a data URI, so they can be easily embedded via [plotly's image API](https://plot.ly/r/reference/#layout-images):
-
-```{r raster, fig.cap = "A simple raster object displayed as an image", screenshot.alt = "screenshots/raster"}
-plot_ly() %>%
-  layout(images = list(
-    source = raster2uri(r), # converts a raster object to a data URI.
-    xref = "x", yref = "y", x = 0, y = 0, sizex = 1, sizey = 1,
-    sizing = "stretch", xanchor = "left", yanchor = "bottom"
-  ))
-```
-
-For more examples of the image API, see <https://plot.ly/r/logos/>
-
-
-# Other chart types
-
-Point to <https://plot.ly> docs?
-
-
-# Leveraging `ggplotly()`
-
-* Talk generally about what things **ggplot2** makes easy
-  * That is, when to use `ggplotly()` over `plot_ly()`?
-
-* Cover ggplot2 geoms that fill a void left by `plot_ly()`
-  * `geom_freqpoly()`
-  
-  
-## A case study comparing `ggplotly()` to `plot_ly()`
-
-That is, what's currently in ggplotly-vs-plotly.Rmd

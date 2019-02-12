@@ -1,19 +1,19 @@
 # (PART) Various special topics {-}
 
-# Is plotly free?
+# Is plotly free & secure?
 
 Yes! Both the R package and the underlying JavaScript library (plotly.js) are MIT licensed. That means you are free to distribute and commericalize anything you create with **plotly**. Optionally, you can sign up for a <https://plot.ly> account and use the `api_create()` function to upload **plotly** graphs to your account, but _a <https://plot.ly> account is not required to use **plotly**_.
 
-# Is my data secure?
-
-Yes! The data behind a **plotly** graph won't leave your computer unless you:
+Moreover, the data behind a **plotly** graph won't leave the computer you're viewing it on, unless:
 
 * You sign up for a [plotly cloud](https://plot.ly/products/cloud/) account and use the `api_create()` function to upload your graph or data. This service is free for public-facing graphs, but private hosting costs money.
 * You add the 'send data to cloud' modebar button. By default, this button is not included, but you can add it by doing `config(p, cloud = TRUE)`.
 
 In other words, unless you specifically request otherwise, your graph runs entirely offline (i.e. no requests to external services are made). That means you can be confident that your data is not being shared with anyone/anything without your knowledge.
 
-# Control tooltip text {#tooltip-text}
+# Controlling tooltips
+
+## `plot_ly()` tooltips {#tooltip-text}
 
 There are two main approaches to controlling the tooltip: `hoverinfo` and `hovertemplate`. I suggest starting with the former approach since it's simpler, more mature, and enjoys universal support across trace types. On the other hand, `hovertemplate` does offer a convenient approach for flexible control over tooltip text, so it can be useful as well.
 
@@ -118,7 +118,7 @@ knitr::include_graphics("images/hovertemplate.png")
 If you need really specific control over the tooltip, you might consider hiding the tooltip altogether (using `hoverinfo='none'`) and defining your own tooltip. Defining your own tooltip, however, will require knowledge of HTML and JavaScript -- see Figure \@ref(fig:tooltip-image) for an example of how to display an image on hover instead of a tooltip.
 
 
-# Control `ggplotly()` tooltips {#tooltip-text-ggplotly}
+## `ggplotly()` tooltips {#tooltip-text-ggplotly}
 
 Similar to how you can use the `text` attribute to supply a custom string in `plot_ly()` (see Section \@ref(tooltip-text)), you can supply a `text` aesthetic to your **ggplot2** graph, as shown in \@ref(fig:ggplotly-text):
 
@@ -200,8 +200,7 @@ w %>%
 knitr::include_graphics("images/custom-predict-text.png")
 ```
 
-
-# Control tooltip styling
+## Styling
 
 There is currently one main attribute for controlling the style of a tooltip: `hoverlabel`. With this attribute you can currently set the background color (`bgcolor`), border color (`bordercolor`), and font family/size/color. Figure \@ref(fig:tooltip-style) demonstrates how to use it with `plot_ly()` (basically any chart type you use should support it):  
 
@@ -237,111 +236,103 @@ knitr::include_graphics("images/tooltip-style-ggplotly.png")
 ```
 
 As shown in sections \@ref(tooltip-text) and \@ref(tooltip-text-ggplotly) the approach to customized the actual text of a tooltip is slightly different depending on whether you're using `ggplotly()` or `plot_ly()`, but styling the appearance of the tooltip is more or less the same in either approach.
-
-# Control axis labels
-
-TODO: 
-  * using factors to control ordering of axis labels 
-  * specifying your own tickvals/ticktext?
-    * discuss pros and cons
     
-# Language support {#locales}
 
-The `locale` argument of the `config()` function allows one to render on-graph text using another language. Figure \@ref(fig:localization) shows how setting `locale='ja'` will render text in Japanese.
+
+# Control the modebar
+
+By default, the modebar appears in the top right-hand side of a **plotly** graph on mouse hover, and can lead to poor user-experience on small displays. Fortunately, the modebar can be completely customized via the `config()` function. The `config()` function can be helpful for a lot of things: language support (Section \@ref(locales)), enabling mathjax (Section \@ref(mathjax)), suppressing tip dialogs (e.g., `showTips`), when to scroll on zoom, etc. However, this topic is all about options related to the modebar. To see a complete list of `config()` options, as well as their description, see the config section of the plotly.js `schema()`.
+
+## Remove the entire modebar
+
+The `displayModeBar` option makes it quick and easy to remove the entire modebar.
 
 ```r
-today <- Sys.Date()
-x <- seq.Date(today, today + 360, by = "day")
-plot_ly(x = x, y = rnorm(length(x))) %>%
-  add_lines() %>%
-  config(locale = "ja")
+plot_ly() %>%
+  config(displayModeBar = FALSE)
 ```
 
-```{r localization, echo = FALSE, fig.cap="Using the `locale` argument of the `config()` function to render on-graph text in another language."}
-knitr::include_graphics("images/localization.png")
+## Remove the plotly logo
+
+The `displaylogo` option makes it quick and easy to remove the entire modebar.
+
+```r
+plot_ly() %>%
+  config(displaylogo = FALSE)
 ```
 
-Table \@ref(tab:locale-codes) contains a list of all the supported locale codes and the language they correspond to:
+```{r displaylogo, echo = FALSE, fig.cap = "Removing the plotly logo from the modebar."}
+knitr::include_graphics("images/displaylogo.png")
+```
 
-```{r locale-codes, echo = FALSE, results='asis'}
-locales <- list.files(system.file("htmlwidgets/lib/plotlyjs/locales", package = "plotly"))
-locale_codes <- tibble::tibble(
-  Code = tools::file_path_sans_ext(locales)
+## Remove modebar buttons by name
+
+Any modebar buttons can be removed by name via `modeBarButtonsToRemove`. The current list of modebar buttons can be found at <https://github.com/plotly/plotly.js/blob/master/src/components/modebar/buttons.js>
+
+```r
+plot_ly() %>%
+  config(modeBarButtonsToRemove = c("zoomIn2d", "zoomOut2d"))
+```
+
+```{r modeBarButtonsToRemove, echo = FALSE, fig.cap = "Removing the 'zoomIn2d' and 'zoomOut2d' modebar buttons by name."}
+knitr::include_graphics("images/modeBarButtonsToRemove.png")
+```
+
+## Add custom modebar buttons
+
+It is possible to supply your own modebar button icon that triggers a custom JavaScript function when clicked. You must provide a `name` for the icon and either a SVG `path` (with just the d attribute) or a full SVG element (to `svg`). Nowadays, there are a number of free websites that allow you to search icons and download their corresponding SVG information. When supplying `path`, as in Figure \@ref(fig:modeBarButtonsToAdd), you can also define an SVG `transform` to help size and position the icon. To define a JavaScript function to call upon clicking the icon, you can provide a string to `htmlwidgets::JS()`. The interactive version of Figure \@ref(fig:modeBarButtonsToAdd) adds on-graph text everytime the octocat icon is clicked. To learn more about how to leverage JavaScript from R, see Section \@ref(javascript).
+
+```r
+octocat <- list(
+  name = "octocat",
+  icon = list(
+    path = "M24.92 12.183c0-1.586-.604-2.864-1.585-3.83.172-.547.398-1.763-.229-3.321 0 0-1.114-.348-3.628 1.315a12.695 12.695 0 0 0-3.081-.366c-1.154 0-2.322.143-3.409.44-2.596-1.747-3.74-1.391-3.74-1.391-.748 1.847-.287 3.215-.145 3.554-.883.936-1.414 2.133-1.414 3.594 0 1.111.128 2.099.44 2.964l.325.732c.879 1.614 2.606 2.655 5.677 2.983-.434.289-.885.779-1.062 1.612-.594.28-2.475.966-3.603-.944 0 0-.633-1.148-1.842-1.235 0 0-1.174-.017-.08.722 0 0 .782.367 1.326 1.738 0 0 .705 2.342 4.114 1.593v2.417s-.076.857-.867 1.143c0 0-.469.312.034.497 0 0 2.205.174 2.205-1.604v-2.643s-.09-1.047.429-1.404v4.332s-.032 1.031-.576 1.421c0 0-.362.646.433.468 0 0 1.517-.211 1.584-1.967l.035-4.383h.363l.033 4.383c.076 1.748 1.59 1.967 1.59 1.967.793.179.429-.468.429-.468-.54-.389-.579-1.421-.579-1.421v-4.297c.52.402.436 1.369.436 1.369v2.643c0 1.777 2.2 1.604 2.2 1.604.505-.186.036-.498.036-.498-.793-.286-.867-1.143-.867-1.143v-3.461c0-1.346-.574-2.056-1.137-2.435 3.277-.318 4.845-1.368 5.572-2.99-.015.027.26-.726.26-.726.25-.859.325-1.855.325-2.963h-.002z",
+    transform = 'matrix(1 0 0 1 -2 -2) scale(0.7)'
+  ),
+  click = htmlwidgets::JS(
+    "function(gd) {
+       var txt = {x: [1], y: [1], text: 'Octocat!', mode: 'text'};
+       Plotly.addTraces(gd, txt);
+    }"
+  )
 )
 
-readr::read_csv("data/locale-table.csv") %>%
-  dplyr::select(Language = Locale, Code = Languagecode) %>%
-  dplyr::semi_join(locale_codes) %>%
-  DT::datatable(rownames = FALSE)
-
-cat("<table>",paste0("<caption>", "(#tab:locale-codes)", "Language support in plotly. To use one of these languages, supply the locale code to the <code>locale</code> argument in the <code>config()</code> function.", "</caption>"),"</table>", sep ="\n")
-```
-
-
-# LaTeX rendering {#mathjax}
-
-LaTeX rendering via MathJax is possible via the `TeX()` function which flags a character vector as LaTeX. To load MathJaX externally (meaning an internet connection is needed for TeX rendering), set the new `mathjax` argument in `config()` to `"cdn"`. Figure \@ref(fig:mathjax) demonstrates how to render LaTeX in the plot and axis titles.
-
-```r
-library(plotly)
-data(co2, package = "datasets")
-
 plot_ly() %>%
-  add_lines(x = zoo::index(co2), y = co2) %>%
-  layout(
-    title = TeX("CO_2 \\text{measured in } \\frac{parts}{million}"),
-    xaxis = list(title = "Time"),
-    yaxis = list(title = TeX("\\text{Atmospheric concentraion of CO}_2"))
-  ) %>%
-  config(mathjax = "cdn")
+  config(modeBarButtonsToAdd = list(octocat))
 ```
 
-```{r mathjax, echo = FALSE, fig.cap="Rendering LaTeX in the plot and axis titles."}
-knitr::include_graphics("images/mathjax.png")
+```{r modeBarButtonsToAdd, echo = FALSE, fig.cap = "Supplying a custom modebar button with custom behavior."}
+knitr::include_graphics("images/modeBarButtonsToAdd.png")
 ```
 
-Figure \@ref(fig:mathjax2) demonstrates how to render LaTeX with on-graph text. There are two ways to draw on-graph text: `add_text()` which is a scatter trace with a mode of text and `add_annotations()` which is part of the graph's layout. The main difference is that `add_text()` is able to display tooltips and `add_annotations()` is able to display arrows.
+Note that you can also use `modeBarButtons` to completely specify which buttons to include in the modebar. With this option, you can supply existing button names and/or your own custom buttons:
 
 ```r
-plotly_empty(showlegend = FALSE, hoverinfo = "x+y") %>%
-  add_annotations(x = 1, y = 2, text = TeX("\\text{The sample mean:} \\sum_{i=1}^n x_i \\text{ where}"), showarrow = FALSE) %>%
-  add_text(x = 1, y = 1, text = TeX("x_i \\sim N(\\mu, \\sigma)"), size = I(100)) %>%
-  add_annotations(x = 1, y = 0, text = TeX("E[x_i]")) %>%
-  add_text(x = 1, y = 0, text = TeX("\\mu"), textposition = "bottom") %>%
-  config(mathjax = "cdn")
+plot_ly() %>%
+  config(modeBarButtons = list(list("zoomIn2d"), list(octocat)))
 ```
 
-```{r mathjax2, echo = FALSE, fig.cap="Rendering LaTeX using `add_text()` and `add_annotations()`. "}
-knitr::include_graphics("images/mathjax2.png")
+```{r modeBarButtons, echo = FALSE, fig.cap = "Specifying the full list of modebar buttons."}
+knitr::include_graphics("images/modeBarButtons.png")
 ```
 
-To use a local version of MathJax (so that your graphs will render without an internet connection), you need to inform **plotly** where it's located. If you don't already have MathJax locally, I recommend downloading the official MathJax git repo. Here's how to do that using terminal commands:
+## Control image downloads
 
-```shell
-$ git clone https://github.com/mathjax/MathJax.git
-$ cd MathJax
-```
-
-Now set the `PLOTLY_MATHJAX_PATH` environment variable so that **plotly** knows where that MathJax folder lives. I recommend setting this variable in you `.Rprofile` so you don't have to reset it everytime you restart R:
-
-```shell
-$ export PLOTLY_MATHJAX_PATH=`pwd`
-$ echo "Sys.setenv('PLOTLY_MATHJAX_PATH' = '$PLOTLY_MATHJAX_PATH')" >> ~/.Rprofile
-```
-
-Finally, once `PLOTLY_MATHJAX_PATH` is set, specify `mathjax="local"` in `config()`:
+By default, the `toImage` modebar button downloads a png file using the current size and state of the graph. With `toImageButtonOptions`, one can specify different sizes and filetypes, which is particularly useful for obtaining a static pdf/webp/jpeg/etc image of the plot *after* components have been directly manipulated, as leveraged in Figure \@ref(fig:edit-county-labels). Here's a basic example of configuring the `'toImage'` button to download an svg file that's 200 x 100 pixels:
 
 ```r
-config(last_plot(), mathjax="local")
+plot_ly() %>%
+  config(
+    toImageButtonOptions = list(
+      format = "svg",
+      width = 200,
+      height = 100
+    )
+  )
 ```
 
-## MathJax caveats
+After downloading the svg file, you can convert it to pdf using the `rsvg_pdf()` function from the **rsvg** package [@rsvg].
 
-1. MathJax rendering in tooltips [currently isn't supported](https://github.com/plotly/plotly.js/issues/559).
-
-2. At least currently, plotly.js requires SVG-based rendering which doesn't play nicely with HTML-based rendering (e.g. **rmarkdown** documents and **shiny** apps) . If you need both the SVG and HTML rendering, consider `<iframe>`-ing your plotly graph(s) into the larger document (see [here](https://github.com/ropensci/plotly/blob/master/inst/examples/rmd/MathJax/index.Rmd) for an example).
-
-3. Due to the size and nature of MathJax, using `htmlwidget::saveWidget()` with `selfcontained = TRUE` won't work. At least for now, when you need to save a plotly graph (`p`) with local MathJax, do `htmlwidget::saveWidget(p, selfcontained = FALSE)`
 
 # Working with colors {#working-with-colors}
 
@@ -447,116 +438,139 @@ jis %>%
   )
 ```
 
-# Customize the modebar
 
-By default, the modebar appears in the top right-hand side of a **plotly** graph on mouse hover, and can lead to poor user-experience on small displays. Fortunately, the modebar can be completely customized via the `config()` function. The `config()` function can be helpful for a lot of things: language support (Section \@ref(locales)), enabling mathjax (Section \@ref(mathjax)), suppressing tip dialogs (e.g., `showTips`), when to scroll on zoom, etc. However, this topic is all about options related to the modebar. To see a complete list of `config()` options, as well as their description, see the config section of the plotly.js `schema()`.
+# Control the layout
 
-## Remove the entire modebar
+## Axis titles
 
-The `displayModeBar` option makes it quick and easy to remove the entire modebar.
+## Axis labels
 
-```r
-plot_ly() %>%
-  config(displayModeBar = FALSE)
-```
+  * using factors to control ordering of axis labels 
+  * specifying your own tickvals/ticktext?
+    * discuss pros and cons
 
-## Remove the plotly logo
+## Margins
 
-The `displaylogo` option makes it quick and easy to remove the entire modebar.
+## Fonts
 
-```r
-plot_ly() %>%
-  config(displaylogo = FALSE)
-```
 
-```{r displaylogo, echo = FALSE, fig.cap = "Removing the plotly logo from the modebar."}
-knitr::include_graphics("images/displaylogo.png")
-```
 
-## Remove modebar buttons by name
+    
+# Language support {#locales}
 
-Any modebar buttons can be removed by name via `modeBarButtonsToRemove`. The current list of modebar buttons can be found at <https://github.com/plotly/plotly.js/blob/master/src/components/modebar/buttons.js>
+The `locale` argument of the `config()` function allows one to render on-graph text using another language. Figure \@ref(fig:localization) shows how setting `locale='ja'` will render text in Japanese.
 
 ```r
-plot_ly() %>%
-  config(modeBarButtonsToRemove = c("zoomIn2d", "zoomOut2d"))
+today <- Sys.Date()
+x <- seq.Date(today, today + 360, by = "day")
+plot_ly(x = x, y = rnorm(length(x))) %>%
+  add_lines() %>%
+  config(locale = "ja")
 ```
 
-```{r modeBarButtonsToRemove, echo = FALSE, fig.cap = "Removing the 'zoomIn2d' and 'zoomOut2d' modebar buttons by name."}
-knitr::include_graphics("images/modeBarButtonsToRemove.png")
+```{r localization, echo = FALSE, fig.cap="Using the `locale` argument of the `config()` function to render on-graph text in another language."}
+knitr::include_graphics("images/localization.png")
 ```
 
-## Add custom modebar buttons
+Table \@ref(tab:locale-codes) contains a list of all the supported locale codes and the language they correspond to:
 
-It is possible to supply your own modebar button icon that triggers a custom JavaScript function when clicked. You must provide a `name` for the icon and either a SVG `path` (with just the d attribute) or a full SVG element (to `svg`). Nowadays, there are a number of free websites that allow you to search icons and download their corresponding SVG information. When supplying `path`, as in Figure \@ref(fig:modeBarButtonsToAdd), you can also define an SVG `transform` to help size and position the icon. To define a JavaScript function to call upon clicking the icon, you can provide a string to `htmlwidgets::JS()`. The interactive version of Figure \@ref(fig:modeBarButtonsToAdd) adds on-graph text everytime the octocat icon is clicked. To learn more about how to leverage JavaScript from R, see Section \@ref(javascript).
-
-```r
-octocat <- list(
-  name = "octocat",
-  icon = list(
-    path = "M24.92 12.183c0-1.586-.604-2.864-1.585-3.83.172-.547.398-1.763-.229-3.321 0 0-1.114-.348-3.628 1.315a12.695 12.695 0 0 0-3.081-.366c-1.154 0-2.322.143-3.409.44-2.596-1.747-3.74-1.391-3.74-1.391-.748 1.847-.287 3.215-.145 3.554-.883.936-1.414 2.133-1.414 3.594 0 1.111.128 2.099.44 2.964l.325.732c.879 1.614 2.606 2.655 5.677 2.983-.434.289-.885.779-1.062 1.612-.594.28-2.475.966-3.603-.944 0 0-.633-1.148-1.842-1.235 0 0-1.174-.017-.08.722 0 0 .782.367 1.326 1.738 0 0 .705 2.342 4.114 1.593v2.417s-.076.857-.867 1.143c0 0-.469.312.034.497 0 0 2.205.174 2.205-1.604v-2.643s-.09-1.047.429-1.404v4.332s-.032 1.031-.576 1.421c0 0-.362.646.433.468 0 0 1.517-.211 1.584-1.967l.035-4.383h.363l.033 4.383c.076 1.748 1.59 1.967 1.59 1.967.793.179.429-.468.429-.468-.54-.389-.579-1.421-.579-1.421v-4.297c.52.402.436 1.369.436 1.369v2.643c0 1.777 2.2 1.604 2.2 1.604.505-.186.036-.498.036-.498-.793-.286-.867-1.143-.867-1.143v-3.461c0-1.346-.574-2.056-1.137-2.435 3.277-.318 4.845-1.368 5.572-2.99-.015.027.26-.726.26-.726.25-.859.325-1.855.325-2.963h-.002z",
-    transform = 'matrix(1 0 0 1 -2 -2) scale(0.7)'
-  ),
-  click = htmlwidgets::JS(
-    "function(gd) {
-       var txt = {x: [1], y: [1], text: 'Octocat!', mode: 'text'};
-       Plotly.addTraces(gd, txt);
-    }"
-  )
+```{r locale-codes, echo = FALSE, results='asis'}
+locales <- list.files(system.file("htmlwidgets/lib/plotlyjs/locales", package = "plotly"))
+locale_codes <- tibble::tibble(
+  Code = tools::file_path_sans_ext(locales)
 )
 
-plot_ly() %>%
-  config(modeBarButtonsToAdd = list(octocat))
+data(locale_table, package = "plotlyBook")
+
+locale_table %>%
+  dplyr::select(Language = Locale, Code = Languagecode) %>%
+  dplyr::semi_join(locale_codes) %>%
+  DT::datatable(rownames = FALSE)
+
+cat("<table>",paste0("<caption>", "(#tab:locale-codes)", "Language support in plotly. To use one of these languages, supply the locale code to the <code>locale</code> argument in the <code>config()</code> function.", "</caption>"),"</table>", sep ="\n")
 ```
 
-```{r modeBarButtonsToAdd, echo = FALSE, fig.cap = "Supplying a custom modebar button with custom behavior."}
-knitr::include_graphics("images/modeBarButtonsToAdd.png")
-```
 
-Note that you can also use `modeBarButtons` to completely specify which buttons to include in the modebar. With this option, you can supply existing button names and/or your own custom buttons:
+# LaTeX rendering {#mathjax}
+
+LaTeX rendering via MathJax is possible via the `TeX()` function which flags a character vector as LaTeX. To load MathJaX externally (meaning an internet connection is needed for TeX rendering), set the new `mathjax` argument in `config()` to `"cdn"`. Figure \@ref(fig:mathjax) demonstrates how to render LaTeX in the plot and axis titles.
 
 ```r
+library(plotly)
+data(co2, package = "datasets")
+
 plot_ly() %>%
-  config(modeBarButtons = list(list("zoomIn2d"), list(octocat)))
+  add_lines(x = zoo::index(co2), y = co2) %>%
+  layout(
+    title = TeX("CO_2 \\text{measured in } \\frac{parts}{million}"),
+    xaxis = list(title = "Time"),
+    yaxis = list(title = TeX("\\text{Atmospheric concentraion of CO}_2"))
+  ) %>%
+  config(mathjax = "cdn")
 ```
 
-```{r modeBarButtons, echo = FALSE, fig.cap = "Specifying the full list of modebar buttons."}
-knitr::include_graphics("images/modeBarButtons.png")
+```{r mathjax, echo = FALSE, fig.cap="Rendering LaTeX in the plot and axis titles."}
+knitr::include_graphics("images/mathjax.png")
 ```
 
-## Control image downloads
-
-By default, the `toImage` modebar button downloads a png file using the current size and state of the graph. With `toImageButtonOptions`, one can specify different sizes and filetypes, which is particularly useful for obtaining a static pdf/webp/jpeg/etc image of the plot *after* components have been directly manipulated, as leveraged in Figure \@ref(fig:edit-county-labels). Here's a basic example of configuring the `'toImage'` button to download an svg file that's 200 x 100 pixels:
+Figure \@ref(fig:mathjax2) demonstrates how to render LaTeX with on-graph text. There are two ways to draw on-graph text: `add_text()` which is a scatter trace with a mode of text and `add_annotations()` which is part of the graph's layout. The main difference is that `add_text()` is able to display tooltips and `add_annotations()` is able to display arrows.
 
 ```r
-plot_ly() %>%
-  config(
-    toImageButtonOptions = list(
-      format = "svg",
-      width = 200,
-      height = 100
-    )
-  )
+plotly_empty(showlegend = FALSE, hoverinfo = "x+y") %>%
+  add_annotations(x = 1, y = 2, text = TeX("\\text{The sample mean:} \\sum_{i=1}^n x_i \\text{ where}"), showarrow = FALSE) %>%
+  add_text(x = 1, y = 1, text = TeX("x_i \\sim N(\\mu, \\sigma)"), size = I(100)) %>%
+  add_annotations(x = 1, y = 0, text = TeX("E[x_i]")) %>%
+  add_text(x = 1, y = 0, text = TeX("\\mu"), textposition = "bottom") %>%
+  config(mathjax = "cdn")
 ```
 
-After downloading the svg file, you can convert it to pdf using the `rsvg_pdf()` function from the **rsvg** package [@rsvg].
+```{r mathjax2, echo = FALSE, fig.cap="Rendering LaTeX using `add_text()` and `add_annotations()`. "}
+knitr::include_graphics("images/mathjax2.png")
+```
 
-## The data-plot-pipeline
+To use a local version of MathJax (so that your graphs will render without an internet connection), you need to inform **plotly** where it's located. If you don't already have MathJax locally, I recommend downloading the official MathJax git repo. Here's how to do that using terminal commands:
 
-Since every **plotly** function modifies a plotly object (or the data underlying that object), we can express complex multi-layer plots as a sequence (or, more specifically, a directed acyclic graph) of data manipulations and mappings to the visual space. Moreover, **plotly** functions are designed to take a plotly object as input, and return a modified plotly object, making it easy to chain together operations via the pipe operator (`%>%`) from the **magrittr** package [@magrittr]. Consequently, we can re-express Figure \@ref(fig:houston) in a much more readable and understandable fashion.
+```shell
+$ git clone https://github.com/mathjax/MathJax.git
+$ cd MathJax
+```
+
+Now set the `PLOTLY_MATHJAX_PATH` environment variable so that **plotly** knows where that MathJax folder lives. I recommend setting this variable in you `.Rprofile` so you don't have to reset it everytime you restart R:
+
+```shell
+$ export PLOTLY_MATHJAX_PATH=`pwd`
+$ echo "Sys.setenv('PLOTLY_MATHJAX_PATH' = '$PLOTLY_MATHJAX_PATH')" >> ~/.Rprofile
+```
+
+Finally, once `PLOTLY_MATHJAX_PATH` is set, specify `mathjax="local"` in `config()`:
+
+```r
+config(last_plot(), mathjax="local")
+```
+
+## MathJax caveats
+
+1. MathJax rendering in tooltips [currently isn't supported](https://github.com/plotly/plotly.js/issues/559).
+
+2. At least currently, plotly.js requires SVG-based rendering which doesn't play nicely with HTML-based rendering (e.g. **rmarkdown** documents and **shiny** apps) . If you need both the SVG and HTML rendering, consider `<iframe>`-ing your plotly graph(s) into the larger document (see [here](https://github.com/ropensci/plotly/blob/master/inst/examples/rmd/MathJax/index.Rmd) for an example).
+
+3. Due to the size and nature of MathJax, using `htmlwidget::saveWidget()` with `selfcontained = TRUE` won't work. At least for now, when you need to save a plotly graph (`p`) with local MathJax, do `htmlwidget::saveWidget(p, selfcontained = FALSE)`
+
+
+# The data-plot-pipeline
+
+As Chapter \@ref(intro-plotly) first introduced, we can express multi-layer **plotly** graphs as a sequence (or, more specifically, a directed acyclic graph) of **dplyr** data manipulations and mappings to visuals. For example, to create Figure \@ref(fig:houston2), we could group `txhousing` by `city` to ensure the first layer of `add_lines()` draws a different line for each city, then `filter()` down to Houston so that the second call to `add_lines()` draws only Houston. 
 
 ```{r houston2, screenshot.alt = "screenshots/houston"}
-allCities <- txhousing %>%
+txhousing %>%
   group_by(city) %>%
   plot_ly(x = ~date, y = ~median) %>%
-  add_lines(alpha = 0.2, name = "Texan Cities", hoverinfo = "none")
-
-allCities %>%
+  add_lines(alpha = 0.2, name = "Texan Cities", hoverinfo = "none") %>%
   filter(city == "Houston") %>%
   add_lines(name = "Houston")
 ```
 
-Sometimes the directed acyclic graph property of a pipeline can be too restrictive for certain types of plots. In this example, after filtering the data down to Houston, there is no way to recover the original data inside the pipeline. The `add_fun()` function helps to work-around this restriction^[Credit to Winston Chang and Hadley Wickham for this idea. The `add_fun()` is very much like `layer_f()` function in **ggvis**.] -- it works by applying a function to the plotly object, but does not affect the data associated with the plotly object. This effectively provides a way to isolate data transformations within the pipeline^[Also, effectively putting a [pipeline inside a pipeline](http://www.memecreator.org/meme/yo-dawg-i-heard-u-like-pipelines-so-we-put-a-pipeline-in-your-pipeline)]. Figure \@ref(fig:houston-vs-sa) uses this idea to highlight both Houston and San Antonio.
+Sometimes the directed acyclic graph property of a **magrittr** pipeline can be too restrictive for certain types of plots. In this example, after filtering the data down to Houston, there is no way to recover the original data inside the pipeline. The `add_fun()` function helps to work-around this restriction^[Credit to Winston Chang and Hadley Wickham for this idea. The `add_fun()` is very much like `layer_f()` function in **ggvis**.] -- it works by applying a function to the plotly object, but does not affect the data associated with the plotly object. This effectively provides a way to isolate data transformations within the pipeline^[Also, effectively putting a [pipeline inside a pipeline](http://www.memecreator.org/meme/yo-dawg-i-heard-u-like-pipelines-so-we-put-a-pipeline-in-your-pipeline)]. Figure \@ref(fig:houston-vs-sa) uses this idea to highlight both Houston and San Antonio.
 
 ```{r houston-vs-sa, fig.cap = "Monthly median house price in Houston and San Antonio in comparison to other Texan cities.", screenshot.alt = "screenshots/houston-vs-sa"}
 allCities %>%
@@ -625,7 +639,150 @@ txhousing %>%
   add_fun(layer_forecast)
 ```
 
-In summary, the "data-plot-pipeline" is desirable for a number of reasons: (1) makes your code easier to read and understand, (2) encourages you to think of both your data and plots using a single, uniform data structure, which (3) makes it easy to combine and reuse transformations. As it turns out, we can even use these ideas when creating a plotly object via `ggplotly()`, as discussed in the next section [Extending `ggplotly()`](#extending-ggplotly).
+In summary, the "data-plot-pipeline" is desirable for a number of reasons: (1) makes your code easier to read and understand, (2) encourages you to think of both your data and plots using a single, uniform data structure, which (3) makes it easy to combine and reuse transformations.
+
+
+# Modifying `ggplotly()` results
+
+## Modifying layout
+
+Since the `ggplotly()` function returns a plotly object, we can manipulate that object in the same way that we would manipulate any other plotly object. A simple and useful application of this is to specify interaction modes, like plotly.js' [layout.dragmode](https://plot.ly/r/reference/#layout-dragmode) for specifying the mode of click+drag events. Figure \@ref(fig:ggplotly-layout) demonstrates how the default for this attribute can be modified via the `layout()` function.
+
+```{r ggplotly-layout, fig.cap = "Customizing the dragmode of an interactive ggplot2 graph.", screenshot.alt = "screenshots/ggplotly-dragmode"}
+data(gold, package = "forecast")
+p <- ggplot(fortify(gold), aes(x, y)) + geom_line()
+gg <- ggplotly(p)
+layout(gg, dragmode = "pan")
+```
+
+Perhaps a more useful application is to add a range slider to the x-axis, which allows you to zoom on the x-axis without losing the global context. This is quite useful for quickly altering the limits of your plot to achieve an optimal aspect ratio for your data without losing the global perspective [@banking]. Figure \@ref(fig:ggplotly-rangeslider) uses the `rangeslider()` function to add a rangeslider to the plot.  
+
+```{r ggplotly-rangeslider, fig.cap = "Adding a rangeslider to an interactive ggplot2 graph.", screenshot.alt = "screenshots/ggplotly-rangeslider"}
+rangeslider(gg)
+```
+
+Since a single plotly object can only have one layout, modifying the layout of `ggplotly()` is fairly easy, but it's trickier to modify the data underlying the graph.
+
+## Modifying data
+
+As mentioned previously, `ggplotly()` translates each ggplot2 layer into one or more plotly.js traces. In this translation, it is forced to make a number of assumptions about trace attribute values that may or may not be appropriate for the use case. To demonstrate, consider Figure \@ref(fig:simple-scatterplot), a simple scatterplot with a fitted line overlaid. By default, this plot shows hover information for the points, the fitted line, and the confidence band. How could we make it so hover information is only displayed for the points?
+
+```{r simple-scatterplot}
+p <- ggplot(mtcars, aes(x = wt, y = mpg)) +
+   geom_point() + geom_smooth()
+ggplotly(p)
+```
+
+The **ggplot2** package doesn't provide an API for interactive features, but by changing the [hoverinfo](https://plot.ly/r/reference/#scatter-hoverinfo) attribute to `"none"`, we can turn off hover for the relevant traces. This sort of task (i.e. modifying trace attribute values) is best achieved through the `style()` function. Before using it, you may want to study the underlying traces with `plotly_json()` which uses the **listviewer** package to display a convenient interactive view of the JSON object sent to plotly.js [@listviewer]. By clicking on the arrow next to the data element, you can see the traces (data) behind the plot. As shown in Figure \@ref(fig:listviewer), we have three traces: one for the `geom_point()` layer and two for the `geom_smooth()` layer.
+
+```r
+plotly_json(p)
+```
+
+```{r listviewer, echo = FALSE, fig.cap = "Using listviewer to inspect the JSON representation of a plotly object."}
+knitr::include_graphics("images/listviewer.png")
+```
+
+This output indicates that the fitted line and confidence band are implemented in the 2nd and 3rd trace of the plotly object, so to turn off the hover of those traces:
+
+```{r style-hoverinfo, fig.cap = "Using the `style()` function to modify hoverinfo attribute values of a plotly object created via `ggplotly()` (by default, `ggplotly()` displays hoverinfo for all traces). In this case, the hoverinfo for a fitted line and error bounds are hidden.", screenshot.alt = "screenshots/style-hoverinfo"}
+style(p, hoverinfo = "none", traces = 2:3)
+```
+
+## Leveraging statistical output
+
+Since `ggplotly()` returns a plotly object, and **plotly** objects can have data attached to them, it attaches data from **ggplot2** layer(s) (either before or after summary statistics have been applied). Furthermore, since each ggplot layer owns a data frame, it is useful to have some way to specify the particular layer of data of interest, which is done via the `layerData` argument in `ggplotly()`. Also, when a particular layer applies a summary statistic (e.g., `geom_bin()`), or applies a statistical model (e.g., `geom_smooth()`) to the data, it might be useful to access the output of that transformation, which is the point of the `originalData` argument in `ggplotly()`. 
+
+```{r}
+p <- ggplot(mtcars, aes(x = wt, y = mpg)) +
+   geom_point() + geom_smooth()
+p %>%
+  ggplotly(layerData = 2, originalData = FALSE) %>%
+  plotly_data()
+```
+
+The data shown above is the data ggplot2 uses to actually draw the fitted values (as a line) and standard error bounds (as a ribbon). Figure \@ref(fig:se-annotations) leverages this data to add additional information about the model fit; in particular, it adds a vertical lines and annotations at the x-values that are associated with the highest and lowest amount uncertainty in the fitted values. Producing a plot like this with **ggplot2** would be impossible using `geom_smooth()` alone.^[It could be recreated by fitting the model via `loess()`, obtaining the fitted values and standard error with `predict()`, and feeding those results into `geom_line()`/`geom_ribbon()`/`geom_text()`/`geom_segment()`, but that process is much more onerous.] Providing a simple visual clue like this can help combat visual misperceptions of uncertainty bands due to the sine illusion [@sine-illusion]. 
+
+```{r se-annotations, fig.cap = "Leveraging data associated with a `geom_smooth()` layer to display additional information about the model fit.", screenshot.alt = "screenshots/se-annotations"}
+p %>%
+  ggplotly(layerData = 2, originalData = FALSE) %>%
+  add_fun(function(p) {
+    p %>% slice(which.max(se)) %>%
+      add_segments(x = ~x, xend = ~x, y = ~ymin, yend = ~ymax) %>%
+      add_annotations("Maximum uncertainty", ax = 60)
+  }) %>%
+  add_fun(function(p) {
+    p %>% slice(which.min(se)) %>%
+      add_segments(x = ~x, xend = ~x, y = ~ymin, yend = ~ymax) %>%
+      add_annotations("Minimum uncertainty")
+  })
+```
+
+In addition to leveraging output from `StatSmooth`, it is sometimes useful to leverage output of other statistics, especially for annotation purposes. Figure \@ref(fig:StatBin) leverages the output of `StatBin` to add annotations to a stacked bar chart. Annotation is primarily helpful for displaying the heights of bars in a stacked bar chart, since decoding the heights of bars is a fairly difficult perceptual task [@graphical-perception]. As result, it is much easier to compare bar heights representing the proportion of diamonds with a given clarity across various diamond cuts.
+
+```{r StatBin, fig.cap = "Leveraging output from `StatBin` to add annotations to a stacked bar chart (created via `geom_bar()`) which makes it easier to compare bar heights.", screenshot.alt = "screenshots/StatBin"}
+p <- ggplot(diamonds, aes(cut, fill = clarity)) +
+  geom_bar(position = "fill")
+
+ggplotly(p, originalData = FALSE) %>%
+  mutate(ydiff = ymax - ymin) %>% 
+  add_text(
+    x = ~x, y = ~(ymin + ymax) / 2,
+    text = ~ifelse(ydiff > 0.02, round(ydiff, 2), ""),
+    showlegend = FALSE, hoverinfo = "none",
+    color = I("black"), size = I(9)
+  )
+```
+
+Another useful application is labelling the levels of each piece/polygon output by `StatDensity2d` as shown in Figure \@ref(fig:StatDensity2d). Note that, in this example, the `add_text()` layer takes advantage of `ggplotly()`'s ability to inherit aesthetics from the global mapping. Furthermore, since `originalData` is `FALSE`, it attaches the "built" aesthetics (i.e.,  the `x`/`y` positions after `StatDensity2d` has been applied to the raw data).
+
+```{r StatDensity2d, fig.cap = "Leveraging output from `StatDensity2d` to add annotations to contour levels.", screenshot.alt = "screenshots/StatDensity2d"}
+p <- ggplot(MASS::geyser, aes(x = waiting, y = duration)) +
+  geom_density2d()
+
+ggplotly(p, originalData = FALSE) %>% 
+  group_by(piece) %>%
+  slice(which.min(y)) %>% 
+  add_text(
+    text = ~level, size = I(9), color = I("black"), hoverinfo = "none"
+  )
+```
+
+
+<!-- TODO: make this more convincing
+## Choosing an interface
+
+1. ggplot2 requires data frame(s) and can be inefficient (especially for time series).
+2. ggplot2 does not have a functional interface (making it awkward to combine with modern functional interfaces such as dplyr), and does not satisfy [referential transparency](https://en.wikipedia.org/wiki/Referential_transparency) (making it easier to program with -- for more details, see )
+3. `ggplotly()` tries to replicate _exactly_ what you see in the corresponding static ggplot2 graph. To do so, it sends axis tick information to plotly as [tickvals](https://plot.ly/r/reference/#layout-xaxis-tickvals)/[ticktext](https://plot.ly/r/reference/#layout-xaxis-ticktext) properties, and consequently, axis ticks do not update on zoom events.
+4. ggplot2's interface wasn't designed for interactive graphics. Directly extending the grammar to support more advanced types of interaction (e.g., linked brushing) is a risky endeavor.
+-->
+
+
+
+# Embed images
+
+In R, there is native support for [raster](https://en.wikipedia.org/wiki/Raster_graphics) objects which encode bitmap images as essentially a matrix of color codes.
+
+```{r}
+m <- matrix(hcl(0, 80, seq(50, 80, 10)), nrow = 4, ncol = 5)
+(r <- as.raster(m))
+plot(r)
+```
+
+The `raster2uri()` function converts raster objects to a data URI, so they can be easily embedded via [plotly's image API](https://plot.ly/r/reference/#layout-images):
+
+```{r raster, fig.cap = "A simple raster object displayed as an image", screenshot.alt = "screenshots/raster"}
+plot_ly() %>%
+  layout(images = list(
+    source = raster2uri(r), # converts a raster object to a data URI.
+    xref = "x", yref = "y", x = 0, y = 0, sizex = 1, sizey = 1,
+    sizing = "stretch", xanchor = "left", yanchor = "bottom"
+  ))
+```
+
+For more examples of the image API, see <https://plot.ly/r/logos/>
+
 
 # Facets with `subplot()`
 
@@ -660,25 +817,6 @@ economics_long %>%
   subplot(nrows = NROW(.), shareX = TRUE)
 ```
 
-
-
-# Control axes
-
-Anything better to say than <https://plot.ly/r/axes/>?
-
-
-# Improving performance (optimizing views?)
-
-Define print-time vs run-time performance.
-
-### SVG vs WebGL
-
-* Borrow examples from workshop?
-* Borrow from maps blog post?
-
-### Reducing runtime dependencies
-
-* Point to `partial_bundle()` use in publishing
 
 # Why is my plot blank?
 
