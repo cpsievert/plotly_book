@@ -27,12 +27,17 @@ This section focuses on a particular approach to linking views known as graphica
 
 Figure \@ref(fig:link-intro) shows a scatterplot of the relationship between weight and miles per gallon of 32 cars. It also uses `highlight_key()` to assign the number of cylinders to each point so that when a particular point is 'queried' all points with the same number of cylinders are highlighted (the number of cylinders is displayed with text just for demonstration purposes). By default, a mouse click triggers a query, and a double-click clears the query, but both of these events can be customized through the `highlight()` function. By typing `help(highlight)` in your R console, you can learn more about what events are supported for turning graphical queries `on` and `off`.
 
-```{r link-intro, fig.cap = "A visual depiction of how `highlight_key()` attaches metadata to graphical elements to enable graphical database queries. Each point represents a different car and the number of cylinders (`cyl`) is assigned as metadata so that when a particular point is queried all points with the same number of cylinders are highlighted."}
+```r
 library(plotly)
 mtcars %>%
   highlight_key(~cyl) %>%
   plot_ly(x = ~wt, y = ~mpg, text = ~cyl, mode = "markers+text", textposition = "top", hoverinfo = "x+y") %>%
   highlight(on = "plotly_hover", off = "plotly_doubleclick")
+```
+
+
+```{r link-intro, echo = FALSE, fig.cap = "A visual depiction of how `highlight_key()` attaches metadata to graphical elements to enable graphical database queries. Each point represents a different car and the number of cylinders (`cyl`) is assigned as metadata so that when a particular point is queried all points with the same number of cylinders are highlighted."}
+include_vimeo("317134071")
 ```
 
 Generally speaking, `highlight_key()` assigns data values to graphical marks so that when graphical mark(s) are *directly manipulated* through the `on` event, it uses the corresponding data values (call it `$SELECTION_VALUE`) to perform an SQL query of the following form.
@@ -41,10 +46,15 @@ Generally speaking, `highlight_key()` assigns data values to graphical marks so 
 SELECT * FROM mtcars WHERE cyl IN $SELECTION_VALUE
 ```
 
-For a more compelling application, lets use graphical querying to explore the `txhousing` dataset first introduced in Section \@ref(txhousing-case-study). Recall how Figure \@ref(fig:houston-vs-sa) shows Houston and San Antonio housing prices relative to other Texan cities by programmatically highlighting their time series. Instead of highlighting with code, we could allow anyone to explore prices in any city through graphical queries, as shown in Figure \@ref(fig:txmissing). One subtlety to be aware of in terms of the implementation of this graphical query is that every point along a line may have a different data value assigned to it. In this case, since the `city` column is used as both the visual grouping and interactive querying variable, we can query an individual time series by clicking on a point along that line. Section \@ref(trellis-linking) has examples of using different grouping and querying variables to query multiple related groups of visual geometries at once, which can be a powerful technique.^[This sort of idea relates closely to the notion of generalized selections as described in @heer2008generalized.]
+For a more useful example, lets use graphical querying to pose interactive queries of the `txhousing` dataset. This data contains monthly housing sales in Texan cities acquired from the [TAMU real estate center](http://recenter.tamu.edu/) and made available via the **ggplot2** package. Figure \@ref(fig:txmissing) shows the median house price in each city over time which produces a rather busy (spaghetti) plot. To help combat the overplotting, we could add the ability to click a particular a given point on a line to highlight that particular city. This interactive ability is enabled by simply using `highlight_key()` to declare that the `city` variable be used as the querying criteria within the graphical querying framework. 
 
-```{r txmissing, fig.cap = "Graphical query of housing prices in various Texas cities. The query in this particular example must be triggered through clicking directly on a time series."}
-# set `city` as the SQL 'query by' column
+One subtlety to be aware of in terms of what makes Figure \@ref(fig:txmissing) possible is that every point along a line may have a different data value assigned to it. In this case, since the `city` column is used as both the visual grouping *and* querying variable, we effectively get the ability to highlight a group by clicking on any point along that line. Section \@ref(trellis-linking) has examples of using different grouping and querying variables to query multiple related groups of visual geometries at once, which can be a powerful technique.^[This sort of idea relates closely to the notion of generalized selections as described in @heer2008generalized.]
+
+```r
+# load the `txhousing` dataset
+data(txhousing, package = "ggplot2")
+
+# declare `city` as the SQL 'query by' column
 tx <- highlight_key(txhousing, ~city)
 
 # initiate a plotly object
@@ -52,12 +62,13 @@ base <- plot_ly(tx, color = I("black")) %>%
   group_by(city)
 
 # create a time series of median house price
-time_series <- base %>%
+base %>%
   group_by(city) %>%
   add_lines(x = ~date, y = ~median)
+```
 
-# set a default query to 'South Padre Island' which can be changed via mouse click 
-highlight(time_series, on = "plotly_click", defaultValue = "South Padre Island")
+```{r txmissing, echo = FALSE, fig.cap = "Graphical query of housing prices in various Texas cities. The query in this particular example must be triggered through clicking directly on a time series."}
+include_vimeo("317137926")
 ```
 
 Querying a city via direct manipulation is somewhat helpful for focusing on a particular time series, but it's not so helpful for querying a city by name and/or comparing multiple cities at once. As it turns out, **plotly** makes it easy to add a selectize.js powered dropdown widget for querying by name (aka indirect manipulation) by setting `selectize = TRUE`.^[The title that appears in the dropdown can be controlled via the `group` argument in the `highlight_key()` function. The primary purpose of the `group` argument is to isolate one group of linked plots from others.] When it comes to comparing multiple cities, we want to be able to both retain previous selections (`persistent = TRUE`) as well as control the highlighting color (`dynamic = TRUE`). This videos explains how to use these features in Figure \@ref(fig:txmissing-modes) to compare pricing across different cities.

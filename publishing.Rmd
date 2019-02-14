@@ -25,7 +25,7 @@ widget_file_size(p)
 widget_file_size(partial_bundle(p))
 ```
 
-If you want to embed numerous widgets in a larger HTML document (e.g., via HTML `<iframe>`s), *self-contained* HTML is not recommended. That's because, if you embed numerous self-contained widgets inside a larger document, your browser has to repeatedly parse the same dependencies over and over. Instead, if you save all the dependency files externally into a single directory, the browser will only have to parse those dependencies once, which can dramatically improve responsiveness. You can do this by setting `selfcontained = FALSE` and specifying a fixed `libdir` in `saveWidget()`. It's also worth noting that using `htmlwidgets::saveWidget()` with `selfcontained = FALSE` is essentially the same as using `htmltools::save_html()` which saves arbitrary HTML content to a file. The `htmltools::save_html()` function is useful for saving numerous htmlwidgets (e.g., Figure \@ref(fig:multiple-htmlwidgets-fake)) and/or other custom HTML markup (e.g., Figure \@ref(fig:correlation-client-side)) in a single HTML page. 
+If you want to embed numerous widgets in a larger HTML document (e.g., via HTML `<iframe>`s), *self-contained* HTML is not recommended. That's because, if you embed numerous self-contained widgets inside a larger document, your browser has to repeatedly parse the same dependencies over and over. Instead, if you save all the dependency files externally into a single directory, the browser will only have to parse those dependencies once, which can dramatically improve responsiveness. You can do this by setting `selfcontained = FALSE` and specifying a fixed `libdir` in `saveWidget()`. It's also worth noting that using `htmlwidgets::saveWidget()` with `selfcontained = FALSE` is essentially the same as using `htmltools::save_html()` which saves arbitrary HTML content to a file. The `htmltools::save_html()` function is useful for saving numerous htmlwidgets (e.g., Figure \@ref(fig:multiple-htmlwidgets)) and/or other custom HTML markup (e.g., Figure \@ref(fig:correlation-client-side)) in a single HTML page. 
 
 ```r
 htmlwidgets::saveWidget(plot_ly(x = rnorm(100)), "p1.html", selfcontained = FALSE, libdir = "lib")
@@ -97,7 +97,7 @@ plot_ly(width = 8 * 96, height = 11 * 96) %>%
   config(toImageButtonOptions = list(format = "svg"))
 ```
 
-# Editing views for publishing
+# Editing views for publishing {#editing-views}
 
 Numerous layout components of a **plotly** graph can be directly manipulated, including annotation text and placement (more on this in section \@ref(edit-events)). In addition, the download (aka, toImage) button can be customized to export a static version to different file types including: svg, png, jpeg, and webp. Since svg can be easily converted to pdf, this effectively means we can edit a graph in a browser to perform touch-ups, then export to a high-quality pdf. At least currently, this workflow is recommended over first exporting to pdf (via `orca()`) then using Adobe Illustrator to manipulate the vectors, especially for adjusting the placement of annotations. 
 

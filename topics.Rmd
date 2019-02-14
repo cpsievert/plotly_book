@@ -377,7 +377,7 @@ plot_ly(x = iris$Petal.Length, color = I(red))
 
 If you'd like to learn more about how to use the `color` argument as well as specify different types of color palettes, see Section \@ref(scatter-traces).
 
-# Working with symbols & glyphs
+# Working with symbols and glyphs {#working-with-symbols}
 
 The JavaScript library underlying **plotly** (plotly.js) has it's own special support for specifying marker symbols by name. As Figure \@ref(fig:symbols-all) shows, there are currently many acceptable `marker.symbol` values, and all the acceptable values can be accessed through plotly.js' `schema()`.
 
@@ -561,18 +561,24 @@ config(last_plot(), mathjax="local")
 
 As Chapter \@ref(intro-plotly) first introduced, we can express multi-layer **plotly** graphs as a sequence (or, more specifically, a directed acyclic graph) of **dplyr** data manipulations and mappings to visuals. For example, to create Figure \@ref(fig:houston2), we could group `txhousing` by `city` to ensure the first layer of `add_lines()` draws a different line for each city, then `filter()` down to Houston so that the second call to `add_lines()` draws only Houston. 
 
-```{r houston2, screenshot.alt = "screenshots/houston"}
-txhousing %>%
+```r
+allCities <- txhousing %>%
   group_by(city) %>%
   plot_ly(x = ~date, y = ~median) %>%
-  add_lines(alpha = 0.2, name = "Texan Cities", hoverinfo = "none") %>%
+  add_lines(alpha = 0.2, name = "Texan Cities", hoverinfo = "none")
+  
+allCities %>%
   filter(city == "Houston") %>%
   add_lines(name = "Houston")
 ```
 
+```{r houston2, echo = FALSE, fig.cap = "Monthly median house prices over time for 46 Texan cities (in blue). Houston is highlighted in orange."}
+knitr::include_graphics("images/houston2.svg")
+```
+
 Sometimes the directed acyclic graph property of a **magrittr** pipeline can be too restrictive for certain types of plots. In this example, after filtering the data down to Houston, there is no way to recover the original data inside the pipeline. The `add_fun()` function helps to work-around this restriction^[Credit to Winston Chang and Hadley Wickham for this idea. The `add_fun()` is very much like `layer_f()` function in **ggvis**.] -- it works by applying a function to the plotly object, but does not affect the data associated with the plotly object. This effectively provides a way to isolate data transformations within the pipeline^[Also, effectively putting a [pipeline inside a pipeline](http://www.memecreator.org/meme/yo-dawg-i-heard-u-like-pipelines-so-we-put-a-pipeline-in-your-pipeline)]. Figure \@ref(fig:houston-vs-sa) uses this idea to highlight both Houston and San Antonio.
 
-```{r houston-vs-sa, fig.cap = "Monthly median house price in Houston and San Antonio in comparison to other Texan cities.", screenshot.alt = "screenshots/houston-vs-sa"}
+```r
 allCities %>%
   add_fun(function(plot) {
     plot %>% filter(city == "Houston") %>% add_lines(name = "Houston")
@@ -583,9 +589,13 @@ allCities %>%
   })
 ```
 
+```{r houston-vs-sa, echo = FALSE, fig.cap = "Monthly median house price in Houston and San Antonio in comparison to other Texan cities."}
+knitr::include_graphics("images/houston-vs-sa.svg")
+```
+
 It is useful to think of the function supplied to `add_fun()` as a "layer" function -- a function that accepts a plot object as input, possibly applies a transformation to the data, and maps that data to visual objects. To make layering functions more modular, flexible, and expressive, the `add_fun()` allows you to pass additional arguments to a layer function. Figure \@ref(fig:summary) makes use of this pattern, by creating a reusable function for layering both a particular city as well as the first, second, and third quartile of median monthly house sales (by city).
 
-```{r summary, fig.cap = "First, second, and third quartile of median monthly house price in Texas.", screenshot.alt = "screenshots/summary"}
+```r
 # reusable function for highlighting a particular city
 layer_city <- function(plot, name) {
   plot %>% filter(city == name) %>% add_lines(name = name)
@@ -610,9 +620,13 @@ allCities %>%
   add_fun(layer_city, "San Antonio")
 ```
 
+```{r summary, echo = FALSE, fig.cap = "First, second, and third quartile of median monthly house price in Texas."}
+knitr::include_graphics("images/summary.svg")
+```
+
 A layering function does not have to be a data-plot-pipeline itself. Its only requirement on a layering function is that the first argument is a plot object and it returns a plot object. This provides an opportunity to say, fit a model to the plot data, extract the model components you desire, and map those components to visuals. Furthermore, since **plotly**'s `add_*()` functions don't require a data.frame, you can supply those components directly to attributes (as long as they are well-defined), as done in Figure \@ref(fig:forecast) via the **forecast** package [@forecast].
 
-```{r forecast, fig.cap = "Layering on a 4-year forecast from a exponential smoothing state space model.", screenshot.alt = "screenshots/forecast"}
+```r
 library(forecast)
 layer_forecast <- function(plot) {
   d <- plotly_data(plot)
@@ -639,6 +653,10 @@ txhousing %>%
   add_fun(layer_forecast)
 ```
 
+```{r forecast, echo = FALSE, fig.cap = "Layering on a 4-year forecast from a exponential smoothing state space model."}
+knitr::include_graphics("images/forecast.svg")
+```
+
 In summary, the "data-plot-pipeline" is desirable for a number of reasons: (1) makes your code easier to read and understand, (2) encourages you to think of both your data and plots using a single, uniform data structure, which (3) makes it easy to combine and reuse transformations.
 
 
@@ -649,6 +667,7 @@ In summary, the "data-plot-pipeline" is desirable for a number of reasons: (1) m
 Since the `ggplotly()` function returns a plotly object, we can manipulate that object in the same way that we would manipulate any other plotly object. A simple and useful application of this is to specify interaction modes, like plotly.js' [layout.dragmode](https://plot.ly/r/reference/#layout-dragmode) for specifying the mode of click+drag events. Figure \@ref(fig:ggplotly-layout) demonstrates how the default for this attribute can be modified via the `layout()` function.
 
 ```{r ggplotly-layout, fig.cap = "Customizing the dragmode of an interactive ggplot2 graph.", screenshot.alt = "screenshots/ggplotly-dragmode"}
+library(forecast)
 data(gold, package = "forecast")
 p <- ggplot(fortify(gold), aes(x, y)) + geom_line()
 gg <- ggplotly(p)
@@ -665,9 +684,9 @@ Since a single plotly object can only have one layout, modifying the layout of `
 
 ## Modifying data
 
-As mentioned previously, `ggplotly()` translates each ggplot2 layer into one or more plotly.js traces. In this translation, it is forced to make a number of assumptions about trace attribute values that may or may not be appropriate for the use case. To demonstrate, consider Figure \@ref(fig:simple-scatterplot), a simple scatterplot with a fitted line overlaid. By default, this plot shows hover information for the points, the fitted line, and the confidence band. How could we make it so hover information is only displayed for the points?
+As mentioned previously, `ggplotly()` translates each ggplot2 layer into one or more plotly.js traces. In this translation, it is forced to make a number of assumptions about trace attribute values that may or may not be appropriate for the use case. To demonstrate, consider Figure \@ref(fig:simple-scatterplot), which shows hover information for the points, the fitted line, and the confidence band. How could we make it so hover information is only displayed for the points?
 
-```{r simple-scatterplot}
+```{r simple-scatterplot, fig.cap="A scatterplot with a fitted line and confidence band."}
 p <- ggplot(mtcars, aes(x = wt, y = mpg)) +
    geom_point() + geom_smooth()
 ggplotly(p)
@@ -685,8 +704,12 @@ knitr::include_graphics("images/listviewer.png")
 
 This output indicates that the fitted line and confidence band are implemented in the 2nd and 3rd trace of the plotly object, so to turn off the hover of those traces:
 
-```{r style-hoverinfo, fig.cap = "Using the `style()` function to modify hoverinfo attribute values of a plotly object created via `ggplotly()` (by default, `ggplotly()` displays hoverinfo for all traces). In this case, the hoverinfo for a fitted line and error bounds are hidden.", screenshot.alt = "screenshots/style-hoverinfo"}
+```r
 style(p, hoverinfo = "none", traces = 2:3)
+```
+
+```{r style-hoverinfo, echo = FALSE, fig.cap = "Using the `style()` function to modify hoverinfo attribute values of a plotly object created via `ggplotly()` (by default, `ggplotly()` displays hoverinfo for all traces). In this case, the hoverinfo for a fitted line and error bounds are hidden."}
+knitr::include_graphics("images/style-hoverinfo.png")
 ```
 
 ## Leveraging statistical output
@@ -703,7 +726,7 @@ p %>%
 
 The data shown above is the data ggplot2 uses to actually draw the fitted values (as a line) and standard error bounds (as a ribbon). Figure \@ref(fig:se-annotations) leverages this data to add additional information about the model fit; in particular, it adds a vertical lines and annotations at the x-values that are associated with the highest and lowest amount uncertainty in the fitted values. Producing a plot like this with **ggplot2** would be impossible using `geom_smooth()` alone.^[It could be recreated by fitting the model via `loess()`, obtaining the fitted values and standard error with `predict()`, and feeding those results into `geom_line()`/`geom_ribbon()`/`geom_text()`/`geom_segment()`, but that process is much more onerous.] Providing a simple visual clue like this can help combat visual misperceptions of uncertainty bands due to the sine illusion [@sine-illusion]. 
 
-```{r se-annotations, fig.cap = "Leveraging data associated with a `geom_smooth()` layer to display additional information about the model fit.", screenshot.alt = "screenshots/se-annotations"}
+```r
 p %>%
   ggplotly(layerData = 2, originalData = FALSE) %>%
   add_fun(function(p) {
@@ -718,9 +741,13 @@ p %>%
   })
 ```
 
+```{r se-annotations, echo = FALSE, fig.cap = "Leveraging data associated with a `geom_smooth()` layer to display additional information about the model fit."}
+knitr::include_graphics("images/se-annotations.svg")
+```
+
 In addition to leveraging output from `StatSmooth`, it is sometimes useful to leverage output of other statistics, especially for annotation purposes. Figure \@ref(fig:StatBin) leverages the output of `StatBin` to add annotations to a stacked bar chart. Annotation is primarily helpful for displaying the heights of bars in a stacked bar chart, since decoding the heights of bars is a fairly difficult perceptual task [@graphical-perception]. As result, it is much easier to compare bar heights representing the proportion of diamonds with a given clarity across various diamond cuts.
 
-```{r StatBin, fig.cap = "Leveraging output from `StatBin` to add annotations to a stacked bar chart (created via `geom_bar()`) which makes it easier to compare bar heights.", screenshot.alt = "screenshots/StatBin"}
+```r
 p <- ggplot(diamonds, aes(cut, fill = clarity)) +
   geom_bar(position = "fill")
 
@@ -734,9 +761,13 @@ ggplotly(p, originalData = FALSE) %>%
   )
 ```
 
+```{r StatBin, echo = FALSE, fig.cap = "Leveraging output from `StatBin` to add annotations to a stacked bar chart (created via `geom_bar()`) which makes it easier to compare bar heights."}
+knitr::include_graphics("images/StatBin.svg")
+```
+
 Another useful application is labelling the levels of each piece/polygon output by `StatDensity2d` as shown in Figure \@ref(fig:StatDensity2d). Note that, in this example, the `add_text()` layer takes advantage of `ggplotly()`'s ability to inherit aesthetics from the global mapping. Furthermore, since `originalData` is `FALSE`, it attaches the "built" aesthetics (i.e.,  the `x`/`y` positions after `StatDensity2d` has been applied to the raw data).
 
-```{r StatDensity2d, fig.cap = "Leveraging output from `StatDensity2d` to add annotations to contour levels.", screenshot.alt = "screenshots/StatDensity2d"}
+```r
 p <- ggplot(MASS::geyser, aes(x = waiting, y = duration)) +
   geom_density2d()
 
@@ -746,6 +777,10 @@ ggplotly(p, originalData = FALSE) %>%
   add_text(
     text = ~level, size = I(9), color = I("black"), hoverinfo = "none"
   )
+```
+
+```{r StatDensity2d, echo = FALSE, fig.cap = "Leveraging output from `StatDensity2d` to add annotations to contour levels."}
+knitr::include_graphics("images/StatDensity2d.svg")
 ```
 
 
@@ -759,68 +794,69 @@ ggplotly(p, originalData = FALSE) %>%
 -->
 
 
+# Embedding images
 
-# Embed images
-
-In R, there is native support for [raster](https://en.wikipedia.org/wiki/Raster_graphics) objects which encode bitmap images as essentially a matrix of color codes.
-
-```{r}
-m <- matrix(hcl(0, 80, seq(50, 80, 10)), nrow = 4, ncol = 5)
-(r <- as.raster(m))
-plot(r)
-```
-
-The `raster2uri()` function converts raster objects to a data URI, so they can be easily embedded via [plotly's image API](https://plot.ly/r/reference/#layout-images):
-
-```{r raster, fig.cap = "A simple raster object displayed as an image", screenshot.alt = "screenshots/raster"}
-plot_ly() %>%
-  layout(images = list(
-    source = raster2uri(r), # converts a raster object to a data URI.
-    xref = "x", yref = "y", x = 0, y = 0, sizex = 1, sizey = 1,
-    sizing = "stretch", xanchor = "left", yanchor = "bottom"
-  ))
-```
-
-For more examples of the image API, see <https://plot.ly/r/logos/>
-
-
-# Facets with `subplot()`
+There are a few ways to embed images in a **plotly** graph. Perhaps the easiest is to point the image source to a hyperlink containing a bitmap file (e.g., png, jpeg, tiff, etc).
 
 ```r
-library(plotly)
-library(dplyr)
-
-my_plot <- . %>% 
-  plot_ly(x = ~date, y = ~value) %>%
-  add_annotations(
-    text = ~unique(variable),
-    x = 0.5,
-    y = 1,
-    yref = "paper",
-    xref = "paper",
-    xanchor = "middle",
-    yanchor = "top",
-    showarrow = FALSE,
-    font = list(size = 15)
-  ) %>%
+plot_ly() %>%
   layout(
-    shapes = list(
-      type = "rect",
-      x = 0,
-      x = 1
-    )
+    images = list(
+      source = "https://www.rstudio.com/wp-content/uploads/2018/10/RStudio-Logo-Flat.png",
+      x = 0, y = 1, 
+      sizex = 0.2, sizey = 0.1,
+      xref = "paper", yref = "paper", 
+      xanchor = "left", yanchor = "bottom"
+    ),
+    margin = list(t = 50)
   )
-
-economics_long %>%
-  group_by(variable) %>%
-  do(p = my_plot(.)) %>%
-  subplot(nrows = NROW(.), shareX = TRUE)
 ```
 
 
-# Why is my plot blank?
+```{r image-hyperlink, echo = FALSE, fig.cap="Embedding an image using a hyperlink. This example uses paper coordinates (i.e., normalized 0-1 scale relative to the graph area) to place the image just above the graph."}
+knitr::include_graphics("images/image-hyperlink.svg")
+```
 
-There are numerous reasons why your plot may not render. 
+The approach in Figure \@ref(fig:image-hyperlink) has a downside though -- if that hyperlink breaks, then so does your plot. It'd be better to download the file to your machine and use the `dataURI()` function from the **base64enc** package (or similar) to embed the image as a data URI [@base64enc].
 
-* Malformed group definition
-* Talk about WebGL compatibility in browsers (e.g. RStudio)
+```r
+plot_ly() %>%
+  layout(
+    images = list(
+      source = base64enc::dataURI(file = "images/rstudio.png"),
+      x = 0, y = 1, 
+      sizex = 0.2, sizey = 0.1,
+      xref = "paper", yref = "paper", 
+      xanchor = "left", yanchor = "bottom"
+    ),
+    margin = list(t = 50)
+  )
+```
+
+```{r image-uri, echo = FALSE, fig.cap="Embedding an image using a data URI. This approach ensures your image stays embedded in the plot."}
+knitr::include_graphics("images/image-uri.svg")
+```
+
+Another approach is to convert a raster object into a data URI, which the `raster2uri()` function in **plotly** is designed to do. R actually ships with native support for raster objects and many image processing R packages either build on this data structure or provide a utility to convert to a raster object (perhaps via `as.raster()`). For example, the `readPNG()` function from the **png** package reads image data in an R array, which can be converted to a raster object [@png].
+
+```r
+pen <- png::readPNG("images/penguin.png")
+
+plot_ly() %>%
+  layout(
+    images = list(
+      source = raster2uri(as.raster(pen)),
+      x = 2, y = 2, 
+      sizex = 2, sizey = 1,
+      xref = "x", yref = "y",
+      xanchor = "left", yanchor = "bottom",
+      sizing = "stretch"
+    )
+  )
+```
+
+```{r raster, echo = FALSE, fig.cap = "Reading a png image into R with `png::readPNG()`, converting the RBGA array into a raster object, generating a data URI of the raster via `raster2uri()`, then embedding the URI as an image in a **plotly** graph."}
+knitr::include_graphics("images/raster.svg")
+```
+
+Moreover, thanks to the R package **magick** it's possible to rasterize non-raster file formats (e.g., pdf, svg, etc) directly in R, so if you wanted, you could also embed non-bitmap images by using `image_read()` and `image_convert()` to generate a raster object [@magick].

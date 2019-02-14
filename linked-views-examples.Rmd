@@ -4,7 +4,7 @@
 
 A facetted chart, also known as a trellis or small multiples display, is an effective way to observe how a certain relationship or visual pattern changes with a discrete variable [@trellis] [@tufte2001]. The implementation of a facetted chart partitions a data set into groups, then produces a graphical panel for each group using a fixed visual encoding (e.g. a scatterplot). When these groups are related in some way, it can be useful to consider linking the panels through graphical queries to reveal greater insight, especially when it comes to making comparisons both within and across multiple groups.
 
-Figure \@ref(fig:epl) is an example of making comparisons both within and across panels via graphical querying in a facetted chart. Each panel represents one year of English Premier League standings across time and each line represents a team (the querying variable). Since the x-axis represents the number of games within season and y-axis tracks cumulative points relative to the league average, lines with a positive slope represent above average performance and a negative slope represents below average performance. This design makes it easy to query a good (or bad) team for a particular year (via direct manipulation) to see who the team is as well as how they've compared to the competition in other years. In addition, the dynamic and persistent color brush allows us to query other teams to compare both within and across years. This example is shipped as a demo with the **plotly** package and uses data from the **engsoccerdata** package [@engsoccerdata].
+Figure \@ref(fig:epl) is an example of making comparisons both within and across panels via graphical querying in a facetted chart. Each panel represents one year of English Premier League standings across time and each line represents a team (the querying variable). Since the x-axis represents the number of games within season and y-axis tracks cumulative points relative to the league average, lines with a positive slope represent above average performance and a negative slope represents below average performance. This design makes it easy to query a good (or bad) team for a particular year (via direct manipulation) to see who the team is as well as how they've compared to the competition in other years. In addition, the dynamic and persistent color brush allows us to query other teams to compare both within and across years. This example is shipped as a demo with the **plotly** package and uses data from the **engsoccerdata** package [@engsoccerdata]. Thanks to Antony Unwin for providing the initial idea and inspiration for Figure \@ref(fig:epl) [@unwin-epl].
 
 ```{r, eval = FALSE}
 # By entering this demo in your R console it will print out the actual source code necessary to recreate the graphic
@@ -309,11 +309,11 @@ include_vimeo("307598814")
 ```
 
 
-### Generalized pairs plots
+### Generalized pairs plots {#ggally-ggpairs}
 
 Section \@ref(scatterplot-matrices) introduced the generalized pairs plot made via `GGally::ggpairs()` which, like `ggplot()`, partially supports graphical queries. The brushing in Figure \@ref(fig:linked-ggally) demonstrates how the scatterplots can respond to a graphical queries (allowing us to see how these relationships behave in specific subsections of the data space), but for the same reasons outlined in \@ref(statistical-queries-ggplot), the statistical summaries (e.g., the density plots and correlations) don't respond to the graphical query.
 
-```{r, eval = FALSE}
+```r
 highlight_key(iris) %>%
   GGally::ggpairs(aes(color = Species), columns = 1:4) %>%
   ggplotly() %>%
@@ -324,7 +324,7 @@ highlight_key(iris) %>%
 include_vimeo("307788027")
 ```
 
-### Querying diagnostic plots
+### Querying diagnostic plots {#ggally-ggnostic}
 
 In addition to the `ggpairs()` function for generalized pairs plots, the **GGally** packages also has a `ggnostic()` function which generates a matrix of diagnostic plots from a model object using **ggplot2**. Each column of this matrix represents a different explanatory variable and each row represents a different diagnostic measure. Figure \@ref(fig:ggnostic) shows the default display for a linear model, which includes residuals (resid), estimates of residual standard deviation when a particular observation is excluded (sigma), diagonals from the projection matrix (hat), and cooks distance (cooksd). 
 

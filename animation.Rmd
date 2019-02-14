@@ -1,6 +1,8 @@
 # Animating views
 
-Both `plot_ly()` and `ggplotly()` support [key frame](https://en.wikipedia.org/wiki/Key_frame) animations through the `frame` attribute/aesthetic. They also support an `ids` attribute/aesthetic to ensure smooth transitions between objects with the same id (which helps facilitate [object constancy](https://bost.ocks.org/mike/constancy/)). Figure \@ref(fig:animation-ggplotly) recreates the famous gapminder animation of the evolution in the relationship between GDP per capita and life expectancy evolved over time [@gapminder]. The data is recorded on a yearly basis, so the year is assigned to `frame`, and each point in the scatterplot represents a country, so the country is assigned to `ids`, ensuring a smooth transition from year to year for a given country.
+## Animation API
+
+Both `plot_ly()` and `ggplotly()` support [key frame](https://en.wikipedia.org/wiki/Key_frame) animations through the `frame` argument/aesthetic. They also support an `ids` argument/aesthetic to ensure smooth transitions between objects with the same id (which helps facilitate [object constancy](https://bost.ocks.org/mike/constancy/)). Figure \@ref(fig:animation-ggplotly) recreates the famous gapminder animation of the evolution in the relationship between GDP per capita and life expectancy evolved over time [@gapminder]. The data is recorded on a yearly basis, so the year is assigned to `frame`, and each point in the scatterplot represents a country, so the country is assigned to `ids`, ensuring a smooth transition from year to year for a given country.
 
 ```{r animation-ggplotly, fig.cap = "Animation of the evolution in the relationship between GDP per capita and life expectancy in numerous countries.", screenshot.alt = "screenshots/animation-ggplotly"}
 data(gapminder, package = "gapminder")
@@ -50,4 +52,63 @@ base %>%
   add_markers(color = ~continent, alpha = 0.2, showlegend = F) %>%
   add_markers(color = ~continent, frame = ~year, ids = ~country) %>%
   animation_opts(1000, redraw = FALSE)
+```
+
+## Animation support {#animation-support}
+
+At the time of writing, the scatter plotly.js trace type is really the only trace type with full support for animation. That means, we need to get a little imaginative to animate certain things, like a population pyramid chart (essentially a bar chart) using `add_segments()` (a scatter-based layer) instead of `add_bars()` (a non-scatter layer). Figure \@ref(fig:profile-pyramid) shows projections for male & female population by age from 2018 to 2050 using data obtained via the **idbr** package [@idbr]. 
+
+```r
+library(idbr)
+library(dplyr)
+
+us <- bind_rows(
+  idb1(
+    country = "US", 
+    year = 2018:2050, 
+    variables = c("AGE", "NAME", "POP"), 
+    sex = "male"
+  ),
+  idb1(
+    country = "US", 
+    year = 2018:2050, 
+    variables = c("AGE", "NAME", "POP"), 
+    sex = "female"
+  )
+)
+  
+us <- us %>%
+  mutate(
+    POP = if_else(SEX == 1, POP, -POP),
+    SEX = if_else(SEX == 1, "Male", "Female")
+  )
+  
+plot_ly(us, size = I(5), alpha  = 0.5) %>%
+  add_segments(
+    x = ~POP, xend = 0, 
+    y = ~AGE, yend = ~AGE, 
+    frame = ~time,
+    color = ~factor(SEX)
+  )
+```
+
+```{r profile-pyramid, echo = FALSE, fig.cap = "US population projections by age and gender from 2018 to 2050. This population pyramid is implemented with thick line segments to give the appearance of bars."}
+include_vimeo("317101075")
+```
+
+Although population pyramids are quite popular, they aren't necessarily the best way to visualize this information, especially if the goal is to compare the population profiles over time. It's much easier to compare them along a common scale, as done in Figure \@ref(fig:profile-lines). Note that, when animating lines in this fashion, it can help to set [`line.simplify`](https://plot.ly/r/reference/#scatter-line-simplify) to `FALSE` so that the number of points along the path are left unaffected.
+
+```r
+plot_ly(us, alpha  = 0.5) %>%
+  add_lines(
+    x = ~AGE, y = ~abs(POP),
+    frame = ~time, 
+    color = ~factor(SEX),
+    line = list(simplify = FALSE)
+  ) %>%
+  layout(yaxis = list(title = "US population"))
+```
+
+```{r profile-lines, echo = FALSE, fig.cap = "Visualizing the same information in Figure \\@ref(fig:profile-pyramid) using lines rather than segments."}
+include_vimeo("317101952")
 ```
