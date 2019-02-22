@@ -25,7 +25,7 @@
 <meta name="author" content="Carson Sievert">
 
 
-<meta name="date" content="2019-02-13">
+<meta name="date" content="2019-02-21">
 
   <meta name="viewport" content="width=device-width, initial-scale=1">
   <meta name="apple-mobile-web-app-capable" content="yes">
@@ -190,9 +190,14 @@ code span.wa { color: #60a0b0; font-weight: bold; font-style: italic; } /* Warni
 </ul></li>
 </ul></li>
 <li class="chapter" data-level="5" data-path="maps.html"><a href="maps.html"><i class="fa fa-check"></i><b>5</b> Maps</a><ul>
-<li class="chapter" data-level="5.1" data-path="maps.html"><a href="maps.html#using-scatter-traces"><i class="fa fa-check"></i><b>5.1</b> Using scatter traces</a></li>
-<li class="chapter" data-level="5.2" data-path="maps.html"><a href="maps.html#choropleths"><i class="fa fa-check"></i><b>5.2</b> Choropleths</a></li>
-<li class="chapter" data-level="5.3" data-path="maps.html"><a href="maps.html#using-geom_sf"><i class="fa fa-check"></i><b>5.3</b> Using <code>geom_sf()</code></a></li>
+<li class="chapter" data-level="5.1" data-path="maps.html"><a href="maps.html#simple-maps"><i class="fa fa-check"></i><b>5.1</b> Simple maps</a><ul>
+<li class="chapter" data-level="5.1.1" data-path="maps.html"><a href="maps.html#overview-1"><i class="fa fa-check"></i><b>5.1.1</b> Overview</a></li>
+<li class="chapter" data-level="5.1.2" data-path="maps.html"><a href="maps.html#choropleths"><i class="fa fa-check"></i><b>5.1.2</b> Choropleths</a></li>
+</ul></li>
+<li class="chapter" data-level="5.2" data-path="maps.html"><a href="maps.html#custom-maps"><i class="fa fa-check"></i><b>5.2</b> Custom maps</a><ul>
+<li class="chapter" data-level="5.2.1" data-path="maps.html"><a href="maps.html#sf"><i class="fa fa-check"></i><b>5.2.1</b> Simple features (sf)</a></li>
+<li class="chapter" data-level="5.2.2" data-path="maps.html"><a href="maps.html#devil-in-the-details"><i class="fa fa-check"></i><b>5.2.2</b> Devil in the details</a></li>
+</ul></li>
 </ul></li>
 <li class="chapter" data-level="6" data-path="bars-histograms.html"><a href="bars-histograms.html"><i class="fa fa-check"></i><b>6</b> Bars &amp; histograms</a><ul>
 <li class="chapter" data-level="6.1" data-path="bars-histograms.html"><a href="bars-histograms.html#multiple-numeric-distributions"><i class="fa fa-check"></i><b>6.1</b> Multiple numeric distributions</a></li>
@@ -271,6 +276,7 @@ code span.wa { color: #60a0b0; font-weight: bold; font-style: italic; } /* Warni
 <li class="chapter" data-level="18.4" data-path="linking-server-side.html"><a href="linking-server-side.html#advanced-applications"><i class="fa fa-check"></i><b>18.4</b> Advanced applications</a><ul>
 <li class="chapter" data-level="18.4.1" data-path="linking-server-side.html"><a href="linking-server-side.html#drill-down"><i class="fa fa-check"></i><b>18.4.1</b> Drill-down</a></li>
 <li class="chapter" data-level="18.4.2" data-path="linking-server-side.html"><a href="linking-server-side.html#crossfilter"><i class="fa fa-check"></i><b>18.4.2</b> Cross-filter</a></li>
+<li class="chapter" data-level="18.4.3" data-path="linking-server-side.html"><a href="linking-server-side.html#drag-brush"><i class="fa fa-check"></i><b>18.4.3</b> A draggable brush</a></li>
 </ul></li>
 <li class="chapter" data-level="18.5" data-path="linking-server-side.html"><a href="linking-server-side.html#discussion"><i class="fa fa-check"></i><b>18.5</b> Discussion</a></li>
 </ul></li>
@@ -389,7 +395,7 @@ FIGURE 27.1: Clicking on a correlation matrix to populate a scatterplot.
 </p>
 </div>
 <p>All the JavaScript we’ve seen thus far is natively supported by modern web browsers, but for larger projects, you may want to leverage modern versions of JS (e.g, ES6) and modern JS development tools for compiling said JS to code that all browsers can support (e.g. Babel, Webpack, etc). The current landscape of JS development tooling is large, complex, fragmented, difficult for non-experts to navigate, and mostly beyond the scope of this book. Thankfully, popular JS libraries often provide a ‘standalone’ JS bundle which allows direct use their library without having to install and learn a bunch of new technology. Moreover, these bundles are likely available through a CDN service like <a href="https://unpkg.com/" class="uri">https://unpkg.com/</a>, <a href="https://www.cloudflare.com/cdn" class="uri">https://www.cloudflare.com/cdn</a>, etc.</p>
-<p>The R package <strong>runpkg</strong> makes it easy to download files from <a href="https://unpkg.com/" class="uri">https://unpkg.com/</a> and include them in web pages generated through the <strong>htmltools</strong> package <span class="citation">(Sievert <a href="#ref-runpkg">2019</a><a href="#ref-runpkg">b</a>)</span>. It does this by returning a <code>htmltools::htmlDependency()</code> object which encapsulates the downloaded files and includes the JS scripts (or CSS stylesheets) into any page that depends on that object. Here we use it to download a standalone bundle of a popular React library for rendering all sort of different video formats, called <code>react-player</code>. React is hugely popular JavaScript framework that makes it easy to bundle and re-use components, so this same general idea could be reused to leverage other components.<a href="#fn28" class="footnote-ref" id="fnref28"><sup>28</sup></a></p>
+<p>The R package <strong>runpkg</strong> makes it easy to download files from <a href="https://unpkg.com/" class="uri">https://unpkg.com/</a> and include them in web pages generated through the <strong>htmltools</strong> package <span class="citation">(Sievert <a href="#ref-runpkg">2019</a><a href="#ref-runpkg">b</a>)</span>. It does this by returning a <code>htmltools::htmlDependency()</code> object which encapsulates the downloaded files and includes the JS scripts (or CSS stylesheets) into any page that depends on that object. Here we use it to download a standalone bundle of a popular React library for rendering all sort of different video formats, called <code>react-player</code>. React is hugely popular JavaScript framework that makes it easy to bundle and re-use components, so this same general idea could be reused to leverage other components.<a href="#fn30" class="footnote-ref" id="fnref30"><sup>30</sup></a></p>
 <pre class="sourceCode r"><code class="sourceCode r"><span class="kw">library</span>(runpkg)
 react_player &lt;-<span class="st"> </span><span class="kw">download_files</span>(<span class="st">&quot;react-player&quot;</span>, <span class="st">&quot;dist/ReactPlayer.standalone.js&quot;</span>)</code></pre>
 <p>This <code>react-player</code> library provides a function called <code>renderReactPlayer()</code> that requires a placeholder (i.e., a DOM element) for inserting the video as well as a url (or file path) to the video.</p>
@@ -482,8 +488,8 @@ FIGURE 27.3: Using <code>babel_transform()</code> to leverage ES6, React, and JS
 </div>
 <div class="footnotes">
 <hr />
-<ol start="28">
-<li id="fn28"><p>Here’s a nice list of popular components <a href="https://github.com/brillout/awesome-react-components" class="uri">https://github.com/brillout/awesome-react-components</a>.<a href="client-side.html#fnref28" class="footnote-back">↩</a></p></li>
+<ol start="30">
+<li id="fn30"><p>Here’s a nice list of popular components <a href="https://github.com/brillout/awesome-react-components" class="uri">https://github.com/brillout/awesome-react-components</a>.<a href="client-side.html#fnref30" class="footnote-back">↩</a></p></li>
 </ol>
 </div>
 <script>

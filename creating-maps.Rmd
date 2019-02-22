@@ -1,44 +1,101 @@
 # Maps {#maps}
 
-## Using scatter traces
+There numerous ways to make a map with **plotly**, and each approach has strengths and weaknesses. The majority of content in this chapter is about drawing your own geo-spatial geometries using the **sf** R package in conjunction with **plotly**'s `add_sf()`.
 
-As shown in [polygons](#polygons), it is possible to create maps using plotly's default (Cartesian) coordinate system, but plotly.js also has support for plotting [scatter traces](#scatter-traces) on top of either a [custom geo layout](https://plot.ly/r/reference/#layout-geo) or a [mapbox layout](https://plot.ly/r/reference/#layout-mapbox). Figure \@ref(fig:maps) compares the three different layout options in a single subplot.
+You may not need this level of control, and in that case, you may want to use **plotly**'s specialized mapping options (Section \@ref()). That being said, being able to draw any geo-spatial geometry that you want gives you way more power and control over what you're doing. For example, cartogram maps (Section \@ref(cartograms)) simply aren't possible with a native mapping approach.
 
-```{r maps, fig.width = 8, fig.cap = "Three different ways to render a map. On the top left is plotly's default cartesian coordinate system, on the top right is plotly's custom geographic layout, and on the bottom is mapbox.", screenshot.alt = "screenshots/maps"}
-dat <- map_data("world", "canada") %>% group_by(group)
+## Simple maps
 
-map1 <- plot_mapbox(dat, x = ~long, y = ~lat) %>% 
-  add_paths(size = I(2)) %>%
-  add_segments(x = -100, xend = -50, y = 50, 75) %>%
-  layout(mapbox = list(
-    zoom = 0,
-    center = list(lat = ~median(lat), lon = ~median(long))
-  ))
+### Overview
 
-# geo() is the only object type which supports different map projections
-map2 <- plot_geo(dat, x = ~long, y = ~lat) %>% 
-  add_markers(size = I(1)) %>%
-  add_segments(x = -100, xend = -50, y = 50, 75) %>%
-  layout(geo = list(projection = list(type = "mercator")))
+If you have fairly simple latitude/longitude data and want to make a quick map, you may want to try one of **plotly**'s native mapping options (i.e., `plot_mapbox()` and `plot_geo()`). Generally speaking, you can treat these constructors like a drop-in replacement for `plot_ly()` and get a dynamic basemap rendered behind your data. Furthermore, all the scatter-based layers we learned about in Section \@ref(scatter-traces) will work as you'd expect it to with `plot_ly()`. For example, Figure \@ref(fig:mapbox-bubble) uses `plot_mapbox()` and `add_markers()` to create a bubble chart:
 
-map3 <- plot_ly(dat, x = ~long, y = ~lat) %>% 
-  add_paths(size = I(1)) %>%
-  add_segments(x = -100, xend = -50, y = 50, 75) %>%
+```{r, eval = FALSE, summary = "Click to show code"}
+plot_mapbox(maps::canada.cities) %>%
+  add_markers(
+    x = ~long, 
+    y = ~lat, 
+    size = ~pop, 
+    color = ~country.etc,
+    colors = "Accent",
+    text = ~paste(name, pop),
+    hoverinfo = "text"
+  )
+```
+
+```{r mapbox-bubble, echo = FALSE, fig.cap = "A mapbox powered bubble chart showing the population of various cities in Canada."}
+include_vimeo("317352934")
+```
+
+Figure \@ref(fig:geo-flights) demonstrates using `plot_geo()` in conjunction with `add_markers()` and `add_segments()` to visualize flight paths within the United States. Whereas `plot_mapbox()` is fixed to a mercator projection, the `plot_geo()` constructor has a handful of different projection available to it, including the orthographic projection which gives the illusion of the 3D globe.
+
+```{r, eval = FALSE, summary = "Click to show code"}
+library(plotly)
+library(dplyr)
+# airport locations
+air <- read.csv('https://raw.githubusercontent.com/plotly/datasets/master/2011_february_us_airport_traffic.csv')
+# flights between airports
+flights <- read.csv('https://raw.githubusercontent.com/plotly/datasets/master/2011_february_aa_flight_paths.csv')
+flights$id <- seq_len(nrow(flights))
+
+# map projection
+geo <- list(
+  projection = list(
+    type = 'orthographic',
+    rotation = list(lon = -100, lat = 40, roll = 0)
+  ),
+  showland = TRUE,
+  landcolor = toRGB("gray95"),
+  countrycolor = toRGB("gray80")
+)
+
+plot_geo(color = I("red")) %>%
+  add_markers(
+    data = air, x = ~long, y = ~lat, text = ~airport,
+    size = ~cnt, hoverinfo = "text", alpha = 0.5
+  ) %>%
+  add_segments(
+    data = group_by(flights, id),
+    x = ~start_lon, xend = ~end_lon,
+    y = ~start_lat, yend = ~end_lat,
+    alpha = 0.3, size = I(1), hoverinfo = "none"
+  ) %>%
+  layout(geo = geo, showlegend = FALSE)
+```
+
+```{r geo-flights, echo = FALSE, fig.cap = "A mapbox powered bubble chart showing the population of various cities in Canada."}
+include_vimeo("317358033")
+```
+
+One nice thing about `plot_geo()` is that it automatically projects geometries into the proper coordinate system defined by the map projection. For example, in Figure \@ref(fig:maps) the simple line segment is straight when using `plot_mapbox()` yet curved when using `plot_geo()`. It's possible to acheive the same effect using `plot_ly()` or `plot_mapbox()`, but the relevant marker/line/polygon data has to be put into an **sf** data structure before rendering (see Section \@ref(sf) for more details).
+
+```r
+map1 <- plot_mapbox() %>% 
+  add_segments(x = -100, xend = -50, y = 50, yend = 75) %>%
   layout(
-    xaxis = list(
-      scaleanchor = "y",
-      scaleratio = 1
+    mapbox = list(
+      zoom = 0,
+      center = list(lat = 65, lon = -75)
     )
   )
 
-htmltools::tagList(map1, map2, map3)
+map2 <- plot_geo() %>% 
+  add_segments(x = -100, xend = -50, y = 50, yend = 75) %>%
+  layout(geo = list(projection = list(type = "mercator")))
+
+library(htmltools)
+browsable(tagList(map1, map2))
 ```
 
-## Choropleths
+```{r maps, echo = FALSE, fig.cap = "Three different ways to render a map. On the top left is plotly's default cartesian coordinate system, on the top right is plotly's custom geographic layout, and on the bottom is mapbox."}
+knitr::include_graphics("images/maps.png")
+```
 
-In addition to scatter traces, plotly-geo objects also support a "native" [choropleth](https://plot.ly/r/reference/#choropleth) api (i.e., plotly.js manages the geo-spatial coordinates). Figure \@ref(fig:us-density) shows the population density of the U.S. via a choropleth, and also layers on markers for the state center locations, using the U.S. state data from the **datasets** package [@RCore]. By simply providing a [`z`](https://plot.ly/r/reference/#choropleth-z) attribute, plotly-geo objects will try to create a choropleth, but you'll also need to provide [`locations`](https://plot.ly/r/reference/#choropleth-locations) and a [`locationmode`](https://plot.ly/r/reference/#choropleth-locationmode).
+### Choropleths
 
-```{r us-density, fig.cap = "A map of U.S. population density using the `state.x77` data from the **datasets** package.", screenshot.alt = "screenshots/us-density"}
+In addition to scatter-based layers, the `plot_geo()` constructor also supports a [choropleth](https://plot.ly/r/reference/#choropleth) layer. Figure \@ref(fig:us-density) shows the population density of the U.S. via a choropleth, and also layers on markers for the state center locations, using the U.S. state data from the **datasets** package [@RCore]. By simply providing a [`z`](https://plot.ly/r/reference/#choropleth-z) attribute, plotly-geo objects will try to create a choropleth, but you'll also need to provide [`locations`](https://plot.ly/r/reference/#choropleth-locations) and a [`locationmode`](https://plot.ly/r/reference/#choropleth-locationmode).
+
+```r
 density <- state.x77[, "Population"] / state.x77[, "Area"]
 
 g <- list(
@@ -49,7 +106,7 @@ g <- list(
 
 plot_geo() %>%
   add_trace(
-    z = ~density, text = state.name,
+    z = ~density, text = state.name, span = I(0),
     locations = state.abb, locationmode = 'USA-states'
   ) %>%
   add_markers(
@@ -59,17 +116,167 @@ plot_geo() %>%
   layout(geo = g)
 ```
 
+```{r us-density, echo = FALSE, fig.cap = "A map of U.S. population density using the `state.x77` data from the **datasets** package."}
+knitr::include_graphics("images/us-density.svg")
+```
+
+Figure \@ref(fig:us-density) helps illuminate a problem with choropleths from a graphical perception point of view. We typically use the color in choropleths to encode a numeric variable (e.g., GDP, net exports, average SAT score, etc) and the eye naturally perceives the area that a particular color covers as proportional to its overall effect. This ends up being misleading since the area the color covers typically has no sensible relationship with the data encoded by the color. A classic example of this misleading effect in action is in US election maps -- the proportion of red to blue coloring is not representative of the overall popular vote [@election-maps]. 
+
+Cartograms are an approach to reducing this misleading effect and grants another dimension to encode data through the size of geo-spatial features. Section \@ref(cartograms) covers how to render cartograms in **plotly** using **sf** and **cartogram**.
+
+
+
 Any of the `add_*()` functions found under [scatter traces](https://cpsievert.github.io/plotly_book/scatter-traces.html) should work as expected on plotly-geo (initialized via `plot_geo()`) or plotly-mapbox (initialized via `plot_mapbox()`) objects. You can think of `plot_geo()` and `plot_mapbox()` as special cases (or more opinionated versions) of `plot_ly()`. For one, they won't allow you to mix scatter and non-scatter traces in a single plot object, which you probably don't want to do anyway. In order to enable Figure \@ref(fig:maps), plotly.js _can't_ make this restriction, but since we have `subplot()` in R, we _can_ make this restriction without sacrificing flexibility.
 
-## Using `geom_sf()`
+## Custom maps
 
-A more flexible and perhaps intuitive way to create maps is via **ggplot2**'s `geom_sf()` which makes it easy to visualize any geo-spatial object supported by the [**sf**](https://cran.r-project.org/package=sf) package [@sf].
+### Simple features (sf) {#sf}
 
-```{r}
-library(ggplot2)
-nc <- sf::st_read(system.file("shape/nc.shp", package = "sf"), quiet = TRUE)
-p <- ggplot(nc) + geom_sf(aes(fill = AREA))
+The **sf** R package is a modern approach to working with geo-spatial data structures based on tidy data principles [@sf]; [@tidy-data]. The key idea behind **sf** is that it stores geo-spatial geometries in a [list-column](https://jennybc.github.io/purrr-tutorial/ls13_list-columns.html) of a data frame. This allows each row to represent the real unit of observation/interest -- whether it's a polygon, multi-polygon, point, line, or even a collection of these features -- and as a result, works seamlessly inside larger tidy workflows.^[This is way more intuitive compared to older workflows based on, say using `ggplot2::fortify()` to obtain a data structure where a row to represents particular point along a feature and having another column track which point belongs to each feature ([for example](https://gis.stackexchange.com/questions/165974/r-fortify-causing-polygons-to-tear)).
+] The **sf** package itself does not really provide geo-spatial data -- it provides the framework and utilties for storing and computing on geo-spatial data structures in an opinionated way.
+
+There are numerous packages for accessing geo-spatial data as simple features data structures. A couple notable examples include **rnaturalearth** and **USAboundaries**. The **rnaturalearth** package is better for obtaining any map data in the world via an API provided by <https://www.naturalearthdata.com/> [@rnaturalearth]. The **USAboundaries** package is great for obtaining map data for the United States at any point in history [@USAboundaries]. It doesn't really matter what tool you use to obtain or create an **sf** object -- once you have one, `plot_ly()` knows how to render it:
+
+
+```r
+library(rnaturalearth)
+
+world <- ne_countries(returnclass = "sf")
+class(world)
+```
+
+```r
+#> [1] "sf"    "data.frame"
+```
+
+```r
+plot_ly(world, color = I("gray90"), stroke = I("black"), span = I(1))
+```
+
+```{r world, echo = FALSE, fig.cap = "Rendering all the world's countries using `plot_ly()` and the `ne_countries()` function from the **rnaturalearth** package."}
+knitr::include_graphics("images/world.svg")
+```
+
+How does `plot_ly()` know how to render the countries? It's because the geo-spatial features are encoded in special (geometry) list-column. Also, meta-data about the geo-spatial structure are retained as special attributes of the data. Figure \@ref(fig:view-sf) augments the print method for **sf** to data frames to demonstrate that all the information needed to render the countries (i.e., polygons) in Figure \@ref(fig:world) is contained within the `world` data frame. Note also, that **sf** provides special **dplyr** methods for this special class of data frame so that you can treat data manipulations as if it were a 'tidy' data structure. One thing about this method is that the special 'geometry' column is always retained -- if we try to just select the `name` column, then we get both the name and the geometry.
+
+```r
+library(sf)
+
+world %>%
+  select(name) %>%
+  print(n = 4)
+```
+
+```{r view-sf, echo = FALSE, fig.cap = "A diagram of a simple features data frame. The geometry column tracks the spatial features attached to each row in the data frame."}
+knitr::include_graphics("images/view-sf.svg")
+```
+
+There are actually 4 different ways to render **sf** objects with **plotly**: `plot_ly()`, `plot_mapbox()`, `plot_geo()`, and via **ggplot2**'s `geom_sf()`. The `plot_ly()` and `geom_sf()` approaches are more flexible -- you can use literally any map projection you wish. That flexibility, especially the math and tools for working with map projections can be intimatidating for a causal map maker. Thankfully, there are nice resources for searching for projections in a human-friendly interface, like <http://spatialreference.org/>. 
+
+```r
+canada <- filter(world, name == "Canada")
+cities <- st_as_sf(
+  maps::canada.cities, 
+  coords = c("long", "lat"),
+  crs = 4326
+)
+
+# A PROJ4 projection designed for Canada
+# http://spatialreference.org/ref/sr-org/7/proj4/
+moll_proj <- "+proj=lcc +lat_1=49 +lat_0=49 +lon_0=-95 +k_0=1 +x_0=0 +y_0=0 +ellps=GRS80 +datum=NAD83 +units=m +no_defs"
+"+proj=moll +lon_0=0 +x_0=0 +y_0=0 +ellps=WGS84 +units=m +no_defs"
+
+
+# perform the projections
+canada <- st_transform(canada, moll_proj)
+cities <- st_transform(cities, moll_proj)
+
+# plot with geom_sf()
+p <- ggplot() + 
+  geom_sf(data = canada) +
+  geom_sf(data = cities, aes(size = pop), color = "red", alpha = 0.3)
 ggplotly(p)
 ```
 
-The most brilliant thing about **sf** is that it stores [geo-spatial structures](https://cran.r-project.org/web/packages/sf/vignettes/sf1.html#sfg-simple-feature-geometry) in a special [list-column](https://jennybc.github.io/purrr-tutorial/ls13_list-columns.html) of a data frame. This allows each row to represent the real unit of observation/interest -- a polygon, multi-polygon, point, line, or even a collection of these features -- and as a result, supports workflows that leverage [tidy-data](https://cran.r-project.org/web/packages/tidyr/vignettes/tidy-data.html) principles. This is way more intuitive compared to older workflows based on, say using `ggplot2::fortify()` to obtain a data structure where a row to represents particular point along a feature and having another column track which point belongs to each feature ([for example](https://gis.stackexchange.com/questions/165974/r-fortify-causing-polygons-to-tear)).
+```{r canada-ggplotly, echo = FALSE, fig.cap = ""}
+knitr::include_graphics("images/canada-ggplotly.svg")
+```
+
+TODO: mention `ggplotly()` is the only approach to get the grid-lines?
+
+### Devil in the details
+
+Analogous to the discussion surrounding \@ref(fig:scatter-lines), it pays to be aware of the tradeoffs involved with rendering **plotly** graphics using one or many traces, and knowledgable about how to leverage either approach. Specifically, by default, **plotly** attempts to render all simple features in a single trace, which is performant, but doesn't have a lot of interactivity.  
+
+```r
+world <- ne_countries("large", returnclass = "sf")
+plot_mapbox(world, color = NA, stroke = I("black"), span = I(0.5))
+```
+
+Same arguments from \@ref(scatter-traces) are respected
+
+
+
+#### Cartograms {#cartograms}
+
+The R package **cartogram** provides a 
+
+```r
+library(cartogram)
+library(albersusa)
+
+us_cont <- cartogram_cont(usa_sf("laea"), "pop_2014")
+
+plot_ly(us_cont) %>% 
+  add_sf(
+    color = ~pop_2014, 
+    split = ~name, 
+    span = I(1),
+    text = ~paste(name, scales::number_si(pop_2014)),
+    hoverinfo = "text",
+    hoveron = "fills"
+  ) %>%
+  layout(showlegend = FALSE) %>%
+  colorbar(title = "Population \n 2014")
+```
+
+```{r cartogram, echo = FALSE, fig.cap = "A cartogram of US population in 2014. A cartogram sizes the area of geo-spatial objects proportional to some metric (e.g., population)."}
+knitr::include_graphics("images/cartogram.png")
+```
+
+
+```r
+us <- usa_sf("laea")
+us_dor <- cartogram_dorling(us, "pop_2014")
+
+plot_ly(stroke = I("black"), span = I(1)) %>% 
+  add_sf(
+    data = us, 
+    color = I("gray95"),
+    hoverinfo = "none"
+  ) %>%
+  add_sf(
+    data = us_dor, 
+    color = I("red"), 
+    split = ~name, 
+    text = ~paste(name, scales::number_si(pop_2014)), 
+    hoverinfo = "text", 
+    hoveron = "fills"
+  ) %>%
+  layout(showlegend = FALSE)
+```
+
+```{r dorling, echo = FALSE, fig.cap = "A dorling cartogram of US population in 2014. A dorling cartogram sizes the circles proportional to some metric (e.g., population)."}
+knitr::include_graphics("images/dorling.png")
+```
+
+
+```r
+library(tilegramsR)
+plot_ly(sf_DKOS_CD_Hexmap_v1.1, color = ~STATENAME, colors = "Accent")
+```
+
+```{r tilegram, echo = FALSE, fig.cap = "A tile cartogram of the US."}
+knitr::include_graphics("images/tilegram.svg")
+```
+

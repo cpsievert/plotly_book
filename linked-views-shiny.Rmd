@@ -237,7 +237,7 @@ include_vimeo("307598025", height = 500)
 
 ### Edit events
 
-A little known fact about **plotly** is that you can directly manipulate annotations, title, shapes (e.g., circle, lines, rectangles), legends, and more by simply adding `config(p, editable = TRUE)` to a plot `p`. Moreover, since these are all layout components, we can access information about these 'edit events', by listening to the `"plotly_relayout"` events. Figure \@ref(fig:shiny-edit-annotations) just how easy it is to access information about changes in annotation positioning and content.
+A little known fact about **plotly** is that you can directly manipulate annotations, title, shapes (e.g., circle, lines, rectangles), legends, and more by simply adding `config(p, editable = TRUE)` to a plot `p`. Moreover, since these are all layout components, we can access and respond to these 'edit events' by listening to the `"plotly_relayout"` events. Figure \@ref(fig:shiny-edit-annotations) demonstrates how display access information about changes in annotation positioning and content.
 
 
 ```{r eval = FALSE, summary = "Click to show/hide the code"}
@@ -332,7 +332,17 @@ shinyApp(ui, server)
 include_vimeo("307598919")
 ```
 
-Figure \@ref(fig:shiny-drag-line) uses an ediatble vertical line and the `plotly_relayout` event data to 'snap' the line to the closest point in a sequence of `x` values. It also places a marker on the intersection between the vertical line shape and the line chart of `y` values. Notice how, by accessing `event_data()` in this way (i.e., the source and target view of the event is the same), the chart is actually fully redrawn every time the line shape moves. If performance were an issue (i.e., we were dealing with lots of lines), this type of interaction likely won't be very responsive. In that case, you can use `event_data()` to trigger side-effects (i.e., partially modify the plot) which is covered in \@ref(proxies).
+Figure \@ref(fig:interactive-lm) demonstrates a linear model that reacts to edited circle shape positions using the `"plotly_relayout"` event in **shiny**. This interactive tool is an effective way to visualize the impact of high leverage points on a linear model fit. The main idea is to have the model fit (as well as it's summary and predicted values) depend on the current state of x and y values, which here is stored and updated via `reactiveValues()`. Section \@ref(reactive-vals) has more examples of using reactive values to maintain state within a **shiny** application.
+
+```r
+plotly_example("shiny", "drag_marker")
+```
+
+```{r interactive-lm, echo=FALSE, fig.cap = "Editing circle shape positions to dynamically alter a linear model summary and fitted line. This is useful mainly as a teaching device to visually demonstrate the effect of high leverage points on a simple linear model."}
+include_vimeo("318338029")
+```
+
+Figure \@ref(fig:shiny-drag-line) uses an editable vertical line and the `plotly_relayout` event data to 'snap' the line to the closest point in a sequence of `x` values. It also places a marker on the intersection between the vertical line shape and the line chart of `y` values. Notice how, by accessing `event_data()` in this way (i.e., the source and target view of the event is the same), the chart is actually fully redrawn every time the line shape moves. If performance were an issue (i.e., we were dealing with lots of lines), this type of interaction likely won't be very responsive. In that case, you can use `event_data()` to trigger side-effects (i.e., partially modify the plot) which is covered in \@ref(proxies).
 
 ```{r eval = FALSE, summary = "Click to show/hide the code"}
 library(shiny)
@@ -575,53 +585,8 @@ Currently all the events accessible through `event_data()` are *transient*. This
 
 Figure \@ref(fig:shiny-hover-persist) demonstrates a shiny app that accumulates hover information and paints the hovered points in red. Every time a hover event is triggered, the corresponding car name is added to the set of selected cars, and everytime the plot is double-clicked that set is cleared. This general pattern of initializing a reactive value (i.e., `cars <- reactiveVal()`), updating that value upon a suitable `observeEvent()` event with relevant `customdata`, and clearing that reactive value (i.e., `cars(NULL)`) in response to another event is a very useful pattern to can support essentially any sort of linked views paradigm because the logic behind the resolution of selection sequences is under your complete control in R. For example, \@ref(fig:shiny-hover-persist) simply adds accumulates the event data from `"plotly_hover"` (which is like a logical `OR` operations), but for other applications, you may need different logic, like the `AND`, `XOR`, etc.
 
-```{r eval = FALSE, summary = "Click to show/hide the code"}
-library(shiny)
-
-ui <- fluidPage(
-  plotlyOutput("p"),
-  tableOutput("table")
-)
-
-server <- function(input, output, session) {
-  
-  # keep track of which cars have been hovered on
-  cars <- reactiveVal()
-  
-  # On hover, the key field of the event data contains the car name
-  # Add that name to the set of all "selected" cars
-  observeEvent(event_data("plotly_hover"), {
-    car <- event_data("plotly_hover")$key
-    cars_old_new <- c(cars(), car)
-    cars(unique(cars_old_new))
-  })
-  
-  # clear the set of cars when a double-click occurs
-  observeEvent(event_data("plotly_doubleclick"), {
-    cars(NULL)
-  })
-  
-  output$p <- renderPlotly({
-    
-    # if the car is selected, paint it red
-    cols <- ifelse(row.names(mtcars) %in% cars(), "red", "black")
-    
-    mtcars %>%
-      plot_ly(
-        x = ~wt, y = ~mpg, 
-        key = row.names(mtcars), 
-        color = I(cols)
-      ) %>%
-      add_markers()
-  })
-  
-  output$table <- renderTable({
-    filter(mtcars, row.names(mtcars) %in% cars())
-  })
-  
-}
-
-shinyApp(ui, server)
+```r
+plotly_example("shiny", "event_data_persist")
 ```
 
 ```{r shiny-hover-persist, echo=FALSE, fig.cap = "Using `reactiveVals()` to enable a persistent brush via mouse hover. In this example, the brush can be cleared through a double-click event."}
@@ -1098,87 +1063,42 @@ include_vimeo("307597838")
 
 ### Cross-filter {#crossfilter}
 
-Related to the drill-down chart is so-called 'cross-filter' chart. The main difference between drill-down and cross-filter is that, with cross-filter, the visualizations are typically fixed and selection(s) impose a filter on the data shown in those fixed views. The typical cross-filter implementation allows multiple brushes (i.e., filters) and uses the intersection of those filters to the dataset portrayed in those views. Figure \@ref(fig:shiny-crossfilter) demonstrates how one could apply this technique to a set of histograms using the `flights` dataset from the **nycflights13** package [@nycflights13]. The brush range for each view in stored and maintained in a `reactiveValues()` variable, named `brush_ranges`. Since the actual bar heights reflect only the active filters in other views, the `d_filter()` function is called for each view using only the `brush_ranges` from the other views.
+Somewhat related to the drill-down idea is so-called 'cross-filter' chart. The main difference between drill-down and cross-filter is that, with cross-filter, interactions don't generate new charts -- interactions impose a filter on the data shown in a fixed set of multiple views. The typical cross-filter implementation allows for multiple brushes (i.e., filters) and uses the intersection of those filters to the dataset displayed in those views. Implementing a scalable and responsive crossfilter with 3 or more views can get quite complicated -- we'll walk through some simple examples first for learning purposes, then progress to more sophicated and complex applications.
 
-```{r eval = FALSE, summary = "Click to show/hide the code"}
+Figure \@ref(fig:shiny-crossfilter-naive) demonstrates the simplest way to implement a cross-filter between *two* histograms. It uses the arrival (`arr_time`) and departure (`dep_time`) from the `flights` dataset via the **nycflights13** package [@nycflights13]. Notice how, in the implementation, the `dep_time` view is re-drawn from stratch everytime the `arr_time` brush changes (and vice-versa). Not only is it completely redrawn (i.e., it relies on `renderPlotly()` to perform the update), but it also uses `add_histogram()` which performs binning client-side (in the web browser). That means, every time a brush changes, the **shiny** server sends *all the raw data* to the browser and plotly.js redraws the histogram from scratch. 
+
+```{r, eval = FALSE, summary = "Click to show code"}
 library(shiny)
 library(dplyr)
 library(nycflights13)
-# install from https://github.com/hadley/ggstat
-library(ggstat)
 
-# Collect numeric variables to be shown as histograms in the crossfilter
-d <- select(flights, arr_time, dep_time, arr_delay, dep_delay, air_time, distance)
-
-# Generate an output container per variable
 ui <- fluidPage(
-  lapply(names(d), function(nm) plotlyOutput(nm, height = 200, width = "49%", inline = TRUE))
+  plotlyOutput("arr_time"),
+  plotlyOutput("dep_time")
 )
 
 server <- function(input, output, session) {
   
-  # These reactive values track the set of active brushes 
-  # Each reactive value corresponds to a different variable 
-  brush_ranges <- reactiveValues()
+  output$arr_time <- renderPlotly({
+    p <- plot_ly(flights, x = ~arr_time, source = "arr_time") 
+    
+    brush <- event_data("plotly_brushing", source = "dep_time")
+    if (is.null(brush)) return(p)
+    
+    p %>%
+      filter(between(dep_time, brush$x[1], brush$x[2])) %>%
+      add_histogram()
+  })
   
-  # Filter the dataset based on every active brush range except for one (var)
-  d_filter <- function(d, var = "arr_time") {
-    for (nm in setdiff(names(d), var)) {
-      rng <- brush_ranges[[nm]]
-      if (is.null(rng)) next
-      d <- filter(d, between(d[[nm]], min(rng), max(rng)))
-    }
-    d
-  }
-  
-  # Implement same render logic for each variable
-  lapply(names(d), function(nm) {
+  output$dep_time <- renderPlotly({
+    p <- plot_ly(flights, x = ~dep_time, source = "dep_time") 
     
-    counts <- d[[nm]] %>%
-      bin_fixed(bins = 150) %>%
-      compute_stat(d[[nm]]) %>%
-      filter(!is.na(xmin_)) %>%
-      mutate(xmid = (xmin_ + xmax_) / 2)
+    brush <- event_data("plotly_brushing", source = "arr_time")
+    if (is.null(brush)) return(p)
     
-    output[[nm]] <- renderPlotly({
-      
-      plot_ly(counts, source = nm) %>%
-        add_bars(x = ~xmid, y = ~count_) %>%
-        layout(
-          dragmode = "select", 
-          selectdirection = "h",
-          xaxis = list(
-            title = nm,
-            range = range(d[[nm]], na.rm = TRUE)
-          ),
-          yaxis = list(title = "")
-        )
-    })
-    
-    observeEvent(event_data("plotly_brushing", source = nm), ignoreNULL = FALSE, {
-      
-      # inform the world about the new brush range
-      brush_ranges[[nm]] <- event_data("plotly_brushing", source = nm)$x
-      
-      # update the bar heights of every view (except for the one being brushed)
-      for (var in setdiff(names(d), nm)) {
-        
-        # views respect every brush except for their own 
-        d_filtered <- d_filter(d, var)
-        
-        # bin the filtered data based on the global binning definition
-        counts_filter <- d[[var]] %>%
-          bin_fixed(bins = 150) %>%
-          compute_stat(d_filtered[[var]]) %>%
-          filter(!is.na(xmin_)) %>%
-          mutate(xmid = (xmin_ + xmax_) / 2)
-        
-        # finally, update the bar heights
-        plotlyProxy(var, session) %>%
-          plotlyProxyInvoke("restyle", "y", list(counts_filter$count_), 0) 
-      }
-    })
-    
+    p %>%
+      filter(between(arr_time, brush$x[1], brush$x[2])) %>%
+      add_histogram()
   })
   
 }
@@ -1186,153 +1106,135 @@ server <- function(input, output, session) {
 shinyApp(ui, server)
 ```
 
-```{r shiny-crossfilter, echo=FALSE, fig.cap="Crossfiltering flights data from the **nycflights13** package [@nycflights13]. Even though the filtering and binning logic occurs server-side, a very minimal amount of data is sent between server and client (just the brush range and bar heights). Moreover, to perform the UI update, the client only has to tweak existing bar heights, so the overall user experience is quite responsive."}
-include_vimeo("307598051")
+```{r shiny-crossfilter-naive, echo=FALSE, fig.cap="A 'naive' crossfilter implementation linking arrival time with departure time of about 350,000 `flights` from the **nycflights13** package."}
+include_vimeo("318277110")
+```
+
+Although the video behind Figure \@ref(fig:shiny-crossfilter-naive) demonstrates the app is fairly responsive at 350,000 observations, this implementation won't scale to much larger data, especially if being viewed a poor internet connection. I call this a 'naive' implementation because the reactive logic is easy to reason about, but it illustrates two common issues that we can address to gain speed improvements:
+
+1. More data than necessary being sent 'over-the-wire' (i.e., between the server and the client). This idea is not unique to **shiny** applications -- with any web application framework it's important to minimize the amount of data you're requesting from a server if you want a responsive website.
+2. More client-side rendering work than necessary to achieve the request update.
+
+The implementation behind Figure \@ref(fig:shiny-crossfilter-naive) could improve in these areas by doing the following:
+
+1. Perform the binning server-side instead of client-side. This will reduce the amount of data needed to be sent from server to client so that responsiveness is less dependent on a good internet connection. Here we propose using **ggstat** for the server-side binning since it's fairly fast and simple if you're data can fit into memory [@ggstat]. If your data does not fit into memory you could use something like **dbplot** to perform the binning in a database [@dbplot].
+2. Perform less rendering work client-side. That is, instead of relying on `renderPlotly()` to re-render the chart from scratch everytime the charts need an update, we could instead modify just the bar heights (using the techniques from Section \@ref(proxies)).
+
+```{r, eval = FALSE, summary = "Click to below to see the responsive implementation"}
+library(shiny)
+library(dplyr)
+library(nycflights13)
+library(ggstat)
+
+arr_time <- flights$arr_time
+dep_time <- flights$dep_time
+arr_bins <- bin_fixed(arr_time, bins = 250)
+dep_bins <- bin_fixed(dep_time, bins = 250)
+arr_stats <- compute_stat(arr_bins, arr_time) %>%
+  filter(!is.na(xmin_))
+dep_stats <- compute_stat(dep_bins, dep_time) %>%
+  filter(!is.na(xmin_))
+
+ui <- fluidPage(
+  plotlyOutput("arr_time", height = 250),
+  plotlyOutput("dep_time", height = 250)
+)
+
+server <- function(input, output, session) {
+  
+  output$arr_time <- renderPlotly({
+    plot_ly(arr_stats, source = "arr_time") %>%
+      add_bars(x = ~xmin_, y = ~count_) 
+  })
+  
+  output$dep_time <- renderPlotly({
+    plot_ly(dep_stats, source = "dep_time") %>%
+      add_bars(x = ~xmin_, y = ~count_) 
+  })
+  
+  # arr_time brush updates dep_time view
+  observe({
+    brush <- event_data("plotly_brushing", source = "arr_time")
+    p <- plotlyProxy("dep_time", session)
+    
+    # if brush is empty, restore default
+    if (is.null(brush)) {
+      plotlyProxyInvoke(p, "restyle", "y", list(dep_stats$count_), 0)
+    } else {
+      dep_time_filter <- dep_time[between(dep_time, brush$x[1], brush$x[2])]
+      dep_count <- dep_bins %>%
+        compute_stat(dep_time_filter) %>%
+        filter(!is.na(xmin_)) %>%
+        pull(count_)
+      
+      plotlyProxyInvoke(p, "restyle", "y", list(dep_count), 0)
+    }
+  })
+  
+  observe({
+    brush <- event_data("plotly_brushing", source = "dep_time")
+    p <- plotlyProxy("arr_time", session)
+    
+    # if brush is empty, restore default
+    if (is.null(brush)) {
+      plotlyProxyInvoke(p, "restyle", "y", list(arr_stats$count_), 0)
+    } else {
+      arr_time_filter <- arr_time[between(arr_time, brush$x[1], brush$x[2])]
+      arr_count <- arr_bins %>%
+        compute_stat(arr_time_filter) %>%
+        filter(!is.na(xmin_)) %>%
+        pull(count_)
+      
+      plotlyProxyInvoke(p, "restyle", "y", list(arr_count), 0)
+    }
+  })
+  
+}
+
+shinyApp(ui, server)
+```
+
+Before we address the additional complexity that comes with linking 3 or more views, let's consider targetting a 2D distribution in the cross-filter, as in Figure \@ref(fig:shiny-crossfilter-kde). This approach uses `kde2d()` from the **MASS** package to summarize the 2D distribution server-side rather than attempting to show all the raw data in a scatterplot.^[It's possible to do this responsively with about 50,000 observations, but it won't scale to anything much larger than that. Run `plotly_example("shiny", "crossfilter_scatter")` to see it action as well as a corresponding video at <https://vimeo.com/318129005>] 
+```r
+plotly_example("shiny", "crossfilter_kde")
+```
+
+```{r shiny-crossfilter-kde, echo=FALSE, fig.cap="Using kernel density estimation to responsively crossfilter a 2D distribution. This particular example shows how the relationship between diamond carat and price is dependent upon it's depth."}
+include_vimeo("318122403")
+```
+
+When linking 3 or more views in a crossfilter, it's important to have a mechanism to maintain the state of all the active brushes. This is because, when updating a given view, it needs to know about *all* of the  active brushes. The implementation behind Figure \@ref(fig:shiny-crossfilter) maintains the range of every active brush through a `reactiveValues()` variable named `brush_ranges`. Everytime a brush changes, the state of `brush_ranges` is updated, then used to filter the data down to the relevant observations. That filtered data is then binned and used to modify the bar heights of every view (except for the one being brushed).
+
+```r
+plotly_example("shiny", "crossfilter")
+```
+
+```{r shiny-crossfilter, echo=FALSE, fig.cap="Crossfiltering 6 variables in the `flights` data from the **nycflights13** package [@nycflights13]. The filtering and binning logic occurs server-side resulting in a very minimal amount of data being sent between server and client (just the brush range and bar heights). Moreover, to perform the UI update, the client only has to tweak existing bar heights, so the overall user experience is quite responsive."}
+include_vimeo("318129502")
 ```
 
 One weakness of a typical crossfilter interface like Figure \@ref(fig:shiny-crossfilter) is that it's difficult to make visual comparisons. That is, when a filter is applied, you lose a visual reference to the overall distribution and/or prior filter, making difficult to make meaningful comparisons. Figure \@ref(fig:shiny-crossfilter) modifies the logic of Figure \@ref(fig:shiny-crossfilter-compare) to enable filter comparisons by adding the ability to change the color of the brush. Moreover, for sake of demonstration and simplicity, it also allows for only one active filter per color (i.e., brushing within color is transient). One could borrow logic from Figure \@ref(fig:shiny-crossfilter) to allow multiple filters for each color, but this would require multiple `brush_ranges`.
 
 Since brushing within color is transient, in constrast to Figure \@ref(fig:shiny-crossfilter), Figure \@ref(fig:shiny-crossfilter-compare) doesn't have to track the state of all the active brushes. It does, however, need to display *relative* rather than absolute frequencies to facilitate comparison of small filter range(s) to the overall distribution. This particular implementation takes the overall distribution as a "base layer" that remains fixed and overlays a handful of "selection layers" -- one for each possible brush color. These selection layers begin with a height of 0, but when the relevant brush fires the heights of the bars for the relevant layer is modified. This approach may seem like a hack, but it leads to a fluid user experience because it's not much work to adjust the height of a bar that already exists. 
 
-```{r eval = FALSE, summary = "Click to show/hide the code"}
-library(shiny)
-library(dplyr)
-library(nycflights13)
-library(colourpicker)
-# install from https://github.com/hadley/ggstat
-library(ggstat)
-
-# Select all the (numeric) variables to be shown as histograms
-# in the crossfilter
-d <- select(flights, arr_time, dep_time, arr_delay, dep_delay, air_time, distance)
-
-# Determing a color palette for the brush
-n_colors <- 5
-color_codes <- RColorBrewer::brewer.pal(n_colors, "Dark2")
-
-# Generate an output container per variable
-ui <- fluidPage(
-  fluidRow(
-    tags$div(
-      style = "display:inline-block; max-width:150px; margin-left:50px",
-      colourInput("brush_color", "Pick a brush color", color_codes[1], palette = "limited", allowedCols = color_codes)
-    ),
-    tags$div(
-      style = "display:inline-block",
-      actionButton("clear", "Clear Selection")
-    )
-  ),
-  lapply(names(d), function(nm) plotlyOutput(nm, height = 200, width = "49%", inline = TRUE))
-)
-
-server <- function(input, output, session) {
-  
-  # Implement same render logic for each variable
-  lapply(names(d), function(nm) {
-    
-    # By letting R handle the binning, there is less data to send over the
-    # wire (and, thus, a more responsive app over back connections)
-    counts <- d[[nm]] %>%
-      bin_fixed(bins = 150) %>%
-      compute_stat(d[[nm]]) %>%
-      filter(!is.na(xmin_)) %>%
-      mutate(
-        xmid = (xmin_ + xmax_) / 2,
-        prop_ = count_ / sum(count_), 
-        zeros = 0
-      )
-    
-    output[[nm]] <- renderPlotly({
-      
-      # Draw two layers of bars, one for the overall (black)
-      # distribution, and one for the filtered data (red)
-      p <- plot_ly(
-        counts, x = ~xmid, alpha = I(0.5), 
-        source = nm, unselected = list(marker = list(opacity = 1))
-      ) %>%
-        add_bars(y = ~prop_, color = I("black")) %>%
-        layout(
-          dragmode = "select", 
-          selectdirection = "h",
-          xaxis = list(
-            title = nm,
-            range = range(d[[nm]], na.rm = TRUE) 
-          ),
-          yaxis = list(
-            title = "",
-            showticks = FALSE, 
-            showticklabels = FALSE, 
-            showgrid = FALSE
-          ),
-          barmode = "overlay",
-          showlegend = FALSE
-        )
-      
-      for (col in color_codes) {
-        p <- add_bars(p, y = ~zeros, color = I(col))
-      }
-      
-      p
-    })
-    
-    # when the selection is cleared, return the selection layer bars to 0
-    observeEvent(input$clear, {
-      plotlyProxy(nm, session) %>%
-        plotlyProxyInvoke("restyle", "y", list(counts$zeros), seq_along(color_codes))
-    })
-    
-    # each brush color code corresponds to a different trace index
-    trace_index <- reactive(match(input$brush_color, color_codes))
-    
-    observe({
-      b <- event_data("plotly_brushing", source = nm)$x
-      in_bounds <- between(d[[nm]], min(b), max(b))
-      
-      lapply(names(d), function(var) {
-        p <- plotlyProxy(var, session)
-        
-        if (is.null(b)) {
-          
-          # brush has been cleared, return the selection bars to a zero height
-          plotlyProxyInvoke(p, "restyle", "y", list(counts$zeros), trace_index())
-          
-        } else {
-          
-          # if the brush originates from the proxy target
-          # then don't compute a new marginal distribution, 
-          # just highlight the range of interest
-          props <- if (nm == var) {
-            if_else(
-              between(counts$xmin_, min(b), max(b)) & 
-                between(counts$xmax_, min(b), max(b)),
-              counts$prop_,
-              0
-            )
-          } else {
-            d[[var]] %>%
-              bin_fixed(bins = 150) %>%
-              compute_stat(d[[var]][in_bounds]) %>%
-              filter(!is.na(xmin_)) %>%
-              mutate(prop_ = count_ / sum(count_)) %>%
-              pull(prop_)
-          }
-          
-          plotlyProxyInvoke(p, "restyle", "y", list(props), trace_index())
-        }
-      })
-      
-    })
-    
-  })
-  
-}
-
-shinyApp(ui, server)
+```r
+plotly_example("shiny", "crossfilter_compare")
 ```
-
 
 ```{r shiny-crossfilter-compare, echo=FALSE, fig.cap="Comparing filters with a dynamic color brush. This particular example compares 'red eye' flights (in green) to early morning flights (in orange). This makes it easier to see that delays occur more often for 'red eye' flights."}
 include_vimeo("307598246")
+```
+
+### A draggable brush {#drag-brush}
+
+A *draggable* linked brush is great for conditioning via a moving window. For example, in a cross-filtering example like Figure \@ref(fig:shiny-crossfilter), it would be nice to condition on a certain hour of day, then drag that hour interval along the axis to explore how the hourly distribution changes throughout the day. At the time of writing, plotly.js does not support a draggable brush, but we could implement one with a clever use of a editable rectangle shape. Figure \@ref(fig:drag_brush) demonstrates this idea in a **shiny** application by drawing a rectangle shape that mimics the plotly.js brush, then uses the `"plotly_relayout"` event to determine the limits of the brush (instead of the `"plotly_brushed"` or `"plotly_brushing"`).
+
+```r
+plotly_example("shiny", "drag_brush")
+```
+
+```{r drag_brush, echo=FALSE, fig.cap="A draggable brush with both a transient and persistent mode. The dragging ability is done by mimicing the native plotly.js brush with an editable rectangle shape and listening to changes in that brush. The implementation of transient vs persistent mode is a matter of forgetting or remembering previous state(s) of the brush."}
+include_vimeo("318330112")
 ```
 
 

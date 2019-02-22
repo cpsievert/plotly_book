@@ -25,7 +25,7 @@
 <meta name="author" content="Carson Sievert">
 
 
-<meta name="date" content="2019-02-13">
+<meta name="date" content="2019-02-21">
 
   <meta name="viewport" content="width=device-width, initial-scale=1">
   <meta name="apple-mobile-web-app-capable" content="yes">
@@ -190,9 +190,14 @@ code span.wa { color: #60a0b0; font-weight: bold; font-style: italic; } /* Warni
 </ul></li>
 </ul></li>
 <li class="chapter" data-level="5" data-path="maps.html"><a href="maps.html"><i class="fa fa-check"></i><b>5</b> Maps</a><ul>
-<li class="chapter" data-level="5.1" data-path="maps.html"><a href="maps.html#using-scatter-traces"><i class="fa fa-check"></i><b>5.1</b> Using scatter traces</a></li>
-<li class="chapter" data-level="5.2" data-path="maps.html"><a href="maps.html#choropleths"><i class="fa fa-check"></i><b>5.2</b> Choropleths</a></li>
-<li class="chapter" data-level="5.3" data-path="maps.html"><a href="maps.html#using-geom_sf"><i class="fa fa-check"></i><b>5.3</b> Using <code>geom_sf()</code></a></li>
+<li class="chapter" data-level="5.1" data-path="maps.html"><a href="maps.html#simple-maps"><i class="fa fa-check"></i><b>5.1</b> Simple maps</a><ul>
+<li class="chapter" data-level="5.1.1" data-path="maps.html"><a href="maps.html#overview-1"><i class="fa fa-check"></i><b>5.1.1</b> Overview</a></li>
+<li class="chapter" data-level="5.1.2" data-path="maps.html"><a href="maps.html#choropleths"><i class="fa fa-check"></i><b>5.1.2</b> Choropleths</a></li>
+</ul></li>
+<li class="chapter" data-level="5.2" data-path="maps.html"><a href="maps.html#custom-maps"><i class="fa fa-check"></i><b>5.2</b> Custom maps</a><ul>
+<li class="chapter" data-level="5.2.1" data-path="maps.html"><a href="maps.html#sf"><i class="fa fa-check"></i><b>5.2.1</b> Simple features (sf)</a></li>
+<li class="chapter" data-level="5.2.2" data-path="maps.html"><a href="maps.html#devil-in-the-details"><i class="fa fa-check"></i><b>5.2.2</b> Devil in the details</a></li>
+</ul></li>
 </ul></li>
 <li class="chapter" data-level="6" data-path="bars-histograms.html"><a href="bars-histograms.html"><i class="fa fa-check"></i><b>6</b> Bars &amp; histograms</a><ul>
 <li class="chapter" data-level="6.1" data-path="bars-histograms.html"><a href="bars-histograms.html#multiple-numeric-distributions"><i class="fa fa-check"></i><b>6.1</b> Multiple numeric distributions</a></li>
@@ -271,6 +276,7 @@ code span.wa { color: #60a0b0; font-weight: bold; font-style: italic; } /* Warni
 <li class="chapter" data-level="18.4" data-path="linking-server-side.html"><a href="linking-server-side.html#advanced-applications"><i class="fa fa-check"></i><b>18.4</b> Advanced applications</a><ul>
 <li class="chapter" data-level="18.4.1" data-path="linking-server-side.html"><a href="linking-server-side.html#drill-down"><i class="fa fa-check"></i><b>18.4.1</b> Drill-down</a></li>
 <li class="chapter" data-level="18.4.2" data-path="linking-server-side.html"><a href="linking-server-side.html#crossfilter"><i class="fa fa-check"></i><b>18.4.2</b> Cross-filter</a></li>
+<li class="chapter" data-level="18.4.3" data-path="linking-server-side.html"><a href="linking-server-side.html#drag-brush"><i class="fa fa-check"></i><b>18.4.3</b> A draggable brush</a></li>
 </ul></li>
 <li class="chapter" data-level="18.5" data-path="linking-server-side.html"><a href="linking-server-side.html#discussion"><i class="fa fa-check"></i><b>18.5</b> Discussion</a></li>
 </ul></li>
@@ -344,7 +350,7 @@ code span.wa { color: #60a0b0; font-weight: bold; font-style: italic; } /* Warni
             <section class="normal" id="section-">
 <div id="translating-custom-ggplot2-geoms" class="section level1">
 <h1><span class="header-section-number">39</span> Translating custom ggplot2 geoms</h1>
-<p>Version 2.0.0 of <strong>ggplot2</strong> introduced a way for other R packages to implement custom geoms. Some great examples include: <strong>ggrepel</strong>, <strong>ggalt</strong>, <strong>ggraph</strong>, <strong>geomnet</strong>, <strong>ggmosaic</strong> and <strong>ggtern</strong> <span class="citation">(Rudis <a href="#ref-ggalt">2016</a>)</span>; <span class="citation">(Pedersen <a href="#ref-ggraph">2016</a>)</span>; <span class="citation">(Tyner and Hofmann <a href="#ref-geomnet">2016</a>)</span>; <span class="citation">(Jeppson, Hofmann, and Cook <a href="#ref-ggmosaic">2016</a>)</span>; <span class="citation">(Hamilton <a href="#ref-ggtern">2016</a>)</span>.<a href="#fn33" class="footnote-ref" id="fnref33"><sup>33</sup></a> Although the <code>ggplotly()</code> function translates most of the geoms bundled with the <strong>ggplot2</strong> package, it has no way of knowing about the rendering rules for custom geoms. The <strong>plotly</strong> package does, however, provide 2 generic functions based on the S3 scheme that can leveraged to inform <code>ggplotly()</code> about these rules <span class="citation">(Chambers <a href="#ref-S3">1992</a>)</span>.<a href="#fn34" class="footnote-ref" id="fnref34"><sup>34</sup></a> To date, the <strong>ggmosaic</strong> and <strong>ggalt</strong> packages have taken advantage of this infrastructure to provide translations of their custom geoms to plotly.</p>
+<p>Version 2.0.0 of <strong>ggplot2</strong> introduced a way for other R packages to implement custom geoms. Some great examples include: <strong>ggrepel</strong>, <strong>ggalt</strong>, <strong>ggraph</strong>, <strong>geomnet</strong>, <strong>ggmosaic</strong> and <strong>ggtern</strong> <span class="citation">(Rudis <a href="#ref-ggalt">2016</a>)</span>; <span class="citation">(Pedersen <a href="#ref-ggraph">2016</a>)</span>; <span class="citation">(Tyner and Hofmann <a href="#ref-geomnet">2016</a>)</span>; <span class="citation">(Jeppson, Hofmann, and Cook <a href="#ref-ggmosaic">2016</a>)</span>; <span class="citation">(Hamilton <a href="#ref-ggtern">2016</a>)</span>.<a href="#fn35" class="footnote-ref" id="fnref35"><sup>35</sup></a> Although the <code>ggplotly()</code> function translates most of the geoms bundled with the <strong>ggplot2</strong> package, it has no way of knowing about the rendering rules for custom geoms. The <strong>plotly</strong> package does, however, provide 2 generic functions based on the S3 scheme that can leveraged to inform <code>ggplotly()</code> about these rules <span class="citation">(Chambers <a href="#ref-S3">1992</a>)</span>.<a href="#fn36" class="footnote-ref" id="fnref36"><sup>36</sup></a> To date, the <strong>ggmosaic</strong> and <strong>ggalt</strong> packages have taken advantage of this infrastructure to provide translations of their custom geoms to plotly.</p>
 <p>In <strong>ggplot2</strong>, many geoms are special cases of other geoms. For example, <code>geom_line()</code> is equivalent to <code>geom_path()</code> once the data is sorted by the x variable. For cases like this, when a geom can be reduced to another lower-level (i.e., basic) geom, authors just have to write a method for the <code>to_basic()</code> generic function in <strong>plotly</strong>. In fact, within the package itself, the <code>to_basic()</code> function has a <code>GeomLine</code> method which simply sorts the data by the x variable then returns it with a class of <code>GeomPath</code> prefixed.</p>
 <pre class="sourceCode r"><code class="sourceCode r"><span class="kw">getS3method</span>(<span class="st">&quot;to_basic&quot;</span>, <span class="st">&quot;GeomLine&quot;</span>)
 <span class="co">#&gt; function (data, prestats_data, layout, params, p, ...) </span>
@@ -352,7 +358,7 @@ code span.wa { color: #60a0b0; font-weight: bold; font-style: italic; } /* Warni
 <span class="co">#&gt;     data &lt;- data[order(data[[&quot;x&quot;]]), ]</span>
 <span class="co">#&gt;     prefix_class(data, &quot;GeomPath&quot;)</span>
 <span class="co">#&gt; }</span>
-<span class="co">#&gt; &lt;bytecode: 0x7fa0d8df51c0&gt;</span>
+<span class="co">#&gt; &lt;bytecode: 0x7ff7f13d2b58&gt;</span>
 <span class="co">#&gt; &lt;environment: namespace:plotly&gt;</span></code></pre>
 <p>If you have implemented a custom geom, say <code>GeomCustom</code>, rest assured that the data passed to <code>to_basic()</code> will be of class <code>GeomCustom</code> when <code>ggplotly()</code> is called on a plot with your geom. And assuming <code>GeomCustom</code> may be reduced to another lower-level geom support by plotly, a <code>to_basic.GeomCustom()</code> method that transforms the data into a form suitable for that lower-level geom is sufficient for adding support. Moreover, note that the data passed to <code>to_basic()</code> is essentially the last form of the data <em>before</em> the render stage and <em>after</em> statistics have been performed. This makes it trivial to add support for geoms like <code>GeomXspline</code> from the <strong>ggalt</strong> package.</p>
 <pre class="sourceCode r"><code class="sourceCode r"><span class="co"># devtools::install_github(&quot;hrbrmstr/ggalt&quot;)</span>
@@ -363,7 +369,7 @@ code span.wa { color: #60a0b0; font-weight: bold; font-style: italic; } /* Warni
 <span class="co">#&gt;     data &lt;- data[order(data[[&quot;x&quot;]]), ]</span>
 <span class="co">#&gt;     prefix_class(data, &quot;GeomPath&quot;)</span>
 <span class="co">#&gt; }</span>
-<span class="co">#&gt; &lt;bytecode: 0x7fa0dce14dd8&gt;</span>
+<span class="co">#&gt; &lt;bytecode: 0x7ff7eefb8f18&gt;</span>
 <span class="co">#&gt; &lt;environment: namespace:plotly&gt;</span></code></pre>
 <p>As shown in Figure <a href="translating-custom-ggplot2-geoms.html#fig:xspline">39.1</a>, once the conversion has been provided. Users can call <code>ggplotly()</code> on the ggplot object containing the custom geom just like any other ggplot object.</p>
 <pre class="sourceCode r"><code class="sourceCode r"><span class="co"># example from `help(geom_xspline)`</span>
@@ -410,9 +416,9 @@ FIGURE 39.1: Converting GeomXspline from the <strong>ggalt</strong> package to p
 </div>
 <div class="footnotes">
 <hr />
-<ol start="33">
-<li id="fn33"><p>There are many other useful extension packages that are listed on this website – <a href="https://www.ggplot2-exts.org" class="uri">https://www.ggplot2-exts.org</a><a href="translating-custom-ggplot2-geoms.html#fnref33" class="footnote-back">↩</a></p></li>
-<li id="fn34"><p>For those new to S3, <a href="http://adv-r.had.co.nz/S3.html" class="uri">http://adv-r.had.co.nz/S3.html</a> provides an approachable introduction and overview <span class="citation">(Wickham <a href="#ref-adv-r">2014</a>)</span>.<a href="translating-custom-ggplot2-geoms.html#fnref34" class="footnote-back">↩</a></p></li>
+<ol start="35">
+<li id="fn35"><p>There are many other useful extension packages that are listed on this website – <a href="https://www.ggplot2-exts.org" class="uri">https://www.ggplot2-exts.org</a><a href="translating-custom-ggplot2-geoms.html#fnref35" class="footnote-back">↩</a></p></li>
+<li id="fn36"><p>For those new to S3, <a href="http://adv-r.had.co.nz/S3.html" class="uri">http://adv-r.had.co.nz/S3.html</a> provides an approachable introduction and overview <span class="citation">(Wickham <a href="#ref-adv-r">2014</a><a href="#ref-adv-r">a</a>)</span>.<a href="translating-custom-ggplot2-geoms.html#fnref36" class="footnote-back">↩</a></p></li>
 </ol>
 </div>
 <script>

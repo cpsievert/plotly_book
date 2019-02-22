@@ -25,7 +25,7 @@
 <meta name="author" content="Carson Sievert">
 
 
-<meta name="date" content="2019-02-13">
+<meta name="date" content="2019-02-21">
 
   <meta name="viewport" content="width=device-width, initial-scale=1">
   <meta name="apple-mobile-web-app-capable" content="yes">
@@ -190,9 +190,14 @@ code span.wa { color: #60a0b0; font-weight: bold; font-style: italic; } /* Warni
 </ul></li>
 </ul></li>
 <li class="chapter" data-level="5" data-path="maps.html"><a href="maps.html"><i class="fa fa-check"></i><b>5</b> Maps</a><ul>
-<li class="chapter" data-level="5.1" data-path="maps.html"><a href="maps.html#using-scatter-traces"><i class="fa fa-check"></i><b>5.1</b> Using scatter traces</a></li>
-<li class="chapter" data-level="5.2" data-path="maps.html"><a href="maps.html#choropleths"><i class="fa fa-check"></i><b>5.2</b> Choropleths</a></li>
-<li class="chapter" data-level="5.3" data-path="maps.html"><a href="maps.html#using-geom_sf"><i class="fa fa-check"></i><b>5.3</b> Using <code>geom_sf()</code></a></li>
+<li class="chapter" data-level="5.1" data-path="maps.html"><a href="maps.html#simple-maps"><i class="fa fa-check"></i><b>5.1</b> Simple maps</a><ul>
+<li class="chapter" data-level="5.1.1" data-path="maps.html"><a href="maps.html#overview-1"><i class="fa fa-check"></i><b>5.1.1</b> Overview</a></li>
+<li class="chapter" data-level="5.1.2" data-path="maps.html"><a href="maps.html#choropleths"><i class="fa fa-check"></i><b>5.1.2</b> Choropleths</a></li>
+</ul></li>
+<li class="chapter" data-level="5.2" data-path="maps.html"><a href="maps.html#custom-maps"><i class="fa fa-check"></i><b>5.2</b> Custom maps</a><ul>
+<li class="chapter" data-level="5.2.1" data-path="maps.html"><a href="maps.html#sf"><i class="fa fa-check"></i><b>5.2.1</b> Simple features (sf)</a></li>
+<li class="chapter" data-level="5.2.2" data-path="maps.html"><a href="maps.html#devil-in-the-details"><i class="fa fa-check"></i><b>5.2.2</b> Devil in the details</a></li>
+</ul></li>
 </ul></li>
 <li class="chapter" data-level="6" data-path="bars-histograms.html"><a href="bars-histograms.html"><i class="fa fa-check"></i><b>6</b> Bars &amp; histograms</a><ul>
 <li class="chapter" data-level="6.1" data-path="bars-histograms.html"><a href="bars-histograms.html#multiple-numeric-distributions"><i class="fa fa-check"></i><b>6.1</b> Multiple numeric distributions</a></li>
@@ -271,6 +276,7 @@ code span.wa { color: #60a0b0; font-weight: bold; font-style: italic; } /* Warni
 <li class="chapter" data-level="18.4" data-path="linking-server-side.html"><a href="linking-server-side.html#advanced-applications"><i class="fa fa-check"></i><b>18.4</b> Advanced applications</a><ul>
 <li class="chapter" data-level="18.4.1" data-path="linking-server-side.html"><a href="linking-server-side.html#drill-down"><i class="fa fa-check"></i><b>18.4.1</b> Drill-down</a></li>
 <li class="chapter" data-level="18.4.2" data-path="linking-server-side.html"><a href="linking-server-side.html#crossfilter"><i class="fa fa-check"></i><b>18.4.2</b> Cross-filter</a></li>
+<li class="chapter" data-level="18.4.3" data-path="linking-server-side.html"><a href="linking-server-side.html#drag-brush"><i class="fa fa-check"></i><b>18.4.3</b> A draggable brush</a></li>
 </ul></li>
 <li class="chapter" data-level="18.5" data-path="linking-server-side.html"><a href="linking-server-side.html#discussion"><i class="fa fa-check"></i><b>18.5</b> Discussion</a></li>
 </ul></li>
@@ -345,8 +351,8 @@ code span.wa { color: #60a0b0; font-weight: bold; font-style: italic; } /* Warni
 <div id="designing-an-htmlwidget-interface" class="section level1">
 <h1><span class="header-section-number">40</span> Designing an htmlwidget interface</h1>
 <p>The plotly.js library, as with many other JavaScript graphing libraries, strives to describe any plot through a plot specification defined via JavaScript Object Notation (JSON). JSON is a language independent data-interchange format that was originally designed for JavaScript, but parsers for many different languages now exist, including R <span class="citation">(Temple Lang <a href="#ref-RJSONIO">2014</a>)</span>; <span class="citation">(Ooms <a href="#ref-jsonlite">2014</a>)</span>. JSON is a recursive key-value data structure (similar to a list in R), and essentially any valid JavaScript value has a natural R equivalent (e.g., <code>NULL</code>/<code>null</code>). As a result, any JSON object can be created from an appropriate R list, meaning that theoretically any plotly.js plot can be described via an R list. However, simply providing a bridge between R lists and JSON does not guarantee a powerful or usable interface, especially for a general purpose graphing library.</p>
-<p>Although it can be complicated to implement, R interfaces to JavaScript graphing libraries should leverage R’s strong resources for computing on the language to design a more expressive interface <span class="citation">(Wickham <a href="#ref-adv-r">2014</a>)</span>. It should also look and feel like (and work well with!) other commonly used interfaces in R. A good way to do this is to embrace (pure and predictable) functional programming. Most importantly, this implies that every function <em>modifies</em> a central type of object – meaning that every function input and output the same type of object (predictable). Furthermore, if the output of a function can be determined completely by the input (i.e., pure), it removes any need to search for other code that may be affecting the output. In the case of providing an interface to a JavaScript graphing library, there are a number of reasons why the central object should inherit from the central object provided by the <strong>htmlwidgets</strong> package.</p>
-<p>The idea of interfacing R with JavaScript libraries via JSON data transfer has been popular approach for quite some time <span class="citation">(Vaidyanathan <a href="#ref-rCharts">2013</a>)</span>; <span class="citation">(Hocking, VanderPlas, and Sievert <a href="#ref-animint">2015</a>)</span>; <span class="citation">(Sievert and Shirley <a href="#ref-Sievert:2014b">2014</a>)</span>. The R package <strong>htmlwidgets</strong> standardized this bridge, and provides some additional infrastructure for making sure the HTML output works as expected in multiple contexts (in the R console or RStudio, within <strong>rmarkdown</strong> documents, and even embedded inside <strong>shiny</strong> apps). The <strong>htmlwidgets</strong> package itself is opinionated about the data structure used to represent the widget in R since it needs to retain meta-information about the widget, such as the sizing policy. To avoid surprise, widget authors should strive to have all functions in their interface modify this data structure.<a href="#fn35" class="footnote-ref" id="fnref35"><sup>35</sup></a></p>
+<p>Although it can be complicated to implement, R interfaces to JavaScript graphing libraries should leverage R’s strong resources for computing on the language to design a more expressive interface <span class="citation">(Wickham <a href="#ref-adv-r">2014</a><a href="#ref-adv-r">a</a>)</span>. It should also look and feel like (and work well with!) other commonly used interfaces in R. A good way to do this is to embrace (pure and predictable) functional programming. Most importantly, this implies that every function <em>modifies</em> a central type of object – meaning that every function input and output the same type of object (predictable). Furthermore, if the output of a function can be determined completely by the input (i.e., pure), it removes any need to search for other code that may be affecting the output. In the case of providing an interface to a JavaScript graphing library, there are a number of reasons why the central object should inherit from the central object provided by the <strong>htmlwidgets</strong> package.</p>
+<p>The idea of interfacing R with JavaScript libraries via JSON data transfer has been popular approach for quite some time <span class="citation">(Vaidyanathan <a href="#ref-rCharts">2013</a>)</span>; <span class="citation">(Hocking, VanderPlas, and Sievert <a href="#ref-animint">2015</a>)</span>; <span class="citation">(Sievert and Shirley <a href="#ref-Sievert:2014b">2014</a>)</span>. The R package <strong>htmlwidgets</strong> standardized this bridge, and provides some additional infrastructure for making sure the HTML output works as expected in multiple contexts (in the R console or RStudio, within <strong>rmarkdown</strong> documents, and even embedded inside <strong>shiny</strong> apps). The <strong>htmlwidgets</strong> package itself is opinionated about the data structure used to represent the widget in R since it needs to retain meta-information about the widget, such as the sizing policy. To avoid surprise, widget authors should strive to have all functions in their interface modify this data structure.<a href="#fn37" class="footnote-ref" id="fnref37"><sup>37</sup></a></p>
 <p>JavaScript graphing libraries usually have strong requirements about the JSON structure used to create a plot. In some cases, the R interface needs to know about these requirements in order to faithfully translate R objects to JSON. For example, in plotly.js some attributes must <em>always</em> be an array (e.g. x/y), even if they are length 1, while other attributes cannot be an array must be a literal constant (e.g. name). This leads to a situation where the translation rules from R to JSON cannot be simply “box all vectors of length 1 into an array (or not)”:</p>
 <pre class="sourceCode javascript"><code class="sourceCode javascript"><span class="at">list</span>(x <span class="op">=</span> <span class="dv">1</span><span class="op">,</span> y <span class="op">=</span> <span class="dv">1</span><span class="op">,</span> name <span class="op">=</span> <span class="st">&quot;A point&quot;</span>) <span class="kw">=&gt;</span> <span class="op">{</span><span class="dt">x</span><span class="op">:</span> [<span class="dv">1</span>]<span class="op">,</span> <span class="dt">y</span><span class="op">:</span> [<span class="dv">1</span>]<span class="op">,</span> <span class="dt">name</span><span class="op">:</span> <span class="st">&quot;A point&quot;</span><span class="op">}</span></code></pre>
 <p>Thankfully plotly.js provides a plot schema which declares types for each attribute that <strong>plotly</strong> leverages internally. If necessary, <strong>plotly</strong> tries to coerce each attribute to its expected type at print time, and also searches for any unsupported attributes that may have been specified by the user (and throws a warning that the attribute will be ignored). This helps</p>
@@ -366,7 +372,7 @@ The **htmlwidgets** package also provides ways for both widget authors and users
 <p>Ooms, Jeroen. 2014. “The Jsonlite Package: A Practical and Consistent Mapping Between Json Data and R Objects.” <em>arXiv:1403.2805 [stat.CO]</em>. <a href="http://arxiv.org/abs/1403.2805">http://arxiv.org/abs/1403.2805</a>.</p>
 </div>
 <div id="ref-adv-r">
-<p>Wickham, Hadley. 2014. <em>Advanced R</em>. Chapman &amp; Hall.</p>
+<p>Wickham, Hadley. 2014a. <em>Advanced R</em>. Chapman &amp; Hall.</p>
 </div>
 <div id="ref-rCharts">
 <p>Vaidyanathan, Ramnath. 2013. <em>RCharts: Interactive Charts Using Javascript Visualization Libraries</em>. <a href="https://github.com/ramnathv/rCharts/">https://github.com/ramnathv/rCharts/</a>.</p>
@@ -380,8 +386,8 @@ The **htmlwidgets** package also provides ways for both widget authors and users
 </div>
 <div class="footnotes">
 <hr />
-<ol start="35">
-<li id="fn35"><p>The <strong>plotly</strong> package initially fought this advice and represented plotly objects using a special data frame with a special print method to enable the <a href="#data-plot-pipeline">data-plot-pipeline</a>. I have since changed my mind and decided special methods for popular generic functions should be provided instead.<a href="designing-an-htmlwidget-interface.html#fnref35" class="footnote-back">↩</a></p></li>
+<ol start="37">
+<li id="fn37"><p>The <strong>plotly</strong> package initially fought this advice and represented plotly objects using a special data frame with a special print method to enable the <a href="#data-plot-pipeline">data-plot-pipeline</a>. I have since changed my mind and decided special methods for popular generic functions should be provided instead.<a href="designing-an-htmlwidget-interface.html#fnref37" class="footnote-back">↩</a></p></li>
 </ol>
 </div>
 <script>

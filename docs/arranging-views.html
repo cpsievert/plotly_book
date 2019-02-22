@@ -25,7 +25,7 @@
 <meta name="author" content="Carson Sievert">
 
 
-<meta name="date" content="2019-02-13">
+<meta name="date" content="2019-02-21">
 
   <meta name="viewport" content="width=device-width, initial-scale=1">
   <meta name="apple-mobile-web-app-capable" content="yes">
@@ -190,9 +190,14 @@ code span.wa { color: #60a0b0; font-weight: bold; font-style: italic; } /* Warni
 </ul></li>
 </ul></li>
 <li class="chapter" data-level="5" data-path="maps.html"><a href="maps.html"><i class="fa fa-check"></i><b>5</b> Maps</a><ul>
-<li class="chapter" data-level="5.1" data-path="maps.html"><a href="maps.html#using-scatter-traces"><i class="fa fa-check"></i><b>5.1</b> Using scatter traces</a></li>
-<li class="chapter" data-level="5.2" data-path="maps.html"><a href="maps.html#choropleths"><i class="fa fa-check"></i><b>5.2</b> Choropleths</a></li>
-<li class="chapter" data-level="5.3" data-path="maps.html"><a href="maps.html#using-geom_sf"><i class="fa fa-check"></i><b>5.3</b> Using <code>geom_sf()</code></a></li>
+<li class="chapter" data-level="5.1" data-path="maps.html"><a href="maps.html#simple-maps"><i class="fa fa-check"></i><b>5.1</b> Simple maps</a><ul>
+<li class="chapter" data-level="5.1.1" data-path="maps.html"><a href="maps.html#overview-1"><i class="fa fa-check"></i><b>5.1.1</b> Overview</a></li>
+<li class="chapter" data-level="5.1.2" data-path="maps.html"><a href="maps.html#choropleths"><i class="fa fa-check"></i><b>5.1.2</b> Choropleths</a></li>
+</ul></li>
+<li class="chapter" data-level="5.2" data-path="maps.html"><a href="maps.html#custom-maps"><i class="fa fa-check"></i><b>5.2</b> Custom maps</a><ul>
+<li class="chapter" data-level="5.2.1" data-path="maps.html"><a href="maps.html#sf"><i class="fa fa-check"></i><b>5.2.1</b> Simple features (sf)</a></li>
+<li class="chapter" data-level="5.2.2" data-path="maps.html"><a href="maps.html#devil-in-the-details"><i class="fa fa-check"></i><b>5.2.2</b> Devil in the details</a></li>
+</ul></li>
 </ul></li>
 <li class="chapter" data-level="6" data-path="bars-histograms.html"><a href="bars-histograms.html"><i class="fa fa-check"></i><b>6</b> Bars &amp; histograms</a><ul>
 <li class="chapter" data-level="6.1" data-path="bars-histograms.html"><a href="bars-histograms.html#multiple-numeric-distributions"><i class="fa fa-check"></i><b>6.1</b> Multiple numeric distributions</a></li>
@@ -271,6 +276,7 @@ code span.wa { color: #60a0b0; font-weight: bold; font-style: italic; } /* Warni
 <li class="chapter" data-level="18.4" data-path="linking-server-side.html"><a href="linking-server-side.html#advanced-applications"><i class="fa fa-check"></i><b>18.4</b> Advanced applications</a><ul>
 <li class="chapter" data-level="18.4.1" data-path="linking-server-side.html"><a href="linking-server-side.html#drill-down"><i class="fa fa-check"></i><b>18.4.1</b> Drill-down</a></li>
 <li class="chapter" data-level="18.4.2" data-path="linking-server-side.html"><a href="linking-server-side.html#crossfilter"><i class="fa fa-check"></i><b>18.4.2</b> Cross-filter</a></li>
+<li class="chapter" data-level="18.4.3" data-path="linking-server-side.html"><a href="linking-server-side.html#drag-brush"><i class="fa fa-check"></i><b>18.4.3</b> A draggable brush</a></li>
 </ul></li>
 <li class="chapter" data-level="18.5" data-path="linking-server-side.html"><a href="linking-server-side.html#discussion"><i class="fa fa-check"></i><b>18.5</b> Discussion</a></li>
 </ul></li>
@@ -386,7 +392,7 @@ FIGURE 14.2: Arranging multiple htmlwidgets with flexbox
 FIGURE 14.3: Arranging multiple htmlwidgets with <code>fluidPage()</code> from the <strong>shiny</strong> package.
 </p>
 </div>
-<p>All the arrangement approaches discussed thus far are agnostic to output format, meaning that they can be used to arrange htmlwidgets within <em>any</em> <strong>knitr</strong>/<strong>rmarkdown</strong> document.<a href="#fn14" class="footnote-ref" id="fnref14"><sup>14</sup></a> If the htmlwidgets do not need to be embedded within a larger document that requires an opinionated output format, the <strong>flexdashboard</strong> package provides a <strong>rmarkdown</strong> template for generating dashboards, with a convenient syntax for arranging views <span class="citation">(Allaire <a href="#ref-flexdashboard">2016</a>)</span>.</p>
+<p>All the arrangement approaches discussed thus far are agnostic to output format, meaning that they can be used to arrange htmlwidgets within <em>any</em> <strong>knitr</strong>/<strong>rmarkdown</strong> document.<a href="#fn15" class="footnote-ref" id="fnref15"><sup>15</sup></a> If the htmlwidgets do not need to be embedded within a larger document that requires an opinionated output format, the <strong>flexdashboard</strong> package provides a <strong>rmarkdown</strong> template for generating dashboards, with a convenient syntax for arranging views <span class="citation">(Allaire <a href="#ref-flexdashboard">2016</a>)</span>.</p>
 </div>
 <div id="merging-plotly-objects" class="section level2">
 <h2><span class="header-section-number">14.2</span> Merging plotly objects</h2>
@@ -580,7 +586,7 @@ FIGURE 14.12: An interactive version of the generalized pairs plot made via the 
 <blockquote>
 <p>“Overview first, zoom and filter, then details-on-demand.”</p>
 </blockquote>
-<p>In fact, Figure <a href="linking-server-side.html#fig:shiny-corrplot">18.10</a> from section <a href="linking-server-side.html#scoping-events">18.2.5</a> provides an example of this mantra put into practice. The correlation matrix provides an overview of the correlation structure between all the variables, and by clicking a cell, it populates a scatterplot between those two specific variables. This works fine with tens or hundreds or variables, but once you have thousands or tens-of-thousands of variables, this technique begins to fall apart. At that point, you may be better off defining a range of correlations that you’re interested in exploring, or better yet, incorporating another measure (e.g., a test statistic), then focusing on views that match a certain criteria.</p>
+<p>In fact, Figure <a href="linking-server-side.html#fig:shiny-corrplot">18.11</a> from section <a href="linking-server-side.html#scoping-events">18.2.5</a> provides an example of this mantra put into practice. The correlation matrix provides an overview of the correlation structure between all the variables, and by clicking a cell, it populates a scatterplot between those two specific variables. This works fine with tens or hundreds or variables, but once you have thousands or tens-of-thousands of variables, this technique begins to fall apart. At that point, you may be better off defining a range of correlations that you’re interested in exploring, or better yet, incorporating another measure (e.g., a test statistic), then focusing on views that match a certain criteria.</p>
 <p><span class="citation">Tukey and Tukey (<a href="#ref-scagnostics-tukey">n.d.</a>)</span> first described the idea of using quantitative measurements of scatterplot characteristics (e.g. correlation) to help guide exploratory analysis of many variables. This idea, coined scagnostics (short for scatterplot diagnostics), has since been made explicit, and many measures have been explored, even measures specifically useful for time-series have been proposed <span class="citation">(Wilkinson, Anand, and Grossman <a href="#ref-Wilkinson:2005b">2005</a>)</span>; <span class="citation">(Wilkinson and Wills <a href="#ref-Wilkinson:2008">2008</a>)</span>; <span class="citation">(Dang and Wilkinson <a href="#ref-Wilkinson:2012">2012</a>)</span>. Probably the most universally useful scagnostic is the outlying measure which helps identify projections of the data space that contain outlying observations. Of course, the idea of associating quantitative measures with a graphical display of data can be generalized to include more that just scatterplots, and in this more general case, these measures are sometimes referred to as cognostics.</p>
 <p>The same problems and principles that inspired scagnostics has inspired work on more general divide &amp; recombine technique(s) for working with navigating through many statistical artifacts <span class="citation">(Cleveland and Hafen <a href="#ref-divide-recombine">2014</a>)</span>; <span class="citation">(Saptarshi Guha and Cleveland <a href="#ref-RHIPE">2012</a>)</span>, including visualizations <span class="citation">(Hafen et al. <a href="#ref-trelliscope">2013</a>)</span>. The <strong>trelliscope</strong> package provides a system for computing arbitrary cognostics on each panel of a trellis display as well as an interactive graphical user interface for defining (and navigating through) interesting panels based on those cognostics <span class="citation">(Hafen <a href="#ref-trelliscope-pkg">2016</a>)</span>. This system also allows users to define the graphical method for displaying each panel, so <strong>plotly</strong> graphs can easily be embedded. The <strong>trelliscope</strong> package is currently built upon <strong>shiny</strong>, but as Figure <a href="arranging-views.html#fig:trelliscope">14.13</a> demonstrates, the <strong>trelliscopejs</strong> package provides lower-level tools that allow one to create trelliscope displays without <strong>shiny</strong> <span class="citation">(Hafen and Schloerke, <a href="#ref-trelliscopejs">n.d.</a>)</span>.</p>
 <pre class="sourceCode r"><code class="sourceCode r"><span class="kw">library</span>(trelliscopejs)
@@ -671,8 +677,8 @@ FIGURE 14.13: Using plotly within a trelliscope
 </div>
 <div class="footnotes">
 <hr />
-<ol start="14">
-<li id="fn14"><p>Although HTML can not possibly render in a pdf or word document, <strong>knitr</strong> can automatically detect a non-HTML output format and embed a static image of the htmlwidget via the <strong>webshot</strong> package <span class="citation">(Chang <a href="#ref-webshot">2016</a>)</span>.<a href="arranging-views.html#fnref14" class="footnote-back">↩</a></p></li>
+<ol start="15">
+<li id="fn15"><p>Although HTML can not possibly render in a pdf or word document, <strong>knitr</strong> can automatically detect a non-HTML output format and embed a static image of the htmlwidget via the <strong>webshot</strong> package <span class="citation">(Chang <a href="#ref-webshot">2016</a>)</span>.<a href="arranging-views.html#fnref15" class="footnote-back">↩</a></p></li>
 </ol>
 </div>
 <script>

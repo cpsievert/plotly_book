@@ -25,7 +25,7 @@
 <meta name="author" content="Carson Sievert">
 
 
-<meta name="date" content="2019-02-13">
+<meta name="date" content="2019-02-21">
 
   <meta name="viewport" content="width=device-width, initial-scale=1">
   <meta name="apple-mobile-web-app-capable" content="yes">
@@ -190,9 +190,14 @@ code span.wa { color: #60a0b0; font-weight: bold; font-style: italic; } /* Warni
 </ul></li>
 </ul></li>
 <li class="chapter" data-level="5" data-path="maps.html"><a href="maps.html"><i class="fa fa-check"></i><b>5</b> Maps</a><ul>
-<li class="chapter" data-level="5.1" data-path="maps.html"><a href="maps.html#using-scatter-traces"><i class="fa fa-check"></i><b>5.1</b> Using scatter traces</a></li>
-<li class="chapter" data-level="5.2" data-path="maps.html"><a href="maps.html#choropleths"><i class="fa fa-check"></i><b>5.2</b> Choropleths</a></li>
-<li class="chapter" data-level="5.3" data-path="maps.html"><a href="maps.html#using-geom_sf"><i class="fa fa-check"></i><b>5.3</b> Using <code>geom_sf()</code></a></li>
+<li class="chapter" data-level="5.1" data-path="maps.html"><a href="maps.html#simple-maps"><i class="fa fa-check"></i><b>5.1</b> Simple maps</a><ul>
+<li class="chapter" data-level="5.1.1" data-path="maps.html"><a href="maps.html#overview-1"><i class="fa fa-check"></i><b>5.1.1</b> Overview</a></li>
+<li class="chapter" data-level="5.1.2" data-path="maps.html"><a href="maps.html#choropleths"><i class="fa fa-check"></i><b>5.1.2</b> Choropleths</a></li>
+</ul></li>
+<li class="chapter" data-level="5.2" data-path="maps.html"><a href="maps.html#custom-maps"><i class="fa fa-check"></i><b>5.2</b> Custom maps</a><ul>
+<li class="chapter" data-level="5.2.1" data-path="maps.html"><a href="maps.html#sf"><i class="fa fa-check"></i><b>5.2.1</b> Simple features (sf)</a></li>
+<li class="chapter" data-level="5.2.2" data-path="maps.html"><a href="maps.html#devil-in-the-details"><i class="fa fa-check"></i><b>5.2.2</b> Devil in the details</a></li>
+</ul></li>
 </ul></li>
 <li class="chapter" data-level="6" data-path="bars-histograms.html"><a href="bars-histograms.html"><i class="fa fa-check"></i><b>6</b> Bars &amp; histograms</a><ul>
 <li class="chapter" data-level="6.1" data-path="bars-histograms.html"><a href="bars-histograms.html#multiple-numeric-distributions"><i class="fa fa-check"></i><b>6.1</b> Multiple numeric distributions</a></li>
@@ -271,6 +276,7 @@ code span.wa { color: #60a0b0; font-weight: bold; font-style: italic; } /* Warni
 <li class="chapter" data-level="18.4" data-path="linking-server-side.html"><a href="linking-server-side.html#advanced-applications"><i class="fa fa-check"></i><b>18.4</b> Advanced applications</a><ul>
 <li class="chapter" data-level="18.4.1" data-path="linking-server-side.html"><a href="linking-server-side.html#drill-down"><i class="fa fa-check"></i><b>18.4.1</b> Drill-down</a></li>
 <li class="chapter" data-level="18.4.2" data-path="linking-server-side.html"><a href="linking-server-side.html#crossfilter"><i class="fa fa-check"></i><b>18.4.2</b> Cross-filter</a></li>
+<li class="chapter" data-level="18.4.3" data-path="linking-server-side.html"><a href="linking-server-side.html#drag-brush"><i class="fa fa-check"></i><b>18.4.3</b> A draggable brush</a></li>
 </ul></li>
 <li class="chapter" data-level="18.5" data-path="linking-server-side.html"><a href="linking-server-side.html#discussion"><i class="fa fa-check"></i><b>18.5</b> Discussion</a></li>
 </ul></li>
@@ -344,7 +350,7 @@ code span.wa { color: #60a0b0; font-weight: bold; font-style: italic; } /* Warni
             <section class="normal" id="section-">
 <div id="json" class="section level1">
 <h1><span class="header-section-number">24</span> Working with JSON</h1>
-<p>JavaScript and other web technologies are intimidating and time-consuming to learn, but by borrowing some knowledge of R’s data structures<a href="#fn26" class="footnote-ref" id="fnref26"><sup>26</sup></a>, we can get up and running with useful examples fairly quickly. JavaScript Object Notation (JSON) is a popular data-interchange format that JavaScript uses to work with data. As turns out, working with JSON in JS is somewhat similar to working with <code>list()</code>s in R – both are recursive and heterogenous data structures that have similar semantics for accessing values. In JSON, there are three basic building blocks: objects, arrays, and primitive data types (e.g., number, string, boolean, <code>null</code>, <code>undefined</code>).</p>
+<p>JavaScript and other web technologies are intimidating and time-consuming to learn, but by borrowing some knowledge of R’s data structures<a href="#fn28" class="footnote-ref" id="fnref28"><sup>28</sup></a>, we can get up and running with useful examples fairly quickly. JavaScript Object Notation (JSON) is a popular data-interchange format that JavaScript uses to work with data. As turns out, working with JSON in JS is somewhat similar to working with <code>list()</code>s in R – both are recursive and heterogenous data structures that have similar semantics for accessing values. In JSON, there are three basic building blocks: objects, arrays, and primitive data types (e.g., number, string, boolean, <code>null</code>, <code>undefined</code>).</p>
 <p>Loosely speaking, a JSON array is similar to a un-named <code>list()</code> in R and a JSON object is similar to an un-named <code>list()</code>. In fact, if you’re already comfortable creating and subsetting named and un-named <code>list()</code>s in R, you can transfer some of that knowledge to JSON arrays and objects.</p>
 <div id="assignment-subsetting-and-iteration" class="section level2">
 <h2><span class="header-section-number">24.1</span> Assignment, subsetting, and iteration</h2>
@@ -418,8 +424,8 @@ FIGURE 24.1: Using the plotly <code>schema()</code> to obtain more information a
 </div>
 <div class="footnotes">
 <hr />
-<ol start="26">
-<li id="fn26"><p>If you’d like a nice succinct overview on the topic, see <a href="http://adv-r.had.co.nz/Data-structures.html" class="uri">http://adv-r.had.co.nz/Data-structures.html</a><a href="json.html#fnref26" class="footnote-back">↩</a></p></li>
+<ol start="28">
+<li id="fn28"><p>If you’d like a nice succinct overview on the topic, see <a href="http://adv-r.had.co.nz/Data-structures.html" class="uri">http://adv-r.had.co.nz/Data-structures.html</a><a href="json.html#fnref28" class="footnote-back">↩</a></p></li>
 </ol>
 </div>
 <script>

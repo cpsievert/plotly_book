@@ -25,7 +25,7 @@
 <meta name="author" content="Carson Sievert">
 
 
-<meta name="date" content="2019-02-13">
+<meta name="date" content="2019-02-21">
 
   <meta name="viewport" content="width=device-width, initial-scale=1">
   <meta name="apple-mobile-web-app-capable" content="yes">
@@ -190,9 +190,14 @@ code span.wa { color: #60a0b0; font-weight: bold; font-style: italic; } /* Warni
 </ul></li>
 </ul></li>
 <li class="chapter" data-level="5" data-path="maps.html"><a href="maps.html"><i class="fa fa-check"></i><b>5</b> Maps</a><ul>
-<li class="chapter" data-level="5.1" data-path="maps.html"><a href="maps.html#using-scatter-traces"><i class="fa fa-check"></i><b>5.1</b> Using scatter traces</a></li>
-<li class="chapter" data-level="5.2" data-path="maps.html"><a href="maps.html#choropleths"><i class="fa fa-check"></i><b>5.2</b> Choropleths</a></li>
-<li class="chapter" data-level="5.3" data-path="maps.html"><a href="maps.html#using-geom_sf"><i class="fa fa-check"></i><b>5.3</b> Using <code>geom_sf()</code></a></li>
+<li class="chapter" data-level="5.1" data-path="maps.html"><a href="maps.html#simple-maps"><i class="fa fa-check"></i><b>5.1</b> Simple maps</a><ul>
+<li class="chapter" data-level="5.1.1" data-path="maps.html"><a href="maps.html#overview-1"><i class="fa fa-check"></i><b>5.1.1</b> Overview</a></li>
+<li class="chapter" data-level="5.1.2" data-path="maps.html"><a href="maps.html#choropleths"><i class="fa fa-check"></i><b>5.1.2</b> Choropleths</a></li>
+</ul></li>
+<li class="chapter" data-level="5.2" data-path="maps.html"><a href="maps.html#custom-maps"><i class="fa fa-check"></i><b>5.2</b> Custom maps</a><ul>
+<li class="chapter" data-level="5.2.1" data-path="maps.html"><a href="maps.html#sf"><i class="fa fa-check"></i><b>5.2.1</b> Simple features (sf)</a></li>
+<li class="chapter" data-level="5.2.2" data-path="maps.html"><a href="maps.html#devil-in-the-details"><i class="fa fa-check"></i><b>5.2.2</b> Devil in the details</a></li>
+</ul></li>
 </ul></li>
 <li class="chapter" data-level="6" data-path="bars-histograms.html"><a href="bars-histograms.html"><i class="fa fa-check"></i><b>6</b> Bars &amp; histograms</a><ul>
 <li class="chapter" data-level="6.1" data-path="bars-histograms.html"><a href="bars-histograms.html#multiple-numeric-distributions"><i class="fa fa-check"></i><b>6.1</b> Multiple numeric distributions</a></li>
@@ -271,6 +276,7 @@ code span.wa { color: #60a0b0; font-weight: bold; font-style: italic; } /* Warni
 <li class="chapter" data-level="18.4" data-path="linking-server-side.html"><a href="linking-server-side.html#advanced-applications"><i class="fa fa-check"></i><b>18.4</b> Advanced applications</a><ul>
 <li class="chapter" data-level="18.4.1" data-path="linking-server-side.html"><a href="linking-server-side.html#drill-down"><i class="fa fa-check"></i><b>18.4.1</b> Drill-down</a></li>
 <li class="chapter" data-level="18.4.2" data-path="linking-server-side.html"><a href="linking-server-side.html#crossfilter"><i class="fa fa-check"></i><b>18.4.2</b> Cross-filter</a></li>
+<li class="chapter" data-level="18.4.3" data-path="linking-server-side.html"><a href="linking-server-side.html#drag-brush"><i class="fa fa-check"></i><b>18.4.3</b> A draggable brush</a></li>
 </ul></li>
 <li class="chapter" data-level="18.5" data-path="linking-server-side.html"><a href="linking-server-side.html#discussion"><i class="fa fa-check"></i><b>18.5</b> Discussion</a></li>
 </ul></li>
@@ -344,8 +350,8 @@ code span.wa { color: #60a0b0; font-weight: bold; font-style: italic; } /* Warni
             <section class="normal" id="section-">
 <div id="bars-histograms" class="section level1">
 <h1><span class="header-section-number">6</span> Bars &amp; histograms</h1>
-<p>The <code>add_bars()</code> and <code>add_histogram()</code> functions wrap the <a href="https://plot.ly/r/reference/#bar">bar</a> and <a href="https://plot.ly/r/reference/#histogram">histogram</a> plotly.js trace types. The main difference between them is that bar traces require bar heights (both <code>x</code> and <code>y</code>), whereas histogram traces require just a single variable, and plotly.js handles binning in the browser.<a href="#fn8" class="footnote-ref" id="fnref8"><sup>8</sup></a> And perhaps confusingly, both of these functions can be used to visualize the distribution of either a numeric or a discrete variable. So, essentially, the only difference between them is where the binning occurs.</p>
-<p>Figure <a href="bars-histograms.html#fig:numeric">6.1</a> compares the default binning algorithm in plotly.js to a few different algorithms available in R via the <code>hist()</code> function. Although plotly.js has the ability to customize histogram bins via <a href="https://plot.ly/r/reference/#histogram-xbins"><code>xbins</code></a>/<a href="https://plot.ly/r/reference/#histogram-ybins"><code>ybins</code></a>, R has diverse facilities for estimating the optimal number of bins in a histogram that we can easily leverage.<a href="#fn9" class="footnote-ref" id="fnref9"><sup>9</sup></a> The <code>hist()</code> function alone allows us to reference 3 famous algorithms by name <span class="citation">(Sturges <a href="#ref-Sturges">1926</a>)</span>; <span class="citation">(Freedman and Diaconis <a href="#ref-FD">1981</a>)</span>; <span class="citation">(Scott <a href="#ref-hist-scott">1979</a>)</span>, but there are also packages (e.g. the <strong>histogram</strong> package) which extend this interface to incorporate more methodology <span class="citation">(Mildenberger, Rozenholc, and Zasada. <a href="#ref-histogram">2009</a>)</span>. The <code>price_hist()</code> function below wraps the <code>hist()</code> function to obtain the binning results, and map those bins to a plotly version of the histogram using <code>add_bars()</code>.</p>
+<p>The <code>add_bars()</code> and <code>add_histogram()</code> functions wrap the <a href="https://plot.ly/r/reference/#bar">bar</a> and <a href="https://plot.ly/r/reference/#histogram">histogram</a> plotly.js trace types. The main difference between them is that bar traces require bar heights (both <code>x</code> and <code>y</code>), whereas histogram traces require just a single variable, and plotly.js handles binning in the browser.<a href="#fn9" class="footnote-ref" id="fnref9"><sup>9</sup></a> And perhaps confusingly, both of these functions can be used to visualize the distribution of either a numeric or a discrete variable. So, essentially, the only difference between them is where the binning occurs.</p>
+<p>Figure <a href="bars-histograms.html#fig:numeric">6.1</a> compares the default binning algorithm in plotly.js to a few different algorithms available in R via the <code>hist()</code> function. Although plotly.js has the ability to customize histogram bins via <a href="https://plot.ly/r/reference/#histogram-xbins"><code>xbins</code></a>/<a href="https://plot.ly/r/reference/#histogram-ybins"><code>ybins</code></a>, R has diverse facilities for estimating the optimal number of bins in a histogram that we can easily leverage.<a href="#fn10" class="footnote-ref" id="fnref10"><sup>10</sup></a> The <code>hist()</code> function alone allows us to reference 3 famous algorithms by name <span class="citation">(Sturges <a href="#ref-Sturges">1926</a>)</span>; <span class="citation">(Freedman and Diaconis <a href="#ref-FD">1981</a>)</span>; <span class="citation">(Scott <a href="#ref-hist-scott">1979</a>)</span>, but there are also packages (e.g. the <strong>histogram</strong> package) which extend this interface to incorporate more methodology <span class="citation">(Mildenberger, Rozenholc, and Zasada. <a href="#ref-histogram">2009</a>)</span>. The <code>price_hist()</code> function below wraps the <code>hist()</code> function to obtain the binning results, and map those bins to a plotly version of the histogram using <code>add_bars()</code>.</p>
 <pre class="sourceCode r"><code class="sourceCode r">p1 &lt;-<span class="st"> </span><span class="kw">plot_ly</span>(diamonds, <span class="dt">x =</span> <span class="op">~</span>price) <span class="op">%&gt;%</span><span class="st"> </span><span class="kw">add_histogram</span>(<span class="dt">name =</span> <span class="st">&quot;plotly.js&quot;</span>)
 
 price_hist &lt;-<span class="st"> </span><span class="cf">function</span>(<span class="dt">method =</span> <span class="st">&quot;FD&quot;</span>) {
@@ -364,7 +370,7 @@ price_hist &lt;-<span class="st"> </span><span class="cf">function</span>(<span 
 FIGURE 6.1: plotly.js’s default binning algorithm versus R’s <code>hist()</code> default
 </p>
 </div>
-<p>Figure <a href="bars-histograms.html#fig:discrete">6.2</a> demonstrates two ways of creating a basic bar chart. Although the visual results are the same, its worth noting the difference in implementation. The <code>add_histogram()</code> function sends all of the observed values to the browser and lets plotly.js perform the binning. It takes more human effort to perform the binning in R, but doing so has the benefit of sending less data, and requiring less computation work of the web browser. In this case, we have only about 50,000 records, so there is not much of a difference in page load times or page size. However, with 1 Million records, page load time more than doubles and page size nearly doubles.<a href="#fn10" class="footnote-ref" id="fnref10"><sup>10</sup></a></p>
+<p>Figure <a href="bars-histograms.html#fig:discrete">6.2</a> demonstrates two ways of creating a basic bar chart. Although the visual results are the same, its worth noting the difference in implementation. The <code>add_histogram()</code> function sends all of the observed values to the browser and lets plotly.js perform the binning. It takes more human effort to perform the binning in R, but doing so has the benefit of sending less data, and requiring less computation work of the web browser. In this case, we have only about 50,000 records, so there is not much of a difference in page load times or page size. However, with 1 Million records, page load time more than doubles and page size nearly doubles.<a href="#fn11" class="footnote-ref" id="fnref11"><sup>11</sup></a></p>
 <pre class="sourceCode r"><code class="sourceCode r">p1 &lt;-<span class="st"> </span><span class="kw">plot_ly</span>(diamonds, <span class="dt">x =</span> <span class="op">~</span>cut) <span class="op">%&gt;%</span><span class="st"> </span><span class="kw">add_histogram</span>()
 
 p2 &lt;-<span class="st"> </span>diamonds <span class="op">%&gt;%</span>
@@ -382,7 +388,7 @@ FIGURE 6.2: Number of diamonds by cut.
 </div>
 <div id="multiple-numeric-distributions" class="section level2">
 <h2><span class="header-section-number">6.1</span> Multiple numeric distributions</h2>
-<p>It is often useful to see how the numeric distribution changes with respect to a discrete variable. When using bars to visualize multiple numeric distributions, I recommend plotting each distribution on its own axis, rather than trying to overlay them on a single axis.<a href="#fn11" class="footnote-ref" id="fnref11"><sup>11</sup></a>. This is where the <a href="#subplot"><code>subplot()</code> infrastructure</a>, and its support for trellis displays, comes in handy. Figure <a href="bars-histograms.html#fig:many-prices">6.3</a> shows a trellis display of diamond price by diamond color. Note how the <code>one_plot()</code> function defines what to display on each panel, then a split-apply-recombine strategy is employed to generate the trellis display.</p>
+<p>It is often useful to see how the numeric distribution changes with respect to a discrete variable. When using bars to visualize multiple numeric distributions, I recommend plotting each distribution on its own axis, rather than trying to overlay them on a single axis.<a href="#fn12" class="footnote-ref" id="fnref12"><sup>12</sup></a>. This is where the <a href="#subplot"><code>subplot()</code> infrastructure</a>, and its support for trellis displays, comes in handy. Figure <a href="bars-histograms.html#fig:many-prices">6.3</a> shows a trellis display of diamond price by diamond color. Note how the <code>one_plot()</code> function defines what to display on each panel, then a split-apply-recombine strategy is employed to generate the trellis display.</p>
 <pre class="sourceCode r"><code class="sourceCode r">one_plot &lt;-<span class="st"> </span><span class="cf">function</span>(d) {
   <span class="kw">plot_ly</span>(d, <span class="dt">x =</span> <span class="op">~</span>price) <span class="op">%&gt;%</span>
 <span class="st">    </span><span class="kw">add_annotations</span>(
@@ -467,11 +473,11 @@ FIGURE 6.6: Using ggmosaic and ggplotly() to create advanced interactive visuali
 </div>
 <div class="footnotes">
 <hr />
-<ol start="8">
-<li id="fn8"><p>This has some interesting applications for <a href="#linked-highlighting">linked highlighting</a> as it allows for summary statistics to be computed on-the-fly based on a selection<a href="bars-histograms.html#fnref8" class="footnote-back">↩</a></p></li>
-<li id="fn9"><p>Optimal in this context is the number of bins which minimizes the distance between the empirical histogram and the underlying density.<a href="bars-histograms.html#fnref9" class="footnote-back">↩</a></p></li>
-<li id="fn10"><p>These tests were run on Google Chrome and loaded a page with a single bar chart. <a href="https://www.webpagetest.org/result/160924_DP_JBX/">Here</a> are the results for <code>add_histogram()</code> and <a href="https://www.webpagetest.org/result/160924_QG_JA1/">here</a> are the results for <code>add_bars()</code> <a href="bars-histograms.html#fnref10" class="footnote-back">↩</a></p></li>
-<li id="fn11"><p>It’s much easier to visualize multiple numeric distributions on a single axis using <a href="scatter-traces.html#lines">lines</a><a href="bars-histograms.html#fnref11" class="footnote-back">↩</a></p></li>
+<ol start="9">
+<li id="fn9"><p>This has some interesting applications for <a href="#linked-highlighting">linked highlighting</a> as it allows for summary statistics to be computed on-the-fly based on a selection<a href="bars-histograms.html#fnref9" class="footnote-back">↩</a></p></li>
+<li id="fn10"><p>Optimal in this context is the number of bins which minimizes the distance between the empirical histogram and the underlying density.<a href="bars-histograms.html#fnref10" class="footnote-back">↩</a></p></li>
+<li id="fn11"><p>These tests were run on Google Chrome and loaded a page with a single bar chart. <a href="https://www.webpagetest.org/result/160924_DP_JBX/">Here</a> are the results for <code>add_histogram()</code> and <a href="https://www.webpagetest.org/result/160924_QG_JA1/">here</a> are the results for <code>add_bars()</code> <a href="bars-histograms.html#fnref11" class="footnote-back">↩</a></p></li>
+<li id="fn12"><p>It’s much easier to visualize multiple numeric distributions on a single axis using <a href="scatter-traces.html#lines">lines</a><a href="bars-histograms.html#fnref12" class="footnote-back">↩</a></p></li>
 </ol>
 </div>
 <script>

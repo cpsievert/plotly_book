@@ -104,7 +104,7 @@ If you want to partition by more than one discrete variable, I recommend mapping
 ```{r cut-by-clarity-boxes, fig.width = 8, fig.cap = "Diamond prices by cut and clarity.", screenshot.alt = "screenshots/cut-by-clarity-boxes"}
 plot_ly(diamonds, x = ~price, y = ~interaction(clarity, cut)) %>%
   add_boxplot(color = ~clarity) %>%
-  layout(yaxis = list(title = ""), margin = list(l = 100))
+  layout(yaxis = list(title = ""))
 ```
 
 It is also helpful to sort the boxplots according to something meaningful, such as the median price. Figure \@ref(fig:cut-by-clarity-boxes-sorted) presents the same information as Figure \@ref(fig:cut-by-clarity-boxes), but sorts the boxplots by their median, and makes it immediately clear that diamonds with a cut of "SI2" have the highest diamond price, on average.
@@ -118,11 +118,11 @@ lvls <- d %>%
   group_by(cc) %>%
   summarise(m = median(price)) %>%
   arrange(m) %>%
-  .[["cc"]]
+  pull(cc)
 
 plot_ly(d, x = ~price, y = ~factor(cc, lvls)) %>%
   add_boxplot(color = ~clarity) %>%
-  layout(yaxis = list(title = ""), margin = list(l = 100))
+  layout(yaxis = list(title = ""))
 ```
 
 Similar to `add_histogram()`, `add_boxplot()` sends the raw data to the browser, and lets plotly.js compute summary statistics. Unfortunately, plotly.js does not yet allow precomputed statistics for boxplots.^[Follow the issue here <https://github.com/plotly/plotly.js/issues/242>]
