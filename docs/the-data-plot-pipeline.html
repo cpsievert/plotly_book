@@ -25,7 +25,7 @@
 <meta name="author" content="Carson Sievert">
 
 
-<meta name="date" content="2019-02-21">
+<meta name="date" content="2019-02-26">
 
   <meta name="viewport" content="width=device-width, initial-scale=1">
   <meta name="apple-mobile-web-app-capable" content="yes">
@@ -190,13 +190,12 @@ code span.wa { color: #60a0b0; font-weight: bold; font-style: italic; } /* Warni
 </ul></li>
 </ul></li>
 <li class="chapter" data-level="5" data-path="maps.html"><a href="maps.html"><i class="fa fa-check"></i><b>5</b> Maps</a><ul>
-<li class="chapter" data-level="5.1" data-path="maps.html"><a href="maps.html#simple-maps"><i class="fa fa-check"></i><b>5.1</b> Simple maps</a><ul>
+<li class="chapter" data-level="5.1" data-path="maps.html"><a href="maps.html#maps-integrated"><i class="fa fa-check"></i><b>5.1</b> Integrated maps</a><ul>
 <li class="chapter" data-level="5.1.1" data-path="maps.html"><a href="maps.html#overview-1"><i class="fa fa-check"></i><b>5.1.1</b> Overview</a></li>
 <li class="chapter" data-level="5.1.2" data-path="maps.html"><a href="maps.html#choropleths"><i class="fa fa-check"></i><b>5.1.2</b> Choropleths</a></li>
 </ul></li>
-<li class="chapter" data-level="5.2" data-path="maps.html"><a href="maps.html#custom-maps"><i class="fa fa-check"></i><b>5.2</b> Custom maps</a><ul>
+<li class="chapter" data-level="5.2" data-path="maps.html"><a href="maps.html#maps-custom"><i class="fa fa-check"></i><b>5.2</b> Custom maps</a><ul>
 <li class="chapter" data-level="5.2.1" data-path="maps.html"><a href="maps.html#sf"><i class="fa fa-check"></i><b>5.2.1</b> Simple features (sf)</a></li>
-<li class="chapter" data-level="5.2.2" data-path="maps.html"><a href="maps.html#devil-in-the-details"><i class="fa fa-check"></i><b>5.2.2</b> Devil in the details</a></li>
 </ul></li>
 </ul></li>
 <li class="chapter" data-level="6" data-path="bars-histograms.html"><a href="bars-histograms.html"><i class="fa fa-check"></i><b>6</b> Bars &amp; histograms</a><ul>
@@ -365,7 +364,7 @@ allCities <span class="op">%&gt;%</span>
 FIGURE 36.1: Monthly median house prices over time for 46 Texan cities (in blue). Houston is highlighted in orange.
 </p>
 </div>
-<p>Sometimes the directed acyclic graph property of a <strong>magrittr</strong> pipeline can be too restrictive for certain types of plots. In this example, after filtering the data down to Houston, there is no way to recover the original data inside the pipeline. The <code>add_fun()</code> function helps to work-around this restriction<a href="#fn32" class="footnote-ref" id="fnref32"><sup>32</sup></a> – it works by applying a function to the plotly object, but does not affect the data associated with the plotly object. This effectively provides a way to isolate data transformations within the pipeline<a href="#fn33" class="footnote-ref" id="fnref33"><sup>33</sup></a>. Figure <a href="the-data-plot-pipeline.html#fig:houston-vs-sa">36.2</a> uses this idea to highlight both Houston and San Antonio.</p>
+<p>Sometimes the directed acyclic graph property of a <strong>magrittr</strong> pipeline can be too restrictive for certain types of plots. In this example, after filtering the data down to Houston, there is no way to recover the original data inside the pipeline. The <code>add_fun()</code> function helps to work-around this restriction<a href="#fn34" class="footnote-ref" id="fnref34"><sup>34</sup></a> – it works by applying a function to the plotly object, but does not affect the data associated with the plotly object. This effectively provides a way to isolate data transformations within the pipeline<a href="#fn35" class="footnote-ref" id="fnref35"><sup>35</sup></a>. Figure <a href="the-data-plot-pipeline.html#fig:houston-vs-sa">36.2</a> uses this idea to highlight both Houston and San Antonio.</p>
 <pre class="sourceCode r"><code class="sourceCode r">allCities <span class="op">%&gt;%</span>
 <span class="st">  </span><span class="kw">add_fun</span>(<span class="cf">function</span>(plot) {
     plot <span class="op">%&gt;%</span><span class="st"> </span><span class="kw">filter</span>(city <span class="op">==</span><span class="st"> &quot;Houston&quot;</span>) <span class="op">%&gt;%</span><span class="st"> </span><span class="kw">add_lines</span>(<span class="dt">name =</span> <span class="st">&quot;Houston&quot;</span>)
@@ -450,9 +449,9 @@ FIGURE 36.4: Layering on a 4-year forecast from a exponential smoothing state sp
 </div>
 <div class="footnotes">
 <hr />
-<ol start="32">
-<li id="fn32"><p>Credit to Winston Chang and Hadley Wickham for this idea. The <code>add_fun()</code> is very much like <code>layer_f()</code> function in <strong>ggvis</strong>.<a href="the-data-plot-pipeline.html#fnref32" class="footnote-back">↩</a></p></li>
-<li id="fn33"><p>Also, effectively putting a <a href="http://www.memecreator.org/meme/yo-dawg-i-heard-u-like-pipelines-so-we-put-a-pipeline-in-your-pipeline">pipeline inside a pipeline</a><a href="the-data-plot-pipeline.html#fnref33" class="footnote-back">↩</a></p></li>
+<ol start="34">
+<li id="fn34"><p>Credit to Winston Chang and Hadley Wickham for this idea. The <code>add_fun()</code> is very much like <code>layer_f()</code> function in <strong>ggvis</strong>.<a href="the-data-plot-pipeline.html#fnref34" class="footnote-back">↩</a></p></li>
+<li id="fn35"><p>Also, effectively putting a <a href="http://www.memecreator.org/meme/yo-dawg-i-heard-u-like-pipelines-so-we-put-a-pipeline-in-your-pipeline">pipeline inside a pipeline</a><a href="the-data-plot-pipeline.html#fnref35" class="footnote-back">↩</a></p></li>
 </ol>
 </div>
 <script>

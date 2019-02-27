@@ -25,7 +25,7 @@
 <meta name="author" content="Carson Sievert">
 
 
-<meta name="date" content="2019-02-21">
+<meta name="date" content="2019-02-26">
 
   <meta name="viewport" content="width=device-width, initial-scale=1">
   <meta name="apple-mobile-web-app-capable" content="yes">
@@ -190,13 +190,12 @@ code span.wa { color: #60a0b0; font-weight: bold; font-style: italic; } /* Warni
 </ul></li>
 </ul></li>
 <li class="chapter" data-level="5" data-path="maps.html"><a href="maps.html"><i class="fa fa-check"></i><b>5</b> Maps</a><ul>
-<li class="chapter" data-level="5.1" data-path="maps.html"><a href="maps.html#simple-maps"><i class="fa fa-check"></i><b>5.1</b> Simple maps</a><ul>
+<li class="chapter" data-level="5.1" data-path="maps.html"><a href="maps.html#maps-integrated"><i class="fa fa-check"></i><b>5.1</b> Integrated maps</a><ul>
 <li class="chapter" data-level="5.1.1" data-path="maps.html"><a href="maps.html#overview-1"><i class="fa fa-check"></i><b>5.1.1</b> Overview</a></li>
 <li class="chapter" data-level="5.1.2" data-path="maps.html"><a href="maps.html#choropleths"><i class="fa fa-check"></i><b>5.1.2</b> Choropleths</a></li>
 </ul></li>
-<li class="chapter" data-level="5.2" data-path="maps.html"><a href="maps.html#custom-maps"><i class="fa fa-check"></i><b>5.2</b> Custom maps</a><ul>
+<li class="chapter" data-level="5.2" data-path="maps.html"><a href="maps.html#maps-custom"><i class="fa fa-check"></i><b>5.2</b> Custom maps</a><ul>
 <li class="chapter" data-level="5.2.1" data-path="maps.html"><a href="maps.html#sf"><i class="fa fa-check"></i><b>5.2.1</b> Simple features (sf)</a></li>
-<li class="chapter" data-level="5.2.2" data-path="maps.html"><a href="maps.html#devil-in-the-details"><i class="fa fa-check"></i><b>5.2.2</b> Devil in the details</a></li>
 </ul></li>
 </ul></li>
 <li class="chapter" data-level="6" data-path="bars-histograms.html"><a href="bars-histograms.html"><i class="fa fa-check"></i><b>6</b> Bars &amp; histograms</a><ul>
@@ -379,7 +378,7 @@ FIGURE 17.2: A visual depiction of how <code>highlight_key()</code> attaches met
 <p>Generally speaking, <code>highlight_key()</code> assigns data values to graphical marks so that when graphical mark(s) are <em>directly manipulated</em> through the <code>on</code> event, it uses the corresponding data values (call it <code>$SELECTION_VALUE</code>) to perform an SQL query of the following form.</p>
 <pre class="sourceCode sql"><code class="sourceCode sql"><span class="kw">SELECT</span> <span class="op">*</span> <span class="kw">FROM</span> mtcars <span class="kw">WHERE</span> cyl <span class="kw">IN</span> $SELECTION_VALUE</code></pre>
 <p>For a more useful example, lets use graphical querying to pose interactive queries of the <code>txhousing</code> dataset. This data contains monthly housing sales in Texan cities acquired from the <a href="http://recenter.tamu.edu/">TAMU real estate center</a> and made available via the <strong>ggplot2</strong> package. Figure <a href="client-side-linking.html#fig:txmissing">17.3</a> shows the median house price in each city over time which produces a rather busy (spaghetti) plot. To help combat the overplotting, we could add the ability to click a particular a given point on a line to highlight that particular city. This interactive ability is enabled by simply using <code>highlight_key()</code> to declare that the <code>city</code> variable be used as the querying criteria within the graphical querying framework.</p>
-<p>One subtlety to be aware of in terms of what makes Figure <a href="client-side-linking.html#fig:txmissing">17.3</a> possible is that every point along a line may have a different data value assigned to it. In this case, since the <code>city</code> column is used as both the visual grouping <em>and</em> querying variable, we effectively get the ability to highlight a group by clicking on any point along that line. Section <a href="client-side-linking.html#trellis-linking">17.4.1</a> has examples of using different grouping and querying variables to query multiple related groups of visual geometries at once, which can be a powerful technique.<a href="#fn16" class="footnote-ref" id="fnref16"><sup>16</sup></a></p>
+<p>One subtlety to be aware of in terms of what makes Figure <a href="client-side-linking.html#fig:txmissing">17.3</a> possible is that every point along a line may have a different data value assigned to it. In this case, since the <code>city</code> column is used as both the visual grouping <em>and</em> querying variable, we effectively get the ability to highlight a group by clicking on any point along that line. Section <a href="client-side-linking.html#trellis-linking">17.4.1</a> has examples of using different grouping and querying variables to query multiple related groups of visual geometries at once, which can be a powerful technique.<a href="#fn18" class="footnote-ref" id="fnref18"><sup>18</sup></a></p>
 <pre class="sourceCode r"><code class="sourceCode r"><span class="co"># load the `txhousing` dataset</span>
 <span class="kw">data</span>(txhousing, <span class="dt">package =</span> <span class="st">&quot;ggplot2&quot;</span>)
 
@@ -400,7 +399,7 @@ base <span class="op">%&gt;%</span>
 FIGURE 17.3: Graphical query of housing prices in various Texas cities. The query in this particular example must be triggered through clicking directly on a time series.
 </p>
 </div>
-<p>Querying a city via direct manipulation is somewhat helpful for focusing on a particular time series, but it’s not so helpful for querying a city by name and/or comparing multiple cities at once. As it turns out, <strong>plotly</strong> makes it easy to add a selectize.js powered dropdown widget for querying by name (aka indirect manipulation) by setting <code>selectize = TRUE</code>.<a href="#fn17" class="footnote-ref" id="fnref17"><sup>17</sup></a> When it comes to comparing multiple cities, we want to be able to both retain previous selections (<code>persistent = TRUE</code>) as well as control the highlighting color (<code>dynamic = TRUE</code>). This videos explains how to use these features in Figure <a href="client-side-linking.html#fig:txmissing-modes">17.4</a> to compare pricing across different cities.</p>
+<p>Querying a city via direct manipulation is somewhat helpful for focusing on a particular time series, but it’s not so helpful for querying a city by name and/or comparing multiple cities at once. As it turns out, <strong>plotly</strong> makes it easy to add a selectize.js powered dropdown widget for querying by name (aka indirect manipulation) by setting <code>selectize = TRUE</code>.<a href="#fn19" class="footnote-ref" id="fnref19"><sup>19</sup></a> When it comes to comparing multiple cities, we want to be able to both retain previous selections (<code>persistent = TRUE</code>) as well as control the highlighting color (<code>dynamic = TRUE</code>). This videos explains how to use these features in Figure <a href="client-side-linking.html#fig:txmissing-modes">17.4</a> to compare pricing across different cities.</p>
 <pre class="sourceCode r"><code class="sourceCode r"><span class="kw">highlight</span>(time_series, <span class="dt">on =</span> <span class="st">&quot;plotly_click&quot;</span>, <span class="dt">selectize =</span> <span class="ot">TRUE</span>, <span class="dt">dynamic =</span> <span class="ot">TRUE</span>, <span class="dt">persistent =</span> <span class="ot">TRUE</span>)</code></pre>
 <div class="figure" style="text-align: center"><span id="fig:txmissing-modes"></span>
 <div id="htmlwidget-0d1ebf5e8869bb59064e" style="width:100%;height:480px;" class="plotly html-widget"></div>
@@ -462,7 +461,7 @@ Figure \@ref(fig:txhousing-miss) is a fairly simple example of how **plotly**'s 
 <p>Section <a href="client-side-linking.html#graphical-queries">17.1</a> provides an overview of <strong>plotly</strong>’s framework for <em>highlight</em> events, but it also supports <em>filter</em> events. These events trigger slightly different logic:</p>
 <ul>
 <li>A highlight event dims the opacity of existing marks, then adds an additional graphical layer representing the selection.</li>
-<li>A filter event completely remove existing marks and rescales axes to the remaining data.<a href="#fn18" class="footnote-ref" id="fnref18"><sup>18</sup></a></li>
+<li>A filter event completely remove existing marks and rescales axes to the remaining data.<a href="#fn20" class="footnote-ref" id="fnref20"><sup>20</sup></a></li>
 </ul>
 <p>Figure <a href="client-side-linking.html#fig:filter-highlight">17.8</a> provides a quick visual depiction in the difference between filter and highlight events. At least currently, filter events must be fired from filter widgets from the <strong>crosstalk</strong> package, and these widgets expect an object of class <code>SharedData</code> as input. As it turns out, the <code>highlight_key()</code> function, introduced in section <a href="client-side-linking.html#graphical-queries">17.1</a>, creates a <code>SharedData</code> instance and is essentially a wrapper for <code>crosstalk::SharedData$new()</code>.</p>
 <pre class="sourceCode r"><code class="sourceCode r"><span class="kw">class</span>(<span class="kw">highlight_key</span>(mtcars))
@@ -514,7 +513,7 @@ widgets &lt;-<span class="st"> </span><span class="kw">bscols</span>(
 FIGURE 17.9: Filtering on multiple variables.
 </p>
 </div>
-<p>As Figure <a href="client-side-linking.html#fig:plotly-leaflet-filter">17.10</a> demonstrates, filter and highlight events can work in conjunction with various <strong>htmlwidgets</strong>. In fact, since the semantics of filter are more well-defined than highlight, linking filter events across <strong>htmlwidgets</strong> via <strong>crosstalk</strong> should generally be more well-supported.<a href="#fn19" class="footnote-ref" id="fnref19"><sup>19</sup></a></p>
+<p>As Figure <a href="client-side-linking.html#fig:plotly-leaflet-filter">17.10</a> demonstrates, filter and highlight events can work in conjunction with various <strong>htmlwidgets</strong>. In fact, since the semantics of filter are more well-defined than highlight, linking filter events across <strong>htmlwidgets</strong> via <strong>crosstalk</strong> should generally be more well-supported.<a href="#fn21" class="footnote-ref" id="fnref21"><sup>21</sup></a></p>
 <pre class="sourceCode r"><code class="sourceCode r"><span class="kw">library</span>(leaflet)
 
 eqs &lt;-<span class="st"> </span><span class="kw">highlight_key</span>(quakes)
@@ -782,7 +781,7 @@ FIGURE 17.21: Clicking on a density estimate to highlight all the raw observatio
 </div>
 <div id="geo-spatial-queries" class="section level3">
 <h3><span class="header-section-number">17.4.4</span> Geo-spatial queries</h3>
-<p>Section <a href="maps.html#maps">5</a> covers several different approaches<a href="#fn20" class="footnote-ref" id="fnref20"><sup>20</sup></a> for rendering geo-spatial information, and each approach supports graphical querying. One clever approach is to render a 3D globe as a surface, then layer on geo-spatial data on top of that globe with a scatter3d trace. Not only is 3D a nice way to visualize geospatial data that has altitude (in addition to latitude and longitude), but it also grants the ability to interpolate color along a path. Figure <a href="client-side-linking.html#fig:storms">17.22</a> renders tropical storms paths on a 3D globe and uses color to encode the altitude of the storm at that point. Below the 3D view is a 2D view of altitude versus distance traveled. These views are linked by a graphical query where the querying variable is the storm ID.</p>
+<p>Section <a href="maps.html#maps">5</a> covers several different approaches<a href="#fn22" class="footnote-ref" id="fnref22"><sup>22</sup></a> for rendering geo-spatial information, and each approach supports graphical querying. One clever approach is to render a 3D globe as a surface, then layer on geo-spatial data on top of that globe with a scatter3d trace. Not only is 3D a nice way to visualize geospatial data that has altitude (in addition to latitude and longitude), but it also grants the ability to interpolate color along a path. Figure <a href="client-side-linking.html#fig:storms">17.22</a> renders tropical storms paths on a 3D globe and uses color to encode the altitude of the storm at that point. Below the 3D view is a 2D view of altitude versus distance traveled. These views are linked by a graphical query where the querying variable is the storm ID.</p>
 <pre class="sourceCode r"><code class="sourceCode r"><span class="kw">demo</span>(<span class="st">&quot;sf-plotly-3D-globe&quot;</span>, <span class="dt">package =</span> <span class="st">&quot;plotly&quot;</span>)</code></pre>
 <div class="figure" style="text-align: center"><span id="fig:storms"></span>
 <iframe src="https://player.vimeo.com/video/257149623?title=0&amp;byline=0&amp;portrait=0" width="100%" height="400" frameborder="0" seamless="seamless" webkitAllowFullScreen mozallowfullscreen allowFullScreen></iframe>
@@ -987,7 +986,7 @@ dend1 &lt;-<span class="st"> </span><span class="kw">as.dendrogram</span>(hc)
 FIGURE 17.31: Leveraging hierarchical selection and persistent brushing to paint branches of a dendrogram.
 </p>
 </div>
-<p>Figure <a href="client-side-linking.html#fig:tour-USArrests">17.32</a> links the dendrogram from Figure <a href="client-side-linking.html#fig:dendro">17.31</a> to a map of the US and a grand tour of the arrest statistics to better understand and diagnose a hierarchical clustering methodology. By highlighting branches of the dendrogram, we can effectively choose a partitioning of the states into similar groups, and see how that model choice projects to the data space<a href="#fn21" class="footnote-ref" id="fnref21"><sup>21</sup></a> through a grand tour. The grand tour is a special kind of animation that interpolates between random 2D projections of numeric data allowing the viewer to perceive the shape of a high-dimensional point cloud <span class="citation">(Asimov <a href="#ref-grand-tour">1985</a>)</span>. Note how the grouping portrayed in Figure <a href="client-side-linking.html#fig:tour-USArrests">17.32</a> does a fairly good job of staying separated in the grand tour.</p>
+<p>Figure <a href="client-side-linking.html#fig:tour-USArrests">17.32</a> links the dendrogram from Figure <a href="client-side-linking.html#fig:dendro">17.31</a> to a map of the US and a grand tour of the arrest statistics to better understand and diagnose a hierarchical clustering methodology. By highlighting branches of the dendrogram, we can effectively choose a partitioning of the states into similar groups, and see how that model choice projects to the data space<a href="#fn23" class="footnote-ref" id="fnref23"><sup>23</sup></a> through a grand tour. The grand tour is a special kind of animation that interpolates between random 2D projections of numeric data allowing the viewer to perceive the shape of a high-dimensional point cloud <span class="citation">(Asimov <a href="#ref-grand-tour">1985</a>)</span>. Note how the grouping portrayed in Figure <a href="client-side-linking.html#fig:tour-USArrests">17.32</a> does a fairly good job of staying separated in the grand tour.</p>
 <pre class="sourceCode r"><code class="sourceCode r"><span class="kw">demo</span>(<span class="st">&quot;animation-tour-USArrests&quot;</span>, <span class="dt">package =</span> <span class="st">&quot;plotly&quot;</span>)</code></pre>
 <div class="figure" style="text-align: center"><span id="fig:tour-USArrests"></span>
 <iframe src="https://player.vimeo.com/video/307788058?title=0&amp;byline=0&amp;portrait=0" width="100%" height="400" frameborder="0" seamless="seamless" webkitAllowFullScreen mozallowfullscreen allowFullScreen></iframe>
@@ -1059,13 +1058,13 @@ Even within the scope of data views as graphical queries, there are numerous fea
 </div>
 <div class="footnotes">
 <hr />
-<ol start="16">
-<li id="fn16"><p>This sort of idea relates closely to the notion of generalized selections as described in <span class="citation">Heer, Agrawala, and Willett (<a href="#ref-heer2008generalized">2008</a>)</span>.<a href="client-side-linking.html#fnref16" class="footnote-back">↩</a></p></li>
-<li id="fn17"><p>The title that appears in the dropdown can be controlled via the <code>group</code> argument in the <code>highlight_key()</code> function. The primary purpose of the <code>group</code> argument is to isolate one group of linked plots from others.<a href="client-side-linking.html#fnref17" class="footnote-back">↩</a></p></li>
-<li id="fn18"><p>When using <code>ggplotly()</code>, you need to specify <code>dynamicTicks = TRUE</code>.<a href="client-side-linking.html#fnref18" class="footnote-back">↩</a></p></li>
-<li id="fn19"><p>All R packages with <strong>crosstalk</strong> support are currently listed here – <a href="https://rstudio.github.io/crosstalk/widgets.html" class="uri">https://rstudio.github.io/crosstalk/widgets.html</a><a href="client-side-linking.html#fnref19" class="footnote-back">↩</a></p></li>
-<li id="fn20"><p><span class="citation">Sievert (<a href="#ref-sf-blog-post">2018</a><a href="#ref-sf-blog-post">c</a>)</span> outlines the relative strengths and weaknesses of each approach.<a href="client-side-linking.html#fnref20" class="footnote-back">↩</a></p></li>
-<li id="fn21"><p>Typically statistical models are diagnosed by visualizing data in the model space rather than model(s) in the data space. As <span class="citation">Wickham, Cook, and Hofmann (<a href="#ref-model-vis-paper">2015</a>)</span> points, the latter approach can be a very effective way to better understand and diagnosis statistical models.<a href="client-side-linking.html#fnref21" class="footnote-back">↩</a></p></li>
+<ol start="18">
+<li id="fn18"><p>This sort of idea relates closely to the notion of generalized selections as described in <span class="citation">Heer, Agrawala, and Willett (<a href="#ref-heer2008generalized">2008</a>)</span>.<a href="client-side-linking.html#fnref18" class="footnote-back">↩</a></p></li>
+<li id="fn19"><p>The title that appears in the dropdown can be controlled via the <code>group</code> argument in the <code>highlight_key()</code> function. The primary purpose of the <code>group</code> argument is to isolate one group of linked plots from others.<a href="client-side-linking.html#fnref19" class="footnote-back">↩</a></p></li>
+<li id="fn20"><p>When using <code>ggplotly()</code>, you need to specify <code>dynamicTicks = TRUE</code>.<a href="client-side-linking.html#fnref20" class="footnote-back">↩</a></p></li>
+<li id="fn21"><p>All R packages with <strong>crosstalk</strong> support are currently listed here – <a href="https://rstudio.github.io/crosstalk/widgets.html" class="uri">https://rstudio.github.io/crosstalk/widgets.html</a><a href="client-side-linking.html#fnref21" class="footnote-back">↩</a></p></li>
+<li id="fn22"><p><span class="citation">Sievert (<a href="#ref-sf-blog-post">2018</a><a href="#ref-sf-blog-post">c</a>)</span> outlines the relative strengths and weaknesses of each approach.<a href="client-side-linking.html#fnref22" class="footnote-back">↩</a></p></li>
+<li id="fn23"><p>Typically statistical models are diagnosed by visualizing data in the model space rather than model(s) in the data space. As <span class="citation">Wickham, Cook, and Hofmann (<a href="#ref-model-vis-paper">2015</a>)</span> points, the latter approach can be a very effective way to better understand and diagnosis statistical models.<a href="client-side-linking.html#fnref23" class="footnote-back">↩</a></p></li>
 </ol>
 </div>
 <script>

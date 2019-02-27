@@ -25,7 +25,7 @@
 <meta name="author" content="Carson Sievert">
 
 
-<meta name="date" content="2019-02-21">
+<meta name="date" content="2019-02-26">
 
   <meta name="viewport" content="width=device-width, initial-scale=1">
   <meta name="apple-mobile-web-app-capable" content="yes">
@@ -190,13 +190,12 @@ code span.wa { color: #60a0b0; font-weight: bold; font-style: italic; } /* Warni
 </ul></li>
 </ul></li>
 <li class="chapter" data-level="5" data-path="maps.html"><a href="maps.html"><i class="fa fa-check"></i><b>5</b> Maps</a><ul>
-<li class="chapter" data-level="5.1" data-path="maps.html"><a href="maps.html#simple-maps"><i class="fa fa-check"></i><b>5.1</b> Simple maps</a><ul>
+<li class="chapter" data-level="5.1" data-path="maps.html"><a href="maps.html#maps-integrated"><i class="fa fa-check"></i><b>5.1</b> Integrated maps</a><ul>
 <li class="chapter" data-level="5.1.1" data-path="maps.html"><a href="maps.html#overview-1"><i class="fa fa-check"></i><b>5.1.1</b> Overview</a></li>
 <li class="chapter" data-level="5.1.2" data-path="maps.html"><a href="maps.html#choropleths"><i class="fa fa-check"></i><b>5.1.2</b> Choropleths</a></li>
 </ul></li>
-<li class="chapter" data-level="5.2" data-path="maps.html"><a href="maps.html#custom-maps"><i class="fa fa-check"></i><b>5.2</b> Custom maps</a><ul>
+<li class="chapter" data-level="5.2" data-path="maps.html"><a href="maps.html#maps-custom"><i class="fa fa-check"></i><b>5.2</b> Custom maps</a><ul>
 <li class="chapter" data-level="5.2.1" data-path="maps.html"><a href="maps.html#sf"><i class="fa fa-check"></i><b>5.2.1</b> Simple features (sf)</a></li>
-<li class="chapter" data-level="5.2.2" data-path="maps.html"><a href="maps.html#devil-in-the-details"><i class="fa fa-check"></i><b>5.2.2</b> Devil in the details</a></li>
 </ul></li>
 </ul></li>
 <li class="chapter" data-level="6" data-path="bars-histograms.html"><a href="bars-histograms.html"><i class="fa fa-check"></i><b>6</b> Bars &amp; histograms</a><ul>
@@ -424,7 +423,7 @@ p <span class="op">%&gt;%</span>
 <span class="co">#&gt; 5  1.71  30.5  27.9  33.0  1.26 1        -1 #3366… grey…     1        1</span>
 <span class="co">#&gt; 6  1.76  30.0  27.7  32.4  1.16 1        -1 #3366… grey…     1        1</span>
 <span class="co">#&gt; # … with 74 more rows, and 2 more variables: weight &lt;dbl&gt;, alpha &lt;dbl&gt;</span></code></pre>
-<p>The data shown above is the data ggplot2 uses to actually draw the fitted values (as a line) and standard error bounds (as a ribbon). Figure <a href="modifying-ggplotly-results.html#fig:se-annotations">37.6</a> leverages this data to add additional information about the model fit; in particular, it adds a vertical lines and annotations at the x-values that are associated with the highest and lowest amount uncertainty in the fitted values. Producing a plot like this with <strong>ggplot2</strong> would be impossible using <code>geom_smooth()</code> alone.<a href="#fn34" class="footnote-ref" id="fnref34"><sup>34</sup></a> Providing a simple visual clue like this can help combat visual misperceptions of uncertainty bands due to the sine illusion <span class="citation">(VanderPlas and Hofmann <a href="#ref-sine-illusion">2015</a>)</span>.</p>
+<p>The data shown above is the data ggplot2 uses to actually draw the fitted values (as a line) and standard error bounds (as a ribbon). Figure <a href="modifying-ggplotly-results.html#fig:se-annotations">37.6</a> leverages this data to add additional information about the model fit; in particular, it adds a vertical lines and annotations at the x-values that are associated with the highest and lowest amount uncertainty in the fitted values. Producing a plot like this with <strong>ggplot2</strong> would be impossible using <code>geom_smooth()</code> alone.<a href="#fn36" class="footnote-ref" id="fnref36"><sup>36</sup></a> Providing a simple visual clue like this can help combat visual misperceptions of uncertainty bands due to the sine illusion <span class="citation">(VanderPlas and Hofmann <a href="#ref-sine-illusion">2015</a>)</span>.</p>
 <pre class="sourceCode r"><code class="sourceCode r">p <span class="op">%&gt;%</span>
 <span class="st">  </span><span class="kw">ggplotly</span>(<span class="dt">layerData =</span> <span class="dv">2</span>, <span class="dt">originalData =</span> <span class="ot">FALSE</span>) <span class="op">%&gt;%</span>
 <span class="st">  </span><span class="kw">add_fun</span>(<span class="cf">function</span>(p) {
@@ -504,8 +503,8 @@ FIGURE 37.8: Leveraging output from <code>StatDensity2d</code> to add annotation
 </div>
 <div class="footnotes">
 <hr />
-<ol start="34">
-<li id="fn34"><p>It could be recreated by fitting the model via <code>loess()</code>, obtaining the fitted values and standard error with <code>predict()</code>, and feeding those results into <code>geom_line()</code>/<code>geom_ribbon()</code>/<code>geom_text()</code>/<code>geom_segment()</code>, but that process is much more onerous.<a href="modifying-ggplotly-results.html#fnref34" class="footnote-back">↩</a></p></li>
+<ol start="36">
+<li id="fn36"><p>It could be recreated by fitting the model via <code>loess()</code>, obtaining the fitted values and standard error with <code>predict()</code>, and feeding those results into <code>geom_line()</code>/<code>geom_ribbon()</code>/<code>geom_text()</code>/<code>geom_segment()</code>, but that process is much more onerous.<a href="modifying-ggplotly-results.html#fnref36" class="footnote-back">↩</a></p></li>
 </ol>
 </div>
 <script>
