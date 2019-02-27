@@ -20,7 +20,7 @@ add_lines(p)
 knitr::include_graphics("images/scatter-intro.svg")
 ```
 
-Section \@ref(intro-plotly) introduced 'aesthetic mapping' arguments (unique to the R package) which make it easier to map data to visual properties (e.g., `color`, `linetype`, etc). In addition to these arguments, **dplyr** groupings can be used to ensure there is at least one geometry per group. The top panel of Figure \@ref(fig:scatter-intro) demonstrates how `group_by()` could be used to effectively wrap the time series from Figure \@ref(fig:scatter-intro) by year, which can be useful for visualizing annual seasonality. Another approach to generating at least one geometry per 'group' is to use a sensible categorical aesthetic mapping (i.e., assign a factor/character to `color`, `linetype`, etc), as shown in the bottom panel of Figure \@ref(fig:scatter-intro).
+Section \@ref(intro-plotly) introduced 'aesthetic mapping' arguments (unique to the R package) which make it easier to map data to visual properties (e.g., `color`, `linetype`, etc). In addition to these arguments, **dplyr** groupings can be used to ensure there is at least one geometry per group. The top panel of Figure \@ref(fig:scatter-intro) demonstrates how `group_by()` could be used to effectively wrap the time series from Figure \@ref(fig:scatter-intro) by year, which can be useful for visualizing annual seasonality. Another approach to generating at least one geometry per 'group' is to provide categorical variable to a relevant aesthetic (e.g., `color`), as shown in the bottom panel of Figure \@ref(fig:scatter-intro).
 
 ```r
 library(lubridate)
@@ -36,13 +36,18 @@ econ %>%
 # multiple traces (less performant, but more interactive)
 plot_ly(econ, x = ~mnth, y = ~uempmed) %>%
   add_lines(color = ~ordered(yr))
+  
+# the split argument guarantees one trace per group level (regardless of the variable type)
+# this is useful if you want a consistent visual properties over multiple traces 
+# plot_ly(econ, x = ~mnth, y = ~uempmed) %>%
+#   add_lines(split = ~yr, color = I("black"))
 ```
 
 ```{r scatter-lines, echo = FALSE, fig.cap="Drawing multiple lines using **dplyr** groups (top panel) versus a categorical `color` mapping (bottom panel). Comparatively speaking, the bottom panel has more interactive capabilites (e.g., legend-based filtering and multiple tooltips), but it does not scale as well with many lines."}
 include_vimeo("316679591")
 ```
 
-Not only do these approaches differ in static visual properties, they also differ in interactive capabilties and computational performance. That's because, the grouping approach (top panel of Figure \@ref(fig:scatter-lines)) uses just one plotly.js trace (more performant, less interactive), whereas the `color` approach (bottom panel of Figure \@ref(fig:scatter-lines)) generates one trace per line/year. In this case, the benefit of having multiple traces is that we can perform interactive filtering via the legend and compare multiple y-values at a given x. The cost of having those capabilities is that plots starts to be become sluggish after a few hundred traces, whereas thousands of lines can be rendered fairly easily in one trace. See section \@ref(scaling) for more details on scaling and performance.
+Not only do these plots differ in visual appearance, they also differ in interactive capabilties, computational performance, and underlying implementation. That's because, the grouping approach (top panel of Figure \@ref(fig:scatter-lines)) uses just one plotly.js trace (more performant, less interactive), whereas the `color` approach (bottom panel of Figure \@ref(fig:scatter-lines)) generates one trace per line/year. In this case, the benefit of having multiple traces is that we can perform interactive filtering via the legend and compare multiple y-values at a given x. The cost of having those capabilities is that plots starts to be become sluggish after a few hundred traces, whereas thousands of lines can be rendered fairly easily in one trace. See section \@ref(scaling) for more details on scaling and performance.
 
 These features make it easier to get started using plotly.js, but it still pays off to learn how to use plotly.js directly. You won't find plotly.js attributes listed as explicit arguments in any **plotly** function (except for the special `type` attribute), but they are passed along verbatim to the plotly.js figure definition through the `...` operator. The scatter-based layers in this chapter fix the `type` plotly.js attribute to `"scatter"` as well as the [`mode`](https://plot.ly/r/reference/#scatter-mode) (e.g., `add_markers()` uses `mode='markers'` etc), but you could also use the lower-level `add_trace()` to work more directly with plotly.js. For example, Figure \@ref(fig:tooltip-praise) shows how to render markers, lines, and text in the same scatter trace. It also demonstrates how to leverage *nested* plotly.js attributes, like [`textfont`](https://plot.ly/r/reference/#scatter-textfont) and [`xaxis`](https://plot.ly/r/reference/#layout-xaxis) -- these attributes contain other attributes, so you need to supply a suitable named list to these arguments.
 

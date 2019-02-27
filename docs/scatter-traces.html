@@ -25,7 +25,7 @@
 <meta name="author" content="Carson Sievert">
 
 
-<meta name="date" content="2019-02-26">
+<meta name="date" content="2019-02-27">
 
   <meta name="viewport" content="width=device-width, initial-scale=1">
   <meta name="apple-mobile-web-app-capable" content="yes">
@@ -196,6 +196,8 @@ code span.wa { color: #60a0b0; font-weight: bold; font-style: italic; } /* Warni
 </ul></li>
 <li class="chapter" data-level="5.2" data-path="maps.html"><a href="maps.html#maps-custom"><i class="fa fa-check"></i><b>5.2</b> Custom maps</a><ul>
 <li class="chapter" data-level="5.2.1" data-path="maps.html"><a href="maps.html#sf"><i class="fa fa-check"></i><b>5.2.1</b> Simple features (sf)</a></li>
+<li class="chapter" data-level="5.2.2" data-path="maps.html"><a href="maps.html#cartograms"><i class="fa fa-check"></i><b>5.2.2</b> Cartograms</a></li>
+<li class="chapter" data-level="5.2.3" data-path="maps.html"><a href="maps.html#geo-faceting"><i class="fa fa-check"></i><b>5.2.3</b> Geo faceting</a></li>
 </ul></li>
 </ul></li>
 <li class="chapter" data-level="6" data-path="bars-histograms.html"><a href="bars-histograms.html"><i class="fa fa-check"></i><b>6</b> Bars &amp; histograms</a><ul>
@@ -367,7 +369,7 @@ p &lt;-<span class="st"> </span>economics <span class="op">%&gt;%</span>
 FIGURE 4.1: The difference between <code>add_paths()</code> and <code>add_lines()</code>: the top panel connects observations according to the ordering of <code>psavert</code> (personal savings rate), whereas the bottom panel connects observations according to the ordering of <code>x</code> (the date).
 </p>
 </div>
-<p>Section <a href="overview.html#intro-plotly">3.1</a> introduced ‘aesthetic mapping’ arguments (unique to the R package) which make it easier to map data to visual properties (e.g., <code>color</code>, <code>linetype</code>, etc). In addition to these arguments, <strong>dplyr</strong> groupings can be used to ensure there is at least one geometry per group. The top panel of Figure <a href="scatter-traces.html#fig:scatter-intro">4.1</a> demonstrates how <code>group_by()</code> could be used to effectively wrap the time series from Figure <a href="scatter-traces.html#fig:scatter-intro">4.1</a> by year, which can be useful for visualizing annual seasonality. Another approach to generating at least one geometry per ‘group’ is to use a sensible categorical aesthetic mapping (i.e., assign a factor/character to <code>color</code>, <code>linetype</code>, etc), as shown in the bottom panel of Figure <a href="scatter-traces.html#fig:scatter-intro">4.1</a>.</p>
+<p>Section <a href="overview.html#intro-plotly">3.1</a> introduced ‘aesthetic mapping’ arguments (unique to the R package) which make it easier to map data to visual properties (e.g., <code>color</code>, <code>linetype</code>, etc). In addition to these arguments, <strong>dplyr</strong> groupings can be used to ensure there is at least one geometry per group. The top panel of Figure <a href="scatter-traces.html#fig:scatter-intro">4.1</a> demonstrates how <code>group_by()</code> could be used to effectively wrap the time series from Figure <a href="scatter-traces.html#fig:scatter-intro">4.1</a> by year, which can be useful for visualizing annual seasonality. Another approach to generating at least one geometry per ‘group’ is to provide categorical variable to a relevant aesthetic (e.g., <code>color</code>), as shown in the bottom panel of Figure <a href="scatter-traces.html#fig:scatter-intro">4.1</a>.</p>
 <pre class="sourceCode r"><code class="sourceCode r"><span class="kw">library</span>(lubridate)
 econ &lt;-<span class="st"> </span>economics <span class="op">%&gt;%</span>
 <span class="st">  </span><span class="kw">mutate</span>(<span class="dt">yr =</span> <span class="kw">year</span>(date), <span class="dt">mnth =</span> <span class="kw">month</span>(date))
@@ -380,14 +382,19 @@ econ <span class="op">%&gt;%</span>
 
 <span class="co"># multiple traces (less performant, but more interactive)</span>
 <span class="kw">plot_ly</span>(econ, <span class="dt">x =</span> <span class="op">~</span>mnth, <span class="dt">y =</span> <span class="op">~</span>uempmed) <span class="op">%&gt;%</span>
-<span class="st">  </span><span class="kw">add_lines</span>(<span class="dt">color =</span> <span class="op">~</span><span class="kw">ordered</span>(yr))</code></pre>
+<span class="st">  </span><span class="kw">add_lines</span>(<span class="dt">color =</span> <span class="op">~</span><span class="kw">ordered</span>(yr))
+  
+<span class="co"># the split argument guarantees one trace per group level (regardless of the variable type)</span>
+<span class="co"># this is useful if you want a consistent visual properties over multiple traces </span>
+<span class="co"># plot_ly(econ, x = ~mnth, y = ~uempmed) %&gt;%</span>
+<span class="co">#   add_lines(split = ~yr, color = I(&quot;black&quot;))</span></code></pre>
 <div class="figure" style="text-align: center"><span id="fig:scatter-lines"></span>
 <iframe src="https://player.vimeo.com/video/316679591?title=0&amp;byline=0&amp;portrait=0" width="100%" height="400" frameborder="0" seamless="seamless" webkitAllowFullScreen mozallowfullscreen allowFullScreen></iframe>
 <p class="caption">
 FIGURE 4.2: Drawing multiple lines using <strong>dplyr</strong> groups (top panel) versus a categorical <code>color</code> mapping (bottom panel). Comparatively speaking, the bottom panel has more interactive capabilites (e.g., legend-based filtering and multiple tooltips), but it does not scale as well with many lines.
 </p>
 </div>
-<p>Not only do these approaches differ in static visual properties, they also differ in interactive capabilties and computational performance. That’s because, the grouping approach (top panel of Figure <a href="scatter-traces.html#fig:scatter-lines">4.2</a>) uses just one plotly.js trace (more performant, less interactive), whereas the <code>color</code> approach (bottom panel of Figure <a href="scatter-traces.html#fig:scatter-lines">4.2</a>) generates one trace per line/year. In this case, the benefit of having multiple traces is that we can perform interactive filtering via the legend and compare multiple y-values at a given x. The cost of having those capabilities is that plots starts to be become sluggish after a few hundred traces, whereas thousands of lines can be rendered fairly easily in one trace. See section <a href="scaling.html#scaling">19</a> for more details on scaling and performance.</p>
+<p>Not only do these plots differ in visual appearance, they also differ in interactive capabilties, computational performance, and underlying implementation. That’s because, the grouping approach (top panel of Figure <a href="scatter-traces.html#fig:scatter-lines">4.2</a>) uses just one plotly.js trace (more performant, less interactive), whereas the <code>color</code> approach (bottom panel of Figure <a href="scatter-traces.html#fig:scatter-lines">4.2</a>) generates one trace per line/year. In this case, the benefit of having multiple traces is that we can perform interactive filtering via the legend and compare multiple y-values at a given x. The cost of having those capabilities is that plots starts to be become sluggish after a few hundred traces, whereas thousands of lines can be rendered fairly easily in one trace. See section <a href="scaling.html#scaling">19</a> for more details on scaling and performance.</p>
 <p>These features make it easier to get started using plotly.js, but it still pays off to learn how to use plotly.js directly. You won’t find plotly.js attributes listed as explicit arguments in any <strong>plotly</strong> function (except for the special <code>type</code> attribute), but they are passed along verbatim to the plotly.js figure definition through the <code>...</code> operator. The scatter-based layers in this chapter fix the <code>type</code> plotly.js attribute to <code>"scatter"</code> as well as the <a href="https://plot.ly/r/reference/#scatter-mode"><code>mode</code></a> (e.g., <code>add_markers()</code> uses <code>mode='markers'</code> etc), but you could also use the lower-level <code>add_trace()</code> to work more directly with plotly.js. For example, Figure <a href="scatter-traces.html#fig:tooltip-praise">4.3</a> shows how to render markers, lines, and text in the same scatter trace. It also demonstrates how to leverage <em>nested</em> plotly.js attributes, like <a href="https://plot.ly/r/reference/#scatter-textfont"><code>textfont</code></a> and <a href="https://plot.ly/r/reference/#layout-xaxis"><code>xaxis</code></a> – these attributes contain other attributes, so you need to supply a suitable named list to these arguments.</p>
 <pre class="sourceCode r"><code class="sourceCode r"><span class="kw">set.seed</span>(<span class="dv">99</span>)
 <span class="kw">plot_ly</span>() <span class="op">%&gt;%</span>
