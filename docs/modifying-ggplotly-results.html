@@ -25,7 +25,7 @@
 <meta name="author" content="Carson Sievert">
 
 
-<meta name="date" content="2019-02-27">
+<meta name="date" content="2019-03-08">
 
   <meta name="viewport" content="width=device-width, initial-scale=1">
   <meta name="apple-mobile-web-app-capable" content="yes">
@@ -168,7 +168,6 @@ code span.wa { color: #60a0b0; font-weight: bold; font-style: italic; } /* Warni
 <li class="chapter" data-level="3.1" data-path="overview.html"><a href="overview.html#intro-plotly"><i class="fa fa-check"></i><b>3.1</b> Intro to <code>plot_ly()</code></a></li>
 <li class="chapter" data-level="3.2" data-path="overview.html"><a href="overview.html#intro-plotly-js"><i class="fa fa-check"></i><b>3.2</b> Intro to plotly.js</a></li>
 <li class="chapter" data-level="3.3" data-path="overview.html"><a href="overview.html#intro-to-ggplotly"><i class="fa fa-check"></i><b>3.3</b> Intro to <code>ggplotly()</code></a></li>
-<li class="chapter" data-level="3.4" data-path="overview.html"><a href="overview.html#plot_ly-vs-ggplotly"><i class="fa fa-check"></i><b>3.4</b> <code>plot_ly()</code> vs <code>ggplotly()</code></a></li>
 </ul></li>
 <li class="chapter" data-level="4" data-path="scatter-traces.html"><a href="scatter-traces.html"><i class="fa fa-check"></i><b>4</b> Scattered foundations</a><ul>
 <li class="chapter" data-level="4.1" data-path="scatter-traces.html"><a href="scatter-traces.html#markers"><i class="fa fa-check"></i><b>4.1</b> Markers</a><ul>
@@ -205,10 +204,10 @@ code span.wa { color: #60a0b0; font-weight: bold; font-style: italic; } /* Warni
 <li class="chapter" data-level="6.2" data-path="bars-histograms.html"><a href="bars-histograms.html#multiple-discrete-distributions"><i class="fa fa-check"></i><b>6.2</b> Multiple discrete distributions</a></li>
 </ul></li>
 <li class="chapter" data-level="7" data-path="boxplots.html"><a href="boxplots.html"><i class="fa fa-check"></i><b>7</b> Boxplots</a></li>
-<li class="chapter" data-level="8" data-path="d-frequencies.html"><a href="d-frequencies.html"><i class="fa fa-check"></i><b>8</b> 2D frequencies</a><ul>
-<li class="chapter" data-level="8.1" data-path="d-frequencies.html"><a href="d-frequencies.html#rectangular-binning-in-plotly.js"><i class="fa fa-check"></i><b>8.1</b> Rectangular binning in plotly.js</a></li>
-<li class="chapter" data-level="8.2" data-path="d-frequencies.html"><a href="d-frequencies.html#rectangular-binning-in-r"><i class="fa fa-check"></i><b>8.2</b> Rectangular binning in R</a></li>
-<li class="chapter" data-level="8.3" data-path="d-frequencies.html"><a href="d-frequencies.html#categorical-axes"><i class="fa fa-check"></i><b>8.3</b> Categorical axes</a></li>
+<li class="chapter" data-level="8" data-path="frequencies-2D.html"><a href="frequencies-2D.html"><i class="fa fa-check"></i><b>8</b> 2D frequencies</a><ul>
+<li class="chapter" data-level="8.1" data-path="frequencies-2D.html"><a href="frequencies-2D.html#rectangular-binning-in-plotly.js"><i class="fa fa-check"></i><b>8.1</b> Rectangular binning in plotly.js</a></li>
+<li class="chapter" data-level="8.2" data-path="frequencies-2D.html"><a href="frequencies-2D.html#rectangular-binning-in-r"><i class="fa fa-check"></i><b>8.2</b> Rectangular binning in R</a></li>
+<li class="chapter" data-level="8.3" data-path="frequencies-2D.html"><a href="frequencies-2D.html#categorical-axes"><i class="fa fa-check"></i><b>8.3</b> Categorical axes</a></li>
 </ul></li>
 <li class="chapter" data-level="9" data-path="d-charts.html"><a href="d-charts.html"><i class="fa fa-check"></i><b>9</b> 3D charts</a><ul>
 <li class="chapter" data-level="9.0.1" data-path="d-charts.html"><a href="d-charts.html#markers-and-lines"><i class="fa fa-check"></i><b>9.0.1</b> Markers and lines</a></li>
@@ -329,7 +328,7 @@ code span.wa { color: #60a0b0; font-weight: bold; font-style: italic; } /* Warni
 </ul></li>
 <li class="chapter" data-level="38" data-path="embedding-images.html"><a href="embedding-images.html"><i class="fa fa-check"></i><b>38</b> Embedding images</a></li>
 <li class="part"><span><b>VIII Developer-facing topics</b></span></li>
-<li class="chapter" data-level="39" data-path="translating-custom-ggplot2-geoms.html"><a href="translating-custom-ggplot2-geoms.html"><i class="fa fa-check"></i><b>39</b> Translating custom ggplot2 geoms</a></li>
+<li class="chapter" data-level="39" data-path="custom-geoms.html"><a href="custom-geoms.html"><i class="fa fa-check"></i><b>39</b> Translating custom ggplot2 geoms</a></li>
 <li class="chapter" data-level="40" data-path="designing-an-htmlwidget-interface.html"><a href="designing-an-htmlwidget-interface.html"><i class="fa fa-check"></i><b>40</b> Designing an htmlwidget interface</a></li>
 <li class="chapter" data-level="" data-path="references.html"><a href="references.html"><i class="fa fa-check"></i>References</a></li>
 </ul>
@@ -366,7 +365,7 @@ gg &lt;-<span class="st"> </span><span class="kw">ggplotly</span>(p)
 FIGURE 37.1: Customizing the dragmode of an interactive ggplot2 graph.
 </p>
 </div>
-<p>Perhaps a more useful application is to add a range slider to the x-axis, which allows you to zoom on the x-axis without losing the global context. This is quite useful for quickly altering the limits of your plot to achieve an optimal aspect ratio for your data without losing the global perspective <span class="citation">(William S. Cleveland <a href="#ref-banking">1988</a>)</span>. Figure <a href="modifying-ggplotly-results.html#fig:ggplotly-rangeslider">37.2</a> uses the <code>rangeslider()</code> function to add a rangeslider to the plot.</p>
+<p>Perhaps a more useful application is to add a range slider to the x-axis, which allows you to zoom on the x-axis without losing the global context. This is quite useful for quickly altering the limits of your plot to achieve an optimal aspect ratio for your data without losing the global perspective <span class="citation">(William S. Cleveland <a href="#ref-banking" role="doc-biblioref">1988</a>)</span>. Figure <a href="modifying-ggplotly-results.html#fig:ggplotly-rangeslider">37.2</a> uses the <code>rangeslider()</code> function to add a rangeslider to the plot.</p>
 <pre class="sourceCode r"><code class="sourceCode r"><span class="kw">rangeslider</span>(gg)</code></pre>
 <div class="figure" style="text-align: center"><span id="fig:ggplotly-rangeslider"></span>
 <div id="htmlwidget-2f591f1b4cd6fe6f33f6" style="width:100%;height:480px;" class="plotly html-widget"></div>
@@ -390,7 +389,7 @@ FIGURE 37.2: Adding a rangeslider to an interactive ggplot2 graph.
 FIGURE 37.3: A scatterplot with a fitted line and confidence band.
 </p>
 </div>
-<p>The <strong>ggplot2</strong> package doesn’t provide an API for interactive features, but by changing the <a href="https://plot.ly/r/reference/#scatter-hoverinfo">hoverinfo</a> attribute to <code>"none"</code>, we can turn off hover for the relevant traces. This sort of task (i.e. modifying trace attribute values) is best achieved through the <code>style()</code> function. Before using it, you may want to study the underlying traces with <code>plotly_json()</code> which uses the <strong>listviewer</strong> package to display a convenient interactive view of the JSON object sent to plotly.js <span class="citation">(de Jong and Russell <a href="#ref-listviewer">2016</a>)</span>. By clicking on the arrow next to the data element, you can see the traces (data) behind the plot. As shown in Figure <a href="modifying-ggplotly-results.html#fig:listviewer">37.4</a>, we have three traces: one for the <code>geom_point()</code> layer and two for the <code>geom_smooth()</code> layer.</p>
+<p>The <strong>ggplot2</strong> package doesn’t provide an API for interactive features, but by changing the <a href="https://plot.ly/r/reference/#scatter-hoverinfo">hoverinfo</a> attribute to <code>"none"</code>, we can turn off hover for the relevant traces. This sort of task (i.e. modifying trace attribute values) is best achieved through the <code>style()</code> function. Before using it, you may want to study the underlying traces with <code>plotly_json()</code> which uses the <strong>listviewer</strong> package to display a convenient interactive view of the JSON object sent to plotly.js <span class="citation">(de Jong and Russell <a href="#ref-listviewer" role="doc-biblioref">2016</a>)</span>. By clicking on the arrow next to the data element, you can see the traces (data) behind the plot. As shown in Figure <a href="modifying-ggplotly-results.html#fig:listviewer">37.4</a>, we have three traces: one for the <code>geom_point()</code> layer and two for the <code>geom_smooth()</code> layer.</p>
 <pre class="sourceCode r"><code class="sourceCode r"><span class="kw">plotly_json</span>(p)</code></pre>
 <div class="figure" style="text-align: center"><span id="fig:listviewer"></span>
 <img src="images/listviewer.png" alt="Using listviewer to inspect the JSON representation of a plotly object." width="100%" />
@@ -416,16 +415,16 @@ p <span class="op">%&gt;%</span>
 <span class="st">  </span><span class="kw">ggplotly</span>(<span class="dt">layerData =</span> <span class="dv">2</span>, <span class="dt">originalData =</span> <span class="ot">FALSE</span>) <span class="op">%&gt;%</span>
 <span class="st">  </span><span class="kw">plotly_data</span>()
 <span class="co">#&gt; # A tibble: 80 x 13</span>
-<span class="co">#&gt;       x     y  ymin  ymax    se PANEL group colour fill   size linetype</span>
-<span class="co">#&gt;   &lt;dbl&gt; &lt;dbl&gt; &lt;dbl&gt; &lt;dbl&gt; &lt;dbl&gt; &lt;fct&gt; &lt;int&gt; &lt;chr&gt;  &lt;chr&gt; &lt;dbl&gt;    &lt;dbl&gt;</span>
-<span class="co">#&gt; 1  1.51  32.1  28.1  36.0  1.92 1        -1 #3366… grey…     1        1</span>
-<span class="co">#&gt; 2  1.56  31.7  28.2  35.2  1.72 1        -1 #3366… grey…     1        1</span>
-<span class="co">#&gt; 3  1.61  31.3  28.1  34.5  1.54 1        -1 #3366… grey…     1        1</span>
-<span class="co">#&gt; 4  1.66  30.9  28.0  33.7  1.39 1        -1 #3366… grey…     1        1</span>
-<span class="co">#&gt; 5  1.71  30.5  27.9  33.0  1.26 1        -1 #3366… grey…     1        1</span>
-<span class="co">#&gt; 6  1.76  30.0  27.7  32.4  1.16 1        -1 #3366… grey…     1        1</span>
+<span class="co">#&gt;   PANEL     x     y  ymin  ymax    se group colour fill   size linetype</span>
+<span class="co">#&gt;   &lt;fct&gt; &lt;dbl&gt; &lt;dbl&gt; &lt;dbl&gt; &lt;dbl&gt; &lt;dbl&gt; &lt;int&gt; &lt;chr&gt;  &lt;chr&gt; &lt;dbl&gt;    &lt;dbl&gt;</span>
+<span class="co">#&gt; 1 1      1.51  32.1  28.1  36.0  1.92    -1 #3366… grey…     1        1</span>
+<span class="co">#&gt; 2 1      1.56  31.7  28.2  35.2  1.72    -1 #3366… grey…     1        1</span>
+<span class="co">#&gt; 3 1      1.61  31.3  28.1  34.5  1.54    -1 #3366… grey…     1        1</span>
+<span class="co">#&gt; 4 1      1.66  30.9  28.0  33.7  1.39    -1 #3366… grey…     1        1</span>
+<span class="co">#&gt; 5 1      1.71  30.5  27.9  33.0  1.26    -1 #3366… grey…     1        1</span>
+<span class="co">#&gt; 6 1      1.76  30.0  27.7  32.4  1.16    -1 #3366… grey…     1        1</span>
 <span class="co">#&gt; # … with 74 more rows, and 2 more variables: weight &lt;dbl&gt;, alpha &lt;dbl&gt;</span></code></pre>
-<p>The data shown above is the data ggplot2 uses to actually draw the fitted values (as a line) and standard error bounds (as a ribbon). Figure <a href="modifying-ggplotly-results.html#fig:se-annotations">37.6</a> leverages this data to add additional information about the model fit; in particular, it adds a vertical lines and annotations at the x-values that are associated with the highest and lowest amount uncertainty in the fitted values. Producing a plot like this with <strong>ggplot2</strong> would be impossible using <code>geom_smooth()</code> alone.<a href="#fn36" class="footnote-ref" id="fnref36"><sup>36</sup></a> Providing a simple visual clue like this can help combat visual misperceptions of uncertainty bands due to the sine illusion <span class="citation">(VanderPlas and Hofmann <a href="#ref-sine-illusion">2015</a>)</span>.</p>
+<p>The data shown above is the data ggplot2 uses to actually draw the fitted values (as a line) and standard error bounds (as a ribbon). Figure <a href="modifying-ggplotly-results.html#fig:se-annotations">37.6</a> leverages this data to add additional information about the model fit; in particular, it adds a vertical lines and annotations at the x-values that are associated with the highest and lowest amount uncertainty in the fitted values. Producing a plot like this with <strong>ggplot2</strong> would be impossible using <code>geom_smooth()</code> alone.<a href="#fn39" class="footnote-ref" id="fnref39"><sup>39</sup></a> Providing a simple visual clue like this can help combat visual misperceptions of uncertainty bands due to the sine illusion <span class="citation">(VanderPlas and Hofmann <a href="#ref-sine-illusion" role="doc-biblioref">2015</a>)</span>.</p>
 <pre class="sourceCode r"><code class="sourceCode r">p <span class="op">%&gt;%</span>
 <span class="st">  </span><span class="kw">ggplotly</span>(<span class="dt">layerData =</span> <span class="dv">2</span>, <span class="dt">originalData =</span> <span class="ot">FALSE</span>) <span class="op">%&gt;%</span>
 <span class="st">  </span><span class="kw">add_fun</span>(<span class="cf">function</span>(p) {
@@ -444,7 +443,7 @@ p <span class="op">%&gt;%</span>
 FIGURE 37.6: Leveraging data associated with a <code>geom_smooth()</code> layer to display additional information about the model fit.
 </p>
 </div>
-<p>In addition to leveraging output from <code>StatSmooth</code>, it is sometimes useful to leverage output of other statistics, especially for annotation purposes. Figure <a href="modifying-ggplotly-results.html#fig:StatBin">37.7</a> leverages the output of <code>StatBin</code> to add annotations to a stacked bar chart. Annotation is primarily helpful for displaying the heights of bars in a stacked bar chart, since decoding the heights of bars is a fairly difficult perceptual task <span class="citation">(Cleveland and McGill <a href="#ref-graphical-perception">1984</a>)</span>. As result, it is much easier to compare bar heights representing the proportion of diamonds with a given clarity across various diamond cuts.</p>
+<p>In addition to leveraging output from <code>StatSmooth</code>, it is sometimes useful to leverage output of other statistics, especially for annotation purposes. Figure <a href="modifying-ggplotly-results.html#fig:StatBin">37.7</a> leverages the output of <code>StatBin</code> to add annotations to a stacked bar chart. Annotation is primarily helpful for displaying the heights of bars in a stacked bar chart, since decoding the heights of bars is a fairly difficult perceptual task <span class="citation">(Cleveland and McGill <a href="#ref-graphical-perception" role="doc-biblioref">1984</a>)</span>. As result, it is much easier to compare bar heights representing the proportion of diamonds with a given clarity across various diamond cuts.</p>
 <pre class="sourceCode r"><code class="sourceCode r">p &lt;-<span class="st"> </span><span class="kw">ggplot</span>(diamonds, <span class="kw">aes</span>(cut, <span class="dt">fill =</span> clarity)) <span class="op">+</span>
 <span class="st">  </span><span class="kw">geom_bar</span>(<span class="dt">position =</span> <span class="st">&quot;fill&quot;</span>)
 
@@ -505,8 +504,8 @@ FIGURE 37.8: Leveraging output from <code>StatDensity2d</code> to add annotation
 </div>
 <div class="footnotes">
 <hr />
-<ol start="36">
-<li id="fn36"><p>It could be recreated by fitting the model via <code>loess()</code>, obtaining the fitted values and standard error with <code>predict()</code>, and feeding those results into <code>geom_line()</code>/<code>geom_ribbon()</code>/<code>geom_text()</code>/<code>geom_segment()</code>, but that process is much more onerous.<a href="modifying-ggplotly-results.html#fnref36" class="footnote-back">↩</a></p></li>
+<ol start="39">
+<li id="fn39"><p>It could be recreated by fitting the model via <code>loess()</code>, obtaining the fitted values and standard error with <code>predict()</code>, and feeding those results into <code>geom_line()</code>/<code>geom_ribbon()</code>/<code>geom_text()</code>/<code>geom_segment()</code>, but that process is much more onerous.<a href="modifying-ggplotly-results.html#fnref39" class="footnote-back">↩</a></p></li>
 </ol>
 </div>
 <script>

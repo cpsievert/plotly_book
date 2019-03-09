@@ -133,7 +133,7 @@ diamonds %>%
   plotly_data()
 ```
 
-This introduction to `plot_ly()` has mainly focused on concepts unique to the R package **plotly** that are generally useful for creating most kinds of data views. The section outlines how **plotly** generates plotly.js figures and how to inspect the underlying data structure that plotly.js uses to render the graph. Not only is this information useful for debugging, but it's also a nice way to learn how to work with plotly.js directly, which you may need to improve performance in **shiny** apps (Chapter \@ref(proxies)) and/or for adding custom behavior with JavaScript (Chapter \@ref()).
+This introduction to `plot_ly()` has mainly focused on concepts unique to the R package **plotly** that are generally useful for creating most kinds of data views. The section outlines how **plotly** generates plotly.js figures and how to inspect the underlying data structure that plotly.js uses to render the graph. Not only is this information useful for debugging, but it's also a nice way to learn how to work with plotly.js directly, which you may need to improve performance in **shiny** apps (Chapter \@ref(proxies)) and/or for adding custom behavior with JavaScript (Chapter \@ref(javascript)).
 
 ## Intro to plotly.js {#intro-plotly-js}
 
@@ -184,23 +184,123 @@ If we investigated further, we'd notice that `color` and `colors` are not offici
 
 ## Intro to `ggplotly()`
 
-* Talk generally about what things **ggplot2** makes easy
-  * That is, when to use `ggplotly()` over `plot_ly()`?
+The `ggplotly()` function from the **plotly** package has the ability to translate **ggplot2** to **plotly**. This functionality can be really helpful for quickly adding interactivity to your existing **ggplot2** workflow.^[This section is not meant to teach you **ggplot2**, but rather to help point out when and why it might be preferrable to `plot_ly()`. If you're new to **ggplot2** and would like to learn it, see \@ref(ggplot2).] Moreover, even if you know `plot_ly()` and plotly.js well, `ggplotly()` can still be desirable for creating visualizations that aren't necessarily straight-forward to acheive without it. To demonstrate, let's explore the relationship between `price` and other variables from the well-known `diamonds` dataset. 
 
+Hexagonal binning (i.e., `geom_hex()`) is useful way to visualize a 2D density^[See Section \@ref(frequencies-2D) for approaches using `plot_ly()`], like the relationship between `price` and `carat` as shown in Figure \@ref(fig:hexbin). From Figure \@ref(fig:hexbin), we can see there is a strong positive linear relationship between the _log_ of carat and price. It also shows that many the carat is only rounded to a particular number (indicated by the light blue bands) and no diamonds are priced around $1500. Making this plot interactive makes it easier to decode the hexagonal colors into the counts that they represent.
+
+```r
+p <- ggplot(diamonds, aes(x = log(carat), y = log(price))) + 
+  geom_hex(bins = 100)
+ggplotly(p)
+```
+
+```{r hexbin, echo = FALSE, fig.cap = "A hexbin plot of diamond carat versus price."}
+knitr::include_graphics("images/hexbin.png")
+```
+
+I often use `ggplotly()` over `plot_ly()` to leverage **ggplot2**'s consistent and expressive interface for exploring statistical summaries across groups. For example, by including a discrete `color` variable (e.g., `cut`) with `geom_freqpoly()`, you get a frequency polygon for each level of that variable. This ability to quickly generate visual encodings of statisitical summaries across an arbitrary number of groups works for basically any geom (e.g. `geom_boxplot()`, `geom_histogram()`, `geom_density()`, etc) and is a key feature of **ggplot2**.
+
+```r
+p <- ggplot(diamonds, aes(x = log(price), color = clarity)) + 
+    geom_freqpoly()
+ggplotly(p)
+```
+
+```{r freqpoly, echo = FALSE, fig.cap = "Frequency polygons of diamond price by diamond clarity. This visualization indicates there may be significant main effects."}
+knitr::include_graphics("images/freqpoly.svg")
+```
+
+Now, to see how `price` varies with both `cut` and `clarity`, we could repeat this same visualization for each level of `cut`. This is where **ggplot2**'s `facet_wrap()` comes in handy. Moreover, to facilitate comparisons, we can have `geom_freqpoly()` display relative rather than absolute frequencies. By making this plot interactive, we can more easily compare particular levels of clarity (as shown in Figure \@ref(fig:freqpoly-facet)) by leveraging the legend filtering capabilites. 
+
+```r
+p <- ggplot(diamonds, aes(x = log(price), color = clarity)) + 
+    geom_freqpoly(stat = "density") + 
+    facet_wrap(~cut)
+ggplotly(p)
+```
+
+```{r freqpoly-facet, echo = FALSE, fig.cap = "Diamond price by clarity and cut."}
+include_vimeo("322318131")
+```
+
+In addition to supporting most of the 'core' **ggplot2** API, `ggplotly()` can automatically convert any **ggplot2** extension packages that return a 'standard' **ggplot2** object. By standard, I mean that the object is comprised of 'core' **ggplot2** data structures and not the result of custom geoms.^[As discussed in \@ref(custom-geoms), `ggplotly()` can actually convert custom geoms as well, but each one requires a custom hook, and many custom geoms are not yet supported.] Some great examples of R packages that extend **ggplot2** using core data structures are **ggforce**, **naniar**, and **GGally** [@ggforce]; [@naniar]; [@GGally]. 
+
+Figure \@ref(fig:geom-sina) demonstrates another way of visualizing the same information found in Figure \@ref(fig:freqpoly-facet) using `geom_sina()` from the **ggforce** package (instead of `geom_freqpoly()`). This visualization jitters the raw data within the density for each group -- allowing us not only only see where the majority observations fall within a group, but also across all across all groups. By making this layer interactive, we can query individual points for more information and zoom into interesting regions. The second layer of Figure \@ref(fig:geom-sina) uses **ggplot2**'s `stat_summary()` to overlay a 95% confidence interval esimated via a bootstrap algorithm via the **Hmisc** package [@Hmisc].
+
+```r
+p <- ggplot(diamonds, aes(x = clarity, y = log(price), color = clarity)) +
+    ggforce::geom_sina(alpha = 0.1) + 
+    stat_summary(fun.data = "mean_cl_boot", color = "black") +
+    facet_wrap(~cut)
+
+# WebGL is a lot more efficient at rendering lots of points
+toWebGL(ggplotly(p))
+```
+
+```{r geom-sina, echo=FALSE, fig.cap="A sina plot of diamond price by clarity and cut."}
+knitr::include_graphics("images/geom-sina.svg")
+```
+
+As noted by @r4ds, it's surprising that the diamond price would decline with an increase of diamond clarity. As it turns out, if we account for the carat of the diamond, then see that better diamond clarity does indeed lead to a higher diamond price, as shown in Figure \@ref(fig:geom-sina-resid). Seeing such a strong pattern in the residuals of simple linear model of carat vs price indicates that our model could be greatly improved by adding `clarity` as a predictor of `price`.
+
+```r
+m <- lm(log(price) ~ log(carat), data = diamonds)
+diamonds <- modelr::add_residuals(diamonds, m)
+p <- ggplot(diamonds, aes(x = clarity, y = resid, color = clarity)) +
+    ggforce::geom_sina(alpha = 0.1) + 
+    stat_summary(fun.data = "mean_cl_boot", color = "black") +
+    facet_wrap(~cut)
+toWebGL(ggplotly(p))
+```
+
+```{r geom-sina-resid, echo=FALSE, fig.cap="A sina plot of diamond price by clarity and cut, after accounting for carat."}
+knitr::include_graphics("images/geom-sina-resid.svg")
+```
+
+As discussed in Section \@ref(ggally-ggnostic) the **GGally** package provides a convenient interface for making similar types of model diagnostic visualizations via the `ggnostic()` function. It also provides a convenience function for visualizating the coefficient estimates and their standard errors via the `ggcoef()` function. Figure \@ref(fig:ggally) shows how injecting interactivity to this plot allows us to query exact values and zoom in on the most intere
+
+```r
+library(GGally)
+m <- lm(log(price) ~ log(carat) + cut, data = diamonds)
+gg <- ggcoef(m)
+# dynamicTicks means generate new axis ticks on zoom
+ggplotly(gg, dynamicTicks = TRUE)
+```
+
+```{r ggally, echo=FALSE, fig.cap="Zooming in on a coefficient plot generated from the `ggcoef()` function from the **GGally** package."}
+include_vimeo("322362701")
+```
+
+Although the `diamonds` dataset does not contain any missing values, it's a very common problem in real data analysis problems. The **naniar** package provides a suite of computational and visual resources for working with and revealing structure in missing values. All the **ggplot2** based visualizations return an object that can be converted by `ggplotly()`. Moreover, **naniar** provides a custom geom, `geom_miss_point()`, that can be useful for visualizing missingness structure. Figure \@ref(fig:naniar) demonstrates this by introducing fake missing values to the diamond price. 
+
+```r
+library(naniar)
+# fake some missing data
+diamonds$price_miss <- ifelse(diamonds$depth > 60, diamonds$price, NA)
+p <- ggplot(diamonds, aes(x = clarity, y = log(price_miss))) +
+    geom_miss_point(alpha = 0.1) + 
+    stat_summary(fun.data = "mean_cl_boot", colour = "black") +
+    facet_wrap(~cut)
+toWebGL(ggplotly(p))
+```
+
+```{r naniar, echo=FALSE, fig.cap="Using the `geom_miss_point()` function from the **naniar** package to visualize missing values in relation to non-missing values. Missing values are shown in red."}
+knitr::include_graphics("images/naniar.svg")
+```
+
+In short, the **ggplot2** ecosystem provides a world-class exploratory visualization toolkit, and having the ability to quickly insert interactivity such as hover, zoom, and filter via `ggplotly()` makes it even more powerful for exploratory analysis. In this introduction to `ggplotly()`, we've only seen relatively simple techniques that come for free out-of-the-box, but the true power of interactive graphics lies in linking multiple views. In that part of the book, you can find lots of examples of linking multiple (`ggplotly()` & `plot_ly()`) graphs purely client-side as well as with **shiny**.
+
+It's also worth mentioning that `ggplotly()` conversions are not always perfect and **ggplot2** doesn't provide an API for interactive features, so sometimes it's desirable to modify the return values of `ggplotly()`. Section \@ref(modifying-ggplotly) talks generally about modifying the data structure underlying `ggplotly()` (which, by the way, uses the same a plotly.js figure definition as discussed in Section \@ref(intro-plotlyjs)). Moreover, Section \@ref(tooltip-text-ggplotly) outlines various ways to customize the tooltip that `ggplotly()` produces.
+
+<!--
 * Cover ggplot2 geoms that fill a void left by `plot_ly()`
-  * `geom_freqpoly()`
   * `stat_summary()` https://twitter.com/tjmahr/status/1095728500852621313
   * More ideas http://r-statistics.co/Top50-Ggplot2-Visualizations-MasterList-R-Code.html
+-->
   
-* Automatic support for approach like **GGally** and **visdat**
-  
-* Mention there is possibility to support custom geoms, but it will require a community-wide effort
-  * Point to developer topics
-
-
-## `plot_ly()` vs `ggplotly()`
-
-TODO: table of strengths and weaknesses
+<!--
+Recall from Section \@ref(intro-plotly) that in the layered grammar of graphics, a layer comprised of 5 components: aethestic mappings (e.g., assigning clarity to color), a geometric representation (e.g. rectangles, circles, etc), statistical transformations (e.g., sum, mean, etc), and positional adjustments (e.g., dodge, stack, etc). Generally speaking, `ggplotly()` is going to be a more complete and consistent approach to expressing layers that leverage statistical transformation(s). This is partly due to its thoughtful integration with other statistical computing R packages like **MASS**, **mgcv**, and **Hmisc** [@MASS]; [@Hmisc]; [@mgcv]. For example, the `stat_summary()` layer al
+-->
 
 
 <!--

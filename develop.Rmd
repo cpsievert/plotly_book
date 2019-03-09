@@ -5,7 +5,7 @@ This part describes some advanced topics some R developers may want to know rega
 * R developers that have authored a custom __ggplot2__ geom and want to inform `ggplotly()` about the rendering rules of their geom.
 * R developers that want to build a similar interface to another JavaScript graphing library.
 
-# Translating custom ggplot2 geoms
+# Translating custom ggplot2 geoms {#custom-geoms}
 
 Version 2.0.0 of __ggplot2__ introduced a way for other R packages to implement custom geoms. Some great examples include: __ggrepel__, __ggalt__, __ggraph__, __geomnet__, __ggmosaic__ and __ggtern__ [@ggalt]; [@ggraph]; [@geomnet]; [@ggmosaic]; [@ggtern].^[There are many other useful extension packages that are listed on this website -- <https://www.ggplot2-exts.org>] Although the `ggplotly()` function translates most of the geoms bundled with the __ggplot2__ package, it has no way of knowing about the rendering rules for custom geoms. The __plotly__ package does, however, provide 2 generic functions based on the S3 scheme that can leveraged to inform `ggplotly()` about these rules [@S3].^[For those new to S3, <http://adv-r.had.co.nz/S3.html> provides an approachable introduction and overview [@adv-r].] To date, the __ggmosaic__ and __ggalt__ packages have taken advantage of this infrastructure to provide translations of their custom geoms to plotly.
 

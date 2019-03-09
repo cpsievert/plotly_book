@@ -512,22 +512,33 @@ It is also worth noting that the **GGally** offers a `ggparcoord()` function whi
 
 ## Polygons
 
-The `add_polygons()` function is essentially equivalent to `add_paths()` with the [fill](https://plot.ly/r/reference/#scatter-fill) attribute set to "toself". Polygons form the basis for other, higher-level, geometries such as `add_ribbons()`, but can be useful in their own right. 
+The `add_polygons()` function is essentially equivalent to `add_paths()` with the [fill](https://plot.ly/r/reference/#scatter-fill) attribute set to "toself". Polygons form the basis for other, higher-level scatter-based layers (e.g., `add_ribbons()` and `add_sf()`) that don't have a dedicated plotly.js trace type. Polygons can be use to draw many things, but perhaps the most familiar application where you *might* want to use `add_polygons()` is to draw geo-spatial objects. If and when you use `add_polygons()` to draw a map, make sure you fix the aspect ratio (e.g. [`xaxis.scaleanchor`](https://plot.ly/r/reference/#layout-xaxis-scaleanchor)). On the other hand, Section \@ref(maps-custom) shows you how to make a custom maps using the **sf** package and `add_sf()`, which is a bit a work to get started, but is absolutely worth the investment.
 
 ```r
-map_data("world", "canada") %>%
+base <- map_data("world", "canada") %>%
   group_by(group) %>%
-  plot_ly(x = ~long, y = ~lat, alpha = 0.2) %>%
+  plotly_empty(x = ~long, y = ~lat, alpha = 0.2) %>%
+  layout(showlegend = FALSE, xaxis = list(scaleanchor = "y"))
+  
+base %>%
   add_polygons(hoverinfo = "none", color = I("black")) %>%
   add_markers(text = ~paste(name, "<br />", pop), hoverinfo = "text", 
-              color = I("red"), data = maps::canada.cities) %>%
-  layout(showlegend = FALSE, xaxis = list(scaleanchor = "y"))
+              color = I("red"), data = maps::canada.cities)
 ```
 
-```{r map-canada, echo = FALSE, fig.cap = "A map of Canada using the default cartesian coordinate system."}
-knitr::include_graphics("images/map-canada.svg")
+```{r map-canada, echo = FALSE, fig.cap = "Using `add_polygons()` to make a map of Canada and major Canadian cities via data provided by the **maps** package [@maps]."}
+knitr::include_graphics("images/map-canada.png")
 ```
 
+As discussion surrounding Figure \@ref(fig:split-color) points out, scatter-based polygon layers (i.e., `add_polygons()`, `add_ribbons()`, etc) render all the polygons using one plotly.js trace by default. This approach is computationally efficient, but it's not always desirable (e.g. can't have multiple fills per trace, interactivity is relatively limited). To work around the limitations, consider using `split` (or `color` with a discrete variable) to split the polygon data into multiple traces. Figure \@ref(fig:map-canada-split) demonstrates using `split` which will impose plotly.js' colorway to each trace (i.e., subregion) and leverage `hoveron` to generate one tooltip per sub-region.
+
+```r
+add_polygons(base, split = ~subregion, hoveron = "fills")
+```
+
+```{r map-canada-split, echo = FALSE, fig.cap = "Using `split` to render polygons with different fills and interactive properties."}
+knitr::include_graphics("images/map-canada-split.png")
+```
 
 ### Ribbons
 
