@@ -421,7 +421,7 @@ Figure \@ref(fig:cut-by-clarity) is useful for comparing the number of diamonds 
 # number of diamonds by cut and clarity (n)
 cc <- count(diamonds, cut, clarity)
 # number of diamonds by cut (nn)
-cc2 <- left_join(cc, count(cc, cut, wt = n))
+cc2 <- left_join(cc, count(cc, cut, wt = n, name = 'nn'))
 cc2 %>%
   mutate(prop = n / nn) %>%
   plot_ly(x = ~cut, y = ~prop, color = ~clarity) %>%
