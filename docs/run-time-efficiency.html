@@ -360,19 +360,19 @@ code span.wa { color: #60a0b0; font-weight: bold; font-style: italic; } /* Warni
 <p>A quick and easy way to try and improve render performance is to use canvas-based rendering (instead of vector-based SVG) with <code>toWebGL(p)</code>. Switching from vector to canvas is generally a good idea when dealing with &gt;30,000 vectors, but in this case, we’re only dealing with a couple hundred vector paths, so switching from vector to canvas for our map won’t significantly improve rendering performance, and in fact, we’ll lose some nice SVG exclusive features (the plotly.js team is getting close to eliminating these limitations!). Instead, what we could (and should!) do is reduce the amount of points along to each path (technically speaking, we’ll reduce the complexity of the SVG d attribute).</p>
 </div>
 <script>
-  var header = document.querySelector(".book-header h1");
+  var header = document.querySelector(".book-header");
 
   var img = document.createElement("img");
   img.src = "images/rstudioCloud.svg";
   img.width = 200;
   img.align = "right";
-  img.style = "margin-top: 10px";
+  img.style = "margin-top:10px; float:right";
 
   var a = document.createElement("a");
   a.href = "https://rstudio.cloud/project/156701";
   a.target = "_blank";
-  a.appendChild(img);
 
+  a.appendChild(img);
   header.appendChild(a);
 </script>
 <!-- Global site tag (gtag.js) - Google Analytics -->
