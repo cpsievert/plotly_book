@@ -214,7 +214,7 @@ plot_ly(
 ```
 
 ```{r split-text, echo = FALSE, fig.cap = "Using `split`, `text`, and `hoveron='fills'` to display a tooltip specific to each Canadian province."}
-knitr::include_graphics("images/split-text.svg")
+knitr::include_graphics("images/split-text.png")
 ```
 
 Although the integrated mapping approaches (`plot_mapbox()` and `plot_geo()`) can render **sf** objects, the custom mapping approaches (`plot_ly()` and `geom_sf()`) are more flexible because they allow for any well-defined mapping projection. Working with and understanding map projections can be intimatidating for a causal map maker. Thankfully, there are nice resources for searching map projections in a human-friendly interface, like <http://spatialreference.org/>. Through this website, one can search desirable projections for a given portion of the globe and extract commands for projecting their geo-spatial objects into that projection. One way way to perform the projection is to supply the relevant PROJ4 command to the `st_transform()` function in **sf** [@PROJ].
@@ -342,8 +342,3 @@ plot_ly(tiles_sf, split = ~name)
 ```{r cartogram-tiles, echo = FALSE, fig.cap = "A tile cartogram of U.S. population in 2016."}
 knitr::include_graphics("images/cartogram-tiles.svg")
 ```
-
-### Geo faceting
-
-
-<https://ryanhafen.com/blog/geofacet/>
