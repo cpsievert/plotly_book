@@ -21,10 +21,11 @@ subplot(
 Figure \@ref(fig:discrete) demonstrates two ways of creating a basic bar chart. Although the visual results are the same, its worth noting the difference in implementation. The `add_histogram()` function sends all of the observed values to the browser and lets plotly.js perform the binning. It takes more human effort to perform the binning in R, but doing so has the benefit of sending less data, and requiring less computation work of the web browser. In this case, we have only about 50,000 records, so there is not much of a difference in page load times or page size. However, with 1 Million records, page load time more than doubles and page size nearly doubles.^[These tests were run on Google Chrome and loaded a page with a single bar chart. [Here](https://www.webpagetest.org/result/160924_DP_JBX/) are the results for `add_histogram()` and [here](https://www.webpagetest.org/result/160924_QG_JA1/) are the results for `add_bars()` ]
 
 ```{r discrete, fig.cap = "Number of diamonds by cut.", screenshot.alt = "screenshots/discrete-bars"}
+library(dplyr)
 p1 <- plot_ly(diamonds, x = ~cut) %>% add_histogram()
 
 p2 <- diamonds %>%
-  dplyr::count(cut) %>%
+  count(cut) %>%
   plot_ly(x = ~cut, y = ~n) %>% 
   add_bars()
 

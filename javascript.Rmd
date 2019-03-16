@@ -391,8 +391,8 @@ If you're not lucky enough to be working with a JS library that provides a stand
 ```r
 library(reactR)
 
-# a message placeholder
-msg <- tags$div(id = "msg")
+# a placeholder for our react 'app'
+app <- tags$div(id = "app")
 
 p <- plot_ly(x = 1, y = 1) %>% 
   add_markers(customdata = "Powered by React") %>%
@@ -402,15 +402,15 @@ p <- plot_ly(x = 1, y = 1) %>%
         let msg = d.points[0].customdata;
         ReactDOM.render(
           <h1>{msg}</h1>, 
-          document.getElementById('msg')
-        );
-      });
+          document.getElementById('app')
+        )
+      })
     }"
-  ), validate = TRUE)
+  ))
 
 # create the HTML page
 browsable(tagList(
-  p, msg, 
+  p, app, 
   html_dependency_corejs(), 
   html_dependency_react()
 ))
