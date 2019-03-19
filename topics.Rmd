@@ -239,7 +239,7 @@ As shown in sections \@ref(tooltip-text) and \@ref(tooltip-text-ggplotly) the ap
     
 
 
-# Control the modebar
+# Control the modebar {#control-modebar}
 
 By default, the modebar appears in the top right-hand side of a **plotly** graph on mouse hover, and can lead to poor user-experience on small displays. Fortunately, the modebar can be completely customized via the `config()` function. The `config()` function can be helpful for a lot of things: language support (Section \@ref(locales)), enabling mathjax (Section \@ref(mathjax)), suppressing tip dialogs (e.g., `showTips`), when to scroll on zoom, etc. However, this topic is all about options related to the modebar. To see a complete list of `config()` options, as well as their description, see the config section of the plotly.js `schema()`.
 
@@ -660,27 +660,50 @@ knitr::include_graphics("images/forecast.svg")
 In summary, the "data-plot-pipeline" is desirable for a number of reasons: (1) makes your code easier to read and understand, (2) encourages you to think of both your data and plots using a single, uniform data structure, which (3) makes it easy to combine and reuse transformations.
 
 
-# Modifying `ggplotly()` results {#modifying-ggplotly}
+# Improving `ggplotly()` {#modifying-ggplotly}
+
+Since the `ggplotly()` function returns a **plotly** object, we can use that object in the same way you can use any other **plotly** object. Modifying this object is _always_ going to be useful when you want more control over certain (interactive) behavior that **ggplot2** doesn't provide an API to describe^[It can also be helpful for correcting translations that `ggplotly()` doesn't get quite right.], for example:
+
+* `layout()` for modifying aspects of the layout, which can be used to:
+    * Change default [`hovermode`](https://plot.ly/r/reference/#layout-hovermode) behavior (See Figure \@ref(fig:ggplotly-rangeslider)). 
+    * Stylizing hover labels ([`hoverlabel`](https://plot.ly/r/reference/#layout-hoverlabel)).
+    * Changing click+drag mode ([`dragmode`](https://plot.ly/r/reference/#layout-dragmode)) and/or constraining rectangular selections (`dragmode='select'`) vertically or horizontally ([`selectdirection`](https://plot.ly/r/reference/#layout-selectdirection)).
+    * Add dropdowns  <https://plot.ly/r/dropdowns/>, sliders <https://plot.ly/r/sliders/>, and rangesliders (see Figure \@ref(fig:ggplotly-rangeslider)).
+* `style()` for modifying data-level attributes, which can be used to:
+    * Control the tooltip content and styling (see Chapter \@ref(tooltip-text-ggplotly)).
+    * Turn hovering on/off (see Figure \@ref(fig:style-hoverinfo)).
+    * Add marker points to lines (e.g., `style(p, mode = "markers+lines")`).
+* `config()` for modifying the plot configuration, which can be used to:
+    * Control the modebar (see Chapter \@ref(control-modebar)).
+    * Change the default language (see Chapter \@ref(locales)).
+    * Enable LaTeX rendering (see Chapter \@ref(mathjax)).
+    * Enable editable shapes (see Chapter \@ref(editing-views)).
+
+In addition to using the functions above to modify `ggplotly()`'s return value, the `ggplotly()` function itself provides some arguments for controling that return value. In this chapter, we'll see a couple of them:
+
+* `dynamicTicks`: should plotly.js dynamically generate axis tick labels? Dynamic ticks are useful for updating ticks in response to zoom/pan interactions; however, they can not always reproduce labels as they would appear in the static ggplot2 image (see Figure \@ref(fig:ggplotly-rangeslider)).
+* `layerData`: return a reference to which **ggplot2** layer's data (see Figure \@ref(fig:se-annotations))?
 
 ## Modifying layout
 
-Since the `ggplotly()` function returns a plotly object, we can manipulate that object in the same way that we would manipulate any other plotly object. A simple and useful application of this is to specify interaction modes, like plotly.js' [layout.dragmode](https://plot.ly/r/reference/#layout-dragmode) for specifying the mode of click+drag events. Figure \@ref(fig:ggplotly-layout) demonstrates how the default for this attribute can be modified via the `layout()` function.
+Any aspect of a **plotly** objects layout can be modified^[Or, in the case of cumulative attributes, like `shapes`, `images`, `annotations`, etc, these items will be added to the existing items) via the `layout()` function. By default, since it doesn't always make sense to compare values, `ggplotly()` will usually set `layout.hovermode='closest'`. As shown in Figure \@ref(fig:ggplotly-rangeslider), when we have multiple y-values of interest at a specific x-value, it can be helpful to set `layout.hovermode='x'`. Moreover, for a long time series graph like this, zooming in on the x-axis can be useful -- `dynamicTicks` allows plotly.js to handle the generation of axis ticks and the `rangeslider()` allows us to zoom on the x-axis without losing the global context.
 
-```{r ggplotly-layout, fig.cap = "Customizing the dragmode of an interactive ggplot2 graph.", screenshot.alt = "screenshots/ggplotly-dragmode"}
-library(forecast)
-data(gold, package = "forecast")
-p <- ggplot(fortify(gold), aes(x, y)) + geom_line()
-gg <- ggplotly(p)
-layout(gg, dragmode = "pan")
+```r
+library(babynames)
+nms <- filter(babynames, name %in% c("Sam", "Alex"))
+p <- ggplot(nms) + 
+  geom_line(aes(year, prop, color = sex, linetype = name))
+  
+ggplotly(p, dynamicTicks = TRUE) %>%
+  rangeslider() %>%
+  layout(hovermode = "x")
 ```
 
-Perhaps a more useful application is to add a range slider to the x-axis, which allows you to zoom on the x-axis without losing the global context. This is quite useful for quickly altering the limits of your plot to achieve an optimal aspect ratio for your data without losing the global perspective [@banking]. Figure \@ref(fig:ggplotly-rangeslider) uses the `rangeslider()` function to add a rangeslider to the plot.  
-
-```{r ggplotly-rangeslider, fig.cap = "Adding a rangeslider to an interactive ggplot2 graph.", screenshot.alt = "screenshots/ggplotly-rangeslider"}
-rangeslider(gg)
+```{r ggplotly-rangeslider, echo = FALSE, fig.cap = "Adding `dynamicTicks`, a `rangeslider()`, and a comparison hovermode to improve the interactive experience of a `ggplotly()` graph."}
+include_vimeo("325298724")
 ```
 
-Since a single plotly object can only have one layout, modifying the layout of `ggplotly()` is fairly easy, but it's trickier to modify the data underlying the graph.
+Since a single **plotly** object can only have one layout, modifying the layout of `ggplotly()` is fairly easy, but it's trickier to modify the data underlying the graph.
 
 ## Modifying data
 

@@ -2,11 +2,234 @@
 
 # Arranging views
 
-One technique essential to high-dimensional data visualization is the ability to arrange multiple views. As discussed latyer, ideally, these views are linked through an underlying data source to foster comparisons and enable posing of data queries [@Cook:2007uk]. The next section, [Arranging htmlwidgets](#arranging-htmlwidgets) describes techniques for arranging htmlwidget objects, which many R packages for creating web-based data visualizations build upon, including **plotly**. Typically interactivity is isolated _within_ an htmlwidget object, but [Linking views without shiny](#linking-views-without-shiny) explores some more recent work on enabling interactivity _across_ htmlwidget objects. The following section, [Subplots](#subplots) describes the `subplot()` function, which is useful for _merging_ multiple plotly objects into a single htmlwidget object. The main benefit of merging (rather than arranging) plotly objects is that it gives us the ability to synchronize zoom and pan events across multiple axes. The last section, [Navigating many views](#navigating-many-views) discusses some useful tools for restricting focus on interesting views when there are more views than you can possibly digest visually.
+One technique essential to high-dimensional data visualization is the ability to arrange multiple views. By arranging multiple low-dimensional graphics of the same (or similar) high-dimensional data, one can put 
+local summaries and patterns into a global context. When arranging multiple **plotly** objects, you have some flexibility in terms of how you arrange them: you could use `subplot()` to merge multiple **plotly** object into a single object (useful for synchronizing zoom&pan events across multiple axes), place them in separate HTML tags (Section \@ref(arranging-htmlwidgets)), or embedded in a larger system for navigating many views (Section \@ref(navigating-many-views)).
+
+Ideally, when displaying multiple related data views, they are linked through an underlying data source to foster comparisons and enable posing of data queries [@Cook:2007uk]. Chapter \@ref(graphical-queries) shows how to build upon these methods for arranging views to link them (client-side) as well.
+
+## Arranging plotly objects
+
+The `subplot()` function provides a flexible interface for merging multiple **plotly** objects into a single object. It is more flexible than most trellis display frameworks (e.g., **ggplot2**'s `facet_wrap()`) as you don't have to condition on a value of common variable in each display [@trellis]. Its capabilities and interface is similar to the `grid.arrange()` function from the **gridExtra** package, which allows you to arrange multiple **grid** grobs in a single view, effectively providing a way to arrange (possibly unrelated)  **ggplot2** and/or **lattice** plots in a single view [@RCore]; [@gridExtra]; [@lattice]. Figure \@ref(fig:subplot-simple) shows the most simple way to use `subplot()` which is to directly supply plotly objects.
+
+```r
+library(plotly)
+p1 <- plot_ly(economics, x = ~date, y = ~unemploy) %>% 
+  add_lines(name = "unemploy")
+p2 <- plot_ly(economics, x = ~date, y = ~uempmed) %>% 
+  add_lines(name = "uempmed")
+subplot(p1, p2)
+```
+
+```{r subplot-simple, echo=FALSE, fig.cap="The most basic use of `subplot()` to merge multiple plotly objects into a single plotly object."}
+knitr::include_graphics("images/subplot-simple.svg")
+```
+
+Although `subplot()` accepts an arbitrary number of plot objects, passing a _list_ of plots can save typing and redundant code when dealing with a large number of plots. Figure \@ref(fig:economics) shows one time series for each variable in the `economics` dataset and share the x-axis so that zoom/pan events are synchronized across each series:
+
+```r
+vars <- setdiff(names(economics), "date")
+plots <- lapply(vars, function(var) {
+  plot_ly(economics, x = ~date, y = as.formula(paste0("~", var))) %>%
+    add_lines(name = var)
+})
+subplot(plots, nrows = length(plots), shareX = TRUE, titleX = FALSE)
+```
+
+```{r economics, echo=FALSE, fig.cap = "Five different economic variables on different y scales and a common x scale. Zoom and pan events in the x-direction are synchronized across plots."}
+knitr::include_graphics("images/economics.svg")
+```
+
+Conceptually, `subplot()` provides a way to place a collection of plots into a table with a given number of rows and columns. The number of rows (and, by consequence, the number of columns) is specified via the `nrows` argument. By default each row/column shares an equal proportion of the overall height/width, but as shown in Figure \@ref(fig:proportions) the default can be changed via the `heights` and `widths` arguments.
+
+```{r proportions, echo = FALSE, fig.cap = "A visual diagram of controling the `heights` of rows and `widths` of columns. In this particular example, there are 5 plots being placed in 2 rows and three columns.", out.width="50%"}
+knitr::include_graphics("images/proportions.svg")
+```
+
+This flexibility is quite useful for a number of visualizations, for example, as shown in Figure \@ref(fig:joint), a joint density plot is really of subplot of joint and marginal densities. The **heatmaply** package is great example of leveraging `subplot()` in a similar way to create interactive dendrograms [@heatmaply].
+
+```{r, eval = FALSE, summary = "Click to show code"}
+# generate 10,000 random values from correlated bi-variate normal distribution
+m <- mvtnorm::rmvnorm(1e5, sigma = matrix(c(1, 0.3, 0.3, 1), nrow = 2))
+x <- m[, 1]
+y <- m[, 2]
+s <- subplot(
+  plot_ly(x = x, color = I("black")), 
+  plotly_empty(), 
+  plot_ly(x = x, y = y, color = I("black")) %>%
+    add_histogram2dcontour(colorscale = "Viridis"), 
+  plot_ly(y = y, color = I("black")),
+  nrows = 2, heights = c(0.2, 0.8), widths = c(0.8, 0.2), margin = 0,
+  shareX = TRUE, shareY = TRUE, titleX = FALSE, titleY = FALSE
+)
+layout(s, showlegend = FALSE)
+```
+
+```{r joint, echo = FALSE, fig.cap = "A joint density plot with synchronized axes."}
+knitr::include_graphics("images/joint.svg")
+```
+
+### Recursive subplots
+
+The `subplot()` function returns a plotly object so it can be modified like any other plotly object. This effectively means that subplots work recursively (i.e., you can have subplots within subplots). This idea is useful when your desired layout doesn't conform to the table structure described in the previous section. In fact, you can think of a subplot of subplots like a spreadsheet with merged cells. Figure \@ref(fig:recursive) gives a basic example where each row of the outer-most subplot contains a different number of columns.
+
+```{r, eval = FALSE, summary = "Click to show code"}
+plotList <- function(nplots) {
+  lapply(seq_len(nplots), function(x) plot_ly())
+}
+s1 <- subplot(plotList(6), nrows = 2, shareX = TRUE, shareY = TRUE)
+s2 <- subplot(plotList(2), shareY = TRUE)
+subplot(
+  s1, s2, plot_ly(), nrows = 3, 
+  margin = 0.04, heights = c(0.6, 0.3, 0.1)
+)
+```
+
+```{r recursive, echo = FALSE, fig.cap = "Recursive subplots."}
+knitr::include_graphics("images/recursive.svg")
+```
+
+The concept is particularly useful when you want plot(s) in a given row to have different widths from plot(s) in another row. Figure \@ref(fig:map-subplot) uses this recursive behavior to place many bar charts in the first row, and a single choropleth in the second row.
+
+```{r, eval = FALSE, summary = "Click to show code"}
+# specify some map projection/options
+g <- list(
+  scope = 'usa',
+  projection = list(type = 'albers usa'),
+  lakecolor = toRGB('white')
+)
+# create a map of population density
+density <- state.x77[, "Population"] / state.x77[, "Area"]
+map <- plot_geo(z = ~density, text = state.name, 
+                locations = state.abb, locationmode = 'USA-states') %>%
+  layout(geo = g)
+# create a bunch of horizontal bar charts 
+vars <- colnames(state.x77)
+barcharts <- lapply(vars, function(var) {
+  plot_ly(x = state.x77[, var], y = state.name) %>%
+    add_bars(orientation = "h", name = var) %>%
+    layout(showlegend = FALSE, hovermode = "y",
+           yaxis = list(showticklabels = FALSE))
+})
+subplot(
+  subplot(barcharts, margin = 0.01), map, 
+  nrows = 2, heights = c(0.3, 0.7), margin = 0.1
+)
+```
+
+```{r map-subplot, echo = FALSE, fig.cap = "Multiple bar charts of US statistics by state in a subplot with a choropleth of population density"}
+knitr::include_graphics("images/map-subplot.svg")
+```
+
+### Other approaches & applications
+
+Using `subplot()` directly is not the _only_ to create multiple views of a dataset with **plotly**. In some special cases, like scatterplot matrices and generalized pair plots, we can take advantage of some special methods designed specifically for these use cases.
+
+#### Scatterplot matrices
+
+The plotly.js library provides a trace specifically designed and optimized for scatterplot matrices (splom). To use it, provide numeric variables to the `dimensions` attribute of the `splom` trace type. 
+
+```r
+dims <- dplyr::select_if(iris, is.numeric)
+dims <- purrr::map2(dims, names(dims), ~list(values = .x, label = .y))
+plot_ly(type = "splom", dimensions = setNames(dims, NULL), showupperhalf = FALSE, diagonal = list(visible = FALSE))
+```
+
+```{r, echo = FALSE, fig.cap = "Linked brushing in a scatterplot matrix of the iris dataset."}
+include_vimeo("325081084")
+```
+
+See <https://plot.ly/r/splom/> for more options related to the splom trace type.
+
+#### Generalized pairs plot
+
+The generalized pairs plot is an extension of the scatterplot matrix to support both discrete and numeric variables [@gpp]. The `ggpairs()` function from the **GGally** package provides an interface for creating these plots via **ggplot2** [@GGally]. To implement `ggpairs()`, **GGally** introduces the notion of a matrix of **ggplot2** plot objects that it calls `ggmatrix()`. As Figure \@ref(fig:ggpairs) shows, the `ggplotly()` function has a method for converting ggmatrix objects directly:
+
+```r
+pm <- GGally::ggpairs(iris, aes(color = Species))
+class(pm)
+#> [1] "gg"  "ggmatrix"
+ggplotly(pm)
+```
+
+```{r ggpairs, echo = FALSE, fig.cap = "A generalized pairs plot made via the `ggpairs()` function from the **GGally** package"}
+knitr::include_graphics("images/ggpairs.svg")
+```
+
+As it turns out, **GGally** use `ggmatrix()` as a building block for other visualizations, like model diagnostic plots (`ggnostic()`). Sections \@ref(ggally-ggpairs) and \@ref(ggally-ggnostic) demonstrates how to leverage linked brushing in the `ggplotly()` versions of these plots.
+
+#### Trellis displays with `subplot()`
+
+It's true that **ggplot2**'s `facet_wrap()`/`facet_grid()` provides a simple way to create trellis displays, but for learning purposes, it can be helpful to learn how to implement a similar trellis display with `plot_ly()` and `subplot()`. Figure \@ref(fig:subplot-trellis) demonstrates one approach, which leverages `subplot()`'s ability to reposition annotations and shapes. Specifically, the `panel()` function below, which defines the visualization method to be applied to each `variable` in the `economics_long` dataset,  uses paper coordinates (i.e., graph coordinates on a normalized 0-1 scale) to place an annotation at the top-center of each panel as well as a rectangle shape behind the annotation. Note also the use of `ysizemode = 'pixel'` which gives the rectangle shape a fixed height (i.e., the reactangle height is always 16 pixels, regardless of the height of the trellis display).
+
+```{r, eval = FALSE, summary = "Click to show code"}
+library(dplyr)
+
+panel <- . %>% 
+  plot_ly(x = ~date, y = ~value) %>%
+  add_lines() %>%
+  add_annotations(
+    text = ~unique(variable),
+    x = 0.5,
+    y = 1,
+    yref = "paper",
+    xref = "paper",
+    yanchor = "bottom",
+    showarrow = FALSE,
+    font = list(size = 15)
+  ) %>%
+  layout(
+    showlegend = FALSE,
+    shapes = list(
+      type = "rect",
+      x0 = 0,
+      x1 = 1,
+      xref = "paper",
+      y0 = 0, 
+      y1 = 16,
+      yanchor = 1,
+      yref = "paper",
+      ysizemode = "pixel",
+      fillcolor = toRGB("gray80"),
+      line = list(color = "transparent")
+    )
+  )
+
+economics_long %>%
+  group_by(variable) %>%
+  do(p = panel(.)) %>%
+  subplot(nrows = NROW(.), shareX = TRUE)
+```
+
+```{r subplot-trellis, echo=FALSE, fig.cap = "Creating a trellis display with `subplot()`."}
+knitr::include_graphics("images/subplot-trellis.svg")
+```
+
+
+#### ggplot2 subplots
+
+It's possible to combine the convenience of **ggplot2**'s `facet_wrap()`/`facet_grid()` with the more flexibile arrangement capabilities of `subplot()`. Figure \@ref(fig:ggplot2-subplots) does this to show two different views of the `economics_long` data: the left-hand column displays each variable along time while the right-hand column shows violin plots of each variable. For the implementation, each column is created through `ggplot2::facet_wrap()`, but then the trellis displays are combined with `subplot()`. In this case, **ggplot2** objects are passed directly to `subplot()`, but you can also use `ggplotly()` for finer control over the conversion of **ggplot2** to **plotly** (see also Chapter \@ref(modifying-ggplotly)) before supplying that result to `subplot()`.
+
+```r
+gg1 <- ggplot(economics_long, aes(date, value)) + geom_line() +
+  facet_wrap(~variable, scales = "free_y", ncol = 1)
+gg2 <- ggplot(economics_long, aes(factor(1), value)) + geom_violin() +
+  facet_wrap(~variable, scales = "free_y", ncol = 1) + 
+  theme(axis.text = element_blank(), axis.ticks = element_blank())
+subplot(gg1, gg2)
+```
+
+```{r ggplot2-subplots, echo = FALSE, fig.cap = "Arranging multiple faceted ggplot2 plots into a plotly subplot."}
+knitr::include_graphics("images/ggplot2-subplots.svg")
+```
+
 
 ## Arranging htmlwidgets
 
-Since plotly objects inherit properties from an htmlwidget object, any method that works for arranging htmlwidgets also works for plotly objects. In some sense, an htmlwidget object is just a collection of HTML tags, and the **htmltools** package provides some useful functions for working with HTML tags [@htmltools]. The `tagList()` function gathers multiple HTML tags into a tag list, and when printing a tag list inside of a **knitr**/**rmarkdown** document [@knitr]; [@rmarkdown], it knows to render as HTML. However, when printing via the R/RStudio console, you must use `browsable()` to render and open the tag list as a web page (otherwise, it prints the HTML tags to your R console). Those familiar with **shiny** might already be familiar with using `uiOutput()` and/or `renderUI()` to dynamically render tag lists server-side.
+Since plotly objects inherit properties from an htmlwidget object, any method that works for arranging htmlwidgets also works for plotly objects. 
+
+TODO: flexdashboard!
+
+An **htmlwidgets** object is a collection of HTML tags, and the **htmltools** package provides some useful functions for working with HTML tags [@htmltools]. The `tagList()` function gathers multiple HTML tags into a tag list, and when printing a tag list inside of a **knitr**/**rmarkdown** document [@knitr]; [@rmarkdown], it knows to render as HTML. However, when printing via the R/RStudio console, you must use `browsable()` to render and open the tag list as a web page (otherwise, it prints the HTML tags to your R console). Those familiar with **shiny** might already be familiar with using `uiOutput()` and/or `renderUI()` to dynamically render tag lists server-side.
 
 ```{r, echo = FALSE}
 set.seed(100)
@@ -59,166 +282,7 @@ knitr::include_graphics("images/fluid.png")
 
 All the arrangement approaches discussed thus far are agnostic to output format, meaning that they can be used to arrange htmlwidgets within _any_ **knitr**/**rmarkdown** document.^[Although HTML can not possibly render in a pdf or word document, **knitr** can automatically detect a non-HTML output format and embed a static image of the htmlwidget via the **webshot** package [@webshot].] If the htmlwidgets do not need to be embedded within a larger document that requires an opinionated output format, the **flexdashboard** package provides a **rmarkdown** template for generating dashboards, with a convenient syntax for arranging views [@flexdashboard].
 
-## Merging plotly objects
 
-The `subplot()` function provides a flexible interface for merging multiple plotly objects into a single object (i.e., view). It is more flexible than most trellis display frameworks (e.g., ggplot2's `facet_wrap()`) as you don't have to condition on a value of common variable in each display [@trellis]. Its capabilities and interface is similar to the `grid.arrange()` function from the **gridExtra** package, which allows you to arrange multiple **grid** grobs in a single view, effectively providing a way to arrange (possibly unrelated)  **ggplot2** and/or **lattice** plots in a single view [@RCore]; [@gridExtra]; [@lattice]. Figure \@ref(fig:simple) shows the most simple way to use `subplot()` which is to directly supply plotly objects.
-
-```{r simple, fig.cap = "The most basic use of `subplot()` to merge multiple plotly objects into a single plotly object.", screenshot.alt = "screenshots/simple"}
-library(plotly)
-p1 <- plot_ly(economics, x = ~date, y = ~unemploy) %>% 
-  add_lines(name = "unemploy")
-p2 <- plot_ly(economics, x = ~date, y = ~uempmed) %>% 
-  add_lines(name = "uempmed")
-subplot(p1, p2)
-```
-
-Although `subplot()` accepts an arbitrary number of plot objects, passing a _list_ of plots can save typing and redundant code when dealing with a large number of plots. Figure \@ref(fig:economics) shows one time series for each variable in the `economics` dataset and share the x-axis so that zoom/pan events are synchronized across each series:
-
-```{r economics, fig.cap = "Five different economic variables on different y scales and a common x scale. Zoom and pan events in the x-direction are synchronized across plots.", screenshot.alt = "screenshots/economics"}
-vars <- setdiff(names(economics), "date")
-plots <- lapply(vars, function(var) {
-  plot_ly(economics, x = ~date, y = as.formula(paste0("~", var))) %>%
-    add_lines(name = var)
-})
-subplot(plots, nrows = length(plots), shareX = TRUE, titleX = FALSE)
-```
-
-A plotly subplot is a single plotly graph with multiple traces anchored on different axes. If you pre-specify an [axis ID](https://plot.ly/r/reference/#scatter-yaxis) for each trace, `subplot()` will respect that ID. Figure \@ref(fig:prepopulate) uses this fact in correspondence with the fact that mapping a discrete variable to `color` creates one trace per value. In addition to providing more control over trace placement, this provides a convenient way to control coloring (we could have `symbol`/`linetype` to achieve the same effect).
-
-```{r prepopulate, fig.cap = "Pre-populating y axis IDs.", screenshot.alt = "screenshots/prepopulate"}
-economics %>%
-  tidyr::gather(variable, value, -date) %>%
-  transform(id = as.integer(factor(variable))) %>%
-  plot_ly(x = ~date, y = ~value, color = ~variable, colors = "Dark2",
-          yaxis = ~paste0("y", id)) %>%
-  add_lines() %>%
-  subplot(nrows = 5, shareX = TRUE)
-```
-
-Conceptually, `subplot()` provides a way to place a collection of plots into a table with a given number of rows and columns. The number of rows (and, by consequence, the number of columns) is specified via the `nrows` argument. By default each row/column shares an equal proportion of the overall height/width, but as shown in Figure \@ref(fig:proportions) the default can be changed via the `heights` and `widths` arguments.
-
-```{r proportions, echo = FALSE, fig.cap = "A visual diagram of controling the `heights` of rows and `widths` of columns."}
-knitr::include_graphics("images/proportions.svg")
-```
-
-This flexibility is quite useful for a number of visualizations, for example, as shown in Figure \@ref(fig:joint), a joint density plot is really of subplot of joint and marginal densities. The **heatmaply** package is great example of leveraging `subplot()` in a similar way to create interactive dendrograms [@heatmaply].
-
-```{r joint, fig.cap = "A joint density plot with synchronized axes.", screenshot.alt = "screenshots/joint"}
-x <- rnorm(100)
-y <- rnorm(100)
-s <- subplot(
-  plot_ly(x = x, color = I("black")), 
-  plotly_empty(), 
-  plot_ly(x = x, y = y, color = I("black")), 
-  plot_ly(y = y, color = I("black")),
-  nrows = 2, heights = c(0.2, 0.8), widths = c(0.8, 0.2), 
-  shareX = TRUE, shareY = TRUE, titleX = FALSE, titleY = FALSE
-)
-layout(s, showlegend = FALSE)
-```
-
-### Recursive subplots
-
-The `subplot()` function returns a plotly object so it can be modified like any other plotly object. This effectively means that subplots work recursively (i.e., you can have subplots within subplots). This idea is useful when your desired layout doesn't conform to the table structure described in the previous section. In fact, you can think of a subplot of subplots like a spreadsheet with merged cells. Figure \@ref(fig:recursive) gives a basic example where each row of the outer-most subplot contains a different number of columns.
-
-```{r recursive, fig.cap = "Recursive subplots.", screenshot.alt = "screenshots/recursive"}
-plotList <- function(nplots) {
-  lapply(seq_len(nplots), function(x) plot_ly())
-}
-s1 <- subplot(plotList(6), nrows = 2, shareX = TRUE, shareY = TRUE)
-s2 <- subplot(plotList(2), shareY = TRUE)
-subplot(
-  s1, s2, plot_ly(), nrows = 3, 
-  margin = 0.04, heights = c(0.6, 0.3, 0.1)
-)
-```
-
-The concept is particularly useful when you want plot(s) in a given row to have different widths from plot(s) in another row. Figure \@ref(fig:map-subplot) uses this recursive behavior to place many bar charts in the first row, and a single choropleth in the second row.
-
-```{r map-subplot, fig.cap = "Multiple bar charts of US statistics by state in a subplot with a choropleth of population density", screenshot.alt = "screenshots/map-subplot"}
-# specify some map projection/options
-g <- list(
-  scope = 'usa',
-  projection = list(type = 'albers usa'),
-  lakecolor = toRGB('white')
-)
-# create a map of population density
-density <- state.x77[, "Population"] / state.x77[, "Area"]
-map <- plot_geo(z = ~density, text = state.name, 
-                locations = state.abb, locationmode = 'USA-states') %>%
-  layout(geo = g)
-# create a bunch of horizontal bar charts 
-vars <- colnames(state.x77)
-barcharts <- lapply(vars, function(var) {
-  plot_ly(x = state.x77[, var], y = state.name) %>%
-    add_bars(orientation = "h", name = var) %>%
-    layout(showlegend = FALSE, hovermode = "y",
-           yaxis = list(showticklabels = FALSE))
-})
-subplot(
-  subplot(barcharts, margin = 0.01), map, 
-  nrows = 2, heights = c(0.3, 0.7), margin = 0.1
-)
-```
-
-### ggplot2 subplots
-
-Underneath the hood, ggplot2 facets are implemented as subplots, which enables the synchronized zoom events on shared axes. Since subplots work recursively, it is also possible to have a subplot of ggplot2 faceted plots, as Figure \@ref(fig:ggplot2-subplots) shows. Moreover, `subplot()` can understand ggplot objects, so there is no need to translate them to plotly object via `ggplotly()`  (unless you want to leverage some of the `ggplotly()` arguments, such as `tooltip` for customizing information displayed on hover).
-
-```{r ggplot2-subplots, fig.cap = "Arranging multiple faceted ggplot2 plots into a plotly subplot.", screenshot.alt = "screenshots/ggplot2-subplots"}
-e <- tidyr::gather(economics, variable, value, -date)
-gg1 <- ggplot(e, aes(date, value)) + geom_line() +
-  facet_wrap(~variable, scales = "free_y", ncol = 1)
-gg2 <- ggplot(e, aes(factor(1), value)) + geom_violin() +
-  facet_wrap(~variable, scales = "free_y", ncol = 1) + 
-  theme(axis.text = element_blank(), axis.ticks = element_blank())
-subplot(gg1, gg2) %>% layout(margin = list(l = 50))
-```
-
-## Creating facets with `subplot()`
-
-```r
-library(plotly)
-library(dplyr)
-
-my_plot <- . %>% 
-  plot_ly(x = ~date, y = ~value) %>%
-  add_annotations(
-    text = ~unique(variable),
-    x = 0.5,
-    y = 1,
-    yref = "paper",
-    xref = "paper",
-    xanchor = "middle",
-    yanchor = "top",
-    showarrow = FALSE,
-    font = list(size = 15)
-  ) %>%
-  layout(
-    shapes = list(
-      type = "rect",
-      x = 0,
-      x = 1
-    )
-  )
-
-economics_long %>%
-  group_by(variable) %>%
-  do(p = my_plot(.)) %>%
-  subplot(nrows = NROW(.), shareX = TRUE)
-```
-
-
-## Scatterplot matrices with GGally
-
-Scatterplot matrices _can_ be made via `plot_ly()` and `subplot()`, but `ggplotly()` has a special method for translating ggmatrix objects from the **GGally** package to **plotly** objects [@GGally]. These objects are essentially a matrix of ggplot objects and are the underlying data structure which powers higher level functions in **GGally**, such as `ggpairs()` -- a function for creating a generalized pairs plot [@gpp]. The generalized pairs plot can be motivated as a generalization of the scatterplot matrix with support for categorical variables and different visual representations of the data powered by the grammar of graphics. Figure \@ref(fig:ggpairs) shows an interactive version of the generalized pairs plot made via `ggpairs()` and `ggplotly()`.
-
-```{r ggpairs, fig.asp = 1, fig.width = 8, fig.cap = "An interactive version of the generalized pairs plot made via the `ggpairs()` function from the **GGally** package", screenshot.alt = "screenshots/ggpairs"}
-pm <- GGally::ggpairs(iris)
-ggplotly(pm)
-```
-
-Sections \@ref(ggally-ggpairs) and \@ref(ggally-ggnostic) domenstrates how to link the views generated by **Gally** functions `ggpairs()` and `ggnostic()` (model diagnostic plots).
 
 ## Navigating many views
 
