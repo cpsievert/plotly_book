@@ -225,49 +225,33 @@ knitr::include_graphics("images/ggplot2-subplots.svg")
 
 ## Arranging htmlwidgets
 
-Since plotly objects inherit properties from an htmlwidget object, any method that works for arranging htmlwidgets also works for plotly objects. 
+Since **plotly** objects are also **htmlwidgets**, any method that works for arranging **htmlwidgets** also works for **plotly** objects. Moreover, since **htmlwidgets** are also **htmltools** tags, any method that works for arranging **htmltools** tags also works for **htmlwidgets**. Here are three common ways to arrange components (e.g., **htmlwidgets**, **htmltools** tags, etc) in a single web-page:
 
-TODO: flexdashboard!
+1. __flexdashboard__: An R package for arranging components into an opinionated dashboard layout. This package is essentially a special **rmarkdown** template that uses a simple markup syntax to define the layout.
+2. Bootstrap's grid layout: Both the **crosstalk** and **shiny** packages provide ways to arrange numerous components via Bootstrap's (a popular HTML/CSS framework) [grid layout system](https://getbootstrap.com/docs/4.1/layout/grid/).
+3. CSS flexbox: If you know some HTML and CSS, you can leverage [CSS flexbox](https://css-tricks.com/snippets/css/a-guide-to-flexbox/) to arrange components via the **htmltools** package.
 
-An **htmlwidgets** object is a collection of HTML tags, and the **htmltools** package provides some useful functions for working with HTML tags [@htmltools]. The `tagList()` function gathers multiple HTML tags into a tag list, and when printing a tag list inside of a **knitr**/**rmarkdown** document [@knitr]; [@rmarkdown], it knows to render as HTML. However, when printing via the R/RStudio console, you must use `browsable()` to render and open the tag list as a web page (otherwise, it prints the HTML tags to your R console). Those familiar with **shiny** might already be familiar with using `uiOutput()` and/or `renderUI()` to dynamically render tag lists server-side.
+Although **flexdashboard** is a really excellent way to arrange web-based content generated from R, it can pay-off to know the other two approaches as their arrangement techniques are agnostic to an **rmarkdown** output format. In other words, approaches 2-3 can be used with used with any **rmarkdown** template^[Although HTML can not possibly render in a pdf or word document, **knitr** can automatically detect a non-HTML output format and embed a static image of the htmlwidget via the **webshot** package [@webshot].] or really _any_ framework for website generation. Although Bootstrap grid layout system (2) is expressive and intuitive, using it in a larger website that also uses a different HTML/CSS framework (e.g. Bulma, Skeleton, etc) can cause issues. In that case, CSS flexbox (3) is a light-weight (i.e., no external CSS/JS dependencies) alternative that is less likely to introduce undesirable side-effects.
+
+### Flexdashboard
+
+Figure \@ref(fig:flexdashboard-ggplotly) provides an example of embedding `ggplotly()` inside **flexdashboard** [@flexdashboard]. Since **flexdashboard** is an **rmarkdown** template, it automatically comes with many of things that make **rmarkdown** great: ability to produce standalone HTML, integration with other languages, and thoughtful integration with RStudio products like Connect. There are many other things to like about **flexdashboard**, including lots of easy-to-use theming options, multiple pages, storyboards, and even **shiny** integration. Explaining how the **flexdashboard** package actually works is beyond the scope of this book, but you can visit the website for documentation and more examples <https://rmarkdown.rstudio.com/flexdashboard/>.
+
+```{r flexdashboard-ggplotly, echo = FALSE, fig.link="https://plotly-r.com/flexdashboard.html", fig.cap = "An example of embedding `ggplotly()` graphs inside **flexdashboard**. See here for the interactive dashboard <https://plotly-r.com/flexdashboard.html>"}
+knitr::include_graphics("images/flexdashboard.png")
+```
+
+### Bootstrap grid layout
+
+If you're already familiar with **shiny**, you may already be familiar with functions like `fluidPage()`, `fluidRow()`, and `column()`. These R functions provide an interface from R to bootstrap's grid layout system. That layout system is based on the notion of rows and columns where each row spans a width of 12 columns. Figure \@ref(fig:fluid) demonstrates how one can use these functions to produce a standalone HTML page with three **plotly** graphs -- with the first plot in the first row spanning the full width and the other 2 plots in the second row of equal width. To learn more about this `fluidPage()` approach to layouts, see <https://shiny.rstudio.com/articles/layout-guide.html>.
 
 ```{r, echo = FALSE}
 set.seed(100)
 ```
 
-```{r multiple-htmlwidgets-fake, eval = FALSE}
-library(htmltools)
-library(plotly)
-p <- plot_ly(x = rnorm(100))
-# NOTE: you don't need browsable() in rmarkdown, but you do at the R prompt 
-browsable(tagList(p, p))
-```
-
-```{r multiple-htmlwidgets, echo = FALSE,  fig.cap = "Printing multiple htmlwidget objects with `tagList()`. To render tag lists at the command line, wrap them in `browsable()`"}
-# resort to this until this gets resolved -- https://github.com/rstudio/bookdown/issues/74
-knitr::include_graphics("images/multiple-htmlwidgets.png")
-```
-
-
-Figure \@ref(fig:multiple-htmlwidgets) renders two plots, each in its own row spanning the width of the page, because each htmlwidget object is an HTML `<div>` tag. More often than not, it is desirable to arrange multiple plots in a given row, and there are a few ways to do that. A very flexible approach is to wrap all of your plots in a [flexbox](https://css-tricks.com/snippets/css/a-guide-to-flexbox/) (i.e., an HTML `<div>` with `display: flex` Cascading Style Sheets (CSS) property). The `tags$div()` function from **htmltools** provides a way to wrap a `<div>` around both tag lists and htmlwidget objects, and set attributes, such as `style`. As Figure \@ref(fig:flexbox) demonstrates, this approach also provides a nice way to add custom styling to the page, such as borders around each panel.
-
-```{r flexbox-fake, eval = FALSE}
-tags$div(
-  style = "display: flex; flex-wrap: wrap",
-  tags$div(p, style = "width: 50%; padding: 1em; border: solid;"),
-  tags$div(p, style = "width: 50%; padding: 1em; border: solid;"),
-  tags$div(p, style = "width: 100%; padding: 1em; border: solid;")
-)
-```
-
-```{r flexbox, echo = FALSE, fig.cap = "Arranging multiple htmlwidgets with flexbox"}
-knitr::include_graphics("images/flexbox.png")
-```
-
-Another way to arrange multiple htmlwidget objects on a single page is to leverage the `fluidPage()`, `fluidRow()`, and `column()` functions from the **shiny** package.
-
-```{r fluid-fake, eval = FALSE}
+```r
 library(shiny)
+p <- plot_ly(x = rnorm(100))
 fluidPage(
   fluidRow(p),
   fluidRow(
@@ -280,13 +264,42 @@ fluidPage(
 knitr::include_graphics("images/fluid.png")
 ```
 
-All the arrangement approaches discussed thus far are agnostic to output format, meaning that they can be used to arrange htmlwidgets within _any_ **knitr**/**rmarkdown** document.^[Although HTML can not possibly render in a pdf or word document, **knitr** can automatically detect a non-HTML output format and embed a static image of the htmlwidget via the **webshot** package [@webshot].] If the htmlwidgets do not need to be embedded within a larger document that requires an opinionated output format, the **flexdashboard** package provides a **rmarkdown** template for generating dashboards, with a convenient syntax for arranging views [@flexdashboard].
+It's also worth noting another, somewhat similar, yet more succinct, interface to grid's layout system provided by the `bscols()` function from the **crosstalk** package. You can think of it in a similar way to `fluidRow()`, but instead of defining `column()` width for each component individually, you can specify the width of several components at once through the `widths` argument. Also, importantly, this functions works recursively -- it returns a collection of **htmltools** tags and accepts them as input as well. The code below produces the same result as above, but is a much more succinct way of doing so.
 
+```r
+bscols(p, bscols(p, p), widths = 12)
+```
+
+Bootstrap is much more than just it's grid layout system, so beware -- using either of these approaches will impose Bootstrap's styling rules on other content in your webpage. If you are using another CSS framework for styling or just want to reduce the size of dependencies in your webpage, consider working with CSS flexbox instead of Bootstrap.
+
+### CSS flexbox
+
+Cascading Style Sheet (CSS) flexbox is a relatively new CSS feature that most modern web browsers natively support.^[For a full reference of which browsers/versions support flexbox, see <https://caniuse.com/#feat=flexbox>.] It aims to provide a general system for distributing space among multiple components in a container. Instead of covering this entire system, we'll cover it's basic functionality, which is fairly similar to Bootstrap's grid layout system. 
+
+Creating a flexbox requires a flexbox container -- in HTML speak, that means a `<div>` tag with a CSS style property of `display: flex`. By default, in this display setting, all the components inside that container will try fit in a single row. To allow 'overflowing' components the freedom to 'wrap' into new row(s), set the CSS property of `flex-wrap: wrap` in the parent container. Another useful CSS property to know about for the 'parent' container is `justify-content`: in the case of Figure \@ref(fig:flexbox), I'm using it to horizontally `center` the components. Moreover, since I've imposed a width of 40% for the first two plots, the net effect is that we have 2 plots in the first two (spanning 80% of the page width), then the third plot wraps onto a new line.
+
+```r
+library(htmltools)
+p <- plot_ly(x = rnorm(100))
+# NOTE: you don't need browsable() in rmarkdown, but you do at the R prompt 
+browsable(div(
+  style = "display: flex; flex-wrap: wrap; justify-content: center",
+  div(p, style = "width: 40%; border: solid;"),
+  div(p, style = "width: 40%; border: solid;"),
+  div(p, style = "width: 100%; border: solid;")
+))
+```
+
+```{r flexbox, echo = FALSE,  fig.cap = "Arranging multiple htmlwidgets with CSS flexbox."}
+knitr::include_graphics("images/flexbox.png")
+```
+
+From the code example in Figure \@ref(fig:flexbox), you might notice that `display: flex; flex-wrap: wrap` is quite similar to Bootstrap grid layout system. The main difference is that, instead of specifying widths in terms of 12 columns, you have more flexibility with how to size things, as well as how you handle extra space. Here, in Figure \@ref(fig:flexbox) I've used widths that are relative to the page width, but you could also use fixed widths (using fixed widths, however, is generally frowned upon). For those that would like to learn about more details about CSS flexbox, see <https://css-tricks.com/snippets/css/a-guide-to-flexbox/>.
 
 
 ## Navigating many views
 
-Sometimes you have to consider way more views than you can possibly digest visually. In [Multiple linked views](#multiple-linked-views), we explore some useful techniques for implementing the popular visualization mantra from @details-on-demand: 
+Sometimes you have to consider way more views than you can possibly digest visually. In Chapters \@ref(graphical-queries) and \@ref(linking-server-side), we explore some useful techniques for implementing the popular visualization mantra from @details-on-demand: 
 
 > "Overview first, zoom and filter, then details-on-demand."
 
