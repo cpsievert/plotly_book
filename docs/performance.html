@@ -5,11 +5,11 @@
 
   <meta charset="UTF-8">
   <meta http-equiv="X-UA-Compatible" content="IE=edge">
-  <title>12 Editing views for publishing | Interactive web-based data visualization with R, plotly, and shiny</title>
+  <title>24 Improving performance | Interactive web-based data visualization with R, plotly, and shiny</title>
   <meta name="description" content="A useR guide to creating highly interactive graphics for exploratory and expository visualization.">
   <meta name="generator" content="bookdown  and GitBook 2.6.7">
 
-  <meta property="og:title" content="12 Editing views for publishing | Interactive web-based data visualization with R, plotly, and shiny" />
+  <meta property="og:title" content="24 Improving performance | Interactive web-based data visualization with R, plotly, and shiny" />
   <meta property="og:type" content="book" />
   
   
@@ -17,7 +17,7 @@
   <meta name="github-repo" content="ropensci/plotly" />
 
   <meta name="twitter:card" content="summary" />
-  <meta name="twitter:title" content="12 Editing views for publishing | Interactive web-based data visualization with R, plotly, and shiny" />
+  <meta name="twitter:title" content="24 Improving performance | Interactive web-based data visualization with R, plotly, and shiny" />
   <meta name="twitter:site" content="@cpsievert" />
   <meta name="twitter:description" content="A useR guide to creating highly interactive graphics for exploratory and expository visualization." />
   
@@ -32,8 +32,8 @@
   <meta name="apple-mobile-web-app-status-bar-style" content="black">
   
   
-<link rel="prev" href="exporting-static-images.html">
-<link rel="next" href="arranging-views.html">
+<link rel="prev" href="is-plotly-free-secure.html">
+<link rel="next" href="controlling-tooltips.html">
 <script src="libs/jquery/jquery.min.js"></script>
 <link href="libs/gitbook/css/style.css" rel="stylesheet" />
 <link href="libs/gitbook/css/plugin-table.css" rel="stylesheet" />
@@ -343,105 +343,38 @@ code span.wa { color: #60a0b0; font-weight: bold; font-style: italic; } /* Warni
           <div class="page-inner">
 
             <section class="normal" id="section-">
-<div id="editing-views" class="section level1">
-<h1><span class="header-section-number">12</span> Editing views for publishing</h1>
-<p>Numerous layout components of a <strong>plotly</strong> graph can be directly manipulated, including annotation text and placement (more on this in section <a href="linking-server-side.html#edit-events">17.2.3</a>). In addition, the download (aka, toImage) button can be customized to export a static version to different file types including: svg, png, jpeg, and webp. Since svg can be easily converted to pdf, this effectively means we can edit a graph in a browser to perform touch-ups, then export to a high-quality pdf. At least currently, this workflow is recommended over first exporting to pdf (via <code>orca()</code>) then using Adobe Illustrator to manipulate the vectors, especially for adjusting the placement of annotations.</p>
-<p>Figure <a href="editing-views.html#fig:edit-county-labels">12.1</a> demonstrates this workflow on a choropleth map of estimated income in Minnesota by county where the top 10 counties by total income are labeled.<a href="#fn19" class="footnote-ref" id="fnref19"><sup>19</sup></a> For visuals like this, automated algorithms for placing the labels may not yield polished results, so it can be nice to have the option to adjust the placement manually. Although pressing ‘download plot’ exports a static version of the current state of the plot, there currently isn’t an official way to save the state of these manual edits in the HTML version. You could, however, create a shiny app that listens to the <code>'plotly_relayout'</code> event to obtain the new annotation positions (see, for example, Figure <a href="linking-server-side.html#fig:shiny-edit-annotations">17.5</a>) and translate that information into code.</p>
-<details>
-<p><summary>Click to show code</summary></p>
-<pre class="sourceCode r"><code class="sourceCode r"><span class="kw">library</span>(dplyr)
-<span class="kw">library</span>(sf)
-<span class="kw">library</span>(purrr)
-<span class="kw">library</span>(tidycensus)
-<span class="kw">library</span>(USAboundaries)
-
-<span class="co"># obtain geographical information for each county in MN</span>
-mn_sf &lt;-<span class="st"> </span><span class="kw">us_counties</span>(<span class="dt">states =</span> <span class="st">&quot;MN&quot;</span>)
-
-<span class="co"># get income information for each county in MN</span>
-mn_income &lt;-<span class="st"> </span><span class="kw">get_acs</span>(<span class="dt">geography =</span> <span class="st">&quot;county&quot;</span>, <span class="dt">variables =</span> <span class="st">&quot;B19013_001&quot;</span>, <span class="dt">state =</span> <span class="st">&quot;MN&quot;</span>) <span class="op">%&gt;%</span>
-<span class="st">  </span><span class="kw">mutate</span>(
-    <span class="dt">NAME =</span> <span class="kw">sub</span>(<span class="st">&quot;County, Minnesota&quot;</span>, <span class="st">&quot;&quot;</span>, NAME),
-    <span class="dt">county =</span> <span class="kw">reorder</span>(NAME, estimate),
-    <span class="dt">color =</span> scales<span class="op">::</span><span class="kw">col_numeric</span>(<span class="st">&quot;viridis&quot;</span>, <span class="ot">NULL</span>)(estimate)
-  )
-
-<span class="co"># find center of each county (for placing annotations)</span>
-mn_center &lt;-<span class="st"> </span>mn_sf <span class="op">%&gt;%</span>
-<span class="st">  </span><span class="kw">st_centroid</span>() <span class="op">%&gt;%</span>
-<span class="st">  </span><span class="kw">mutate</span>(
-    <span class="dt">x =</span> <span class="kw">map_dbl</span>(geometry, <span class="dv">1</span>),
-    <span class="dt">y =</span> <span class="kw">map_dbl</span>(geometry, <span class="dv">2</span>)
-  )
-
-<span class="co"># get top 10 counties by income with their x/y center location</span>
-top10labels &lt;-<span class="st"> </span>mn_income <span class="op">%&gt;%</span>
-<span class="st">  </span><span class="kw">top_n</span>(<span class="dv">10</span>, estimate) <span class="op">%&gt;%</span>
-<span class="st">  </span><span class="kw">left_join</span>(mn_center, <span class="dt">by =</span> <span class="kw">c</span>(<span class="st">&quot;GEOID&quot;</span> =<span class="st"> &quot;geoid&quot;</span>))
-
-<span class="co"># the map and top 10 county labels</span>
-map &lt;-<span class="st"> </span><span class="kw">plot_ly</span>() <span class="op">%&gt;%</span>
-<span class="st">  </span><span class="kw">add_sf</span>(
-    <span class="dt">data =</span> <span class="kw">left_join</span>(mn_sf, mn_income, <span class="dt">by =</span> <span class="kw">c</span>(<span class="st">&quot;geoid&quot;</span> =<span class="st"> &quot;GEOID&quot;</span>)),
-    <span class="dt">color =</span> <span class="op">~</span><span class="kw">I</span>(color),
-    <span class="dt">split =</span> <span class="op">~</span>NAME,
-    <span class="dt">stroke =</span> <span class="kw">I</span>(<span class="st">&quot;black&quot;</span>),
-    <span class="dt">span =</span> <span class="kw">I</span>(<span class="dv">1</span>),
-    <span class="dt">hoverinfo =</span> <span class="st">&quot;none&quot;</span>
-  ) <span class="op">%&gt;%</span>
-<span class="st">  </span><span class="kw">add_annotations</span>(
-    <span class="dt">data =</span> <span class="kw">select</span>(top10labels, NAME, x, y),
-    <span class="dt">text =</span> <span class="op">~</span>NAME,
-    <span class="dt">x =</span> <span class="op">~</span>x,
-    <span class="dt">y =</span> <span class="op">~</span>y
-  ) 
-
-<span class="co"># the dot-plot</span>
-bars &lt;-<span class="st"> </span><span class="kw">ggplot</span>(mn_income, <span class="kw">aes</span>(<span class="dt">x =</span> estimate, <span class="dt">y =</span> county)) <span class="op">+</span>
-<span class="st">  </span><span class="kw">geom_errorbarh</span>(<span class="kw">aes</span>(<span class="dt">xmin =</span> estimate <span class="op">-</span><span class="st"> </span>moe, <span class="dt">xmax =</span> estimate <span class="op">+</span><span class="st"> </span>moe)) <span class="op">+</span>
-<span class="st">  </span><span class="kw">geom_point</span>(<span class="kw">aes</span>(<span class="dt">color =</span> color), <span class="dt">size =</span> <span class="dv">2</span>) <span class="op">+</span>
-<span class="st">  </span><span class="kw">scale_color_identity</span>()
-
-<span class="co"># make manual edits in the browser, then click the </span>
-<span class="co"># &#39;toImage&#39; button to export an svg file</span>
-<span class="kw">ggplotly</span>(bars, <span class="dt">dynamicTicks =</span> <span class="ot">TRUE</span>, <span class="dt">tooltip =</span> <span class="st">&quot;y&quot;</span>, <span class="dt">height =</span> <span class="dv">8</span> <span class="op">*</span><span class="st"> </span><span class="dv">96</span>, <span class="dt">width =</span> <span class="dv">11</span> <span class="op">*</span><span class="st"> </span><span class="dv">96</span>) <span class="op">%&gt;%</span>
-<span class="st">  </span><span class="kw">subplot</span>(map, <span class="dt">nrows =</span> <span class="dv">1</span>, <span class="dt">widths =</span> <span class="kw">c</span>(<span class="fl">0.3</span>, <span class="fl">0.7</span>)) <span class="op">%&gt;%</span>
-<span class="st">  </span><span class="kw">layout</span>(<span class="dt">showlegend =</span> <span class="ot">FALSE</span>) <span class="op">%&gt;%</span>
-<span class="st">  </span><span class="kw">config</span>(
-    <span class="dt">edits =</span> <span class="kw">list</span>(
-      <span class="dt">annotationPosition =</span> <span class="ot">TRUE</span>,
-      <span class="dt">annotationTail =</span> <span class="ot">TRUE</span>,
-      <span class="dt">annotationText =</span> <span class="ot">TRUE</span>
-    ),
-    <span class="dt">toImageButtonOptions =</span> <span class="kw">list</span>(<span class="dt">format =</span> <span class="st">&quot;svg&quot;</span>)
-  )</code></pre>
-</details>
-<div class="figure" style="text-align: center"><span id="fig:edit-county-labels"></span>
-<iframe src="https://player.vimeo.com/video/309371928?title=0&amp;byline=0&amp;portrait=0" width="100%" height="400" frameborder="0" seamless="seamless" webkitAllowFullScreen mozallowfullscreen allowFullScreen></iframe>
-<p class="caption">
-FIGURE 12.1: Estimated total income by county in Minnesota. The top 10 counties are labeled with editable annotations. After manually adjusting the placement of county labels in a web browser, and zooming in on the top 10 counties in the dot plot, the ‘download plot’ button is used to export to svg.
-</p>
+<div id="performance" class="section level1">
+<h1><span class="header-section-number">24</span> Improving performance</h1>
+<p>Recall, from Figure <a href="overview.html#fig:intro-printing">2.5</a>, when you print a <strong>plotly</strong> object (or really any plot), there are two classes of performance to be aware of: print-time (i.e. build) and run-time (i.e. render). That is, build time can be classified as the time it takes for the object to be serialized as JSON/HTML, whereas run time is the time it takes for the browser to render the HTML into a webpage. In the case of <strong>plotly</strong>, there are two quick and easy things you can do to improve run time performance in <em>any context</em>:</p>
+<ul>
+<li><p><code>toWebGL()</code>: This function attempts to render the chart using WebGL (i.e., Canvas) instead of Scalable Vector Graphics (SVG). The difference between these contexts is somewhat analogous to the difference between saving a static chart to png/jpeg (pixel based) versus pdf (vector based). Vector based graphics have the desirable property of producing sharp visuals that scale well to any size, but they don’t scale well in the number of vectors (e.g., points, lines, polygons, etc) that they need to render.</p></li>
+<li><p><code>partial_bundle()</code>: This function attempts to reduce the size of the plotly.js bundle used to render the <strong>plotly</strong> graphs. The size of the default (i.e., main) plotly.js bundle is about 3MB, which can take a considerable amount of time to download with a slow internet connection, potentially leading to noticable lag in initial page load for consumers of the graph. As it turns out, the main bundle is not always necessary to render every graphs on a given website, so plotly.js provides <a href="https://github.com/plotly/plotly.js/tree/master/dist#partial-bundles">partial bundles</a> that can render certain subsets of the graphing library. For instance, if you only need scatter, bar, or pie trace types, you can get away with the basic bundle which is currently under 1MB in size. This function is always safe to use when rendering a single <strong>plotly</strong> graph in a web page, but when rendering multiple graphs, you should take care not to include mutliple bundles in the same page.</p></li>
+</ul>
+<p>These two options may improve run-time performance without much of any thinking, but sometimes it’s worth being more thoughtful about your visualization strategy by leveraging summaries (e.g., Section <a href="arranging-views.html#navigating-many-views">13.3</a>, Figure <a href="linking-server-side.html#fig:shiny-crossfilter-kde">17.24</a>, Figure <a href="client-side.html#fig:correlation-client-side">22.1</a>) as well as being more explicit about how a graph responds to changes in the underlying data (e.g., Section <a href="linking-server-side.html#proxies">17.3.1</a>). Mastering these more broad and complex subjects is critical for scaling interactive visualizations to truly large data<a href="#fn38" class="footnote-ref" id="fnref38"><sup>38</sup></a>, especially in the case of linking multiple views, where computational ‘tricks’ such as pre-aggregating distributive (e.g., min, max, sum, count) and algebraic (e.g., mean, var, etc) statistics intelligently is a trademark of systems that enable real-time graphical queries of massive datasets <span class="citation">(Heer <a href="#ref-2013-immens" role="doc-biblioref">2013</a>)</span>; <span class="citation">(Lauro Lins and Scheidegger <a href="#ref-nanocubes" role="doc-biblioref">2013</a>)</span>; <span class="citation">(Heer <a href="#ref-2019-falcon" role="doc-biblioref">2019</a>)</span>. As <span class="citation">Wickham (<a href="#ref-bigvis" role="doc-biblioref">2013</a>)</span> points out, it’s also important to consider the uncertainty in these computationally efficient statistics, as they aren’t nearly as statistically robust as their holistic conterparts (e.g., mean vs median) that are more computationally intensive.</p>
+<p>Since latency in interactive graphics is known to make exploratory data analysis a more challenging task <span class="citation">(Heer <a href="#ref-2014-latency" role="doc-biblioref">2014</a>)</span>, systems that optimize run over build performance are typically preferrable. This is especially true for visualizations that <em>others</em> are consuming, but in a typical EDA context, where the person creating the visualization is main consumer, build time performance is also important factor because it also presents a hurdle to the analytical thought process. It’s hard to give general advice on improving build-time performance in general, but a great first step in doing so is to profile the speed of your R code with something like the <strong>profvis</strong> package. This will at least let you know if the slowness you’re experiencing is due to your own R code.</p>
 </div>
-<p>After pressing the “download plot” button to export svg, then the <strong>rsvg</strong> package can be used to convert the svg to pdf <span class="citation">(Ooms <a href="#ref-rsvg" role="doc-biblioref">2018</a>)</span>.</p>
-<pre class="sourceCode r"><code class="sourceCode r"><span class="co"># This is the directory that my browser places downloads...</span>
-<span class="co"># you may have to change this to your download directory</span>
-download_dir &lt;-<span class="st"> &quot;~/Downloads/&quot;</span>
-withr<span class="op">::</span><span class="kw">with_dir</span>(download_dir, rsvg<span class="op">::</span><span class="kw">rsvg_pdf</span>(<span class="st">&quot;newplot.svg&quot;</span>, <span class="st">&quot;mn.pdf&quot;</span>))</code></pre>
-
-</div>
-
-
-
 <h3>References</h3>
 <div id="refs" class="references">
-<div id="ref-rsvg">
-<p>Ooms, Jeroen. 2018. <em>Rsvg: Render Svg Images into Pdf, Png, Postscript, or Bitmap Arrays</em>. <a href="https://CRAN.R-project.org/package=rsvg">https://CRAN.R-project.org/package=rsvg</a>.</p>
+<div id="ref-2013-immens">
+<p>Heer, Zhicheng Liu AND Biye Jiang AND Jeffrey. 2013. “ImMens: Real-Time Visual Querying of Big Data.” <em>Computer Graphics Forum (Proc. EuroVis)</em> 32 (3). <a href="http://idl.cs.washington.edu/papers/immens">http://idl.cs.washington.edu/papers/immens</a>.</p>
+</div>
+<div id="ref-nanocubes">
+<p>Lauro Lins, James T. Klosowski, and Carlos Scheidegger. 2013. “Nanocubes for Real-Time Exploration of Spatiotemporal Datasets.” <em>Visualization and Computer Graphics, IEEE Transactions</em>.</p>
+</div>
+<div id="ref-2019-falcon">
+<p>Heer, Dominik Moritz AND Bill Howe AND Jeffrey. 2019. “Falcon: Balancing Interactive Latency and Resolution Sensitivity for Scalable Linked Visualizations.” In <em>ACM Human Factors in Computing Systems (Chi)</em>. <a href="http://idl.cs.washington.edu/papers/falcon">http://idl.cs.washington.edu/papers/falcon</a>.</p>
+</div>
+<div id="ref-bigvis">
+<p>Wickham, Hadley. 2013. “Bin-Summarise-Smooth: A Framework for Visualising Large Data.” had.co.nz.</p>
+</div>
+<div id="ref-2014-latency">
+<p>Heer, Zhicheng Liu AND Jeffrey. 2014. “The Effects of Interactive Latency on Exploratory Visual Analysis.” <em>IEEE Trans. Visualization &amp; Comp. Graphics (Proc. InfoVis)</em>. <a href="http://idl.cs.washington.edu/papers/latency">http://idl.cs.washington.edu/papers/latency</a>.</p>
 </div>
 </div>
 <div class="footnotes">
 <hr />
-<ol start="19">
-<li id="fn19"><p>Yes, this is <a href="https://xkcd.com/1138/">essentially a population map</a>. A more informative visual would show income per person within a given county. I decided against showing the more informative version so the code would be more concise.<a href="editing-views.html#fnref19" class="footnote-back">↩</a></p></li>
+<ol start="38">
+<li id="fn38"><p>Large data means different things to different people at different time periods. At the time of writing, I’d consider hundreds of millions of observations with at least a handful of variables to be large data.<a href="performance.html#fnref38" class="footnote-back">↩</a></p></li>
 </ol>
 </div>
 <script>
@@ -474,8 +407,8 @@ withr<span class="op">::</span><span class="kw">with_dir</span>(download_dir, rs
           </div>
         </div>
       </div>
-<a href="exporting-static-images.html" class="navigation navigation-prev " aria-label="Previous page"><i class="fa fa-angle-left"></i></a>
-<a href="arranging-views.html" class="navigation navigation-next " aria-label="Next page"><i class="fa fa-angle-right"></i></a>
+<a href="is-plotly-free-secure.html" class="navigation navigation-prev " aria-label="Previous page"><i class="fa fa-angle-left"></i></a>
+<a href="controlling-tooltips.html" class="navigation navigation-next " aria-label="Next page"><i class="fa fa-angle-right"></i></a>
     </div>
   </div>
 <script src="libs/gitbook/js/app.min.js"></script>
@@ -495,7 +428,7 @@ gitbook.start({
 "size": 2
 },
 "edit": {
-"link": "https://github.com/cpsievert/plotly_book/edit/master/publishing.Rmd",
+"link": "https://github.com/cpsievert/plotly_book/edit/master/topics.Rmd",
 "text": "Edit"
 },
 "history": {
