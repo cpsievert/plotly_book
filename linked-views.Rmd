@@ -79,8 +79,16 @@ time_series <- base %>%
   add_lines(x = ~date, y = ~median)
 ```
 
-```{r txmissing-modes, fig.cap = "(ref:txmissing-modes)", screenshot.alt = "images/txmissing-modes.png"}
+```r
 highlight(time_series, on = "plotly_click", selectize = TRUE, dynamic = TRUE, persistent = TRUE)
+```
+
+```{r txmissing-modes, echo = FALSE, fig.cap = "(ref:txmissing-modes)"}
+if (knitr::is_html_output()) {
+  highlight(time_series, on = "plotly_click", selectize = TRUE, dynamic = TRUE, persistent = TRUE)
+} else {
+  knitr::include_graphics("images/txmissing-modes.png")
+}
 ```
 
 By querying a few different cities in Figure \@ref(fig:txmissing-modes), one obvious thing we can learn is that not every city has complete pricing information (e.g., South Padre Island, San Marcos, etc). To learn more about what cities are missing information as well as how that missingness is structured, Figure \@ref(fig:txmissing-linked) links a view of the raw time series to a dot-plot of the corresponding number of missing values per city. In addition to making it easy to see how cities rank in terms of missing house prices, it also provides a way to query the corresponding time series (i.e., reveal the structure of those missing values) by brushing cities in the dot-plot. This general pattern of linking aggregated views of the data to more detailed views fits the famous and practical information visualization advice from @details-on-demand: "Overview first, zoom and filter, then details on demand".
@@ -94,7 +102,7 @@ time_series <- base %>%
   add_lines(x = ~date, y = ~median)
 ```
 
-```{r txmissing-linked, fig.cap="(ref:txmissing-linked)", screenshot.alt = "images/txmissing-linked.png"}
+```r
 # remember, `base` is a plotly object, but we can use dplyr verbs to
 # manipulate the input data 
 # (`txhousing` with `city` as a grouping and querying variable)
@@ -110,6 +118,25 @@ dot_plot <- base %>%
 subplot(dot_plot, time_series, widths = c(0.2, 0.8), titleX = TRUE) %>%
   layout(showlegend = FALSE) %>%
   highlight(on = "plotly_selected", dynamic = TRUE, selectize = TRUE)
+```
+
+```{r txmissing-linked, echo = FALSE, fig.cap = "(ref:txmissing-linked)"}
+if (knitr::is_html_output()) {
+  dot_plot <- base %>%
+    summarise(miss = sum(is.na(median))) %>%
+    filter(miss > 0) %>%
+    add_markers(x = ~miss, y = ~forcats::fct_reorder(city, miss), hoverinfo = "x+y") %>%
+    layout(
+      xaxis = list(title = "Number of months missing"),
+      yaxis = list(title = "")
+    ) 
+
+  subplot(dot_plot, time_series, widths = c(0.2, 0.8), titleX = TRUE) %>%
+    layout(showlegend = FALSE) %>%
+    highlight(on = "plotly_selected", dynamic = TRUE, selectize = TRUE)
+} else {
+  knitr::include_graphics("images/txmissing-linked.png")
+}
 ```
 
 How does **plotly** know to highlight the time series when markers in the dot-plot are selected? The answer lies in what data values are embedded in the graphical markers via `highlight_key()`. When 'South Padre Island' is selected, like in Figure \@ref(fig:pipeline-diagram), it seems as though the logic says to simply change the color of any graphical elements that match that value, but the logic behind **plotly**'s graphical queries is a bit more subtle and powerful. Another, more accurate, framing of the logic is to first imagine a linked database query being performed behind the scenes (as in Figure \@ref(fig:pipeline-diagram)). When 'South Padre Island' is selected, it first filters the aggregated dot-plot data down to just that one row, then it filters down the raw time-series data down to every row with 'South Padre Island' as a city. The drawing logic will then call [`Plotly.addTrace()`](https://plot.ly/javascript/plotlyjs-function-reference/#plotlyaddtraces) with the newly filtered data which adds a new graphical layer representing the selection, allowing us to have finely-tuned control over the visual encoding of the data query.
@@ -129,11 +156,22 @@ time_series <- base %>%
   add_lines(x = ~date, y = ~median)
 ```
 
-```{r txhousing-aggregates, fig.cap = "(ref:txhousing-aggregates)", screenshot.alt = "images/txhousing-aggregates.png"}
+```r
 hist <- base %>% add_histogram(x = ~median, histnorm = "probability density")
 subplot(time_series, hist, nrows = 2) %>%
   layout(barmode = "overlay", showlegend = FALSE) %>%
   highlight(dynamic = TRUE, selectize = TRUE, selected = attrs_selected(opacity = 0.3))
+```
+
+```{r txhousing-aggregates, echo = FALSE, fig.cap = "(ref:txhousing-aggregates)"}
+if (knitr::is_html_output()) {
+  hist <- base %>% add_histogram(x = ~median, histnorm = "probability density")
+subplot(time_series, hist, nrows = 2) %>%
+  layout(barmode = "overlay", showlegend = FALSE) %>%
+  highlight(dynamic = TRUE, selectize = TRUE, selected = attrs_selected(opacity = 0.3))
+} else {
+  knitr::include_graphics("images/txhousing-aggregates.png")
+}
 ```
 
 Another neat consequence of drawing a completely new layer is that we can control the  plotly.js attributes in that layer through the `selected` argument of the `highlight()` function. In Figure \@ref(fig:txhousing-aggregates) we use it to ensure the new highlighting layer has some transparency to more easily compare the city specific distribution to the overall distribution.

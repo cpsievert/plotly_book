@@ -21,33 +21,9 @@ Roughly speaking, the bulk of the time  translates R code to an R list.
 That list is then serialized as JSON (via `jsonlite::toJSON()`) and should match a JSON specification (i.e. schema) defined by the JavaScript library (which uses the JSON to render the widget). 
 
 
-# Scaling across views {#navigating-many-views}
+# Scaling across views 
 
-As we've already seen in Figures \@ref(fig:freqpoly-facet), \@ref(fig:trellis-txhousing), & \@ref(fig:subplot-trellis), the trellis (aka small multiple) display is an effective way to see how a conditional distribution behaves under different conditions. In other words, the trellis display helps us understand how patterns or structure in the data changes across groups. However, trellis displays do have a limitation: they don't scale very well to a large number of groups. 
-
-Before trellis displays were formally introduced, @scagnostics-tukey proposed a solution to the problem of scatterplots not being able to scale to a large number of variables (i.e., it's time consuming to visualize 1000 scatterplots!). The proposed solution involved using quantitative measurements of various scatterplot characteristics (e.g. correlation, clumpiness, etc) to help summarise and guide attention towards 'interesting' scatterplots. This idea, coined scagnostics (short for scatterplot diagnostics), has since been made explicit, and many other similar applications have been explored, even techniques for time-series [@Wilkinson:2005b]; [@Wilkinson:2008]; [@Wilkinson:2012]. The idea of associating quantitative measures with a graphical display of data can be generalized to include more that just scatterplots, and in this more general case, these measures are sometimes referred to as cognostics.
-
-In addition to being useful for navigating exploration of many variables, cognostics can also be useful for exploring many subsets of data. This idea has inspired work on more general divide & recombine technique(s) for working with navigating through many statistical artifacts [@divide-recombine]; [@RHIPE], including visualizations [@trelliscope]. The **trelliscope** package provides a system for computing arbitrary cognostics on each panel of a trellis display as well as an interactive graphical user interface for defining (and navigating through) interesting panels based on those cognostics [@trelliscope-pkg]. This system also allows users to define the graphical method for displaying each panel, so **plotly** graphs can easily be embedded. The **trelliscope** package is currently built upon **shiny**, but as Figure \@ref(fig:trelliscope) demonstrates, the **trelliscopejs** package provides lower-level tools that allow one to create trelliscope displays without **shiny** [@trelliscopejs].
-
-As the video behind Figure \@ref(fig:trelliscope) demonstrates, **trelliscopejs** provides two very powerful interactive techniques for surfacing 'interesting' panels: sorting and filtering. In this toy example, each panel represents a different country, and the life expentancy is plotted as a function of time. By default, **trelliscopejs** sorts panels by group alphabetically, which is why, on page load we see the first 12 countries (Afghanistan, Albania, Algeria, etc). By opening the sort menu, we can pick and sort by any cognostic for any variable in the dataset. If no cognostics are supplied (as it the case here), some sensible ones are computed and supplied for us (e.g., mean, median, var, max, min). In this case, since we are primarily interested in life expectancy, we sort by life expectancy. This simple task allows us to quickly see the countries with the best and worst average life expectancy, as well as how it has evolved over time. By combining sort with filter, we can surface countries that perform well/poorly under certain conditions. For example, Cuba, Uruguay, Taiwan have great life expectancy considering their GDP per capita. Also, within the Americas, Haiti, Bolivia, and Guatemala have the poorest life expectancy.
-
-```r
-library(trelliscopejs)
-data(gapminder, package = "gapminder")
-
-qplot(year, lifeExp, data = gapminder) +
-  xlim(1948, 2011) + ylim(10, 95) + theme_bw() +
-  facet_trelliscope(~ country + continent,
-    nrow = 2, ncol = 6, width = 300, 
-    as_plotly = TRUE, 
-    plotly_args = list(dynamicTicks = T),
-    plotly_cfg = list(displayModeBar = F)
-  )
-```
-
-```{r trelliscope, echo = FALSE, fig.cap = "Using **trelliscopejs** to surface high-dimensional insights related to life expectancy and GDP per capita in various countries."}
-include_vimeo("325778067")
-```
+<!-- Move trelliscopejs (navigating many views) section here? -->
 
 # Scaling within views 
 

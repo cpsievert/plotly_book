@@ -379,30 +379,21 @@ If you'd like to learn more about how to use the `color` argument as well as spe
 
 The JavaScript library underlying **plotly** (plotly.js) has it's own special support for specifying marker symbols by name. As Figure \@ref(fig:symbols-all) shows, there are currently many acceptable `marker.symbol` values, and all the acceptable values can be accessed through plotly.js' `schema()`.
 
-```{r symbols-all, fig.cap = "(ref:symbols-all)", screenshot.alt = "images/symbols-all.png"}
-s <- schema()
-vals <- grep("-", s$traces$scatter$attributes$marker$symbol$values, value = T)
-plot_ly() %>%
-  add_markers(
-    x = rep(1:12, each = 11, length.out = length(vals)), 
-    y = rep(1:11, times = 12, length.out = length(vals)), 
-    text = vals, 
-    hoverinfo = "text",
-    marker = list(
-      symbol = vals,
-      size = 30,
-      line = list(
-        color = "black",
-        width = 2
-      )
-    )
-  )
+```{r, eval = FALSE, code = readLines("code/symbols-all.R")}
 ```
+
+```{r symbols-all, echo = FALSE, fig.cap = "(ref:symbols-all)"}
+if (knitr::is_html_output()) {
+  source("code/symbols-all.R")
+} else {
+  knitr::include_graphics("images/symbols-all.png")
+}
+```
+
 
 In addition to these marker symbols, you can also use `add_text()` to encode data with on-graph text. Moreover, the `add_text()` function (i.e. a scatter trace with `mode="markers"`) enjoys a lot of the same properties as `add_markers()` (i.e. a scatter trace with `mode="text"`). As Figure \@ref(fig:glyphs) shows, similar to how we can supply typographical glyphs and/or unicode in a custom tooltip, you can supply a character vector of similar content to `add_text()` (i.e. a scatter trace with `mode='text'`) which renders on-graph text. Furthermore, when using `text` to render on-graph text, one can leverage the `hovertext` attribute to display some different text on hover.
 
-
-```{r glyphs, fig.cap = "(ref:glyphs)", screenshot.alt = "images/glyphs.png"}
+```r
 plot_ly() %>% 
   add_text(
     x = rep(2, 2), 
@@ -421,9 +412,13 @@ plot_ly() %>%
   )
 ```
 
+```{r glyphs, echo = FALSE, fig.cap = "(ref:glyphs)"}
+knitr::include_graphics("images/glyphs.svg")
+```
+
 Having the ability to encode data with unicode means that we have a virtually endless number of ways to encode data in symbols/glyphs. Just for fun, Figure \@ref(fig:emojis) demonstrates how you could plot all the activity emojis using the **emo** package and display the name of the emoji on hover [@emo].
 
-```{r emojis, fig.cap = "(ref:emojis)", screenshot.alt = "images/emojis.png"}
+```r
 library(emo)
 set.seed(100)
 jis %>%
@@ -435,6 +430,10 @@ jis %>%
     hoverinfo = "text",
     size = I(20)
   )
+```
+
+```{r emojis, echo = FALSE, fig.cap = "(ref:emojis)"}
+knitr::include_graphics("images/emojis.png")
 ```
 
 <!--
@@ -701,12 +700,16 @@ Since a single **plotly** object can only have one layout, modifying the layout 
 
 ## Modifying data
 
-As mentioned previously, `ggplotly()` translates each ggplot2 layer into one or more plotly.js traces. In this translation, it is forced to make a number of assumptions about trace attribute values that may or may not be appropriate for the use case. To demonstrate, consider Figure \@ref(fig:simple-scatterplot), which shows hover information for the points, the fitted line, and the confidence band. How could we make it so hover information is only displayed for the points?
+As mentioned previously, `ggplotly()` translates each ggplot2 layer into one or more plotly.js traces. In this translation, it is forced to make a number of assumptions about trace attribute values that may or may not be appropriate for the use case. To demonstrate, consider Figure \@ref(fig:simple-scatterplot), which shows hover information for the points, the fitted line, and the confidence band. How could we make it so hover information is only displayed for the points and not for the fitted line and confidence band?
 
-```{r simple-scatterplot, fig.cap="(ref:simple-scatterplot)"}
+```r
 p <- ggplot(mtcars, aes(x = wt, y = mpg)) +
    geom_point() + geom_smooth()
 ggplotly(p)
+```
+
+```{r simple-scatterplot, echo=FALSE, fig.cap="(ref:simple-scatterplot)"}
+knitr::include_graphics("images/simple-scatterplot.png")
 ```
 
 The **ggplot2** package doesn't provide an API for interactive features, but by changing the [hoverinfo](https://plot.ly/r/reference/#scatter-hoverinfo) attribute to `"none"`, we can turn off hover for the relevant traces. This sort of task (i.e. modifying trace attribute values) is best achieved through the `style()` function. Before using it, you may want to study the underlying traces with `plotly_json()` which uses the **listviewer** package to display a convenient interactive view of the JSON object sent to plotly.js [@listviewer]. By clicking on the arrow next to the data element, you can see the traces (data) behind the plot. As shown in Figure \@ref(fig:listviewer), we have three traces: one for the `geom_point()` layer and two for the `geom_smooth()` layer.

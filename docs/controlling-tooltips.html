@@ -25,7 +25,7 @@
 <meta name="author" content="Carson Sievert">
 
 
-<meta name="date" content="2019-03-27">
+<meta name="date" content="2019-03-29">
 
   <meta name="viewport" content="width=device-width, initial-scale=1">
   <meta name="apple-mobile-web-app-capable" content="yes">
@@ -149,7 +149,7 @@ code span.wa { color: #60a0b0; font-weight: bold; font-style: italic; } /* Warni
 <li class="chapter" data-level="1" data-path="introduction.html"><a href="introduction.html"><i class="fa fa-check"></i><b>1</b> Introduction</a><ul>
 <li class="chapter" data-level="1.1" data-path="introduction.html"><a href="introduction.html#why-interactive-web-graphics-from-r"><i class="fa fa-check"></i><b>1.1</b> Why interactive web graphics <em>from R</em>?</a></li>
 <li class="chapter" data-level="1.2" data-path="introduction.html"><a href="introduction.html#what-you-will-learn"><i class="fa fa-check"></i><b>1.2</b> What you will learn</a></li>
-<li class="chapter" data-level="1.3" data-path="introduction.html"><a href="introduction.html#what-you-wont-learn"><i class="fa fa-check"></i><b>1.3</b> What you won’t learn</a><ul>
+<li class="chapter" data-level="1.3" data-path="introduction.html"><a href="introduction.html#what-you-wont-learn-much-of"><i class="fa fa-check"></i><b>1.3</b> What you won’t learn (much of)</a><ul>
 <li class="chapter" data-level="1.3.1" data-path="introduction.html"><a href="introduction.html#web-technologies"><i class="fa fa-check"></i><b>1.3.1</b> Web technologies</a></li>
 <li class="chapter" data-level="1.3.2" data-path="introduction.html"><a href="introduction.html#d3js"><i class="fa fa-check"></i><b>1.3.2</b> d3js</a></li>
 <li class="chapter" data-level="1.3.3" data-path="introduction.html"><a href="introduction.html#ggplot2"><i class="fa fa-check"></i><b>1.3.3</b> ggplot2</a></li>
@@ -234,6 +234,7 @@ code span.wa { color: #60a0b0; font-weight: bold; font-style: italic; } /* Warni
 <li class="chapter" data-level="13.2.2" data-path="arranging-views.html"><a href="arranging-views.html#bootstrap-grid-layout"><i class="fa fa-check"></i><b>13.2.2</b> Bootstrap grid layout</a></li>
 <li class="chapter" data-level="13.2.3" data-path="arranging-views.html"><a href="arranging-views.html#css-flexbox"><i class="fa fa-check"></i><b>13.2.3</b> CSS flexbox</a></li>
 </ul></li>
+<li class="chapter" data-level="13.3" data-path="arranging-views.html"><a href="arranging-views.html#navigating-many-views"><i class="fa fa-check"></i><b>13.3</b> Arranging many views</a></li>
 </ul></li>
 <li class="chapter" data-level="14" data-path="animating-views.html"><a href="animating-views.html"><i class="fa fa-check"></i><b>14</b> Animating views</a><ul>
 <li class="chapter" data-level="14.1" data-path="animating-views.html"><a href="animating-views.html#animation-api"><i class="fa fa-check"></i><b>14.1</b> Animation API</a></li>
@@ -324,7 +325,6 @@ code span.wa { color: #60a0b0; font-weight: bold; font-style: italic; } /* Warni
 <li class="part"><span><b>VII Developer-facing topics</b></span></li>
 <li class="chapter" data-level="33" data-path="custom-geoms.html"><a href="custom-geoms.html"><i class="fa fa-check"></i><b>33</b> Translating custom ggplot2 geoms</a></li>
 <li class="chapter" data-level="34" data-path="designing-an-htmlwidget-interface.html"><a href="designing-an-htmlwidget-interface.html"><i class="fa fa-check"></i><b>34</b> Designing an htmlwidget interface</a></li>
-<li class="chapter" data-level="" data-path="references.html"><a href="references.html"><i class="fa fa-check"></i>References</a></li>
 </ul>
 
       </nav>
@@ -347,7 +347,7 @@ code span.wa { color: #60a0b0; font-weight: bold; font-style: italic; } /* Warni
 <div id="tooltip-text" class="section level2">
 <h2><span class="header-section-number">24.1</span> <code>plot_ly()</code> tooltips</h2>
 <p>There are two main approaches to controlling the tooltip: <code>hoverinfo</code> and <code>hovertemplate</code>. I suggest starting with the former approach since it’s simpler, more mature, and enjoys universal support across trace types. On the other hand, <code>hovertemplate</code> does offer a convenient approach for flexible control over tooltip text, so it can be useful as well.</p>
-<p>The <code>hoverinfo</code> attribute controls what other plot attributes are shown into the tooltip text. The default value of <code>hoverinfo</code> is <code>x+y+text+name</code> (you can verify this with <code>schema()</code>), meaning that plotly.js will use the relevant values of <code>x</code>, <code>y</code>, <code>text</code>, and <code>name</code> to populate the tooltip text. As in Figure <a href="controlling-tooltips.html#fig:custom-tooltip-plotly">24.1</a> shows, you can supply custom text (without the other ‘calculated values’) by supplying a character string <code>text</code> and setting <code>hoverinfo = "text"</code>. The character string can include Glyphs, unicode characters, a some (white-listed) HTML entities and tags.<a href="#fn38" class="footnote-ref" id="fnref38"><sup>38</sup></a> At least currently, plotly.js doesn’t support rendering of <a href="https://github.com/plotly/plotly.js/issues/559">LaTeX</a> or images in the tooltip, but as demonstrated in Figure <a href="supplying-custom-data.html#fig:tooltip-image">21.3</a>, if you know some HTML/JavaScript, you can always build your own custom tooltip.</p>
+<p>The <code>hoverinfo</code> attribute controls what other plot attributes are shown into the tooltip text. The default value of <code>hoverinfo</code> is <code>x+y+text+name</code> (you can verify this with <code>schema()</code>), meaning that plotly.js will use the relevant values of <code>x</code>, <code>y</code>, <code>text</code>, and <code>name</code> to populate the tooltip text. As in Figure <a href="controlling-tooltips.html#fig:custom-tooltip-plotly">24.1</a> shows, you can supply custom text (without the other ‘calculated values’) by supplying a character string <code>text</code> and setting <code>hoverinfo = "text"</code>. The character string can include Glyphs, unicode characters, a some (white-listed) HTML entities and tags.<a href="#fn38" class="footnote-ref" id="fnref38"><sup>38</sup></a> At least currently, plotly.js doesn’t support rendering of <a href="https://github.com/plotly/plotly.js/issues/559">LaTeX</a> or images in the tooltip, but as demonstrated in Figure <a href="#fig:tooltip-image"><strong>??</strong></a>, if you know some HTML/JavaScript, you can always build your own custom tooltip.</p>
 <pre class="sourceCode r"><code class="sourceCode r"><span class="kw">library</span>(tibble)
 <span class="kw">library</span>(forcats)
 
@@ -376,7 +376,7 @@ tooltip_data &lt;-<span class="st"> </span><span class="kw">tibble</span>(
     <span class="dt">hovermode =</span> <span class="st">&quot;x&quot;</span>
   )</code></pre>
 <div class="figure" style="text-align: center"><span id="fig:custom-tooltip-plotly"></span>
-<img src="images/custom-tooltip-plotly.png" alt="Customizing the tooltip by supplying glyphs, Unicode, HTML markup to the `text` attributes and restricting displayed attributes with `hoverinfo='text'`." width="100%" />
+<img src="images/custom-tooltip-plotly.png" alt="Customizing the tooltip by supplying glyphs, Unicode, HTML markup to the text attributes and restricting displayed attributes with hoverinfo='text'." width="100%" />
 <p class="caption">
 FIGURE 24.1: Customizing the tooltip by supplying glyphs, Unicode, HTML markup to the <code>text</code> attributes and restricting displayed attributes with <code>hoverinfo='text'</code>.
 </p>
@@ -395,7 +395,7 @@ FIGURE 24.1: Customizing the tooltip by supplying glyphs, Unicode, HTML markup t
   <span class="kw">add_trace</span>(p, <span class="dt">text =</span> <span class="kw">paste0</span>(<span class="st">&quot;point&quot;</span>, <span class="dv">1</span><span class="op">:</span><span class="dv">3</span>), <span class="dt">hoveron =</span> <span class="st">&quot;points&quot;</span>)
 )</code></pre>
 <div class="figure" style="text-align: center"><span id="fig:hoveron-fill-points"></span>
-<img src="images/hoveron-fill-points.png" alt="Using the `hoveron` attribute to control whether a tooltip is attached to fill or each point along that fill." width="100%" />
+<img src="images/hoveron-fill-points.png" alt="Using the hoveron attribute to control whether a tooltip is attached to fill or each point along that fill." width="100%" />
 <p class="caption">
 FIGURE 24.2: Using the <code>hoveron</code> attribute to control whether a tooltip is attached to fill or each point along that fill.
 </p>
@@ -406,7 +406,7 @@ FIGURE 24.2: Using the <code>hoveron</code> attribute to control whether a toolt
 <span class="st">  </span><span class="kw">add_boxplot</span>(<span class="dt">hoverinfo =</span> <span class="st">&quot;x&quot;</span>) <span class="op">%&gt;%</span>
 <span class="st">  </span><span class="kw">layout</span>(<span class="dt">xaxis =</span> <span class="kw">list</span>(<span class="dt">hoverformat =</span> <span class="st">&quot;.2f&quot;</span>))</code></pre>
 <div class="figure" style="text-align: center"><span id="fig:tooltip-format-boxplot"></span>
-<img src="images/tooltip-format-boxplot.png" alt="Using `xaxis.hoverformat` to round aggregated values displayed in the tooltip to two decimal places." width="100%" />
+<img src="images/tooltip-format-boxplot.png" alt="Using xaxis.hoverformat to round aggregated values displayed in the tooltip to two decimal places." width="100%" />
 <p class="caption">
 FIGURE 24.3: Using <code>xaxis.hoverformat</code> to round aggregated values displayed in the tooltip to two decimal places.
 </p>
@@ -416,7 +416,7 @@ FIGURE 24.3: Using <code>xaxis.hoverformat</code> to round aggregated values dis
 <span class="st">  </span><span class="kw">add_heatmap</span>(<span class="dt">zhoverformat =</span> <span class="st">&quot;.1f&quot;</span>) <span class="op">%&gt;%</span>
 <span class="st">  </span><span class="kw">layout</span>(<span class="dt">xaxis =</span> <span class="kw">list</span>(<span class="dt">hoverformat =</span> <span class="st">&quot;.2f&quot;</span>))</code></pre>
 <div class="figure" style="text-align: center"><span id="fig:tooltip-format-heatmap"></span>
-<img src="images/tooltip-format-heatmap.png" alt="Formatting the displayed `z` values in a heatmap using `zhoverformat`." width="100%" />
+<img src="images/tooltip-format-heatmap.png" alt="Formatting the displayed z values in a heatmap using zhoverformat." width="100%" />
 <p class="caption">
 FIGURE 24.4: Formatting the displayed <code>z</code> values in a heatmap using <code>zhoverformat</code>.
 </p>
@@ -429,12 +429,12 @@ FIGURE 24.4: Formatting the displayed <code>z</code> values in a heatmap using <
     <span class="dt">hovertemplate =</span> <span class="st">&quot;The height is %{y:.1e} &lt;extra&gt;That&#39;s very small!&lt;/extra&gt;&quot;</span>
   )</code></pre>
 <div class="figure" style="text-align: center"><span id="fig:hovertemplate"></span>
-<img src="images/hovertemplate.png" alt="Using the `hovertemplate` attribute to reference computed variables and their display format inside a custom string." width="100%" />
+<img src="images/hovertemplate.png" alt="Using the hovertemplate attribute to reference computed variables and their display format inside a custom string." width="100%" />
 <p class="caption">
 FIGURE 24.5: Using the <code>hovertemplate</code> attribute to reference computed variables and their display format inside a custom string.
 </p>
 </div>
-<p>If you need really specific control over the tooltip, you might consider hiding the tooltip altogether (using <code>hoverinfo='none'</code>) and defining your own tooltip. Defining your own tooltip, however, will require knowledge of HTML and JavaScript – see Figure <a href="supplying-custom-data.html#fig:tooltip-image">21.3</a> for an example of how to display an image on hover instead of a tooltip.</p>
+<p>If you need really specific control over the tooltip, you might consider hiding the tooltip altogether (using <code>hoverinfo='none'</code>) and defining your own tooltip. Defining your own tooltip, however, will require knowledge of HTML and JavaScript – see Figure <a href="#fig:tooltip-image"><strong>??</strong></a> for an example of how to display an image on hover instead of a tooltip.</p>
 </div>
 <div id="tooltip-text-ggplotly" class="section level2">
 <h2><span class="header-section-number">24.2</span> <code>ggplotly()</code> tooltips</h2>
@@ -442,15 +442,15 @@ FIGURE 24.5: Using the <code>hovertemplate</code> attribute to reference compute
 <pre class="sourceCode r"><code class="sourceCode r">p &lt;-<span class="st"> </span><span class="kw">ggplot</span>(mtcars, <span class="kw">aes</span>(wt, mpg, <span class="dt">text =</span> <span class="kw">row.names</span>(mtcars))) <span class="op">+</span><span class="st"> </span><span class="kw">geom_point</span>()
 <span class="kw">ggplotly</span>(p)</code></pre>
 <div class="figure" style="text-align: center"><span id="fig:ggplotly-text"></span>
-<img src="images/ggplotly-text.png" alt="Using the `text` **ggplot2** aesthetic to supply custom tooltip text to " width="100%" />
+<img src="images/ggplotly-text.png" alt="Using the text ggplot2 aesthetic to supply custom tooltip text to a scatterplot." width="100%" />
 <p class="caption">
-FIGURE 24.6: Using the <code>text</code> <strong>ggplot2</strong> aesthetic to supply custom tooltip text to
+FIGURE 24.6: Using the <code>text</code> <strong>ggplot2</strong> aesthetic to supply custom tooltip text to a scatterplot.
 </p>
 </div>
 <p>By default, <code>ggplotly()</code> will display all relevant aesthetic mappings (or computed values), but you can restrict what aesthetics are used to populate the tooltip, as shown in Figure <a href="controlling-tooltips.html#fig:ggplotly-text-tooltip">24.7</a>:</p>
 <pre class="sourceCode r"><code class="sourceCode r"><span class="kw">ggplotly</span>(p, <span class="dt">tooltip =</span> <span class="st">&quot;text&quot;</span>)</code></pre>
 <div class="figure" style="text-align: center"><span id="fig:ggplotly-text-tooltip"></span>
-<img src="images/ggplotly-text-tooltip.png" alt="Using the `tooltip` arugment in `ggplotly()` to only display the `text` aesthetic." width="100%" />
+<img src="images/ggplotly-text-tooltip.png" alt="Using the tooltip arugment in ggplotly() to only display the text aesthetic." width="100%" />
 <p class="caption">
 FIGURE 24.7: Using the <code>tooltip</code> arugment in <code>ggplotly()</code> to only display the <code>text</code> aesthetic.
 </p>
@@ -464,7 +464,7 @@ p &lt;-<span class="st"> </span><span class="kw">ggplot</span>(faithfuld, <span 
   <span class="kw">with_options</span>(<span class="kw">list</span>(<span class="dt">digits =</span> <span class="dv">6</span>, <span class="dt">scipen =</span> <span class="dv">20</span>), <span class="kw">ggplotly</span>(p))
 )</code></pre>
 <div class="figure" style="text-align: center"><span id="fig:format-options"></span>
-<img src="images/format-options.png" alt="Leveraging global R options for controlling the displayed values in a `ggplotly()` tooltip." width="100%" />
+<img src="images/format-options.png" alt="Leveraging global R options for controlling the displayed values in a ggplotly() tooltip." width="100%" />
 <p class="caption">
 FIGURE 24.8: Leveraging global R options for controlling the displayed values in a <code>ggplotly()</code> tooltip.
 </p>
@@ -475,7 +475,7 @@ p &lt;-<span class="st"> </span><span class="kw">ggplot</span>(txhousing, <span 
 <span class="st">  </span><span class="kw">geom_line</span>(<span class="kw">aes</span>(<span class="dt">group =</span> city, <span class="dt">text =</span> <span class="kw">paste</span>(<span class="st">&quot;median:&quot;</span>, <span class="kw">number_si</span>(median))))
 <span class="kw">ggplotly</span>(p, <span class="dt">tooltip =</span> <span class="kw">c</span>(<span class="st">&quot;text&quot;</span>, <span class="st">&quot;x&quot;</span>, <span class="st">&quot;city&quot;</span>))</code></pre>
 <div class="figure" style="text-align: center"><span id="fig:text-clever"></span>
-<img src="images/text-clever.png" alt="Using the `text` aesthetic to replace an auto-generated aesthetic (`y`)." width="100%" />
+<img src="images/text-clever.png" alt="Using the text aesthetic to replace an auto-generated aesthetic (y)." width="100%" />
 <p class="caption">
 FIGURE 24.9: Using the <code>text</code> aesthetic to replace an auto-generated aesthetic (<code>y</code>).
 </p>
@@ -503,7 +503,7 @@ w <span class="op">%&gt;%</span>
 <span class="st">  </span><span class="kw">style</span>(<span class="dt">hoverinfo =</span> <span class="st">&quot;skip&quot;</span>, <span class="dt">traces =</span> <span class="dv">1</span>) <span class="op">%&gt;%</span>
 <span class="st">  </span><span class="kw">style</span>(<span class="dt">text =</span> text_y, <span class="dt">traces =</span> <span class="dv">2</span>)</code></pre>
 <div class="figure" style="text-align: center"><span id="fig:custom-predict-text"></span>
-<img src="images/custom-predict-text.png" alt="Using the return value of `ggplotly()` to populate a custom `text` attribute." width="100%" />
+<img src="images/custom-predict-text.png" alt="Using the return value of ggplotly() to populate a custom text attribute." width="100%" />
 <p class="caption">
 FIGURE 24.10: Using the return value of <code>ggplotly()</code> to populate a custom <code>text</code> attribute.
 </p>
@@ -524,7 +524,7 @@ label &lt;-<span class="st"> </span><span class="kw">list</span>(
 )
 <span class="kw">plot_ly</span>(<span class="dt">x =</span> iris<span class="op">$</span>Petal.Length, <span class="dt">hoverlabel =</span> label)</code></pre>
 <div class="figure" style="text-align: center"><span id="fig:tooltip-style"></span>
-<img src="images/tooltip-style.png" alt="Using the `hoverlabel` attribute to customize the color and font of the tooltip." width="100%" />
+<img src="images/tooltip-style.png" alt="Using the hoverlabel attribute to customize the color and font of the tooltip." width="100%" />
 <p class="caption">
 FIGURE 24.11: Using the <code>hoverlabel</code> attribute to customize the color and font of the tooltip.
 </p>
@@ -535,7 +535,7 @@ FIGURE 24.11: Using the <code>hoverlabel</code> attribute to customize the color
 <span class="st">  </span><span class="kw">style</span>(<span class="dt">hoverlabel =</span> label, <span class="dt">marker.color =</span> <span class="st">&quot;#232F34&quot;</span>) <span class="op">%&gt;%</span>
 <span class="st">  </span><span class="kw">layout</span>(<span class="dt">font =</span> font)</code></pre>
 <div class="figure" style="text-align: center"><span id="fig:tooltip-style-ggplotly"></span>
-<img src="images/tooltip-style-ggplotly.png" alt="Using the `hoverlabel` attribute with `ggplotly()`." width="100%" />
+<img src="images/tooltip-style-ggplotly.png" alt="Using the hoverlabel attribute with ggplotly()." width="100%" />
 <p class="caption">
 FIGURE 24.12: Using the <code>hoverlabel</code> attribute with <code>ggplotly()</code>.
 </p>

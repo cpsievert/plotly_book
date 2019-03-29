@@ -25,7 +25,7 @@
 <meta name="author" content="Carson Sievert">
 
 
-<meta name="date" content="2019-03-27">
+<meta name="date" content="2019-03-29">
 
   <meta name="viewport" content="width=device-width, initial-scale=1">
   <meta name="apple-mobile-web-app-capable" content="yes">
@@ -149,7 +149,7 @@ code span.wa { color: #60a0b0; font-weight: bold; font-style: italic; } /* Warni
 <li class="chapter" data-level="1" data-path="introduction.html"><a href="introduction.html"><i class="fa fa-check"></i><b>1</b> Introduction</a><ul>
 <li class="chapter" data-level="1.1" data-path="introduction.html"><a href="introduction.html#why-interactive-web-graphics-from-r"><i class="fa fa-check"></i><b>1.1</b> Why interactive web graphics <em>from R</em>?</a></li>
 <li class="chapter" data-level="1.2" data-path="introduction.html"><a href="introduction.html#what-you-will-learn"><i class="fa fa-check"></i><b>1.2</b> What you will learn</a></li>
-<li class="chapter" data-level="1.3" data-path="introduction.html"><a href="introduction.html#what-you-wont-learn"><i class="fa fa-check"></i><b>1.3</b> What you won’t learn</a><ul>
+<li class="chapter" data-level="1.3" data-path="introduction.html"><a href="introduction.html#what-you-wont-learn-much-of"><i class="fa fa-check"></i><b>1.3</b> What you won’t learn (much of)</a><ul>
 <li class="chapter" data-level="1.3.1" data-path="introduction.html"><a href="introduction.html#web-technologies"><i class="fa fa-check"></i><b>1.3.1</b> Web technologies</a></li>
 <li class="chapter" data-level="1.3.2" data-path="introduction.html"><a href="introduction.html#d3js"><i class="fa fa-check"></i><b>1.3.2</b> d3js</a></li>
 <li class="chapter" data-level="1.3.3" data-path="introduction.html"><a href="introduction.html#ggplot2"><i class="fa fa-check"></i><b>1.3.3</b> ggplot2</a></li>
@@ -234,6 +234,7 @@ code span.wa { color: #60a0b0; font-weight: bold; font-style: italic; } /* Warni
 <li class="chapter" data-level="13.2.2" data-path="arranging-views.html"><a href="arranging-views.html#bootstrap-grid-layout"><i class="fa fa-check"></i><b>13.2.2</b> Bootstrap grid layout</a></li>
 <li class="chapter" data-level="13.2.3" data-path="arranging-views.html"><a href="arranging-views.html#css-flexbox"><i class="fa fa-check"></i><b>13.2.3</b> CSS flexbox</a></li>
 </ul></li>
+<li class="chapter" data-level="13.3" data-path="arranging-views.html"><a href="arranging-views.html#navigating-many-views"><i class="fa fa-check"></i><b>13.3</b> Arranging many views</a></li>
 </ul></li>
 <li class="chapter" data-level="14" data-path="animating-views.html"><a href="animating-views.html"><i class="fa fa-check"></i><b>14</b> Animating views</a><ul>
 <li class="chapter" data-level="14.1" data-path="animating-views.html"><a href="animating-views.html#animation-api"><i class="fa fa-check"></i><b>14.1</b> Animation API</a></li>
@@ -324,7 +325,6 @@ code span.wa { color: #60a0b0; font-weight: bold; font-style: italic; } /* Warni
 <li class="part"><span><b>VII Developer-facing topics</b></span></li>
 <li class="chapter" data-level="33" data-path="custom-geoms.html"><a href="custom-geoms.html"><i class="fa fa-check"></i><b>33</b> Translating custom ggplot2 geoms</a></li>
 <li class="chapter" data-level="34" data-path="designing-an-htmlwidget-interface.html"><a href="designing-an-htmlwidget-interface.html"><i class="fa fa-check"></i><b>34</b> Designing an htmlwidget interface</a></li>
-<li class="chapter" data-level="" data-path="references.html"><a href="references.html"><i class="fa fa-check"></i>References</a></li>
 </ul>
 
       </nav>
@@ -345,11 +345,64 @@ code span.wa { color: #60a0b0; font-weight: bold; font-style: italic; } /* Warni
 <div id="working-with-symbols" class="section level1">
 <h1><span class="header-section-number">27</span> Working with symbols and glyphs</h1>
 <p>The JavaScript library underlying <strong>plotly</strong> (plotly.js) has it’s own special support for specifying marker symbols by name. As Figure <a href="#fig:symbols-all"><strong>??</strong></a> shows, there are currently many acceptable <code>marker.symbol</code> values, and all the acceptable values can be accessed through plotly.js’ <code>schema()</code>.</p>
-<p><code>{r symbols-all, fig.cap = "All marker symbols currently supported by **plotly**.", screenshot.alt = "images/symbols-all".png}}s &lt;- schema() vals &lt;- grep("-", s$traces$scatter$attributes$marker$symbol$values, value = T) plot_ly() %&gt;%   add_markers(     x = rep(1:12, each = 11, length.out = length(vals)),      y = rep(1:11, times = 12, length.out = length(vals)),      text = vals,      hoverinfo = "text",     marker = list(       symbol = vals,       size = 30,       line = list(         color = "black",         width = 2       )     )   )</code></p>
-<p>In addition to these marker symbols, you can also use <code>add_text()</code> to encode data with on-graph text. Moreover, the <code>add_text()</code> function (i.e. a scatter trace with <code>mode="markers"</code>) enjoys a lot of the same properties as <code>add_markers()</code> (i.e. a scatter trace with <code>mode="text"</code>). As Figure <a href="#fig:glyphs"><strong>??</strong></a> shows, similar to how we can supply typographical glyphs and/or unicode in a custom tooltip, you can supply a character vector of similar content to <code>add_text()</code> (i.e. a scatter trace with <code>mode='text'</code>) which renders on-graph text. Furthermore, when using <code>text</code> to render on-graph text, one can leverage the <code>hovertext</code> attribute to display some different text on hover.</p>
-<p><code>{r glyphs, fig.cap = "Using `add_text()` to render on-graph text with typographical glyphs and/or unicode.", sscreenshot.alt = "images/glyphs.png"}plot_ly() %&gt;%    add_text(     x = rep(2, 2),      y = 1:2,      size = I(15),     text = c(       "Glyphs: Ѳ, （╯°□°）╯ ┻━┻",       "Unicode: \U00AE \U00B6 \U00BF"     ),     hovertext = c(       "glyphs",       "unicode"     ),     textposition = "left center",     hoverinfo = "text"   )</code></p>
-<p>Having the ability to encode data with unicode means that we have a virtually endless number of ways to encode data in symbols/glyphs. Just for fun, Figure <a href="#fig:emojis"><strong>??</strong></a> demonstrates how you could plot all the activity emojis using the <strong>emo</strong> package and display the name of the emoji on hover <span class="citation">(Wickham, François, and D’Agostino McGowan <a href="#ref-emo" role="doc-biblioref">2018</a>)</span>.</p>
-<p><code>{r emojis, fig.cap = "Using `add_text()` to plot all the activity emojis and leveraging `hovertext` to place the emoji names in the tooltip text.",, screenshot.alt = "images/emojis.png"}library(emo) set.seed(100) jis %&gt;%   filter(group == "Activities") %&gt;%   plot_ly(x = runif(nrow(.)), y = runif(nrow(.))) %&gt;%   add_text(     text = ~emoji,     hovertext = ~name,     hoverinfo = "text",     size = I(20)   )</code></p>
+<pre class="sourceCode r"><code class="sourceCode r">s &lt;-<span class="st"> </span><span class="kw">schema</span>()
+vals &lt;-<span class="st"> </span><span class="kw">grep</span>(<span class="st">&quot;-&quot;</span>, s<span class="op">$</span>traces<span class="op">$</span>scatter<span class="op">$</span>attributes<span class="op">$</span>marker<span class="op">$</span>symbol<span class="op">$</span>values, <span class="dt">value =</span> T)
+<span class="kw">plot_ly</span>() <span class="op">%&gt;%</span>
+<span class="st">  </span><span class="kw">add_markers</span>(
+    <span class="dt">x =</span> <span class="kw">rep</span>(<span class="dv">1</span><span class="op">:</span><span class="dv">12</span>, <span class="dt">each =</span> <span class="dv">11</span>, <span class="dt">length.out =</span> <span class="kw">length</span>(vals)), 
+    <span class="dt">y =</span> <span class="kw">rep</span>(<span class="dv">1</span><span class="op">:</span><span class="dv">11</span>, <span class="dt">times =</span> <span class="dv">12</span>, <span class="dt">length.out =</span> <span class="kw">length</span>(vals)), 
+    <span class="dt">text =</span> vals, 
+    <span class="dt">hoverinfo =</span> <span class="st">&quot;text&quot;</span>,
+    <span class="dt">marker =</span> <span class="kw">list</span>(
+      <span class="dt">symbol =</span> vals,
+      <span class="dt">size =</span> <span class="dv">30</span>,
+      <span class="dt">line =</span> <span class="kw">list</span>(
+        <span class="dt">color =</span> <span class="st">&quot;black&quot;</span>,
+        <span class="dt">width =</span> <span class="dv">2</span>
+      )
+    )
+  )</code></pre>
+<p>In addition to these marker symbols, you can also use <code>add_text()</code> to encode data with on-graph text. Moreover, the <code>add_text()</code> function (i.e. a scatter trace with <code>mode="markers"</code>) enjoys a lot of the same properties as <code>add_markers()</code> (i.e. a scatter trace with <code>mode="text"</code>). As Figure <a href="working-with-symbols.html#fig:glyphs">27.1</a> shows, similar to how we can supply typographical glyphs and/or unicode in a custom tooltip, you can supply a character vector of similar content to <code>add_text()</code> (i.e. a scatter trace with <code>mode='text'</code>) which renders on-graph text. Furthermore, when using <code>text</code> to render on-graph text, one can leverage the <code>hovertext</code> attribute to display some different text on hover.</p>
+<pre class="sourceCode r"><code class="sourceCode r"><span class="kw">plot_ly</span>() <span class="op">%&gt;%</span><span class="st"> </span>
+<span class="st">  </span><span class="kw">add_text</span>(
+    <span class="dt">x =</span> <span class="kw">rep</span>(<span class="dv">2</span>, <span class="dv">2</span>), 
+    <span class="dt">y =</span> <span class="dv">1</span><span class="op">:</span><span class="dv">2</span>, 
+    <span class="dt">size =</span> <span class="kw">I</span>(<span class="dv">15</span>),
+    <span class="dt">text =</span> <span class="kw">c</span>(
+      <span class="st">&quot;Glyphs: Ѳ, （╯°□°）╯ ┻━┻&quot;</span>,
+      <span class="st">&quot;Unicode: \U00AE \U00B6 \U00BF&quot;</span>
+    ),
+    <span class="dt">hovertext =</span> <span class="kw">c</span>(
+      <span class="st">&quot;glyphs&quot;</span>,
+      <span class="st">&quot;unicode&quot;</span>
+    ),
+    <span class="dt">textposition =</span> <span class="st">&quot;left center&quot;</span>,
+    <span class="dt">hoverinfo =</span> <span class="st">&quot;text&quot;</span>
+  )</code></pre>
+<div class="figure" style="text-align: center"><span id="fig:glyphs"></span>
+<img src="images/glyphs.svg" alt="Using add_text() to render on-graph text with typographical glyphs and/or unicode." width="100%" />
+<p class="caption">
+FIGURE 27.1: Using <code>add_text()</code> to render on-graph text with typographical glyphs and/or unicode.
+</p>
+</div>
+<p>Having the ability to encode data with unicode means that we have a virtually endless number of ways to encode data in symbols/glyphs. Just for fun, Figure <a href="working-with-symbols.html#fig:emojis">27.2</a> demonstrates how you could plot all the activity emojis using the <strong>emo</strong> package and display the name of the emoji on hover <span class="citation">(Wickham, François, and D’Agostino McGowan <a href="#ref-emo" role="doc-biblioref">2018</a>)</span>.</p>
+<pre class="sourceCode r"><code class="sourceCode r"><span class="kw">library</span>(emo)
+<span class="kw">set.seed</span>(<span class="dv">100</span>)
+jis <span class="op">%&gt;%</span>
+<span class="st">  </span><span class="kw">filter</span>(group <span class="op">==</span><span class="st"> &quot;Activities&quot;</span>) <span class="op">%&gt;%</span>
+<span class="st">  </span><span class="kw">plot_ly</span>(<span class="dt">x =</span> <span class="kw">runif</span>(<span class="kw">nrow</span>(.)), <span class="dt">y =</span> <span class="kw">runif</span>(<span class="kw">nrow</span>(.))) <span class="op">%&gt;%</span>
+<span class="st">  </span><span class="kw">add_text</span>(
+    <span class="dt">text =</span> <span class="op">~</span>emoji,
+    <span class="dt">hovertext =</span> <span class="op">~</span>name,
+    <span class="dt">hoverinfo =</span> <span class="st">&quot;text&quot;</span>,
+    <span class="dt">size =</span> <span class="kw">I</span>(<span class="dv">20</span>)
+  )</code></pre>
+<div class="figure" style="text-align: center"><span id="fig:emojis"></span>
+<img src="images/emojis.png" alt="Using add_text() to plot all the activity emojis and leveraging hovertext to place the emoji names in the tooltip text." width="100%" />
+<p class="caption">
+FIGURE 27.2: Using <code>add_text()</code> to plot all the activity emojis and leveraging <code>hovertext</code> to place the emoji names in the tooltip text.
+</p>
+</div>
 <!--
 # Control the layout
 

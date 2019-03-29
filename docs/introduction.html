@@ -25,7 +25,7 @@
 <meta name="author" content="Carson Sievert">
 
 
-<meta name="date" content="2019-03-27">
+<meta name="date" content="2019-03-29">
 
   <meta name="viewport" content="width=device-width, initial-scale=1">
   <meta name="apple-mobile-web-app-capable" content="yes">
@@ -149,7 +149,7 @@ code span.wa { color: #60a0b0; font-weight: bold; font-style: italic; } /* Warni
 <li class="chapter" data-level="1" data-path="introduction.html"><a href="introduction.html"><i class="fa fa-check"></i><b>1</b> Introduction</a><ul>
 <li class="chapter" data-level="1.1" data-path="introduction.html"><a href="introduction.html#why-interactive-web-graphics-from-r"><i class="fa fa-check"></i><b>1.1</b> Why interactive web graphics <em>from R</em>?</a></li>
 <li class="chapter" data-level="1.2" data-path="introduction.html"><a href="introduction.html#what-you-will-learn"><i class="fa fa-check"></i><b>1.2</b> What you will learn</a></li>
-<li class="chapter" data-level="1.3" data-path="introduction.html"><a href="introduction.html#what-you-wont-learn"><i class="fa fa-check"></i><b>1.3</b> What you won’t learn</a><ul>
+<li class="chapter" data-level="1.3" data-path="introduction.html"><a href="introduction.html#what-you-wont-learn-much-of"><i class="fa fa-check"></i><b>1.3</b> What you won’t learn (much of)</a><ul>
 <li class="chapter" data-level="1.3.1" data-path="introduction.html"><a href="introduction.html#web-technologies"><i class="fa fa-check"></i><b>1.3.1</b> Web technologies</a></li>
 <li class="chapter" data-level="1.3.2" data-path="introduction.html"><a href="introduction.html#d3js"><i class="fa fa-check"></i><b>1.3.2</b> d3js</a></li>
 <li class="chapter" data-level="1.3.3" data-path="introduction.html"><a href="introduction.html#ggplot2"><i class="fa fa-check"></i><b>1.3.3</b> ggplot2</a></li>
@@ -234,6 +234,7 @@ code span.wa { color: #60a0b0; font-weight: bold; font-style: italic; } /* Warni
 <li class="chapter" data-level="13.2.2" data-path="arranging-views.html"><a href="arranging-views.html#bootstrap-grid-layout"><i class="fa fa-check"></i><b>13.2.2</b> Bootstrap grid layout</a></li>
 <li class="chapter" data-level="13.2.3" data-path="arranging-views.html"><a href="arranging-views.html#css-flexbox"><i class="fa fa-check"></i><b>13.2.3</b> CSS flexbox</a></li>
 </ul></li>
+<li class="chapter" data-level="13.3" data-path="arranging-views.html"><a href="arranging-views.html#navigating-many-views"><i class="fa fa-check"></i><b>13.3</b> Arranging many views</a></li>
 </ul></li>
 <li class="chapter" data-level="14" data-path="animating-views.html"><a href="animating-views.html"><i class="fa fa-check"></i><b>14</b> Animating views</a><ul>
 <li class="chapter" data-level="14.1" data-path="animating-views.html"><a href="animating-views.html#animation-api"><i class="fa fa-check"></i><b>14.1</b> Animation API</a></li>
@@ -324,7 +325,6 @@ code span.wa { color: #60a0b0; font-weight: bold; font-style: italic; } /* Warni
 <li class="part"><span><b>VII Developer-facing topics</b></span></li>
 <li class="chapter" data-level="33" data-path="custom-geoms.html"><a href="custom-geoms.html"><i class="fa fa-check"></i><b>33</b> Translating custom ggplot2 geoms</a></li>
 <li class="chapter" data-level="34" data-path="designing-an-htmlwidget-interface.html"><a href="designing-an-htmlwidget-interface.html"><i class="fa fa-check"></i><b>34</b> Designing an htmlwidget interface</a></li>
-<li class="chapter" data-level="" data-path="references.html"><a href="references.html"><i class="fa fa-check"></i>References</a></li>
 </ul>
 
       </nav>
@@ -348,7 +348,7 @@ code span.wa { color: #60a0b0; font-weight: bold; font-style: italic; } /* Warni
 <h2><span class="header-section-number">1.1</span> Why interactive web graphics <em>from R</em>?</h2>
 <p>As <span class="citation">Wickham and Grolemund (<a href="#ref-r4ds" role="doc-biblioref">2018</a>)</span> argue, the exploratory phase of a data science workflow (Figure <a href="introduction.html#fig:workflow">1.1</a>) requires lots of iteration between data manipulation, visualization, and modeling. Acheiving these tasks through a programming language like <code>R</code> offers the opportunity to scale and automate tasks, document and track them, and reliably reproduce their output. That power, however, typically comes at the cost of increasing the amount of cognitive load involved relative to a GUI-based system.<a href="#fn1" class="footnote-ref" id="fnref1"><sup>1</sup></a> <code>R</code> packages like the <strong>tidyverse</strong> have been incredibly successful due to their ability to limit cognitive load without removing the benefits of performing analysis via code. Moreover, the <strong>tidyverse</strong>’s unifying principles of designing for humans, consistency, and composabilty makes iteration within and between these stages seamless – an important but often overlooked challenge in exploratory data analysis (EDA) <span class="citation">(Tidyverse team <a href="#ref-tidy-principles" role="doc-biblioref">2018</a>)</span>.</p>
 <div class="figure" style="text-align: center"><span id="fig:workflow"></span>
-<img src="images/workflow.png" alt="The stages of a data science workflow from @r4ds." width="80%" />
+<img src="images/workflow.png" alt="The stages of a data science workflow from Wickham and Grolemund (2018)." width="100%" />
 <p class="caption">
 FIGURE 1.1: The stages of a data science workflow from <span class="citation">Wickham and Grolemund (<a href="#ref-r4ds" role="doc-biblioref">2018</a>)</span>.
 </p>
@@ -365,25 +365,21 @@ FIGURE 1.1: The stages of a data science workflow from <span class="citation">Wi
 <pre class="sourceCode r"><code class="sourceCode r"><span class="kw">library</span>(ggplot2)
 <span class="kw">ggplot</span>(mpg, <span class="kw">aes</span>(displ, hwy)) <span class="op">+</span><span class="st"> </span><span class="kw">geom_point</span>()</code></pre>
 <div class="figure" style="text-align: center"><span id="fig:mpg-static"></span>
-<img src="plotly_book_files/figure-html/mpg-static-1.png" alt="A scatterplot of engine displacement versus miles per gallon made with the ggplot2 package." width="70%" />
+<img src="plotly_book_files/figure-html/mpg-static-1.png" alt="A scatterplot of engine displacement versus miles per gallon made with the ggplot2 package." width="100%" />
 <p class="caption">
-FIGURE 1.2: A scatterplot of engine displacement versus miles per gallon made with the ggplot2 package.
+FIGURE 1.2: A scatterplot of engine displacement versus miles per gallon made with the <strong>ggplot2</strong> package.
 </p>
 </div>
-<p>Figure <a href="introduction.html#fig:mpg-lasso">1.3</a> demonstrates how we can transform Figure <a href="introduction.html#fig:mpg-static">1.2</a> into an interactive version that can be used to query and inspect points of interest. The framework that enables this kind of linked brushing is discussed in depth within Chapter <a href="client-side-linking.html#graphical-queries">16.1</a>, but the point here is that the added effort required to enable such functionality is relatively small. This is important, because although interactivity <em>can</em> augment exploration by allowing us to pursue follow-up questions, it’s typically only <em>practical</em> when we can create and alter them quickly. That’s because, in a true exploratory setting, you have to make lots of visualizations, and investigate lots of follow-up questions, before stumbling across something truly valuable.</p>
+<p>Figure <a href="#fig:mpg-lasso"><strong>??</strong></a> demonstrates how we can transform Figure <a href="introduction.html#fig:mpg-static">1.2</a> into an interactive version that can be used to query and inspect points of interest. The framework that enables this kind of linked brushing is discussed in depth within Chapter <a href="client-side-linking.html#graphical-queries">16.1</a>, but the point here is that the added effort required to enable such functionality is relatively small. This is important, because although interactivity <em>can</em> augment exploration by allowing us to pursue follow-up questions, it’s typically only <em>practical</em> when we can create and alter them quickly. That’s because, in a true exploratory setting, you have to make lots of visualizations, and investigate lots of follow-up questions, before stumbling across something truly valuable.</p>
 <pre class="sourceCode r"><code class="sourceCode r"><span class="kw">library</span>(plotly)
 m &lt;-<span class="st"> </span><span class="kw">highlight_key</span>(mpg)
 p &lt;-<span class="st"> </span><span class="kw">ggplot</span>(m, <span class="kw">aes</span>(displ, hwy)) <span class="op">+</span><span class="st"> </span><span class="kw">geom_point</span>()
 gg &lt;-<span class="st"> </span><span class="kw">highlight</span>(<span class="kw">ggplotly</span>(p), <span class="st">&quot;plotly_selected&quot;</span>)
 crosstalk<span class="op">::</span><span class="kw">bscols</span>(gg, DT<span class="op">::</span><span class="kw">datatable</span>(m))</code></pre>
-<div class="figure" style="text-align: center"><span id="fig:mpg-lasso"></span>
+
 <iframe src="https://player.vimeo.com/video/324366759?title=0&amp;byline=0&amp;portrait=0" width="100%" height="400" frameborder="0" seamless="seamless" webkitAllowFullScreen mozallowfullscreen allowFullScreen></iframe>
-<p class="caption">
-FIGURE 1.3: Linked brushing in a scatterplot to query more information about points of interest. By lasso selecting a region of unusual points, we learn that corvette’s have an unusually high miles per gallon considering the engine size.
-</p>
-</div>
-<p>When a valuable insight surfaces, since the code behind Figure <a href="introduction.html#fig:mpg-lasso">1.3</a> generates HTML, the web-based graphic can be easily shared with collaborators through email and/or incorporated inside a larger automated report or website. Moreover, since these interactive graphics are based on the <strong>htmlwidgets</strong> framework, they work seamlessly inside of larger <strong>rmarkdown</strong> documents, inside <strong>shiny</strong> apps, <code>RStudio</code>, <code>Jupyter</code> notebooks, the <code>R</code> prompt, and more. Being able to share interactive graphics with collaborators through these different mediums enhances the conversation – your colleagues can point out things you may not yet have considered and, in some cases, they can get immediate responses from the graphics themselves.</p>
-<p>In the final stages of an analysis, when it comes time to publish your work to a general audience, rather than relying on the audience to interact with the graphics and discover insight for themselves, it’s always a good idea to clearly highlight your findings. For example, from Figure <a href="introduction.html#fig:mpg-lasso">1.3</a>, we’ve learned that most of these unusual points can be explained by a single feature of the data (<code>model == 'corvette'</code>). As shown in Figure <a href="introduction.html#fig:mpg-mark-hull">1.4</a>, the <code>geom_mark_hull()</code> function from the <strong>ggforce</strong> package provides a helpful way to annotate those points with a hull. Moreover, as Chapter <a href="editing-views.html#editing-views">12</a> demonstrates, it can also be helpful to add and/or edit annotations interactively when preparing a graphic for publication.</p>
+<p>When a valuable insight surfaces, since the code behind Figure <a href="#fig:mpg-lasso"><strong>??</strong></a> generates HTML, the web-based graphic can be easily shared with collaborators through email and/or incorporated inside a larger automated report or website. Moreover, since these interactive graphics are based on the <strong>htmlwidgets</strong> framework, they work seamlessly inside of larger <strong>rmarkdown</strong> documents, inside <strong>shiny</strong> apps, <code>RStudio</code>, <code>Jupyter</code> notebooks, the <code>R</code> prompt, and more. Being able to share interactive graphics with collaborators through these different mediums enhances the conversation – your colleagues can point out things you may not yet have considered and, in some cases, they can get immediate responses from the graphics themselves.</p>
+<p>In the final stages of an analysis, when it comes time to publish your work to a general audience, rather than relying on the audience to interact with the graphics and discover insight for themselves, it’s always a good idea to clearly highlight your findings. For example, from Figure <a href="#fig:mpg-lasso"><strong>??</strong></a>, we’ve learned that most of these unusual points can be explained by a single feature of the data (<code>model == 'corvette'</code>). As shown in Figure <a href="introduction.html#fig:mpg-mark-hull">1.3</a>, the <code>geom_mark_hull()</code> function from the <strong>ggforce</strong> package provides a helpful way to annotate those points with a hull. Moreover, as Chapter <a href="editing-views.html#editing-views">12</a> demonstrates, it can also be helpful to add and/or edit annotations interactively when preparing a graphic for publication.</p>
 <pre class="sourceCode r"><code class="sourceCode r"><span class="kw">library</span>(ggforce)
 <span class="kw">ggplot</span>(mpg, <span class="kw">aes</span>(displ, hwy)) <span class="op">+</span><span class="st"> </span>
 <span class="st">  </span><span class="kw">geom_point</span>() <span class="op">+</span>
@@ -395,9 +391,9 @@ FIGURE 1.3: Linked brushing in a scatterplot to query more information about poi
     <span class="dt">y =</span> <span class="st">&quot;Miles Per Gallon&quot;</span>
   )</code></pre>
 <div class="figure" style="text-align: center"><span id="fig:mpg-mark-hull"></span>
-<img src="plotly_book_files/figure-html/mpg-mark-hull-1.png" alt="Using the **ggforce** package to annotate the corvette's in this dataset." width="70%" />
+<img src="plotly_book_files/figure-html/mpg-mark-hull-1.png" alt="Using the ggforce package to annotate the corvette’s in this dataset." width="100%" />
 <p class="caption">
-FIGURE 1.4: Using the <strong>ggforce</strong> package to annotate the corvette’s in this dataset.
+FIGURE 1.3: Using the <strong>ggforce</strong> package to annotate the corvette’s in this dataset.
 </p>
 </div>
 <p>This simple example quickly shows how interactive web graphics can assist EDA (for another, slightly more in-depth example, see Chapter <a href="overview.html#intro-ggplotly">2.3</a>). Being able to program these graphics from <code>R</code> allows one to combine their functionality within a world-class computing environment for data analysis and statistics. Programming interactive graphics may not be as intuitive as using a GUI-based system, but making the investment pays dividends in terms of workflow improvements: automation, scaling, provenance, and flexibility.</p>
@@ -451,8 +447,8 @@ FIGURE 1.4: Using the <strong>ggforce</strong> package to annotate the corvette�
 </ol>
 <p>You might already notice that this book often uses the term ‘view’ or ‘data view’, so here we take a moment to frame its use in a wider context. As <span class="citation">Wills (<a href="#ref-Wills2008" role="doc-biblioref">2008</a>)</span> puts it: “a ‘data view’ is anything that gives the user a way of examining data so as to gain insight and understanding. A data view is usually thought of as a barchart, scatterplot, or other traditional statistical graphic, but we use the term more generally, including ‘views’ such as the results of a regression analysis, a neural net prediction, or a set of descriptive statistics”. In this book, more often than not, the term ‘view’ typically refers to a <strong>plotly</strong> graph or other <strong>htmlwidgets</strong> (e.g., <strong>DT</strong>, <strong>leaflet</strong>, etc). In particular, Chapter <a href="client-side-linking.html#graphical-queries">16.1</a> is all about linking multiple <strong>htmlwidgets</strong> together through a graphical database querying framework. However, the term ‘view’ takes on a more general interpretation in Chapter <a href="linking-server-side.html#linking-server-side">17</a> since the reactive programming framework that <strong>shiny</strong> provides allows us to have a more general conversation surrounding linked data views.</p>
 </div>
-<div id="what-you-wont-learn" class="section level2">
-<h2><span class="header-section-number">1.3</span> What you won’t learn</h2>
+<div id="what-you-wont-learn-much-of" class="section level2">
+<h2><span class="header-section-number">1.3</span> What you won’t learn (much of)</h2>
 <div id="web-technologies" class="section level3">
 <h3><span class="header-section-number">1.3.1</span> Web technologies</h3>
 <p>Although this book is fundamentally about creating web graphics, it does not aim to teach you web technologies (e.g., HTML, SVG, CSS, JavaScript, etc). It’s true that mastering these technologies grants you the ability to build really impressive websites, but even expert web developers would say their skillset is much better suited for expository rather than exploratory visualization. That’s because, most web programming tools are not well-suited for the exploratory phase of a data science workflow where iteration between data visualization, transformation, and modeling is a necessary task that often impedes hypothesis generation and sense-making. As a result, for most data analysts whose primary function is to derive insight from data, the opportunity costs involved with mastering web technologies is usually not worth the investment.</p>
@@ -460,7 +456,7 @@ FIGURE 1.4: Using the <strong>ggforce</strong> package to annotate the corvette�
 </div>
 <div id="d3js" class="section level3">
 <h3><span class="header-section-number">1.3.2</span> d3js</h3>
-<p>The JavaScript library D3 is a great tool for data visualization assuming you’re familiar with web technologies and are primarily interested in expository (not exploratory) visualization. There are already lots of great resources for learning D3, including the numerous books <span class="citation">(Murray <a href="#ref-murray-d3" role="doc-biblioref">2013</a>)</span>; <span class="citation">(Murray <a href="#ref-meeks-d3" role="doc-biblioref">2017</a>)</span>. It’s worth noting, however, if you do know D3, you can easily leverage it from a web page that are already a <strong>plotly</strong> graph, as demonstrated in Figure <a href="client-side.html#fig:correlation-client-side">22.1</a>.</p>
+<p>The JavaScript library D3 is a great tool for data visualization assuming you’re familiar with web technologies and are primarily interested in expository (not exploratory) visualization. There are already lots of great resources for learning D3, including the numerous books <span class="citation">(Murray <a href="#ref-murray-d3" role="doc-biblioref">2013</a>)</span>; <span class="citation">(Murray <a href="#ref-meeks-d3" role="doc-biblioref">2017</a>)</span>. It’s worth noting, however, if you do know D3, you can easily leverage it from a web page that are already a <strong>plotly</strong> graph, as demonstrated in Figure <a href="#fig:correlation-client-side"><strong>??</strong></a>.</p>
 </div>
 <div id="ggplot2" class="section level3">
 <h3><span class="header-section-number">1.3.3</span> ggplot2</h3>
@@ -498,11 +494,11 @@ remotes<span class="op">::</span><span class="kw">install_github</span>(<span cl
 <li>Joe Cheng for many helpful conversations and inspiring section <a href="client-side-linking.html#graphical-queries">16.1</a>.</li>
 <li>Étienne Tétreault-Pinard, Alex Johnson, and the other plotly.js core developers for responding to my feature requests and bug reports.</li>
 <li>Yihui Xie for his work on <strong>knitr</strong>, <strong>rmarkdown</strong>, <strong>bookdown</strong>, <a href="https://github.com/yihui/bookdown-crc">bookdown-crc</a>, and responding to my feature requests.</li>
-<li>Anthony Unwin for helpful feedback, suggestions, and for inspiring Figure <a href="client-side-linking.html#fig:epl">16.13</a>.</li>
+<li>Anthony Unwin for helpful feedback, suggestions, and for inspiring Figure <a href="#fig:epl"><strong>??</strong></a>.</li>
 <li>Hadley Wickham and the <strong>ggplot2</strong> team for maintaining <strong>ggplot2</strong>.</li>
 <li>Hadley Wickham and Garret Grolemund for writing <em>R for Data Science</em> and allowing me to model this introduction after their introduction.</li>
 <li>Kent Russell for contributions to <strong>plotly</strong> and writing <strong>reactR</strong>.</li>
-<li>Adam Loy for inspiring Figure <a href="animating-views.html#fig:profile-pyramid">14.5</a>.</li>
+<li>Adam Loy for inspiring Figure <a href="#fig:profile-pyramid"><strong>??</strong></a>.</li>
 </ul>
 </div>
 <div id="colophon" class="section level2">
@@ -520,7 +516,7 @@ remotes<span class="op">::</span><span class="kw">install_github</span>(<span cl
 <span class="co">#&gt;  collate  en_US.UTF-8                 </span>
 <span class="co">#&gt;  ctype    en_US.UTF-8                 </span>
 <span class="co">#&gt;  tz       America/Chicago             </span>
-<span class="co">#&gt;  date     2019-03-27                  </span>
+<span class="co">#&gt;  date     2019-03-29                  </span>
 <span class="co">#&gt; </span>
 <span class="co">#&gt; ─ Packages ──────────────────────────────────────────</span>
 <span class="co">#&gt;  package      * version    date       lib</span>
@@ -537,7 +533,7 @@ remotes<span class="op">::</span><span class="kw">install_github</span>(<span cl
 <span class="co">#&gt;  digest         0.6.18     2018-10-10 [1]</span>
 <span class="co">#&gt;  dplyr          0.8.0.1    2019-02-15 [1]</span>
 <span class="co">#&gt;  fansi          0.4.0      2018-12-03 [1]</span>
-<span class="co">#&gt;  ggplot2      * 3.1.0.9000 2019-03-11 [1]</span>
+<span class="co">#&gt;  ggplot2      * 3.1.0.9000 2019-03-29 [1]</span>
 <span class="co">#&gt;  glue           1.3.1      2019-03-12 [1]</span>
 <span class="co">#&gt;  gtable         0.3.0      2019-03-25 [1]</span>
 <span class="co">#&gt;  hexbin         1.27.2     2018-01-15 [1]</span>
@@ -561,7 +557,7 @@ remotes<span class="op">::</span><span class="kw">install_github</span>(<span cl
 <span class="co">#&gt;  pillar         1.3.1.9000 2019-01-23 [1]</span>
 <span class="co">#&gt;  pkgconfig      2.0.2      2018-08-16 [1]</span>
 <span class="co">#&gt;  plogr          0.2.0      2018-03-25 [1]</span>
-<span class="co">#&gt;  plotly         4.8.0.9000 2019-03-27 [1]</span>
+<span class="co">#&gt;  plotly         4.8.0.9000 2019-03-28 [1]</span>
 <span class="co">#&gt;  plyr           1.8.4      2016-06-08 [1]</span>
 <span class="co">#&gt;  promises       1.0.1      2018-04-13 [1]</span>
 <span class="co">#&gt;  purrr          0.3.2      2019-03-15 [1]</span>
@@ -622,7 +618,7 @@ remotes<span class="op">::</span><span class="kw">install_github</span>(<span cl
 <span class="co">#&gt;  Github (r-lib/pillar@3a54b8d)        </span>
 <span class="co">#&gt;  CRAN (R 3.5.0)                       </span>
 <span class="co">#&gt;  CRAN (R 3.5.0)                       </span>
-<span class="co">#&gt;  Github (ropensci/plotly@d9662a6)     </span>
+<span class="co">#&gt;  Github (ropensci/plotly@8f794c9)     </span>
 <span class="co">#&gt;  CRAN (R 3.5.0)                       </span>
 <span class="co">#&gt;  CRAN (R 3.5.0)                       </span>
 <span class="co">#&gt;  CRAN (R 3.5.2)                       </span>

@@ -25,7 +25,7 @@
 <meta name="author" content="Carson Sievert">
 
 
-<meta name="date" content="2019-03-27">
+<meta name="date" content="2019-03-29">
 
   <meta name="viewport" content="width=device-width, initial-scale=1">
   <meta name="apple-mobile-web-app-capable" content="yes">
@@ -149,7 +149,7 @@ code span.wa { color: #60a0b0; font-weight: bold; font-style: italic; } /* Warni
 <li class="chapter" data-level="1" data-path="introduction.html"><a href="introduction.html"><i class="fa fa-check"></i><b>1</b> Introduction</a><ul>
 <li class="chapter" data-level="1.1" data-path="introduction.html"><a href="introduction.html#why-interactive-web-graphics-from-r"><i class="fa fa-check"></i><b>1.1</b> Why interactive web graphics <em>from R</em>?</a></li>
 <li class="chapter" data-level="1.2" data-path="introduction.html"><a href="introduction.html#what-you-will-learn"><i class="fa fa-check"></i><b>1.2</b> What you will learn</a></li>
-<li class="chapter" data-level="1.3" data-path="introduction.html"><a href="introduction.html#what-you-wont-learn"><i class="fa fa-check"></i><b>1.3</b> What you won’t learn</a><ul>
+<li class="chapter" data-level="1.3" data-path="introduction.html"><a href="introduction.html#what-you-wont-learn-much-of"><i class="fa fa-check"></i><b>1.3</b> What you won’t learn (much of)</a><ul>
 <li class="chapter" data-level="1.3.1" data-path="introduction.html"><a href="introduction.html#web-technologies"><i class="fa fa-check"></i><b>1.3.1</b> Web technologies</a></li>
 <li class="chapter" data-level="1.3.2" data-path="introduction.html"><a href="introduction.html#d3js"><i class="fa fa-check"></i><b>1.3.2</b> d3js</a></li>
 <li class="chapter" data-level="1.3.3" data-path="introduction.html"><a href="introduction.html#ggplot2"><i class="fa fa-check"></i><b>1.3.3</b> ggplot2</a></li>
@@ -234,6 +234,7 @@ code span.wa { color: #60a0b0; font-weight: bold; font-style: italic; } /* Warni
 <li class="chapter" data-level="13.2.2" data-path="arranging-views.html"><a href="arranging-views.html#bootstrap-grid-layout"><i class="fa fa-check"></i><b>13.2.2</b> Bootstrap grid layout</a></li>
 <li class="chapter" data-level="13.2.3" data-path="arranging-views.html"><a href="arranging-views.html#css-flexbox"><i class="fa fa-check"></i><b>13.2.3</b> CSS flexbox</a></li>
 </ul></li>
+<li class="chapter" data-level="13.3" data-path="arranging-views.html"><a href="arranging-views.html#navigating-many-views"><i class="fa fa-check"></i><b>13.3</b> Arranging many views</a></li>
 </ul></li>
 <li class="chapter" data-level="14" data-path="animating-views.html"><a href="animating-views.html"><i class="fa fa-check"></i><b>14</b> Animating views</a><ul>
 <li class="chapter" data-level="14.1" data-path="animating-views.html"><a href="animating-views.html#animation-api"><i class="fa fa-check"></i><b>14.1</b> Animation API</a></li>
@@ -324,7 +325,6 @@ code span.wa { color: #60a0b0; font-weight: bold; font-style: italic; } /* Warni
 <li class="part"><span><b>VII Developer-facing topics</b></span></li>
 <li class="chapter" data-level="33" data-path="custom-geoms.html"><a href="custom-geoms.html"><i class="fa fa-check"></i><b>33</b> Translating custom ggplot2 geoms</a></li>
 <li class="chapter" data-level="34" data-path="designing-an-htmlwidget-interface.html"><a href="designing-an-htmlwidget-interface.html"><i class="fa fa-check"></i><b>34</b> Designing an htmlwidget interface</a></li>
-<li class="chapter" data-level="" data-path="references.html"><a href="references.html"><i class="fa fa-check"></i>References</a></li>
 </ul>
 
       </nav>
@@ -344,7 +344,7 @@ code span.wa { color: #60a0b0; font-weight: bold; font-style: italic; } /* Warni
             <section class="normal" id="section-">
 <div id="js-event-handlers" class="section level1">
 <h1><span class="header-section-number">20</span> Adding custom event handlers</h1>
-<p>When using <code>onRender()</code> to provide a JS function to be called upon static render of a <strong>plotly</strong> object, the relevant DOM element (<code>el</code>) has an <code>on()</code> method that accepts a function to be called whenever a plotly.js (or DOM) event occurs on that DOM element. Currently all plotly.js event handlers accept a function with a single argument, and that argument either contains nothing (e.g. <code>"plotly_afterplot"</code>, etc) or a single object with all the relevant information about the event (e.g. <code>"plotly_hover"</code>, <code>"plotly_selected"</code>, etc). Figure <a href="js-event-handlers.html#fig:console-log-event">20.1</a> logs and inspects data (<code>d</code>) emitted during the <code>"plotly_hover"</code>, <code>"plotly_click"</code>, and <code>"plotly_selected"</code> events. The object emitted for these events includes a key, named <code>points</code>, with information tying the selection back to the input data. The <code>points</code> key is always an array of object(s) where each object represents a different data point. This object contains any supplied <code>customdata</code>, the relevant <code>x</code>/<code>y</code> location, and a reference back to the input <code>data</code>.</p>
+<p>When using <code>onRender()</code> to provide a JS function to be called upon static render of a <strong>plotly</strong> object, the relevant DOM element (<code>el</code>) has an <code>on()</code> method that accepts a function to be called whenever a plotly.js (or DOM) event occurs on that DOM element. Currently all plotly.js event handlers accept a function with a single argument, and that argument either contains nothing (e.g. <code>"plotly_afterplot"</code>, etc) or a single object with all the relevant information about the event (e.g. <code>"plotly_hover"</code>, <code>"plotly_selected"</code>, etc). Figure <a href="#fig:console-log-event"><strong>??</strong></a> logs and inspects data (<code>d</code>) emitted during the <code>"plotly_hover"</code>, <code>"plotly_click"</code>, and <code>"plotly_selected"</code> events. The object emitted for these events includes a key, named <code>points</code>, with information tying the selection back to the input data. The <code>points</code> key is always an array of object(s) where each object represents a different data point. This object contains any supplied <code>customdata</code>, the relevant <code>x</code>/<code>y</code> location, and a reference back to the input <code>data</code>.</p>
 <pre class="sourceCode r"><code class="sourceCode r"><span class="kw">library</span>(htmlwidgets)
 <span class="kw">plot_ly</span>(mtcars, <span class="dt">x =</span> <span class="op">~</span>wt, <span class="dt">y =</span> <span class="op">~</span>mpg) <span class="op">%&gt;%</span>
 <span class="st">  </span><span class="kw">onRender</span>(<span class="st">&quot;</span>
@@ -354,12 +354,7 @@ code span.wa { color: #60a0b0; font-weight: bold; font-style: italic; } /* Warni
 <span class="st">      el.on(&#39;plotly_selected&#39;, function(d) { console.log(&#39;Select: &#39;, d) });</span>
 <span class="st">    }</span>
 <span class="st">  &quot;</span>)</code></pre>
-<div class="figure" style="text-align: center"><span id="fig:console-log-event"></span>
 <iframe src="https://player.vimeo.com/video/307597974?title=0&amp;byline=0&amp;portrait=0" width="100%" height="700" frameborder="0" seamless="seamless" webkitAllowFullScreen mozallowfullscreen allowFullScreen></iframe>
-<p class="caption">
-FIGURE 20.1: Inspecting event data for hover, click, and selected events. If a click or hover event does not derive from a statistical aggregation (e.g., boxplot, histogram, etc), the <code>points</code> array is of length 1; otherwise, the length corresponds to how many input values are represented in the selection. In Chrome, when you log an object to the console, you can click on a link to the JS source function where you can then set breakpoints.
-</p>
-</div>
 </div>
 <script>
   var header = document.querySelector(".book-header");

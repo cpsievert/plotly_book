@@ -18,42 +18,28 @@ include_vimeo("307598973")
 
 The demo above requires some fairly advanced data pre-processing, so to learn how to implement graphical queries in trellis displays, let's work with more minimal examples. Figure \@ref(fig:trellis-txhousing) gives us yet another look at the `txhousing` dataset. This time we focus on just four cities and give each city it's own panel in the trellis display by leveraging `facet_wrap()` from **ggplot2**. Within each panel, we'll wrap the house price time series by year by putting the month on the x-axis and grouping by year. Then, to link these panels, we can ulitize year as a querying variable. As a result, not only do we have the ability to analyze annual trends within city, but we can also query specific years to compare unusual or interesting years both within and across cities.
 
-```{r trellis-txhousing, fig.cap = "(ref:trellis-txhousing)", screenshot.alt = "images/trellis-txhousing.png"}
-library(dplyr)
-txsmall <- txhousing %>%
-  select(city, year, month, median) %>%
-  filter(city %in% c("Galveston", "Midland", "Odessa", "South Padre Island"))
+```{r, eval = FALSE, code = readLines("code/trellis-txhousing.R")}
+```
 
-txsmall %>%
-  highlight_key(~year) %>% {
-    ggplot(., aes(month, median, group = year)) + geom_line() +
-      facet_wrap(~city, ncol = 2)
-  } %>%
-  ggplotly(tooltip = "year")
+```{r trellis-txhousing, echo = FALSE, fig.cap = "(ref:trellis-txhousing)"}
+if (knitr::is_html_output()) {
+  source("code/trellis-txhousing.R")
+} else {
+  knitr::include_graphics("images/trellis-txhousing.png")
+}
 ```
 
 Figure \@ref(fig:trellis-txhousing-plotly) displays the same information as \@ref(fig:trellis-txhousing), but shows a way to implement a linked trellis display via `plot_ly()` instead of `ggplotly()`. This approach leverages `dplyr::do()` to create **plotly** object for each city/panel, then routes that list of plots into `subplot()`. One nuance here is that the querying variable has to be defined within the `do()` statement, but everytime `highlight_key()` is called, it creates a `crosstalk::SharedData` object belonging to a new unique `group`, so to link these panels together the `group` must be set to a constant value (here we've set `group = "txhousing-trellis"`).
 
-```{r trellis-txhousing-plotly, fig.cap = "(ref:trellis-txhousing-plotly)", screenshot.alt = "images/trellis-txhousing-plotly.png"}
-txsmall %>%
-  group_by(city) %>%
-  do(
-    p = highlight_key(., ~year, group = "txhousing-trellis") %>% 
-      plot_ly(showlegend = FALSE) %>% 
-      group_by(year) %>%
-      add_lines(
-        x = ~month, y = ~median, text = ~year, 
-        hoverinfo = "text"
-      ) %>%
-      add_annotations(
-        text = ~unique(city), 
-        x = 0.5, y = 1, 
-        xref = "paper", yref = "paper", 
-        xanchor = "center", yanchor = "bottom", 
-        showarrow = FALSE
-      )
-  ) %>%
-  subplot(nrows = 2, margin = 0.05, shareY = TRUE, shareX = TRUE, titleY = FALSE)
+```{r, eval = FALSE, code = readLines("code/trellis-txhousing-plotly.R")}
+```
+
+```{r trellis-txhousing-plotly, echo = FALSE, fig.cap = "(ref:trellis-txhousing-plotly)"}
+if (knitr::is_html_output()) {
+  source("code/trellis-txhousing-plotly.R")
+} else {
+  knitr::include_graphics("images/trellis-txhousing-plotly.png")
+}
 ```
 
 

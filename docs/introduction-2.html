@@ -25,7 +25,7 @@
 <meta name="author" content="Carson Sievert">
 
 
-<meta name="date" content="2019-03-27">
+<meta name="date" content="2019-03-29">
 
   <meta name="viewport" content="width=device-width, initial-scale=1">
   <meta name="apple-mobile-web-app-capable" content="yes">
@@ -149,7 +149,7 @@ code span.wa { color: #60a0b0; font-weight: bold; font-style: italic; } /* Warni
 <li class="chapter" data-level="1" data-path="introduction.html"><a href="introduction.html"><i class="fa fa-check"></i><b>1</b> Introduction</a><ul>
 <li class="chapter" data-level="1.1" data-path="introduction.html"><a href="introduction.html#why-interactive-web-graphics-from-r"><i class="fa fa-check"></i><b>1.1</b> Why interactive web graphics <em>from R</em>?</a></li>
 <li class="chapter" data-level="1.2" data-path="introduction.html"><a href="introduction.html#what-you-will-learn"><i class="fa fa-check"></i><b>1.2</b> What you will learn</a></li>
-<li class="chapter" data-level="1.3" data-path="introduction.html"><a href="introduction.html#what-you-wont-learn"><i class="fa fa-check"></i><b>1.3</b> What you won’t learn</a><ul>
+<li class="chapter" data-level="1.3" data-path="introduction.html"><a href="introduction.html#what-you-wont-learn-much-of"><i class="fa fa-check"></i><b>1.3</b> What you won’t learn (much of)</a><ul>
 <li class="chapter" data-level="1.3.1" data-path="introduction.html"><a href="introduction.html#web-technologies"><i class="fa fa-check"></i><b>1.3.1</b> Web technologies</a></li>
 <li class="chapter" data-level="1.3.2" data-path="introduction.html"><a href="introduction.html#d3js"><i class="fa fa-check"></i><b>1.3.2</b> d3js</a></li>
 <li class="chapter" data-level="1.3.3" data-path="introduction.html"><a href="introduction.html#ggplot2"><i class="fa fa-check"></i><b>1.3.3</b> ggplot2</a></li>
@@ -234,6 +234,7 @@ code span.wa { color: #60a0b0; font-weight: bold; font-style: italic; } /* Warni
 <li class="chapter" data-level="13.2.2" data-path="arranging-views.html"><a href="arranging-views.html#bootstrap-grid-layout"><i class="fa fa-check"></i><b>13.2.2</b> Bootstrap grid layout</a></li>
 <li class="chapter" data-level="13.2.3" data-path="arranging-views.html"><a href="arranging-views.html#css-flexbox"><i class="fa fa-check"></i><b>13.2.3</b> CSS flexbox</a></li>
 </ul></li>
+<li class="chapter" data-level="13.3" data-path="arranging-views.html"><a href="arranging-views.html#navigating-many-views"><i class="fa fa-check"></i><b>13.3</b> Arranging many views</a></li>
 </ul></li>
 <li class="chapter" data-level="14" data-path="animating-views.html"><a href="animating-views.html"><i class="fa fa-check"></i><b>14</b> Animating views</a><ul>
 <li class="chapter" data-level="14.1" data-path="animating-views.html"><a href="animating-views.html#animation-api"><i class="fa fa-check"></i><b>14.1</b> Animation API</a></li>
@@ -324,7 +325,6 @@ code span.wa { color: #60a0b0; font-weight: bold; font-style: italic; } /* Warni
 <li class="part"><span><b>VII Developer-facing topics</b></span></li>
 <li class="chapter" data-level="33" data-path="custom-geoms.html"><a href="custom-geoms.html"><i class="fa fa-check"></i><b>33</b> Translating custom ggplot2 geoms</a></li>
 <li class="chapter" data-level="34" data-path="designing-an-htmlwidget-interface.html"><a href="designing-an-htmlwidget-interface.html"><i class="fa fa-check"></i><b>34</b> Designing an htmlwidget interface</a></li>
-<li class="chapter" data-level="" data-path="references.html"><a href="references.html"><i class="fa fa-check"></i>References</a></li>
 </ul>
 
       </nav>
@@ -349,9 +349,9 @@ code span.wa { color: #60a0b0; font-weight: bold; font-style: italic; } /* Warni
 <p>A web application relies on a client-server relationship where the client’s (i.e., end user) web browser requests content from a remote server. This model is necessary whenever the webpage needs to execute computer code that is not natively supported by the client’s web browser. As Section <a href="linking-server-side.html#linking-server-side">17</a> details, the flexibility that a web application framework, like <strong>shiny</strong>, offers is an incredibly productive and powerful way to link multiple data views; but when it comes to distributing a web application, it introduces a lot of complexity and computational infrastructure that may or may not be necessary.</p>
 <p>Figure <a href="introduction-2.html#fig:server-client">15.1</a> is a basic illustration of the difference between a web application and a purely client-side web page. Thanks to <code>JavaScript</code> and <code>HTML5</code>, purely client-side web pages can still be dynamic without any software dependencies besides a modern web browser. In fact, Section (graphical-queries) outlines <strong>plotly</strong>’s graphical querying framework for linking multiple plots entirely client-side, which makes the result very easy to distribute (see Section (saving)). There are, of course, many useful examples of linked and dynamic views that can not be easily expressed as a database query, but a suprising amount actually can, and the remainder can likely be quickly implemented as a <strong>shiny</strong> web application.</p>
 <div class="figure" style="text-align: center"><span id="fig:server-client"></span>
-<img src="images/server-client.svg" alt="A diagram of the graphical querying framework underlying Figure \@ref(fig:txhousing-aggregates)." width="100%" />
+<img src="images/server-client.svg" alt="A diagram of the graphical querying framework underlying Figure 16.4." width="100%" />
 <p class="caption">
-FIGURE 15.1: A diagram of the graphical querying framework underlying Figure <a href="client-side-linking.html#fig:txhousing-aggregates">16.6</a>.
+FIGURE 15.1: A diagram of the graphical querying framework underlying Figure <a href="client-side-linking.html#fig:txhousing-aggregates">16.4</a>.
 </p>
 </div>
 <p>The graphical querying framework implemented by <strong>plotly</strong> is inspired by <span class="citation">Buja et al. (<a href="#ref-Buja:1991vh" role="doc-biblioref">1991</a>)</span>, where direct manipulation of graphical elements in multiple linked plots is used to perform data base queries and visually reveal high-dimensional structure in real-time. <span class="citation">D. Cook, Buja, and Swayne (<a href="#ref-Cook:2007uk" role="doc-biblioref">2007</a>)</span> goes on to argue this framework is preferable to posing data base queries dynamically via a menus, as described by <span class="citation">Ahlberg, Williamson, and Shneiderman (<a href="#ref-Ahlberg:1991" role="doc-biblioref">1991</a>)</span>, and goes on to state that “Multiple linked views are the optimal framework for posing queries about data”. The next section shows you how to implement similar graphical queries in a standalone webpage using R code.</p>
