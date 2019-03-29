@@ -50,7 +50,7 @@ server <- function(input, output, ...) {
 shinyApp(ui, server)
 ```
 
-```{r shiny-intro, echo=FALSE, fig.cap="Using a **shiny** input widget to control which time series are shown on a **plotly** graph."}
+```{r shiny-intro, echo=FALSE, fig.cap="(ref:shiny-intro)"}
 include_vimeo("307597444")
 ```
 
@@ -103,10 +103,9 @@ server <- function(input, output, session, ...) {
 shinyApp(ui, server)
 ```
 
-```{r shiny-ggplotly, echo=FALSE, fig.cap="Rendering a **plotly** graph in **shiny** if and only if the `selectizeInput()`'s dropdown is non-empty. When the graph is present, and the window is resized, then the reactive expression is re-evaluated."}
+```{r shiny-ggplotly, echo=FALSE, fig.cap="(ref:shiny-ggplotly)"}
 include_vimeo("307598318")
 ```
-
 
 When a reactive expression inside `renderPlotly()` is re-executes, it triggers a full redraw of the **plotly** graph on the client. Generally speaking, this makes your **shiny** app logic easy to reason about, but it's not always performant enough. For example, say you have a scatterplot with 10s of thousands of points, and you just want to add a fitted line to those points (in respond to input event)? Instead of redrawing the whole plot from scratch, it can be way more performant to partially update specific components of the visual. Section \@ref(proxies) covers this idea through a handful of examples.
 
@@ -172,10 +171,9 @@ server <- function(input, output, session) {
 shinyApp(ui, server)
 ```
 
-```{r plotlyEvents, echo=FALSE, fig.cap = "Accessing event data from click and drag events."}
+```{r plotlyEvents, echo=FALSE, fig.cap = "(ref:plotlyEvents)"}
 include_vimeo("307597427", height = 500)
 ```
-
 
 ### 3D events
 
@@ -230,10 +228,9 @@ server <- function(input, output, session) {
 shinyApp(ui, server)
 ```
 
-```{r 3Devents, echo=FALSE, fig.cap = "Accessing 3D events."}
+```{r 3Devents, echo=FALSE, fig.cap = "(ref:3Devents)"}
 include_vimeo("307598025", height = 500)
 ```
-
 
 ### Edit events
 
@@ -282,8 +279,7 @@ server <- function(input, output, session) {
 shinyApp(ui, server)
 ```
 
-
-```{r shiny-edit-annotations, echo=FALSE, fig.cap = "Accessing information about direct manipulation of annotations."}
+```{r shiny-edit-annotations, echo=FALSE, fig.cap = "(ref:shiny-edit-annotations)"}
 include_vimeo("307597631")
 ```
 
@@ -328,7 +324,7 @@ server <- function(input, output, session) {
 shinyApp(ui, server)
 ```
 
-```{r shiny-drag-circle, echo=FALSE, fig.cap = "Accessing information about direct manipulation of circle shapes."}
+```{r shiny-drag-circle, echo=FALSE, fig.cap = "(ref:shiny-drag-circle)"}
 include_vimeo("307598919")
 ```
 
@@ -338,7 +334,7 @@ Figure \@ref(fig:interactive-lm) demonstrates a linear model that reacts to edit
 plotly_example("shiny", "drag_marker")
 ```
 
-```{r interactive-lm, echo=FALSE, fig.cap = "Editing circle shape positions to dynamically alter a linear model summary and fitted line. This is useful mainly as a teaching device to visually demonstrate the effect of high leverage points on a simple linear model."}
+```{r interactive-lm, echo=FALSE, fig.cap = "(ref:interactive-lm)"}
 include_vimeo("318338029")
 ```
 
@@ -392,8 +388,7 @@ server <- function(input, output, session) {
 shinyApp(ui, server)
 ```
 
-
-```{r shiny-drag-line, echo=FALSE, fig.cap = "Dragging a vertical line shape and 'snapping' the line to match the closest provided `x` value."}
+```{r shiny-drag-line, echo=FALSE, fig.cap = "(ref:shiny-drag-line)"}
 include_vimeo("307597984")
 ```
 
@@ -427,7 +422,7 @@ server <- function(input, output, session) {
 shinyApp(ui, server)
 ```
 
-```{r shiny-parcoords, echo=FALSE, fig.cap = 'Using the `"plotly_restyle"` event to access brushed dimensions of a parallel coordinates plot.'}
+```{r shiny-parcoords, echo=FALSE, fig.cap = '(ref:shiny-parcoords)'}
 include_vimeo("307597864")
 ```
 
@@ -437,7 +432,7 @@ As Figure \@ref(fig:shiny-parcoords-data) shows, it's possible to use this infor
 plotly_example("shiny", "event_data_parcoords")
 ```
 
-```{r shiny-parcoords-data, echo=FALSE, fig.cap = "Displaying the highlighted observations of a parcoords trace."}
+```{r shiny-parcoords-data, echo=FALSE, fig.cap = "(ref:shiny-parcoords-data)"}
 include_vimeo("307598128")
 ```
 
@@ -495,7 +490,7 @@ server <- function(input, output, session) {
 shinyApp(ui, server)
 ```
 
-```{r shiny-corrplot, echo=FALSE, fig.cap="Linking each cell of a correlation heatmap to their corresponding scatterplots."}
+```{r shiny-corrplot, echo=FALSE, fig.cap="(ref:shiny-corrplot)"}
 include_vimeo("307597728")
 ```
 
@@ -534,7 +529,7 @@ server <- function(input, output, session) {
 shinyApp(ui, server)
 ```
 
-```{r event-priority, echo=FALSE, fig.cap = "A demo of input priority versus event priority. Clicking on the same marker repeatedly, by default, won't invalidate a reactive expression that depends on 'plotly_click', but it will invalidate when given event priority."}
+```{r event-priority, echo=FALSE, fig.cap = "(ref:event-priority)"}
 include_vimeo("307598534")
 ```
 
@@ -574,8 +569,7 @@ server <- function(input, output, session) {
 shinyApp(ui, server)
 ```
 
-
-```{r discrete-event-data, echo=FALSE, fig.cap = "Retrieving the data observations that correspond to a particular bar in a stacked bar chart."}
+```{r discrete-event-data, echo=FALSE, fig.cap = "(ref:discrete-event-data)"}
 include_vimeo("307598771")
 ```
 
@@ -589,7 +583,7 @@ Figure \@ref(fig:shiny-hover-persist) demonstrates a shiny app that accumulates 
 plotly_example("shiny", "event_data_persist")
 ```
 
-```{r shiny-hover-persist, echo=FALSE, fig.cap = "Using `reactiveVals()` to enable a persistent brush via mouse hover. In this example, the brush can be cleared through a double-click event."}
+```{r shiny-hover-persist, echo=FALSE, fig.cap = "(ref:shiny-hover-persist)"}
 include_vimeo("307597677")
 ```
 
@@ -599,7 +593,7 @@ Figure \@ref(fig:shiny-lmGadget) demonstrates a **shiny** gadget for interactive
 plotly_example("shiny", "lmGadget")
 ```
 
-```{r shiny-lmGadget, echo=FALSE, fig.cap = "Interactively removing observations from a linear model. Credit to Winston Chang for the initial implementation of this **shiny** gadget using `shiny::plotOutput()` instead of `plotly::plotlyOutput()`"}
+```{r shiny-lmGadget, echo=FALSE, fig.cap = "(ref:shiny-lmGadget)"}
 include_vimeo("307598908")
 ```
 
@@ -673,10 +667,9 @@ server <- function(input, output, session) {
 shinyApp(ui, server)
 ```
 
-```{r shiny-scatterplot, echo=FALSE, fig.cap="Naive implementation of a shiny app that optionally overlays a fitted line to a scatterplot. A full redraw of the plot is performed everytime the checkbox is clicked, leading to an unnecessarily slow plot."}
+```{r shiny-scatterplot, echo=FALSE, fig.cap="(ref:shiny-scatterplot)"}
 include_vimeo("307597740")
 ```
-
 
 In terms of the implementation behind Figure \@ref(fig:shiny-scatterplot) and \@ref(fig:shiny-scatterplot-performant), the only difference resides in the `server` definition. In Figure \@ref(fig:shiny-scatterplot-performant), the `renderPlotly()` statement no longer has a dependency on input values, so that code is only executed once (on page load) to generate the initial view of the scatterplot. The logic behind adding and removing the fitted line is handled through an `observe()` block -- this reactive expression watches the `input$smooth` input value and modifies the `output$scatterplot` widget whenever it changes. To trigger a modification of a **plotly** output widget, you must create a proxy object with `plotlyProxy()` that references the relevant output ID. Once a proxy object is created, you can invoke any sequence of [plotly.js function(s)](https://plot.ly/javascript/plotlyjs-function-reference/#plotlymaketemplate) on it with `plotlyProxyInvoke()`. Invoking a method with the correct arguments can be tricky and requires knowledge of plotly.js because `plotlyProxyInvoke()` will send these arguments directly to the plotly.js method and therefore doesn't support the same 'high-level' semantics that `plot_ly()` does.
 
@@ -721,7 +714,7 @@ server <- function(input, output, session) {
 }
 ```
 
-```{r shiny-scatterplot-performant, echo=FALSE, fig.cap="A more responsive version of Figure \\@ref(fig:shiny-scatterplot)."}
+```{r shiny-scatterplot-performant, echo=FALSE, fig.cap="(ref:shiny-scatterplot-performant)"}
 include_vimeo("307598567")
 ```
 
@@ -777,7 +770,7 @@ server <- function(input, output, session) {
 shinyApp(ui, server)
 ```
 
-```{r shiny-partial-restyle, echo = FALSE, fig.cap="Using `Plotly.restyle()` to change just the width of a path and markers along that path in response to changes to **shiny** input sliders."}
+```{r shiny-partial-restyle, echo = FALSE, fig.cap="(ref:shiny-partial-restyle)"}
 include_vimeo("307598144")
 ```
 
@@ -819,7 +812,7 @@ server <- function(input, output, session) {
 shinyApp(ui, server)
 ```
 
-```{r shiny-mapbox-relayout, echo = FALSE, fig.cap="Using `Plotly.relayout()` to 'auto-range' the y-axis in response to changes in the x-axis range."}
+```{r shiny-mapbox-relayout, echo = FALSE, fig.cap="(ref:shiny-mapbox-relayout)"}
 include_vimeo("307598178")
 ```
 
@@ -871,7 +864,7 @@ server <- function(input, output, session) {
 shinyApp(ui, server)
 ```
 
-```{r shiny-rangeslider-relayout, echo = FALSE, fig.cap="Using `Plotly.relayout()` to 'auto-range' the y-axis in response to changes in the x-axis range."}
+```{r shiny-rangeslider-relayout, echo = FALSE, fig.cap="(ref:shiny-rangeslider-relayout)"}
 include_vimeo("307598689")
 ```
 
@@ -948,7 +941,7 @@ server <- function(input, output, session) {
 shinyApp(ui, server)
 ```
 
-```{r shiny-stream, echo = FALSE, fig.cap="Using `Plotly.extendTraces()` to efficiently stream data into a plotly chart. This specific example implements a random walk (using R's random number generator) which updates every 100 milliseconds."}
+```{r shiny-stream, echo = FALSE, fig.cap="(ref:shiny-stream)"}
 include_vimeo("307598387")
 ```
 
@@ -1055,8 +1048,7 @@ server <- function(input, output, session) {
 shinyApp(ui, server)
 ```
 
-
-```{r shiny-drill-down, echo=FALSE, fig.cap="Using a drill-down approach to navigating through sales data by category, sub-category, and order date."}
+```{r shiny-drill-down, echo=FALSE, fig.cap="(ref:shiny-drill-down)"}
 include_vimeo("307597838")
 ```
 
@@ -1106,7 +1098,7 @@ server <- function(input, output, session) {
 shinyApp(ui, server)
 ```
 
-```{r shiny-crossfilter-naive, echo=FALSE, fig.cap="A 'naive' crossfilter implementation linking arrival time with departure time of about 350,000 `flights` from the **nycflights13** package."}
+```{r shiny-crossfilter-naive, echo=FALSE, fig.cap="(ref:shiny-crossfilter-naive)"}
 include_vimeo("318277110")
 ```
 
@@ -1199,7 +1191,7 @@ Before we address the additional complexity that comes with linking 3 or more vi
 plotly_example("shiny", "crossfilter_kde")
 ```
 
-```{r shiny-crossfilter-kde, echo=FALSE, fig.cap="Using kernel density estimation to responsively crossfilter a 2D distribution. This particular example shows how the relationship between diamond carat and price is dependent upon it's depth."}
+```{r shiny-crossfilter-kde, echo=FALSE, fig.cap="(ref:shiny-crossfilter-kde)"}
 include_vimeo("318122403")
 ```
 
@@ -1209,7 +1201,7 @@ When linking 3 or more views in a crossfilter, it's important to have a mechanis
 plotly_example("shiny", "crossfilter")
 ```
 
-```{r shiny-crossfilter, echo=FALSE, fig.cap="Crossfiltering 6 variables in the `flights` data from the **nycflights13** package [@nycflights13]. The filtering and binning logic occurs server-side resulting in a very minimal amount of data being sent between server and client (just the brush range and bar heights). Moreover, to perform the UI update, the client only has to tweak existing bar heights, so the overall user experience is quite responsive."}
+```{r shiny-crossfilter, echo=FALSE, fig.cap="(ref:shiny-crossfilter)"}
 include_vimeo("318129502")
 ```
 
@@ -1221,7 +1213,7 @@ Since brushing within color is transient, in constrast to Figure \@ref(fig:shiny
 plotly_example("shiny", "crossfilter_compare")
 ```
 
-```{r shiny-crossfilter-compare, echo=FALSE, fig.cap="Comparing filters with a dynamic color brush. This particular example compares 'red eye' flights (in green) to early morning flights (in orange). This makes it easier to see that delays occur more often for 'red eye' flights."}
+```{r shiny-crossfilter-compare, echo=FALSE, fig.cap="(ref:shiny-crossfilter-compare)"}
 include_vimeo("307598246")
 ```
 
@@ -1233,7 +1225,7 @@ A *draggable* linked brush is great for conditioning via a moving window. For ex
 plotly_example("shiny", "drag_brush")
 ```
 
-```{r drag_brush, echo=FALSE, fig.cap="A draggable brush with both a transient and persistent mode. The dragging ability is done by mimicing the native plotly.js brush with an editable rectangle shape and listening to changes in that brush. The implementation of transient vs persistent mode is a matter of forgetting or remembering previous state(s) of the brush."}
+```{r drag_brush, echo=FALSE, fig.cap="(ref:drag_brush)"}
 include_vimeo("318330112")
 ```
 
@@ -1242,8 +1234,7 @@ include_vimeo("318330112")
 
 Compared to the linking framework covered in section \@ref(graphical-queries), the ability to link views server-side with **shiny** opens the door to many new possibilities. This chapter focuses mostly on using just **plotly** within **shiny**, but the **shiny** ecosystem is vast and these techniques can of course be used to inform other views, such as static plots, other **htmlwidgets** packages (e.g., **leaflet**, **DT**, **network3D**, etc), and other custom **shiny** bindings. In fact, I have a numerous **shiny** apps publically available via an R package that use numerous tools to provide exploratory interfaces to a variety of domain-specific problems, including `zikar::explore()` for exploring Zika virus reports, `eechidna::launch()` for exploring Australian election and census data, and `bcviz::launch()` for exploring housing and census information in British Colombia [@zikar]; [@eechidna]; [@bcviz]. These complex applications also serve as a reference as to how can use the client-side linking framework (i.e., **crosstalk**) inside a larger **shiny** application. See this video for an example:
 
-
-```{r shiny-crosstalk-examples, echo=FALSE, fig.cap="Example of a **shiny** app that has **crosstalk** functionality embedded."}
+```{r shiny-crosstalk-examples, echo=FALSE, fig.cap="(ref:shiny-crosstalk-examples)"}
 include_vimeo("207379729")
 ```
 

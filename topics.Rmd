@@ -50,7 +50,7 @@ plot_ly(tooltip_data, hoverinfo = "text") %>%
   )
 ```
 
-```{r custom-tooltip-plotly, echo = FALSE, fig.cap = "Customizing the tooltip by supplying glyphs, Unicode, HTML markup to the `text` attributes and restricting displayed attributes with `hoverinfo='text'`."}
+```{r custom-tooltip-plotly, echo = FALSE, fig.cap = "(ref:custom-tooltip-plotly)"}
 knitr::include_graphics("images/custom-tooltip-plotly.png")
 ```
 
@@ -71,7 +71,7 @@ subplot(
 )
 ```
 
-```{r hoveron-fill-points, echo = FALSE, fig.cap = "Using the `hoveron` attribute to control whether a tooltip is attached to fill or each point along that fill."}
+```{r hoveron-fill-points, echo = FALSE, fig.cap = "(ref:hoveron-fill-points)"}
 knitr::include_graphics("images/hoveron-fill-points.png")
 ```
 
@@ -84,7 +84,7 @@ plot_ly(x = rnorm(100), name = " ") %>%
   layout(xaxis = list(hoverformat = ".2f"))
 ```
 
-```{r tooltip-format-boxplot, echo = FALSE, fig.cap = "Using `xaxis.hoverformat` to round aggregated values displayed in the tooltip to two decimal places."}
+```{r tooltip-format-boxplot, echo = FALSE, fig.cap = "(ref:tooltip-format-boxplot)"}
 knitr::include_graphics("images/tooltip-format-boxplot.png")
 ```
 
@@ -96,7 +96,7 @@ plot_ly(z = ~volcano) %>%
   layout(xaxis = list(hoverformat = ".2f"))
 ```
 
-```{r tooltip-format-heatmap, echo = FALSE, fig.cap = "Formatting the displayed `z` values in a heatmap using `zhoverformat`."}
+```{r tooltip-format-heatmap, echo = FALSE, fig.cap = "(ref:tooltip-format-heatmap)"}
 knitr::include_graphics("images/tooltip-format-heatmap.png")
 ```
 
@@ -111,7 +111,7 @@ plot_ly(x = rnorm(100, 0, 1e5)) %>%
   )
 ```
 
-```{r hovertemplate, echo = FALSE, fig.cap = "Using the `hovertemplate` attribute to reference computed variables and their display format inside a custom string."}
+```{r hovertemplate, echo = FALSE, fig.cap = "(ref:hovertemplate)"}
 knitr::include_graphics("images/hovertemplate.png")
 ```
 
@@ -127,7 +127,7 @@ p <- ggplot(mtcars, aes(wt, mpg, text = row.names(mtcars))) + geom_point()
 ggplotly(p)
 ```
 
-```{r ggplotly-text, echo = FALSE, fig.cap = "Using the `text` **ggplot2** aesthetic to supply custom tooltip text to "}
+```{r ggplotly-text, echo = FALSE, fig.cap = "(ref:ggplotly-text)"}
 knitr::include_graphics("images/ggplotly-text.png")
 ```
 
@@ -137,7 +137,7 @@ By default, `ggplotly()` will display all relevant aesthetic mappings (or comput
 ggplotly(p, tooltip = "text")
 ```
 
-```{r ggplotly-text-tooltip, echo = FALSE, fig.cap = "Using the `tooltip` arugment in `ggplotly()` to only display the `text` aesthetic."}
+```{r ggplotly-text-tooltip, echo = FALSE, fig.cap = "(ref:ggplotly-text-tooltip)"}
 knitr::include_graphics("images/ggplotly-text-tooltip.png")
 ```
 
@@ -153,7 +153,7 @@ subplot(
 )
 ```
 
-```{r format-options, echo = FALSE, fig.cap="Leveraging global R options for controlling the displayed values in a `ggplotly()` tooltip."}
+```{r format-options, echo = FALSE, fig.cap="(ref:format-options)"}
 knitr::include_graphics("images/format-options.png")
 ```
 
@@ -166,7 +166,7 @@ p <- ggplot(txhousing, aes(date, median)) +
 ggplotly(p, tooltip = c("text", "x", "city"))
 ```
 
-```{r text-clever, echo = FALSE, fig.cap="Using the `text` aesthetic to replace an auto-generated aesthetic (`y`)."}
+```{r text-clever, echo = FALSE, fig.cap="(ref:text-clever)"}
 knitr::include_graphics("images/text-clever.png")
 ```
 
@@ -196,7 +196,7 @@ w %>%
   style(text = text_y, traces = 2)
 ```
 
-```{r custom-predict-text, echo = FALSE, fig.cap="Using the return value of `ggplotly()` to populate a custom `text` attribute."}
+```{r custom-predict-text, echo = FALSE, fig.cap="(ref:custom-predict-text)"}
 knitr::include_graphics("images/custom-predict-text.png")
 ```
 
@@ -218,7 +218,7 @@ label <- list(
 plot_ly(x = iris$Petal.Length, hoverlabel = label)
 ```
 
-```{r tooltip-style, echo = FALSE, fig.cap="Using the `hoverlabel` attribute to customize the color and font of the tooltip."}
+```{r tooltip-style, echo = FALSE, fig.cap="(ref:tooltip-style)"}
 knitr::include_graphics("images/tooltip-style.png")
 ```
 
@@ -231,13 +231,11 @@ qplot(x = Petal.Length, data = iris) %>%
   layout(font = font)
 ```
 
-```{r tooltip-style-ggplotly, echo = FALSE, fig.cap="Using the `hoverlabel` attribute with `ggplotly()`."}
+```{r tooltip-style-ggplotly, echo = FALSE, fig.cap="(ref:tooltip-style-ggplotly)"}
 knitr::include_graphics("images/tooltip-style-ggplotly.png")
 ```
 
 As shown in sections \@ref(tooltip-text) and \@ref(tooltip-text-ggplotly) the approach to customized the actual text of a tooltip is slightly different depending on whether you're using `ggplotly()` or `plot_ly()`, but styling the appearance of the tooltip is more or less the same in either approach.
-    
-
 
 # Control the modebar {#control-modebar}
 
@@ -261,7 +259,7 @@ plot_ly() %>%
   config(displaylogo = FALSE)
 ```
 
-```{r displaylogo, echo = FALSE, fig.cap = "Removing the plotly logo from the modebar."}
+```{r displaylogo, echo = FALSE, fig.cap = "(ref:displaylogo)"}
 knitr::include_graphics("images/displaylogo.png")
 ```
 
@@ -274,7 +272,7 @@ plot_ly() %>%
   config(modeBarButtonsToRemove = c("zoomIn2d", "zoomOut2d"))
 ```
 
-```{r modeBarButtonsToRemove, echo = FALSE, fig.cap = "Removing the 'zoomIn2d' and 'zoomOut2d' modebar buttons by name."}
+```{r modeBarButtonsToRemove, echo = FALSE, fig.cap = "(fig:modeBarButtonsToRemove)"}
 knitr::include_graphics("images/modeBarButtonsToRemove.png")
 ```
 
@@ -301,7 +299,7 @@ plot_ly() %>%
   config(modeBarButtonsToAdd = list(octocat))
 ```
 
-```{r modeBarButtonsToAdd, echo = FALSE, fig.cap = "Supplying a custom modebar button with custom behavior."}
+```{r modeBarButtonsToAdd, echo = FALSE, fig.cap = "(ref:modeBarButtonsToAdd)"}
 knitr::include_graphics("images/modeBarButtonsToAdd.png")
 ```
 
@@ -312,7 +310,7 @@ plot_ly() %>%
   config(modeBarButtons = list(list("zoomIn2d"), list(octocat)))
 ```
 
-```{r modeBarButtons, echo = FALSE, fig.cap = "Specifying the full list of modebar buttons."}
+```{r modeBarButtons, echo = FALSE, fig.cap = "(ref:modeBarButtons)"}
 knitr::include_graphics("images/modeBarButtons.png")
 ```
 
@@ -351,7 +349,7 @@ If you use `plot_ly()` and directly specify a plotly.js color attribute (e.g. `m
 plot_ly(x = iris$Petal.Length, marker = list(color = "hsl(0, 100%, 50%)"))
 ```
 
-```{r color-plotly-js, echo = FALSE, fig.cap="Specifying a color in plotly.js' supported format"}
+```{r color-plotly-js, echo = FALSE, fig.cap="(ref:color-plotly-js)"}
 knitr::include_graphics("images/color-plotly-js.png")
 ```
 
@@ -381,7 +379,7 @@ If you'd like to learn more about how to use the `color` argument as well as spe
 
 The JavaScript library underlying **plotly** (plotly.js) has it's own special support for specifying marker symbols by name. As Figure \@ref(fig:symbols-all) shows, there are currently many acceptable `marker.symbol` values, and all the acceptable values can be accessed through plotly.js' `schema()`.
 
-```{r symbols-all, fig.cap = "All marker symbols currently supported by **plotly**.", screenshot.alt = "images/symbols-all"}
+```{r symbols-all, fig.cap = "(ref:symbols-all)", screenshot.alt = "images/symbols-all.png"}
 s <- schema()
 vals <- grep("-", s$traces$scatter$attributes$marker$symbol$values, value = T)
 plot_ly() %>%
@@ -403,7 +401,8 @@ plot_ly() %>%
 
 In addition to these marker symbols, you can also use `add_text()` to encode data with on-graph text. Moreover, the `add_text()` function (i.e. a scatter trace with `mode="markers"`) enjoys a lot of the same properties as `add_markers()` (i.e. a scatter trace with `mode="text"`). As Figure \@ref(fig:glyphs) shows, similar to how we can supply typographical glyphs and/or unicode in a custom tooltip, you can supply a character vector of similar content to `add_text()` (i.e. a scatter trace with `mode='text'`) which renders on-graph text. Furthermore, when using `text` to render on-graph text, one can leverage the `hovertext` attribute to display some different text on hover.
 
-```{r glyphs, fig.cap = "Using `add_text()` to render on-graph text with typographical glyphs and/or unicode.", screenshot.alt = "images/glyphs"}
+
+```{r glyphs, fig.cap = "(ref:glyphs)", screenshot.alt = "images/glyphs.png"}
 plot_ly() %>% 
   add_text(
     x = rep(2, 2), 
@@ -424,7 +423,7 @@ plot_ly() %>%
 
 Having the ability to encode data with unicode means that we have a virtually endless number of ways to encode data in symbols/glyphs. Just for fun, Figure \@ref(fig:emojis) demonstrates how you could plot all the activity emojis using the **emo** package and display the name of the emoji on hover [@emo].
 
-```{r emojis, fig.cap = "Using `add_text()` to plot all the activity emojis and leveraging `hovertext` to place the emoji names in the tooltip text.", screenshot.alt = "images/emojis"}
+```{r emojis, fig.cap = "(ref:emojis)", screenshot.alt = "images/emojis.png"}
 library(emo)
 set.seed(100)
 jis %>%
@@ -463,7 +462,7 @@ plot_ly(x = x, y = rnorm(length(x))) %>%
   config(locale = "ja")
 ```
 
-```{r localization, echo = FALSE, fig.cap="Using the `locale` argument of the `config()` function to render on-graph text in another language."}
+```{r localization, echo = FALSE, fig.cap="(ref:localization)"}
 knitr::include_graphics("images/localization.png")
 ```
 
@@ -504,7 +503,7 @@ plot_ly() %>%
   config(mathjax = "cdn")
 ```
 
-```{r mathjax, echo = FALSE, fig.cap="Rendering LaTeX in the plot and axis titles."}
+```{r mathjax, echo = FALSE, fig.cap="(ref:mathjax)"}
 knitr::include_graphics("images/mathjax.png")
 ```
 
@@ -519,7 +518,7 @@ plotly_empty(showlegend = FALSE, hoverinfo = "x+y") %>%
   config(mathjax = "cdn")
 ```
 
-```{r mathjax2, echo = FALSE, fig.cap="Rendering LaTeX using `add_text()` and `add_annotations()`. "}
+```{r mathjax2, echo = FALSE, fig.cap="(ref:mathjax2)"}
 knitr::include_graphics("images/mathjax2.png")
 ```
 
@@ -567,7 +566,7 @@ allCities %>%
   add_lines(name = "Houston")
 ```
 
-```{r houston2, echo = FALSE, fig.cap = "Monthly median house prices over time for 46 Texan cities (in blue). Houston is highlighted in orange."}
+```{r houston2, echo = FALSE, fig.cap = "(ref:houston2)"}
 knitr::include_graphics("images/houston2.svg")
 ```
 
@@ -584,7 +583,7 @@ allCities %>%
   })
 ```
 
-```{r houston-vs-sa, echo = FALSE, fig.cap = "Monthly median house price in Houston and San Antonio in comparison to other Texan cities."}
+```{r houston-vs-sa, echo = FALSE, fig.cap = "(ref:houston-vs-sa)"}
 knitr::include_graphics("images/houston-vs-sa.svg")
 ```
 
@@ -615,7 +614,7 @@ allCities %>%
   add_fun(layer_city, "San Antonio")
 ```
 
-```{r summary, echo = FALSE, fig.cap = "First, second, and third quartile of median monthly house price in Texas."}
+```{r summary, echo = FALSE, fig.cap = "(ref:summary)"}
 knitr::include_graphics("images/summary.svg")
 ```
 
@@ -648,7 +647,7 @@ txhousing %>%
   add_fun(layer_forecast)
 ```
 
-```{r forecast, echo = FALSE, fig.cap = "Layering on a 4-year forecast from a exponential smoothing state space model."}
+```{r forecast, echo = FALSE, fig.cap = "(ref:forecast)"}
 knitr::include_graphics("images/forecast.svg")
 ```
 
@@ -694,7 +693,7 @@ ggplotly(p, dynamicTicks = TRUE) %>%
   layout(hovermode = "x")
 ```
 
-```{r ggplotly-rangeslider, echo = FALSE, fig.cap = "Adding `dynamicTicks`, a `rangeslider()`, and a comparison hovermode to improve the interactive experience of a `ggplotly()` graph."}
+```{r ggplotly-rangeslider, echo = FALSE, fig.cap = "(ref:ggplotly-rangeslider)"}
 include_vimeo("325298724")
 ```
 
@@ -704,7 +703,7 @@ Since a single **plotly** object can only have one layout, modifying the layout 
 
 As mentioned previously, `ggplotly()` translates each ggplot2 layer into one or more plotly.js traces. In this translation, it is forced to make a number of assumptions about trace attribute values that may or may not be appropriate for the use case. To demonstrate, consider Figure \@ref(fig:simple-scatterplot), which shows hover information for the points, the fitted line, and the confidence band. How could we make it so hover information is only displayed for the points?
 
-```{r simple-scatterplot, fig.cap="A scatterplot with a fitted line and confidence band."}
+```{r simple-scatterplot, fig.cap="(ref:simple-scatterplot)"}
 p <- ggplot(mtcars, aes(x = wt, y = mpg)) +
    geom_point() + geom_smooth()
 ggplotly(p)
@@ -716,7 +715,7 @@ The **ggplot2** package doesn't provide an API for interactive features, but by 
 plotly_json(p)
 ```
 
-```{r listviewer, echo = FALSE, fig.cap = "Using listviewer to inspect the JSON representation of a plotly object."}
+```{r listviewer, echo = FALSE, fig.cap = "(ref:listviewer)"}
 knitr::include_graphics("images/listviewer.png")
 ```
 
@@ -726,7 +725,7 @@ This output indicates that the fitted line and confidence band are implemented i
 style(p, hoverinfo = "none", traces = 2:3)
 ```
 
-```{r style-hoverinfo, echo = FALSE, fig.cap = "Using the `style()` function to modify hoverinfo attribute values of a plotly object created via `ggplotly()` (by default, `ggplotly()` displays hoverinfo for all traces). In this case, the hoverinfo for a fitted line and error bounds are hidden."}
+```{r style-hoverinfo, echo = FALSE, fig.cap = "(ref:style-hoverinfo)"}
 knitr::include_graphics("images/style-hoverinfo.png")
 ```
 
@@ -759,7 +758,7 @@ p %>%
   })
 ```
 
-```{r se-annotations, echo = FALSE, fig.cap = "Leveraging data associated with a `geom_smooth()` layer to display additional information about the model fit."}
+```{r se-annotations, echo = FALSE, fig.cap = "(ref:se-annotations)"}
 knitr::include_graphics("images/se-annotations.svg")
 ```
 
@@ -779,7 +778,7 @@ ggplotly(p, originalData = FALSE) %>%
   )
 ```
 
-```{r StatBin, echo = FALSE, fig.cap = "Leveraging output from `StatBin` to add annotations to a stacked bar chart (created via `geom_bar()`) which makes it easier to compare bar heights."}
+```{r StatBin, echo = FALSE, fig.cap = "(ref:StatBin)"}
 knitr::include_graphics("images/StatBin.svg")
 ```
 
@@ -797,7 +796,7 @@ ggplotly(p, originalData = FALSE) %>%
   )
 ```
 
-```{r StatDensity2d, echo = FALSE, fig.cap = "Leveraging output from `StatDensity2d` to add annotations to contour levels."}
+```{r StatDensity2d, echo = FALSE, fig.cap = "(ref:StatDensity2d)"}
 knitr::include_graphics("images/StatDensity2d.svg")
 ```
 
@@ -831,7 +830,7 @@ plot_ly() %>%
 ```
 
 
-```{r image-hyperlink, echo = FALSE, fig.cap="Embedding an image using a hyperlink. This example uses paper coordinates (i.e., normalized 0-1 scale relative to the graph area) to place the image just above the graph."}
+```{r image-hyperlink, echo = FALSE, fig.cap="(ref:image-hyperlink)"}
 knitr::include_graphics("images/image-hyperlink.svg")
 ```
 
@@ -851,7 +850,7 @@ plot_ly() %>%
   )
 ```
 
-```{r image-uri, echo = FALSE, fig.cap="Embedding an image using a data URI. This approach ensures your image stays embedded in the plot."}
+```{r image-uri, echo = FALSE, fig.cap="(ref:image-uri)"}
 knitr::include_graphics("images/image-uri.svg")
 ```
 
@@ -873,7 +872,7 @@ plot_ly() %>%
   )
 ```
 
-```{r raster, echo = FALSE, fig.cap = "Reading a png image into R with `png::readPNG()`, converting the RBGA array into a raster object, generating a data URI of the raster via `raster2uri()`, then embedding the URI as an image in a **plotly** graph."}
+```{r raster, echo = FALSE, fig.cap = "(ref:raster)"}
 knitr::include_graphics("images/raster.svg")
 ```
 

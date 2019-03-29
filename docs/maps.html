@@ -25,7 +25,7 @@
 <meta name="author" content="Carson Sievert">
 
 
-<meta name="date" content="2019-03-20">
+<meta name="date" content="2019-03-27">
 
   <meta name="viewport" content="width=device-width, initial-scale=1">
   <meta name="apple-mobile-web-app-capable" content="yes">
@@ -208,9 +208,11 @@ code span.wa { color: #60a0b0; font-weight: bold; font-style: italic; } /* Warni
 <li class="chapter" data-level="7.3" data-path="frequencies-2D.html"><a href="frequencies-2D.html#categorical-axes"><i class="fa fa-check"></i><b>7.3</b> Categorical axes</a></li>
 </ul></li>
 <li class="chapter" data-level="8" data-path="d-charts.html"><a href="d-charts.html"><i class="fa fa-check"></i><b>8</b> 3D charts</a><ul>
-<li class="chapter" data-level="8.0.1" data-path="d-charts.html"><a href="d-charts.html#markers-and-lines"><i class="fa fa-check"></i><b>8.0.1</b> Markers and lines</a></li>
-<li class="chapter" data-level="8.0.2" data-path="d-charts.html"><a href="d-charts.html#d-paths"><i class="fa fa-check"></i><b>8.0.2</b> 3D paths</a></li>
-<li class="chapter" data-level="8.0.3" data-path="d-charts.html"><a href="d-charts.html#d-surfaces"><i class="fa fa-check"></i><b>8.0.3</b> 3D surfaces</a></li>
+<li class="chapter" data-level="8.1" data-path="d-charts.html"><a href="d-charts.html#markers-1"><i class="fa fa-check"></i><b>8.1</b> Markers</a></li>
+<li class="chapter" data-level="8.2" data-path="d-charts.html"><a href="d-charts.html#paths"><i class="fa fa-check"></i><b>8.2</b> Paths</a></li>
+<li class="chapter" data-level="8.3" data-path="d-charts.html"><a href="d-charts.html#lines-1"><i class="fa fa-check"></i><b>8.3</b> Lines</a></li>
+<li class="chapter" data-level="8.4" data-path="d-charts.html"><a href="d-charts.html#axes"><i class="fa fa-check"></i><b>8.4</b> Axes</a></li>
+<li class="chapter" data-level="8.5" data-path="d-charts.html"><a href="d-charts.html#surfaces"><i class="fa fa-check"></i><b>8.5</b> Surfaces</a></li>
 </ul></li>
 <li class="part"><span><b>II Publishing views</b></span></li>
 <li class="chapter" data-level="9" data-path="introduction-1.html"><a href="introduction-1.html"><i class="fa fa-check"></i><b>9</b> Introduction</a></li>
@@ -232,7 +234,6 @@ code span.wa { color: #60a0b0; font-weight: bold; font-style: italic; } /* Warni
 <li class="chapter" data-level="13.2.2" data-path="arranging-views.html"><a href="arranging-views.html#bootstrap-grid-layout"><i class="fa fa-check"></i><b>13.2.2</b> Bootstrap grid layout</a></li>
 <li class="chapter" data-level="13.2.3" data-path="arranging-views.html"><a href="arranging-views.html#css-flexbox"><i class="fa fa-check"></i><b>13.2.3</b> CSS flexbox</a></li>
 </ul></li>
-<li class="chapter" data-level="13.3" data-path="arranging-views.html"><a href="arranging-views.html#navigating-many-views"><i class="fa fa-check"></i><b>13.3</b> Navigating many views</a></li>
 </ul></li>
 <li class="chapter" data-level="14" data-path="animating-views.html"><a href="animating-views.html"><i class="fa fa-check"></i><b>14</b> Animating views</a><ul>
 <li class="chapter" data-level="14.1" data-path="animating-views.html"><a href="animating-views.html#animation-api"><i class="fa fa-check"></i><b>14.1</b> Animation API</a></li>
@@ -289,7 +290,10 @@ code span.wa { color: #60a0b0; font-weight: bold; font-style: italic; } /* Warni
 </ul></li>
 <li class="chapter" data-level="20" data-path="js-event-handlers.html"><a href="js-event-handlers.html"><i class="fa fa-check"></i><b>20</b> Adding custom event handlers</a></li>
 <li class="chapter" data-level="21" data-path="supplying-custom-data.html"><a href="supplying-custom-data.html"><i class="fa fa-check"></i><b>21</b> Supplying custom data</a></li>
-<li class="chapter" data-level="22" data-path="client-side.html"><a href="client-side.html"><i class="fa fa-check"></i><b>22</b> Leveraging web technologies from R</a></li>
+<li class="chapter" data-level="22" data-path="client-side.html"><a href="client-side.html"><i class="fa fa-check"></i><b>22</b> Leveraging web technologies from R</a><ul>
+<li class="chapter" data-level="22.1" data-path="client-side.html"><a href="client-side.html#web-infrastructure"><i class="fa fa-check"></i><b>22.1</b> Web infrastructure</a></li>
+<li class="chapter" data-level="22.2" data-path="client-side.html"><a href="client-side.html#react"><i class="fa fa-check"></i><b>22.2</b> Modern JS &amp; React</a></li>
+</ul></li>
 <li class="part"><span><b>VI Various special topics</b></span></li>
 <li class="chapter" data-level="23" data-path="is-plotly-free-secure.html"><a href="is-plotly-free-secure.html"><i class="fa fa-check"></i><b>23</b> Is plotly free &amp; secure?</a></li>
 <li class="chapter" data-level="24" data-path="controlling-tooltips.html"><a href="controlling-tooltips.html"><i class="fa fa-check"></i><b>24</b> Controlling tooltips</a><ul>
@@ -365,8 +369,9 @@ FIGURE 4.1: A mapbox powered bubble chart showing the population of various citi
 <p>The Mapbox basemap styling is controlled through the <a href="https://plot.ly/r/reference/#layout-mapbox-style"><code>layout.mapbox.style</code></a> attribute. The <strong>plotly</strong> package comes with support for 7 different styles, but you can also supply a custom URL to a <a href="https://docs.mapbox.com/help/tutorials/create-a-custom-style/">custom mapbox style</a>. To obtain all the pre-packaged basemap style names, you can grab them from the official plotly.js <code>schema()</code>:</p>
 <pre class="sourceCode r"><code class="sourceCode r">styles &lt;-<span class="st"> </span><span class="kw">schema</span>()<span class="op">$</span>layout<span class="op">$</span>layoutAttributes<span class="op">$</span>mapbox<span class="op">$</span>style<span class="op">$</span>values
 styles
-<span class="co">#&gt; [1] &quot;basic&quot;             &quot;streets&quot;           &quot;outdoors&quot;         </span>
-<span class="co">#&gt; [4] &quot;light&quot;             &quot;dark&quot;              &quot;satellite&quot;        </span>
+<span class="co">#&gt; [1] &quot;basic&quot;             &quot;streets&quot;          </span>
+<span class="co">#&gt; [3] &quot;outdoors&quot;          &quot;light&quot;            </span>
+<span class="co">#&gt; [5] &quot;dark&quot;              &quot;satellite&quot;        </span>
 <span class="co">#&gt; [7] &quot;satellite-streets&quot;</span></code></pre>
 <p>Any one of these values can be used for a mapbox style. Figure <a href="maps.html#fig:satellite">4.2</a> demonstrates the satellite earth imagery basemap.</p>
 <pre class="sourceCode r"><code class="sourceCode r"><span class="kw">layout</span>(
@@ -374,7 +379,7 @@ styles
   <span class="dt">mapbox =</span> <span class="kw">list</span>(<span class="dt">style =</span> <span class="st">&quot;satellite&quot;</span>)
 )</code></pre>
 <div class="figure" style="text-align: center"><span id="fig:satellite"></span>
-<iframe src="https://player.vimeo.com/video/319959926?title=0&amp;byline=0&amp;portrait=0" width="100%" height="400" frameborder="0" seamless="seamless" webkitAllowFullScreen mozallowfullscreen allowFullScreen></iframe>
+<iframe src="https://player.vimeo.com/video/326683897?title=0&amp;byline=0&amp;portrait=0" width="100%" height="400" frameborder="0" seamless="seamless" webkitAllowFullScreen mozallowfullscreen allowFullScreen></iframe>
 <p class="caption">
 FIGURE 4.2: Zooming in on earth satellite imagery using <code>plot_mapbox()</code>.
 </p>
@@ -391,8 +396,7 @@ FIGURE 4.2: Zooming in on earth satellite imagery using <code>plot_mapbox()</cod
   )
 )</code></pre>
 <div class="figure" style="text-align: center"><span id="fig:mapbox-style-dropdown"></span>
-<div id="htmlwidget-2ea23d84f4a148e72515" style="width:100%;height:480px;" class="plotly html-widget"></div>
-<script type="application/json" data-for="htmlwidget-2ea23d84f4a148e72515">{"x":{"visdat":{"ca3cbd6df2c":["function () ","plotlyVisDat"]},"cur_data":"ca3cbd6df2c","attrs":{"ca3cbd6df2c":{"alpha_stroke":1,"sizes":[10,100],"spans":[1,20]}},"layout":{"margin":{"b":40,"l":60,"t":25,"r":10},"mapType":"mapbox","mapbox":{"domain":{"x":[0,1],"y":[0,1]},"style":"dark"},"updatemenus":[{"y":0.8,"buttons":[{"label":"basic","method":"relayout","args":["mapbox.style","basic"]},{"label":"streets","method":"relayout","args":["mapbox.style","streets"]},{"label":"outdoors","method":"relayout","args":["mapbox.style","outdoors"]},{"label":"light","method":"relayout","args":["mapbox.style","light"]},{"label":"dark","method":"relayout","args":["mapbox.style","dark"]},{"label":"satellite","method":"relayout","args":["mapbox.style","satellite"]},{"label":"satellite-streets","method":"relayout","args":["mapbox.style","satellite-streets"]}]}],"hovermode":"closest","showlegend":false},"source":"A","config":{"modeBarButtonsToAdd":[{"name":"Collaborate","icon":{"width":1000,"ascent":500,"descent":-50,"path":"M487 375c7-10 9-23 5-36l-79-259c-3-12-11-23-22-31-11-8-22-12-35-12l-263 0c-15 0-29 5-43 15-13 10-23 23-28 37-5 13-5 25-1 37 0 0 0 3 1 7 1 5 1 8 1 11 0 2 0 4-1 6 0 3-1 5-1 6 1 2 2 4 3 6 1 2 2 4 4 6 2 3 4 5 5 7 5 7 9 16 13 26 4 10 7 19 9 26 0 2 0 5 0 9-1 4-1 6 0 8 0 2 2 5 4 8 3 3 5 5 5 7 4 6 8 15 12 26 4 11 7 19 7 26 1 1 0 4 0 9-1 4-1 7 0 8 1 2 3 5 6 8 4 4 6 6 6 7 4 5 8 13 13 24 4 11 7 20 7 28 1 1 0 4 0 7-1 3-1 6-1 7 0 2 1 4 3 6 1 1 3 4 5 6 2 3 3 5 5 6 1 2 3 5 4 9 2 3 3 7 5 10 1 3 2 6 4 10 2 4 4 7 6 9 2 3 4 5 7 7 3 2 7 3 11 3 3 0 8 0 13-1l0-1c7 2 12 2 14 2l218 0c14 0 25-5 32-16 8-10 10-23 6-37l-79-259c-7-22-13-37-20-43-7-7-19-10-37-10l-248 0c-5 0-9-2-11-5-2-3-2-7 0-12 4-13 18-20 41-20l264 0c5 0 10 2 16 5 5 3 8 6 10 11l85 282c2 5 2 10 2 17 7-3 13-7 17-13z m-304 0c-1-3-1-5 0-7 1-1 3-2 6-2l174 0c2 0 4 1 7 2 2 2 4 4 5 7l6 18c0 3 0 5-1 7-1 1-3 2-6 2l-173 0c-3 0-5-1-8-2-2-2-4-4-4-7z m-24-73c-1-3-1-5 0-7 2-2 3-2 6-2l174 0c2 0 5 0 7 2 3 2 4 4 5 7l6 18c1 2 0 5-1 6-1 2-3 3-5 3l-174 0c-3 0-5-1-7-3-3-1-4-4-5-6z"},"click":"function(gd) { \n        // is this being viewed in RStudio?\n        if (location.search == '?viewer_pane=1') {\n          alert('To learn about plotly for collaboration, visit:\\n https://cpsievert.github.io/plotly_book/plot-ly-for-collaboration.html');\n        } else {\n          window.open('https://cpsievert.github.io/plotly_book/plot-ly-for-collaboration.html', '_blank');\n        }\n      }"}],"cloud":false,"mapboxAccessToken":"pk.eyJ1IjoiY3BzaWV2ZXJ0IiwiYSI6ImNpdGRiOWwwMjAwMHQyem84NG5tcXg5eXIifQ.UJ2VwrJmPW8DB8H2d-wN3g"},"data":[{"type":"scattermapbox","mode":"markers","marker":{"color":"rgba(31,119,180,1)","line":{"color":"rgba(31,119,180,1)"}},"line":{"color":"rgba(31,119,180,1)"},"subplot":"mapbox","frame":null}],"highlight":{"on":"plotly_click","persistent":false,"dynamic":false,"selectize":false,"opacityDim":0.2,"selected":{"opacity":1},"debounce":0},"base_url":"https://plot.ly"},"evals":["config.modeBarButtonsToAdd.0.click"],"jsHooks":[]}</script>
+<iframe src="https://player.vimeo.com/video/326684625?title=0&amp;byline=0&amp;portrait=0" width="100%" height="400" frameborder="0" seamless="seamless" webkitAllowFullScreen mozallowfullscreen allowFullScreen></iframe>
 <p class="caption">
 FIGURE 4.3: Providing a dropdown menu to control the styling of the mapbox baselayer.
 </p>
@@ -585,7 +589,7 @@ world_large &lt;-<span class="st"> </span><span class="kw">ne_countries</span>(<
 <div id="cartograms" class="section level3">
 <h3><span class="header-section-number">4.2.2</span> Cartograms</h3>
 <p>Cartograms distort the size of geo-spatial polygons to encode a numeric variable other than the land size. There are numerous types of cartograms and they are typically categorized by their ability to perserve shape and maintain contingous regions. Cartograms has been shown to be an effective approach to both encode and teach about geo-spatial data, though the effects certainly vary by cartogram type <span class="citation">(Nusrat S, Alam MJ, Kobourov S. <a href="#ref-cartogram-vis" role="doc-biblioref">2018</a>)</span>.
-The R package <strong>cartogram</strong> provides an interface to several popular cartogram algorithms <span class="citation">(Jeworutzki <a href="#ref-cartogram" role="doc-biblioref">2018</a>)</span>. A number of other R packages provide cartogram algorithms, but the great thing about <strong>cartogram</strong> is that all the functions can take an <strong>sf</strong> (or <strong>sp</strong>) object as input and return an <strong>sf</strong> object. This makes it incredibly easy to go from raw spatial objects, to transformed objects, to visual. Figure <a href="maps.html#fig:cartogram">4.12</a> demonstrates a continuous area cartogram of US population in 2014 using a rubber sheet distortion algorithm from <span class="citation">Dougenik, J. A., Chrisman, N. R., &amp; Niemeyer, D. R. (<a href="#ref-Dougenik" role="doc-biblioref">1985</a>)</span>.</p>
+The R package <strong>cartogram</strong> provides an interface to several popular cartogram algorithms <span class="citation">(Jeworutzki <a href="#ref-cartogram" role="doc-biblioref">2018</a>)</span>. A number of other R packages provide cartogram algorithms, but the great thing about <strong>cartogram</strong> is that all the functions can take an <strong>sf</strong> (or <strong>sp</strong>) object as input and return an <strong>sf</strong> object. This makes it incredibly easy to go from raw spatial objects, to transformed objects, to visual. Figure <a href="maps.html#fig:cartogram">4.12</a> demonstrates a continuous area cartogram of US population in 2014 using a rubber sheet distortion algorithm from <span class="citation">James A. Dougenik, Nicholas R. Chrisman, Duane R. Niemeyer (<a href="#ref-Dougenik" role="doc-biblioref">1985</a>)</span>.</p>
 <pre class="sourceCode r"><code class="sourceCode r"><span class="kw">library</span>(cartogram)
 <span class="kw">library</span>(albersusa)
 
@@ -697,7 +701,7 @@ FIGURE 4.15: A tile cartogram of U.S. population in 2016.
 <p>Jeworutzki, Sebastian. 2018. <em>Cartogram: Create Cartograms with R</em>. <a href="https://CRAN.R-project.org/package=cartogram">https://CRAN.R-project.org/package=cartogram</a>.</p>
 </div>
 <div id="ref-Dougenik">
-<p>Dougenik, J. A., Chrisman, N. R., &amp; Niemeyer, D. R. 1985. “An Algorithm to Construct Continuous Area Cartograms.” <em>The Professional Geographer</em>.</p>
+<p>James A. Dougenik, Nicholas R. Chrisman, Duane R. Niemeyer. 1985. “An Algorithm to Construct Continuous Area Cartograms.” <em>The Professional Geographer</em>.</p>
 </div>
 <div id="ref-Dorling">
 <p>Dorling, D. 1996. “Area Cartograms: Their Use and Creation.” <em>Concepts and Techniques in Modern Geography (CATMOG)</em>.</p>

@@ -25,7 +25,7 @@
 <meta name="author" content="Carson Sievert">
 
 
-<meta name="date" content="2019-03-20">
+<meta name="date" content="2019-03-27">
 
   <meta name="viewport" content="width=device-width, initial-scale=1">
   <meta name="apple-mobile-web-app-capable" content="yes">
@@ -208,9 +208,11 @@ code span.wa { color: #60a0b0; font-weight: bold; font-style: italic; } /* Warni
 <li class="chapter" data-level="7.3" data-path="frequencies-2D.html"><a href="frequencies-2D.html#categorical-axes"><i class="fa fa-check"></i><b>7.3</b> Categorical axes</a></li>
 </ul></li>
 <li class="chapter" data-level="8" data-path="d-charts.html"><a href="d-charts.html"><i class="fa fa-check"></i><b>8</b> 3D charts</a><ul>
-<li class="chapter" data-level="8.0.1" data-path="d-charts.html"><a href="d-charts.html#markers-and-lines"><i class="fa fa-check"></i><b>8.0.1</b> Markers and lines</a></li>
-<li class="chapter" data-level="8.0.2" data-path="d-charts.html"><a href="d-charts.html#d-paths"><i class="fa fa-check"></i><b>8.0.2</b> 3D paths</a></li>
-<li class="chapter" data-level="8.0.3" data-path="d-charts.html"><a href="d-charts.html#d-surfaces"><i class="fa fa-check"></i><b>8.0.3</b> 3D surfaces</a></li>
+<li class="chapter" data-level="8.1" data-path="d-charts.html"><a href="d-charts.html#markers-1"><i class="fa fa-check"></i><b>8.1</b> Markers</a></li>
+<li class="chapter" data-level="8.2" data-path="d-charts.html"><a href="d-charts.html#paths"><i class="fa fa-check"></i><b>8.2</b> Paths</a></li>
+<li class="chapter" data-level="8.3" data-path="d-charts.html"><a href="d-charts.html#lines-1"><i class="fa fa-check"></i><b>8.3</b> Lines</a></li>
+<li class="chapter" data-level="8.4" data-path="d-charts.html"><a href="d-charts.html#axes"><i class="fa fa-check"></i><b>8.4</b> Axes</a></li>
+<li class="chapter" data-level="8.5" data-path="d-charts.html"><a href="d-charts.html#surfaces"><i class="fa fa-check"></i><b>8.5</b> Surfaces</a></li>
 </ul></li>
 <li class="part"><span><b>II Publishing views</b></span></li>
 <li class="chapter" data-level="9" data-path="introduction-1.html"><a href="introduction-1.html"><i class="fa fa-check"></i><b>9</b> Introduction</a></li>
@@ -232,7 +234,6 @@ code span.wa { color: #60a0b0; font-weight: bold; font-style: italic; } /* Warni
 <li class="chapter" data-level="13.2.2" data-path="arranging-views.html"><a href="arranging-views.html#bootstrap-grid-layout"><i class="fa fa-check"></i><b>13.2.2</b> Bootstrap grid layout</a></li>
 <li class="chapter" data-level="13.2.3" data-path="arranging-views.html"><a href="arranging-views.html#css-flexbox"><i class="fa fa-check"></i><b>13.2.3</b> CSS flexbox</a></li>
 </ul></li>
-<li class="chapter" data-level="13.3" data-path="arranging-views.html"><a href="arranging-views.html#navigating-many-views"><i class="fa fa-check"></i><b>13.3</b> Navigating many views</a></li>
 </ul></li>
 <li class="chapter" data-level="14" data-path="animating-views.html"><a href="animating-views.html"><i class="fa fa-check"></i><b>14</b> Animating views</a><ul>
 <li class="chapter" data-level="14.1" data-path="animating-views.html"><a href="animating-views.html#animation-api"><i class="fa fa-check"></i><b>14.1</b> Animation API</a></li>
@@ -289,7 +290,10 @@ code span.wa { color: #60a0b0; font-weight: bold; font-style: italic; } /* Warni
 </ul></li>
 <li class="chapter" data-level="20" data-path="js-event-handlers.html"><a href="js-event-handlers.html"><i class="fa fa-check"></i><b>20</b> Adding custom event handlers</a></li>
 <li class="chapter" data-level="21" data-path="supplying-custom-data.html"><a href="supplying-custom-data.html"><i class="fa fa-check"></i><b>21</b> Supplying custom data</a></li>
-<li class="chapter" data-level="22" data-path="client-side.html"><a href="client-side.html"><i class="fa fa-check"></i><b>22</b> Leveraging web technologies from R</a></li>
+<li class="chapter" data-level="22" data-path="client-side.html"><a href="client-side.html"><i class="fa fa-check"></i><b>22</b> Leveraging web technologies from R</a><ul>
+<li class="chapter" data-level="22.1" data-path="client-side.html"><a href="client-side.html#web-infrastructure"><i class="fa fa-check"></i><b>22.1</b> Web infrastructure</a></li>
+<li class="chapter" data-level="22.2" data-path="client-side.html"><a href="client-side.html#react"><i class="fa fa-check"></i><b>22.2</b> Modern JS &amp; React</a></li>
+</ul></li>
 <li class="part"><span><b>VI Various special topics</b></span></li>
 <li class="chapter" data-level="23" data-path="is-plotly-free-secure.html"><a href="is-plotly-free-secure.html"><i class="fa fa-check"></i><b>23</b> Is plotly free &amp; secure?</a></li>
 <li class="chapter" data-level="24" data-path="controlling-tooltips.html"><a href="controlling-tooltips.html"><i class="fa fa-check"></i><b>24</b> Controlling tooltips</a><ul>
@@ -340,7 +344,11 @@ code span.wa { color: #60a0b0; font-weight: bold; font-style: italic; } /* Warni
             <section class="normal" id="section-">
 <div id="client-side" class="section level1">
 <h1><span class="header-section-number">22</span> Leveraging web technologies from R</h1>
-<p>Sometimes supplying <code>customdata</code> isn’t the best way to acheive a particular interactive feature. In those cases, you likely want to leverage other R interfaces to client-side technologies. Recall from section <a href="arranging-views.html#arranging-htmlwidgets">13.2</a> that <strong>htmlwidgets</strong> objects are a special case of <strong>htmltools</strong> tags. That means, you can always complement your widget(s) with arbitrary HTML content by adding additional tags. Figure <a href="client-side.html#fig:correlation-client-side">22.1</a> leverages this idea to place an empty HTML <code>&lt;div&gt;</code> container below the correlation heatmap which is then populated with a <strong>plotly</strong> scatterplot upon clicking a cell. As it turns out, you <em>could</em> implement Figure <a href="client-side.html#fig:correlation-client-side">22.1</a> by binding x/y data to each heatmap cell via <code>customdata</code>, but that would require the browser to store twice the amount of data as what’s required here. Instead, this approach seralizes the input data (<code>mtcars</code>) into a JSON file via <strong>jsonlite</strong> so the webpage can read and parse the full dataset once and select just the two required columns when required (on click). There are a lot of ways to read JSON in JavaScript, but here we use the d3.js library’s <code>d3.json()</code> since <strong>plotly</strong> already comes bundled with the library <span class="citation">(Heer <a href="#ref-d3js" role="doc-biblioref">2011</a>)</span>. Also, since the HTML file is reading the JSON from disk, most browsers won’t render the HTML file directly (at least, by default, for security reasons). To get around that, we can start up a simple web server from R using <strong>servr</strong> to serve both the HTML and JSON in way that your browser will deem safe to run <span class="citation">(Xie <a href="#ref-servr" role="doc-biblioref">2016</a>)</span>.</p>
+<div id="web-infrastructure" class="section level2">
+<h2><span class="header-section-number">22.1</span> Web infrastructure</h2>
+<p>Sometimes supplying <code>customdata</code> isn’t the best way to acheive a particular interactive feature. In those cases, you likely want to leverage other R lower-level interfaces to web technologies. Recall from section <a href="arranging-views.html#arranging-htmlwidgets">13.2</a> that <strong>htmlwidgets</strong> objects are a special case of <strong>htmltools</strong> tags. That means, you can always complement your widget(s) with arbitrary HTML content by adding additional tags. Figure <a href="client-side.html#fig:correlation-client-side">22.1</a> leverages this idea to place an empty HTML <code>&lt;div&gt;</code> container below the correlation heatmap which is then populated with a <strong>plotly</strong> scatterplot upon clicking a cell. As it turns out, you <em>could</em> implement Figure <a href="client-side.html#fig:correlation-client-side">22.1</a> by binding x/y data to each heatmap cell via <code>customdata</code>, but that would require the browser to store twice the amount of data as what’s required here. Instead, this approach seralizes the input data (<code>mtcars</code>) into a JSON file via <strong>jsonlite</strong> so the webpage can read and parse the full dataset once and select just the two required columns when required (on click). There are a lot of ways to read JSON in JavaScript, but here we use the d3.js library’s <code>d3.json()</code> since <strong>plotly</strong> already comes bundled with the library <span class="citation">(Heer <a href="#ref-d3js" role="doc-biblioref">2011</a>)</span>. Also, since the HTML file is reading the JSON from disk, most browsers won’t render the HTML file directly (at least, by default, for security reasons). To get around that, we can start up a simple web server from R using <strong>servr</strong> to serve both the HTML and JSON in way that your browser will deem safe to run <span class="citation">(Xie <a href="#ref-servr" role="doc-biblioref">2016</a>)</span>.</p>
+<details>
+<p><summary>Click to see code</summary></p>
 <pre class="sourceCode r"><code class="sourceCode r"><span class="kw">library</span>(plotly)
 <span class="kw">library</span>(htmltools)
 
@@ -378,17 +386,22 @@ withr<span class="op">::</span><span class="kw">with_path</span>(<span class="kw
   <span class="kw">save_html</span>(html, <span class="st">&quot;index.html&quot;</span>)
   <span class="cf">if</span> (<span class="kw">interactive</span>()) servr<span class="op">::</span><span class="kw">httd</span>()
 })</code></pre>
+</details>
 <div class="figure" style="text-align: center"><span id="fig:correlation-client-side"></span>
 <iframe src="https://player.vimeo.com/video/307598118?title=0&amp;byline=0&amp;portrait=0" width="100%" height="700" frameborder="0" seamless="seamless" webkitAllowFullScreen mozallowfullscreen allowFullScreen></iframe>
 <p class="caption">
 FIGURE 22.1: Clicking on a correlation matrix to populate a scatterplot.
 </p>
 </div>
-<p>All the JavaScript we’ve seen thus far is natively supported by modern web browsers, but for larger projects, you may want to leverage modern versions of JS (e.g, ES6) and modern JS development tools for compiling said JS to code that all browsers can support (e.g. Babel, Webpack, etc). The current landscape of JS development tooling is large, complex, fragmented, difficult for non-experts to navigate, and mostly beyond the scope of this book. Thankfully, popular JS libraries often provide a ‘standalone’ JS bundle which allows direct use their library without having to install and learn a bunch of new technology. Moreover, these bundles are likely available through a CDN service like <a href="https://unpkg.com/" class="uri">https://unpkg.com/</a>, <a href="https://www.cloudflare.com/cdn" class="uri">https://www.cloudflare.com/cdn</a>, etc.</p>
-<p>The R package <strong>runpkg</strong> makes it easy to download files from <a href="https://unpkg.com/" class="uri">https://unpkg.com/</a> and include them in web pages generated through the <strong>htmltools</strong> package <span class="citation">(Sievert <a href="#ref-runpkg" role="doc-biblioref">2019</a><a href="#ref-runpkg" role="doc-biblioref">b</a>)</span>. It does this by returning a <code>htmltools::htmlDependency()</code> object which encapsulates the downloaded files and includes the JS scripts (or CSS stylesheets) into any page that depends on that object. Here we use it to download a standalone bundle of a popular React library for rendering all sort of different video formats, called <code>react-player</code>. React is hugely popular JavaScript framework that makes it easy to bundle and re-use components, so this same general idea could be reused to leverage other components.<a href="#fn36" class="footnote-ref" id="fnref36"><sup>36</sup></a></p>
-<pre class="sourceCode r"><code class="sourceCode r"><span class="kw">library</span>(runpkg)
-react_player &lt;-<span class="st"> </span><span class="kw">download_files</span>(<span class="st">&quot;react-player&quot;</span>, <span class="st">&quot;dist/ReactPlayer.standalone.js&quot;</span>)</code></pre>
-<p>This <code>react-player</code> library provides a function called <code>renderReactPlayer()</code> that requires a placeholder (i.e., a DOM element) for inserting the video as well as a url (or file path) to the video.</p>
+</div>
+<div id="react" class="section level2">
+<h2><span class="header-section-number">22.2</span> Modern JS &amp; React</h2>
+<p>All the JavaScript (JS) we’ve seen thus far is natively supported by modern web browsers, but for larger projects, you may want to leverage modern versions of JS (i.e., ES6, ES7, etc) and modern JS development tools (e.g., Babel, Webpack, etc) for compiling modern JS to a version that all browsers can support (i.e., ES2015). The current landscape of JS development tooling is large, complex, fragmented, difficult for non-experts to navigate, and mostly beyond the scope of this book. However, thanks to R packages like <strong>V8</strong>, <strong>reactR</strong>, and <strong>runpkg</strong>, it turns out we can effectively leverage React<a href="#fn36" class="footnote-ref" id="fnref36"><sup>36</sup></a> components<a href="#fn37" class="footnote-ref" id="fnref37"><sup>37</sup></a> from R without fussing with system commands or setting up a complicated JS build toolchain.</p>
+<p>The R package <strong>runpkg</strong> makes it easy to download any <a href="https://www.npmjs.com/">npm</a> (the main repository network for JS) package (via <a href="https://unpkg.com/" class="uri">https://unpkg.com/</a>) and include it in a web page generated through the <strong>htmltools</strong> package <span class="citation">(Sievert <a href="#ref-runpkg" role="doc-biblioref">2019</a><a href="#ref-runpkg" role="doc-biblioref">b</a>)</span>. It does so by returning a <code>htmltools::htmlDependency()</code> object which encapsulates the downloaded files and includes the JS scripts (or CSS stylesheets) into any page that depends on that object. Here we use it to download a standalone bundle of a React library for rendering all sort of different video formats, called <code>react-player</code>.</p>
+<pre class="sourceCode r"><code class="sourceCode r">react_player &lt;-<span class="st"> </span>runpkg<span class="op">::</span><span class="kw">download_files</span>(<span class="st">&quot;react-player&quot;</span>, <span class="st">&quot;dist/ReactPlayer.standalone.js&quot;</span>)</code></pre>
+<p>This <code>react-player</code> library provides a function called <code>renderReactPlayer()</code> that requires a placeholder (i.e., a DOM element) for inserting the video as well as a url (or file path) to the video. Figure <a href="client-side.html#fig:react-player">22.2</a> demonstrates how we could use it to render a YouTube video in response to a <strong>plotly</strong> click event:</p>
+<details>
+<p><summary>Click to see code</summary></p>
 <pre class="sourceCode r"><code class="sourceCode r"><span class="kw">library</span>(htmltools)
 
 <span class="co"># the video placeholder</span>
@@ -415,13 +428,16 @@ p &lt;-<span class="st"> </span><span class="kw">plot_ly</span>(<span class="dt"
 
 <span class="co"># create the HTML page</span>
 <span class="kw">browsable</span>(<span class="kw">tagList</span>(p, video, react_player))</code></pre>
+</details>
 <div class="figure" style="text-align: center"><span id="fig:react-player"></span>
 <iframe src="https://player.vimeo.com/video/315308561?title=0&amp;byline=0&amp;portrait=0" width="100%" height="700" frameborder="0" seamless="seamless" webkitAllowFullScreen mozallowfullscreen allowFullScreen></iframe>
 <p class="caption">
-FIGURE 22.2: Populating a video in response to a <code>'plotly_click'</code> event.
+FIGURE 22.2: Using the <code>react-player</code> React component to render a video in response to a <code>'plotly_click'</code> event.
 </p>
 </div>
-<p>If you’re not lucky enough to be working with a JS library that provides a standalone library and/or if you want to leverage some of the features of modern JS (e.g., namespacing, tree-shaking, async+await, etc), then you may have to dive into node.js (i.e., server-side JavaScript) command-line tools like <code>npm</code>, <code>yarn</code>, and <code>webpack</code>. As it turns out, though, R packages like <strong>V8</strong> and <strong>reactR</strong> are making it easier to leverage server-side JavaScript from R with minimal fuss. The <strong>V8</strong> package provides a low-level interface to a JS runtime that allows you run server-side JavaScript from R <span class="citation">(Ooms <a href="#ref-V8" role="doc-biblioref">2017</a>)</span>. <strong>V8</strong> provides a foundation for packages like <strong>reactR</strong> to provide functions like <code>babel_transform()</code> which compile modern JS (e.g., ES6, ES2017, etc) code to a version of JavaScript that all browsers support (e.g., ES5) <span class="citation">(Inc, Russell, and Dipert <a href="#ref-reactR" role="doc-biblioref">2019</a>)</span>. For a simple example, Figure <a href="client-side.html#fig:babel">22.3</a> demonstrates how one could leverage ES6, React, and JSX syntax to populate a <code>&lt;h1&gt;</code> title filled with a <code>customdata</code> message in response to a <code>'plotly_click'</code> event.</p>
+<p>This <code>react-player</code> React library is rather unique in that it provides a standalone function, <code>renderReactPlayer()</code>, that enables rendering of a React component without loading React itself or leveraging special React syntax like JSX. It’s more likely that the React component library will explictly require you to import both React and ReactDOM. You could use <strong>runpkg</strong> to download these React/ReactDOM as well, but the <code>html_dependency_react()</code> function from <strong>reactR</strong> package makes this even easier <span class="citation">(Inc, Russell, and Dipert <a href="#ref-reactR" role="doc-biblioref">2019</a>)</span>. Furthermore, <strong>reactR</strong> provides a <code>babel_transform()</code> function which will compile modern JS (e.g., ES6, ES2017, etc) as well as special React markup (e.g., JSX) to a version of JS that all browsers support (e.g., ES5). For a toy example, Figure <a href="client-side.html#fig:babel">22.3</a> demonstrates how one could leverage ES6, React, and React’s JSX syntax to populate a <code>&lt;h1&gt;</code> title filled with a <code>customdata</code> message in response to a <strong>plotly</strong> click event.</p>
+<details>
+<p><summary>Click to see code</summary></p>
 <pre class="sourceCode r"><code class="sourceCode r"><span class="kw">library</span>(reactR)
 
 <span class="co"># a placeholder for our react &#39;app&#39;</span>
@@ -442,18 +458,51 @@ p &lt;-<span class="st"> </span><span class="kw">plot_ly</span>(<span class="dt"
   ))
 
 <span class="co"># create the HTML page</span>
-<span class="kw">browsable</span>(<span class="kw">tagList</span>(
-  p, app, 
-  <span class="kw">html_dependency_corejs</span>(), 
-  <span class="kw">html_dependency_react</span>()
-))</code></pre>
+<span class="kw">browsable</span>(<span class="kw">tagList</span>(p, app, <span class="kw">html_dependency_react</span>()))</code></pre>
+</details>
 <div class="figure" style="text-align: center"><span id="fig:babel"></span>
 <iframe src="https://player.vimeo.com/video/315309034?title=0&amp;byline=0&amp;portrait=0" width="100%" height="400" frameborder="0" seamless="seamless" webkitAllowFullScreen mozallowfullscreen allowFullScreen></iframe>
 <p class="caption">
 FIGURE 22.3: Using <code>babel_transform()</code> to leverage ES6, React, and JSX.
 </p>
 </div>
+<p>For a more serious example, we could leverage another React component, named <code>react-data-grid</code>, to display the data within a <strong>plotly</strong> scatterplot brush, as done in Figure <a href="client-side.html#fig:react-data-grid">22.4</a>. Again, we can use <strong>runpkg</strong> to download a bundle of <code>react-data-grid</code>, but this library doesn’t come with <code>React</code>/<code>ReactDOM</code>, so we must explicitly include it this time around. In fact, this approach of explicitly importing and calling <code>ReactDOM.render()</code> on your component is a more common approach than the custom standalone interface approach (i.e., <code>renderReactPlayer()</code>) used in Figure <a href="client-side.html#fig:react-player">22.2</a>.</p>
+<details>
+<p><summary>Click to see code</summary></p>
+<pre class="sourceCode r"><code class="sourceCode r">data_grid_js &lt;-<span class="st"> </span>runpkg<span class="op">::</span><span class="kw">download_files</span>(<span class="st">&quot;react-data-grid&quot;</span>, <span class="st">&quot;dist/react-data-grid.min.js&quot;</span>)
 
+<span class="co"># the data table placeholder</span>
+data_grid &lt;-<span class="st"> </span>tags<span class="op">$</span><span class="kw">div</span>(<span class="dt">id =</span> <span class="st">&quot;data-grid&quot;</span>)
+
+<span class="co"># upon clicking the marker, populate a video </span>
+<span class="co"># in the DOM element with an id of &#39;video&#39;</span>
+p &lt;-<span class="st"> </span><span class="kw">plot_ly</span>(mtcars, <span class="dt">x =</span> <span class="op">~</span>wt, <span class="dt">y =</span> <span class="op">~</span>mpg, <span class="dt">customdata =</span> <span class="kw">row.names</span>(mtcars)) <span class="op">%&gt;%</span><span class="st"> </span>
+<span class="st">  </span><span class="kw">layout</span>(<span class="dt">dragmode =</span> <span class="st">&quot;select&quot;</span>) <span class="op">%&gt;%</span>
+<span class="st">  </span><span class="kw">onRender</span>(<span class="kw">babel_transform</span>(   
+    <span class="st">&quot;gd =&gt; {</span>
+<span class="st">       var container = document.getElementById(&#39;data-grid&#39;);</span>
+<span class="st">       var columns = [{key: &#39;x&#39;, name: &#39;Weight&#39;}, {key: &#39;y&#39;, name: &#39;MPG&#39;}, {key: &#39;customdata&#39;, name: &#39;Model&#39;}];</span>
+<span class="st">       gd.on(&#39;plotly_selecting&#39;, d =&gt; {</span>
+<span class="st">          if (d.points) {</span>
+<span class="st">            var grid = &lt;ReactDataGrid columns={columns} rowGetter={i =&gt; d.points[i]} rowsCount={d.points.length} /&gt;;</span>
+<span class="st">            ReactDOM.render(grid, container);</span>
+<span class="st">          }</span>
+<span class="st">        });</span>
+<span class="st">        gd.on(&#39;plotly_deselect&#39;, d =&gt; { ReactDOM.render(null, container); });</span>
+<span class="st">     }&quot;</span>
+  ))
+
+<span class="co"># create the HTML page</span>
+<span class="kw">browsable</span>(<span class="kw">tagList</span>(p, data_grid, <span class="kw">html_dependency_react</span>(), data_grid_js))</code></pre>
+</details>
+<div class="figure" style="text-align: center"><span id="fig:react-data-grid"></span>
+<iframe src="https://player.vimeo.com/video/325933744?title=0&amp;byline=0&amp;portrait=0" width="100%" height="400" frameborder="0" seamless="seamless" webkitAllowFullScreen mozallowfullscreen allowFullScreen></iframe>
+<p class="caption">
+FIGURE 22.4: Using the <code>react-data-grid</code> React component to render a data table of the observation within a scatterplot brush.
+</p>
+</div>
+
+</div>
 </div>
 
 
@@ -469,9 +518,6 @@ FIGURE 22.3: Using <code>babel_transform()</code> to leverage ES6, React, and JS
 <div id="ref-runpkg">
 <p>Sievert, Carson. 2019b. <em>Runpkg: Tools for Working with ’Unpkg’</em>. <a href="https://github.com/cpsievert/runpkg">https://github.com/cpsievert/runpkg</a>.</p>
 </div>
-<div id="ref-V8">
-<p>Ooms, Jeroen. 2017. <em>V8: Embedded Javascript Engine for R</em>. <a href="https://CRAN.R-project.org/package=V8">https://CRAN.R-project.org/package=V8</a>.</p>
-</div>
 <div id="ref-reactR">
 <p>Inc, Facebook, Kent Russell, and Alan Dipert. 2019. <em>ReactR: React Helpers</em>. <a href="https://CRAN.R-project.org/package=reactR">https://CRAN.R-project.org/package=reactR</a>.</p>
 </div>
@@ -479,7 +525,8 @@ FIGURE 22.3: Using <code>babel_transform()</code> to leverage ES6, React, and JS
 <div class="footnotes">
 <hr />
 <ol start="36">
-<li id="fn36"><p>Here’s a nice list of popular components <a href="https://github.com/brillout/awesome-react-components" class="uri">https://github.com/brillout/awesome-react-components</a>.<a href="client-side.html#fnref36" class="footnote-back">↩</a></p></li>
+<li id="fn36"><p>React is a modern JavaScript library, backed by Facebook, for building and distributing components of a website – <a href="https://reactjs.org/" class="uri">https://reactjs.org/</a><a href="client-side.html#fnref36" class="footnote-back">↩</a></p></li>
+<li id="fn37"><p>There are thousands of React components available. To get a sense what’s available, see this list <a href="https://github.com/brillout/awesome-react-components" class="uri">https://github.com/brillout/awesome-react-components</a>. <a href="client-side.html#fnref37" class="footnote-back">↩</a></p></li>
 </ol>
 </div>
 <script>

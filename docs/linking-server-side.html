@@ -25,7 +25,7 @@
 <meta name="author" content="Carson Sievert">
 
 
-<meta name="date" content="2019-03-20">
+<meta name="date" content="2019-03-27">
 
   <meta name="viewport" content="width=device-width, initial-scale=1">
   <meta name="apple-mobile-web-app-capable" content="yes">
@@ -208,9 +208,11 @@ code span.wa { color: #60a0b0; font-weight: bold; font-style: italic; } /* Warni
 <li class="chapter" data-level="7.3" data-path="frequencies-2D.html"><a href="frequencies-2D.html#categorical-axes"><i class="fa fa-check"></i><b>7.3</b> Categorical axes</a></li>
 </ul></li>
 <li class="chapter" data-level="8" data-path="d-charts.html"><a href="d-charts.html"><i class="fa fa-check"></i><b>8</b> 3D charts</a><ul>
-<li class="chapter" data-level="8.0.1" data-path="d-charts.html"><a href="d-charts.html#markers-and-lines"><i class="fa fa-check"></i><b>8.0.1</b> Markers and lines</a></li>
-<li class="chapter" data-level="8.0.2" data-path="d-charts.html"><a href="d-charts.html#d-paths"><i class="fa fa-check"></i><b>8.0.2</b> 3D paths</a></li>
-<li class="chapter" data-level="8.0.3" data-path="d-charts.html"><a href="d-charts.html#d-surfaces"><i class="fa fa-check"></i><b>8.0.3</b> 3D surfaces</a></li>
+<li class="chapter" data-level="8.1" data-path="d-charts.html"><a href="d-charts.html#markers-1"><i class="fa fa-check"></i><b>8.1</b> Markers</a></li>
+<li class="chapter" data-level="8.2" data-path="d-charts.html"><a href="d-charts.html#paths"><i class="fa fa-check"></i><b>8.2</b> Paths</a></li>
+<li class="chapter" data-level="8.3" data-path="d-charts.html"><a href="d-charts.html#lines-1"><i class="fa fa-check"></i><b>8.3</b> Lines</a></li>
+<li class="chapter" data-level="8.4" data-path="d-charts.html"><a href="d-charts.html#axes"><i class="fa fa-check"></i><b>8.4</b> Axes</a></li>
+<li class="chapter" data-level="8.5" data-path="d-charts.html"><a href="d-charts.html#surfaces"><i class="fa fa-check"></i><b>8.5</b> Surfaces</a></li>
 </ul></li>
 <li class="part"><span><b>II Publishing views</b></span></li>
 <li class="chapter" data-level="9" data-path="introduction-1.html"><a href="introduction-1.html"><i class="fa fa-check"></i><b>9</b> Introduction</a></li>
@@ -232,7 +234,6 @@ code span.wa { color: #60a0b0; font-weight: bold; font-style: italic; } /* Warni
 <li class="chapter" data-level="13.2.2" data-path="arranging-views.html"><a href="arranging-views.html#bootstrap-grid-layout"><i class="fa fa-check"></i><b>13.2.2</b> Bootstrap grid layout</a></li>
 <li class="chapter" data-level="13.2.3" data-path="arranging-views.html"><a href="arranging-views.html#css-flexbox"><i class="fa fa-check"></i><b>13.2.3</b> CSS flexbox</a></li>
 </ul></li>
-<li class="chapter" data-level="13.3" data-path="arranging-views.html"><a href="arranging-views.html#navigating-many-views"><i class="fa fa-check"></i><b>13.3</b> Navigating many views</a></li>
 </ul></li>
 <li class="chapter" data-level="14" data-path="animating-views.html"><a href="animating-views.html"><i class="fa fa-check"></i><b>14</b> Animating views</a><ul>
 <li class="chapter" data-level="14.1" data-path="animating-views.html"><a href="animating-views.html#animation-api"><i class="fa fa-check"></i><b>14.1</b> Animation API</a></li>
@@ -289,7 +290,10 @@ code span.wa { color: #60a0b0; font-weight: bold; font-style: italic; } /* Warni
 </ul></li>
 <li class="chapter" data-level="20" data-path="js-event-handlers.html"><a href="js-event-handlers.html"><i class="fa fa-check"></i><b>20</b> Adding custom event handlers</a></li>
 <li class="chapter" data-level="21" data-path="supplying-custom-data.html"><a href="supplying-custom-data.html"><i class="fa fa-check"></i><b>21</b> Supplying custom data</a></li>
-<li class="chapter" data-level="22" data-path="client-side.html"><a href="client-side.html"><i class="fa fa-check"></i><b>22</b> Leveraging web technologies from R</a></li>
+<li class="chapter" data-level="22" data-path="client-side.html"><a href="client-side.html"><i class="fa fa-check"></i><b>22</b> Leveraging web technologies from R</a><ul>
+<li class="chapter" data-level="22.1" data-path="client-side.html"><a href="client-side.html#web-infrastructure"><i class="fa fa-check"></i><b>22.1</b> Web infrastructure</a></li>
+<li class="chapter" data-level="22.2" data-path="client-side.html"><a href="client-side.html#react"><i class="fa fa-check"></i><b>22.2</b> Modern JS &amp; React</a></li>
+</ul></li>
 <li class="part"><span><b>VI Various special topics</b></span></li>
 <li class="chapter" data-level="23" data-path="is-plotly-free-secure.html"><a href="is-plotly-free-secure.html"><i class="fa fa-check"></i><b>23</b> Is plotly free &amp; secure?</a></li>
 <li class="chapter" data-level="24" data-path="controlling-tooltips.html"><a href="controlling-tooltips.html"><i class="fa fa-check"></i><b>24</b> Controlling tooltips</a><ul>
@@ -1386,7 +1390,7 @@ FIGURE 17.22: Using a drill-down approach to navigating through sales data by ca
 <div id="crossfilter" class="section level3">
 <h3><span class="header-section-number">17.4.2</span> Cross-filter</h3>
 <p>Somewhat related to the drill-down idea is so-called ‘cross-filter’ chart. The main difference between drill-down and cross-filter is that, with cross-filter, interactions don’t generate new charts – interactions impose a filter on the data shown in a fixed set of multiple views. The typical cross-filter implementation allows for multiple brushes (i.e., filters) and uses the intersection of those filters to the dataset displayed in those views. Implementing a scalable and responsive crossfilter with 3 or more views can get quite complicated – we’ll walk through some simple examples first for learning purposes, then progress to more sophicated and complex applications.</p>
-<p>Figure <a href="linking-server-side.html#fig:shiny-crossfilter-naive">17.23</a> demonstrates the simplest way to implement a cross-filter between <em>two</em> histograms. It uses the arrival (<code>arr_time</code>) and departure (<code>dep_time</code>) from the <code>flights</code> dataset via the <strong>nycflights13</strong> package <span class="citation">(Wickham <a href="#ref-nycflights13" role="doc-biblioref">2018</a>)</span>. Notice how, in the implementation, the <code>dep_time</code> view is re-drawn from stratch everytime the <code>arr_time</code> brush changes (and vice-versa). Not only is it completely redrawn (i.e., it relies on <code>renderPlotly()</code> to perform the update), but it also uses <code>add_histogram()</code> which performs binning client-side (in the web browser). That means, every time a brush changes, the <strong>shiny</strong> server sends <em>all the raw data</em> to the browser and plotly.js redraws the histogram from scratch.</p>
+<p>Figure <a href="linking-server-side.html#fig:shiny-crossfilter-naive">17.23</a> demonstrates the simplest way to implement a cross-filter between <em>two</em> histograms. It uses the arrival (<code>arr_time</code>) and departure (<code>dep_time</code>) from the <code>flights</code> dataset via the <strong>nycflights13</strong> package <span class="citation">(Wickham <a href="#ref-nycflights13" role="doc-biblioref">2018</a><a href="#ref-nycflights13" role="doc-biblioref">a</a>)</span>. Notice how, in the implementation, the <code>dep_time</code> view is re-drawn from stratch everytime the <code>arr_time</code> brush changes (and vice-versa). Not only is it completely redrawn (i.e., it relies on <code>renderPlotly()</code> to perform the update), but it also uses <code>add_histogram()</code> which performs binning client-side (in the web browser). That means, every time a brush changes, the <strong>shiny</strong> server sends <em>all the raw data</em> to the browser and plotly.js redraws the histogram from scratch.</p>
 <details>
 <p><summary>Click to show code</summary></p>
 <pre class="sourceCode r"><code class="sourceCode r"><span class="kw">library</span>(shiny)
@@ -1529,7 +1533,7 @@ FIGURE 17.24: Using kernel density estimation to responsively crossfilter a 2D d
 <div class="figure" style="text-align: center"><span id="fig:shiny-crossfilter"></span>
 <iframe src="https://player.vimeo.com/video/318129502?title=0&amp;byline=0&amp;portrait=0" width="100%" height="400" frameborder="0" seamless="seamless" webkitAllowFullScreen mozallowfullscreen allowFullScreen></iframe>
 <p class="caption">
-FIGURE 17.25: Crossfiltering 6 variables in the <code>flights</code> data from the <strong>nycflights13</strong> package <span class="citation">(Wickham <a href="#ref-nycflights13" role="doc-biblioref">2018</a>)</span>. The filtering and binning logic occurs server-side resulting in a very minimal amount of data being sent between server and client (just the brush range and bar heights). Moreover, to perform the UI update, the client only has to tweak existing bar heights, so the overall user experience is quite responsive.
+FIGURE 17.25: Crossfiltering 6 variables in the <code>flights</code> data from the <strong>nycflights13</strong> package <span class="citation">(Wickham <a href="#ref-nycflights13" role="doc-biblioref">2018</a><a href="#ref-nycflights13" role="doc-biblioref">a</a>)</span>. The filtering and binning logic occurs server-side resulting in a very minimal amount of data being sent between server and client (just the brush range and bar heights). Moreover, to perform the UI update, the client only has to tweak existing bar heights, so the overall user experience is quite responsive.
 </p>
 </div>
 <p>One weakness of a typical crossfilter interface like Figure <a href="linking-server-side.html#fig:shiny-crossfilter">17.25</a> is that it’s difficult to make visual comparisons. That is, when a filter is applied, you lose a visual reference to the overall distribution and/or prior filter, making difficult to make meaningful comparisons. Figure <a href="linking-server-side.html#fig:shiny-crossfilter">17.25</a> modifies the logic of Figure <a href="linking-server-side.html#fig:shiny-crossfilter-compare">17.26</a> to enable filter comparisons by adding the ability to change the color of the brush. Moreover, for sake of demonstration and simplicity, it also allows for only one active filter per color (i.e., brushing within color is transient). One could borrow logic from Figure <a href="linking-server-side.html#fig:shiny-crossfilter">17.25</a> to allow multiple filters for each color, but this would require multiple <code>brush_ranges</code>.</p>
@@ -1608,7 +1612,7 @@ FIGURE 17.27: Example of a <strong>shiny</strong> app that has <strong>crosstalk
 <p>Cheng, Joe. 2018a. “Case Study: Converting a Shiny App to Async.” Blog. <a href="https://rstudio.github.io/promises/articles/casestudy.html">https://rstudio.github.io/promises/articles/casestudy.html</a>.</p>
 </div>
 <div id="ref-nycflights13">
-<p>Wickham, Hadley. 2018. <em>Nycflights13: Flights That Departed Nyc in 2013</em>. <a href="https://CRAN.R-project.org/package=nycflights13">https://CRAN.R-project.org/package=nycflights13</a>.</p>
+<p>Wickham, Hadley. 2018a. <em>Nycflights13: Flights That Departed Nyc in 2013</em>. <a href="https://CRAN.R-project.org/package=nycflights13">https://CRAN.R-project.org/package=nycflights13</a>.</p>
 </div>
 <div id="ref-ggstat">
 <p>Wickham, Hadley. 2016. <em>Ggstat: Statistical Computations for Visualisation</em>. <a href="https://github.com/hadley/ggstat">https://github.com/hadley/ggstat</a>.</p>

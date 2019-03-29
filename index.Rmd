@@ -15,6 +15,9 @@ github-repo: ropensci/plotly
 twitter-handle: cpsievert
 #cover-image: images/plotly.png
 always_allow_html: yes
+fontsize: 12pt
+monofont: "Source Code Pro"
+monofontoptions: "Scale=0.7"
 ---
 
 # Welcome {-}
@@ -34,7 +37,14 @@ opts_chunk$set(
 
 # conditionally global chunk options
 if (knitr::is_latex_output()) {
-  opts_chunk$set(out.width = "\\textwidth", fig.width = 8, fig.asp = 0.618)
+  opts_chunk$set(
+    # why does specifying this lead to so many issues?
+    # https://github.com/yihui/bookdown-crc/issues/3
+    # https://github.com/hadley/adv-r/commit/4f99def#diff-04c6e90f
+    out.width = "\\textwidth", 
+    fig.width = 8, 
+    fig.asp = 0.618
+  )
 }
 if (knitr::is_html_output()) {
   # https://github.com/hafen/lazyrmd
@@ -52,6 +62,10 @@ if (knitr::is_html_output()) {
 }
 
 include_vimeo <- function(id, width = "100%", height = "400") {
+  #if (knitr::is_latex_output()) {
+  #  # TODO: fill this in with proper thumbnails
+  #  return(knitr::include_graphics("images/3D-axes.png"))
+  #}
   url <- sprintf("https://player.vimeo.com/video/%s?title=0&byline=0&portrait=0", id)
   htmltools::tags$iframe(
     src = url, 
@@ -67,7 +81,8 @@ include_vimeo <- function(id, width = "100%", height = "400") {
 
 options(
   dplyr.print_min = 6, dplyr.print_max = 6, 
-  digits = 3, htmltools.dir.version = FALSE
+  digits = 3, htmltools.dir.version = FALSE,
+  width = 55, formatR.indent = 2
 )
 ```
 

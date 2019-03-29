@@ -2,9 +2,9 @@
 
 The `add_bars()` and `add_histogram()` functions wrap the [bar](https://plot.ly/r/reference/#bar) and [histogram](https://plot.ly/r/reference/#histogram) plotly.js trace types. The main difference between them is that bar traces require bar heights (both `x` and `y`), whereas histogram traces require just a single variable, and plotly.js handles binning in the browser.^[This has some interesting applications for [linked highlighting](#linked-highlighting) as it allows for summary statistics to be computed on-the-fly based on a selection] And perhaps confusingly, both of these functions can be used to visualize the distribution of either a numeric or a discrete variable. So, essentially, the only difference between them is where the binning occurs.
 
-Figure \@ref(fig:numeric) compares the default binning algorithm in plotly.js to a few different algorithms available in R via the `hist()` function. Although plotly.js has the ability to customize histogram bins via [`xbins`](https://plot.ly/r/reference/#histogram-xbins)/[`ybins`](https://plot.ly/r/reference/#histogram-ybins), R has diverse facilities for estimating the optimal number of bins in a histogram that we can easily leverage.^[Optimal in this context is the number of bins which minimizes the distance between the empirical histogram and the underlying density.] The `hist()` function alone allows us to reference 3 famous algorithms by name [@Sturges]; [@FD]; [@hist-scott], but there are also packages (e.g. the **histogram** package) which extend this interface to incorporate more methodology [@histogram]. The `price_hist()` function below wraps the `hist()` function to obtain the binning results, and map those bins to a plotly version of the histogram using `add_bars()`.
+Figure \@ref(fig:bars-numeric) compares the default binning algorithm in plotly.js to a few different algorithms available in R via the `hist()` function. Although plotly.js has the ability to customize histogram bins via [`xbins`](https://plot.ly/r/reference/#histogram-xbins)/[`ybins`](https://plot.ly/r/reference/#histogram-ybins), R has diverse facilities for estimating the optimal number of bins in a histogram that we can easily leverage.^[Optimal in this context is the number of bins which minimizes the distance between the empirical histogram and the underlying density.] The `hist()` function alone allows us to reference 3 famous algorithms by name [@Sturges]; [@FD]; [@hist-scott], but there are also packages (e.g. the **histogram** package) which extend this interface to incorporate more methodology [@histogram]. The `price_hist()` function below wraps the `hist()` function to obtain the binning results, and map those bins to a plotly version of the histogram using `add_bars()`.
 
-```{r numeric, fig.cap = "plotly.js's default binning algorithm versus R's `hist()` default",  screenshot.alt = "screenshots/default-bins"}
+```r
 p1 <- plot_ly(diamonds, x = ~price) %>% add_histogram(name = "plotly.js")
 
 price_hist <- function(method = "FD") {
@@ -18,9 +18,13 @@ subplot(
 )
 ```
 
-Figure \@ref(fig:discrete) demonstrates two ways of creating a basic bar chart. Although the visual results are the same, its worth noting the difference in implementation. The `add_histogram()` function sends all of the observed values to the browser and lets plotly.js perform the binning. It takes more human effort to perform the binning in R, but doing so has the benefit of sending less data, and requiring less computation work of the web browser. In this case, we have only about 50,000 records, so there is not much of a difference in page load times or page size. However, with 1 Million records, page load time more than doubles and page size nearly doubles.^[These tests were run on Google Chrome and loaded a page with a single bar chart. [Here](https://www.webpagetest.org/result/160924_DP_JBX/) are the results for `add_histogram()` and [here](https://www.webpagetest.org/result/160924_QG_JA1/) are the results for `add_bars()` ]
+```{r bars-numeric, echo = FALSE, fig.cap = "(ref:bars-numeric)"}
+knitr::include_graphics("images/bars-numeric.svg")
+```
 
-```{r discrete, fig.cap = "Number of diamonds by cut.", screenshot.alt = "screenshots/discrete-bars"}
+Figure \@ref(fig:bars-discrete) demonstrates two ways of creating a basic bar chart. Although the visual results are the same, its worth noting the difference in implementation. The `add_histogram()` function sends all of the observed values to the browser and lets plotly.js perform the binning. It takes more human effort to perform the binning in R, but doing so has the benefit of sending less data, and requiring less computation work of the web browser. In this case, we have only about 50,000 records, so there is not much of a difference in page load times or page size. However, with 1 Million records, page load time more than doubles and page size nearly doubles.^[These tests were run on Google Chrome and loaded a page with a single bar chart. [Here](https://www.webpagetest.org/result/160924_DP_JBX/) are the results for `add_histogram()` and [here](https://www.webpagetest.org/result/160924_QG_JA1/) are the results for `add_bars()` ]
+
+```r
 library(dplyr)
 p1 <- plot_ly(diamonds, x = ~cut) %>% add_histogram()
 
@@ -32,11 +36,15 @@ p2 <- diamonds %>%
 subplot(p1, p2) %>% hide_legend()
 ```
 
+```{r bars-discrete, echo = FALSE, fig.cap = "(ref:bars-discrete)"}
+knitr::include_graphics("images/bars-discrete.svg")
+```
+
 ## Multiple numeric distributions
 
-It is often useful to see how the numeric distribution changes with respect to a discrete variable. When using bars to visualize multiple numeric distributions, I recommend plotting each distribution on its own axis, rather than trying to overlay them on a single axis.^[It's much easier to visualize multiple numeric distributions on a single axis using [lines](#lines)]. This is where the [`subplot()` infrastructure](#subplot), and its support for trellis displays, comes in handy. Figure \@ref(fig:many-prices) shows a trellis display of diamond price by diamond color. Note how the `one_plot()` function defines what to display on each panel, then a split-apply-recombine strategy is employed to generate the trellis display.
+It is often useful to see how the numeric distribution changes with respect to a discrete variable. When using bars to visualize multiple numeric distributions, I recommend plotting each distribution on its own axis using a small multiples display, rather than trying to overlay them on a single axis.^[It's much easier to visualize multiple numeric distributions on a single axis using [lines](#lines)]. Chapter \@ref(arranging-views), and specifically Section \@ref(trellis-displays-subplot), discuss small multiples in more detail, but Figure \@ref(fig:subplot-trellis) demonstrates how it be done with `plot_ly()` and `subplot()`. Note how the `one_plot()` function defines what to display on each panel, then a split-apply-recombine (i.e., `split()`, `lapply()`, `subplot()`) strategy is employed to generate the trellis display. 
 
-```{r many-prices, fig.cap = "A trellis display of diamond price by diamond clarity.", screenshot.alt = "screenshots/many-prices"}
+```r
 one_plot <- function(d) {
   plot_ly(d, x = ~price) %>%
     add_annotations(
@@ -52,23 +60,31 @@ diamonds %>%
   hide_legend()
 ```
 
+```{r many-prices, echo = FALSE, fig.cap = "(ref:many-prices)"}
+knitr::include_graphics("images/many-prices.svg")
+```
+
 
 ## Multiple discrete distributions
 
 Visualizing multiple discrete distributions is difficult. The subtle complexity is due to the fact that both counts and proportions are important for understanding multi-variate discrete distributions. Figure \@ref(fig:cut-by-clarity) presents diamond counts, divided by both their cut and clarity, using a grouped bar chart. 
 
-```{r cut-by-clarity, fig.cap = "A grouped bar chart", screenshot.alt = "screenshots/cut-by-clarity"}
+```r
 plot_ly(diamonds, x = ~cut, color = ~clarity) %>%
   add_histogram()
 ```
 
+```{r cut-by-clarity, echo = FALSE, fig.cap = "(ref:cut-by-clarity)"}
+knitr::include_graphics("images/cut-by-clarity.svg")
+```
+
 Figure \@ref(fig:cut-by-clarity) is useful for comparing the number of diamonds by clarity, given a type of cut. For instance, within "Ideal" diamonds, a cut of "VS1" is most popular, "VS2" is second most popular, and "I1" the least popular. The distribution of clarity within "Ideal" diamonds seems to be fairly similar to other diamonds, but it's hard to make this comparison using raw counts. Figure \@ref(fig:cut-by-clarity-prop) makes this comparison easier by showing the relative frequency of diamonds by clarity, given a cut. 
 
-```{r cut-by-clarity-prop, fig.cap = "A stacked bar chart showing the proportion of diamond clarity within cut.", screenshot.alt = "screenshots/cut-by-clarity-prop"}
+```r
 # number of diamonds by cut and clarity (n)
 cc <- count(diamonds, cut, clarity)
 # number of diamonds by cut (nn)
-cc2 <- left_join(cc, count(cc, cut, wt = n))
+cc2 <- left_join(cc, count(cc, cut, wt = n, name = 'nn'))
 cc2 %>%
   mutate(prop = n / nn) %>%
   plot_ly(x = ~cut, y = ~prop, color = ~clarity) %>%
@@ -76,20 +92,28 @@ cc2 %>%
   layout(barmode = "stack")
 ```
 
+```{r cut-by-clarity-prop, echo = FALSE, fig.cap = "(ref:cut-by-clarity-prop)"}
+knitr::include_graphics("images/cut-by-clarity-prop.svg")
+```
+
 This type of plot, also known as a spine plot, is a special case of a mosaic plot. In a mosaic plot, you can scale both bar widths and heights according to discrete distributions. For mosaic plots, I recommend using the **ggmosaic** package [@ggmosaic], which implements a custom **ggplot2** geom designed for mosaic plots, which we can convert to plotly via `ggplotly()`. Figure \@ref(fig:ggmosaic) shows a mosaic plot of cut by clarity. Notice how the bar widths are scaled proportional to the cut frequency.
 
-```{r ggmosaic, fig.cap = "Using ggmosaic and ggplotly() to create advanced interactive visualizations of categorical data", screenshot.alt = "screenshots/ggmosaic"}
+```r
 library(ggmosaic)
 p <- ggplot(data = cc) +
   geom_mosaic(aes(weight = n, x = product(cut), fill = clarity))
 ggplotly(p)
 ```
 
+```{r ggmosaic, echo = FALSE, fig.cap = "(ref:ggmosaic)"}
+knitr::include_graphics("images/ggmosaic.svg")
+```
+
 # Boxplots
 
 Boxplots encode the five number summary of a numeric variable, and are more efficient than [trellis displays of histograms](multiple-numeric-distributions) for comparing many numeric distributions. The `add_boxplot()` function requires one numeric variable, and guarantees boxplots are [oriented](https://plot.ly/r/reference/#box-orientation) correctly, regardless of whether the numeric variable is placed on the x or y scale. As Figure \@ref(fig:cut-boxes) shows, on the axis orthogonal to the numeric axis, you can provide a discrete variable (for conditioning) or supply a single value (to name the axis category).
 
-```{r cut-boxes, fig.cap = "Overall diamond price and price by cut.", screenshot.alt = "screenshots/cut-boxes"}
+```r
 p <- plot_ly(diamonds, y = ~price, color = I("black"), 
              alpha = 0.1, boxpoints = "suspectedoutliers")
 p1 <- p %>% add_boxplot(x = "Overall")
@@ -100,17 +124,26 @@ subplot(
 ) %>% hide_legend()
 ```
 
-If you want to partition by more than one discrete variable, I recommend mapping the interaction of those variables to the discrete axis, and coloring by the nested variable, as Figure \@ref(fig:cut-by-clarity-boxes) does with diamond clarity and cut.
+```{r cut-boxes, echo = FALSE, fig.cap = "(ref:cut-boxes)"}
+knitr::include_graphics("images/cut-boxes.svg")
+```
 
-```{r cut-by-clarity-boxes, fig.width = 8, fig.cap = "Diamond prices by cut and clarity.", screenshot.alt = "screenshots/cut-by-clarity-boxes"}
+If you want to partition by more than one discrete variable, you could use the interaction of those variables to the discrete axis, and coloring by the nested variable, as Figure \@ref(fig:cut-by-clarity-boxes) does with diamond clarity and cut. Another approach would be to use a trellis display, similar to Figure \@ref(fig:subplot-trellis).
+
+```r
 plot_ly(diamonds, x = ~price, y = ~interaction(clarity, cut)) %>%
   add_boxplot(color = ~clarity) %>%
   layout(yaxis = list(title = ""))
 ```
 
+```{r cut-by-clarity-boxes, echo = FALSE, fig.cap = "(ref:cut-by-clarity-boxes)"}
+knitr::include_graphics("images/cut-by-clarity-boxes.svg")
+```
+
+
 It is also helpful to sort the boxplots according to something meaningful, such as the median price. Figure \@ref(fig:cut-by-clarity-boxes-sorted) presents the same information as Figure \@ref(fig:cut-by-clarity-boxes), but sorts the boxplots by their median, and makes it immediately clear that diamonds with a cut of "SI2" have the highest diamond price, on average.
 
-```{r cut-by-clarity-boxes-sorted, fig.width = 8, fig.cap = "Diamond prices by cut and clarity, sorted by price median.", screenshot.alt = "screenshots/cut-by-clarity-boxes-sorted"}
+```r
 d <- diamonds %>%
   mutate(cc = interaction(clarity, cut))
 
@@ -126,4 +159,8 @@ plot_ly(d, x = ~price, y = ~factor(cc, lvls)) %>%
   layout(yaxis = list(title = ""))
 ```
 
-Similar to `add_histogram()`, `add_boxplot()` sends the raw data to the browser, and lets plotly.js compute summary statistics. Unfortunately, plotly.js does not yet allow precomputed statistics for boxplots.^[Follow the issue here <https://github.com/plotly/plotly.js/issues/242>]
+```{r cut-by-clarity-boxes-sorted, echo = FALSE, fig.cap = "(ref:cut-by-clarity-boxes-sorted)"}
+knitr::include_graphics("images/cut-by-clarity-boxes-sorted.svg")
+```
+
+Similar to `add_histogram()`, `add_boxplot()` sends the raw data to the browser, and lets plotly.js compute summary statistics. Unfortunately, plotly.js does not yet allow precomputed statistics for boxplots.^[Follow the issue here <https://github.com/plotly/plotly.js/issues/1059>]

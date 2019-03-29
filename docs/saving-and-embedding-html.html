@@ -25,7 +25,7 @@
 <meta name="author" content="Carson Sievert">
 
 
-<meta name="date" content="2019-03-20">
+<meta name="date" content="2019-03-27">
 
   <meta name="viewport" content="width=device-width, initial-scale=1">
   <meta name="apple-mobile-web-app-capable" content="yes">
@@ -208,9 +208,11 @@ code span.wa { color: #60a0b0; font-weight: bold; font-style: italic; } /* Warni
 <li class="chapter" data-level="7.3" data-path="frequencies-2D.html"><a href="frequencies-2D.html#categorical-axes"><i class="fa fa-check"></i><b>7.3</b> Categorical axes</a></li>
 </ul></li>
 <li class="chapter" data-level="8" data-path="d-charts.html"><a href="d-charts.html"><i class="fa fa-check"></i><b>8</b> 3D charts</a><ul>
-<li class="chapter" data-level="8.0.1" data-path="d-charts.html"><a href="d-charts.html#markers-and-lines"><i class="fa fa-check"></i><b>8.0.1</b> Markers and lines</a></li>
-<li class="chapter" data-level="8.0.2" data-path="d-charts.html"><a href="d-charts.html#d-paths"><i class="fa fa-check"></i><b>8.0.2</b> 3D paths</a></li>
-<li class="chapter" data-level="8.0.3" data-path="d-charts.html"><a href="d-charts.html#d-surfaces"><i class="fa fa-check"></i><b>8.0.3</b> 3D surfaces</a></li>
+<li class="chapter" data-level="8.1" data-path="d-charts.html"><a href="d-charts.html#markers-1"><i class="fa fa-check"></i><b>8.1</b> Markers</a></li>
+<li class="chapter" data-level="8.2" data-path="d-charts.html"><a href="d-charts.html#paths"><i class="fa fa-check"></i><b>8.2</b> Paths</a></li>
+<li class="chapter" data-level="8.3" data-path="d-charts.html"><a href="d-charts.html#lines-1"><i class="fa fa-check"></i><b>8.3</b> Lines</a></li>
+<li class="chapter" data-level="8.4" data-path="d-charts.html"><a href="d-charts.html#axes"><i class="fa fa-check"></i><b>8.4</b> Axes</a></li>
+<li class="chapter" data-level="8.5" data-path="d-charts.html"><a href="d-charts.html#surfaces"><i class="fa fa-check"></i><b>8.5</b> Surfaces</a></li>
 </ul></li>
 <li class="part"><span><b>II Publishing views</b></span></li>
 <li class="chapter" data-level="9" data-path="introduction-1.html"><a href="introduction-1.html"><i class="fa fa-check"></i><b>9</b> Introduction</a></li>
@@ -232,7 +234,6 @@ code span.wa { color: #60a0b0; font-weight: bold; font-style: italic; } /* Warni
 <li class="chapter" data-level="13.2.2" data-path="arranging-views.html"><a href="arranging-views.html#bootstrap-grid-layout"><i class="fa fa-check"></i><b>13.2.2</b> Bootstrap grid layout</a></li>
 <li class="chapter" data-level="13.2.3" data-path="arranging-views.html"><a href="arranging-views.html#css-flexbox"><i class="fa fa-check"></i><b>13.2.3</b> CSS flexbox</a></li>
 </ul></li>
-<li class="chapter" data-level="13.3" data-path="arranging-views.html"><a href="arranging-views.html#navigating-many-views"><i class="fa fa-check"></i><b>13.3</b> Navigating many views</a></li>
 </ul></li>
 <li class="chapter" data-level="14" data-path="animating-views.html"><a href="animating-views.html"><i class="fa fa-check"></i><b>14</b> Animating views</a><ul>
 <li class="chapter" data-level="14.1" data-path="animating-views.html"><a href="animating-views.html#animation-api"><i class="fa fa-check"></i><b>14.1</b> Animation API</a></li>
@@ -289,7 +290,10 @@ code span.wa { color: #60a0b0; font-weight: bold; font-style: italic; } /* Warni
 </ul></li>
 <li class="chapter" data-level="20" data-path="js-event-handlers.html"><a href="js-event-handlers.html"><i class="fa fa-check"></i><b>20</b> Adding custom event handlers</a></li>
 <li class="chapter" data-level="21" data-path="supplying-custom-data.html"><a href="supplying-custom-data.html"><i class="fa fa-check"></i><b>21</b> Supplying custom data</a></li>
-<li class="chapter" data-level="22" data-path="client-side.html"><a href="client-side.html"><i class="fa fa-check"></i><b>22</b> Leveraging web technologies from R</a></li>
+<li class="chapter" data-level="22" data-path="client-side.html"><a href="client-side.html"><i class="fa fa-check"></i><b>22</b> Leveraging web technologies from R</a><ul>
+<li class="chapter" data-level="22.1" data-path="client-side.html"><a href="client-side.html#web-infrastructure"><i class="fa fa-check"></i><b>22.1</b> Web infrastructure</a></li>
+<li class="chapter" data-level="22.2" data-path="client-side.html"><a href="client-side.html#react"><i class="fa fa-check"></i><b>22.2</b> Modern JS &amp; React</a></li>
+</ul></li>
 <li class="part"><span><b>VI Various special topics</b></span></li>
 <li class="chapter" data-level="23" data-path="is-plotly-free-secure.html"><a href="is-plotly-free-secure.html"><i class="fa fa-check"></i><b>23</b> Is plotly free &amp; secure?</a></li>
 <li class="chapter" data-level="24" data-path="controlling-tooltips.html"><a href="controlling-tooltips.html"><i class="fa fa-check"></i><b>24</b> Controlling tooltips</a><ul>
@@ -350,9 +354,9 @@ widget_file_size &lt;-<span class="st"> </span><span class="cf">function</span>(
   <span class="kw">message</span>(<span class="st">&quot;File is: &quot;</span>, mb,<span class="st">&quot; MB&quot;</span>)
 }
 <span class="kw">widget_file_size</span>(p)
-<span class="co">#&gt; File is: 3.077 MB</span>
+<span class="co">#&gt; File is: 3.078 MB</span>
 <span class="kw">widget_file_size</span>(<span class="kw">partial_bundle</span>(p))
-<span class="co">#&gt; File is: 1.01 MB</span></code></pre>
+<span class="co">#&gt; File is: 1.011 MB</span></code></pre>
 <p>If you want to embed numerous widgets in a larger HTML document (e.g., via HTML <code>&lt;iframe&gt;</code>s), <em>self-contained</em> HTML is not recommended. That’s because, if you embed numerous self-contained widgets inside a larger document, your browser has to repeatedly parse the same dependencies over and over. Instead, if you save all the dependency files externally into a single directory, the browser will only have to parse those dependencies once, which can dramatically improve responsiveness. You can do this by setting <code>selfcontained = FALSE</code> and specifying a fixed <code>libdir</code> in <code>saveWidget()</code>. It’s also worth noting that using <code>htmlwidgets::saveWidget()</code> with <code>selfcontained = FALSE</code> is essentially the same as using <code>htmltools::save_html()</code> which saves arbitrary HTML content to a file. The <code>htmltools::save_html()</code> function is useful for saving numerous htmlwidgets (e.g., Figure <a href="arranging-views.html#fig:fluid">13.12</a> or <a href="arranging-views.html#fig:flexbox">13.13</a>) and/or other custom HTML markup (e.g., Figure <a href="client-side.html#fig:correlation-client-side">22.1</a>) in a single HTML page.</p>
 <pre class="sourceCode r"><code class="sourceCode r">htmlwidgets<span class="op">::</span><span class="kw">saveWidget</span>(<span class="kw">plot_ly</span>(<span class="dt">x =</span> <span class="kw">rnorm</span>(<span class="dv">100</span>)), <span class="st">&quot;p1.html&quot;</span>, <span class="dt">selfcontained =</span> <span class="ot">FALSE</span>, <span class="dt">libdir =</span> <span class="st">&quot;lib&quot;</span>)
 htmlwidgets<span class="op">::</span><span class="kw">saveWidget</span>(<span class="kw">plot_ly</span>(<span class="dt">x =</span> <span class="kw">rnorm</span>(<span class="dv">100</span>)), <span class="st">&quot;p2.html&quot;</span>, <span class="dt">selfcontained =</span> <span class="ot">FALSE</span>, <span class="dt">libdir =</span> <span class="st">&quot;lib&quot;</span>)</code></pre>
@@ -360,7 +364,7 @@ htmlwidgets<span class="op">::</span><span class="kw">saveWidget</span>(<span cl
 <pre class="sourceCode r"><code class="sourceCode r"><span class="kw">zip</span>(<span class="st">&quot;p1.zip&quot;</span>, <span class="kw">c</span>(<span class="st">&quot;p1.html&quot;</span>, <span class="st">&quot;lib&quot;</span>))
 <span class="kw">zip</span>(<span class="st">&quot;p2.zip&quot;</span>, <span class="kw">c</span>(<span class="st">&quot;p2.html&quot;</span>, <span class="st">&quot;lib&quot;</span>))</code></pre>
 <p>Embedding these HTML files via an HTML <code>&lt;iframe&gt;</code> is convenient not only for re-using a widget in various parent documents, but also for preventing any JavaScript and CSS in the parent document from negatively impacting how the widget renders. Rather than writing the HTML <code>&lt;iframe&gt;</code> tag directly, I recommend using <code>htmltools::tags$iframe()</code> – this will allow you to leverage <strong>bookdown</strong>’s figure captioning, numbering, and automatic snapshots for non-HTML output:</p>
-<pre><code>```{r}
+<pre><code>```{r}
 htmltools::tags$iframe(
   src = &quot;p1.html&quot;, 
   scrolling = &quot;no&quot;, 

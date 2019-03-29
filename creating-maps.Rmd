@@ -21,7 +21,7 @@ plot_mapbox(maps::canada.cities) %>%
   )
 ```
 
-```{r mapbox-bubble, echo = FALSE, fig.cap = "A mapbox powered bubble chart showing the population of various cities in Canada."}
+```{r mapbox-bubble, echo = FALSE, fig.cap = "(ref:mapbox-bubble)"}
 include_vimeo("317352934")
 ```
 
@@ -41,13 +41,13 @@ layout(
 )
 ```
 
-```{r satellite, echo = FALSE, fig.cap = "Zooming in on earth satellite imagery using `plot_mapbox()`."}
-include_vimeo("319959926")
+```{r satellite, echo = FALSE, fig.cap = "(ref:satellite)"}
+include_vimeo("326683897")
 ```
 
 Figure \@ref(fig:mapbox-style-dropdown) demonstrates how to create an integrated plotly.js dropdown menu to control the basemap style via the [`layout.updatemenus`](https://plot.ly/r/reference/#layout-updatemenus-items-updatemenu-buttons) attribute. The idea behind an integrated plotly.js dropdown is to supply a list of buttons (i.e., menu items) where each button invokes a plotly.js method with some arguments. In this case, each button uses the [relayout](https://plot.ly/javascript/plotlyjs-function-reference/) method to modify the `layout.mapbox.style` attribute.^[To see more examples of creating and using plotly.js' integrated dropdown functionality to modify graphs, see <https://plot.ly/r/dropdowns/>]
 
-```{r mapbox-style-dropdown, fig.cap="Providing a dropdown menu to control the styling of the mapbox baselayer.", screenshot.alt = "images/houston-satellite.png"}
+```r
 style_buttons <- lapply(styles, function(s) {
   list(label = s, method = "relayout", args = list("mapbox.style", s))
 })
@@ -58,6 +58,10 @@ layout(
     list(y = 0.8, buttons = style_buttons)
   )
 )
+```
+
+```{r mapbox-style-dropdown, echo = FALSE, fig.cap="(ref:mapbox-style-dropdown)"}
+include_vimeo("326684625")
 ```
 
 The other integrated mapping solution in **plotly** is `plot_geo()`. Compared to `plot_mapbox()`, this approach has support for different mapping projections, but styling the basemap is limited and can be more cumbersome. Figure \@ref(fig:geo-flights) demonstrates using `plot_geo()` in conjunction with `add_markers()` and `add_segments()` to visualize flight paths within the United States. Whereas `plot_mapbox()` is fixed to a mercator projection, the `plot_geo()` constructor has a handful of different projection available to it, including the orthographic projection which gives the illusion of the 3D globe.
@@ -96,7 +100,7 @@ plot_geo(color = I("red")) %>%
   layout(geo = geo, showlegend = FALSE)
 ```
 
-```{r geo-flights, echo = FALSE, fig.cap = "A mapbox powered bubble chart showing the population of various cities in Canada."}
+```{r geo-flights, echo = FALSE, fig.cap = "(ref:geo-flights)"}
 include_vimeo("317358033")
 ```
 
@@ -120,7 +124,7 @@ library(htmltools)
 browsable(tagList(map1, map2))
 ```
 
-```{r maps, echo = FALSE, fig.cap = "Three different ways to render a map. On the top left is plotly's default cartesian coordinate system, on the top right is plotly's custom geographic layout, and on the bottom is mapbox."}
+```{r maps, echo = FALSE, fig.cap = "(ref:maps)"}
 knitr::include_graphics("images/maps.png")
 ```
 
@@ -145,7 +149,7 @@ plot_geo() %>%
   layout(geo = g)
 ```
 
-```{r us-density, echo = FALSE, fig.cap = "A map of U.S. population density using the `state.x77` data from the **datasets** package."}
+```{r us-density, echo = FALSE, fig.cap = "(ref:us-density)"}
 knitr::include_graphics("images/us-density.svg")
 ```
 
@@ -171,7 +175,7 @@ class(world)
 plot_ly(world, color = I("gray90"), stroke = I("black"), span = I(1))
 ```
 
-```{r world, echo = FALSE, fig.cap = "Rendering all the world's countries using `plot_ly()` and the `ne_countries()` function from the **rnaturalearth** package."}
+```{r world, echo = FALSE, fig.cap = "(ref:world)"}
 knitr::include_graphics("images/world.svg")
 ```
 
@@ -184,7 +188,7 @@ world %>%
   print(n = 4)
 ```
 
-```{r view-sf, echo = FALSE, fig.cap = "A diagram of a simple features data frame. The geometry column tracks the spatial features attached to each row in the data frame."}
+```{r view-sf, echo = FALSE, fig.cap = "(ref:view-sf)"}
 knitr::include_graphics("images/view-sf.svg")
 ```
 
@@ -195,7 +199,7 @@ canada <- ne_states(country = "Canada", returnclass = "sf")
 plot_ly(canada, split = ~name, color = ~provnum_ne)
 ```
 
-```{r split-color, echo = FALSE, fig.cap = "Using `split` and `color` to create a choropleth map of provinces in Canada."}
+```{r split-color, echo = FALSE, fig.cap = "(ref:split-color)"}
 knitr::include_graphics("images/split-color.svg")
 ```
 
@@ -213,7 +217,7 @@ plot_ly(
 )
 ```
 
-```{r split-text, echo = FALSE, fig.cap = "Using `split`, `text`, and `hoveron='fills'` to display a tooltip specific to each Canadian province."}
+```{r split-text, echo = FALSE, fig.cap = "(ref:split-text)"}
 knitr::include_graphics("images/split-text.png")
 ```
 
@@ -245,7 +249,7 @@ p <- ggplot() +
 ggplotly(p)
 ```
 
-```{r canada-ggplotly, echo = FALSE, fig.cap = "The population of various Canadian cities rendered on a custom basemap using a Mollweide projection."}
+```{r canada-ggplotly, echo = FALSE, fig.cap = "(ref:canada-ggplotly)"}
 knitr::include_graphics("images/canada-ggplotly.svg")
 ```
 
@@ -293,7 +297,7 @@ plot_ly(us_cont) %>%
   colorbar(title = "Population \n 2014")
 ```
 
-```{r cartogram, echo = FALSE, fig.cap = "A cartogram of US population in 2014. A cartogram sizes the area of geo-spatial objects proportional to some metric (e.g., population)."}
+```{r cartogram, echo = FALSE, fig.cap = "(ref:cartogram)"}
 knitr::include_graphics("images/cartogram.png")
 ```
 
@@ -320,13 +324,13 @@ plot_ly(stroke = I("black"), span = I(1)) %>%
   layout(showlegend = FALSE)
 ```
 
-```{r cartogram-dorling, echo = FALSE, fig.cap = "A dorling cartogram of US population in 2014. A dorling cartogram sizes the circles proportional to some metric (e.g., population)."}
+```{r cartogram-dorling, echo = FALSE, fig.cap = "(ref:cartogram-dorling)"}
 knitr::include_graphics("images/cartogram-dorling.svg")
 ```
 
 Figure \@ref(fig:cartogram-ncont) demonstrates a non-continuous cartogram of US population in 2014 from @Olson. In contrast to the Dorling cartogram, this approach does preserve the shape of polygons. The implementation behind Figure \@ref(fig:cartogram-ncont) is to simply take the implementation of Figure \@ref(fig:cartogram-dorling) and change `cartogram_dorling()` to `cartogram_ncont()`.
 
-```{r cartogram-ncont, echo = FALSE, fig.cap = "A non-continguous cartogram of US population in 2014 that preserves shape."}
+```{r cartogram-ncont, echo = FALSE, fig.cap = "(ref:cartogram-ncont)"}
 knitr::include_graphics("images/cartogram-ncont.svg")
 ```
 
@@ -339,6 +343,6 @@ tiles_sf <- st_as_sf(tiles)
 plot_ly(tiles_sf, split = ~name)
 ```
 
-```{r cartogram-tiles, echo = FALSE, fig.cap = "A tile cartogram of U.S. population in 2016."}
+```{r cartogram-tiles, echo = FALSE, fig.cap = "(ref:cartogram-tiles)"}
 knitr::include_graphics("images/cartogram-tiles.svg")
 ```

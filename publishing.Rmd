@@ -41,7 +41,7 @@ zip("p2.zip", c("p2.html", "lib"))
 
 Embedding these HTML files via an HTML `<iframe>` is convenient not only for re-using a widget in various parent documents, but also for preventing any JavaScript and CSS in the parent document from negatively impacting how the widget renders. Rather than writing the HTML `<iframe>` tag directly, I recommend using `htmltools::tags$iframe()` -- this will allow you to leverage **bookdown**'s figure captioning, numbering, and automatic snapshots for non-HTML output:
 
-    ```{r}
+    ```{r}`r ''`
     htmltools::tags$iframe(
       src = "p1.html", 
       scrolling = "no", 
@@ -62,7 +62,7 @@ browseVignettes("widgetframe")
 
 Any **plotly** object can be saved as a static image via the `orca()` function. To use it, you'll need the `orca` command-line utility (CLI). This CLI can be installed via node.js, conda, or a standalone binary from <https://github.com/plotly/orca/releases>. Figure \@ref(fig:orca) demonstrates how `orca()` can generate a svg (or pdf) that can then be imported into Adobe Illustrator for post-processing. Although it's a nice option to have, importing into Adobe Illustrator might not enable as nice of a workflow as using **plotly**'s native support for editable layout components in the browser, then exporting to svg/pdf (as shown in Figure \@ref(fig:edit-county-labels)). 
 
-```{r orca, echo = FALSE, fig.cap="Using the `orca()` function to export a WebGL/Canvas based **plotly** graphic to a static pdf file. That pdf file can then be imported into Adobe Illustrator for post-processing."}
+```{r orca, echo = FALSE, fig.cap="(ref:orca)"}
 include_vimeo(307598492)
 ```
 
@@ -70,7 +70,7 @@ include_vimeo(307598492)
 
 Exporting an image from a browser is a nice option if you need to perform edits before exporting or if you'd like others to share your work. By default, the 'download plot' icon in the modebar will download to png and use the `height` and `width` of the plot, but these defaults can be altered via the plot's configuration:
 
-```{r, fig.cap = "Specifying options for static image exporting via the modebar. Clicking on the 'download plot' icon should prompt your browser to download a static svg file named 'myplot.svg'"}
+```r
 plot_ly() %>%
   config(
     toImageButtonOptions = list(
@@ -80,6 +80,10 @@ plot_ly() %>%
       height = 700
     )
   )
+```
+
+```{r toImageSVG, echo = FALSE, fig.cap = "(ref:toImageSVG)"}
+knitr::include_graphics("images/toImageSVG.png")
 ```
 
 ## Sizing exports
@@ -172,8 +176,7 @@ ggplotly(bars, dynamicTicks = TRUE, tooltip = "y", height = 8 * 96, width = 11 *
   )
 ```
 
-
-```{r edit-county-labels, echo = FALSE, fig.cap="Estimated total income by county in Minnesota. The top 10 counties are labeled with editable annotations. After manually adjusting the placement of county labels in a web browser, and zooming in on the top 10 counties in the dot plot, the 'download plot' button is used to export to svg."}
+```{r edit-county-labels, echo = FALSE, fig.cap="(ref:edit-county-labels)"}
 include_vimeo(309371928)
 ```
 

@@ -25,7 +25,7 @@
 <meta name="author" content="Carson Sievert">
 
 
-<meta name="date" content="2019-03-20">
+<meta name="date" content="2019-03-27">
 
   <meta name="viewport" content="width=device-width, initial-scale=1">
   <meta name="apple-mobile-web-app-capable" content="yes">
@@ -208,9 +208,11 @@ code span.wa { color: #60a0b0; font-weight: bold; font-style: italic; } /* Warni
 <li class="chapter" data-level="7.3" data-path="frequencies-2D.html"><a href="frequencies-2D.html#categorical-axes"><i class="fa fa-check"></i><b>7.3</b> Categorical axes</a></li>
 </ul></li>
 <li class="chapter" data-level="8" data-path="d-charts.html"><a href="d-charts.html"><i class="fa fa-check"></i><b>8</b> 3D charts</a><ul>
-<li class="chapter" data-level="8.0.1" data-path="d-charts.html"><a href="d-charts.html#markers-and-lines"><i class="fa fa-check"></i><b>8.0.1</b> Markers and lines</a></li>
-<li class="chapter" data-level="8.0.2" data-path="d-charts.html"><a href="d-charts.html#d-paths"><i class="fa fa-check"></i><b>8.0.2</b> 3D paths</a></li>
-<li class="chapter" data-level="8.0.3" data-path="d-charts.html"><a href="d-charts.html#d-surfaces"><i class="fa fa-check"></i><b>8.0.3</b> 3D surfaces</a></li>
+<li class="chapter" data-level="8.1" data-path="d-charts.html"><a href="d-charts.html#markers-1"><i class="fa fa-check"></i><b>8.1</b> Markers</a></li>
+<li class="chapter" data-level="8.2" data-path="d-charts.html"><a href="d-charts.html#paths"><i class="fa fa-check"></i><b>8.2</b> Paths</a></li>
+<li class="chapter" data-level="8.3" data-path="d-charts.html"><a href="d-charts.html#lines-1"><i class="fa fa-check"></i><b>8.3</b> Lines</a></li>
+<li class="chapter" data-level="8.4" data-path="d-charts.html"><a href="d-charts.html#axes"><i class="fa fa-check"></i><b>8.4</b> Axes</a></li>
+<li class="chapter" data-level="8.5" data-path="d-charts.html"><a href="d-charts.html#surfaces"><i class="fa fa-check"></i><b>8.5</b> Surfaces</a></li>
 </ul></li>
 <li class="part"><span><b>II Publishing views</b></span></li>
 <li class="chapter" data-level="9" data-path="introduction-1.html"><a href="introduction-1.html"><i class="fa fa-check"></i><b>9</b> Introduction</a></li>
@@ -232,7 +234,6 @@ code span.wa { color: #60a0b0; font-weight: bold; font-style: italic; } /* Warni
 <li class="chapter" data-level="13.2.2" data-path="arranging-views.html"><a href="arranging-views.html#bootstrap-grid-layout"><i class="fa fa-check"></i><b>13.2.2</b> Bootstrap grid layout</a></li>
 <li class="chapter" data-level="13.2.3" data-path="arranging-views.html"><a href="arranging-views.html#css-flexbox"><i class="fa fa-check"></i><b>13.2.3</b> CSS flexbox</a></li>
 </ul></li>
-<li class="chapter" data-level="13.3" data-path="arranging-views.html"><a href="arranging-views.html#navigating-many-views"><i class="fa fa-check"></i><b>13.3</b> Navigating many views</a></li>
 </ul></li>
 <li class="chapter" data-level="14" data-path="animating-views.html"><a href="animating-views.html"><i class="fa fa-check"></i><b>14</b> Animating views</a><ul>
 <li class="chapter" data-level="14.1" data-path="animating-views.html"><a href="animating-views.html#animation-api"><i class="fa fa-check"></i><b>14.1</b> Animation API</a></li>
@@ -289,7 +290,10 @@ code span.wa { color: #60a0b0; font-weight: bold; font-style: italic; } /* Warni
 </ul></li>
 <li class="chapter" data-level="20" data-path="js-event-handlers.html"><a href="js-event-handlers.html"><i class="fa fa-check"></i><b>20</b> Adding custom event handlers</a></li>
 <li class="chapter" data-level="21" data-path="supplying-custom-data.html"><a href="supplying-custom-data.html"><i class="fa fa-check"></i><b>21</b> Supplying custom data</a></li>
-<li class="chapter" data-level="22" data-path="client-side.html"><a href="client-side.html"><i class="fa fa-check"></i><b>22</b> Leveraging web technologies from R</a></li>
+<li class="chapter" data-level="22" data-path="client-side.html"><a href="client-side.html"><i class="fa fa-check"></i><b>22</b> Leveraging web technologies from R</a><ul>
+<li class="chapter" data-level="22.1" data-path="client-side.html"><a href="client-side.html#web-infrastructure"><i class="fa fa-check"></i><b>22.1</b> Web infrastructure</a></li>
+<li class="chapter" data-level="22.2" data-path="client-side.html"><a href="client-side.html#react"><i class="fa fa-check"></i><b>22.2</b> Modern JS &amp; React</a></li>
+</ul></li>
 <li class="part"><span><b>VI Various special topics</b></span></li>
 <li class="chapter" data-level="23" data-path="is-plotly-free-secure.html"><a href="is-plotly-free-secure.html"><i class="fa fa-check"></i><b>23</b> Is plotly free &amp; secure?</a></li>
 <li class="chapter" data-level="24" data-path="controlling-tooltips.html"><a href="controlling-tooltips.html"><i class="fa fa-check"></i><b>24</b> Controlling tooltips</a><ul>
@@ -341,11 +345,11 @@ code span.wa { color: #60a0b0; font-weight: bold; font-style: italic; } /* Warni
 <div id="arranging-views" class="section level1">
 <h1><span class="header-section-number">13</span> Arranging views</h1>
 <p>One technique essential to high-dimensional data visualization is the ability to arrange multiple views. By arranging multiple low-dimensional graphics of the same (or similar) high-dimensional data, one can put
-local summaries and patterns into a global context. When arranging multiple <strong>plotly</strong> objects, you have some flexibility in terms of how you arrange them: you could use <code>subplot()</code> to merge multiple <strong>plotly</strong> object into a single object (useful for synchronizing zoom&amp;pan events across multiple axes), place them in separate HTML tags (Section <a href="arranging-views.html#arranging-htmlwidgets">13.2</a>), or embedded in a larger system for navigating many views (Section <a href="arranging-views.html#navigating-many-views">13.3</a>).</p>
+local summaries and patterns into a global context. When arranging multiple <strong>plotly</strong> objects, you have some flexibility in terms of how you arrange them: you could use <code>subplot()</code> to merge multiple <strong>plotly</strong> object into a single object (useful for synchronizing zoom&amp;pan events across multiple axes), place them in separate HTML tags (Section <a href="arranging-views.html#arranging-htmlwidgets">13.2</a>), or embedded in a larger system for navigating many views (Section <a href="#navigating-many-views"><strong>??</strong></a>).</p>
 <p>Ideally, when displaying multiple related data views, they are linked through an underlying data source to foster comparisons and enable posing of data queries <span class="citation">(D. Cook, Buja, and Swayne <a href="#ref-Cook:2007uk" role="doc-biblioref">2007</a>)</span>. Chapter <a href="client-side-linking.html#graphical-queries">16.1</a> shows how to build upon these methods for arranging views to link them (client-side) as well.</p>
 <div id="arranging-plotly-objects" class="section level2">
 <h2><span class="header-section-number">13.1</span> Arranging plotly objects</h2>
-<p>The <code>subplot()</code> function provides a flexible interface for merging multiple <strong>plotly</strong> objects into a single object. It is more flexible than most trellis display frameworks (e.g., <strong>ggplot2</strong>’s <code>facet_wrap()</code>) as you don’t have to condition on a value of common variable in each display <span class="citation">(Richard A. Becker <a href="#ref-trellis" role="doc-biblioref">1996</a>)</span>. Its capabilities and interface is similar to the <code>grid.arrange()</code> function from the <strong>gridExtra</strong> package, which allows you to arrange multiple <strong>grid</strong> grobs in a single view, effectively providing a way to arrange (possibly unrelated) <strong>ggplot2</strong> and/or <strong>lattice</strong> plots in a single view <span class="citation">(R Core Team <a href="#ref-RCore" role="doc-biblioref">2016</a>)</span>; <span class="citation">(Auguie <a href="#ref-gridExtra" role="doc-biblioref">2016</a>)</span>; <span class="citation">(Sarkar <a href="#ref-lattice" role="doc-biblioref">2008</a>)</span>. Figure <a href="arranging-views.html#fig:subplot-simple">13.1</a> shows the most simple way to use <code>subplot()</code> which is to directly supply plotly objects.</p>
+<p>The <code>subplot()</code> function provides a flexible interface for merging multiple <strong>plotly</strong> objects into a single object. It is more flexible than most trellis display frameworks (e.g., <strong>ggplot2</strong>’s <code>facet_wrap()</code>) as you don’t have to condition on a value of common variable in each display <span class="citation">(Richard A. Becker <a href="#ref-trellis" role="doc-biblioref">1996</a>)</span>. Its capabilities and interface are similar to the <code>grid.arrange()</code> function from the <strong>gridExtra</strong> package, which allows you to arrange multiple <strong>grid</strong> grobs in a single view, effectively providing a way to arrange (possibly unrelated) <strong>ggplot2</strong> and/or <strong>lattice</strong> plots in a single view <span class="citation">(R Core Team <a href="#ref-RCore" role="doc-biblioref">2016</a>)</span>; <span class="citation">(Auguie <a href="#ref-gridExtra" role="doc-biblioref">2016</a>)</span>; <span class="citation">(Sarkar <a href="#ref-lattice" role="doc-biblioref">2008</a>)</span>. Figure <a href="arranging-views.html#fig:subplot-simple">13.1</a> shows the most simple way to use <code>subplot()</code> which is to directly supply plotly objects.</p>
 <pre class="sourceCode r"><code class="sourceCode r"><span class="kw">library</span>(plotly)
 p1 &lt;-<span class="st"> </span><span class="kw">plot_ly</span>(economics, <span class="dt">x =</span> <span class="op">~</span>date, <span class="dt">y =</span> <span class="op">~</span>unemploy) <span class="op">%&gt;%</span><span class="st"> </span>
 <span class="st">  </span><span class="kw">add_lines</span>(<span class="dt">name =</span> <span class="st">&quot;unemploy&quot;</span>)
@@ -459,14 +463,14 @@ FIGURE 13.6: Multiple bar charts of US statistics by state in a subplot with a c
 </div>
 <div id="other-approaches-applications" class="section level3">
 <h3><span class="header-section-number">13.1.2</span> Other approaches &amp; applications</h3>
-<p>Using <code>subplot()</code> directly is not the <em>only</em> to create multiple views of a dataset with <strong>plotly</strong>. In some special cases, like scatterplot matrices and generalized pair plots, we can take advantage of some special methods designed specifically for these use cases.</p>
+<p>Using <code>subplot()</code> directly is not the <em>only</em> way to create multiple views of a dataset with <strong>plotly</strong>. In some special cases, like scatterplot matrices and generalized pair plots, we can take advantage of some special methods designed specifically for these use cases.</p>
 <div id="scatterplot-matrices" class="section level4">
 <h4><span class="header-section-number">13.1.2.1</span> Scatterplot matrices</h4>
 <p>The plotly.js library provides a trace specifically designed and optimized for scatterplot matrices (splom). To use it, provide numeric variables to the <code>dimensions</code> attribute of the <code>splom</code> trace type.</p>
 <pre class="sourceCode r"><code class="sourceCode r">dims &lt;-<span class="st"> </span>dplyr<span class="op">::</span><span class="kw">select_if</span>(iris, is.numeric)
 dims &lt;-<span class="st"> </span>purrr<span class="op">::</span><span class="kw">map2</span>(dims, <span class="kw">names</span>(dims), <span class="op">~</span><span class="kw">list</span>(<span class="dt">values =</span> .x, <span class="dt">label =</span> .y))
 <span class="kw">plot_ly</span>(<span class="dt">type =</span> <span class="st">&quot;splom&quot;</span>, <span class="dt">dimensions =</span> <span class="kw">setNames</span>(dims, <span class="ot">NULL</span>), <span class="dt">showupperhalf =</span> <span class="ot">FALSE</span>, <span class="dt">diagonal =</span> <span class="kw">list</span>(<span class="dt">visible =</span> <span class="ot">FALSE</span>))</code></pre>
-<div class="figure" style="text-align: center"><span id="fig:unnamed-chunk-16"></span>
+<div class="figure" style="text-align: center"><span id="fig:unnamed-chunk-18"></span>
 <iframe src="https://player.vimeo.com/video/325081084?title=0&amp;byline=0&amp;portrait=0" width="100%" height="400" frameborder="0" seamless="seamless" webkitAllowFullScreen mozallowfullscreen allowFullScreen></iframe>
 <p class="caption">
 FIGURE 13.7: Linked brushing in a scatterplot matrix of the iris dataset.
@@ -489,7 +493,7 @@ FIGURE 13.8: A generalized pairs plot made via the <code>ggpairs()</code> functi
 </div>
 <p>As it turns out, <strong>GGally</strong> use <code>ggmatrix()</code> as a building block for other visualizations, like model diagnostic plots (<code>ggnostic()</code>). Sections <a href="client-side-linking.html#ggally-ggpairs">16.4.6</a> and <a href="client-side-linking.html#ggally-ggnostic">16.4.7</a> demonstrates how to leverage linked brushing in the <code>ggplotly()</code> versions of these plots.</p>
 </div>
-<div id="trellis-displays-with-subplot" class="section level4">
+<div id="trellis-displays-subplot" class="section level4">
 <h4><span class="header-section-number">13.1.2.3</span> Trellis displays with <code>subplot()</code></h4>
 <p>It’s true that <strong>ggplot2</strong>’s <code>facet_wrap()</code>/<code>facet_grid()</code> provides a simple way to create trellis displays, but for learning purposes, it can be helpful to learn how to implement a similar trellis display with <code>plot_ly()</code> and <code>subplot()</code>. Figure <a href="arranging-views.html#fig:subplot-trellis">13.9</a> demonstrates one approach, which leverages <code>subplot()</code>’s ability to reposition annotations and shapes. Specifically, the <code>panel()</code> function below, which defines the visualization method to be applied to each <code>variable</code> in the <code>economics_long</code> dataset, uses paper coordinates (i.e., graph coordinates on a normalized 0-1 scale) to place an annotation at the top-center of each panel as well as a rectangle shape behind the annotation. Note also the use of <code>ysizemode = 'pixel'</code> which gives the rectangle shape a fixed height (i.e., the reactangle height is always 16 pixels, regardless of the height of the trellis display).</p>
 <details>
@@ -594,7 +598,7 @@ FIGURE 13.12: Arranging multiple htmlwidgets with <code>fluidPage()</code> from 
 </div>
 <p>It’s also worth noting another, somewhat similar, yet more succinct, interface to grid’s layout system provided by the <code>bscols()</code> function from the <strong>crosstalk</strong> package. You can think of it in a similar way to <code>fluidRow()</code>, but instead of defining <code>column()</code> width for each component individually, you can specify the width of several components at once through the <code>widths</code> argument. Also, importantly, this functions works recursively – it returns a collection of <strong>htmltools</strong> tags and accepts them as input as well. The code below produces the same result as above, but is a much more succinct way of doing so.</p>
 <pre class="sourceCode r"><code class="sourceCode r"><span class="kw">bscols</span>(p, <span class="kw">bscols</span>(p, p), <span class="dt">widths =</span> <span class="dv">12</span>)</code></pre>
-<p>Bootstrap is much more than just it’s grid layout system, so beware – using either of these approaches will impose Bootstrap’s styling rules on other content in your webpage. If you are using another CSS framework for styling or just want to reduce the size of dependencies in your webpage, consider working with CSS flexbox instead of Bootstrap.</p>
+<p>Bootstrap is much more than just its grid layout system, so beware – using either of these approaches will impose Bootstrap’s styling rules on other content in your webpage. If you are using another CSS framework for styling or just want to reduce the size of dependencies in your webpage, consider working with CSS flexbox instead of Bootstrap.</p>
 </div>
 <div id="css-flexbox" class="section level3">
 <h3><span class="header-section-number">13.2.3</span> CSS flexbox</h3>
@@ -616,32 +620,8 @@ FIGURE 13.13: Arranging multiple htmlwidgets with CSS flexbox.
 </p>
 </div>
 <p>From the code example in Figure <a href="arranging-views.html#fig:flexbox">13.13</a>, you might notice that <code>display: flex; flex-wrap: wrap</code> is quite similar to Bootstrap grid layout system. The main difference is that, instead of specifying widths in terms of 12 columns, you have more flexibility with how to size things, as well as how you handle extra space. Here, in Figure <a href="arranging-views.html#fig:flexbox">13.13</a> I’ve used widths that are relative to the page width, but you could also use fixed widths (using fixed widths, however, is generally frowned upon). For those that would like to learn about more details about CSS flexbox, see <a href="https://css-tricks.com/snippets/css/a-guide-to-flexbox/" class="uri">https://css-tricks.com/snippets/css/a-guide-to-flexbox/</a>.</p>
-</div>
-</div>
-<div id="navigating-many-views" class="section level2">
-<h2><span class="header-section-number">13.3</span> Navigating many views</h2>
-<p>Sometimes you have to consider way more views than you can possibly digest visually. In Chapters <a href="client-side-linking.html#graphical-queries">16.1</a> and <a href="linking-server-side.html#linking-server-side">17</a>, we explore some useful techniques for implementing the popular visualization mantra from <span class="citation">Shneiderman (<a href="#ref-details-on-demand" role="doc-biblioref">1996</a>)</span>:</p>
-<blockquote>
-<p>“Overview first, zoom and filter, then details-on-demand.”</p>
-</blockquote>
-<p>In fact, Figure <a href="linking-server-side.html#fig:shiny-corrplot">17.11</a> from section <a href="linking-server-side.html#scoping-events">17.2.5</a> provides an example of this mantra put into practice. The correlation matrix provides an overview of the correlation structure between all the variables, and by clicking a cell, it populates a scatterplot between those two specific variables. This works fine with tens or hundreds or variables, but once you have thousands or tens-of-thousands of variables, this technique begins to fall apart. At that point, you may be better off defining a range of correlations that you’re interested in exploring, or better yet, incorporating another measure (e.g., a test statistic), then focusing on views that match a certain criteria.</p>
-<p><span class="citation">Tukey and Tukey (<a href="#ref-scagnostics-tukey" role="doc-biblioref">n.d.</a>)</span> first described the idea of using quantitative measurements of scatterplot characteristics (e.g. correlation) to help guide exploratory analysis of many variables. This idea, coined scagnostics (short for scatterplot diagnostics), has since been made explicit, and many measures have been explored, even measures specifically useful for time-series have been proposed <span class="citation">(Wilkinson, Anand, and Grossman <a href="#ref-Wilkinson:2005b" role="doc-biblioref">2005</a>)</span>; <span class="citation">(Wilkinson and Wills <a href="#ref-Wilkinson:2008" role="doc-biblioref">2008</a>)</span>; <span class="citation">(Dang and Wilkinson <a href="#ref-Wilkinson:2012" role="doc-biblioref">2012</a>)</span>. Probably the most universally useful scagnostic is the outlying measure which helps identify projections of the data space that contain outlying observations. Of course, the idea of associating quantitative measures with a graphical display of data can be generalized to include more that just scatterplots, and in this more general case, these measures are sometimes referred to as cognostics.</p>
-<p>The same problems and principles that inspired scagnostics has inspired work on more general divide &amp; recombine technique(s) for working with navigating through many statistical artifacts <span class="citation">(Cleveland and Hafen <a href="#ref-divide-recombine" role="doc-biblioref">2014</a>)</span>; <span class="citation">(Saptarshi Guha and Cleveland <a href="#ref-RHIPE" role="doc-biblioref">2012</a>)</span>, including visualizations <span class="citation">(Hafen et al. <a href="#ref-trelliscope" role="doc-biblioref">2013</a>)</span>. The <strong>trelliscope</strong> package provides a system for computing arbitrary cognostics on each panel of a trellis display as well as an interactive graphical user interface for defining (and navigating through) interesting panels based on those cognostics <span class="citation">(Hafen <a href="#ref-trelliscope-pkg" role="doc-biblioref">2016</a>)</span>. This system also allows users to define the graphical method for displaying each panel, so <strong>plotly</strong> graphs can easily be embedded. The <strong>trelliscope</strong> package is currently built upon <strong>shiny</strong>, but as Figure <a href="arranging-views.html#fig:trelliscope">13.14</a> demonstrates, the <strong>trelliscopejs</strong> package provides lower-level tools that allow one to create trelliscope displays without <strong>shiny</strong> <span class="citation">(Hafen and Schloerke, <a href="#ref-trelliscopejs" role="doc-biblioref">n.d.</a>)</span>.</p>
-<pre class="sourceCode r"><code class="sourceCode r"><span class="kw">library</span>(trelliscopejs)
 
-<span class="kw">qplot</span>(cty, hwy, <span class="dt">data =</span> mpg) <span class="op">+</span>
-<span class="st">  </span><span class="kw">xlim</span>(<span class="dv">7</span>, <span class="dv">37</span>) <span class="op">+</span><span class="st"> </span><span class="kw">ylim</span>(<span class="dv">9</span>, <span class="dv">47</span>) <span class="op">+</span><span class="st"> </span><span class="kw">theme_bw</span>() <span class="op">+</span>
-<span class="st">  </span><span class="kw">facet_trelliscope</span>(
-    <span class="op">~</span><span class="st"> </span>manufacturer <span class="op">+</span><span class="st"> </span>class, <span class="dt">nrow =</span> <span class="dv">2</span>, <span class="dt">ncol =</span> <span class="dv">4</span>, 
-    <span class="dt">as_plotly =</span> <span class="ot">TRUE</span>, <span class="dt">plotly_args =</span> <span class="kw">list</span>(<span class="dt">dynamicTicks =</span> T)
-  )</code></pre>
-<div class="figure" style="text-align: center"><span id="fig:trelliscope"></span>
-<img src="images/trelliscope.png" alt="Using plotly within a trelliscope" width="100%" />
-<p class="caption">
-FIGURE 13.14: Using plotly within a trelliscope
-</p>
 </div>
-
 </div>
 </div>
 <h3>References</h3>
@@ -672,36 +652,6 @@ FIGURE 13.14: Using plotly within a trelliscope
 </div>
 <div id="ref-flexdashboard">
 <p>Allaire, JJ. 2016. <em>Flexdashboard: R Markdown Format for Flexible Dashboards</em>. <a href="https://CRAN.R-project.org/package=flexdashboard">https://CRAN.R-project.org/package=flexdashboard</a>.</p>
-</div>
-<div id="ref-details-on-demand">
-<p>Shneiderman, Ben. 1996. “The Eyes Have It:A Task by Data Type Taxonomy for Information Visualizations.” <em>VL Proceedings of the IEEE Symposium on Visual Languages</em>, January, 1–9.</p>
-</div>
-<div id="ref-scagnostics-tukey">
-<p>Tukey, J. W., and P. A. Tukey. n.d. “Computer Graphics and Exploratory Data Analysis: An Introduction.” In <em>In Proceedings of the Sixth Annual Conference and Exposition: Computer Graphics85</em>.</p>
-</div>
-<div id="ref-Wilkinson:2005b">
-<p>Wilkinson, Leland, Anushka Anand, and Robert Grossman. 2005. “Graph-Theoretic Scagnostics.” In <em>Proceedings of the Proceedings of the 2005 Ieee Symposium on Information Visualization</em>, 21. INFOVIS ’05. Washington, DC, USA: IEEE Computer Society. <a href="https://doi.org/10.1109/INFOVIS.2005.14">https://doi.org/10.1109/INFOVIS.2005.14</a>.</p>
-</div>
-<div id="ref-Wilkinson:2008">
-<p>Wilkinson, Leland, and Graham Wills. 2008. “Scagnostics Distributions.” <em>Journal of Computational and Graphical Statistics</em>, no. 2: 473–91.</p>
-</div>
-<div id="ref-Wilkinson:2012">
-<p>Dang, Tuan Nhon, and Leland Wilkinson. 2012. “Timeseer: Detecting interesting distributions in multiple time series data.” <em>VINCI</em>, October, 1–9.</p>
-</div>
-<div id="ref-divide-recombine">
-<p>Cleveland, William S., and Ryan Hafen. 2014. “Divide and Recombine (d&amp;R): Data Science for Large Complex Data.” <em>Statistical Analysis and Data Mining: The ASA Data Science Journal</em> 7 (6): 425–33.</p>
-</div>
-<div id="ref-RHIPE">
-<p>Saptarshi Guha, Jeremiah Rounds, Ryan Hafen, and William S. Cleveland. 2012. “Large Complex Data: Divide and Recombine (d&amp;R) with Rhipe.” <em>The ISI’s Journal for the Rapid Dissemination of Statistics Research</em>, August, 53–67.</p>
-</div>
-<div id="ref-trelliscope">
-<p>Hafen, R., L. Gosink, J. McDermott, K. Rodland, K. K. V. Dam, and W. S. Cleveland. 2013. “Trelliscope: A System for Detailed Visualization in the Deep Analysis of Large Complex Data.” In <em>Large-Scale Data Analysis and Visualization (Ldav), 2013 Ieee Symposium on</em>, 105–12. <a href="https://doi.org/10.1109/LDAV.2013.6675164">https://doi.org/10.1109/LDAV.2013.6675164</a>.</p>
-</div>
-<div id="ref-trelliscope-pkg">
-<p>Hafen, Ryan. 2016. <em>Trelliscope: Create and Navigate Large Multi-Panel Visual Displays</em>. <a href="https://CRAN.R-project.org/package=trelliscope">https://CRAN.R-project.org/package=trelliscope</a>.</p>
-</div>
-<div id="ref-trelliscopejs">
-<p>Hafen, Ryan, and Barret Schloerke. n.d. <em>Trelliscopejs: Create Interactive Trelliscope Displays</em>. <a href="https://github.com/hafen/trelliscopejs">https://github.com/hafen/trelliscopejs</a>.</p>
 </div>
 </div>
 <div class="footnotes">

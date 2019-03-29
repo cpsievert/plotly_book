@@ -10,7 +10,7 @@ A web application relies on a client-server relationship where the client's (i.e
 
 Figure \@ref(fig:server-client) is a basic illustration of the difference between a web application and a purely client-side web page. Thanks to `JavaScript` and `HTML5`, purely client-side web pages can still be dynamic without any software dependencies besides a modern web browser. In fact, Section \ref(graphical-queries) outlines **plotly**'s graphical querying framework for linking multiple plots entirely client-side, which makes the result very easy to distribute (see Section \ref(saving)). There are, of course, many useful examples of linked and dynamic views that can not be easily expressed as a database query, but a suprising amount actually can, and the remainder can likely be quickly implemented as a **shiny** web application.
 
-```{r server-client, echo = FALSE, fig.cap = "A diagram of the graphical querying framework underlying Figure \\@ref(fig:txhousing-aggregates)."}
+```{r server-client, echo = FALSE, fig.cap = "(ref:server-client)"}
 knitr::include_graphics("images/server-client.svg")
 ```
 
@@ -32,8 +32,7 @@ mtcars %>%
   highlight(on = "plotly_hover", off = "plotly_doubleclick")
 ```
 
-
-```{r link-intro, echo = FALSE, fig.cap = "A visual depiction of how `highlight_key()` attaches metadata to graphical elements to enable graphical database queries. Each point represents a different car and the number of cylinders (`cyl`) is assigned as metadata so that when a particular point is queried all points with the same number of cylinders are highlighted."}
+```{r link-intro, echo = FALSE, fig.cap = "(ref:link-intro)"}
 include_vimeo("317134071")
 ```
 
@@ -64,7 +63,7 @@ base %>%
   add_lines(x = ~date, y = ~median)
 ```
 
-```{r txmissing, echo = FALSE, fig.cap = "Graphical query of housing prices in various Texas cities. The query in this particular example must be triggered through clicking directly on a time series."}
+```{r txmissing, echo = FALSE, fig.cap = "(ref:txmissing)"}
 include_vimeo("317137926")
 ```
 
@@ -80,7 +79,7 @@ time_series <- base %>%
   add_lines(x = ~date, y = ~median)
 ```
 
-```{r txmissing-modes, fig.cap = "Using a selectize dropdown widget to search for cities by name and comparing multiple cities through persistent selection with a dynamic highlighting color. See [this video](https://vimeo.com/202647310) for a demo and audio explanation."}
+```{r txmissing-modes, fig.cap = "(ref:txmissing-modes)", screenshot.alt = "images/txmissing-modes.png"}
 highlight(time_series, on = "plotly_click", selectize = TRUE, dynamic = TRUE, persistent = TRUE)
 ```
 
@@ -95,7 +94,7 @@ time_series <- base %>%
   add_lines(x = ~date, y = ~median)
 ```
 
-```{r txmissing-linked, fig.cap="Linking a dot-plot of the number of missing housing prices with the raw time series. By brushing markers on the dot-plot, their raw time series is highlighted on the right hand side."}
+```{r txmissing-linked, fig.cap="(ref:txmissing-linked)", screenshot.alt = "images/txmissing-linked.png"}
 # remember, `base` is a plotly object, but we can use dplyr verbs to
 # manipulate the input data 
 # (`txhousing` with `city` as a grouping and querying variable)
@@ -113,10 +112,9 @@ subplot(dot_plot, time_series, widths = c(0.2, 0.8), titleX = TRUE) %>%
   highlight(on = "plotly_selected", dynamic = TRUE, selectize = TRUE)
 ```
 
-
 How does **plotly** know to highlight the time series when markers in the dot-plot are selected? The answer lies in what data values are embedded in the graphical markers via `highlight_key()`. When 'South Padre Island' is selected, like in Figure \@ref(fig:pipeline-diagram), it seems as though the logic says to simply change the color of any graphical elements that match that value, but the logic behind **plotly**'s graphical queries is a bit more subtle and powerful. Another, more accurate, framing of the logic is to first imagine a linked database query being performed behind the scenes (as in Figure \@ref(fig:pipeline-diagram)). When 'South Padre Island' is selected, it first filters the aggregated dot-plot data down to just that one row, then it filters down the raw time-series data down to every row with 'South Padre Island' as a city. The drawing logic will then call [`Plotly.addTrace()`](https://plot.ly/javascript/plotlyjs-function-reference/#plotlyaddtraces) with the newly filtered data which adds a new graphical layer representing the selection, allowing us to have finely-tuned control over the visual encoding of the data query.
 
-```{r pipeline-diagram, echo = FALSE, fig.cap = "A diagram of the graphical querying framework underlying Figure \\@ref(fig:txmissing-linked)."}
+```{r pipeline-diagram, echo = FALSE, fig.cap = "(ref:pipeline-diagram)"}
 knitr::include_graphics("images/pipeline.svg")
 ```
 
@@ -131,7 +129,7 @@ time_series <- base %>%
   add_lines(x = ~date, y = ~median)
 ```
 
-```{r txhousing-aggregates, fig.cap = "Linking house prices as a function of time with their probability density estimates."}
+```{r txhousing-aggregates, fig.cap = "(ref:txhousing-aggregates)", screenshot.alt = "images/txhousing-aggregates.png"}
 hist <- base %>% add_histogram(x = ~median, histnorm = "probability density")
 subplot(time_series, hist, nrows = 2) %>%
   layout(barmode = "overlay", showlegend = FALSE) %>%
@@ -145,8 +143,6 @@ Figure \@ref(fig:txhousing-miss) is a fairly simple example of how **plotly**'s 
 -->
 
 This section is designed to help give you a foundation for leveraging graphical queries in your own work. Hopefully by now you have a rough idea what graphical queries are, how they can be useful, and how to create them with `highlight_key()` and `highlight()`. Understanding the basic idea is one thing, but applying it effectively to new problems is another thing entirely. To help spark your imagination and demonstrate what's possible, Section \@ref(querying-examples) has numerous subsections each with numerous examples of graphical queries in action. 
-
-
 
 
 ## Highlight versus filter events {#filter}
@@ -187,7 +183,7 @@ select <- highlight(
 bscols(filter, select)
 ```
 
-```{r filter-highlight, echo = FALSE, fig.cap = "Comparing filter to highlight events. Filter events completely remove existing marks and rescales axes to the remaining data."}
+```{r filter-highlight, echo = FALSE, fig.cap = "(ref:filter-highlight)"}
 include_vimeo("307598256")
 ```
 
@@ -209,7 +205,7 @@ bscols(
 )
 ```
 
-```{r multiple-filter-widgets, echo=FALSE, fig.cap="Filtering on multiple variables."}
+```{r multiple-filter-widgets, echo=FALSE, fig.cap="(ref:multiple-filter-widgets)"}
 include_vimeo("307598347")
 ```
 
@@ -235,7 +231,7 @@ bscols(
 )
 ```
 
-```{r plotly-leaflet-filter, echo=FALSE, fig.cap="Linking **plotly** and **leaflet** through both **filter** and **highlight** events."}
+```{r plotly-leaflet-filter, echo=FALSE, fig.cap="(ref:plotly-leaflet-filter)"}
 include_vimeo("307597495")
 ```
 
@@ -255,7 +251,7 @@ p <- plot_ly(g) %>%
 bscols(continent_filter, p, widths = 12)
 ```
 
-```{r gapminder-filter-highlight, echo=FALSE, fig.cap="Combining filtering and highlighting with non-unique querying variables"}
+```{r gapminder-filter-highlight, echo=FALSE, fig.cap="(ref:gapminder-filter-highlight)"}
 include_vimeo("307598672")
 ```
 
@@ -296,7 +292,7 @@ gg <- ggplot(g, aes(gdpPercap, lifeExp, color = continent, frame = year)) +
 highlight(ggplotly(gg), "plotly_hover")
 ```
 
-```{r gapminder-highlight-animation, echo = FALSE, fig.cap = "Highlighting the relationship between GDP per capita and life expectancy in the Americas and tracking that relationship through several decades."}
+```{r gapminder-highlight-animation, echo = FALSE, fig.cap = "(ref:gapminder-highlight-animation)"}
 include_vimeo("307789187")
 ```
 
@@ -306,7 +302,7 @@ For example, in Figure \@ref(fig:animation-gapminder), countries below the 50th 
 
 The `gapminder` data does not include a measure of population density, but the `gap` dataset (included with the **plotlyBook** R package) adds a column containing the population per square kilometer (`popDen`), which helps implement Figure \@ref(fig:animation-gapminder). In order to link the animated layers (i.e., red points), we need another version of `gap` that marks the country variable as the link between the plots (`gapKey`).
 
-```{r, eval = FALSE, include = knitr:::is_html_output()}
+```r
 data(gap, package = "plotlyBook")
 
 gapKey <- highlight_key(gap, ~country)
@@ -329,7 +325,7 @@ subplot(p1, p2, nrows = 1, widths = c(0.3, 0.7), titleX = TRUE) %>%
   highlight("plotly_selected", color = "blue", opacityDim = 1, hoverinfo = "none")
 ```
 
-```{r animation-gapminder, echo = FALSE, fig.cap = "Comparing the evolution in the relationship between per capita GDP and life expectancy in countries with large populations (red) and small populations (blue)."}
+```{r animation-gapminder, echo = FALSE, fig.cap = "(ref:animation-gapminder)"}
 include_vimeo("307789070")
 ```
 

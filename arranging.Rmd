@@ -9,7 +9,7 @@ Ideally, when displaying multiple related data views, they are linked through an
 
 ## Arranging plotly objects
 
-The `subplot()` function provides a flexible interface for merging multiple **plotly** objects into a single object. It is more flexible than most trellis display frameworks (e.g., **ggplot2**'s `facet_wrap()`) as you don't have to condition on a value of common variable in each display [@trellis]. Its capabilities and interface is similar to the `grid.arrange()` function from the **gridExtra** package, which allows you to arrange multiple **grid** grobs in a single view, effectively providing a way to arrange (possibly unrelated)  **ggplot2** and/or **lattice** plots in a single view [@RCore]; [@gridExtra]; [@lattice]. Figure \@ref(fig:subplot-simple) shows the most simple way to use `subplot()` which is to directly supply plotly objects.
+The `subplot()` function provides a flexible interface for merging multiple **plotly** objects into a single object. It is more flexible than most trellis display frameworks (e.g., **ggplot2**'s `facet_wrap()`) as you don't have to condition on a value of common variable in each display [@trellis]. Its capabilities and interface are similar to the `grid.arrange()` function from the **gridExtra** package, which allows you to arrange multiple **grid** grobs in a single view, effectively providing a way to arrange (possibly unrelated)  **ggplot2** and/or **lattice** plots in a single view [@RCore]; [@gridExtra]; [@lattice]. Figure \@ref(fig:subplot-simple) shows the most simple way to use `subplot()` which is to directly supply plotly objects.
 
 ```r
 library(plotly)
@@ -20,7 +20,8 @@ p2 <- plot_ly(economics, x = ~date, y = ~uempmed) %>%
 subplot(p1, p2)
 ```
 
-```{r subplot-simple, echo=FALSE, fig.cap="The most basic use of `subplot()` to merge multiple plotly objects into a single plotly object."}
+
+```{r subplot-simple, echo=FALSE, fig.cap="(ref:subplot-simple)"}
 knitr::include_graphics("images/subplot-simple.svg")
 ```
 
@@ -35,13 +36,13 @@ plots <- lapply(vars, function(var) {
 subplot(plots, nrows = length(plots), shareX = TRUE, titleX = FALSE)
 ```
 
-```{r economics, echo=FALSE, fig.cap = "Five different economic variables on different y scales and a common x scale. Zoom and pan events in the x-direction are synchronized across plots."}
+```{r economics, echo=FALSE, fig.cap = "(ref:economics)"}
 knitr::include_graphics("images/economics.svg")
 ```
 
 Conceptually, `subplot()` provides a way to place a collection of plots into a table with a given number of rows and columns. The number of rows (and, by consequence, the number of columns) is specified via the `nrows` argument. By default each row/column shares an equal proportion of the overall height/width, but as shown in Figure \@ref(fig:proportions) the default can be changed via the `heights` and `widths` arguments.
 
-```{r proportions, echo = FALSE, fig.cap = "A visual diagram of controling the `heights` of rows and `widths` of columns. In this particular example, there are 5 plots being placed in 2 rows and three columns.", out.width="50%"}
+```{r proportions, echo = FALSE, fig.cap = "(ref:proportions)", out.width="50%"}
 knitr::include_graphics("images/proportions.svg")
 ```
 
@@ -64,7 +65,7 @@ s <- subplot(
 layout(s, showlegend = FALSE)
 ```
 
-```{r joint, echo = FALSE, fig.cap = "A joint density plot with synchronized axes."}
+```{r joint, echo = FALSE, fig.cap = "(ref:joint)"}
 knitr::include_graphics("images/joint.svg")
 ```
 
@@ -84,7 +85,7 @@ subplot(
 )
 ```
 
-```{r recursive, echo = FALSE, fig.cap = "Recursive subplots."}
+```{r recursive, echo = FALSE, fig.cap = "(ref:recursive)"}
 knitr::include_graphics("images/recursive.svg")
 ```
 
@@ -116,13 +117,13 @@ subplot(
 )
 ```
 
-```{r map-subplot, echo = FALSE, fig.cap = "Multiple bar charts of US statistics by state in a subplot with a choropleth of population density"}
+```{r map-subplot, echo = FALSE, fig.cap = "(ref:map-subplot)"}
 knitr::include_graphics("images/map-subplot.svg")
 ```
 
 ### Other approaches & applications
 
-Using `subplot()` directly is not the _only_ to create multiple views of a dataset with **plotly**. In some special cases, like scatterplot matrices and generalized pair plots, we can take advantage of some special methods designed specifically for these use cases.
+Using `subplot()` directly is not the _only_ way to create multiple views of a dataset with **plotly**. In some special cases, like scatterplot matrices and generalized pair plots, we can take advantage of some special methods designed specifically for these use cases.
 
 #### Scatterplot matrices
 
@@ -134,7 +135,7 @@ dims <- purrr::map2(dims, names(dims), ~list(values = .x, label = .y))
 plot_ly(type = "splom", dimensions = setNames(dims, NULL), showupperhalf = FALSE, diagonal = list(visible = FALSE))
 ```
 
-```{r, echo = FALSE, fig.cap = "Linked brushing in a scatterplot matrix of the iris dataset."}
+```{r splom, echo = FALSE, fig.cap = "(ref:splom)"}
 include_vimeo("325081084")
 ```
 
@@ -151,13 +152,13 @@ class(pm)
 ggplotly(pm)
 ```
 
-```{r ggpairs, echo = FALSE, fig.cap = "A generalized pairs plot made via the `ggpairs()` function from the **GGally** package"}
+```{r ggpairs, echo = FALSE, fig.cap = "(ref:ggpairs)"}
 knitr::include_graphics("images/ggpairs.svg")
 ```
 
 As it turns out, **GGally** use `ggmatrix()` as a building block for other visualizations, like model diagnostic plots (`ggnostic()`). Sections \@ref(ggally-ggpairs) and \@ref(ggally-ggnostic) demonstrates how to leverage linked brushing in the `ggplotly()` versions of these plots.
 
-#### Trellis displays with `subplot()`
+#### Trellis displays with `subplot()` {#trellis-displays-subplot}
 
 It's true that **ggplot2**'s `facet_wrap()`/`facet_grid()` provides a simple way to create trellis displays, but for learning purposes, it can be helpful to learn how to implement a similar trellis display with `plot_ly()` and `subplot()`. Figure \@ref(fig:subplot-trellis) demonstrates one approach, which leverages `subplot()`'s ability to reposition annotations and shapes. Specifically, the `panel()` function below, which defines the visualization method to be applied to each `variable` in the `economics_long` dataset,  uses paper coordinates (i.e., graph coordinates on a normalized 0-1 scale) to place an annotation at the top-center of each panel as well as a rectangle shape behind the annotation. Note also the use of `ysizemode = 'pixel'` which gives the rectangle shape a fixed height (i.e., the reactangle height is always 16 pixels, regardless of the height of the trellis display).
 
@@ -200,7 +201,7 @@ economics_long %>%
   subplot(nrows = NROW(.), shareX = TRUE)
 ```
 
-```{r subplot-trellis, echo=FALSE, fig.cap = "Creating a trellis display with `subplot()`."}
+```{r subplot-trellis, echo=FALSE, fig.cap = "(ref:subplot-trellis)"}
 knitr::include_graphics("images/subplot-trellis.svg")
 ```
 
@@ -218,7 +219,7 @@ gg2 <- ggplot(economics_long, aes(factor(1), value)) + geom_violin() +
 subplot(gg1, gg2)
 ```
 
-```{r ggplot2-subplots, echo = FALSE, fig.cap = "Arranging multiple faceted ggplot2 plots into a plotly subplot."}
+```{r ggplot2-subplots, echo = FALSE, fig.cap = "(ref:ggplot2-subplots)"}
 knitr::include_graphics("images/ggplot2-subplots.svg")
 ```
 
@@ -237,7 +238,9 @@ Although **flexdashboard** is a really excellent way to arrange web-based conten
 
 Figure \@ref(fig:flexdashboard-ggplotly) provides an example of embedding `ggplotly()` inside **flexdashboard** [@flexdashboard]. Since **flexdashboard** is an **rmarkdown** template, it automatically comes with many of things that make **rmarkdown** great: ability to produce standalone HTML, integration with other languages, and thoughtful integration with RStudio products like Connect. There are many other things to like about **flexdashboard**, including lots of easy-to-use theming options, multiple pages, storyboards, and even **shiny** integration. Explaining how the **flexdashboard** package actually works is beyond the scope of this book, but you can visit the website for documentation and more examples <https://rmarkdown.rstudio.com/flexdashboard/>.
 
-```{r flexdashboard-ggplotly, echo = FALSE, fig.link="https://plotly-r.com/flexdashboard.html", fig.cap = "An example of embedding `ggplotly()` graphs inside **flexdashboard**. See here for the interactive dashboard <https://plotly-r.com/flexdashboard.html>"}
+
+
+```{r flexdashboard-ggplotly, echo = FALSE, fig.link="https://plotly-r.com/flexdashboard.html", fig.cap = "(ref:flexdashboard-ggplotly)"}
 knitr::include_graphics("images/flexdashboard.png")
 ```
 
@@ -260,7 +263,7 @@ fluidPage(
 )
 ```
 
-```{r fluid, echo = FALSE,  fig.cap = "Arranging multiple htmlwidgets with `fluidPage()` from the **shiny** package."}
+```{r fluid, echo = FALSE,  fig.cap = "(ref:fluid)"}
 knitr::include_graphics("images/fluid.png")
 ```
 
@@ -270,7 +273,7 @@ It's also worth noting another, somewhat similar, yet more succinct, interface t
 bscols(p, bscols(p, p), widths = 12)
 ```
 
-Bootstrap is much more than just it's grid layout system, so beware -- using either of these approaches will impose Bootstrap's styling rules on other content in your webpage. If you are using another CSS framework for styling or just want to reduce the size of dependencies in your webpage, consider working with CSS flexbox instead of Bootstrap.
+Bootstrap is much more than just its grid layout system, so beware -- using either of these approaches will impose Bootstrap's styling rules on other content in your webpage. If you are using another CSS framework for styling or just want to reduce the size of dependencies in your webpage, consider working with CSS flexbox instead of Bootstrap.
 
 ### CSS flexbox
 
@@ -290,36 +293,8 @@ browsable(div(
 ))
 ```
 
-```{r flexbox, echo = FALSE,  fig.cap = "Arranging multiple htmlwidgets with CSS flexbox."}
+```{r flexbox, echo = FALSE,  fig.cap = "(ref:flexbox)"}
 knitr::include_graphics("images/flexbox.png")
 ```
 
 From the code example in Figure \@ref(fig:flexbox), you might notice that `display: flex; flex-wrap: wrap` is quite similar to Bootstrap grid layout system. The main difference is that, instead of specifying widths in terms of 12 columns, you have more flexibility with how to size things, as well as how you handle extra space. Here, in Figure \@ref(fig:flexbox) I've used widths that are relative to the page width, but you could also use fixed widths (using fixed widths, however, is generally frowned upon). For those that would like to learn about more details about CSS flexbox, see <https://css-tricks.com/snippets/css/a-guide-to-flexbox/>.
-
-
-## Navigating many views
-
-Sometimes you have to consider way more views than you can possibly digest visually. In Chapters \@ref(graphical-queries) and \@ref(linking-server-side), we explore some useful techniques for implementing the popular visualization mantra from @details-on-demand: 
-
-> "Overview first, zoom and filter, then details-on-demand."
-
-In fact, Figure \@ref(fig:shiny-corrplot) from section \@ref(scoping-events) provides an example of this mantra put into practice. The correlation matrix provides an overview of the correlation structure between all the variables, and by clicking a cell, it populates a scatterplot between those two specific variables. This works fine with tens or hundreds or variables, but once you have thousands or tens-of-thousands of variables, this technique begins to fall apart. At that point, you may be better off defining a range of correlations that you're interested in exploring, or better yet, incorporating another measure (e.g., a test statistic), then focusing on views that match a certain criteria.
-
-@scagnostics-tukey first described the idea of using quantitative measurements of scatterplot characteristics (e.g. correlation) to help guide exploratory analysis of many variables. This idea, coined scagnostics (short for scatterplot diagnostics), has since been made explicit, and many measures have been explored, even measures specifically useful for time-series have been proposed [@Wilkinson:2005b]; [@Wilkinson:2008]; [@Wilkinson:2012]. Probably the most universally useful scagnostic is the outlying measure which helps identify projections of the data space that contain outlying observations. Of course, the idea of associating quantitative measures with a graphical display of data can be generalized to include more that just scatterplots, and in this more general case, these measures are sometimes referred to as cognostics.
-
-The same problems and principles that inspired scagnostics has inspired work on more general divide & recombine technique(s) for working with navigating through many statistical artifacts [@divide-recombine]; [@RHIPE], including visualizations [@trelliscope]. The **trelliscope** package provides a system for computing arbitrary cognostics on each panel of a trellis display as well as an interactive graphical user interface for defining (and navigating through) interesting panels based on those cognostics [@trelliscope-pkg]. This system also allows users to define the graphical method for displaying each panel, so **plotly** graphs can easily be embedded. The **trelliscope** package is currently built upon **shiny**, but as Figure \@ref(fig:trelliscope) demonstrates, the **trelliscopejs** package provides lower-level tools that allow one to create trelliscope displays without **shiny** [@trelliscopejs].
-
-```{r trelliscope-fake, eval = FALSE}
-library(trelliscopejs)
-
-qplot(cty, hwy, data = mpg) +
-  xlim(7, 37) + ylim(9, 47) + theme_bw() +
-  facet_trelliscope(
-    ~ manufacturer + class, nrow = 2, ncol = 4, 
-    as_plotly = TRUE, plotly_args = list(dynamicTicks = T)
-  )
-```
-
-```{r trelliscope, echo = FALSE, fig.cap = "Using plotly within a trelliscope"}
-knitr::include_graphics("images/trelliscope.png")
-```

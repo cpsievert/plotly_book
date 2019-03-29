@@ -18,14 +18,13 @@ getS3method("to_basic", "GeomLine")
 If you have implemented a custom geom, say `GeomCustom`, rest assured that the data passed to `to_basic()` will be of class `GeomCustom` when `ggplotly()` is called on a plot with your geom. And assuming `GeomCustom` may be reduced to another lower-level geom support by plotly, a `to_basic.GeomCustom()` method that transforms the data into a form suitable for that lower-level geom is sufficient for adding support. Moreover, note that the data passed to `to_basic()` is essentially the last form of the data _before_ the render stage and _after_ statistics have been performed. This makes it trivial to add support for geoms like `GeomXspline` from the __ggalt__ package.
 
 ```{r}
-# devtools::install_github("hrbrmstr/ggalt")
 library(ggalt)
 getS3method("to_basic", "GeomXspline")
 ```
 
 As shown in Figure \@ref(fig:xspline), once the conversion has been provided. Users can call `ggplotly()` on the ggplot object containing the custom geom just like any other ggplot object.
 
-```{r xspline, error = TRUE, fig.cap = "Converting GeomXspline from the **ggalt** package to plotly.js via `ggplotly()`.", screenshot.alt = "screenshots/xspline"}
+```r
 # example from `help(geom_xspline)`
 set.seed(1492)
 dat <- data.frame(
@@ -38,6 +37,10 @@ p <- ggplot(dat, aes(x, y, group = group, color = factor(group))) +
   geom_smooth(se = FALSE, linetype = "dashed", size = 0.5) +
   geom_xspline(spline_shape = 1, size = 0.5)
 ggplotly(p) %>% hide_legend()
+```
+
+```{r xspline, echo = FALSE, fig.cap = "(ref:xspline)"}
+knitr::include_graphics("images/xspline.svg")
 ```
 
 In more complicated cases, where your custom geom can not be converted to a lower level geom, a custom method for the `geom2trace()` generic is required (`methods(geom2trace)` lists all the basic geoms that we natively support). This method should involve a conversion from a data frame to a list-like object conforming to the [plotly.js figure reference](https://plot.ly/r/reference).
@@ -56,7 +59,7 @@ JavaScript graphing libraries usually have strong requirements about the JSON st
 list(x = 1, y = 1, name = "A point") => {x: [1], y: [1], name: "A point"}
 ```
 
-Thankfully plotly.js provides a plot schema which declares types for each attribute that __plotly__ leverages internally. If necessary, __plotly__ tries to coerce each attribute to its expected type at print time, and also searches for any unsupported attributes that may have been specified by the user (and throws a warning that the attribute will be ignored). This helps 
+Thankfully plotly.js provides a plot schema which declares types for each attribute that __plotly__ leverages internally. If necessary, __plotly__ tries to coerce each attribute to its expected type at print time, and also searches for any unsupported attributes that may have been specified by the user (and throws a warning that the attribute will be ignored). This helps informs users when they've mis-specified plotly.js attributes from R.
 
 <!-- TODO:
 * using R's data types to provide smart defaults that simply aren't possible with JSON

@@ -16,7 +16,7 @@ add_paths(p)
 add_lines(p)
 ```
 
-```{r scatter-intro, echo = FALSE, fig.cap="The difference between `add_paths()` and `add_lines()`: the top panel connects observations according to the ordering of `psavert` (personal savings rate), whereas the bottom panel connects observations according to the ordering of `x` (the date)."}
+```{r scatter-intro, echo = FALSE, fig.cap="(ref:scatter-intro)"}
 knitr::include_graphics("images/scatter-intro.svg")
 ```
 
@@ -43,7 +43,7 @@ plot_ly(econ, x = ~mnth, y = ~uempmed) %>%
 #   add_lines(split = ~yr, color = I("black"))
 ```
 
-```{r scatter-lines, echo = FALSE, fig.cap="Drawing multiple lines using **dplyr** groups (top panel) versus a categorical `color` mapping (bottom panel). Comparatively speaking, the bottom panel has more interactive capabilites (e.g., legend-based filtering and multiple tooltips), but it does not scale as well with many lines."}
+```{r scatter-lines, echo = FALSE, fig.cap="(ref:scatter-lines)"}
 include_vimeo("316679591")
 ```
 
@@ -67,7 +67,7 @@ plot_ly() %>%
  layout(xaxis = list(range = c(3, 8)))
 ```
 
-```{r tooltip-praise, echo = FALSE, fig.cap="Using the generic `add_trace()` function to render markers, lines, and text in a single scatter trace. This `add_trace()` function, as well as any `add_*()` function allows you to directly specify plotly.js attributes."}
+```{r , echo = FALSE, fig.cap="(ref:tooltip-praise)"}
 knitr::include_graphics("images/tooltip-praise.png")
 ```
 
@@ -82,7 +82,7 @@ If you are new to plotly.js, I recommend taking a bit of time to look through th
 schema()
 ```
 
-```{r schema, echo = FALSE, fig.cap="Using `schema()` function to traverse through the attributes available to a given trace type (e.g., scatter)", out.width = "40%"}
+```{r schema, echo = FALSE, fig.cap="(ref:schema)", out.width = "40%"}
 knitr::include_graphics("images/schema.png")
 ```
 
@@ -104,7 +104,9 @@ subplot(
 )
 ```
 
-```{r scatterplots, echo = FALSE, fig.cap = "Combating overplotting in a scatterplot with alpha blending."}
+
+
+```{r scatterplots, echo = FALSE, fig.cap = "(ref:scatterplots)"}
 knitr::include_graphics("images/scatterplots.svg")
 ```
 
@@ -121,7 +123,7 @@ subplot(
 )
 ```
 
-```{r color-types, echo = FALSE, fig.cap = "Variations on a numeric color mapping."}
+```{r color-types, echo = FALSE, fig.cap = "(ref:color-types)"}
 knitr::include_graphics("images/color-types.svg")
 ```
 
@@ -141,7 +143,7 @@ subplot(
 ) %>% hide_legend()
 ```
 
-```{r color-numeric, echo = FALSE, fig.cap = "Three variations on a numeric color mapping. "}
+```{r color-numeric, echo = FALSE, fig.cap = "(ref:color-numeric)"}
 knitr::include_graphics("images/color-numeric.svg")
 ```
 
@@ -156,7 +158,7 @@ subplot(
 ) %>% hide_legend()
 ```
 
-```{r color-discrete, echo = FALSE, fig.cap = "Three variations on a discrete color mapping."}
+```{r color-discrete, echo = FALSE, fig.cap = "(fig:color-discrete)"}
 knitr::include_graphics("images/color-discrete.svg")
 ```
 
@@ -166,7 +168,7 @@ As introduced in Figure \@ref(fig:intro-range), color codes can be specified man
 add_markers(p, color = I("black"))
 ```
 
-```{r color-manual, echo = FALSE, fig.cap = "Setting a fixed color directly using `I()`."}
+```{r color-manual, echo = FALSE, fig.cap = "(ref:color-manual)"}
 knitr::include_graphics("images/color-manual.svg")
 ```
 
@@ -191,7 +193,7 @@ subplot(
 )
 ```
 
-```{r symbol-factor, echo = FALSE, fig.cap = "Mapping symbol to a numeric variable (left panel) and a factor (right panel)."}
+```{r symbol-factor, echo = FALSE, fig.cap = "(ref:symbol-factor)"}
 knitr::include_graphics("images/symbol-factor.svg")
 ```
 
@@ -204,7 +206,7 @@ subplot(
 )
 ```
 
-```{r symbol-factor-range, echo = FALSE, fig.cap = "Specifying the visual range of `symbols`."}
+```{r symbol-factor-range, echo = FALSE, fig.cap = "(ref:symbol-factor-range)"}
 knitr::include_graphics("images/symbol-factor-range.svg")
 ```
 
@@ -215,7 +217,7 @@ plot_ly(mpg, x = ~cty, y = ~hwy) %>%
   add_markers(symbol = I(18), alpha = 0.5)
 ```
 
-```{r symbol-factor-manual, echo = FALSE, fig.cap = "Setting a fixed symbol directly using `I()`."}
+```{r symbol-factor-manual, echo = FALSE, fig.cap = "(ref:symbol-factor-manual)"}
 knitr::include_graphics("images/symbol-factor-manual.svg")
 ```
 
@@ -230,7 +232,7 @@ plot_ly(mpg, x = ~cty, y = ~hwy) %>%
   add_markers(symbol = I(18), alpha = 0.5, stroke = I("black"), span = I(1))
 ```
 
-```{r stroke-manual, echo = FALSE, fig.cap = "Using `stroke` and `span` to control the outline color as well as the width of that outline."}
+```{r stroke-manual, echo = FALSE, fig.cap = "(ref:stroke-manual)"}
 knitr::include_graphics("images/symbol-factor-range.svg")
 ```
 
@@ -246,7 +248,7 @@ subplot(
 )
 ```
 
-```{r sizes, echo = FALSE, fig.cap = "Controlling the size range via `sizes` (measured in pixels)."}
+```{r sizes, echo = FALSE, fig.cap = "(ref:sizes)"}
 knitr::include_graphics("images/sizes.svg")
 ```
 
@@ -287,7 +289,7 @@ tidy(m) %>%
   )
 ```
 
-```{r coefplot, echo = FALSE, fig.cap = "A coefficient plot."}
+```{r coefplot, echo = FALSE, fig.cap = "(ref:coefplot)"}
 knitr::include_graphics("images/coefplot.png")
 ```
 
@@ -313,7 +315,7 @@ plot_ly(tx5, x = ~date, y = ~median) %>%
   add_lines(linetype = ~city)
 ```
 
-```{r linetypes, echo = FALSE, fig.cap = "Using `color` and/or `linetype` to differentiate groups of lines."}
+```{r linetypes, echo = FALSE, fig.cap = "(ref:linetypes)"}
 knitr::include_graphics("images/linetypes.svg")
 ```
 
@@ -332,7 +334,7 @@ plot_ly(tx5, x = ~date, y = ~median) %>%
   add_lines(linetype = ~city, linetypes = ltys)
 ```
 
-```{r linetypes-manual, echo = FALSE, fig.cap = "Providing a named character vector to linetypes in order to control exactly what linetype gets mapped to which city."}
+```{r linetypes-manual, echo = FALSE, fig.cap = "(ref:linetypes-manual)"}
 knitr::include_graphics("images/linetypes-manual.svg")
 ```
 
@@ -386,7 +388,7 @@ plot_ly(gdp) %>%
   config(edits = list(annotationPosition = TRUE))
 ```
 
-```{r slopegraph, echo = FALSE, fig.cap = "Interactively editing the label positioning in a slopegraph."}
+```{r slopegraph, echo = FALSE, fig.cap = "(ref:slopegraph)"}
 include_vimeo("317086612")
 ```
 
@@ -419,10 +421,9 @@ mpg %>%
   layout(xaxis = list(title = "Miles per gallon"))
 ```
 
-```{r dumbell, echo = FALSE, fig.cap = "A dumbell chart of mile per gallon city vs highway by model of car."}
+```{r dumbell, echo = FALSE, fig.cap = "(ref:dumbell)"}
 knitr::include_graphics("images/dumbell.svg")
 ```
-
 
 #### Candlestick
 
@@ -445,7 +446,7 @@ plot_ly(dat, x = ~date, xend = ~date, color = ~Close > Open,
   rangeslider()
 ```
 
-```{r candlestick, echo = FALSE, fig.cap = "A candlestick chart built out of segments"}
+```{r candlestick, echo = FALSE, fig.cap = "(ref:candlestick)"}
 knitr::include_graphics("images/candlestick.svg")
 ```
 
@@ -464,7 +465,7 @@ for (k in kerns) {
 p
 ```
 
-```{r densities, echo = FALSE, fig.cap = "Various kernel density estimates."}
+```{r densities, echo = FALSE, fig.cap = "(ref:densities)"}
 knitr::include_graphics("images/densities.svg")
 ```
 
@@ -503,7 +504,7 @@ subplot(
 ) %>% hide_legend()
 ```
 
-```{r pcp-common, echo = FALSE, fig.cap = "Parallel coordinates plots of the Iris dataset. The top panel shows all variables on a common scale. The middle panel scales each variable to have mean of 0 and standard deviation of 1. In the bottom panel, each variable is scaled to have a minimum of 0 and a maximum of 1."}
+```{r pcp-common, echo = FALSE, fig.cap = "(ref:pcp-common)"}
 knitr::include_graphics("images/pcp-common.svg")
 ```
 
@@ -526,7 +527,7 @@ base %>%
               color = I("red"), data = maps::canada.cities)
 ```
 
-```{r map-canada, echo = FALSE, fig.cap = "Using `add_polygons()` to make a map of Canada and major Canadian cities via data provided by the **maps** package [@maps]."}
+```{r map-canada, echo = FALSE, fig.cap = "(ref:map-canada)"}
 knitr::include_graphics("images/map-canada.png")
 ```
 
@@ -536,7 +537,7 @@ As discussion surrounding Figure \@ref(fig:split-color) points out, scatter-base
 add_polygons(base, split = ~subregion, hoveron = "fills")
 ```
 
-```{r map-canada-split, echo = FALSE, fig.cap = "Using `split` to render polygons with different fills and interactive properties."}
+```{r map-canada-split, echo = FALSE, fig.cap = "(ref:map-canada-split)"}
 knitr::include_graphics("images/map-canada-split.png")
 ```
 
@@ -554,6 +555,6 @@ broom::augment(m) %>%
   add_lines(y = ~.fitted, color = I("steelblue"))
 ```
 
-```{r, broom-lm, echo = FALSE, fig.cap = "Plotting fitted values and uncertainty bounds of a linear model via the **broom** package."}
+```{r broom-lm, echo = FALSE, fig.cap = "(ref:broom-lm)"}
 knitr::include_graphics("images/broom-lm.svg")
 ```

@@ -25,7 +25,7 @@
 <meta name="author" content="Carson Sievert">
 
 
-<meta name="date" content="2019-03-20">
+<meta name="date" content="2019-03-27">
 
   <meta name="viewport" content="width=device-width, initial-scale=1">
   <meta name="apple-mobile-web-app-capable" content="yes">
@@ -208,9 +208,11 @@ code span.wa { color: #60a0b0; font-weight: bold; font-style: italic; } /* Warni
 <li class="chapter" data-level="7.3" data-path="frequencies-2D.html"><a href="frequencies-2D.html#categorical-axes"><i class="fa fa-check"></i><b>7.3</b> Categorical axes</a></li>
 </ul></li>
 <li class="chapter" data-level="8" data-path="d-charts.html"><a href="d-charts.html"><i class="fa fa-check"></i><b>8</b> 3D charts</a><ul>
-<li class="chapter" data-level="8.0.1" data-path="d-charts.html"><a href="d-charts.html#markers-and-lines"><i class="fa fa-check"></i><b>8.0.1</b> Markers and lines</a></li>
-<li class="chapter" data-level="8.0.2" data-path="d-charts.html"><a href="d-charts.html#d-paths"><i class="fa fa-check"></i><b>8.0.2</b> 3D paths</a></li>
-<li class="chapter" data-level="8.0.3" data-path="d-charts.html"><a href="d-charts.html#d-surfaces"><i class="fa fa-check"></i><b>8.0.3</b> 3D surfaces</a></li>
+<li class="chapter" data-level="8.1" data-path="d-charts.html"><a href="d-charts.html#markers-1"><i class="fa fa-check"></i><b>8.1</b> Markers</a></li>
+<li class="chapter" data-level="8.2" data-path="d-charts.html"><a href="d-charts.html#paths"><i class="fa fa-check"></i><b>8.2</b> Paths</a></li>
+<li class="chapter" data-level="8.3" data-path="d-charts.html"><a href="d-charts.html#lines-1"><i class="fa fa-check"></i><b>8.3</b> Lines</a></li>
+<li class="chapter" data-level="8.4" data-path="d-charts.html"><a href="d-charts.html#axes"><i class="fa fa-check"></i><b>8.4</b> Axes</a></li>
+<li class="chapter" data-level="8.5" data-path="d-charts.html"><a href="d-charts.html#surfaces"><i class="fa fa-check"></i><b>8.5</b> Surfaces</a></li>
 </ul></li>
 <li class="part"><span><b>II Publishing views</b></span></li>
 <li class="chapter" data-level="9" data-path="introduction-1.html"><a href="introduction-1.html"><i class="fa fa-check"></i><b>9</b> Introduction</a></li>
@@ -232,7 +234,6 @@ code span.wa { color: #60a0b0; font-weight: bold; font-style: italic; } /* Warni
 <li class="chapter" data-level="13.2.2" data-path="arranging-views.html"><a href="arranging-views.html#bootstrap-grid-layout"><i class="fa fa-check"></i><b>13.2.2</b> Bootstrap grid layout</a></li>
 <li class="chapter" data-level="13.2.3" data-path="arranging-views.html"><a href="arranging-views.html#css-flexbox"><i class="fa fa-check"></i><b>13.2.3</b> CSS flexbox</a></li>
 </ul></li>
-<li class="chapter" data-level="13.3" data-path="arranging-views.html"><a href="arranging-views.html#navigating-many-views"><i class="fa fa-check"></i><b>13.3</b> Navigating many views</a></li>
 </ul></li>
 <li class="chapter" data-level="14" data-path="animating-views.html"><a href="animating-views.html"><i class="fa fa-check"></i><b>14</b> Animating views</a><ul>
 <li class="chapter" data-level="14.1" data-path="animating-views.html"><a href="animating-views.html#animation-api"><i class="fa fa-check"></i><b>14.1</b> Animation API</a></li>
@@ -289,7 +290,10 @@ code span.wa { color: #60a0b0; font-weight: bold; font-style: italic; } /* Warni
 </ul></li>
 <li class="chapter" data-level="20" data-path="js-event-handlers.html"><a href="js-event-handlers.html"><i class="fa fa-check"></i><b>20</b> Adding custom event handlers</a></li>
 <li class="chapter" data-level="21" data-path="supplying-custom-data.html"><a href="supplying-custom-data.html"><i class="fa fa-check"></i><b>21</b> Supplying custom data</a></li>
-<li class="chapter" data-level="22" data-path="client-side.html"><a href="client-side.html"><i class="fa fa-check"></i><b>22</b> Leveraging web technologies from R</a></li>
+<li class="chapter" data-level="22" data-path="client-side.html"><a href="client-side.html"><i class="fa fa-check"></i><b>22</b> Leveraging web technologies from R</a><ul>
+<li class="chapter" data-level="22.1" data-path="client-side.html"><a href="client-side.html#web-infrastructure"><i class="fa fa-check"></i><b>22.1</b> Web infrastructure</a></li>
+<li class="chapter" data-level="22.2" data-path="client-side.html"><a href="client-side.html#react"><i class="fa fa-check"></i><b>22.2</b> Modern JS &amp; React</a></li>
+</ul></li>
 <li class="part"><span><b>VI Various special topics</b></span></li>
 <li class="chapter" data-level="23" data-path="is-plotly-free-secure.html"><a href="is-plotly-free-secure.html"><i class="fa fa-check"></i><b>23</b> Is plotly free &amp; secure?</a></li>
 <li class="chapter" data-level="24" data-path="controlling-tooltips.html"><a href="controlling-tooltips.html"><i class="fa fa-check"></i><b>24</b> Controlling tooltips</a><ul>
@@ -352,15 +356,16 @@ code span.wa { color: #60a0b0; font-weight: bold; font-style: italic; } /* Warni
 <span class="kw">data</span>(diamonds, <span class="dt">package =</span> <span class="st">&quot;ggplot2&quot;</span>)
 diamonds
 <span class="co">#&gt; # A tibble: 53,940 x 10</span>
-<span class="co">#&gt;   carat cut       color clarity depth table price     x     y     z</span>
-<span class="co">#&gt;   &lt;dbl&gt; &lt;ord&gt;     &lt;ord&gt; &lt;ord&gt;   &lt;dbl&gt; &lt;dbl&gt; &lt;int&gt; &lt;dbl&gt; &lt;dbl&gt; &lt;dbl&gt;</span>
-<span class="co">#&gt; 1 0.23  Ideal     E     SI2      61.5    55   326  3.95  3.98  2.43</span>
-<span class="co">#&gt; 2 0.21  Premium   E     SI1      59.8    61   326  3.89  3.84  2.31</span>
-<span class="co">#&gt; 3 0.23  Good      E     VS1      56.9    65   327  4.05  4.07  2.31</span>
-<span class="co">#&gt; 4 0.290 Premium   I     VS2      62.4    58   334  4.2   4.23  2.63</span>
-<span class="co">#&gt; 5 0.31  Good      J     SI2      63.3    58   335  4.34  4.35  2.75</span>
-<span class="co">#&gt; 6 0.24  Very Good J     VVS2     62.8    57   336  3.94  3.96  2.48</span>
-<span class="co">#&gt; # … with 5.393e+04 more rows</span></code></pre>
+<span class="co">#&gt;   carat cut   color clarity depth table price     x</span>
+<span class="co">#&gt;   &lt;dbl&gt; &lt;ord&gt; &lt;ord&gt; &lt;ord&gt;   &lt;dbl&gt; &lt;dbl&gt; &lt;int&gt; &lt;dbl&gt;</span>
+<span class="co">#&gt; 1 0.23  Ideal E     SI2      61.5    55   326  3.95</span>
+<span class="co">#&gt; 2 0.21  Prem… E     SI1      59.8    61   326  3.89</span>
+<span class="co">#&gt; 3 0.23  Good  E     VS1      56.9    65   327  4.05</span>
+<span class="co">#&gt; 4 0.290 Prem… I     VS2      62.4    58   334  4.2 </span>
+<span class="co">#&gt; 5 0.31  Good  J     SI2      63.3    58   335  4.34</span>
+<span class="co">#&gt; 6 0.24  Very… J     VVS2     62.8    57   336  3.94</span>
+<span class="co">#&gt; # … with 5.393e+04 more rows, and 2 more variables:</span>
+<span class="co">#&gt; #   y &lt;dbl&gt;, z &lt;dbl&gt;</span></code></pre>
 <p>If we assign variable names (e.g., <code>cut</code>, <code>clarity</code>, etc) to visual properties (e.g., <code>x</code>, <code>y</code>, <code>color</code>, etc) within <code>plot_ly()</code>, as done in Figure <a href="overview.html#fig:intro-defaults">2.1</a>, it tries to find a sensible geometric representation of that information for us. Shortly we’ll cover how to specify these geometric representations (as well as other visual encodings) to create different kinds of charts.</p>
 <pre class="sourceCode r"><code class="sourceCode r"><span class="co"># create three visualizations of the diamonds dataset</span>
 <span class="kw">plot_ly</span>(diamonds, <span class="dt">x =</span> <span class="op">~</span>cut)
@@ -538,7 +543,7 @@ FIGURE 2.9: Frequency polygons of diamond price by diamond clarity. This visuali
 FIGURE 2.10: Diamond price by clarity and cut.
 </p>
 </div>
-<p>In addition to supporting most of the ‘core’ <strong>ggplot2</strong> API, <code>ggplotly()</code> can automatically convert any <strong>ggplot2</strong> extension packages that return a ‘standard’ <strong>ggplot2</strong> object. By standard, I mean that the object is comprised of ‘core’ <strong>ggplot2</strong> data structures and not the result of custom geoms.<a href="#fn9" class="footnote-ref" id="fnref9"><sup>9</sup></a> Some great examples of R packages that extend <strong>ggplot2</strong> using core data structures are <strong>ggforce</strong>, <strong>naniar</strong>, and <strong>GGally</strong> <span class="citation">(Pedersen <a href="#ref-ggforce" role="doc-biblioref">2019</a>)</span>; <span class="citation">(Tierney et al., <a href="#ref-naniar" role="doc-biblioref">n.d.</a>)</span>; <span class="citation">(Schloerke et al. <a href="#ref-GGally" role="doc-biblioref">2016</a>)</span>.</p>
+<p>In addition to supporting most of the ‘core’ <strong>ggplot2</strong> API, <code>ggplotly()</code> can automatically convert any <strong>ggplot2</strong> extension packages that return a ‘standard’ <strong>ggplot2</strong> object. By standard, I mean that the object is comprised of ‘core’ <strong>ggplot2</strong> data structures and not the result of custom geoms.<a href="#fn9" class="footnote-ref" id="fnref9"><sup>9</sup></a> Some great examples of R packages that extend <strong>ggplot2</strong> using core data structures are <strong>ggforce</strong>, <strong>naniar</strong>, and <strong>GGally</strong> <span class="citation">(Pedersen <a href="#ref-ggforce" role="doc-biblioref">2019</a>)</span>; <span class="citation">(Tierney et al. <a href="#ref-naniar" role="doc-biblioref">2018</a>)</span>; <span class="citation">(Schloerke et al. <a href="#ref-GGally" role="doc-biblioref">2016</a>)</span>.</p>
 <p>Figure <a href="overview.html#fig:geom-sina">2.11</a> demonstrates another way of visualizing the same information found in Figure <a href="overview.html#fig:freqpoly-facet">2.10</a> using <code>geom_sina()</code> from the <strong>ggforce</strong> package (instead of <code>geom_freqpoly()</code>). This visualization jitters the raw data within the density for each group – allowing us not only only see where the majority observations fall within a group, but also across all across all groups. By making this layer interactive, we can query individual points for more information and zoom into interesting regions. The second layer of Figure <a href="overview.html#fig:geom-sina">2.11</a> uses <strong>ggplot2</strong>’s <code>stat_summary()</code> to overlay a 95% confidence interval esimated via a bootstrap algorithm via the <strong>Hmisc</strong> package <span class="citation">(Harrell Jr, Charles Dupont, and others. <a href="#ref-Hmisc" role="doc-biblioref">2019</a>)</span>.</p>
 <pre class="sourceCode r"><code class="sourceCode r">p &lt;-<span class="st"> </span><span class="kw">ggplot</span>(diamonds, <span class="kw">aes</span>(<span class="dt">x =</span> clarity, <span class="dt">y =</span> <span class="kw">log</span>(price), <span class="dt">color =</span> clarity)) <span class="op">+</span>
 <span class="st">    </span>ggforce<span class="op">::</span><span class="kw">geom_sina</span>(<span class="dt">alpha =</span> <span class="fl">0.1</span>) <span class="op">+</span><span class="st"> </span>
@@ -634,7 +639,7 @@ This chapter demonstrates the rendering capabilities of `plot_ly()` through a se
 <p>Pedersen, Thomas Lin. 2019. <em>Ggforce: Accelerating ’Ggplot2’</em>. <a href="https://CRAN.R-project.org/package=ggforce">https://CRAN.R-project.org/package=ggforce</a>.</p>
 </div>
 <div id="ref-naniar">
-<p>Tierney, Nicholas, Di Cook, Miles McBain, and Colin Fay. n.d. <em>Naniar: Data Structures, Summaries, and Visualisations for Missing Data</em>. <a href="https://github.com/njtierney/naniar">https://github.com/njtierney/naniar</a>.</p>
+<p>Tierney, Nicholas, Di Cook, Miles McBain, and Colin Fay. 2018. <em>Naniar: Data Structures, Summaries, and Visualisations for Missing Data</em>. <a href="https://github.com/njtierney/naniar">https://github.com/njtierney/naniar</a>.</p>
 </div>
 <div id="ref-GGally">
 <p>Schloerke, Barret, Jason Crowley, Di Cook, Francois Briatte, Moritz Marbach, Edwin Thoen, Amos Elberg, and Joseph Larmarange. 2016. <em>GGally: Extension to ’Ggplot2’</em>.</p>

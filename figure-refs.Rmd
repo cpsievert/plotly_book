@@ -1,0 +1,498 @@
+<!--
+Use text references as workaround for fig.cap not correctly parsing markdown
+https://github.com/yihui/bookdown-crc/issues/3
+-->
+
+<!-- 
+  introduction.Rmd 
+-->
+
+(ref:workflow) The stages of a data science workflow from @r4ds.
+
+(ref:mpg-static) A scatterplot of engine displacement versus miles per gallon made with the **ggplot2** package.
+
+(ref:mpg-mark-hull) Using the **ggforce** package to annotate the corvette's in this dataset.
+
+
+<!-- 
+  creating-overview.Rmd 
+-->
+
+
+(ref:intro-defaults) Three examples of visualizing categorical data with `plot_ly()`: (top) mapping `cut` to `x` yields a bar chart, (middle) mapping `cut` & `clarity` to `x` & `y` yields a heatmap, and (c) mapping `cut` & `clarity` to `x` & `color` yields a dodged bar chart.
+
+(ref:color-mapping) Mapping data values to a visual color range.
+
+(ref:intro-range) Using `I()` to supply visual properties directly instead of mapping values to a visual range. In the top portion of this figure, the value `'black'` is being mapped to a visual range spanned by `colors` (which, for discrete data, defaults to `'Set2'`).
+
+(ref:intro-dplyr) Using `add_histogram()`, `add_text()`, and **dplyr** verbs to compose a plot that leverages a raw form of the data (e.g., histogram) as well as a summarized version (e.g., text labels).
+
+(ref:intro-json) A portion of the JSON data behind the bottom plot of Figure \@ref(fig:intro-defaults). This dodged bar chart has 8 layers of data (i.e., 8 traces) -- one for each level of `clarity`.
+
+(ref:intro-show-hide) Leveraging two interactive features that require one trace per level of `clarity`: (1) Using 'Compare data on hover' mode to get counts for every level of `clarity` for a given level of `cut` and (2) Using the ability to hide/show clarity levels via their legend entries.
+
+(ref:hexbin) A hexbin plot of diamond carat versus price.
+
+(ref:freqpoly) Frequency polygons of diamond price by diamond clarity. This visualization indicates there may be significant main effects.
+
+(ref:freqpoly-facet) Diamond price by clarity and cut.
+
+(ref:geom-sina) A sina plot of diamond price by clarity and cut.
+
+(ref:geom-sina-resid) A sina plot of diamond price by clarity and cut, after accounting for carat.
+
+(ref:ggally) Zooming in on a coefficient plot generated from the `ggcoef()` function from the **GGally** package.
+
+(ref:naniar) Using the `geom_miss_point()` function from the **naniar** package to visualize missing values in relation to non-missing values. Missing values are shown in red.
+
+
+<!-- 
+  creating-overview.Rmd 
+-->
+
+
+(ref:scatter-intro) The difference between `add_paths()` and `add_lines()`: the top panel connects observations according to the ordering of `psavert` (personal savings rate), whereas the bottom panel connects observations according to the ordering of `x` (the date).
+
+(ref:scatter-lines) Drawing multiple lines using **dplyr** groups (top panel) versus a categorical `color` mapping (bottom panel). Comparatively speaking, the bottom panel has more interactive capabilites (e.g., legend-based filtering and multiple tooltips), but it does not scale as well with many lines.
+
+(ref:tooltip-praise) Using the generic `add_trace()` function to render markers, lines, and text in a single scatter trace. This `add_trace()` function, as well as any `add_*()` function allows you to directly specify plotly.js attributes.
+
+(ref:schema) Using `schema()` function to traverse through the attributes available to a given trace type (e.g., scatter)
+
+(ref:scatterplots) Combating overplotting in a scatterplot with alpha blending.
+
+(ref:color-types) Variations on a numeric color mapping.
+
+(ref:color-numeric) Three variations on a numeric color mapping.
+
+(ref:color-discrete) Three variations on a discrete color mapping.
+
+(ref:color-manual) Setting a fixed color directly using `I()`.
+
+(ref:symbol-factor) Mapping symbol to a numeric variable (left panel) and a factor (right panel).
+
+(ref:symbol-factor-range) Specifying the visual range of `symbols`.
+
+(ref:symbol-factor-manual) Setting a fixed symbol directly using `I()`.
+
+(ref:stroke-manual) Using `stroke` and `span` to control the outline color as well as the width of that outline.
+
+(ref:sizes) Controlling the size range via `sizes` (measured in pixels).
+
+(ref:coefplot) A coefficient plot.
+
+(ref:linetypes) Using `color` and/or `linetype` to differentiate groups of lines.
+
+(ref:linetypes-manual) Providing a named character vector to linetypes in order to control exactly what linetype gets mapped to which city.
+
+(ref:slopegraph) Interactively editing the label positioning in a slopegraph.
+
+(ref:dumbell) A dumbell chart of mile per gallon city vs highway by model of car.
+
+(ref:candlestick) A candlestick chart built out of segments
+
+(ref:densities) Various kernel density estimates.
+
+(ref:pcp-common) Parallel coordinates plots of the Iris dataset. The top panel shows all variables on a common scale. The middle panel scales each variable to have mean of 0 and standard deviation of 1. In the bottom panel, each variable is scaled to have a minimum of 0 and a maximum of 1.
+
+(ref:map-canada) Using `add_polygons()` to make a map of Canada and major Canadian cities via data provided by the **maps** package [@maps].
+
+(ref:map-canada-split) Using `split` to render polygons with different fills and interactive properties.
+
+(ref:broom-lm) Plotting fitted values and uncertainty bounds of a linear model via the **broom** package.
+
+
+<!-- 
+  creating-maps.Rmd 
+-->
+
+
+(ref:mapbox-bubble) A mapbox powered bubble chart showing the population of various cities in Canada.
+
+(ref:satellite) Zooming in on earth satellite imagery using `plot_mapbox()`.
+
+(ref:mapbox-style-dropdown) Providing a dropdown menu to control the styling of the mapbox baselayer.
+
+(ref:geo-flights) A mapbox powered bubble chart showing the population of various cities in Canada.
+
+(ref:maps) Three different ways to render a map. On the top left is plotly's default cartesian coordinate system, on the top right is plotly's custom geographic layout, and on the bottom is mapbox.
+
+(ref:us-density) A map of U.S. population density using the `state.x77` data from the **datasets** package.
+
+(ref:world) Rendering all the world's countries using `plot_ly()` and the `ne_countries()` function from the **rnaturalearth** package.
+
+(ref:view-sf) A diagram of a simple features data frame. The geometry column tracks the spatial features attached to each row in the data frame.
+
+(ref:split-color) Using `split` and `color` to create a choropleth map of provinces in Canada.
+
+(ref:split-text) Using `split`, `text`, and `hoveron='fills'` to display a tooltip specific to each Canadian province.
+
+(ref:canada-ggplotly) The population of various Canadian cities rendered on a custom basemap using a Mollweide projection.
+
+(ref:cartogram) A cartogram of US population in 2014. A cartogram sizes the area of geo-spatial objects proportional to some metric (e.g., population).
+
+(ref:cartogram-dorling) A dorling cartogram of US population in 2014. A dorling cartogram sizes the circles proportional to some metric (e.g., population).
+
+(ref:cartogram-ncont) A non-continguous cartogram of US population in 2014 that preserves shape.
+
+(ref:cartogram-tiles) A tile cartogram of U.S. population in 2016.
+
+
+<!-- 
+  creating-bars.Rmd 
+-->
+
+
+(ref:bars-numeric) plotly.js's default binning algorithm versus R's `hist()` default.
+
+(ref:bars-discrete) Number of diamonds by cut.
+
+(ref:many-prices) A trellis display of diamond price by diamond clarity.
+
+(ref:cut-by-clarity) A grouped bar chart.
+
+(ref:cut-by-clarity-prop) A stacked bar chart showing the proportion of diamond clarity within cut.
+
+(ref:ggmosaic) Using **ggmosaic** and `ggplotly()` to create advanced interactive visualizations of categorical data.
+
+(ref:cut-boxes) Overall diamond price and price by cut.
+
+(ref:cut-by-clarity-boxes) Diamond prices by cut and clarity.
+
+(ref:cut-by-clarity-boxes-sorted) Diamond prices by cut and clarity, sorted by price median.
+
+
+<!-- 
+  creating-other.Rmd 
+-->
+
+
+(ref:histogram2d) Three different uses of `histogram2d()`.
+
+(ref:heatmap-corr-diamonds) 2D Density estimation via the `kde2d()` function.
+
+(ref:correlation) Displaying a correlation matrix with `add_heatmap()` and controling the scale limits with `colorbar()`.
+
+(ref:3D-scatterplot) A 3D scatterplot.
+
+(ref:3D-paths) A path with color interpolation in 3D.
+
+(ref:3D-lines) A line with color interpolation in 3D.
+
+(ref:3D-lines-groups) Using `group_by()` to create multiple 3D lines.
+
+(ref:3D-axes) Setting axis titles on a 3D plot.
+
+(ref:surface) A 3D surface of volcano height.
+
+<!-- 
+  publishing.Rmd 
+-->
+
+(ref:orca) Using the `orca()` function to export a WebGL/Canvas based **plotly** graphic to a static pdf file. That pdf file can then be imported into Adobe Illustrator for post-processing.
+
+(ref:toImageSVG) Specifying options for static image exporting via the modebar. Clicking on the 'download plot' icon should prompt your browser to download a static svg file named 'myplot.svg'.
+
+(ref:edit-county-labels) Estimated total income by county in Minnesota. The top 10 counties are labeled with editable annotations. After manually adjusting the placement of county labels in a web browser, and zooming in on the top 10 counties in the dot plot, the 'download plot' button is used to export to svg.
+
+<!-- 
+  arranging.Rmd 
+-->
+
+(ref:subplot-simple) The most basic use of `subplot()` to merge multiple plotly objects into a single plotly object.
+
+(ref:economics) Five different economic variables on different y scales and a common x scale. Zoom and pan events in the x-direction are synchronized across plots.
+
+(ref:proportions) A visual diagram of controling the `heights` of rows and `widths` of columns. In this particular example, there are 5 plots being placed in 2 rows and three columns.
+
+(ref:joint) A joint density plot with synchronized axes.
+
+(ref:recursive) Recursive subplots.
+
+(ref:map-subplot) Multiple bar charts of US statistics by state in a subplot with a choropleth of population density.
+
+(ref:splom) Linked brushing in a scatterplot matrix of the iris dataset.
+
+(ref:ggpairs) A generalized pairs plot made via the `ggpairs()` function from the **GGally** package.
+
+(ref:subplot-trellis) Creating a trellis display with `subplot()`.
+
+(ref:ggplot2-subplots) Arranging multiple faceted ggplot2 plots into a plotly subplot.
+
+(ref:flexdashboard-ggplotly) An example of embedding `ggplotly()` graphs inside **flexdashboard**. See here for the interactive dashboard <https://plotly-r.com/flexdashboard.html>
+
+(ref:fluid) Arranging multiple htmlwidgets with `fluidPage()` from the **shiny** package.
+
+(ref:flexbox) Arranging multiple htmlwidgets with CSS flexbox.
+
+
+<!--
+  animation.Rmd
+-->
+
+(ref:animation-ggplotly) Animation of the evolution in the relationship between GDP per capita and life expectancy in numerous countries.
+
+(ref:animation-opts) Modifying animation defaults with `animation_opts()`, `animation_button()`, and `animation_slider()`.
+
+(ref:animation-factors) Animation of GDP per capita versus life expectancy by continent. The ordering of the contintents goes from lowest average (across countries) life expectancy to highest.
+
+(ref:animation-targets) Overlaying animated frames on top of a background of all possible frames.
+
+(ref:profile-pyramid) US population projections by age and gender from 2018 to 2050. This population pyramid is implemented with thick line segments to give the appearance of bars.
+
+(ref:profile-lines) Visualizing the same information in Figure \@ref(fig:profile-pyramid) using lines rather than segments.
+
+
+
+<!-- 
+  linked-views.Rmd 
+-->
+
+
+(ref:server-client) A diagram of the graphical querying framework underlying Figure \@ref(fig:txhousing-aggregates).
+
+(ref:link-intro) A visual depiction of how `highlight_key()` attaches metadata to graphical elements to enable graphical database queries. Each point represents a different car and the number of cylinders (`cyl`) is assigned as metadata so that when a particular point is queried all points with the same number of cylinders are highlighted.
+
+(ref:txmissing) Graphical query of housing prices in various Texas cities. The query in this particular example must be triggered through clicking directly on a time series.
+
+(ref:txmissing-modes) Using a selectize dropdown widget to search for cities by name and comparing multiple cities through persistent selection with a dynamic highlighting color. For a visual and audio explanation, see <https://vimeo.com/202647310>.
+
+(ref:txmissing-linked) Linking a dot-plot of the number of missing housing prices with the raw time series. By brushing markers on the dot-plot, their raw time series is highlighted on the right hand side.
+
+(ref:pipeline-diagram) A diagram of the graphical querying framework underlying Figure \@ref(fig:txmissing-linked).
+
+(ref:txhousing-aggregates) Linking house prices as a function of time with their probability density estimates.
+
+(ref:filter-highlight) Comparing filter to highlight events. Filter events completely remove existing marks and rescales axes to the remaining data.
+
+(ref:multiple-filter-widgets) Filtering on multiple variables.
+
+(ref:plotly-leaflet-filter) Linking **plotly** and **leaflet** through both **filter** and **highlight** events.
+
+(ref:gapminder-filter-highlight) Combining filtering and highlighting with non-unique querying variables.
+
+(ref:gapminder-highlight-animation) Highlighting the relationship between GDP per capita and life expectancy in the Americas and tracking that relationship through several decades.
+
+(ref:animation-gapminder) Comparing the evolution in the relationship between per capita GDP and life expectancy in countries with large populations (red) and small populations (blue).
+
+
+<!-- 
+  linked-views-examples.Rmd 
+-->
+
+(ref:epl) Graphical querying in a facetted display of English Premier League standings over time. The combination of direct and indirect manipulation with the dynamic color brush makes it easy to make comparisons between good and/or bad teams relative to their known rivals.
+
+(ref:trellis-txhousing) Monthly median house prices in four Texan cities. Querying by year allows one to compare unusual or interesting years both within and across cities.
+
+(ref:trellis-txhousing-plotly) Using `plot_ly()` instead of `ggplotly()` to implement a linked trellis display.
+
+(ref:2-way-anova) Linking a (jittered) dotplot of engine displacement by number of cylinders with boxplots of miles per gallon split by class and a bar chart of Dynamic 2-way ANOVA.
+
+(ref:mpg-linked-bars) Linking a bar chart with a scatterplot to query interesting regions of the data space defined by engine displacement (`disp`), miles per gallon highway (`hwy`), and the class of car (`class`). Notice how, by using `add_histogram()`, the number of cars within each class is dynamically computed by plotly.js.
+
+(ref:mpg-linked) Using statistical queries to perform a 2-way ANOVA on the `mpg` dataset. Cars with front-wheel drive are highlighted in red and 4-wheel drive highlighted in blue. The dynamically rendered boxplots by fuel type indicate significant interaction effects.
+
+(ref:smooth-highlight) Engine displacement versus highway miles per gallon by class of car. The linear model for each class, as well as the individual observations, can be selected by hovering over the line of fitted values. An individual observation can also be selected by hovering over the relevant point.
+
+(ref:ggplotly-linked-densities) Clicking on a density estimate to highlight all the raw observations that went into that estimate.
+
+(ref:storms) Linking a 3D globe with tropical storm paths to a 2D view of the storm altitude versus distance traveled. 
+
+(ref:mapbox-quakes) Querying earthquakes by location and displaying their a histogram of their magnitude and number of stations.
+
+(ref:mapbox-bars) Graphically querying North Carolina by location and area.
+
+(ref:sf-dt) Linking a `plot_ly()`-based map with a `datatable()` from the **DT** package.
+
+(ref:leaflet-persistent) Linking views between plotly and leaflet to explore the relation between magnitude and geographic location of earthquakes around Fiji.
+
+(ref:leaflet-polygons) Querying polygons on a **leaflet** map in response to direct manipulation of a **plotly** graph.
+
+(ref:linked-ggally) Brushing a scatterplot matrix via the `ggpairs()` function in the **GGally** package. A video demonstrating the graphical queries can be viewed here <https://vimeo.com/307788027>
+
+(ref:ggnostic) Graphical queries applied to multiple diagnostic plots of a linear model. The `ggplotly()` function has a special method for `ggnostic()` that adds graphical queries automatically with support for both individual observations (e.g. points) as well as meaningful groups (e.g., automatic vs manual).
+
+(ref:list-column-simple) A simple example of subset queries via a list-column.
+
+(ref:dendro) Leveraging hierarchical selection and persistent brushing to paint branches of a dendrogram.
+
+(ref:tour-USArrests) Linking a dendrogram to a grand tour and map of the `USArrests` data to visualize a classification in 5 dimensions.
+
+
+<!-- 
+  linked-views-shiny.Rmd 
+-->
+
+
+(ref:shiny-intro) Using a **shiny** input widget to control which time series are shown on a **plotly** graph.
+
+(ref:shiny-ggplotly) Rendering a **plotly** graph in **shiny** if and only if the `selectizeInput()`'s dropdown is non-empty. When the graph is present, and the window is resized, then the reactive expression is re-evaluated.
+
+(ref:plotlyEvents) Accessing event data from click and drag events.
+
+(ref:3Devents) Accessing 3D events.
+
+(ref:shiny-edit-annotations) Accessing information about direct manipulation of annotations.
+
+(ref:shiny-drag-circle) Accessing information about direct manipulation of circle shapes.
+
+(ref:interactive-lm) Editing circle shape positions to dynamically alter a linear model summary and fitted line. This is useful mainly as a teaching device to visually demonstrate the effect of high leverage points on a simple linear model.
+
+(ref:shiny-drag-line) Dragging a vertical line shape and 'snapping' the line to match the closest provided `x` value.
+
+(ref:shiny-parcoords) Using the `"plotly_restyle"` event to access brushed dimensions of a parallel coordinates plot.
+
+(ref:shiny-parcoords-data) Displaying the highlighted observations of a parcoords trace.
+
+(ref:shiny-corrplot) Linking each cell of a correlation heatmap to their corresponding scatterplots.
+
+(ref:event-priority) A demo of input priority versus event priority. Clicking on the same marker repeatedly, by default, won't invalidate a reactive expression that depends on 'plotly_click', but it will invalidate when given event priority.
+
+(ref:discrete-event-data) Retrieving the data observations that correspond to a particular bar in a stacked bar chart.
+
+(ref:shiny-hover-persist) Using `reactiveVals()` to enable a persistent brush via mouse hover. In this example, the brush can be cleared through a double-click event.
+
+(ref:shiny-lmGadget) Interactively removing observations from a linear model. Credit to Winston Chang for the initial implementation of this **shiny** gadget using `shiny::plotOutput()` instead of `plotly::plotlyOutput()`.
+
+(ref:shiny-scatterplot) Naive implementation of a shiny app that optionally overlays a fitted line to a scatterplot. A full redraw of the plot is performed everytime the checkbox is clicked, leading to an unnecessarily slow plot.
+
+(ref:shiny-scatterplot-performant) A more responsive version of Figure \@ref(fig:shiny-scatterplot).
+
+(ref:shiny-partial-restyle) Using `Plotly.restyle()` to change just the width of a path and markers along that path in response to changes to **shiny** input sliders.
+
+(ref:shiny-mapbox-relayout) Using `Plotly.relayout()` to 'auto-range' the y-axis in response to changes in the x-axis range.
+
+(ref:shiny-rangeslider-relayout) Using `Plotly.relayout()` to 'auto-range' the y-axis in response to changes in the x-axis range.
+
+(ref:shiny-stream) Using `Plotly.extendTraces()` to efficiently stream data into a plotly chart. This specific example implements a random walk (using R's random number generator) which updates every 100 milliseconds.
+
+(ref:shiny-drill-down) Using a drill-down approach to navigating through sales data by category, sub-category, and order date.
+
+(ref:shiny-crossfilter-naive) A 'naive' crossfilter implementation linking arrival time with departure time of about 350,000 `flights` from the **nycflights13** package.
+
+(ref:shiny-crossfilter-kde) Using kernel density estimation to responsively crossfilter a 2D distribution. This particular example shows how the relationship between diamond carat and price is dependent upon it's depth.
+
+(ref:shiny-crossfilter) Crossfiltering 6 variables in the `flights` data from the **nycflights13** package [@nycflights13]. The filtering and binning logic occurs server-side resulting in a very minimal amount of data being sent between server and client (just the brush range and bar heights). Moreover, to perform the UI update, the client only has to tweak existing bar heights, so the overall user experience is quite responsive.
+
+(ref:shiny-crossfilter-compare) Comparing filters with a dynamic color brush. This particular example compares 'red eye' flights (in green) to early morning flights (in orange). This makes it easier to see that delays occur more often for 'red eye' flights.
+
+(ref:drag_brush) A draggable brush with both a transient and persistent mode. The dragging ability is done by mimicing the native plotly.js brush with an editable rectangle shape and listening to changes in that brush. The implementation of transient vs persistent mode is a matter of forgetting or remembering previous state(s) of the brush.
+
+(ref:shiny-crosstalk-examples) Example of a **shiny** app that has **crosstalk** functionality embedded.
+
+
+<!-- 
+  javascript.Rmd 
+-->
+
+(ref:console-log) Using `htmlwidgets::onRender()` to inspect the relevant DOM instance containing the **plotly** graph and information related to it's current display. The `_fullData` and `_fullLayout` attributes bound to the element are 'internal' (meaning relying on this information in production code is discouraged), but do provide a useful description of the chart's current state, especially if you need access to computations done by plotly.js (e.g., axis tick placement).
+
+(ref:json-schema) Using the plotly `schema()` to obtain more information about expected attribute types.
+
+(ref:console-log-event) Inspecting event data for hover, click, and selected events. If a click or hover event does not derive from a statistical aggregation (e.g., boxplot, histogram, etc), the `points` array is of length 1; otherwise, the length corresponds to how many input values are represented in the selection. In Chrome, when you log an object to the console, you can click on a link to the JS source function where you can then set breakpoints.
+
+(ref:click-open) Attaching hyperlinks to each point in a scatterplot and using a custom JS event to open that Google search query upon clicking a point.
+
+(ref:click-annotate) Using `Plotly.relayout()` to add and change hyperlink in response to hover events.
+
+(ref:tooltip-image) Displaying an image on hover in a scatterplot.
+
+(ref:tooltip-image-heatmap) Displaying an image on hover in a heatmap.
+
+(ref:tx-annotate) Combining the graphical querying framework from \@ref(graphical-queries) with the ability to define custom JS event handlers. This example also leverages the fact that `customdata` supports list-columns to effectively bind both the city name and number of houses sold on a particular day.
+
+(ref:tx-mean-sales) Displaying the average monthly sales for a city of interest on hover. This implementation supplies all the raw sales figures, then uses the hovered `customdata` value to query sales for the given city and display the average.
+
+(ref:tx-inset-plot) Adding another event handler to Figure \@ref(fig:tx-annotate) to draw an inset plot showing the distribution of monthly house sales.
+
+(ref:correlation-client-side) Clicking on a correlation matrix to populate a scatterplot.
+
+(ref:react-player) Using the `react-player` React component to render a video in response to a `'plotly_click'` event.
+
+(ref:babel) Using `babel_transform()` to leverage ES6, React, and JSX.
+
+(ref:react-data-grid) Using the `react-data-grid` React component to render a data table of the observation within a scatterplot brush.
+
+<!-- 
+  topics.Rmd 
+-->
+
+(ref:custom-tooltip-plotly) Customizing the tooltip by supplying glyphs, Unicode, HTML markup to the `text` attributes and restricting displayed attributes with `hoverinfo='text'`.
+
+(ref:hoveron-fill-points) Using the `hoveron` attribute to control whether a tooltip is attached to fill or each point along that fill.
+
+(ref:tooltip-format-boxplot) Using `xaxis.hoverformat` to round aggregated values displayed in the tooltip to two decimal places.
+
+(ref:hovertemplate) Using the `hovertemplate` attribute to reference computed variables and their display format inside a custom string.
+
+(ref:tooltip-format-heatmap) Formatting the displayed `z` values in a heatmap using `zhoverformat`.
+
+(ref:ggplotly-text) Using the `text` **ggplot2** aesthetic to supply custom tooltip text to a scatterplot.
+
+(ref:ggplotly-text-tooltip) Using the `tooltip` arugment in `ggplotly()` to only display the `text` aesthetic.
+
+(ref:format-options) Leveraging global R options for controlling the displayed values in a `ggplotly()` tooltip.
+
+(ref:text-clever) Using the `text` aesthetic to replace an auto-generated aesthetic (`y`).
+
+(ref:custom-predict-text) Using the return value of `ggplotly()` to populate a custom `text` attribute.
+
+(ref:tooltip-style) Using the `hoverlabel` attribute to customize the color and font of the tooltip.
+
+(ref:tooltip-style-ggplotly) Using the `hoverlabel` attribute with `ggplotly()`.
+
+(ref:displaylogo) Removing the plotly logo from the modebar.
+
+(fig:modeBarButtonsToRemove) Removing the 'zoomIn2d' and 'zoomOut2d' modebar buttons by name.
+
+(ref:modeBarButtonsToAdd) Supplying a custom modebar button with custom behavior.
+
+(ref:modeBarButtons) Specifying the full list of modebar buttons.
+
+(ref:color-plotly-js) Specifying a color in plotly.js' supported format.
+
+(ref:symbols-all) All marker symbols currently supported by **plotly**.
+
+(ref:glyphs) Using `add_text()` to render on-graph text with typographical glyphs and/or unicode.
+
+(ref:emojis) Using `add_text()` to plot all the activity emojis and leveraging `hovertext` to place the emoji names in the tooltip text.
+
+(ref:localization) Using the `locale` argument of the `config()` function to render on-graph text in another language.
+
+(ref:mathjax) Rendering LaTeX in the plot and axis titles.
+
+(ref:mathjax2) Rendering LaTeX using `add_text()` and `add_annotations()`. 
+
+(ref:houston2) Monthly median house prices over time for 46 Texan cities (in blue). Houston is highlighted in orange.
+
+(ref:houston-vs-sa) Monthly median house price in Houston and San Antonio in comparison to other Texan cities.
+
+(ref:summary) First, second, and third quartile of median monthly house price in Texas.
+
+(ref:forecast) Layering on a 4-year forecast from a exponential smoothing state space model.
+
+(ref:ggplotly-rangeslider) Adding `dynamicTicks`, a `rangeslider()`, and a comparison hovermode to improve the interactive experience of a `ggplotly()` graph.
+
+(ref:simple-scatterplot) A scatterplot with a fitted line and confidence band.
+
+(ref:listviewer) Using listviewer to inspect the JSON representation of a plotly object.
+
+(ref:style-hoverinfo) Using the `style()` function to modify hoverinfo attribute values of a plotly object created via `ggplotly()` (by default, `ggplotly()` displays hoverinfo for all traces). In this case, the hoverinfo for a fitted line and error bounds are hidden.
+
+(ref:se-annotations) Leveraging data associated with a `geom_smooth()` layer to display additional information about the model fit.
+
+(ref:StatBin) Leveraging output from `StatBin` to add annotations to a stacked bar chart (created via `geom_bar()`) which makes it easier to compare bar heights.
+
+(ref:StatDensity2d) Leveraging output from `StatDensity2d` to add annotations to contour levels.
+
+(ref:image-hyperlink) Embedding an image using a hyperlink. This example uses paper coordinates (i.e., normalized 0-1 scale relative to the graph area) to place the image just above the graph.
+
+(ref:image-uri) Embedding an image using a data URI. This approach ensures your image stays embedded in the plot.
+
+(ref:raster) Reading a png image into R with `png::readPNG()`, converting the RBGA array into a raster object, generating a data URI of the raster via `raster2uri()`, then embedding the URI as an image in a **plotly** graph.
+
+<!-- 
+  develop.Rmd 
+-->
+
+(ref:xspline) Converting GeomXspline from the **ggalt** package to plotly.js via `ggplotly()`.

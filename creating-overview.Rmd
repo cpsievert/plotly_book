@@ -28,17 +28,13 @@ plot_ly(diamonds, x = ~cut, y = ~clarity)
 plot_ly(diamonds, x = ~cut, color = ~clarity, colors = "Accent")
 ```
 
-```{block, type="rmdtip"}
-The `~` operator is only needed when refering to a column name in `data` (the first argument to `plot_ly()`). Moreover, the `data` argument is optional, meaning you can also provide column(s) directly to `plot_ly(x = diamonds$cut)`
-```
-
-```{r intro-defaults, echo = FALSE, fig.cap = "Three examples of visualizing categorical data with `plot_ly()`: (top) mapping `cut` to `x` yields a bar chart, (middle) mapping `cut` & `clarity` to `x` & `y` yields a heatmap, and (c) mapping `cut` & `clarity` to `x` & `color` yields a dodged bar chart."}
+```{r intro-defaults, echo = FALSE, fig.cap = "(ref:intro-defaults)"}
 knitr::include_graphics("images/intro-defaults.svg")
 ```
 
 The `plot_ly()` function has numerous arguments that are unique to the R package (e.g., `color`, `stroke`, `span`, `symbol`, `linetype`, etc) and make it easier to encode data as visual properties. By default, these arguments map values to a visual range defined by the plural form of the argument (e.g., `colors`, `strokes`, `spans`, `symbols`, `linetypes`, etc). Figure \@ref(fig:color-mapping) depicts how the combination of `color` (e.g., `clarity` levels) and `colors` (e.g., the `"Accent"` color palette from the **RColorBrewer** package) can be used to specify a mapping from data values to color codes. Besides providing a palette by name, one may also provide their own mapping function (e.g., `colorRamp()`), or even a set of custom color codes. See Chapter \@ref(scatter-traces) for many more examples and Chapter \@ref(working-with-colors) for more details about working with colors.
 
-```{r color-mapping, echo = FALSE, fig.cap = "Mapping data values to a visual color range.", out.width = "45%"}
+```{r color-mapping, echo = FALSE, fig.cap = "(ref:color-mapping)", out.width = "45%"}
 knitr::include_graphics("images/color-mapping.svg")
 ```
 
@@ -51,7 +47,7 @@ plot_ly(diamonds, x = ~cut, color = "black")
 plot_ly(diamonds, x = ~cut, color = I("red"), stroke = I("black"), span = I(2))
 ```
 
-```{r intro-range, echo = FALSE, fig.cap = "Using `I()` to supply visual properties directly instead of mapping values to a visual range. In the top portion of this figure, the value `'black'` is being mapped to a visual range spanned by `colors` (which, for discrete data, defaults to `'Set2'`)."}
+```{r intro-range, echo = FALSE, fig.cap = "(ref:intro-range)"}
 knitr::include_graphics("images/intro-range.svg")
 ```
 
@@ -118,7 +114,7 @@ diamonds %>%
   )
 ```
 
-```{r intro-dplyr, echo = FALSE, fig.cap = "Using `add_histogram()`, `add_text()`, and **dplyr** verbs to compose a plot that leverages a raw form of the data (e.g., histogram) as well as a summarized version (e.g., text labels)."}
+```{r intro-dplyr, echo = FALSE, fig.cap = "(ref:intro-dplyr)"}
 knitr::include_graphics("images/intro-dplyr.png")
 ```
 
@@ -150,7 +146,9 @@ p <- plot_ly(diamonds, x = ~cut, color = ~clarity, colors = "Accent")
 plotly_json(p)
 ```
 
-```{r intro-json, echo = FALSE, fig.cap = "A portion of the JSON data behind the bottom plot of Figure \\@ref(fig:intro-defaults). This dodged bar chart has 8 layers of data (i.e., 8 traces) -- one for each level of `clarity`.", out.width="70%"}
+
+
+```{r intro-json, echo = FALSE, fig.cap = "(ref:intro-json)", out.width="70%"}
 knitr::include_graphics("images/intro-json.png")
 ```
 
@@ -176,7 +174,7 @@ unique(purrr::map_chr(b$x$data, "type"))
 
 Here we've learned that **plotly** creates 8 histogram traces to generate the dodged bar chart: one trace for each level of `clarity`.^[Although the x-axis is discrete, plotly.js still considers this a histogram because it's generating it generates counts in the browser. Learn more about the difference between histograms and bar charts in section \@ref(bars-histograms).] Why one trace per category? As illustrated in Figure \@ref(fig:intro-show-hide) there are two main reasons: to populate a tooltip and legend entry for each level of `clarity` level.
 
-```{r intro-show-hide, echo = FALSE, fig.cap = "Leveraging two interactive features that require one trace per level of `clarity`: (1) Using 'Compare data on hover' mode to get counts for every level of `clarity` for a given level of `cut` and (2) Using the ability to hide/show clarity levels via their legend entries."}
+```{r intro-show-hide, echo = FALSE, fig.cap = "(ref:intro-show-hide)"}
 include_vimeo("315707813")
 ```
 
@@ -194,7 +192,7 @@ p <- ggplot(diamonds, aes(x = log(carat), y = log(price))) +
 ggplotly(p)
 ```
 
-```{r hexbin, echo = FALSE, fig.cap = "A hexbin plot of diamond carat versus price."}
+```{r hexbin, echo = FALSE, fig.cap = "(ref:hexbin)"}
 knitr::include_graphics("images/hexbin.png")
 ```
 
@@ -206,7 +204,7 @@ p <- ggplot(diamonds, aes(x = log(price), color = clarity)) +
 ggplotly(p)
 ```
 
-```{r freqpoly, echo = FALSE, fig.cap = "Frequency polygons of diamond price by diamond clarity. This visualization indicates there may be significant main effects."}
+```{r freqpoly, echo = FALSE, fig.cap = "(ref:freqpoly)"}
 knitr::include_graphics("images/freqpoly.svg")
 ```
 
@@ -219,7 +217,7 @@ p <- ggplot(diamonds, aes(x = log(price), color = clarity)) +
 ggplotly(p)
 ```
 
-```{r freqpoly-facet, echo = FALSE, fig.cap = "Diamond price by clarity and cut."}
+```{r freqpoly-facet, echo = FALSE, fig.cap = "(ref:freqpoly-facet)"}
 include_vimeo("322318131")
 ```
 
@@ -237,7 +235,7 @@ p <- ggplot(diamonds, aes(x = clarity, y = log(price), color = clarity)) +
 toWebGL(ggplotly(p))
 ```
 
-```{r geom-sina, echo=FALSE, fig.cap="A sina plot of diamond price by clarity and cut."}
+```{r geom-sina, echo=FALSE, fig.cap="(ref:geom-sina)"}
 knitr::include_graphics("images/geom-sina.svg")
 ```
 
@@ -253,7 +251,7 @@ p <- ggplot(diamonds, aes(x = clarity, y = resid, color = clarity)) +
 toWebGL(ggplotly(p))
 ```
 
-```{r geom-sina-resid, echo=FALSE, fig.cap="A sina plot of diamond price by clarity and cut, after accounting for carat."}
+```{r geom-sina-resid, echo=FALSE, fig.cap="(ref:geom-sina-resid)"}
 knitr::include_graphics("images/geom-sina-resid.svg")
 ```
 
@@ -267,7 +265,7 @@ gg <- ggcoef(m)
 ggplotly(gg, dynamicTicks = TRUE)
 ```
 
-```{r ggally, echo=FALSE, fig.cap="Zooming in on a coefficient plot generated from the `ggcoef()` function from the **GGally** package."}
+```{r ggally, echo=FALSE, fig.cap="(ref:ggally)"}
 include_vimeo("322362701")
 ```
 
@@ -284,7 +282,7 @@ p <- ggplot(diamonds, aes(x = clarity, y = log(price_miss))) +
 toWebGL(ggplotly(p))
 ```
 
-```{r naniar, echo=FALSE, fig.cap="Using the `geom_miss_point()` function from the **naniar** package to visualize missing values in relation to non-missing values. Missing values are shown in red."}
+```{r naniar, echo=FALSE, fig.cap="(ref:naniar)"}
 knitr::include_graphics("images/naniar.svg")
 ```
 

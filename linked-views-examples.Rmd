@@ -6,19 +6,19 @@ A facetted chart, also known as a trellis or small multiples display, is an effe
 
 Figure \@ref(fig:epl) is an example of making comparisons both within and across panels via graphical querying in a facetted chart. Each panel represents one year of English Premier League standings across time and each line represents a team (the querying variable). Since the x-axis represents the number of games within season and y-axis tracks cumulative points relative to the league average, lines with a positive slope represent above average performance and a negative slope represents below average performance. This design makes it easy to query a good (or bad) team for a particular year (via direct manipulation) to see who the team is as well as how they've compared to the competition in other years. In addition, the dynamic and persistent color brush allows us to query other teams to compare both within and across years. This example is shipped as a demo with the **plotly** package and uses data from the **engsoccerdata** package [@engsoccerdata]. Thanks to Antony Unwin for providing the initial idea and inspiration for Figure \@ref(fig:epl) [@unwin-epl].
 
-```{r, eval = FALSE}
+```r
 # By entering this demo in your R console it will print out the actual source code necessary to recreate the graphic
 # Also, `demo(package = "plotly")` will list of all demos shipped with plotly
 demo("crosstalk-highlight-epl-2", package = "plotly")
 ```
 
-```{r epl, echo = FALSE, fig.cap = "Graphical querying in a facetted display of English Premier League standings over time. The combination of direct and indirect manipulation with the dynamic color brush makes it easy to make comparisons between good and/or bad teams relative to their known rivals."}
+```{r epl, echo = FALSE, fig.cap = "(ref:epl)"}
 include_vimeo("307598973")
 ```
 
 The demo above requires some fairly advanced data pre-processing, so to learn how to implement graphical queries in trellis displays, let's work with more minimal examples. Figure \@ref(fig:trellis-txhousing) gives us yet another look at the `txhousing` dataset. This time we focus on just four cities and give each city it's own panel in the trellis display by leveraging `facet_wrap()` from **ggplot2**. Within each panel, we'll wrap the house price time series by year by putting the month on the x-axis and grouping by year. Then, to link these panels, we can ulitize year as a querying variable. As a result, not only do we have the ability to analyze annual trends within city, but we can also query specific years to compare unusual or interesting years both within and across cities.
 
-```{r trellis-txhousing, fig.cap = "Monthly median house prices in four Texan cities. Querying by year allows one to compare unusual or interesting years both within and across cities."}
+```{r trellis-txhousing, fig.cap = "(ref:trellis-txhousing)", screenshot.alt = "images/trellis-txhousing.png"}
 library(dplyr)
 txsmall <- txhousing %>%
   select(city, year, month, median) %>%
@@ -34,7 +34,7 @@ txsmall %>%
 
 Figure \@ref(fig:trellis-txhousing-plotly) displays the same information as \@ref(fig:trellis-txhousing), but shows a way to implement a linked trellis display via `plot_ly()` instead of `ggplotly()`. This approach leverages `dplyr::do()` to create **plotly** object for each city/panel, then routes that list of plots into `subplot()`. One nuance here is that the querying variable has to be defined within the `do()` statement, but everytime `highlight_key()` is called, it creates a `crosstalk::SharedData` object belonging to a new unique `group`, so to link these panels together the `group` must be set to a constant value (here we've set `group = "txhousing-trellis"`).
 
-```{r trellis-txhousing-plotly, fig.cap = "Using `plot_ly()` instead of `ggplotly()` to implement a linked trellis display."}
+```{r trellis-txhousing-plotly, fig.cap = "(ref:trellis-txhousing-plotly)", screenshot.alt = "images/trellis-txhousing-plotly.png"}
 txsmall %>%
   group_by(city) %>%
   do(
@@ -69,7 +69,7 @@ Figure \@ref(fig:2-way-anova) demonstrates routing of a scatterplot brushing eve
 demo("crosstalk-highlight-binned-target-a", package = "plotly")
 ```
 
-```{r 2-way-anova, echo = FALSE, fig.cap = "Linking a (jittered) dotplot of engine displacement by number of cylinders with boxplots of miles per gallon split by class and a bar chart of Dynamic 2-way ANOVA."}
+```{r 2-way-anova, echo = FALSE, fig.cap = "(ref:2-way-anova)"}
 include_vimeo("307580944")
 ```
 
@@ -89,7 +89,7 @@ subplot(
   highlight("plotly_selected")
 ```
 
-```{r mpg-linked-bars, echo = FALSE, fig.cap = "Linking a bar chart with a scatterplot to query interesting regions of the data space defined by engine displacement (`disp`), miles per gallon highway (`hwy`), and the class of car (`class`). Notice how, by using `add_histogram()`, the number of cars within each class is dynamically computed by plotly.js."}
+```{r mpg-linked-bars, echo = FALSE, fig.cap = "(ref:mpg-linked-bars)"}
 include_vimeo("307598219")
 ```
 
@@ -114,7 +114,7 @@ subplot(
   highlight("plotly_selected", dynamic = TRUE)
 ```
 
-```{r mpg-linked, echo = FALSE, fig.cap = "Using statistical queries to perform a 2-way ANOVA on the `mpg` dataset. Cars with front-wheel drive are highlighted in red and 4-wheel drive highlighted in blue. The dynamically rendered boxplots by fuel type indicate significant interaction effects."}
+```{r mpg-linked, echo = FALSE, fig.cap = "(ref:mpg-linked)"}
 include_vimeo("307597640")
 ```
 
@@ -132,7 +132,7 @@ p <- ggplot(m, aes(displ, hwy, colour = class)) +
 ggplotly(p) %>% highlight("plotly_hover")
 ```
 
-```{r smooth-highlight, echo = FALSE, fig.cap = "Engine displacement versus highway miles per gallon by class of car. The linear model for each class, as well as the individual observations, can be selected by hovering over the line of fitted values. An individual observation can also be selected by hovering over the relevant point."}
+```{r smooth-highlight, echo = FALSE, fig.cap = "(ref:smooth-highlight)"}
 include_vimeo("307788164")
 ```
 
@@ -145,7 +145,7 @@ p2 <- ggplot(m, aes(displ, hwy, fill = class)) + geom_point()
 subplot(p1, p2) %>% hide_legend() %>% highlight("plotly_hover")
 ```
 
-```{r ggplotly-linked-densities, echo = FALSE, fig.cap = "Clicking on a density estimate to highlight all the raw observations that went into that estimate."}
+```{r ggplotly-linked-densities, echo = FALSE, fig.cap = "(ref:ggplotly-linked-densities)"}
 include_vimeo("307597927")
 ```
 
@@ -163,7 +163,7 @@ Section \@ref(maps) covers several different approaches^[@sf-blog-post outlines 
 demo("sf-plotly-3D-globe", package = "plotly")
 ```
 
-```{r storms, echo = FALSE, fig.cap="Linking a 3D globe with tropical storm paths to a 2D view of the storm altitude versus distance traveled. "}
+```{r storms, echo = FALSE, fig.cap="(ref:storms)"}
 include_vimeo("257149623")
 ```
 
@@ -198,7 +198,7 @@ histograms <- subplot(
 crosstalk::bscols(histograms, map)
 ```
 
-```{r mapbox-quakes, echo = FALSE, fig.cap = "Querying earthquakes by location and displaying their a histogram of their magnitude and number of stations."}
+```{r mapbox-quakes, echo = FALSE, fig.cap = "(ref:mapbox-quakes)"}
 include_vimeo("307597784")
 ```
 
@@ -227,7 +227,7 @@ hist <- plot_ly(color = I("black")) %>%
 crosstalk::bscols(widths = 12, map, hist)
 ```
 
-```{r mapbox-bars, echo = FALSE, fig.cap = "Graphically querying North Carolina by location and area"}
+```{r mapbox-bars, echo = FALSE, fig.cap = "(ref:mapbox-bars)"}
 include_vimeo("307598178")
 ```
 
@@ -239,8 +239,7 @@ The **plotly** package is able to share graphical queries with a limited set of 
 demo("sf-dt", package = "plotly")
 ```
 
-
-```{r sf-dt, echo = FALSE, fig.cap = "Linking a `plot_ly()`-based map with a `datatable()` from the **DT** package."}
+```{r sf-dt, echo = FALSE, fig.cap = "(ref:sf-dt)"}
 include_vimeo("307597509")
 ```
 
@@ -268,7 +267,7 @@ withr::with_options(
 )
 ```
 
-```{r leaflet-persistent, echo = FALSE, fig.cap = "Linking views between plotly and leaflet to explore the relation between magnitude and geographic location of earthquakes around Fiji."}
+```{r leaflet-persistent, echo = FALSE, fig.cap = "(ref:leaflet-persistent)"}
 include_vimeo("307787997")
 ```
 
@@ -304,7 +303,7 @@ p <- plot_ly(nc) %>%
 crosstalk::bscols(map, p)
 ```
 
-```{r leaflet-polygons, echo = FALSE, fig.cap = "Querying polygons on a **leaflet** map in response to direct manipulation of a **plotly** graph."}
+```{r leaflet-polygons, echo = FALSE, fig.cap = "(ref:leaflet-polygons)"}
 include_vimeo("307598814")
 ```
 
@@ -320,7 +319,7 @@ highlight_key(iris) %>%
   highlight("plotly_selected")
 ```
 
-```{r linked-ggally, echo = FALSE, fig.cap = "Brushing a scatterplot matrix via the `ggpairs()` function in the **GGally** package. A video demonstrating the graphical queries can be viewed here"}
+```{r linked-ggally, echo = FALSE, fig.cap = "(ref:linked-ggally)"}
 include_vimeo("307788027")
 ```
 
@@ -340,7 +339,7 @@ mtcars %>%
   ggplotly()
 ```
 
-```{r ggnostic, echo = FALSE, fig.cap="Graphical queries applied to multiple diagnostic plots of a linear model. The `ggplotly()` function has a special method for `ggnostic()` that adds graphical queries automatically with support for both individual observations (e.g. points) as well as meaningful groups (e.g., automatic vs manual)."}
+```{r ggnostic, echo = FALSE, fig.cap="(ref:ggnostic)"}
 include_vimeo("307788157")
 ```
 
@@ -365,7 +364,7 @@ highlight_key(d, ~key) %>%
   layout(dragmode = "lasso")
 ```
 
-```{r list-column-simple, echo = FALSE, fig.cap = "A simple example of subset queries via a list-column"}
+```{r list-column-simple, echo = FALSE, fig.cap = "(ref:list-column-simple)"}
 include_vimeo("307788086")
 ```
 
@@ -379,7 +378,7 @@ plot_dendro(dend1, height = 600) %>%
   highlight("plotly_selected", persistent = TRUE, dynamic = TRUE)
 ```
 
-```{r dendro, echo = FALSE, fig.cap = "Leveraging hierarchical selection and persistent brushing to paint branches of a dendrogram."}
+```{r dendro, echo = FALSE, fig.cap = "(ref:dendro)"}
 include_vimeo("307788070")
 ```
 
@@ -389,7 +388,7 @@ Figure \@ref(fig:tour-USArrests) links the dendrogram from Figure \@ref(fig:dend
 demo("animation-tour-USArrests", package = "plotly")
 ```
 
-```{r tour-USArrests, echo = FALSE, fig.cap = "Linking a dendrogram to a grand tour and map of the `USArrests` data to visualize a classification in 5 dimensions."}
+```{r tour-USArrests, echo = FALSE, fig.cap = "(ref:tour-USArrests)"}
 include_vimeo("307788058")
 ```
 
@@ -401,7 +400,7 @@ The code to generate Figure \@ref(fig:tour-USArrests), as well as a few other ex
 
 ## Limitations
 
-Linking of data views, as defined in Section \@ref(whats-a-data-view), has a much larger scope than the graphical querying framework covered in this chapter. For serious statistical analysis, one often needs to link views in a way that can not be easily compiled down to client-side web technologies. For these use cases, the R package **shiny** makes it very easy to build on concepts we've already covered to build more powerful client-server applications entirely in R, without having to learn any HTML, CSS, or JavaScript. The next chapter \@ref(linking-server-side) gives a brief introduction to **shiny**, then dives right into concepts related to linking plotly graphics to other arbitrary views.
+The graphical querying framework presented here is for posing database queries between multiple graphs via direct manipulation. For serious statistical analysis, one often needs to link other data views (i.e., text-based summaries, tables, etc) in other arbitrary ways. For these use cases, the R package **shiny** makes it very easy to build on concepts we've already covered to build more powerful client-server applications entirely in R, without having to learn any HTML, CSS, or JavaScript. The next chapter \@ref(linking-server-side) gives a brief introduction to **shiny**, then dives right into concepts related to linking plotly graphics to other arbitrary views.
 
 <!--
 Even within the scope of data views as graphical queries, there are numerous features **plotly** doesn't currently have, but would be nice to have in the future. 
