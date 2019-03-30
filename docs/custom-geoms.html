@@ -216,7 +216,7 @@ code span.wa { color: #60a0b0; font-weight: bold; font-style: italic; } /* Warni
 </ul></li>
 <li class="part"><span><b>II Publishing views</b></span></li>
 <li class="chapter" data-level="9" data-path="introduction-1.html"><a href="introduction-1.html"><i class="fa fa-check"></i><b>9</b> Introduction</a></li>
-<li class="chapter" data-level="10" data-path="saving-and-embedding-html.html"><a href="saving-and-embedding-html.html"><i class="fa fa-check"></i><b>10</b> Saving and embedding HTML</a></li>
+<li class="chapter" data-level="10" data-path="saving.html"><a href="saving.html"><i class="fa fa-check"></i><b>10</b> Saving and embedding HTML</a></li>
 <li class="chapter" data-level="11" data-path="exporting-static-images.html"><a href="exporting-static-images.html"><i class="fa fa-check"></i><b>11</b> Exporting static images</a><ul>
 <li class="chapter" data-level="11.1" data-path="exporting-static-images.html"><a href="exporting-static-images.html#with-code"><i class="fa fa-check"></i><b>11.1</b> With code</a></li>
 <li class="chapter" data-level="11.2" data-path="exporting-static-images.html"><a href="exporting-static-images.html#from-a-browser"><i class="fa fa-check"></i><b>11.2</b> From a browser</a></li>
@@ -326,6 +326,7 @@ code span.wa { color: #60a0b0; font-weight: bold; font-style: italic; } /* Warni
 <li class="part"><span><b>VII Developer-facing topics</b></span></li>
 <li class="chapter" data-level="34" data-path="custom-geoms.html"><a href="custom-geoms.html"><i class="fa fa-check"></i><b>34</b> Translating custom ggplot2 geoms</a></li>
 <li class="chapter" data-level="35" data-path="designing-an-htmlwidget-interface.html"><a href="designing-an-htmlwidget-interface.html"><i class="fa fa-check"></i><b>35</b> Designing an htmlwidget interface</a></li>
+<li class="chapter" data-level="" data-path="references.html"><a href="references.html"><i class="fa fa-check"></i>References</a></li>
 </ul>
 
       </nav>
@@ -353,7 +354,7 @@ code span.wa { color: #60a0b0; font-weight: bold; font-style: italic; } /* Warni
 <span class="co">#&gt;     data &lt;- data[order(data[[&quot;x&quot;]]), ]</span>
 <span class="co">#&gt;     prefix_class(data, &quot;GeomPath&quot;)</span>
 <span class="co">#&gt; }</span>
-<span class="co">#&gt; &lt;bytecode: 0x7f9622a9a558&gt;</span>
+<span class="co">#&gt; &lt;bytecode: 0x7fef3d5f8ce0&gt;</span>
 <span class="co">#&gt; &lt;environment: namespace:plotly&gt;</span></code></pre>
 <p>If you have implemented a custom geom, say <code>GeomCustom</code>, rest assured that the data passed to <code>to_basic()</code> will be of class <code>GeomCustom</code> when <code>ggplotly()</code> is called on a plot with your geom. And assuming <code>GeomCustom</code> may be reduced to another lower-level geom support by plotly, a <code>to_basic.GeomCustom()</code> method that transforms the data into a form suitable for that lower-level geom is sufficient for adding support. Moreover, note that the data passed to <code>to_basic()</code> is essentially the last form of the data <em>before</em> the render stage and <em>after</em> statistics have been performed. This makes it trivial to add support for geoms like <code>GeomXspline</code> from the <strong>ggalt</strong> package.</p>
 <pre class="sourceCode r"><code class="sourceCode r"><span class="kw">library</span>(ggalt)
@@ -363,7 +364,7 @@ code span.wa { color: #60a0b0; font-weight: bold; font-style: italic; } /* Warni
 <span class="co">#&gt;     data &lt;- data[order(data[[&quot;x&quot;]]), ]</span>
 <span class="co">#&gt;     prefix_class(data, &quot;GeomPath&quot;)</span>
 <span class="co">#&gt; }</span>
-<span class="co">#&gt; &lt;bytecode: 0x7f9625dfd9f0&gt;</span>
+<span class="co">#&gt; &lt;bytecode: 0x7fef3bfdff88&gt;</span>
 <span class="co">#&gt; &lt;environment: namespace:plotly&gt;</span></code></pre>
 <p>As shown in Figure <a href="custom-geoms.html#fig:xspline">34.1</a>, once the conversion has been provided. Users can call <code>ggplotly()</code> on the ggplot object containing the custom geom just like any other ggplot object.</p>
 <pre class="sourceCode r"><code class="sourceCode r"><span class="co"># example from `help(geom_xspline)`</span>

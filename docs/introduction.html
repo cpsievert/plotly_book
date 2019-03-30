@@ -216,7 +216,7 @@ code span.wa { color: #60a0b0; font-weight: bold; font-style: italic; } /* Warni
 </ul></li>
 <li class="part"><span><b>II Publishing views</b></span></li>
 <li class="chapter" data-level="9" data-path="introduction-1.html"><a href="introduction-1.html"><i class="fa fa-check"></i><b>9</b> Introduction</a></li>
-<li class="chapter" data-level="10" data-path="saving-and-embedding-html.html"><a href="saving-and-embedding-html.html"><i class="fa fa-check"></i><b>10</b> Saving and embedding HTML</a></li>
+<li class="chapter" data-level="10" data-path="saving.html"><a href="saving.html"><i class="fa fa-check"></i><b>10</b> Saving and embedding HTML</a></li>
 <li class="chapter" data-level="11" data-path="exporting-static-images.html"><a href="exporting-static-images.html"><i class="fa fa-check"></i><b>11</b> Exporting static images</a><ul>
 <li class="chapter" data-level="11.1" data-path="exporting-static-images.html"><a href="exporting-static-images.html#with-code"><i class="fa fa-check"></i><b>11.1</b> With code</a></li>
 <li class="chapter" data-level="11.2" data-path="exporting-static-images.html"><a href="exporting-static-images.html#from-a-browser"><i class="fa fa-check"></i><b>11.2</b> From a browser</a></li>
@@ -326,6 +326,7 @@ code span.wa { color: #60a0b0; font-weight: bold; font-style: italic; } /* Warni
 <li class="part"><span><b>VII Developer-facing topics</b></span></li>
 <li class="chapter" data-level="34" data-path="custom-geoms.html"><a href="custom-geoms.html"><i class="fa fa-check"></i><b>34</b> Translating custom ggplot2 geoms</a></li>
 <li class="chapter" data-level="35" data-path="designing-an-htmlwidget-interface.html"><a href="designing-an-htmlwidget-interface.html"><i class="fa fa-check"></i><b>35</b> Designing an htmlwidget interface</a></li>
+<li class="chapter" data-level="" data-path="references.html"><a href="references.html"><i class="fa fa-check"></i>References</a></li>
 </ul>
 
       </nav>
@@ -349,7 +350,7 @@ code span.wa { color: #60a0b0; font-weight: bold; font-style: italic; } /* Warni
 <h2><span class="header-section-number">1.1</span> Why interactive web graphics <em>from R</em>?</h2>
 <p>As <span class="citation">Wickham and Grolemund (<a href="#ref-r4ds" role="doc-biblioref">2018</a>)</span> argue, the exploratory phase of a data science workflow (Figure <a href="introduction.html#fig:workflow">1.1</a>) requires lots of iteration between data manipulation, visualization, and modeling. Acheiving these tasks through a programming language like <code>R</code> offers the opportunity to scale and automate tasks, document and track them, and reliably reproduce their output. That power, however, typically comes at the cost of increasing the amount of cognitive load involved relative to a GUI-based system.<a href="#fn1" class="footnote-ref" id="fnref1"><sup>1</sup></a> <code>R</code> packages like the <strong>tidyverse</strong> have been incredibly successful due to their ability to limit cognitive load without removing the benefits of performing analysis via code. Moreover, the <strong>tidyverse</strong>’s unifying principles of designing for humans, consistency, and composabilty makes iteration within and between these stages seamless – an important but often overlooked challenge in exploratory data analysis (EDA) <span class="citation">(Tidyverse team <a href="#ref-tidy-principles" role="doc-biblioref">2018</a>)</span>.</p>
 <div class="figure" style="text-align: center"><span id="fig:workflow"></span>
-<img src="images/workflow.png" alt="The stages of a data science workflow from Wickham and Grolemund (2018)." width="100%" />
+<img src="images/workflow.svg" alt="The stages of a data science workflow from Wickham and Grolemund (2018)." width="100%" />
 <p class="caption">
 FIGURE 1.1: The stages of a data science workflow from <span class="citation">Wickham and Grolemund (<a href="#ref-r4ds" role="doc-biblioref">2018</a>)</span>.
 </p>
@@ -377,7 +378,6 @@ m &lt;-<span class="st"> </span><span class="kw">highlight_key</span>(mpg)
 p &lt;-<span class="st"> </span><span class="kw">ggplot</span>(m, <span class="kw">aes</span>(displ, hwy)) <span class="op">+</span><span class="st"> </span><span class="kw">geom_point</span>()
 gg &lt;-<span class="st"> </span><span class="kw">highlight</span>(<span class="kw">ggplotly</span>(p), <span class="st">&quot;plotly_selected&quot;</span>)
 crosstalk<span class="op">::</span><span class="kw">bscols</span>(gg, DT<span class="op">::</span><span class="kw">datatable</span>(m))</code></pre>
-
 <div class="figure" style="text-align: center"><span id="fig:mpg-lasso"></span>
 <iframe src="https://player.vimeo.com/video/324366759?title=0&amp;byline=0&amp;portrait=0" width="100%" height="400" frameborder="0" seamless="seamless" webkitAllowFullScreen mozallowfullscreen allowFullScreen></iframe>
 <p class="caption">
@@ -409,11 +409,26 @@ FIGURE 1.4: Using the <strong>ggforce</strong> package to annotate the corvette�
 <p>This book provides a foundation for learning how to make interactive web-based graphics for data analysis from <code>R</code> via <strong>plotly</strong>, without assuming any prior experience with web technologies. The goal is to provide the context you need to go beyond copying existing <strong>plotly</strong> examples to having a useful mental model of the underlying framework, its capabilities, and how it fits into the larger R ecosystem. By learning this mental model, you’ll have a better understanding of how to create more sophisticated visualizatons, fix common issues, improve performance, understand the limitations, and even contribute back to the project itself. You may already be familiar with existing <strong>plotly</strong> documentation (e.g., <a href="https://plot.ly/r/" class="uri">https://plot.ly/r/</a>), which is essentially a language-agnostic how-to guide, but this book is meant to be more wholistic tutorial written by and for the R user.</p>
 <p>This book also focuses primarily on features that are unique to the <strong>plotly</strong> R package (i.e., things that don’t work the same for Python or JavaScript). This ranges from creation of a single graph using the <code>plot_ly()</code> special named arguments that make it easier to map data to visuals:</p>
 <pre class="sourceCode r"><code class="sourceCode r"><span class="kw">plot_ly</span>(diamonds, <span class="dt">x =</span> <span class="op">~</span>cut, <span class="dt">color =</span> <span class="op">~</span>clarity, <span class="dt">colors =</span> <span class="st">&quot;Accent&quot;</span>)</code></pre>
+<div class="figure" style="text-align: center"><span id="fig:intro-show-hide-preview"></span>
 <iframe src="https://player.vimeo.com/video/315707813?title=0&amp;byline=0&amp;portrait=0" width="100%" height="400" frameborder="0" seamless="seamless" webkitAllowFullScreen mozallowfullscreen allowFullScreen></iframe>
+<p class="caption">
+FIGURE 1.5: An example of what you’ll learn: Figure <a href="overview.html#fig:intro-show-hide">2.7</a>.
+</p>
+</div>
 <p>To its ability to link multiple data views purely client-side (see Chapter <a href="client-side-linking.html#graphical-queries">16.1</a>):</p>
+<div class="figure" style="text-align: center"><span id="fig:storms-preview"></span>
 <iframe src="https://player.vimeo.com/video/257149623?title=0&amp;byline=0&amp;portrait=0" width="100%" height="400" frameborder="0" seamless="seamless" webkitAllowFullScreen mozallowfullscreen allowFullScreen></iframe>
+<p class="caption">
+FIGURE 1.6: An example of what you’ll learn: Figure <a href="client-side-linking.html#fig:storms">16.19</a>.
+</p>
+</div>
 <p>To advanced server-side linking with <strong>shiny</strong> to implement responsive and scalable crossfilters (see Section <a href="linking-server-side.html#crossfilter">17.4.2</a>):</p>
+<div class="figure" style="text-align: center"><span id="fig:shiny-crossfilter-naive-preview"></span>
 <iframe src="https://player.vimeo.com/video/318277110?title=0&amp;byline=0&amp;portrait=0" width="100%" height="400" frameborder="0" seamless="seamless" webkitAllowFullScreen mozallowfullscreen allowFullScreen></iframe>
+<p class="caption">
+FIGURE 1.7: An example of what you’ll learn: Figure <a href="linking-server-side.html#fig:shiny-crossfilter-naive">17.23</a>.
+</p>
+</div>
 <p>By going through the code behind these examples, you’ll that many of them leverage other <code>R</code> packages in their implementation. To highlight a few of the R packages that you’ll see:</p>
 <ul>
 <li><strong>dplyr</strong> and <strong>tidyr</strong>
@@ -571,7 +586,7 @@ remotes<span class="op">::</span><span class="kw">install_github</span>(<span cl
 <span class="co">#&gt;  RColorBrewer   1.1-2      2014-12-07 [1]</span>
 <span class="co">#&gt;  Rcpp           1.0.1      2019-03-17 [1]</span>
 <span class="co">#&gt;  reshape2       1.4.3      2017-12-11 [1]</span>
-<span class="co">#&gt;  rlang          0.3.2      2019-03-21 [1]</span>
+<span class="co">#&gt;  rlang          0.3.3      2019-03-29 [1]</span>
 <span class="co">#&gt;  scales         1.0.0.9000 2019-02-14 [1]</span>
 <span class="co">#&gt;  shiny          1.3.0      2019-03-27 [1]</span>
 <span class="co">#&gt;  sourcetools    0.1.7      2018-04-25 [1]</span>
@@ -632,7 +647,7 @@ remotes<span class="op">::</span><span class="kw">install_github</span>(<span cl
 <span class="co">#&gt;  CRAN (R 3.5.0)                       </span>
 <span class="co">#&gt;  CRAN (R 3.5.2)                       </span>
 <span class="co">#&gt;  CRAN (R 3.5.0)                       </span>
-<span class="co">#&gt;  CRAN (R 3.5.2)                       </span>
+<span class="co">#&gt;  CRAN (R 3.5.3)                       </span>
 <span class="co">#&gt;  Github (hadley/scales@c374014)       </span>
 <span class="co">#&gt;  Github (rstudio/shiny@b21bdac)       </span>
 <span class="co">#&gt;  CRAN (R 3.5.0)                       </span>

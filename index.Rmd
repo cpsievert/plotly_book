@@ -62,21 +62,22 @@ if (knitr::is_html_output()) {
 }
 
 include_vimeo <- function(id, width = "100%", height = "400") {
-  #if (knitr::is_latex_output()) {
-  #  # TODO: fill this in with proper thumbnails
-  #  return(knitr::include_graphics("images/3D-axes.png"))
-  #}
-  url <- sprintf("https://player.vimeo.com/video/%s?title=0&byline=0&portrait=0", id)
-  htmltools::tags$iframe(
-    src = url, 
-    width = width, 
-    height = height, 
-    frameborder = "0", 
-    seamless = "seamless",
-    webkitAllowFullScreen = NA, 
-    mozallowfullscreen = NA, 
-    allowFullScreen = NA
-  )
+  if (knitr::is_latex_output()) {
+    img <- paste0("vimeo-images/", id, "/final.png")
+    knitr::include_graphics(img)
+  } else {
+    url <- sprintf("https://player.vimeo.com/video/%s?title=0&byline=0&portrait=0", id)
+    htmltools::tags$iframe(
+      src = url, 
+      width = width, 
+      height = height, 
+      frameborder = "0", 
+      seamless = "seamless",
+      webkitAllowFullScreen = NA, 
+      mozallowfullscreen = NA, 
+      allowFullScreen = NA
+    )
+  }
 }
 
 options(
