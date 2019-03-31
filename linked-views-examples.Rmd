@@ -196,13 +196,13 @@ nc <- st_read(system.file("shape/nc.shp", package = "sf"), quiet = TRUE)
 nc_query <- highlight_key(nc, group = "sf-rocks")
 nc_centroid <- highlight_key(st_centroid(nc), group = "sf-rocks")
 
-map <- plot_mapbox(color = I("black")) %>%
+map <- plot_mapbox(color = I("black"), height = 250) %>%
   add_sf(data = nc) %>%
   add_sf(data = nc_centroid) %>%
   layout(showlegend = FALSE) %>%
   highlight("plotly_selected", dynamic = TRUE)
 
-hist <- plot_ly(color = I("black")) %>% 
+hist <- plot_ly(color = I("black"), height = 250) %>% 
   add_histogram(
     data = nc_query, x = ~AREA,
     xbins = list(start = 0, end = 0.3, size = 0.01)
@@ -313,7 +313,7 @@ include_vimeo("307788027")
 
 In addition to the `ggpairs()` function for generalized pairs plots, the **GGally** packages also has a `ggnostic()` function which generates a matrix of diagnostic plots from a model object using **ggplot2**. Each column of this matrix represents a different explanatory variable and each row represents a different diagnostic measure. Figure \@ref(fig:ggnostic) shows the default display for a linear model, which includes residuals (resid), estimates of residual standard deviation when a particular observation is excluded (sigma), diagonals from the projection matrix (hat), and cooks distance (cooksd). 
 
-```{r, eval = FALSE}
+```r
 library(dplyr)
 library(GGally)
 
@@ -346,7 +346,7 @@ d <- tibble::tibble(
 )
 highlight_key(d, ~key) %>%
   plot_ly(x = ~x, y = ~y, text = ~txt, hoverinfo = "text") %>%
-  highlight("plotly_selected") %>%
+  highlight("plotly_selected", color = "red") %>%
   layout(dragmode = "lasso")
 ```
 

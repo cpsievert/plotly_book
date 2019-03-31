@@ -189,7 +189,7 @@ onRender(
 include_vimeo("307598425")
 ```
 
-In addition to using `window.open()` to open the `url`, we could also add it to the plot as an annotation using the plotly.js function `Plotly.relayout()`, as done in Figure \@ref(fig:click-annotate). Moreover, since plotly annotations support HTML markup, we can also treat that url as a true HTML hyperlink by wrapping it in an HTML `<a>` tag. In cases where your JS function starts to get complex, it can help to put that JS function in its own file, then use the R function `readLines()` to read it in as a string and pass along `onRender()` as done below:
+In addition to using `window.open()` to open the `url`, we could also add it to the plot as an annotation using the plotly.js function `Plotly.relayout()`, as done in Figure \@ref(fig:hover-annotate). Moreover, since plotly annotations support HTML markup, we can also treat that url as a true HTML hyperlink by wrapping it in an HTML `<a>` tag. In cases where your JS function starts to get complex, it can help to put that JS function in its own file, then use the R function `readLines()` to read it in as a string and pass along `onRender()` as done below:
 
 ```r
 onRender(p, readLines("js/hover-hyperlink.js"))
@@ -198,8 +198,8 @@ onRender(p, readLines("js/hover-hyperlink.js"))
 ```{js, eval = FALSE, summary = "Click to show the 'js/hover-hyperlink.js' file", code = readLines("js/hover-hyperlink.js")}
 ```
 
-```{r click-annotate, echo = FALSE, fig.cap="(ref:click-annotate)"}
-include_vimeo("307598266")
+```{r hover-annotate, echo = FALSE, fig.cap="(ref:hover-annotate)"}
+include_vimeo("327588345")
 ```
 
 ```{block, type='rmdtip'}

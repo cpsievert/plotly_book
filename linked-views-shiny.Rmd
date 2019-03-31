@@ -121,7 +121,7 @@ Section \@ref(fig:shiny-intro) covered how to render **shiny** output widgets (e
 
 The `event_data()` function is the most straight-forward way to access a **plotly** input events in **shiny**. Although `event_data()` is function, it references and returns a **shiny** input value, so `event_data()` needs to be used inside a reactive context. Most of these available events are data-specific traces (e.g., `"plotly_hover"`, `"plotly_click"`, `"plotly_selected"`, etc), but there are also some that are layout-specific (e.g., `"plotly_relayout"`). Most plotly.js events^[These events are documented at https://plot.ly/javascript/plotlyjs-events/] are accessible through this interface -- for a complete list see the `help(event_data)` documentation page.
 
-Numerous Figures in the following sections show how to access common **plotly** events in **shiny** and do something with the result. When using these events to inform another view of the data, it's often necessary to know what portion of data was queried in the event (i.e., the `x`/`y` positions alone may not be enough to uniquely identify the information of interest). For this reason, it's often a good idea to supply a `key` (or `customdata`) attribute, so that you can map the event data back to the original data. The `key` attribute is only supported in **shiny**, but `customdata` is officially supported by plotly.js, and thus can also be used to attach meta-information to event -- see section \@ref(javascript) for more details.
+Numerous Figures in the following sections show how to access common **plotly** events in **shiny** and do something with the result. When using these events to inform another view of the data, it's often necessary to know what portion of data was queried in the event (i.e., the `x`/`y` positions alone may not be enough to uniquely identify the information of interest). For this reason, it's often a good idea to supply a `key` (and/or `customdata`) attribute, so that you can map the event data back to the original data. The `key` attribute is only supported in **shiny**, but `customdata` is officially supported by plotly.js, and thus can also be used to attach meta-information to event -- see section \@ref(javascript) for more details.
 
 ### Dragging events
 
@@ -133,8 +133,8 @@ library(shiny)
 ui <- fluidPage(
   radioButtons("plotType", "Plot Type:", choices = c("ggplotly", "plotly")),
   plotlyOutput("plot"),
-  verbatimTextOutput("selecting"),
   verbatimTextOutput("brushing"),
+  verbatimTextOutput("selecting"),
   verbatimTextOutput("relayout")
 )
 
@@ -144,21 +144,21 @@ server <- function(input, output, session) {
     
   output$plot <- renderPlotly({
     p <- if (identical(input$plotType, "ggplotly")) {
-      ggplotly(ggplot(mtcars, aes(x = mpg, y = wt, key = nms)) + geom_point())
+      ggplotly(ggplot(mtcars, aes(x = mpg, y = wt, customdata = nms)) + geom_point())
     } else {
-      plot_ly(mtcars, x = ~mpg, y = ~wt, key = nms)
+      plot_ly(mtcars, x = ~mpg, y = ~wt, customdata = nms)
     }
-    layout(p, dragmode = "select")
-  })
-  
-  output$selecting <- renderPrint({
-    d <- event_data("plotly_selecting")
-    if (is.null(d)) "Selected data appears here" else d
+    p %>% layout(dragmode = "select") %>% event_register("plotly_selecting")
   })
   
   output$brushing <- renderPrint({
     d <- event_data("plotly_brushing")
     if (is.null(d)) "Selection brush limits appear here" else d
+  })
+  
+  output$selecting <- renderPrint({
+    d <- event_data("plotly_selecting")
+    if (is.null(d)) "Selected data appears here" else d
   })
   
   output$relayout <- renderPrint({
@@ -195,7 +195,9 @@ ui <- fluidPage(
 server <- function(input, output, session) {
   
   output$plot <- renderPlotly({
-    plot_ly(mtcars, x = ~wt, y = ~mpg, z = ~disp, color = ~factor(cyl))
+    plot_ly(mtcars, x = ~wt, y = ~mpg, z = ~disp, color = ~factor(cyl)) %>%
+      event_register("plotly_legendclick") %>%
+      event_register("plotly_legenddoubleclick") 
   })
   
   output$hover <- renderPrint({
@@ -229,7 +231,7 @@ shinyApp(ui, server)
 ```
 
 ```{r 3Devents, echo=FALSE, fig.cap = "(ref:3Devents)"}
-include_vimeo("307598025", height = 500)
+include_vimeo("327600560", height = 500)
 ```
 
 ### Edit events
@@ -560,7 +562,7 @@ server <- function(input, output, session) {
     d <- event_data("plotly_click")
     if (is.null(d)) return("Click a bar")
     mpg %>%
-      filter(drv %in% d$key) %>%
+      filter(drv %in% d$customdata) %>%
       filter(class %in% classes[d$x])
   })
   
@@ -813,7 +815,7 @@ shinyApp(ui, server)
 ```
 
 ```{r shiny-mapbox-relayout, echo = FALSE, fig.cap="(ref:shiny-mapbox-relayout)"}
-include_vimeo("307598178")
+include_vimeo("327603568")
 ```
 
 Figure \@ref(fig:shiny-rangeslider-relayout) demonstrates a clever use of `Plotly.relayout()` to set the y-axis range in response to changes in the x-axis range.
@@ -852,13 +854,9 @@ server <- function(input, output, session) {
   
   yRange <- range(txhousing$median, na.rm = TRUE)
   observeEvent(event_data("plotly_doubleclick"), {
-    
     plotlyProxy("plot", session) %>%
       plotlyProxyInvoke("relayout", list(yaxis = list(range = yRange)))
-    
   })
-  
-  
 }
 
 shinyApp(ui, server)
