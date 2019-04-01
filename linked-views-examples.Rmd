@@ -21,7 +21,7 @@ The demo above requires some fairly advanced data pre-processing, so to learn ho
 ```{r, eval = FALSE, code = readLines("code/trellis-txhousing.R")}
 ```
 
-```{r trellis-txhousing, echo = FALSE, fig.cap = "(ref:trellis-txhousing)", code = if (knitr::is_html_output()) readLines("code/trellis-txhousing.R") else knitr::include_graphics("images/trellis-txhousing.png")}
+```{r trellis-txhousing, echo = FALSE, fig.cap = "(ref:trellis-txhousing)", code = readLines("code/trellis-txhousing-output.R")}
 ```
 
 Figure \@ref(fig:trellis-txhousing-plotly) displays the same information as \@ref(fig:trellis-txhousing), but shows a way to implement a linked trellis display via `plot_ly()` instead of `ggplotly()`. This approach leverages `dplyr::do()` to create **plotly** object for each city/panel, then routes that list of plots into `subplot()`. One nuance here is that the querying variable has to be defined within the `do()` statement, but everytime `highlight_key()` is called, it creates a `crosstalk::SharedData` object belonging to a new unique `group`, so to link these panels together the `group` must be set to a constant value (here we've set `group = "txhousing-trellis"`).
@@ -29,7 +29,7 @@ Figure \@ref(fig:trellis-txhousing-plotly) displays the same information as \@re
 ```{r, eval = FALSE, code = readLines("code/trellis-txhousing-plotly.R")}
 ```
 
-```{r trellis-txhousing-plotly, echo = FALSE, fig.cap = "(ref:trellis-txhousing-plotly)", code = if (knitr::is_html_output()) readLines("code/trellis-txhousing-plotly.R") else knitr::include_graphics("images/trellis-txhousing-plotly.png")}
+```{r trellis-txhousing-plotly, echo = FALSE, fig.cap = "(ref:trellis-txhousing-plotly)", code = readLines("code/trellis-txhousing-plotly-output.R")}
 ```
 
 

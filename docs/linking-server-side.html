@@ -1405,12 +1405,12 @@ FIGURE 17.26: Comparing filters with a dynamic color brush. This particular exam
 </div>
 <div id="drag-brush" class="section level3">
 <h3><span class="header-section-number">17.4.3</span> A draggable brush</h3>
-<p>A <em>draggable</em> linked brush is great for conditioning via a moving window. For example, in a cross-filtering example like Figure <a href="linking-server-side.html#fig:shiny-crossfilter">17.25</a>, it would be nice to condition on a certain hour of day, then drag that hour interval along the axis to explore how the hourly distribution changes throughout the day. At the time of writing, plotly.js does not support a draggable brush, but we could implement one with a clever use of a editable rectangle shape. Figure @ref(fig:drag_brush) demonstrates this idea in a <strong>shiny</strong> application by drawing a rectangle shape that mimics the plotly.js brush, then uses the <code>"plotly_relayout"</code> event to determine the limits of the brush (instead of the <code>"plotly_brushed"</code> or <code>"plotly_brushing"</code>).</p>
+<p>A <em>draggable</em> linked brush is great for conditioning via a moving window. For example, in a cross-filtering example like Figure <a href="linking-server-side.html#fig:shiny-crossfilter">17.25</a>, it would be nice to condition on a certain hour of day, then drag that hour interval along the axis to explore how the hourly distribution changes throughout the day. At the time of writing, plotly.js does not support a draggable brush, but we could implement one with a clever use of a editable rectangle shape. Figure <a href="linking-server-side.html#fig:shiny-drag-brush">17.27</a> demonstrates this idea in a <strong>shiny</strong> application by drawing a rectangle shape that mimics the plotly.js brush, then uses the <code>"plotly_relayout"</code> event to determine the limits of the brush (instead of the <code>"plotly_brushed"</code> or <code>"plotly_brushing"</code>).</p>
 <pre class="sourceCode r"><code class="sourceCode r"><span class="kw">plotly_example</span>(<span class="st">&quot;shiny&quot;</span>, <span class="st">&quot;drag_brush&quot;</span>)</code></pre>
-<div class="figure" style="text-align: center">
+<div class="figure" style="text-align: center"><span id="fig:shiny-drag-brush"></span>
 <iframe src="https://player.vimeo.com/video/318330112?title=0&amp;byline=0&amp;portrait=0" width="100%" height="400" frameborder="0" seamless="seamless" webkitAllowFullScreen mozallowfullscreen allowFullScreen></iframe>
 <p class="caption">
-(#fig:drag_brush)(ref:drag_brush)
+FIGURE 17.27: A draggable brush with both a transient and persistent mode. The dragging ability is done by mimicing the native plotly.js brush with an editable rectangle shape and listening to changes in that brush. The implementation of transient vs persistent mode is a matter of forgetting or remembering previous state(s) of the brush.
 </p>
 </div>
 </div>
@@ -1421,7 +1421,7 @@ FIGURE 17.26: Comparing filters with a dynamic color brush. This particular exam
 <div class="figure" style="text-align: center"><span id="fig:shiny-crosstalk-examples"></span>
 <iframe src="https://player.vimeo.com/video/207379729?title=0&amp;byline=0&amp;portrait=0" width="100%" height="400" frameborder="0" seamless="seamless" webkitAllowFullScreen mozallowfullscreen allowFullScreen></iframe>
 <p class="caption">
-FIGURE 17.27: Example of a <strong>shiny</strong> app that has <strong>crosstalk</strong> functionality embedded.
+FIGURE 17.28: Example of a <strong>shiny</strong> app that has <strong>crosstalk</strong> functionality embedded.
 </p>
 </div>
 <p>Sometimes <strong>shiny</strong> gets a bad rap for being too slow or unresponsive, but as we learned in sections <a href="linking-server-side.html#proxies">17.3.1</a> and <a href="linking-server-side.html#advanced-applications">17.4</a>, we can still have very advanced functionality as well as a good user experience – it just takes a bit more effort to optimize performance in some cases. In fact, one could argue that a server-client approach to crossfiltering, as done in Figure <a href="linking-server-side.html#fig:shiny-crossfilter">17.25</a> is more scalable than a purely client-side approach since the client wouldn’t need to know about the raw data – just the summary statistics. Nevertheless, sometimes linking views server side simply isn’t an option for you or your organization.</p>

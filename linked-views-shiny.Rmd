@@ -1082,13 +1082,13 @@ include_vimeo("327622610")
 
 ### A draggable brush {#drag-brush}
 
-A *draggable* linked brush is great for conditioning via a moving window. For example, in a cross-filtering example like Figure \@ref(fig:shiny-crossfilter), it would be nice to condition on a certain hour of day, then drag that hour interval along the axis to explore how the hourly distribution changes throughout the day. At the time of writing, plotly.js does not support a draggable brush, but we could implement one with a clever use of a editable rectangle shape. Figure \@ref(fig:drag_brush) demonstrates this idea in a **shiny** application by drawing a rectangle shape that mimics the plotly.js brush, then uses the `"plotly_relayout"` event to determine the limits of the brush (instead of the `"plotly_brushed"` or `"plotly_brushing"`).
+A *draggable* linked brush is great for conditioning via a moving window. For example, in a cross-filtering example like Figure \@ref(fig:shiny-crossfilter), it would be nice to condition on a certain hour of day, then drag that hour interval along the axis to explore how the hourly distribution changes throughout the day. At the time of writing, plotly.js does not support a draggable brush, but we could implement one with a clever use of a editable rectangle shape. Figure \@ref(fig:shiny-drag-brush) demonstrates this idea in a **shiny** application by drawing a rectangle shape that mimics the plotly.js brush, then uses the `"plotly_relayout"` event to determine the limits of the brush (instead of the `"plotly_brushed"` or `"plotly_brushing"`).
 
 ```r
 plotly_example("shiny", "drag_brush")
 ```
 
-```{r drag_brush, echo=FALSE, fig.cap="(ref:drag_brush)"}
+```{r shiny-drag-brush, echo=FALSE, fig.cap="(ref:shiny-drag-brush)"}
 include_vimeo("318330112")
 ```
 
