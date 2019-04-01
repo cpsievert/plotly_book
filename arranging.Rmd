@@ -188,7 +188,8 @@ The same problems and principles that inspired scagnostics has inspired work on 
 library(trelliscopejs)
 
 qplot(cty, hwy, data = mpg) +
-  xlim(7, 37) + ylim(9, 47) + theme_bw() +
+  coord_cartesian(xlim=c(7, 37), ylim=c(9, 47)) + 
+  theme_bw() +
   facet_trelliscope(
     ~ manufacturer + class, nrow = 2, ncol = 4, 
     as_plotly = TRUE, plotly_args = list(dynamicTicks = T)
