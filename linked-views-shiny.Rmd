@@ -96,7 +96,9 @@ server <- function(input, output, session, ...) {
     if (identical(input$cities, "")) return(NULL)
     p <- ggplot(data = filter(txhousing, city %in% input$cities)) + 
       geom_line(aes(date, median, group = city))
-    ggplotly(p, height = session$clientData$output_p_height, width = session$clientData$output_p_width)
+    height <- session$clientData$output_p_height
+    width <- session$clientData$output_p_width
+    ggplotly(p, height = height, width = width)
   })
 }
 
@@ -595,46 +597,8 @@ The last section explains why you may want to leverage partial **plotly** update
 
 All **plotly** figures have two main components: traces (i.e., mapping from data to visuals) and layout. The plotly.js function `Plotly.restyle()` is for modifying any existing traces. In addition to being a performant way to modify existing data and/or visual properties, it also has the added benefit of not affecting the current layout of the graph. Notice how, in Figure \@ref(fig:shiny-partial-restyle) for example, when the size of the marker/path changes, it doesn't change the camera's view of the 3D plot that the user altered after initial draw. If these input widgets triggered a full redraw of the plot, the camera would be reset to it's initial state.
 
-```{r eval = FALSE, summary = "Click to show/hide the code"}
-library(shiny)
-library(plotly)
-
-ui <- fluidPage(
-  sliderInput("marker", "Marker size", min = 0, max = 20, value = 8),
-  sliderInput("path", "Path size", min = 0, max = 30, value = 2),
-  plotlyOutput("p")
-)
-
-server <- function(input, output, session) {
-  
-  output$p <- renderPlotly({
-    plot_ly(
-      economics, x = ~pce, y = ~psavert, z = ~unemploy, 
-      color = ~as.numeric(date), mode = "markers+lines"
-    )
-  })
-  
-  observeEvent(input$marker, {
-    plotlyProxy("p", session) %>%
-      plotlyProxyInvoke(
-        "restyle", 
-        # could also do list(marker = list(size = input$marker))
-        # but that overwrites the existing marker definition
-        # https://github.com/plotly/plotly.js/issues/1866#issuecomment-314115744
-        list(marker.size = input$marker)
-      )
-  })
-  
-  observeEvent(input$path, {
-    plotlyProxy("p", session) %>%
-      plotlyProxyInvoke(
-        "restyle", list(line.width = input$path)
-      )
-  })
-  
-}
-
-shinyApp(ui, server)
+```r
+plotly_example("shiny", "proxy_restyle_economics")
 ```
 
 ```{r shiny-partial-restyle, echo = FALSE, fig.cap="(ref:shiny-partial-restyle)"}
@@ -648,35 +612,8 @@ One un-intuitive thing about `Plotly.restyle()` is that it fully replaces object
 
 All **plotly** figures have two main components: traces (i.e., mapping from data to visuals) and layout. The plotly.js function `Plotly.relayout()` modifies the layout component, so it can control a wide variety of things such titles, axis definitions, annotations, shapes, and many other things. It can even be used to change the basemap layer of a Mapbox-powered layout, as in Figure \@ref(fig:shiny-mapbox-relayout). Note how this example uses `schema()` to grab all the pre-packaged basemap layers and create a dropdown of those options, but you can also provide a URL to a [custom basemap style](https://www.mapbox.com/help/create-a-custom-style/).
 
-```{r eval = FALSE, summary = "Click to show/hide the code"}
-library(shiny)
-library(plotly)
-
-# get all the available mapbox styles
-mapStyles <- schema()$layout$layoutAttributes$mapbox$style$values
-
-ui <- fluidPage(
-  selectInput("style", "Select a mapbox style", mapStyles),
-  plotlyOutput("map")
-)
-
-server <- function(input, output, session) {
-  
-  output$map <- renderPlotly({
-    plot_mapbox()
-  })
-  
-  observeEvent(input$style, {
-    plotlyProxy("map", session) %>%
-      plotlyProxyInvoke(
-        "relayout",
-        list(mapbox = list(style = input$style))
-      )
-  })
-  
-}
-
-shinyApp(ui, server)
+```r
+plotly_example("shiny", "proxy_relayout")
 ```
 
 ```{r shiny-mapbox-relayout, echo = FALSE, fig.cap="(ref:shiny-mapbox-relayout)"}
@@ -685,46 +622,8 @@ include_vimeo("327603568")
 
 Figure \@ref(fig:shiny-rangeslider-relayout) demonstrates a clever use of `Plotly.relayout()` to set the y-axis range in response to changes in the x-axis range.
 
-```{r eval = FALSE, summary = "Click to show/hide the code"}
-library(shiny)
-library(plotly)
-
-ui <- fluidPage(
-  plotlyOutput("plot")
-)
-
-server <- function(input, output, session) {
-  
-  p <- ggplot(txhousing) +
-    geom_line(aes(date, median, group = city))
-  
-  output$plot <- renderPlotly({
-    ggplotly(p, dynamicTicks = TRUE) %>% 
-      rangeslider() 
-  })
-  
-  observeEvent(event_data("plotly_relayout"), {
-    d <- event_data("plotly_relayout")
-    xmin <- if (length(d[["xaxis.range[0]"]])) d[["xaxis.range[0]"]] else d[["xaxis.range"]][1]
-    xmax <- if (length(d[["xaxis.range[1]"]])) d[["xaxis.range[1]"]] else d[["xaxis.range"]][2]
-    if (is.null(xmin) || is.null(xmax)) return(NULL)
-    
-    # compute the y-range based on the new x-range
-    idx <- with(txhousing, xmin <= date & date <= xmax)
-    yrng <- extendrange(txhousing$median[idx])
-    
-    plotlyProxy("plot", session) %>%
-      plotlyProxyInvoke("relayout", list(yaxis = list(range = yrng)))
-  })
-  
-  yRange <- range(txhousing$median, na.rm = TRUE)
-  observeEvent(event_data("plotly_doubleclick"), {
-    plotlyProxy("plot", session) %>%
-      plotlyProxyInvoke("relayout", list(yaxis = list(range = yRange)))
-  })
-}
-
-shinyApp(ui, server)
+```r
+plotly_example("shiny", "proxy_relayout")
 ```
 
 ```{r shiny-rangeslider-relayout, echo = FALSE, fig.cap="(ref:shiny-rangeslider-relayout)"}
@@ -741,67 +640,8 @@ The implementation behind Figure \@ref(fig:shiny-stream), an elementary example 
 Even if the app is not streaming, there is still constant client/server communication because of the use of `invalidateLater()` inside the `observe()`. This effectively tells **shiny** to re-evaluate the `observe()` block every 100 milliseconds. If the app isn't in streaming mode, then it exits early without doing anything. If the app is streaming, then we first use `sample()` to randomly draw either -1 or 1 (with equal probability) and use the result to update the most recent (x, y) state. This is done by assigning a new value to the reactive values `rv$y` and `rv$n` within an `isolate()`d context -- if this assignment happened outside of an `isolate()`d context it would cause the reactive expression to be invalidated and cause an infinite loop! Once we have the new (x, y) point stored away, `Plotly.extendTraces()` can be used to add the new point to the plotly graph.
 
 
-```{r eval = FALSE, summary = "Click to show/hide the code"}
-library(shiny)
-library(plotly)
-
-ui <- fluidPage(
-  actionButton("stream", "Turn stream on/off"),
-  plotlyOutput("plot")
-)
-
-server <- function(input, output, session) {
-  
-  # initial values
-  yint <- c(0, 1)
-  
-  # initiate graph with initial values
-  output$plot <- renderPlotly({
-    plot_ly(y = yint, x = seq_along(yint)) %>%
-      add_lines()
-  })
-  
-  # reactiveValues() act very much like input values, but may be used to 
-  # maintain state (e.g., are we currently streaming?)
-  rv <- reactiveValues(
-    stream = FALSE,
-    yend = sum(yint), 
-    n = length(yint)
-  )
-  
-  # turn streaming on/off when the button is pressed
-  observeEvent(input$stream, {
-    rv$stream <- if (rv$stream) FALSE else TRUE
-  })
-  
-  observe({
-    # if we're not streaming, don't do anything
-    if (!rv$stream) return()
-    
-    # re-execute this code block to every 100 milliseconds
-    invalidateLater(100, session)
-    # changing a reactive value "invalidates" it, so isolate() is needed 
-    # to avoid recursion
-    isolate({
-      rv$n <- rv$n + 1
-      rv$yend <- rv$yend + sample(c(-1, 1), 1)
-    })
-    
-    # add the new value to the plot
-    plotlyProxy("plot", session) %>%
-      plotlyProxyInvoke(
-        "extendTraces", 
-        list(
-          y = list(list(rv$yend)), 
-          x = list(list(rv$n))
-        ), 
-        list(0)
-      )
-  })
-  
-}
-
-shinyApp(ui, server)
+```r
+plotly_example("shiny", "stream")
 ```
 
 ```{r shiny-stream, echo = FALSE, fig.cap="(ref:shiny-stream)"}

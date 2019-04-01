@@ -28,8 +28,10 @@ widget_file_size(partial_bundle(p))
 If you want to embed numerous widgets in a larger HTML document (e.g., via HTML `<iframe>`s), *self-contained* HTML is not recommended. That's because, if you embed numerous self-contained widgets inside a larger document, your browser has to repeatedly parse the same dependencies over and over. Instead, if you save all the dependency files externally into a single directory, the browser will only have to parse those dependencies once, which can dramatically improve responsiveness. You can do this by setting `selfcontained = FALSE` and specifying a fixed `libdir` in `saveWidget()`. It's also worth noting that using `htmlwidgets::saveWidget()` with `selfcontained = FALSE` is essentially the same as using `htmltools::save_html()` which saves arbitrary HTML content to a file. The `htmltools::save_html()` function is useful for saving numerous htmlwidgets (e.g., Figure \@ref(fig:fluid) or \@ref(fig:flexbox)) and/or other custom HTML markup (e.g., Figure \@ref(fig:correlation-client-side)) in a single HTML page. 
 
 ```r
-htmlwidgets::saveWidget(plot_ly(x = rnorm(100)), "p1.html", selfcontained = FALSE, libdir = "lib")
-htmlwidgets::saveWidget(plot_ly(x = rnorm(100)), "p2.html", selfcontained = FALSE, libdir = "lib")
+library(htmlwidgets)
+p <- plot_ly(x = rnorm(100))
+saveWidget(p, "p1.html", selfcontained = F, libdir = "lib")
+saveWidget(p, "p2.html", selfcontained = F, libdir = "lib")
 ```
 
 In this case, if you wanted to share `"p1.html"` and/or `"p2.html"` with someone else, make sure to include the `libdir` folder, perhaps via a zip file:

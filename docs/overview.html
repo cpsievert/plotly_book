@@ -25,7 +25,7 @@
 <meta name="author" content="Carson Sievert">
 
 
-<meta name="date" content="2019-03-31">
+<meta name="date" content="2019-04-01">
 
   <meta name="viewport" content="width=device-width, initial-scale=1">
   <meta name="apple-mobile-web-app-capable" content="yes">
@@ -59,11 +59,6 @@
 <script src="libs/selectize/selectize.min.js"></script>
 <link href="libs/colourpicker/colourpicker.min.css" rel="stylesheet" />
 <script src="libs/colourpicker/colourpicker.min.js"></script>
-<link href="libs/datatables-css/datatables-crosstalk.css" rel="stylesheet" />
-<script src="libs/datatables-binding/datatables.js"></script>
-<link href="libs/dt-core/css/jquery.dataTables.min.css" rel="stylesheet" />
-<link href="libs/dt-core/css/jquery.dataTables.extra.css" rel="stylesheet" />
-<script src="libs/dt-core/js/jquery.dataTables.min.js"></script>
 
 
 <style type="text/css">
@@ -312,20 +307,18 @@ code span.wa { color: #60a0b0; font-weight: bold; font-style: italic; } /* Warni
 </ul></li>
 <li class="chapter" data-level="27" data-path="working-with-colors.html"><a href="working-with-colors.html"><i class="fa fa-check"></i><b>27</b> Working with colors</a></li>
 <li class="chapter" data-level="28" data-path="working-with-symbols.html"><a href="working-with-symbols.html"><i class="fa fa-check"></i><b>28</b> Working with symbols and glyphs</a></li>
-<li class="chapter" data-level="29" data-path="locales.html"><a href="locales.html"><i class="fa fa-check"></i><b>29</b> Language support</a></li>
-<li class="chapter" data-level="30" data-path="mathjax.html"><a href="mathjax.html"><i class="fa fa-check"></i><b>30</b> LaTeX rendering</a><ul>
-<li class="chapter" data-level="30.1" data-path="mathjax.html"><a href="mathjax.html#mathjax-caveats"><i class="fa fa-check"></i><b>30.1</b> MathJax caveats</a></li>
+<li class="chapter" data-level="29" data-path="embedding-images.html"><a href="embedding-images.html"><i class="fa fa-check"></i><b>29</b> Embedding images</a></li>
+<li class="chapter" data-level="30" data-path="locales.html"><a href="locales.html"><i class="fa fa-check"></i><b>30</b> Language support</a></li>
+<li class="chapter" data-level="31" data-path="mathjax.html"><a href="mathjax.html"><i class="fa fa-check"></i><b>31</b> LaTeX rendering</a><ul>
+<li class="chapter" data-level="31.1" data-path="mathjax.html"><a href="mathjax.html#mathjax-caveats"><i class="fa fa-check"></i><b>31.1</b> MathJax caveats</a></li>
 </ul></li>
-<li class="chapter" data-level="31" data-path="the-data-plot-pipeline.html"><a href="the-data-plot-pipeline.html"><i class="fa fa-check"></i><b>31</b> The data-plot-pipeline</a></li>
-<li class="chapter" data-level="32" data-path="modifying-ggplotly.html"><a href="modifying-ggplotly.html"><i class="fa fa-check"></i><b>32</b> Improving <code>ggplotly()</code></a><ul>
-<li class="chapter" data-level="32.1" data-path="modifying-ggplotly.html"><a href="modifying-ggplotly.html#modifying-layout"><i class="fa fa-check"></i><b>32.1</b> Modifying layout</a></li>
-<li class="chapter" data-level="32.2" data-path="modifying-ggplotly.html"><a href="modifying-ggplotly.html#modifying-data"><i class="fa fa-check"></i><b>32.2</b> Modifying data</a></li>
-<li class="chapter" data-level="32.3" data-path="modifying-ggplotly.html"><a href="modifying-ggplotly.html#leveraging-statistical-output"><i class="fa fa-check"></i><b>32.3</b> Leveraging statistical output</a></li>
+<li class="chapter" data-level="32" data-path="the-data-plot-pipeline.html"><a href="the-data-plot-pipeline.html"><i class="fa fa-check"></i><b>32</b> The data-plot-pipeline</a></li>
+<li class="chapter" data-level="33" data-path="modifying-ggplotly.html"><a href="modifying-ggplotly.html"><i class="fa fa-check"></i><b>33</b> Improving <code>ggplotly()</code></a><ul>
+<li class="chapter" data-level="33.1" data-path="modifying-ggplotly.html"><a href="modifying-ggplotly.html#modifying-layout"><i class="fa fa-check"></i><b>33.1</b> Modifying layout</a></li>
+<li class="chapter" data-level="33.2" data-path="modifying-ggplotly.html"><a href="modifying-ggplotly.html#modifying-data"><i class="fa fa-check"></i><b>33.2</b> Modifying data</a></li>
+<li class="chapter" data-level="33.3" data-path="modifying-ggplotly.html"><a href="modifying-ggplotly.html#leveraging-statistical-output"><i class="fa fa-check"></i><b>33.3</b> Leveraging statistical output</a></li>
 </ul></li>
-<li class="chapter" data-level="33" data-path="embedding-images.html"><a href="embedding-images.html"><i class="fa fa-check"></i><b>33</b> Embedding images</a></li>
-<li class="part"><span><b>VII Developer-facing topics</b></span></li>
 <li class="chapter" data-level="34" data-path="custom-geoms.html"><a href="custom-geoms.html"><i class="fa fa-check"></i><b>34</b> Translating custom ggplot2 geoms</a></li>
-<li class="chapter" data-level="35" data-path="designing-an-htmlwidget-interface.html"><a href="designing-an-htmlwidget-interface.html"><i class="fa fa-check"></i><b>35</b> Designing an htmlwidget interface</a></li>
 <li class="chapter" data-level="" data-path="references.html"><a href="references.html"><i class="fa fa-check"></i>References</a></li>
 </ul>
 
@@ -490,7 +483,8 @@ b &lt;-<span class="st"> </span><span class="kw">plotly_build</span>(p)
 <span class="kw">length</span>(b<span class="op">$</span>x<span class="op">$</span>data)
 <span class="co">#&gt; [1] 8</span>
 
-<span class="co"># Extract the `name` of each trace. plotly.js uses `name` to populate legend entries and tooltips</span>
+<span class="co"># Extract the `name` of each trace. plotly.js uses `name` to </span>
+<span class="co"># populate legend entries and tooltips</span>
 purrr<span class="op">::</span><span class="kw">map_chr</span>(b<span class="op">$</span>x<span class="op">$</span>data, <span class="st">&quot;name&quot;</span>)
 <span class="co">#&gt; [1] &quot;IF&quot; &quot;VVS1&quot; &quot;VVS2&quot; &quot;VS1&quot; &quot;VS2&quot; &quot;SI1&quot; &quot;SI2&quot; &quot;I1&quot; </span>
 
@@ -597,7 +591,7 @@ FIGURE 2.14: Using the <code>geom_miss_point()</code> function from the <strong>
 </p>
 </div>
 <p>In short, the <strong>ggplot2</strong> ecosystem provides a world-class exploratory visualization toolkit, and having the ability to quickly insert interactivity such as hover, zoom, and filter via <code>ggplotly()</code> makes it even more powerful for exploratory analysis. In this introduction to <code>ggplotly()</code>, we’ve only seen relatively simple techniques that come for free out-of-the-box, but the true power of interactive graphics lies in linking multiple views. In that part of the book, you can find lots of examples of linking multiple (<code>ggplotly()</code> &amp; <code>plot_ly()</code>) graphs purely client-side as well as with <strong>shiny</strong>.</p>
-<p>It’s also worth mentioning that <code>ggplotly()</code> conversions are not always perfect and <strong>ggplot2</strong> doesn’t provide an API for interactive features, so sometimes it’s desirable to modify the return values of <code>ggplotly()</code>. Section <a href="modifying-ggplotly.html#modifying-ggplotly">32</a> talks generally about modifying the data structure underlying <code>ggplotly()</code> (which, by the way, uses the same a plotly.js figure definition as discussed in Section <a href="overview.html#intro-plotly-js">2.2</a>). Moreover, Section <a href="controlling-tooltips.html#tooltip-text-ggplotly">25.2</a> outlines various ways to customize the tooltip that <code>ggplotly()</code> produces.</p>
+<p>It’s also worth mentioning that <code>ggplotly()</code> conversions are not always perfect and <strong>ggplot2</strong> doesn’t provide an API for interactive features, so sometimes it’s desirable to modify the return values of <code>ggplotly()</code>. Section <a href="modifying-ggplotly.html#modifying-ggplotly">33</a> talks generally about modifying the data structure underlying <code>ggplotly()</code> (which, by the way, uses the same a plotly.js figure definition as discussed in Section <a href="overview.html#intro-plotly-js">2.2</a>). Moreover, Section <a href="controlling-tooltips.html#tooltip-text-ggplotly">25.2</a> outlines various ways to customize the tooltip that <code>ggplotly()</code> produces.</p>
 <!--
 * Cover ggplot2 geoms that fill a void left by `plot_ly()`
   * `stat_summary()` https://twitter.com/tjmahr/status/1095728500852621313

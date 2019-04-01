@@ -25,7 +25,7 @@
 <meta name="author" content="Carson Sievert">
 
 
-<meta name="date" content="2019-03-31">
+<meta name="date" content="2019-04-01">
 
   <meta name="viewport" content="width=device-width, initial-scale=1">
   <meta name="apple-mobile-web-app-capable" content="yes">
@@ -59,11 +59,6 @@
 <script src="libs/selectize/selectize.min.js"></script>
 <link href="libs/colourpicker/colourpicker.min.css" rel="stylesheet" />
 <script src="libs/colourpicker/colourpicker.min.js"></script>
-<link href="libs/datatables-css/datatables-crosstalk.css" rel="stylesheet" />
-<script src="libs/datatables-binding/datatables.js"></script>
-<link href="libs/dt-core/css/jquery.dataTables.min.css" rel="stylesheet" />
-<link href="libs/dt-core/css/jquery.dataTables.extra.css" rel="stylesheet" />
-<script src="libs/dt-core/js/jquery.dataTables.min.js"></script>
 
 
 <style type="text/css">
@@ -312,20 +307,18 @@ code span.wa { color: #60a0b0; font-weight: bold; font-style: italic; } /* Warni
 </ul></li>
 <li class="chapter" data-level="27" data-path="working-with-colors.html"><a href="working-with-colors.html"><i class="fa fa-check"></i><b>27</b> Working with colors</a></li>
 <li class="chapter" data-level="28" data-path="working-with-symbols.html"><a href="working-with-symbols.html"><i class="fa fa-check"></i><b>28</b> Working with symbols and glyphs</a></li>
-<li class="chapter" data-level="29" data-path="locales.html"><a href="locales.html"><i class="fa fa-check"></i><b>29</b> Language support</a></li>
-<li class="chapter" data-level="30" data-path="mathjax.html"><a href="mathjax.html"><i class="fa fa-check"></i><b>30</b> LaTeX rendering</a><ul>
-<li class="chapter" data-level="30.1" data-path="mathjax.html"><a href="mathjax.html#mathjax-caveats"><i class="fa fa-check"></i><b>30.1</b> MathJax caveats</a></li>
+<li class="chapter" data-level="29" data-path="embedding-images.html"><a href="embedding-images.html"><i class="fa fa-check"></i><b>29</b> Embedding images</a></li>
+<li class="chapter" data-level="30" data-path="locales.html"><a href="locales.html"><i class="fa fa-check"></i><b>30</b> Language support</a></li>
+<li class="chapter" data-level="31" data-path="mathjax.html"><a href="mathjax.html"><i class="fa fa-check"></i><b>31</b> LaTeX rendering</a><ul>
+<li class="chapter" data-level="31.1" data-path="mathjax.html"><a href="mathjax.html#mathjax-caveats"><i class="fa fa-check"></i><b>31.1</b> MathJax caveats</a></li>
 </ul></li>
-<li class="chapter" data-level="31" data-path="the-data-plot-pipeline.html"><a href="the-data-plot-pipeline.html"><i class="fa fa-check"></i><b>31</b> The data-plot-pipeline</a></li>
-<li class="chapter" data-level="32" data-path="modifying-ggplotly.html"><a href="modifying-ggplotly.html"><i class="fa fa-check"></i><b>32</b> Improving <code>ggplotly()</code></a><ul>
-<li class="chapter" data-level="32.1" data-path="modifying-ggplotly.html"><a href="modifying-ggplotly.html#modifying-layout"><i class="fa fa-check"></i><b>32.1</b> Modifying layout</a></li>
-<li class="chapter" data-level="32.2" data-path="modifying-ggplotly.html"><a href="modifying-ggplotly.html#modifying-data"><i class="fa fa-check"></i><b>32.2</b> Modifying data</a></li>
-<li class="chapter" data-level="32.3" data-path="modifying-ggplotly.html"><a href="modifying-ggplotly.html#leveraging-statistical-output"><i class="fa fa-check"></i><b>32.3</b> Leveraging statistical output</a></li>
+<li class="chapter" data-level="32" data-path="the-data-plot-pipeline.html"><a href="the-data-plot-pipeline.html"><i class="fa fa-check"></i><b>32</b> The data-plot-pipeline</a></li>
+<li class="chapter" data-level="33" data-path="modifying-ggplotly.html"><a href="modifying-ggplotly.html"><i class="fa fa-check"></i><b>33</b> Improving <code>ggplotly()</code></a><ul>
+<li class="chapter" data-level="33.1" data-path="modifying-ggplotly.html"><a href="modifying-ggplotly.html#modifying-layout"><i class="fa fa-check"></i><b>33.1</b> Modifying layout</a></li>
+<li class="chapter" data-level="33.2" data-path="modifying-ggplotly.html"><a href="modifying-ggplotly.html#modifying-data"><i class="fa fa-check"></i><b>33.2</b> Modifying data</a></li>
+<li class="chapter" data-level="33.3" data-path="modifying-ggplotly.html"><a href="modifying-ggplotly.html#leveraging-statistical-output"><i class="fa fa-check"></i><b>33.3</b> Leveraging statistical output</a></li>
 </ul></li>
-<li class="chapter" data-level="33" data-path="embedding-images.html"><a href="embedding-images.html"><i class="fa fa-check"></i><b>33</b> Embedding images</a></li>
-<li class="part"><span><b>VII Developer-facing topics</b></span></li>
 <li class="chapter" data-level="34" data-path="custom-geoms.html"><a href="custom-geoms.html"><i class="fa fa-check"></i><b>34</b> Translating custom ggplot2 geoms</a></li>
-<li class="chapter" data-level="35" data-path="designing-an-htmlwidget-interface.html"><a href="designing-an-htmlwidget-interface.html"><i class="fa fa-check"></i><b>35</b> Designing an htmlwidget interface</a></li>
 <li class="chapter" data-level="" data-path="references.html"><a href="references.html"><i class="fa fa-check"></i>References</a></li>
 </ul>
 
@@ -436,7 +429,9 @@ server &lt;-<span class="st"> </span><span class="cf">function</span>(input, out
     <span class="cf">if</span> (<span class="kw">identical</span>(input<span class="op">$</span>cities, <span class="st">&quot;&quot;</span>)) <span class="kw">return</span>(<span class="ot">NULL</span>)
     p &lt;-<span class="st"> </span><span class="kw">ggplot</span>(<span class="dt">data =</span> <span class="kw">filter</span>(txhousing, city <span class="op">%in%</span><span class="st"> </span>input<span class="op">$</span>cities)) <span class="op">+</span><span class="st"> </span>
 <span class="st">      </span><span class="kw">geom_line</span>(<span class="kw">aes</span>(date, median, <span class="dt">group =</span> city))
-    <span class="kw">ggplotly</span>(p, <span class="dt">height =</span> session<span class="op">$</span>clientData<span class="op">$</span>output_p_height, <span class="dt">width =</span> session<span class="op">$</span>clientData<span class="op">$</span>output_p_width)
+    height &lt;-<span class="st"> </span>session<span class="op">$</span>clientData<span class="op">$</span>output_p_height
+    width &lt;-<span class="st"> </span>session<span class="op">$</span>clientData<span class="op">$</span>output_p_width
+    <span class="kw">ggplotly</span>(p, <span class="dt">height =</span> height, <span class="dt">width =</span> width)
   })
 }
 
@@ -921,48 +916,7 @@ FIGURE 17.17: A more responsive version of Figure <a href="linking-server-side.h
 <div id="restyle" class="section level4">
 <h4><span class="header-section-number">17.3.2.1</span> Modifying traces</h4>
 <p>All <strong>plotly</strong> figures have two main components: traces (i.e., mapping from data to visuals) and layout. The plotly.js function <code>Plotly.restyle()</code> is for modifying any existing traces. In addition to being a performant way to modify existing data and/or visual properties, it also has the added benefit of not affecting the current layout of the graph. Notice how, in Figure <a href="linking-server-side.html#fig:shiny-partial-restyle">17.18</a> for example, when the size of the marker/path changes, it doesn’t change the camera’s view of the 3D plot that the user altered after initial draw. If these input widgets triggered a full redraw of the plot, the camera would be reset to it’s initial state.</p>
-<details>
-<p><summary>Click to show/hide the code</summary></p>
-<pre class="sourceCode r"><code class="sourceCode r"><span class="kw">library</span>(shiny)
-<span class="kw">library</span>(plotly)
-
-ui &lt;-<span class="st"> </span><span class="kw">fluidPage</span>(
-  <span class="kw">sliderInput</span>(<span class="st">&quot;marker&quot;</span>, <span class="st">&quot;Marker size&quot;</span>, <span class="dt">min =</span> <span class="dv">0</span>, <span class="dt">max =</span> <span class="dv">20</span>, <span class="dt">value =</span> <span class="dv">8</span>),
-  <span class="kw">sliderInput</span>(<span class="st">&quot;path&quot;</span>, <span class="st">&quot;Path size&quot;</span>, <span class="dt">min =</span> <span class="dv">0</span>, <span class="dt">max =</span> <span class="dv">30</span>, <span class="dt">value =</span> <span class="dv">2</span>),
-  <span class="kw">plotlyOutput</span>(<span class="st">&quot;p&quot;</span>)
-)
-
-server &lt;-<span class="st"> </span><span class="cf">function</span>(input, output, session) {
-  
-  output<span class="op">$</span>p &lt;-<span class="st"> </span><span class="kw">renderPlotly</span>({
-    <span class="kw">plot_ly</span>(
-      economics, <span class="dt">x =</span> <span class="op">~</span>pce, <span class="dt">y =</span> <span class="op">~</span>psavert, <span class="dt">z =</span> <span class="op">~</span>unemploy, 
-      <span class="dt">color =</span> <span class="op">~</span><span class="kw">as.numeric</span>(date), <span class="dt">mode =</span> <span class="st">&quot;markers+lines&quot;</span>
-    )
-  })
-  
-  <span class="kw">observeEvent</span>(input<span class="op">$</span>marker, {
-    <span class="kw">plotlyProxy</span>(<span class="st">&quot;p&quot;</span>, session) <span class="op">%&gt;%</span>
-<span class="st">      </span><span class="kw">plotlyProxyInvoke</span>(
-        <span class="st">&quot;restyle&quot;</span>, 
-        <span class="co"># could also do list(marker = list(size = input$marker))</span>
-        <span class="co"># but that overwrites the existing marker definition</span>
-        <span class="co"># https://github.com/plotly/plotly.js/issues/1866#issuecomment-314115744</span>
-        <span class="kw">list</span>(<span class="dt">marker.size =</span> input<span class="op">$</span>marker)
-      )
-  })
-  
-  <span class="kw">observeEvent</span>(input<span class="op">$</span>path, {
-    <span class="kw">plotlyProxy</span>(<span class="st">&quot;p&quot;</span>, session) <span class="op">%&gt;%</span>
-<span class="st">      </span><span class="kw">plotlyProxyInvoke</span>(
-        <span class="st">&quot;restyle&quot;</span>, <span class="kw">list</span>(<span class="dt">line.width =</span> input<span class="op">$</span>path)
-      )
-  })
-  
-}
-
-<span class="kw">shinyApp</span>(ui, server)</code></pre>
-</details>
+<pre class="sourceCode r"><code class="sourceCode r"><span class="kw">plotly_example</span>(<span class="st">&quot;shiny&quot;</span>, <span class="st">&quot;proxy_restyle_economics&quot;</span>)</code></pre>
 <div class="figure" style="text-align: center"><span id="fig:shiny-partial-restyle"></span>
 <iframe src="https://player.vimeo.com/video/327621625?title=0&amp;byline=0&amp;portrait=0" width="100%" height="400" frameborder="0" seamless="seamless" webkitAllowFullScreen mozallowfullscreen allowFullScreen></iframe>
 <p class="caption">
@@ -974,37 +928,7 @@ FIGURE 17.18: Using <code>Plotly.restyle()</code> to change just the width of a 
 <div id="relayout" class="section level4">
 <h4><span class="header-section-number">17.3.2.2</span> Updating the layout</h4>
 <p>All <strong>plotly</strong> figures have two main components: traces (i.e., mapping from data to visuals) and layout. The plotly.js function <code>Plotly.relayout()</code> modifies the layout component, so it can control a wide variety of things such titles, axis definitions, annotations, shapes, and many other things. It can even be used to change the basemap layer of a Mapbox-powered layout, as in Figure <a href="linking-server-side.html#fig:shiny-mapbox-relayout">17.19</a>. Note how this example uses <code>schema()</code> to grab all the pre-packaged basemap layers and create a dropdown of those options, but you can also provide a URL to a <a href="https://www.mapbox.com/help/create-a-custom-style/">custom basemap style</a>.</p>
-<details>
-<p><summary>Click to show/hide the code</summary></p>
-<pre class="sourceCode r"><code class="sourceCode r"><span class="kw">library</span>(shiny)
-<span class="kw">library</span>(plotly)
-
-<span class="co"># get all the available mapbox styles</span>
-mapStyles &lt;-<span class="st"> </span><span class="kw">schema</span>()<span class="op">$</span>layout<span class="op">$</span>layoutAttributes<span class="op">$</span>mapbox<span class="op">$</span>style<span class="op">$</span>values
-
-ui &lt;-<span class="st"> </span><span class="kw">fluidPage</span>(
-  <span class="kw">selectInput</span>(<span class="st">&quot;style&quot;</span>, <span class="st">&quot;Select a mapbox style&quot;</span>, mapStyles),
-  <span class="kw">plotlyOutput</span>(<span class="st">&quot;map&quot;</span>)
-)
-
-server &lt;-<span class="st"> </span><span class="cf">function</span>(input, output, session) {
-  
-  output<span class="op">$</span>map &lt;-<span class="st"> </span><span class="kw">renderPlotly</span>({
-    <span class="kw">plot_mapbox</span>()
-  })
-  
-  <span class="kw">observeEvent</span>(input<span class="op">$</span>style, {
-    <span class="kw">plotlyProxy</span>(<span class="st">&quot;map&quot;</span>, session) <span class="op">%&gt;%</span>
-<span class="st">      </span><span class="kw">plotlyProxyInvoke</span>(
-        <span class="st">&quot;relayout&quot;</span>,
-        <span class="kw">list</span>(<span class="dt">mapbox =</span> <span class="kw">list</span>(<span class="dt">style =</span> input<span class="op">$</span>style))
-      )
-  })
-  
-}
-
-<span class="kw">shinyApp</span>(ui, server)</code></pre>
-</details>
+<pre class="sourceCode r"><code class="sourceCode r"><span class="kw">plotly_example</span>(<span class="st">&quot;shiny&quot;</span>, <span class="st">&quot;proxy_relayout&quot;</span>)</code></pre>
 <div class="figure" style="text-align: center"><span id="fig:shiny-mapbox-relayout"></span>
 <iframe src="https://player.vimeo.com/video/327603568?title=0&amp;byline=0&amp;portrait=0" width="100%" height="400" frameborder="0" seamless="seamless" webkitAllowFullScreen mozallowfullscreen allowFullScreen></iframe>
 <p class="caption">
@@ -1012,48 +936,7 @@ FIGURE 17.19: Using a <code>shiny::selectInput()</code> to modify the basemap st
 </p>
 </div>
 <p>Figure <a href="linking-server-side.html#fig:shiny-rangeslider-relayout">17.20</a> demonstrates a clever use of <code>Plotly.relayout()</code> to set the y-axis range in response to changes in the x-axis range.</p>
-<details>
-<p><summary>Click to show/hide the code</summary></p>
-<pre class="sourceCode r"><code class="sourceCode r"><span class="kw">library</span>(shiny)
-<span class="kw">library</span>(plotly)
-
-ui &lt;-<span class="st"> </span><span class="kw">fluidPage</span>(
-  <span class="kw">plotlyOutput</span>(<span class="st">&quot;plot&quot;</span>)
-)
-
-server &lt;-<span class="st"> </span><span class="cf">function</span>(input, output, session) {
-  
-  p &lt;-<span class="st"> </span><span class="kw">ggplot</span>(txhousing) <span class="op">+</span>
-<span class="st">    </span><span class="kw">geom_line</span>(<span class="kw">aes</span>(date, median, <span class="dt">group =</span> city))
-  
-  output<span class="op">$</span>plot &lt;-<span class="st"> </span><span class="kw">renderPlotly</span>({
-    <span class="kw">ggplotly</span>(p, <span class="dt">dynamicTicks =</span> <span class="ot">TRUE</span>) <span class="op">%&gt;%</span><span class="st"> </span>
-<span class="st">      </span><span class="kw">rangeslider</span>() 
-  })
-  
-  <span class="kw">observeEvent</span>(<span class="kw">event_data</span>(<span class="st">&quot;plotly_relayout&quot;</span>), {
-    d &lt;-<span class="st"> </span><span class="kw">event_data</span>(<span class="st">&quot;plotly_relayout&quot;</span>)
-    xmin &lt;-<span class="st"> </span><span class="cf">if</span> (<span class="kw">length</span>(d[[<span class="st">&quot;xaxis.range[0]&quot;</span>]])) d[[<span class="st">&quot;xaxis.range[0]&quot;</span>]] <span class="cf">else</span> d[[<span class="st">&quot;xaxis.range&quot;</span>]][<span class="dv">1</span>]
-    xmax &lt;-<span class="st"> </span><span class="cf">if</span> (<span class="kw">length</span>(d[[<span class="st">&quot;xaxis.range[1]&quot;</span>]])) d[[<span class="st">&quot;xaxis.range[1]&quot;</span>]] <span class="cf">else</span> d[[<span class="st">&quot;xaxis.range&quot;</span>]][<span class="dv">2</span>]
-    <span class="cf">if</span> (<span class="kw">is.null</span>(xmin) <span class="op">||</span><span class="st"> </span><span class="kw">is.null</span>(xmax)) <span class="kw">return</span>(<span class="ot">NULL</span>)
-    
-    <span class="co"># compute the y-range based on the new x-range</span>
-    idx &lt;-<span class="st"> </span><span class="kw">with</span>(txhousing, xmin <span class="op">&lt;=</span><span class="st"> </span>date <span class="op">&amp;</span><span class="st"> </span>date <span class="op">&lt;=</span><span class="st"> </span>xmax)
-    yrng &lt;-<span class="st"> </span><span class="kw">extendrange</span>(txhousing<span class="op">$</span>median[idx])
-    
-    <span class="kw">plotlyProxy</span>(<span class="st">&quot;plot&quot;</span>, session) <span class="op">%&gt;%</span>
-<span class="st">      </span><span class="kw">plotlyProxyInvoke</span>(<span class="st">&quot;relayout&quot;</span>, <span class="kw">list</span>(<span class="dt">yaxis =</span> <span class="kw">list</span>(<span class="dt">range =</span> yrng)))
-  })
-  
-  yRange &lt;-<span class="st"> </span><span class="kw">range</span>(txhousing<span class="op">$</span>median, <span class="dt">na.rm =</span> <span class="ot">TRUE</span>)
-  <span class="kw">observeEvent</span>(<span class="kw">event_data</span>(<span class="st">&quot;plotly_doubleclick&quot;</span>), {
-    <span class="kw">plotlyProxy</span>(<span class="st">&quot;plot&quot;</span>, session) <span class="op">%&gt;%</span>
-<span class="st">      </span><span class="kw">plotlyProxyInvoke</span>(<span class="st">&quot;relayout&quot;</span>, <span class="kw">list</span>(<span class="dt">yaxis =</span> <span class="kw">list</span>(<span class="dt">range =</span> yRange)))
-  })
-}
-
-<span class="kw">shinyApp</span>(ui, server)</code></pre>
-</details>
+<pre class="sourceCode r"><code class="sourceCode r"><span class="kw">plotly_example</span>(<span class="st">&quot;shiny&quot;</span>, <span class="st">&quot;proxy_relayout&quot;</span>)</code></pre>
 <div class="figure" style="text-align: center"><span id="fig:shiny-rangeslider-relayout"></span>
 <iframe src="https://player.vimeo.com/video/307598689?title=0&amp;byline=0&amp;portrait=0" width="100%" height="400" frameborder="0" seamless="seamless" webkitAllowFullScreen mozallowfullscreen allowFullScreen></iframe>
 <p class="caption">
@@ -1066,69 +949,7 @@ FIGURE 17.20: Using <code>Plotly.relayout()</code> to ‘auto-range’ the y-axi
 <p>At this point, we’ve seen how to add/remove traces (e.g., add/remove a fitted line, as in Figure <a href="linking-server-side.html#fig:shiny-scatterplot-performant">17.17</a>), and how to edit specific trace properties (e.g., change marker size or path width, as in Figure <a href="linking-server-side.html#fig:shiny-partial-restyle">17.18</a>), but what about adding more data to existing trace(s)? This is a job for the plotly.js function <code>Plotly.extendTraces()</code> and/or <code>Plotly.prependTraces()</code> which can used to efficiently ‘stream’ data into an existing plot, as done in Figure <a href="linking-server-side.html#fig:shiny-stream">17.21</a>.</p>
 <p>The implementation behind Figure <a href="linking-server-side.html#fig:shiny-stream">17.21</a>, an elementary example of a random walk, makes use of some fairly sophisicated reactive programming tools from <strong>shiny</strong>. Similar to most examples from this section, the <code>renderPlotly()</code> statement is executed once on initial load to draw the initial line with just two data points. By default, the plot is not streaming, but streaming can be turned on or off through the click of a button, which will require the app to know (at all times) whether or not we are in a streaming state. One way to do this is to leverage <strong>shiny</strong>’s <code>reactiveValues()</code>, which act like input values, but can be created and modified entirely server-side, making them quite useful for maintaining state of an application. In this case, the reactive value <code>rv$stream</code> is used to store the streaming state, which is turned on/off whenever the <code>actionButton()</code> is clicked (via the <code>observeEvent()</code> logic).</p>
 <p>Even if the app is not streaming, there is still constant client/server communication because of the use of <code>invalidateLater()</code> inside the <code>observe()</code>. This effectively tells <strong>shiny</strong> to re-evaluate the <code>observe()</code> block every 100 milliseconds. If the app isn’t in streaming mode, then it exits early without doing anything. If the app is streaming, then we first use <code>sample()</code> to randomly draw either -1 or 1 (with equal probability) and use the result to update the most recent (x, y) state. This is done by assigning a new value to the reactive values <code>rv$y</code> and <code>rv$n</code> within an <code>isolate()</code>d context – if this assignment happened outside of an <code>isolate()</code>d context it would cause the reactive expression to be invalidated and cause an infinite loop! Once we have the new (x, y) point stored away, <code>Plotly.extendTraces()</code> can be used to add the new point to the plotly graph.</p>
-<details>
-<p><summary>Click to show/hide the code</summary></p>
-<pre class="sourceCode r"><code class="sourceCode r"><span class="kw">library</span>(shiny)
-<span class="kw">library</span>(plotly)
-
-ui &lt;-<span class="st"> </span><span class="kw">fluidPage</span>(
-  <span class="kw">actionButton</span>(<span class="st">&quot;stream&quot;</span>, <span class="st">&quot;Turn stream on/off&quot;</span>),
-  <span class="kw">plotlyOutput</span>(<span class="st">&quot;plot&quot;</span>)
-)
-
-server &lt;-<span class="st"> </span><span class="cf">function</span>(input, output, session) {
-  
-  <span class="co"># initial values</span>
-  yint &lt;-<span class="st"> </span><span class="kw">c</span>(<span class="dv">0</span>, <span class="dv">1</span>)
-  
-  <span class="co"># initiate graph with initial values</span>
-  output<span class="op">$</span>plot &lt;-<span class="st"> </span><span class="kw">renderPlotly</span>({
-    <span class="kw">plot_ly</span>(<span class="dt">y =</span> yint, <span class="dt">x =</span> <span class="kw">seq_along</span>(yint)) <span class="op">%&gt;%</span>
-<span class="st">      </span><span class="kw">add_lines</span>()
-  })
-  
-  <span class="co"># reactiveValues() act very much like input values, but may be used to </span>
-  <span class="co"># maintain state (e.g., are we currently streaming?)</span>
-  rv &lt;-<span class="st"> </span><span class="kw">reactiveValues</span>(
-    <span class="dt">stream =</span> <span class="ot">FALSE</span>,
-    <span class="dt">yend =</span> <span class="kw">sum</span>(yint), 
-    <span class="dt">n =</span> <span class="kw">length</span>(yint)
-  )
-  
-  <span class="co"># turn streaming on/off when the button is pressed</span>
-  <span class="kw">observeEvent</span>(input<span class="op">$</span>stream, {
-    rv<span class="op">$</span>stream &lt;-<span class="st"> </span><span class="cf">if</span> (rv<span class="op">$</span>stream) <span class="ot">FALSE</span> <span class="cf">else</span> <span class="ot">TRUE</span>
-  })
-  
-  <span class="kw">observe</span>({
-    <span class="co"># if we&#39;re not streaming, don&#39;t do anything</span>
-    <span class="cf">if</span> (<span class="op">!</span>rv<span class="op">$</span>stream) <span class="kw">return</span>()
-    
-    <span class="co"># re-execute this code block to every 100 milliseconds</span>
-    <span class="kw">invalidateLater</span>(<span class="dv">100</span>, session)
-    <span class="co"># changing a reactive value &quot;invalidates&quot; it, so isolate() is needed </span>
-    <span class="co"># to avoid recursion</span>
-    <span class="kw">isolate</span>({
-      rv<span class="op">$</span>n &lt;-<span class="st"> </span>rv<span class="op">$</span>n <span class="op">+</span><span class="st"> </span><span class="dv">1</span>
-      rv<span class="op">$</span>yend &lt;-<span class="st"> </span>rv<span class="op">$</span>yend <span class="op">+</span><span class="st"> </span><span class="kw">sample</span>(<span class="kw">c</span>(<span class="op">-</span><span class="dv">1</span>, <span class="dv">1</span>), <span class="dv">1</span>)
-    })
-    
-    <span class="co"># add the new value to the plot</span>
-    <span class="kw">plotlyProxy</span>(<span class="st">&quot;plot&quot;</span>, session) <span class="op">%&gt;%</span>
-<span class="st">      </span><span class="kw">plotlyProxyInvoke</span>(
-        <span class="st">&quot;extendTraces&quot;</span>, 
-        <span class="kw">list</span>(
-          <span class="dt">y =</span> <span class="kw">list</span>(<span class="kw">list</span>(rv<span class="op">$</span>yend)), 
-          <span class="dt">x =</span> <span class="kw">list</span>(<span class="kw">list</span>(rv<span class="op">$</span>n))
-        ), 
-        <span class="kw">list</span>(<span class="dv">0</span>)
-      )
-  })
-  
-}
-
-<span class="kw">shinyApp</span>(ui, server)</code></pre>
-</details>
+<pre class="sourceCode r"><code class="sourceCode r"><span class="kw">plotly_example</span>(<span class="st">&quot;shiny&quot;</span>, <span class="st">&quot;stream&quot;</span>)</code></pre>
 <div class="figure" style="text-align: center"><span id="fig:shiny-stream"></span>
 <iframe src="https://player.vimeo.com/video/307598387?title=0&amp;byline=0&amp;portrait=0" width="100%" height="400" frameborder="0" seamless="seamless" webkitAllowFullScreen mozallowfullscreen allowFullScreen></iframe>
 <p class="caption">

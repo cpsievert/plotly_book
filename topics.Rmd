@@ -455,7 +455,76 @@ knitr::include_graphics("images/emojis.png")
 ## Fonts
 -->
 
-    
+ 
+# Embedding images
+
+There are a few ways to embed images in a **plotly** graph. Perhaps the easiest is to point the image source to a hyperlink containing a bitmap file (e.g., png, jpeg, tiff, etc).
+
+```r
+plot_ly() %>%
+  layout(
+    images = list(
+      source = "https://www.rstudio.com/wp-content/uploads/2018/10/RStudio-Logo-Flat.png",
+      x = 0, y = 1, 
+      sizex = 0.2, sizey = 0.1,
+      xref = "paper", yref = "paper", 
+      xanchor = "left", yanchor = "bottom"
+    ),
+    margin = list(t = 50)
+  )
+```
+
+
+```{r image-hyperlink, echo = FALSE, fig.cap="(ref:image-hyperlink)"}
+knitr::include_graphics("images/image-hyperlink.svg")
+```
+
+The approach in Figure \@ref(fig:image-hyperlink) has a downside though -- if that hyperlink breaks, then so does your plot. It'd be better to download the file to your machine and use the `dataURI()` function from the **base64enc** package (or similar) to embed the image as a data URI [@base64enc].
+
+```r
+plot_ly() %>%
+  layout(
+    images = list(
+      source = base64enc::dataURI(file = "images/rstudio.png"),
+      x = 0, y = 1, 
+      sizex = 0.2, sizey = 0.1,
+      xref = "paper", yref = "paper", 
+      xanchor = "left", yanchor = "bottom"
+    ),
+    margin = list(t = 50)
+  )
+```
+
+```{r image-uri, echo = FALSE, fig.cap="(ref:image-uri)"}
+knitr::include_graphics("images/image-uri.svg")
+```
+
+Another approach is to convert a raster object into a data URI, which the `raster2uri()` function in **plotly** is designed to do. R actually ships with native support for raster objects and many image processing R packages either build on this data structure or provide a utility to convert to a raster object (perhaps via `as.raster()`). For example, the `readPNG()` function from the **png** package reads image data in an R array, which can be converted to a raster object [@png].
+
+```r
+pen <- png::readPNG("images/penguin.png")
+
+plot_ly() %>%
+  layout(
+    images = list(
+      source = raster2uri(as.raster(pen)),
+      x = 2, y = 2, 
+      sizex = 2, sizey = 1,
+      xref = "x", yref = "y",
+      xanchor = "left", yanchor = "bottom",
+      sizing = "stretch"
+    )
+  )
+```
+
+```{r raster, echo = FALSE, fig.cap = "(ref:raster)"}
+knitr::include_graphics("images/raster.svg")
+```
+
+Moreover, thanks to the R package **magick** it's possible to rasterize non-raster file formats (e.g., pdf, svg, etc) directly in R, so if you wanted, you could also embed non-bitmap images by using `image_read()` and `image_convert()` to generate a raster object [@magick].
+
+
+   
 # Language support {#locales}
 
 The `locale` argument of the `config()` function allows one to render on-graph text using another language. Figure \@ref(fig:localization) shows how setting `locale='ja'` will render text in Japanese.
@@ -482,12 +551,18 @@ locale_codes <- tibble::tibble(
 
 data(locale_table, package = "plotlyBook")
 
-locale_table %>%
-  dplyr::select(Language = Locale, Code = Languagecode) %>%
-  dplyr::semi_join(locale_codes) %>%
-  DT::datatable(rownames = FALSE)
+locale_df <- locale_table %>%
+    dplyr::select(Language = Locale, Code = Languagecode) %>%
+    dplyr::semi_join(locale_codes)
 
-cat("<table>",paste0("<caption>", "(#tab:locale-codes)", "Language support in plotly. To use one of these languages, supply the locale code to the <code>locale</code> argument in the <code>config()</code> function.", "</caption>"),"</table>", sep ="\n")
+if (knitr::is_html_output()) {
+  DT::datatable(locale_df, rownames = FALSE)
+  cat("<table>", paste0("<caption>", "(#tab:locale-codes)", "Language support in plotly. To use one of these languages, supply the locale code to the <code>locale</code> argument in the <code>config()</code> function.", "</caption>"),"</table>", sep ="\n")
+ 
+} else {
+  knitr::kable(locale_df, "latex", booktabs = TRUE, longtable = TRUE, caption = "Language support in plotly. To use one of these languages, supply the locale code to the \texttt{locale} argument in the \texttt{config()} function.") %>%
+    kableExtra::kable_styling(latex_options = c("hold_position", "repeat_header"))
+}
 ```
 
 
@@ -821,69 +896,42 @@ knitr::include_graphics("images/StatDensity2d.svg")
 -->
 
 
-# Embedding images
+# Translating custom ggplot2 geoms {#custom-geoms}
 
-There are a few ways to embed images in a **plotly** graph. Perhaps the easiest is to point the image source to a hyperlink containing a bitmap file (e.g., png, jpeg, tiff, etc).
+Version 2.0.0 of __ggplot2__ introduced a way for other R packages to implement custom geoms. Some great examples include: __ggrepel__, __ggalt__, __ggraph__, __geomnet__, __ggmosaic__ and __ggtern__ [@ggalt]; [@ggraph]; [@geomnet]; [@ggmosaic]; [@ggtern].^[There are many other useful extension packages that are listed on this website -- <https://www.ggplot2-exts.org>] Although the `ggplotly()` function translates most of the geoms bundled with the __ggplot2__ package, it has no way of knowing about the rendering rules for custom geoms. The __plotly__ package does, however, provide 2 generic functions based on the S3 scheme that can leveraged to inform `ggplotly()` about these rules [@S3].^[For those new to S3, <http://adv-r.had.co.nz/S3.html> provides an approachable introduction and overview [@adv-r].] To date, the __ggmosaic__ and __ggalt__ packages have taken advantage of this infrastructure to provide translations of their custom geoms to plotly.
+
+In __ggplot2__, many geoms are special cases of other geoms. For example, `geom_line()` is equivalent to `geom_path()` once the data is sorted by the x variable. For cases like this, when a geom can be reduced to another lower-level (i.e., basic) geom, authors just have to write a method for the `to_basic()` generic function in __plotly__. In fact, within the package itself, the `to_basic()` function has a `GeomLine` method which simply sorts the data by the x variable then returns it with a class of `GeomPath` prefixed.
+
+```{r}
+getS3method("to_basic", "GeomLine")
+```
+
+If you have implemented a custom geom, say `GeomCustom`, rest assured that the data passed to `to_basic()` will be of class `GeomCustom` when `ggplotly()` is called on a plot with your geom. And assuming `GeomCustom` may be reduced to another lower-level geom support by plotly, a `to_basic.GeomCustom()` method that transforms the data into a form suitable for that lower-level geom is sufficient for adding support. Moreover, note that the data passed to `to_basic()` is essentially the last form of the data _before_ the render stage and _after_ statistics have been performed. This makes it trivial to add support for geoms like `GeomXspline` from the __ggalt__ package.
+
+```{r}
+library(ggalt)
+getS3method("to_basic", "GeomXspline")
+```
+
+As shown in Figure \@ref(fig:xspline), once the conversion has been provided. Users can call `ggplotly()` on the ggplot object containing the custom geom just like any other ggplot object.
 
 ```r
-plot_ly() %>%
-  layout(
-    images = list(
-      source = "https://www.rstudio.com/wp-content/uploads/2018/10/RStudio-Logo-Flat.png",
-      x = 0, y = 1, 
-      sizex = 0.2, sizey = 0.1,
-      xref = "paper", yref = "paper", 
-      xanchor = "left", yanchor = "bottom"
-    ),
-    margin = list(t = 50)
-  )
+# example from `help(geom_xspline)`
+set.seed(1492)
+dat <- data.frame(
+  x = c(1:10, 1:10, 1:10),
+  y = c(sample(15:30, 10), 2 * sample(15:30, 10), 3 * sample(15:30, 10)),
+  group = factor(c(rep(1, 10), rep(2, 10), rep(3, 10)))
+)
+p <- ggplot(dat, aes(x, y, group = group, color = factor(group))) +
+  geom_point(color = "black") +
+  geom_smooth(se = FALSE, linetype = "dashed", size = 0.5) +
+  geom_xspline(spline_shape = 1, size = 0.5)
+ggplotly(p) %>% hide_legend()
 ```
 
-
-```{r image-hyperlink, echo = FALSE, fig.cap="(ref:image-hyperlink)"}
-knitr::include_graphics("images/image-hyperlink.svg")
+```{r xspline, echo = FALSE, fig.cap = "(ref:xspline)"}
+knitr::include_graphics("images/xspline.svg")
 ```
 
-The approach in Figure \@ref(fig:image-hyperlink) has a downside though -- if that hyperlink breaks, then so does your plot. It'd be better to download the file to your machine and use the `dataURI()` function from the **base64enc** package (or similar) to embed the image as a data URI [@base64enc].
-
-```r
-plot_ly() %>%
-  layout(
-    images = list(
-      source = base64enc::dataURI(file = "images/rstudio.png"),
-      x = 0, y = 1, 
-      sizex = 0.2, sizey = 0.1,
-      xref = "paper", yref = "paper", 
-      xanchor = "left", yanchor = "bottom"
-    ),
-    margin = list(t = 50)
-  )
-```
-
-```{r image-uri, echo = FALSE, fig.cap="(ref:image-uri)"}
-knitr::include_graphics("images/image-uri.svg")
-```
-
-Another approach is to convert a raster object into a data URI, which the `raster2uri()` function in **plotly** is designed to do. R actually ships with native support for raster objects and many image processing R packages either build on this data structure or provide a utility to convert to a raster object (perhaps via `as.raster()`). For example, the `readPNG()` function from the **png** package reads image data in an R array, which can be converted to a raster object [@png].
-
-```r
-pen <- png::readPNG("images/penguin.png")
-
-plot_ly() %>%
-  layout(
-    images = list(
-      source = raster2uri(as.raster(pen)),
-      x = 2, y = 2, 
-      sizex = 2, sizey = 1,
-      xref = "x", yref = "y",
-      xanchor = "left", yanchor = "bottom",
-      sizing = "stretch"
-    )
-  )
-```
-
-```{r raster, echo = FALSE, fig.cap = "(ref:raster)"}
-knitr::include_graphics("images/raster.svg")
-```
-
-Moreover, thanks to the R package **magick** it's possible to rasterize non-raster file formats (e.g., pdf, svg, etc) directly in R, so if you wanted, you could also embed non-bitmap images by using `image_read()` and `image_convert()` to generate a raster object [@magick].
+In more complicated cases, where your custom geom can not be converted to a lower level geom, a custom method for the `geom2trace()` generic is required (`methods(geom2trace)` lists all the basic geoms that we natively support). This method should involve a conversion from a data frame to a list-like object conforming to the [plotly.js figure reference](https://plot.ly/r/reference).

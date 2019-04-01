@@ -132,7 +132,10 @@ The plotly.js library provides a trace specifically designed and optimized for s
 ```r
 dims <- dplyr::select_if(iris, is.numeric)
 dims <- purrr::map2(dims, names(dims), ~list(values = .x, label = .y))
-plot_ly(type = "splom", dimensions = setNames(dims, NULL), showupperhalf = FALSE, diagonal = list(visible = FALSE))
+plot_ly(
+  type = "splom", dimensions = setNames(dims, NULL), 
+  showupperhalf = FALSE, diagonal = list(visible = FALSE)
+)
 ```
 
 ```{r splom, echo = FALSE, fig.cap = "(ref:splom)"}

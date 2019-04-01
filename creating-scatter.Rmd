@@ -203,7 +203,10 @@ There are two ways to specify the visual range of `symbols`: (1) numeric codes (
 ```r
 subplot(
   add_markers(p, symbol = ~cyl, symbols = c(17, 18, 19)),
-  add_markers(p, symbol = ~factor(cyl), symbols = c("triangle-up", "diamond", "circle" ), color = I("black"))
+  add_markers(
+    p, color = I("black"),
+    symbol = ~factor(cyl), symbols = c("triangle-up", "diamond", "circle")
+  )
 )
 ```
 
