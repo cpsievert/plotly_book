@@ -25,7 +25,7 @@
 <meta name="author" content="Carson Sievert">
 
 
-<meta name="date" content="2019-03-29">
+<meta name="date" content="2019-03-31">
 
   <meta name="viewport" content="width=device-width, initial-scale=1">
   <meta name="apple-mobile-web-app-capable" content="yes">
@@ -460,56 +460,13 @@ Once a reactive expression generates a value, it needs to know where on the user
 <h2><span class="header-section-number">17.2</span> Leveraging plotly input events</h2>
 <p>Section <a href="linking-server-side.html#fig:shiny-intro">17.1</a> covered how to render <strong>shiny</strong> output widgets (e.g., <code>plotlyOutput()</code>) that depend on a input widget, but what about having an output act like an input to another output? For example, say we’d like to dynamically generate a bar chart (i.e., an output) based on a point clicked on a scatter-plot (i.e., an input event tied to an output widget). In addition to <strong>shiny</strong>’s static graph and image rendering functions (e.g., <code>plotOutput()</code>/<code>imageOutput()</code>), there are a handful of other R packages that expose user interaction with “output” widget(s) as input value(s). <span class="citation">Cheng (<a href="#ref-leaflet-shiny" role="doc-biblioref">2018</a><a href="#ref-leaflet-shiny" role="doc-biblioref">c</a>)</span> and <span class="citation">Xie (<a href="#ref-DT-shiny" role="doc-biblioref">2018</a>)</span> describe the interface for the <strong>leaflet</strong> and <strong>DT</strong> packages. This section outlines the interface for <code>plotlyOutput()</code>. This sort of functionality plays a vital role in linking of views through direct manipulation, similar to what we’ve already seen in section <a href="client-side-linking.html#graphical-queries">16.1</a>, but having access to <strong>plotly</strong> events on a <strong>shiny</strong> server allows for much more flexibility than linking views purely client-side.</p>
 <p>The <code>event_data()</code> function is the most straight-forward way to access a <strong>plotly</strong> input events in <strong>shiny</strong>. Although <code>event_data()</code> is function, it references and returns a <strong>shiny</strong> input value, so <code>event_data()</code> needs to be used inside a reactive context. Most of these available events are data-specific traces (e.g., <code>"plotly_hover"</code>, <code>"plotly_click"</code>, <code>"plotly_selected"</code>, etc), but there are also some that are layout-specific (e.g., <code>"plotly_relayout"</code>). Most plotly.js events<a href="#fn32" class="footnote-ref" id="fnref32"><sup>32</sup></a> are accessible through this interface – for a complete list see the <code>help(event_data)</code> documentation page.</p>
-<p>Numerous Figures in the following sections show how to access common <strong>plotly</strong> events in <strong>shiny</strong> and do something with the result. When using these events to inform another view of the data, it’s often necessary to know what portion of data was queried in the event (i.e., the <code>x</code>/<code>y</code> positions alone may not be enough to uniquely identify the information of interest). For this reason, it’s often a good idea to supply a <code>key</code> (or <code>customdata</code>) attribute, so that you can map the event data back to the original data. The <code>key</code> attribute is only supported in <strong>shiny</strong>, but <code>customdata</code> is officially supported by plotly.js, and thus can also be used to attach meta-information to event – see section <a href="javascript.html#javascript">18</a> for more details.</p>
+<p>Numerous Figures in the following sections show how to access common <strong>plotly</strong> events in <strong>shiny</strong> and do something with the result. When using these events to inform another view of the data, it’s often necessary to know what portion of data was queried in the event (i.e., the <code>x</code>/<code>y</code> positions alone may not be enough to uniquely identify the information of interest). For this reason, it’s often a good idea to supply a <code>key</code> (and/or <code>customdata</code>) attribute, so that you can map the event data back to the original data. The <code>key</code> attribute is only supported in <strong>shiny</strong>, but <code>customdata</code> is officially supported by plotly.js, and thus can also be used to attach meta-information to event – see section <a href="javascript.html#javascript">18</a> for more details.</p>
 <div id="dragging-events" class="section level3">
 <h3><span class="header-section-number">17.2.1</span> Dragging events</h3>
 <p>There are currently four different modes for mouse click+drag behavior (i.e., <code>dragmode</code>) in plotly.js: zoom, pan, rectangular selection, and lasso selection. This mode may be changed interactively via the modebar that appears above a <strong>plotly</strong> graph, but the default mode can also be set from the command-line. The default <code>dragmode</code> in Figure <a href="linking-server-side.html#fig:plotlyEvents">17.3</a> is set to <code>'select'</code>, so that dragging draws a rectangular box which highlights markers. When in this mode, or in the lasso selection mode, information about the drag event can be accessed in four different ways: <code>"plotly_selecting"</code>, <code>"plotly_selected"</code>, <code>"plotly_brushing"</code>, and <code>"plotly_brushed"</code>. Both the <code>"plotly_selecting"</code> and <code>"plotly_selected"</code> events emit information about trace(s) appearing within the interior of the brush – the only difference is that <code>"plotly_selecting"</code> fires repeatedly <em>during</em> drag events, whereas <code>"plotly_selected"</code> fires <em>after</em> drag events (i.e., after the mouse has been released). The semantics behind <code>"plotly_brushing"</code> and <code>"plotly_brushed"</code> are similar, but these emit the x/y limits of the selection brush. As for the other two dragging modes (zoom and pan), since they modify the range of the x/y axes, information about these events can be accessed through <code>"plotly_relayout"</code>. Sections <a href="linking-server-side.html#proxies">17.3.1</a> and <a href="linking-server-side.html#advanced-applications">17.4</a> both have advanced applications of these dragging events.</p>
-<details>
-<p><summary>Click to show/hide the code</summary></p>
-<pre class="sourceCode r"><code class="sourceCode r"><span class="kw">library</span>(shiny)
-
-ui &lt;-<span class="st"> </span><span class="kw">fluidPage</span>(
-  <span class="kw">radioButtons</span>(<span class="st">&quot;plotType&quot;</span>, <span class="st">&quot;Plot Type:&quot;</span>, <span class="dt">choices =</span> <span class="kw">c</span>(<span class="st">&quot;ggplotly&quot;</span>, <span class="st">&quot;plotly&quot;</span>)),
-  <span class="kw">plotlyOutput</span>(<span class="st">&quot;plot&quot;</span>),
-  <span class="kw">verbatimTextOutput</span>(<span class="st">&quot;selecting&quot;</span>),
-  <span class="kw">verbatimTextOutput</span>(<span class="st">&quot;brushing&quot;</span>),
-  <span class="kw">verbatimTextOutput</span>(<span class="st">&quot;relayout&quot;</span>)
-)
-
-server &lt;-<span class="st"> </span><span class="cf">function</span>(input, output, session) {
-    
-  nms &lt;-<span class="st"> </span><span class="kw">row.names</span>(mtcars)
-    
-  output<span class="op">$</span>plot &lt;-<span class="st"> </span><span class="kw">renderPlotly</span>({
-    p &lt;-<span class="st"> </span><span class="cf">if</span> (<span class="kw">identical</span>(input<span class="op">$</span>plotType, <span class="st">&quot;ggplotly&quot;</span>)) {
-      <span class="kw">ggplotly</span>(<span class="kw">ggplot</span>(mtcars, <span class="kw">aes</span>(<span class="dt">x =</span> mpg, <span class="dt">y =</span> wt, <span class="dt">key =</span> nms)) <span class="op">+</span><span class="st"> </span><span class="kw">geom_point</span>())
-    } <span class="cf">else</span> {
-      <span class="kw">plot_ly</span>(mtcars, <span class="dt">x =</span> <span class="op">~</span>mpg, <span class="dt">y =</span> <span class="op">~</span>wt, <span class="dt">key =</span> nms)
-    }
-    <span class="kw">layout</span>(p, <span class="dt">dragmode =</span> <span class="st">&quot;select&quot;</span>)
-  })
-  
-  output<span class="op">$</span>selecting &lt;-<span class="st"> </span><span class="kw">renderPrint</span>({
-    d &lt;-<span class="st"> </span><span class="kw">event_data</span>(<span class="st">&quot;plotly_selecting&quot;</span>)
-    <span class="cf">if</span> (<span class="kw">is.null</span>(d)) <span class="st">&quot;Selected data appears here&quot;</span> <span class="cf">else</span> d
-  })
-  
-  output<span class="op">$</span>brushing &lt;-<span class="st"> </span><span class="kw">renderPrint</span>({
-    d &lt;-<span class="st"> </span><span class="kw">event_data</span>(<span class="st">&quot;plotly_brushing&quot;</span>)
-    <span class="cf">if</span> (<span class="kw">is.null</span>(d)) <span class="st">&quot;Selection brush limits appear here&quot;</span> <span class="cf">else</span> d
-  })
-  
-  output<span class="op">$</span>relayout &lt;-<span class="st"> </span><span class="kw">renderPrint</span>({
-    d &lt;-<span class="st"> </span><span class="kw">event_data</span>(<span class="st">&quot;plotly_relayout&quot;</span>)
-    <span class="cf">if</span> (<span class="kw">is.null</span>(d)) <span class="st">&quot;Zoom and pan info appears here&quot;</span> <span class="cf">else</span> d
-  })
-    
-}
-
-<span class="kw">shinyApp</span>(ui, server)</code></pre>
-</details>
+<pre class="sourceCode r"><code class="sourceCode r"><span class="kw">plotly_example</span>(<span class="st">&quot;shiny&quot;</span>, <span class="st">&quot;event_data&quot;</span>)</code></pre>
 <div class="figure" style="text-align: center"><span id="fig:plotlyEvents"></span>
-<iframe src="https://player.vimeo.com/video/307597427?title=0&amp;byline=0&amp;portrait=0" width="100%" height="500" frameborder="0" seamless="seamless" webkitAllowFullScreen mozallowfullscreen allowFullScreen></iframe>
+<iframe src="https://player.vimeo.com/video/327625843?title=0&amp;byline=0&amp;portrait=0" width="100%" height="500" frameborder="0" seamless="seamless" webkitAllowFullScreen mozallowfullscreen allowFullScreen></iframe>
 <p class="caption">
 FIGURE 17.3: Accessing event data from click and drag events.
 </p>
@@ -518,56 +475,9 @@ FIGURE 17.3: Accessing event data from click and drag events.
 <div id="d-events" class="section level3">
 <h3><span class="header-section-number">17.2.2</span> 3D events</h3>
 <p>Drag selection events (i.e., <code>"plotly_selecting"</code>) are currently only available for 2D charts, but other common events are generally supported for any type of graph, including 3D charts. Figure <a href="linking-server-side.html#fig:3Devents">17.4</a> accesses various events in 3D including: <code>"plotly_hover"</code>, <code>"plotly_click"</code>, <code>"plotly_legendclick"</code>, <code>"plotly_legenddoubleclick"</code>, and <code>"plotly_relayout"</code>. The data emitted via <code>"plotly_hover"</code> and <code>"plotly_click"</code> is structured similarly to data emitted from <code>"plotly_selecting"</code>/<code>"plotly_selected"</code>. Figure <a href="linking-server-side.html#fig:3Devents">17.4</a> also demonstrates how one can react to particular components of a conflated event like <code>"plotly_relayout"</code>. That is, <code>"plotly_relayout"</code> will fire whenever <em>any</em> part of the layout has changed, so if we want to trigger behavior if and only if there are changes to the camera eye, one could first check if the information emitted contains information about the camera eye.</p>
-<details>
-<p><summary>Click to show/hide the code</summary></p>
-<pre class="sourceCode r"><code class="sourceCode r"><span class="kw">library</span>(shiny)
-
-ui &lt;-<span class="st"> </span><span class="kw">fluidPage</span>(
-  <span class="kw">plotlyOutput</span>(<span class="st">&quot;plot&quot;</span>),
-  <span class="kw">verbatimTextOutput</span>(<span class="st">&quot;hover&quot;</span>),
-  <span class="kw">verbatimTextOutput</span>(<span class="st">&quot;click&quot;</span>),
-  <span class="kw">verbatimTextOutput</span>(<span class="st">&quot;legendclick&quot;</span>),
-  <span class="kw">verbatimTextOutput</span>(<span class="st">&quot;legend2click&quot;</span>),
-  <span class="kw">verbatimTextOutput</span>(<span class="st">&quot;relayout&quot;</span>)
-)
-
-server &lt;-<span class="st"> </span><span class="cf">function</span>(input, output, session) {
-  
-  output<span class="op">$</span>plot &lt;-<span class="st"> </span><span class="kw">renderPlotly</span>({
-    <span class="kw">plot_ly</span>(mtcars, <span class="dt">x =</span> <span class="op">~</span>wt, <span class="dt">y =</span> <span class="op">~</span>mpg, <span class="dt">z =</span> <span class="op">~</span>disp, <span class="dt">color =</span> <span class="op">~</span><span class="kw">factor</span>(cyl))
-  })
-  
-  output<span class="op">$</span>hover &lt;-<span class="st"> </span><span class="kw">renderPrint</span>({
-    d &lt;-<span class="st"> </span><span class="kw">event_data</span>(<span class="st">&quot;plotly_hover&quot;</span>)
-    <span class="cf">if</span> (<span class="kw">is.null</span>(d)) <span class="st">&quot;Hover events appear here&quot;</span> <span class="cf">else</span> d
-  })
-  
-  output<span class="op">$</span>click &lt;-<span class="st"> </span><span class="kw">renderPrint</span>({
-    d &lt;-<span class="st"> </span><span class="kw">event_data</span>(<span class="st">&quot;plotly_click&quot;</span>)
-    <span class="cf">if</span> (<span class="kw">is.null</span>(d)) <span class="st">&quot;Click events appear here&quot;</span> <span class="cf">else</span> d
-  })
-  
-  output<span class="op">$</span>legendclick &lt;-<span class="st"> </span><span class="kw">renderPrint</span>({
-    d &lt;-<span class="st"> </span><span class="kw">event_data</span>(<span class="st">&quot;plotly_legendclick&quot;</span>)<span class="op">$</span>name
-    <span class="cf">if</span> (<span class="kw">is.null</span>(d)) <span class="st">&quot;Legend click&quot;</span> <span class="cf">else</span> d
-  })
-  
-  output<span class="op">$</span>legend2click &lt;-<span class="st"> </span><span class="kw">renderPrint</span>({
-    d &lt;-<span class="st"> </span><span class="kw">event_data</span>(<span class="st">&quot;plotly_legenddoubleclick&quot;</span>)<span class="op">$</span>name
-    <span class="cf">if</span> (<span class="kw">is.null</span>(d)) <span class="st">&quot;Legend double-click&quot;</span> <span class="cf">else</span> d
-  })
-  
-  output<span class="op">$</span>relayout &lt;-<span class="st"> </span><span class="kw">renderPrint</span>({
-    d &lt;-<span class="st"> </span><span class="kw">event_data</span>(<span class="st">&quot;plotly_relayout&quot;</span>)<span class="op">$</span>scene.camera<span class="op">$</span>eye
-    <span class="cf">if</span> (<span class="kw">is.null</span>(d)) <span class="st">&quot;Camera eye info&quot;</span> <span class="cf">else</span> d
-  })
-  
-}
-
-<span class="kw">shinyApp</span>(ui, server)</code></pre>
-</details>
+<pre class="sourceCode r"><code class="sourceCode r"><span class="kw">plotly_example</span>(<span class="st">&quot;shiny&quot;</span>, <span class="st">&quot;event_data_3D&quot;</span>)</code></pre>
 <div class="figure" style="text-align: center"><span id="fig:3Devents"></span>
-<iframe src="https://player.vimeo.com/video/307598025?title=0&amp;byline=0&amp;portrait=0" width="100%" height="500" frameborder="0" seamless="seamless" webkitAllowFullScreen mozallowfullscreen allowFullScreen></iframe>
+<iframe src="https://player.vimeo.com/video/327600560?title=0&amp;byline=0&amp;portrait=0" width="100%" height="500" frameborder="0" seamless="seamless" webkitAllowFullScreen mozallowfullscreen allowFullScreen></iframe>
 <p class="caption">
 FIGURE 17.4: Accessing 3D events.
 </p>
@@ -665,7 +575,7 @@ server &lt;-<span class="st"> </span><span class="cf">function</span>(input, out
 <span class="kw">shinyApp</span>(ui, server)</code></pre>
 </details>
 <div class="figure" style="text-align: center"><span id="fig:shiny-drag-circle"></span>
-<iframe src="https://player.vimeo.com/video/307598919?title=0&amp;byline=0&amp;portrait=0" width="100%" height="400" frameborder="0" seamless="seamless" webkitAllowFullScreen mozallowfullscreen allowFullScreen></iframe>
+<iframe src="https://player.vimeo.com/video/327619858?title=0&amp;byline=0&amp;portrait=0" width="100%" height="400" frameborder="0" seamless="seamless" webkitAllowFullScreen mozallowfullscreen allowFullScreen></iframe>
 <p class="caption">
 FIGURE 17.6: Accessing information about direct manipulation of circle shapes.
 </p>
@@ -679,54 +589,7 @@ FIGURE 17.7: Editing circle shape positions to dynamically alter a linear model 
 </p>
 </div>
 <p>Figure <a href="linking-server-side.html#fig:shiny-drag-line">17.8</a> uses an editable vertical line and the <code>plotly_relayout</code> event data to ‘snap’ the line to the closest point in a sequence of <code>x</code> values. It also places a marker on the intersection between the vertical line shape and the line chart of <code>y</code> values. Notice how, by accessing <code>event_data()</code> in this way (i.e., the source and target view of the event is the same), the chart is actually fully redrawn every time the line shape moves. If performance were an issue (i.e., we were dealing with lots of lines), this type of interaction likely won’t be very responsive. In that case, you can use <code>event_data()</code> to trigger side-effects (i.e., partially modify the plot) which is covered in <a href="linking-server-side.html#proxies">17.3.1</a>.</p>
-<details>
-<p><summary>Click to show/hide the code</summary></p>
-<pre class="sourceCode r"><code class="sourceCode r"><span class="kw">library</span>(shiny)
-<span class="kw">library</span>(plotly)
-
-ui &lt;-<span class="st"> </span><span class="kw">fluidPage</span>(
-  <span class="kw">plotlyOutput</span>(<span class="st">&quot;p&quot;</span>),
-  <span class="kw">verbatimTextOutput</span>(<span class="st">&quot;event&quot;</span>)
-)
-
-x &lt;-<span class="st"> </span><span class="kw">seq</span>(<span class="op">-</span><span class="dv">10</span>, <span class="dv">10</span>)
-y &lt;-<span class="st"> </span><span class="kw">rnorm</span>(<span class="kw">length</span>(x))
-
-server &lt;-<span class="st"> </span><span class="cf">function</span>(input, output, session) {
-  
-  output<span class="op">$</span>p &lt;-<span class="st"> </span><span class="kw">renderPlotly</span>({
-    d &lt;-<span class="st"> </span><span class="kw">event_data</span>(<span class="st">&quot;plotly_relayout&quot;</span>)
-    selected_point &lt;-<span class="st"> </span><span class="cf">if</span> (<span class="op">!</span><span class="kw">is.null</span>(d[[<span class="st">&quot;shapes[0].x0&quot;</span>]])) {
-      <span class="co"># &#39;snap&#39; the x-position from the event to the closest `x` value</span>
-      xint &lt;-<span class="st"> </span>d[[<span class="st">&quot;shapes[0].x0&quot;</span>]]
-      xpt &lt;-<span class="st"> </span>x[<span class="kw">which.min</span>(<span class="kw">abs</span>(x <span class="op">-</span><span class="st"> </span>xint))]
-      <span class="kw">list</span>(<span class="dt">x =</span> xpt, <span class="dt">y =</span> y[<span class="kw">which</span>(x <span class="op">==</span><span class="st"> </span>xpt)])
-    } <span class="cf">else</span> {
-      <span class="co"># default to </span>
-      <span class="kw">list</span>(<span class="dt">x =</span> <span class="dv">1</span>, <span class="dt">y =</span> y[<span class="kw">which</span>(x <span class="op">==</span><span class="st"> </span><span class="dv">1</span>)])
-    }
-    
-    <span class="kw">plot_ly</span>(<span class="dt">color =</span> <span class="kw">I</span>(<span class="st">&quot;red&quot;</span>)) <span class="op">%&gt;%</span>
-<span class="st">      </span><span class="kw">add_lines</span>(<span class="dt">x =</span> x, <span class="dt">y =</span> y) <span class="op">%&gt;%</span>
-<span class="st">      </span><span class="kw">add_markers</span>(<span class="dt">x =</span> selected_point<span class="op">$</span>x, <span class="dt">y =</span> selected_point<span class="op">$</span>y) <span class="op">%&gt;%</span>
-<span class="st">      </span><span class="kw">layout</span>(
-        <span class="dt">shapes =</span> <span class="kw">list</span>(
-          <span class="dt">type =</span> <span class="st">&quot;line&quot;</span>, 
-          <span class="dt">line =</span> <span class="kw">list</span>(<span class="dt">color =</span> <span class="st">&quot;gray&quot;</span>, <span class="dt">dash =</span> <span class="st">&quot;dot&quot;</span>),
-          <span class="dt">x0 =</span> selected_point<span class="op">$</span>x, 
-          <span class="dt">x1 =</span> selected_point<span class="op">$</span>x,
-          <span class="dt">y0 =</span> <span class="dv">0</span>,
-          <span class="dt">y1 =</span> <span class="dv">1</span>,
-          <span class="dt">yref =</span> <span class="st">&quot;paper&quot;</span>
-        )
-      ) <span class="op">%&gt;%</span>
-<span class="st">      </span><span class="kw">config</span>(<span class="dt">editable =</span> <span class="ot">TRUE</span>)
-  })
-  
-}
-
-<span class="kw">shinyApp</span>(ui, server)</code></pre>
-</details>
+<pre class="sourceCode r"><code class="sourceCode r"><span class="kw">plotly_example</span>(<span class="st">&quot;shiny&quot;</span>, <span class="st">&quot;drag_lines&quot;</span>)</code></pre>
 <div class="figure" style="text-align: center"><span id="fig:shiny-drag-line"></span>
 <iframe src="https://player.vimeo.com/video/307597984?title=0&amp;byline=0&amp;portrait=0" width="100%" height="400" frameborder="0" seamless="seamless" webkitAllowFullScreen mozallowfullscreen allowFullScreen></iframe>
 <p class="caption">
@@ -751,7 +614,8 @@ server &lt;-<span class="st"> </span><span class="cf">function</span>(input, out
   
   output<span class="op">$</span>parcoords &lt;-<span class="st"> </span><span class="kw">renderPlotly</span>({
     <span class="kw">plot_ly</span>(iris) <span class="op">%&gt;%</span>
-<span class="st">      </span><span class="kw">add_parcoords</span>()
+<span class="st">      </span><span class="kw">add_parcoords</span>() <span class="op">%&gt;%</span>
+<span class="st">      </span><span class="kw">event_register</span>(<span class="st">&quot;plotly_restyle&quot;</span>)
   })
   
   output<span class="op">$</span>info &lt;-<span class="st"> </span><span class="kw">renderPrint</span>({
@@ -764,7 +628,7 @@ server &lt;-<span class="st"> </span><span class="cf">function</span>(input, out
 <span class="kw">shinyApp</span>(ui, server)</code></pre>
 </details>
 <div class="figure" style="text-align: center"><span id="fig:shiny-parcoords"></span>
-<iframe src="https://player.vimeo.com/video/307597864?title=0&amp;byline=0&amp;portrait=0" width="100%" height="400" frameborder="0" seamless="seamless" webkitAllowFullScreen mozallowfullscreen allowFullScreen></iframe>
+<iframe src="https://player.vimeo.com/video/327623322?title=0&amp;byline=0&amp;portrait=0" width="100%" height="400" frameborder="0" seamless="seamless" webkitAllowFullScreen mozallowfullscreen allowFullScreen></iframe>
 <p class="caption">
 FIGURE 17.9: Using the <code>"plotly_restyle"</code> event to access brushed dimensions of a parallel coordinates plot.
 </p>
@@ -904,7 +768,7 @@ server &lt;-<span class="st"> </span><span class="cf">function</span>(input, out
     d &lt;-<span class="st"> </span><span class="kw">event_data</span>(<span class="st">&quot;plotly_click&quot;</span>)
     <span class="cf">if</span> (<span class="kw">is.null</span>(d)) <span class="kw">return</span>(<span class="st">&quot;Click a bar&quot;</span>)
     mpg <span class="op">%&gt;%</span>
-<span class="st">      </span><span class="kw">filter</span>(drv <span class="op">%in%</span><span class="st"> </span>d<span class="op">$</span>key) <span class="op">%&gt;%</span>
+<span class="st">      </span><span class="kw">filter</span>(drv <span class="op">%in%</span><span class="st"> </span>d<span class="op">$</span>customdata) <span class="op">%&gt;%</span>
 <span class="st">      </span><span class="kw">filter</span>(class <span class="op">%in%</span><span class="st"> </span>classes[d<span class="op">$</span>x])
   })
   
@@ -1002,7 +866,7 @@ server &lt;-<span class="st"> </span><span class="cf">function</span>(input, out
 <span class="kw">shinyApp</span>(ui, server)</code></pre>
 </details>
 <div class="figure" style="text-align: center"><span id="fig:shiny-scatterplot"></span>
-<iframe src="https://player.vimeo.com/video/307597740?title=0&amp;byline=0&amp;portrait=0" width="100%" height="400" frameborder="0" seamless="seamless" webkitAllowFullScreen mozallowfullscreen allowFullScreen></iframe>
+<iframe src="https://player.vimeo.com/video/327620506?title=0&amp;byline=0&amp;portrait=0" width="100%" height="400" frameborder="0" seamless="seamless" webkitAllowFullScreen mozallowfullscreen allowFullScreen></iframe>
 <p class="caption">
 FIGURE 17.16: Naive implementation of a shiny app that optionally overlays a fitted line to a scatterplot. A full redraw of the plot is performed everytime the checkbox is clicked, leading to an unnecessarily slow plot.
 </p>
@@ -1019,9 +883,7 @@ FIGURE 17.16: Naive implementation of a shiny app that optionally overlays a fit
   })
   
   <span class="kw">observe</span>({
-    
     <span class="cf">if</span> (input<span class="op">$</span>smooth) {
-      
       <span class="co"># this is essentially the plotly.js way of doing</span>
       <span class="co"># `p %&gt;% add_lines(x = ~x, y = ~yhat) %&gt;% toWebGL()`</span>
       <span class="co"># without having to redraw the entire plot</span>
@@ -1037,19 +899,16 @@ FIGURE 17.16: Naive implementation of a shiny app that optionally overlays a fit
           )
         )
     } <span class="cf">else</span> {
-    
       <span class="co"># JavaScript index starts at 0, so the &#39;1&#39; here really means</span>
       <span class="co"># &quot;delete the second traces (i.e., the fitted line)&quot;</span>
       <span class="kw">plotlyProxy</span>(<span class="st">&quot;scatterplot&quot;</span>, session) <span class="op">%&gt;%</span>
 <span class="st">        </span><span class="kw">plotlyProxyInvoke</span>(<span class="st">&quot;deleteTraces&quot;</span>, <span class="dv">1</span>)
     }
-    
   })
-  
 }</code></pre>
 </details>
 <div class="figure" style="text-align: center"><span id="fig:shiny-scatterplot-performant"></span>
-<iframe src="https://player.vimeo.com/video/307598567?title=0&amp;byline=0&amp;portrait=0" width="100%" height="400" frameborder="0" seamless="seamless" webkitAllowFullScreen mozallowfullscreen allowFullScreen></iframe>
+<iframe src="https://player.vimeo.com/video/327621124?title=0&amp;byline=0&amp;portrait=0" width="100%" height="400" frameborder="0" seamless="seamless" webkitAllowFullScreen mozallowfullscreen allowFullScreen></iframe>
 <p class="caption">
 FIGURE 17.17: A more responsive version of Figure <a href="linking-server-side.html#fig:shiny-scatterplot">17.16</a>.
 </p>
@@ -1105,7 +964,7 @@ server &lt;-<span class="st"> </span><span class="cf">function</span>(input, out
 <span class="kw">shinyApp</span>(ui, server)</code></pre>
 </details>
 <div class="figure" style="text-align: center"><span id="fig:shiny-partial-restyle"></span>
-<iframe src="https://player.vimeo.com/video/307598144?title=0&amp;byline=0&amp;portrait=0" width="100%" height="400" frameborder="0" seamless="seamless" webkitAllowFullScreen mozallowfullscreen allowFullScreen></iframe>
+<iframe src="https://player.vimeo.com/video/327621625?title=0&amp;byline=0&amp;portrait=0" width="100%" height="400" frameborder="0" seamless="seamless" webkitAllowFullScreen mozallowfullscreen allowFullScreen></iframe>
 <p class="caption">
 FIGURE 17.18: Using <code>Plotly.restyle()</code> to change just the width of a path and markers along that path in response to changes to <strong>shiny</strong> input sliders.
 </p>
@@ -1147,9 +1006,9 @@ server &lt;-<span class="st"> </span><span class="cf">function</span>(input, out
 <span class="kw">shinyApp</span>(ui, server)</code></pre>
 </details>
 <div class="figure" style="text-align: center"><span id="fig:shiny-mapbox-relayout"></span>
-<iframe src="https://player.vimeo.com/video/307598178?title=0&amp;byline=0&amp;portrait=0" width="100%" height="400" frameborder="0" seamless="seamless" webkitAllowFullScreen mozallowfullscreen allowFullScreen></iframe>
+<iframe src="https://player.vimeo.com/video/327603568?title=0&amp;byline=0&amp;portrait=0" width="100%" height="400" frameborder="0" seamless="seamless" webkitAllowFullScreen mozallowfullscreen allowFullScreen></iframe>
 <p class="caption">
-FIGURE 17.19: Using <code>Plotly.relayout()</code> to ‘auto-range’ the y-axis in response to changes in the x-axis range.
+FIGURE 17.19: Using a <code>shiny::selectInput()</code> to modify the basemap style of <code>plot_mapbox()</code> via <code>Plotly.relayout()</code>.
 </p>
 </div>
 <p>Figure <a href="linking-server-side.html#fig:shiny-rangeslider-relayout">17.20</a> demonstrates a clever use of <code>Plotly.relayout()</code> to set the y-axis range in response to changes in the x-axis range.</p>
@@ -1188,13 +1047,9 @@ server &lt;-<span class="st"> </span><span class="cf">function</span>(input, out
   
   yRange &lt;-<span class="st"> </span><span class="kw">range</span>(txhousing<span class="op">$</span>median, <span class="dt">na.rm =</span> <span class="ot">TRUE</span>)
   <span class="kw">observeEvent</span>(<span class="kw">event_data</span>(<span class="st">&quot;plotly_doubleclick&quot;</span>), {
-    
     <span class="kw">plotlyProxy</span>(<span class="st">&quot;plot&quot;</span>, session) <span class="op">%&gt;%</span>
 <span class="st">      </span><span class="kw">plotlyProxyInvoke</span>(<span class="st">&quot;relayout&quot;</span>, <span class="kw">list</span>(<span class="dt">yaxis =</span> <span class="kw">list</span>(<span class="dt">range =</span> yRange)))
-    
   })
-  
-  
 }
 
 <span class="kw">shinyApp</span>(ui, server)</code></pre>
@@ -1542,7 +1397,7 @@ FIGURE 17.25: Crossfiltering 6 variables in the <code>flights</code> data from t
 <p>Since brushing within color is transient, in constrast to Figure <a href="linking-server-side.html#fig:shiny-crossfilter">17.25</a>, Figure <a href="linking-server-side.html#fig:shiny-crossfilter-compare">17.26</a> doesn’t have to track the state of all the active brushes. It does, however, need to display <em>relative</em> rather than absolute frequencies to facilitate comparison of small filter range(s) to the overall distribution. This particular implementation takes the overall distribution as a “base layer” that remains fixed and overlays a handful of “selection layers” – one for each possible brush color. These selection layers begin with a height of 0, but when the relevant brush fires the heights of the bars for the relevant layer is modified. This approach may seem like a hack, but it leads to a fluid user experience because it’s not much work to adjust the height of a bar that already exists.</p>
 <pre class="sourceCode r"><code class="sourceCode r"><span class="kw">plotly_example</span>(<span class="st">&quot;shiny&quot;</span>, <span class="st">&quot;crossfilter_compare&quot;</span>)</code></pre>
 <div class="figure" style="text-align: center"><span id="fig:shiny-crossfilter-compare"></span>
-<iframe src="https://player.vimeo.com/video/307598246?title=0&amp;byline=0&amp;portrait=0" width="100%" height="400" frameborder="0" seamless="seamless" webkitAllowFullScreen mozallowfullscreen allowFullScreen></iframe>
+<iframe src="https://player.vimeo.com/video/327622610?title=0&amp;byline=0&amp;portrait=0" width="100%" height="400" frameborder="0" seamless="seamless" webkitAllowFullScreen mozallowfullscreen allowFullScreen></iframe>
 <p class="caption">
 FIGURE 17.26: Comparing filters with a dynamic color brush. This particular example compares ‘red eye’ flights (in green) to early morning flights (in orange). This makes it easier to see that delays occur more often for ‘red eye’ flights.
 </p>

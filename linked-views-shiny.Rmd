@@ -127,107 +127,20 @@ Numerous Figures in the following sections show how to access common **plotly** 
 
 There are currently four different modes for mouse click+drag behavior (i.e., `dragmode`) in plotly.js: zoom, pan, rectangular selection, and lasso selection. This mode may be changed interactively via the modebar that appears above a **plotly** graph, but the default mode can also be set from the command-line. The default `dragmode` in Figure \@ref(fig:plotlyEvents) is set to `'select'`, so that dragging draws a rectangular box which highlights markers. When in this mode, or in the lasso selection mode, information about the drag event can be accessed in four different ways: `"plotly_selecting"`, `"plotly_selected"`, `"plotly_brushing"`, and `"plotly_brushed"`. Both the `"plotly_selecting"` and `"plotly_selected"` events emit information about trace(s) appearing within the interior of the brush -- the only difference is that `"plotly_selecting"` fires repeatedly *during* drag events, whereas `"plotly_selected"` fires *after* drag events (i.e., after the mouse has been released). The semantics behind `"plotly_brushing"` and `"plotly_brushed"` are similar, but these emit the x/y limits of the selection brush. As for the other two dragging modes (zoom and pan), since they modify the range of the x/y axes, information about these events can be accessed through `"plotly_relayout"`. Sections \@ref(proxies) and \@ref(advanced-applications) both have advanced applications of these dragging events.
 
-```{r, eval = FALSE, summary = "Click to show/hide the code"}
-library(shiny)
-
-ui <- fluidPage(
-  radioButtons("plotType", "Plot Type:", choices = c("ggplotly", "plotly")),
-  plotlyOutput("plot"),
-  verbatimTextOutput("brushing"),
-  verbatimTextOutput("selecting"),
-  verbatimTextOutput("relayout")
-)
-
-server <- function(input, output, session) {
-    
-  nms <- row.names(mtcars)
-    
-  output$plot <- renderPlotly({
-    p <- if (identical(input$plotType, "ggplotly")) {
-      ggplotly(ggplot(mtcars, aes(x = mpg, y = wt, customdata = nms)) + geom_point())
-    } else {
-      plot_ly(mtcars, x = ~mpg, y = ~wt, customdata = nms)
-    }
-    p %>% layout(dragmode = "select") %>% event_register("plotly_selecting")
-  })
-  
-  output$brushing <- renderPrint({
-    d <- event_data("plotly_brushing")
-    if (is.null(d)) "Selection brush limits appear here" else d
-  })
-  
-  output$selecting <- renderPrint({
-    d <- event_data("plotly_selecting")
-    if (is.null(d)) "Selected data appears here" else d
-  })
-  
-  output$relayout <- renderPrint({
-    d <- event_data("plotly_relayout")
-    if (is.null(d)) "Zoom and pan info appears here" else d
-  })
-    
-}
-
-shinyApp(ui, server)
+```r
+plotly_example("shiny", "event_data")
 ```
 
 ```{r plotlyEvents, echo=FALSE, fig.cap = "(ref:plotlyEvents)"}
-include_vimeo("307597427", height = 500)
+include_vimeo("327625843", height = 500)
 ```
 
 ### 3D events
 
 Drag selection events (i.e., `"plotly_selecting"`) are currently only available for 2D charts, but other common events are generally supported for any type of graph, including 3D charts. Figure \@ref(fig:3Devents) accesses various events in 3D including: `"plotly_hover"`, `"plotly_click"`, `"plotly_legendclick"`, `"plotly_legenddoubleclick"`, and `"plotly_relayout"`. The data emitted via `"plotly_hover"` and `"plotly_click"` is structured similarly to data emitted from `"plotly_selecting"`/`"plotly_selected"`. Figure \@ref(fig:3Devents) also demonstrates how one can react to particular components of a conflated event like `"plotly_relayout"`. That is, `"plotly_relayout"` will fire whenever _any_ part of the layout has changed, so if we want to trigger behavior if and only if there are changes to the camera eye, one could first check if the information emitted contains information about the camera eye.
 
-
-```{r eval = FALSE, summary = "Click to show/hide the code"}
-library(shiny)
-
-ui <- fluidPage(
-  plotlyOutput("plot"),
-  verbatimTextOutput("hover"),
-  verbatimTextOutput("click"),
-  verbatimTextOutput("legendclick"),
-  verbatimTextOutput("legend2click"),
-  verbatimTextOutput("relayout")
-)
-
-server <- function(input, output, session) {
-  
-  output$plot <- renderPlotly({
-    plot_ly(mtcars, x = ~wt, y = ~mpg, z = ~disp, color = ~factor(cyl)) %>%
-      event_register("plotly_legendclick") %>%
-      event_register("plotly_legenddoubleclick") 
-  })
-  
-  output$hover <- renderPrint({
-    d <- event_data("plotly_hover")
-    if (is.null(d)) "Hover events appear here" else d
-  })
-  
-  output$click <- renderPrint({
-    d <- event_data("plotly_click")
-    if (is.null(d)) "Click events appear here" else d
-  })
-  
-  output$legendclick <- renderPrint({
-    d <- event_data("plotly_legendclick")$name
-    if (is.null(d)) "Legend click" else d
-  })
-  
-  output$legend2click <- renderPrint({
-    d <- event_data("plotly_legenddoubleclick")$name
-    if (is.null(d)) "Legend double-click" else d
-  })
-  
-  output$relayout <- renderPrint({
-    d <- event_data("plotly_relayout")$scene.camera$eye
-    if (is.null(d)) "Camera eye info" else d
-  })
-  
-}
-
-shinyApp(ui, server)
+```r
+plotly_example("shiny", "event_data_3D")
 ```
 
 ```{r 3Devents, echo=FALSE, fig.cap = "(ref:3Devents)"}
@@ -327,7 +240,7 @@ shinyApp(ui, server)
 ```
 
 ```{r shiny-drag-circle, echo=FALSE, fig.cap = "(ref:shiny-drag-circle)"}
-include_vimeo("307598919")
+include_vimeo("327619858")
 ```
 
 Figure \@ref(fig:interactive-lm) demonstrates a linear model that reacts to edited circle shape positions using the `"plotly_relayout"` event in **shiny**. This interactive tool is an effective way to visualize the impact of high leverage points on a linear model fit. The main idea is to have the model fit (as well as it's summary and predicted values) depend on the current state of x and y values, which here is stored and updated via `reactiveValues()`. Section \@ref(reactive-vals) has more examples of using reactive values to maintain state within a **shiny** application.
@@ -342,52 +255,8 @@ include_vimeo("318338029")
 
 Figure \@ref(fig:shiny-drag-line) uses an editable vertical line and the `plotly_relayout` event data to 'snap' the line to the closest point in a sequence of `x` values. It also places a marker on the intersection between the vertical line shape and the line chart of `y` values. Notice how, by accessing `event_data()` in this way (i.e., the source and target view of the event is the same), the chart is actually fully redrawn every time the line shape moves. If performance were an issue (i.e., we were dealing with lots of lines), this type of interaction likely won't be very responsive. In that case, you can use `event_data()` to trigger side-effects (i.e., partially modify the plot) which is covered in \@ref(proxies).
 
-```{r eval = FALSE, summary = "Click to show/hide the code"}
-library(shiny)
-library(plotly)
-
-ui <- fluidPage(
-  plotlyOutput("p"),
-  verbatimTextOutput("event")
-)
-
-x <- seq(-10, 10)
-y <- rnorm(length(x))
-
-server <- function(input, output, session) {
-  
-  output$p <- renderPlotly({
-    d <- event_data("plotly_relayout")
-    selected_point <- if (!is.null(d[["shapes[0].x0"]])) {
-      # 'snap' the x-position from the event to the closest `x` value
-      xint <- d[["shapes[0].x0"]]
-      xpt <- x[which.min(abs(x - xint))]
-      list(x = xpt, y = y[which(x == xpt)])
-    } else {
-      # default to 
-      list(x = 1, y = y[which(x == 1)])
-    }
-    
-    plot_ly(color = I("red")) %>%
-      add_lines(x = x, y = y) %>%
-      add_markers(x = selected_point$x, y = selected_point$y) %>%
-      layout(
-        shapes = list(
-          type = "line", 
-          line = list(color = "gray", dash = "dot"),
-          x0 = selected_point$x, 
-          x1 = selected_point$x,
-          y0 = 0,
-          y1 = 1,
-          yref = "paper"
-        )
-      ) %>%
-      config(editable = TRUE)
-  })
-  
-}
-
-shinyApp(ui, server)
+```r
+plotly_example("shiny", "drag_lines")
 ```
 
 ```{r shiny-drag-line, echo=FALSE, fig.cap = "(ref:shiny-drag-line)"}
@@ -411,7 +280,8 @@ server <- function(input, output, session) {
   
   output$parcoords <- renderPlotly({
     plot_ly(iris) %>%
-      add_parcoords()
+      add_parcoords() %>%
+      event_register("plotly_restyle")
   })
   
   output$info <- renderPrint({
@@ -425,7 +295,7 @@ shinyApp(ui, server)
 ```
 
 ```{r shiny-parcoords, echo=FALSE, fig.cap = '(ref:shiny-parcoords)'}
-include_vimeo("307597864")
+include_vimeo("327623322")
 ```
 
 As Figure \@ref(fig:shiny-parcoords-data) shows, it's possible to use this information to infer which data points are highlighted. The logic to do so is fairly sophisticated, and requires accumulation of the event data, as discussed in section \@ref(reactive-vals).
@@ -670,7 +540,7 @@ shinyApp(ui, server)
 ```
 
 ```{r shiny-scatterplot, echo=FALSE, fig.cap="(ref:shiny-scatterplot)"}
-include_vimeo("307597740")
+include_vimeo("327620506")
 ```
 
 In terms of the implementation behind Figure \@ref(fig:shiny-scatterplot) and \@ref(fig:shiny-scatterplot-performant), the only difference resides in the `server` definition. In Figure \@ref(fig:shiny-scatterplot-performant), the `renderPlotly()` statement no longer has a dependency on input values, so that code is only executed once (on page load) to generate the initial view of the scatterplot. The logic behind adding and removing the fitted line is handled through an `observe()` block -- this reactive expression watches the `input$smooth` input value and modifies the `output$scatterplot` widget whenever it changes. To trigger a modification of a **plotly** output widget, you must create a proxy object with `plotlyProxy()` that references the relevant output ID. Once a proxy object is created, you can invoke any sequence of [plotly.js function(s)](https://plot.ly/javascript/plotlyjs-function-reference/#plotlymaketemplate) on it with `plotlyProxyInvoke()`. Invoking a method with the correct arguments can be tricky and requires knowledge of plotly.js because `plotlyProxyInvoke()` will send these arguments directly to the plotly.js method and therefore doesn't support the same 'high-level' semantics that `plot_ly()` does.
@@ -686,9 +556,7 @@ server <- function(input, output, session) {
   })
   
   observe({
-    
     if (input$smooth) {
-      
       # this is essentially the plotly.js way of doing
       # `p %>% add_lines(x = ~x, y = ~yhat) %>% toWebGL()`
       # without having to redraw the entire plot
@@ -704,20 +572,17 @@ server <- function(input, output, session) {
           )
         )
     } else {
-    
       # JavaScript index starts at 0, so the '1' here really means
       # "delete the second traces (i.e., the fitted line)"
       plotlyProxy("scatterplot", session) %>%
         plotlyProxyInvoke("deleteTraces", 1)
     }
-    
   })
-  
 }
 ```
 
 ```{r shiny-scatterplot-performant, echo=FALSE, fig.cap="(ref:shiny-scatterplot-performant)"}
-include_vimeo("307598567")
+include_vimeo("327621124")
 ```
 
 Figure \@ref(fig:shiny-scatterplot) demonstrates a common use case where partial updates can be helpful, but there are other not-so-obvious cases. The next section covers a range of examples where you'll see how to leverage partial updates to implement smooth 'streaming' visuals, avoid resetting axis ranges, avoid flickering basemap layers, and more.
@@ -773,7 +638,7 @@ shinyApp(ui, server)
 ```
 
 ```{r shiny-partial-restyle, echo = FALSE, fig.cap="(ref:shiny-partial-restyle)"}
-include_vimeo("307598144")
+include_vimeo("327621625")
 ```
 
 One un-intuitive thing about `Plotly.restyle()` is that it fully replaces object (i.e., attributes that contain attributes) definitions like `marker` by default. To modify just a particular attribute of an object, like the size of a marker, you must replace that attribute directly (hence `marker.size`). As mentioned in the [official documentation](https://plot.ly/javascript/plotlyjs-function-reference/#plotlyrestyle), by default, modifications are applied to all traces, but specific traces can be targeted through their trace index (which starts at 0, because JavaScript)!
@@ -1212,7 +1077,7 @@ plotly_example("shiny", "crossfilter_compare")
 ```
 
 ```{r shiny-crossfilter-compare, echo=FALSE, fig.cap="(ref:shiny-crossfilter-compare)"}
-include_vimeo("307598246")
+include_vimeo("327622610")
 ```
 
 ### A draggable brush {#drag-brush}

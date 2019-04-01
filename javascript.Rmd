@@ -367,9 +367,9 @@ p <- plot_ly(x = 1, y = 1, size = I(50)) %>%
     hoverinfo = "text"
   ) %>%
   onRender(
-    "function(gd) { 
+    "function(el) { 
        var container = document.getElementById('video');
-       gd.on('plotly_click', function(d) {
+       el.on('plotly_click', function(d) {
          var url = d.points[0].customdata;
          renderReactPlayer(container, {url: url, playing: true});
        })
@@ -395,8 +395,8 @@ app <- tags$div(id = "app")
 p <- plot_ly(x = 1, y = 1) %>% 
   add_markers(customdata = "Powered by React") %>%
   onRender(babel_transform(
-    "gd => { 
-      gd.on('plotly_click', d => {
+    "el => { 
+      el.on('plotly_click', d => {
         let msg = d.points[0].customdata;
         ReactDOM.render(
           <h1>{msg}</h1>, 
@@ -427,16 +427,16 @@ data_grid <- tags$div(id = "data-grid")
 p <- plot_ly(mtcars, x = ~wt, y = ~mpg, customdata = row.names(mtcars)) %>% 
   layout(dragmode = "select") %>%
   onRender(babel_transform(   
-    "gd => {
+    "el => {
        var container = document.getElementById('data-grid');
        var columns = [{key: 'x', name: 'Weight'}, {key: 'y', name: 'MPG'}, {key: 'customdata', name: 'Model'}];
-       gd.on('plotly_selecting', d => {
+       el.on('plotly_selecting', d => {
           if (d.points) {
             var grid = <ReactDataGrid columns={columns} rowGetter={i => d.points[i]} rowsCount={d.points.length} />;
             ReactDOM.render(grid, container);
           }
         });
-        gd.on('plotly_deselect', d => { ReactDOM.render(null, container); });
+        el.on('plotly_deselect', d => { ReactDOM.render(null, container); });
      }"
   ))
 

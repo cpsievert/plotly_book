@@ -25,7 +25,7 @@
 <meta name="author" content="Carson Sievert">
 
 
-<meta name="date" content="2019-03-29">
+<meta name="date" content="2019-03-31">
 
   <meta name="viewport" content="width=device-width, initial-scale=1">
   <meta name="apple-mobile-web-app-capable" content="yes">
@@ -370,7 +370,7 @@ p &lt;-<span class="st"> </span><span class="kw">plot_ly</span>(mtcars, <span cl
 FIGURE 21.1: Attaching hyperlinks to each point in a scatterplot and using a custom JS event to open that Google search query upon clicking a point.
 </p>
 </div>
-<p>In addition to using <code>window.open()</code> to open the <code>url</code>, we could also add it to the plot as an annotation using the plotly.js function <code>Plotly.relayout()</code>, as done in Figure <a href="supplying-custom-data.html#fig:click-annotate">21.2</a>. Moreover, since plotly annotations support HTML markup, we can also treat that url as a true HTML hyperlink by wrapping it in an HTML <code>&lt;a&gt;</code> tag. In cases where your JS function starts to get complex, it can help to put that JS function in its own file, then use the R function <code>readLines()</code> to read it in as a string and pass along <code>onRender()</code> as done below:</p>
+<p>In addition to using <code>window.open()</code> to open the <code>url</code>, we could also add it to the plot as an annotation using the plotly.js function <code>Plotly.relayout()</code>, as done in Figure <a href="supplying-custom-data.html#fig:hover-annotate">21.2</a>. Moreover, since plotly annotations support HTML markup, we can also treat that url as a true HTML hyperlink by wrapping it in an HTML <code>&lt;a&gt;</code> tag. In cases where your JS function starts to get complex, it can help to put that JS function in its own file, then use the R function <code>readLines()</code> to read it in as a string and pass along <code>onRender()</code> as done below:</p>
 <pre class="sourceCode r"><code class="sourceCode r"><span class="kw">onRender</span>(p, <span class="kw">readLines</span>(<span class="st">&quot;js/hover-hyperlink.js&quot;</span>))</code></pre>
 <details>
 <p><summary>Click to show the ‘js/hover-hyperlink.js’ file</summary></p>
@@ -390,8 +390,8 @@ FIGURE 21.1: Attaching hyperlinks to each point in a scatterplot and using a cus
  <span class="op">}</span>)<span class="op">;</span>
 <span class="op">}</span></code></pre>
 </details>
-<div class="figure" style="text-align: center"><span id="fig:click-annotate"></span>
-<iframe src="https://player.vimeo.com/video/307598266?title=0&amp;byline=0&amp;portrait=0" width="100%" height="400" frameborder="0" seamless="seamless" webkitAllowFullScreen mozallowfullscreen allowFullScreen></iframe>
+<div class="figure" style="text-align: center"><span id="fig:hover-annotate"></span>
+<iframe src="https://player.vimeo.com/video/327588345?title=0&amp;byline=0&amp;portrait=0" width="100%" height="400" frameborder="0" seamless="seamless" webkitAllowFullScreen mozallowfullscreen allowFullScreen></iframe>
 <p class="caption">
 FIGURE 21.2: Using <code>Plotly.relayout()</code> to add and change hyperlink in response to hover events.
 </p>
@@ -509,7 +509,7 @@ sales_hover &lt;-<span class="st"> </span>txhousing <span class="op">%&gt;%</spa
 <div class="figure" style="text-align: center"><span id="fig:tx-annotate"></span>
 <iframe src="https://player.vimeo.com/video/307597956?title=0&amp;byline=0&amp;portrait=0" width="100%" height="400" frameborder="0" seamless="seamless" webkitAllowFullScreen mozallowfullscreen allowFullScreen></iframe>
 <p class="caption">
-FIGURE 21.5: Combining the graphical querying framework from <a href="client-side-linking.html#graphical-queries">16.1</a> with the ability to define custom JS event handlers. This example also leverages the fact that <code>customdata</code> supports list-columns to effectively bind both the city name and number of houses sold on a particular day.
+FIGURE 21.5: Combining the graphical querying framework from <a href="client-side-linking.html#graphical-queries">16.1</a> with a custom JS event handler to highlight a time series as well as circling the month selected. This example supplies a list-column to <code>customdata</code> in order to populate an informative title based on the user’s selection of city and month.
 </p>
 </div>
 <p>Sometimes supplying and accessing <code>customdata</code> alone is not quite enough for the task at hand. For instance, what if we wish to add the average monthly sales to the annotation for the city of interest in Figure <a href="supplying-custom-data.html#fig:tx-annotate">21.5</a>? In cases like this, we may need to use <code>customdata</code> to query a portion of the plot’s input data, like Figure <a href="supplying-custom-data.html#fig:tx-annotate">21.5</a> does to compute and display average sales for a given city. This implementation leverages the fact that each selected point (<code>pt</code>) contains a reference to the entire trace it derives from (<code>pt.data</code>). As discussion behind Figure <a href="scatter-traces.html#fig:scatter-lines">3.2</a> noted, this particular plot has a <em>single trace</em> and uses missing values to create separate lines for each city. As a result, <code>pt.data.customdata</code> contains all the <code>customdata</code> we supplied from the R side, so to get all the <code>sales</code> for a given city, we first need to filter that array down to only the elements that are belong to that city (while being careful of missing values!).</p>

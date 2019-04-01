@@ -25,7 +25,7 @@
 <meta name="author" content="Carson Sievert">
 
 
-<meta name="date" content="2019-03-29">
+<meta name="date" content="2019-03-31">
 
   <meta name="viewport" content="width=device-width, initial-scale=1">
   <meta name="apple-mobile-web-app-capable" content="yes">
@@ -419,9 +419,9 @@ p &lt;-<span class="st"> </span><span class="kw">plot_ly</span>(<span class="dt"
     <span class="dt">hoverinfo =</span> <span class="st">&quot;text&quot;</span>
   ) <span class="op">%&gt;%</span>
 <span class="st">  </span><span class="kw">onRender</span>(
-    <span class="st">&quot;function(gd) { </span>
+    <span class="st">&quot;function(el) { </span>
 <span class="st">       var container = document.getElementById(&#39;video&#39;);</span>
-<span class="st">       gd.on(&#39;plotly_click&#39;, function(d) {</span>
+<span class="st">       el.on(&#39;plotly_click&#39;, function(d) {</span>
 <span class="st">         var url = d.points[0].customdata;</span>
 <span class="st">         renderReactPlayer(container, {url: url, playing: true});</span>
 <span class="st">       })</span>
@@ -448,8 +448,8 @@ app &lt;-<span class="st"> </span>tags<span class="op">$</span><span class="kw">
 p &lt;-<span class="st"> </span><span class="kw">plot_ly</span>(<span class="dt">x =</span> <span class="dv">1</span>, <span class="dt">y =</span> <span class="dv">1</span>) <span class="op">%&gt;%</span><span class="st"> </span>
 <span class="st">  </span><span class="kw">add_markers</span>(<span class="dt">customdata =</span> <span class="st">&quot;Powered by React&quot;</span>) <span class="op">%&gt;%</span>
 <span class="st">  </span><span class="kw">onRender</span>(<span class="kw">babel_transform</span>(
-    <span class="st">&quot;gd =&gt; { </span>
-<span class="st">      gd.on(&#39;plotly_click&#39;, d =&gt; {</span>
+    <span class="st">&quot;el =&gt; { </span>
+<span class="st">      el.on(&#39;plotly_click&#39;, d =&gt; {</span>
 <span class="st">        let msg = d.points[0].customdata;</span>
 <span class="st">        ReactDOM.render(</span>
 <span class="st">          &lt;h1&gt;{msg}&lt;/h1&gt;, </span>
@@ -481,16 +481,16 @@ data_grid &lt;-<span class="st"> </span>tags<span class="op">$</span><span class
 p &lt;-<span class="st"> </span><span class="kw">plot_ly</span>(mtcars, <span class="dt">x =</span> <span class="op">~</span>wt, <span class="dt">y =</span> <span class="op">~</span>mpg, <span class="dt">customdata =</span> <span class="kw">row.names</span>(mtcars)) <span class="op">%&gt;%</span><span class="st"> </span>
 <span class="st">  </span><span class="kw">layout</span>(<span class="dt">dragmode =</span> <span class="st">&quot;select&quot;</span>) <span class="op">%&gt;%</span>
 <span class="st">  </span><span class="kw">onRender</span>(<span class="kw">babel_transform</span>(   
-    <span class="st">&quot;gd =&gt; {</span>
+    <span class="st">&quot;el =&gt; {</span>
 <span class="st">       var container = document.getElementById(&#39;data-grid&#39;);</span>
 <span class="st">       var columns = [{key: &#39;x&#39;, name: &#39;Weight&#39;}, {key: &#39;y&#39;, name: &#39;MPG&#39;}, {key: &#39;customdata&#39;, name: &#39;Model&#39;}];</span>
-<span class="st">       gd.on(&#39;plotly_selecting&#39;, d =&gt; {</span>
+<span class="st">       el.on(&#39;plotly_selecting&#39;, d =&gt; {</span>
 <span class="st">          if (d.points) {</span>
 <span class="st">            var grid = &lt;ReactDataGrid columns={columns} rowGetter={i =&gt; d.points[i]} rowsCount={d.points.length} /&gt;;</span>
 <span class="st">            ReactDOM.render(grid, container);</span>
 <span class="st">          }</span>
 <span class="st">        });</span>
-<span class="st">        gd.on(&#39;plotly_deselect&#39;, d =&gt; { ReactDOM.render(null, container); });</span>
+<span class="st">        el.on(&#39;plotly_deselect&#39;, d =&gt; { ReactDOM.render(null, container); });</span>
 <span class="st">     }&quot;</span>
   ))
 
