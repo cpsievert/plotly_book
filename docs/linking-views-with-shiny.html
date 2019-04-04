@@ -389,7 +389,7 @@ FIGURE 17.1: Using a <strong>shiny</strong> input widget to control which time s
 </p>
 </div>
 <p>If, instead of a <strong>plotly</strong> graph, a reactive expression generates a static R graphic, simply use <code>renderPlot()</code> (instead of <code>renderPlotly()</code>) to render it and <code>plotOutput()</code> (instead of <code>plotlyOutput()</code>) to position it. Other <strong>shiny</strong> output widgets also use this naming convention: <code>renderDataTable()</code>/<code>datatableOutput()</code>, <code>renderPrint()</code>/<code>verbatimTextOutput()</code>, <code>renderText()</code>/<code>textOutput()</code>, <code>renderImage()</code>/<code>imageOutput()</code>, etc. Packages that are built on the <strong>htmlwidgets</strong> standard (e.g. <strong>plotly</strong> and <strong>leaflet</strong>) are, in some sense, also <strong>shiny</strong> output widgets that are encouraged to follow this same naming convention (e.g. <code>renderPlotly()</code>/<code>plotlyOutput()</code> and <code>renderLeaflet()</code>/<code>leafletOutput()</code>).</p>
-<p><strong>Shiny</strong> also comes pre-packaged with a handful of other useful input widgets. Although many <strong>shiny</strong> apps use them straight “out-of-the-box”, input widgets can easily be stylized with CSS and/or SASS, and even custom input widgets can be integrated <span class="citation">(Mastny <a href="#ref-sass" role="doc-biblioref">2018</a>, <span class="citation">@shiny-custom-inputs</span>)</span>.</p>
+<p><strong>Shiny</strong> also comes pre-packaged with a handful of other useful input widgets. Although many <strong>shiny</strong> apps use them straight “out-of-the-box”, input widgets can easily be stylized with CSS and/or SASS, and even custom input widgets can be integrated <span class="citation">(Mastny <a href="#ref-sass" role="doc-biblioref">2018</a>)</span>; <span class="citation">(RStudio <a href="#ref-shiny-custom-inputs" role="doc-biblioref">2014</a><a href="#ref-shiny-custom-inputs" role="doc-biblioref">a</a>)</span>.</p>
 <ul>
 <li><code>selectInput()</code>/<code>selectizeInput()</code> for dropdown menus.</li>
 <li><code>numericInput()</code> for a single number.</li>
@@ -987,8 +987,7 @@ FIGURE 17.21: Using <code>Plotly.extendTraces()</code> to efficiently stream dat
 <span class="kw">library</span>(plotly)
 <span class="kw">library</span>(dplyr)
 
-<span class="co"># CSV available from https://github.com/cpsievert/plotly_book</span>
-sales &lt;-<span class="st"> </span>readr<span class="op">::</span><span class="kw">read_csv</span>(<span class="st">&quot;data/sales.csv&quot;</span>)
+<span class="kw">data</span>(sales, <span class="dt">package =</span> <span class="st">&quot;plotlyBook&quot;</span>)
 
 ui &lt;-<span class="st"> </span><span class="kw">fluidPage</span>(
   <span class="kw">plotlyOutput</span>(<span class="st">&quot;category&quot;</span>, <span class="dt">height =</span> <span class="dv">200</span>),
@@ -1278,6 +1277,9 @@ FIGURE 17.28: Example of a <strong>shiny</strong> app that has <strong>crosstalk
 </div>
 <div id="ref-sass">
 <p>Mastny, Timothy. 2018. <em>Sass: Syntactically Awesome Stylesheets (Sass) Compiler</em>. <a href="https://github.com/rstudio/sass">https://github.com/rstudio/sass</a>.</p>
+</div>
+<div id="ref-shiny-custom-inputs">
+<p>RStudio. 2014a. “Build Custom Input Objects.” Blog. <a href="https://shiny.rstudio.com/articles/building-inputs.html">https://shiny.rstudio.com/articles/building-inputs.html</a>.</p>
 </div>
 <div id="ref-leaflet-shiny">
 <p>Cheng, Joe. 2018c. <em>Using Leaflet with Shiny</em>. Blog. <a href="https://rstudio.github.io/leaflet/shiny.html">https://rstudio.github.io/leaflet/shiny.html</a>.</p>

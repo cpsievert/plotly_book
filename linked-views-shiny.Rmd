@@ -56,7 +56,7 @@ include_vimeo("307597444")
 
 If, instead of a **plotly** graph, a reactive expression generates a static R graphic, simply use `renderPlot()` (instead of `renderPlotly()`) to render it and `plotOutput()` (instead of `plotlyOutput()`) to position it. Other **shiny** output widgets also use this naming convention: `renderDataTable()`/`datatableOutput()`, `renderPrint()`/`verbatimTextOutput()`, `renderText()`/`textOutput()`, `renderImage()`/`imageOutput()`, etc. Packages that are built on the **htmlwidgets** standard (e.g. **plotly** and **leaflet**) are, in some sense, also **shiny** output widgets that are encouraged to follow this same naming convention (e.g. `renderPlotly()`/`plotlyOutput()` and `renderLeaflet()`/`leafletOutput()`).
 
-**Shiny** also comes pre-packaged with a handful of other useful input widgets. Although many **shiny** apps use them straight "out-of-the-box", input widgets can easily be stylized with CSS and/or SASS, and even custom input widgets can be integrated [@sass, @shiny-custom-inputs].
+**Shiny** also comes pre-packaged with a handful of other useful input widgets. Although many **shiny** apps use them straight "out-of-the-box", input widgets can easily be stylized with CSS and/or SASS, and even custom input widgets can be integrated [@sass]; [@shiny-custom-inputs].
 
 * `selectInput()`/`selectizeInput()` for dropdown menus.
 * `numericInput()` for a single number.
@@ -679,8 +679,7 @@ library(shiny)
 library(plotly)
 library(dplyr)
 
-# CSV available from https://github.com/cpsievert/plotly_book
-sales <- readr::read_csv("data/sales.csv")
+data(sales, package = "plotlyBook")
 
 ui <- fluidPage(
   plotlyOutput("category", height = 200),
