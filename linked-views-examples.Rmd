@@ -1,0 +1,386 @@
+## Examples {#querying-examples}
+
+### Querying facetted charts {#trellis-linking}
+
+A facetted chart, also known as a trellis or small multiples display, is an effective way to observe how a certain relationship or visual pattern changes with a discrete variable [@trellis] [@tufte2001]. The implementation of a facetted chart partitions a data set into groups, then produces a graphical panel for each group using a fixed visual encoding (e.g. a scatterplot). When these groups are related in some way, it can be useful to consider linking the panels through graphical queries to reveal greater insight, especially when it comes to making comparisons both within and across multiple groups.
+
+Figure \@ref(fig:epl) is an example of making comparisons both within and across panels via graphical querying in a facetted chart. Each panel represents one year of English Premier League standings across time and each line represents a team (the querying variable). Since the x-axis represents the number of games within season and y-axis tracks cumulative points relative to the league average, lines with a positive slope represent above average performance and a negative slope represents below average performance. This design makes it easy to query a good (or bad) team for a particular year (via direct manipulation) to see who the team is as well as how they've compared to the competition in other years. In addition, the dynamic and persistent color brush allows us to query other teams to compare both within and across years. This example is shipped as a demo with the **plotly** package and uses data from the **engsoccerdata** package [@engsoccerdata]. Thanks to Antony Unwin for providing the initial idea and inspiration for Figure \@ref(fig:epl) [@unwin-epl].
+
+```r
+# By entering this demo in your R console it will print out the actual source code necessary to recreate the graphic
+# Also, `demo(package = "plotly")` will list of all demos shipped with plotly
+demo("crosstalk-highlight-epl-2", package = "plotly")
+```
+
+```{r epl, echo = FALSE, fig.cap = "(ref:epl)"}
+include_vimeo("307598973")
+```
+
+The demo above requires some fairly advanced data pre-processing, so to learn how to implement graphical queries in trellis displays, let's work with more minimal examples. Figure \@ref(fig:trellis-txhousing) gives us yet another look at the `txhousing` dataset. This time we focus on just four cities and give each city it's own panel in the trellis display by leveraging `facet_wrap()` from **ggplot2**. Within each panel, we'll wrap the house price time series by year by putting the month on the x-axis and grouping by year. Then, to link these panels, we can ulitize year as a querying variable. As a result, not only do we have the ability to analyze annual trends within city, but we can also query specific years to compare unusual or interesting years both within and across cities.
+
+```{r, eval = FALSE, code = readLines("code/trellis-txhousing.R")}
+```
+
+```{r trellis-txhousing, echo = FALSE, fig.cap = "(ref:trellis-txhousing)", code = readLines("code/trellis-txhousing-output.R")}
+```
+
+Figure \@ref(fig:trellis-txhousing-plotly) displays the same information as \@ref(fig:trellis-txhousing), but shows a way to implement a linked trellis display via `plot_ly()` instead of `ggplotly()`. This approach leverages `dplyr::do()` to create **plotly** object for each city/panel, then routes that list of plots into `subplot()`. One nuance here is that the querying variable has to be defined within the `do()` statement, but everytime `highlight_key()` is called, it creates a `crosstalk::SharedData` object belonging to a new unique `group`, so to link these panels together the `group` must be set to a constant value (here we've set `group = "txhousing-trellis"`).
+
+```{r, eval = FALSE, code = readLines("code/trellis-txhousing-plotly.R")}
+```
+
+```{r trellis-txhousing-plotly, echo = FALSE, fig.cap = "(ref:trellis-txhousing-plotly)", code = readLines("code/trellis-txhousing-plotly-output.R")}
+```
+
+
+### Statistical queries
+
+#### Statistical queries with `plot_ly()`
+
+Figure \@ref(fig:txhousing-aggregates) introduced the concept of leveraging statistical trace types inside the graphical querying framework. This section gives some more examples of leveraging these trace types to dynamically produce statistical summaries of graphical queries. But first, to help understand what makes a trace "statistical", consider the difference between `add_bars()` and `add_histogram()` (described in detail in Section \@ref(bars-histograms)). The important difference here is that `add_bars()` requires the bar heights to be pre-specified, whereas plotly.js does the relevant computations in `add_histogram()`. More generally, with a statistical trace, you provide a collection of "raw" values and plotly.js performs the statistical summaries necessary to render the graphic. As Figure \@ref(fig:mapbox-bars) shows, sometimes you'll want to fix certain parameters of the summary (e.g., number of bins in a histogram) to ensure the selection layer is comparable to original layer.
+
+Figure \@ref(fig:2-way-anova) demonstrates routing of a scatterplot brushing event to two different statistical trace types: `add_boxplot()` and `add_histogram()`. Here we've selected all cars with 4 cylinders to show that cylinders appears to have a significant impact on miles per gallon for pickups and sport utility vehicles, but the interactive graphic allows us to query any subset of cars. Often times, with scatterplot brushing, it's desirable to have the row index inform the SQL query (i.e., have a 1-to-1 mapping between a row of data and the marker encoding that row). This happens to be the default behavior of `highlight_key()` -- if no data variable is specified, then it automatically uses the row index as the querying variable.
+
+```{r, eval = FALSE}
+demo("crosstalk-highlight-binned-target-a", package = "plotly")
+```
+
+```{r 2-way-anova, echo = FALSE, fig.cap = "(ref:2-way-anova)"}
+include_vimeo("307580944")
+```
+
+When using a statistical trace type with graphical queries, it's often desirable to set the querying variable as the row index. That's because, with a statistical trace, numerous data values are attached to each graphical mark; and in that case, it's most intuitive if each value queries just one observation. Figure \@ref(fig:mpg-linked-bars) gives a simple example of linking a (dynamic) bar chart with a scatterplot in this way to allow us to query interesting regions of the data space defined by engine displacement (`disp`), miles per gallon highway (`hwy`), and the class of car (`class`). Notice how selections can derive from either view, and since we've specified `"plotly_selected"` as the `on` event, either rectangular or lasso selections can be used to trigger the query.
+
+```{r, eval = FALSE}
+d <- highlight_key(mpg)
+base <- plot_ly(d, color = I("black"), showlegend = FALSE)
+
+subplot(
+  add_histogram(base, x = ~class),
+  add_markers(base, x = ~displ, y = ~hwy)
+) %>%
+  # Selections are actually additional traces, and, by default, 
+  # plotly.js will try to dodge bars placed under the same category
+  layout(barmode = "overlay", dragmode = "lasso") %>%
+  highlight("plotly_selected")
+```
+
+```{r mpg-linked-bars, echo = FALSE, fig.cap = "(ref:mpg-linked-bars)"}
+include_vimeo("307598219")
+```
+
+Figure \@ref(fig:mpg-linked) adds two more statistical trace types to Figure \@ref(fig:mpg-linked-bars) to further explore how miles per gallon highway is related to fuel type (`fl`) and front/rear/4 wheel drive (`drv`). In particular, one can effectively condition on these discrete variables to see how the other distributions respond by brushing and dragging over markers. For example, in Figure \@ref(fig:mpg-linked), front-wheel drive cars are highlighted in red, then 4-wheel drive cars in blue, and as a result, we can see that the main effect of going from 4 to front wheel-drive is are also large interaction effect sizes with regular and diesel fuel types.
+
+```{r, eval = FALSE}
+d <- highlight_key(mpg)
+base <- plot_ly(d, color = I("black"), showlegend = FALSE)
+
+subplot(
+  add_markers(base, x = ~displ, y = ~hwy),
+  add_boxplot(base, x = ~fl, y = ~hwy) %>%
+    add_markers(x = ~fl, y = ~hwy, alpha = 0.1),
+  add_trace(base, x = ~drv, y = ~hwy, type = "violin") %>%
+    add_markers(x = ~drv, y = ~hwy, alpha = 0.1),
+  shareY = TRUE
+) %>%
+  subplot(add_histogram(base, x = ~class), nrows = 2) %>%
+  # Selections are actually additional traces, and, by default, 
+  # plotly.js will try to dodge bars placed under the same category
+  layout(barmode = "overlay") %>%
+  highlight("plotly_selected", dynamic = TRUE)
+```
+
+```{r mpg-linked, echo = FALSE, fig.cap = "(ref:mpg-linked)"}
+include_vimeo("307597640")
+```
+
+### Statistical queries with `ggplotly()` {#statistical-queries-ggplot}
+
+Compared to `plot_ly()`, statistical queries (client-side) with `ggplotly()` are fundamentally limited. That's because, the statistical R functions that **ggplot2** relies on to generate the graphical layers can't necessarily be recomputed with different input data in your web browser. That being said, this is really only an issue when attempting to *target* a **ggplot2** layer with a non-identity statistic (e.g., `geom_smooth()`, `stat_summary()`, etc). In that case, one should consider linking views server-side, as covered in section \@ref(linking-views-with-shiny). 
+
+As Figure \@ref(fig:smooth-highlight) demonstrates, you can still have a **ggplot2** layer with a non-identity statistic serve as the *source* of a selection. In that case, `ggplotly()` will automatically attach all the input values of the querying variable into the creation of the relevant graphical object (e.g. the fitted line). That is why, in the example below, when a fitted line is hovered upon, all the points belonging to that particular group are highlighted, even when the querying variable is the row index.
+
+```{r, eval = FALSE}
+m <- highlight_key(mpg)
+p <- ggplot(m, aes(displ, hwy, colour = class)) +
+    geom_point() +
+    geom_smooth(se = FALSE, method = "lm")
+ggplotly(p) %>% highlight("plotly_hover")
+```
+
+```{r smooth-highlight, echo = FALSE, fig.cap = "(ref:smooth-highlight)"}
+include_vimeo("307788164")
+```
+
+Figure \@ref(fig:smooth-highlight) demonstrates highlighting in a single view when the querying variable is the row index, but the linking could also be done by matching the querying variable with the **ggplot2** group of interest, as is done in Figure \@ref(fig:ggplotly-linked-densities). This way, when a user highlights an individual point, it highlights the entire group instead of just that point. 
+
+```{r, eval = FALSE}
+m <- highlight_key(mpg, ~class)
+p1 <- ggplot(m, aes(displ, fill = class)) + geom_density()
+p2 <- ggplot(m, aes(displ, hwy, fill = class)) + geom_point()
+subplot(p1, p2) %>% hide_legend() %>% highlight("plotly_hover")
+```
+
+```{r ggplotly-linked-densities, echo = FALSE, fig.cap = "(ref:ggplotly-linked-densities)"}
+include_vimeo("307597927")
+```
+
+In summary, we've learned numerous things about statistical queries:
+
+* A statistical trace (e.g., `add_histogram()`, `add_boxplot()`, etc) can be used as both the source and target of a graphical query. 
+* When a statistical trace is the target of a graphical query, it's often desirable to have the row index assigned as the querying variable.
+* A **ggplot2** layer can be used as the source of a graphical query, but when it is the target, non-trivial statistical functions can not be recomputed client-side. In that case, one should consider linking views server side, as covered in section \@ref(linking-views-with-shiny).
+
+### Geo-spatial queries
+
+Section \@ref(maps) covers several different approaches^[@sf-blog-post outlines the relative strengths and weaknesses of each approach.] for rendering geo-spatial information, and each approach supports graphical querying. One clever approach is to render a 3D globe as a surface, then layer on geo-spatial data on top of that globe with a scatter3d trace. Not only is 3D a nice way to visualize geospatial data that has altitude (in addition to latitude and longitude), but it also grants the ability to interpolate color along a path. Figure \@ref(fig:storms) renders tropical storms paths on a 3D globe and uses color to encode the altitude of the storm at that point. Below the 3D view is a 2D view of altitude versus distance traveled. These views are linked by a graphical query where the querying variable is the storm ID.
+
+```{r, eval = FALSE}
+demo("sf-plotly-3D-globe", package = "plotly")
+```
+
+```{r storms, echo = FALSE, fig.cap="(ref:storms)"}
+include_vimeo("257149623")
+```
+
+A more widely used approach to geo-spatial data visualization is to render lat/lon data on a basemap layer that updates in response to zoom events. The `plot_mapbox()` function from **plotly** does this via integration with [mapbox](https://www.mapbox.com/). Figure \@ref(fig:mapbox-quakes) uses `plot_mapbox()` highlighting earthquakes west of Fiji to compare the relative frequency of their magnitude and number of reporting stations (to the overall relative frequency).
+
+```{r, eval = FALSE}
+eqs <- highlight_key(quakes)
+ 
+# you need a mapbox API key to use plot_mapbox()
+# https://www.mapbox.com/signup/?route-to=https://www.mapbox.com/studio/account/tokens/
+map <- plot_mapbox(eqs, x = ~long, y = ~lat) %>%
+  add_markers(color = ~depth) %>%
+  layout(
+    mapbox = list(
+      zoom = 2,
+      center = list(lon = ~mean(long), lat = ~mean(lat))
+    )
+  ) %>%
+  highlight("plotly_selected")
+ 
+# shared properties of the two histograms
+hist_base <- plot_ly(eqs, color = I("black"), histnorm = "probability density") %>%
+  layout(barmode = "overlay", showlegend = FALSE) %>%
+  highlight(selected = attrs_selected(opacity = 0.5))
+ 
+histograms <- subplot(
+  add_histogram(hist_base, x = ~mag),
+  add_histogram(hist_base, x = ~stations),
+  nrows = 2, titleX = TRUE
+)
+ 
+crosstalk::bscols(histograms, map)
+```
+
+```{r mapbox-quakes, echo = FALSE, fig.cap = "(ref:mapbox-quakes)"}
+include_vimeo("307597784")
+```
+
+Every 2D mapping approach in **plotly** (e.g., `plot_mapbox()`, `plot_ly()`, `geom_sf()`) has a special understanding of the simple features data structure provided by the **sf** package. @ggplotly-blog-post and @sf-blog-post goes more in depth about simple features support in **plotly** and provides more examples of graphical queries and animation with simple features, but Figure \@ref(fig:mapbox-bars) demonstrates a clever 'trick' to get bi-directional brushing between polygon centroids and a histogram showing a numerical summary of the polygons. The main idea is to leverage the `st_centroid()` function from **sf** to get the polygons centroids, then link those points to the histogram via `highlight_key()`. 
+
+```{r, eval = FALSE}
+library(sf)
+nc <- st_read(system.file("shape/nc.shp", package = "sf"), quiet = TRUE)
+nc_query <- highlight_key(nc, group = "sf-rocks")
+nc_centroid <- highlight_key(st_centroid(nc), group = "sf-rocks")
+
+map <- plot_mapbox(color = I("black"), height = 250) %>%
+  add_sf(data = nc) %>%
+  add_sf(data = nc_centroid) %>%
+  layout(showlegend = FALSE) %>%
+  highlight("plotly_selected", dynamic = TRUE)
+
+hist <- plot_ly(color = I("black"), height = 250) %>% 
+  add_histogram(
+    data = nc_query, x = ~AREA,
+    xbins = list(start = 0, end = 0.3, size = 0.01)
+  ) %>%
+  layout(barmode = "overlay") %>% 
+  highlight("plotly_selected")
+
+crosstalk::bscols(widths = 12, map, hist)
+```
+
+```{r mapbox-bars, echo = FALSE, fig.cap = "(ref:mapbox-bars)"}
+include_vimeo("307598178")
+```
+
+### Linking with other htmlwidgets
+
+The **plotly** package is able to share graphical queries with a limited set of other R packages that build upon the **htmlwidgets** standard. At the moment, graphical queries work best with **leaflet** and **DT**. Figure \@ref(fig:sf-dt) links **plotly** with **DT**, and since the data set linked bewteen the two is an **sf** data frame, each row of the table is linked to a polygon on the map through the row index of the same dataset.  
+
+```{r, eval = FALSE}
+demo("sf-dt", package = "plotly")
+```
+
+```{r sf-dt, echo = FALSE, fig.cap = "(ref:sf-dt)"}
+include_vimeo("307597509")
+```
+
+As already shown in section \@ref(filter), **plotly** can share graphical queries with **leaflet**. Some of the more advanced features (e.g., persistent selection with dynamic color brush) are not yet officially supported, but you can still leverage these experimental features by installing the experimental versions of **leaflet** referenced in the code below. For example, in Figure \@ref(fig:leaflet-persistent), persistent selection with dynamic colors allows one to first highlight earthquakes with a magnitude of 5 or higher in red, then earthquakes with a magnitude of 4.5 or lower, and the corresponding earthquakes are highlighted in the leaflet map. This reveals an interesting relationship in magnitude and geographic location, and **leaflet** provides the ability to zoom and pan on the map to investigate regions that have a high density of quakes. 
+
+```{r, eval = FALSE}
+# requires an experimental version of leaflet
+# devtools::install_github("rstudio/leaflet#346")
+library(leaflet)
+
+qquery <- highlight_key(quakes)
+
+p <- plot_ly(qquery, x = ~depth, y = ~mag) %>% 
+  add_markers(alpha = 0.5) %>%
+  highlight("plotly_selected", dynamic = TRUE)
+
+map <- leaflet(qquery) %>% 
+  addTiles() %>% 
+  addCircles()
+
+# persistent selection can be specified via options()
+withr::with_options(
+  list(persistent = TRUE), 
+  crosstalk::bscols(widths = c(6, 6), p, map)
+)
+```
+
+```{r leaflet-persistent, echo = FALSE, fig.cap = "(ref:leaflet-persistent)"}
+include_vimeo("307787997")
+```
+
+Figure \@ref(fig:leaflet-polygons) uses another experimental feature of querying **leaflet** polygons in response to direct manipulation of a **plotly** graph.
+
+```{r, eval = FALSE}
+# requires an experimental version of leaflet
+# devtools::install_github("rstudio/leaflet#391")
+library(leaflet)
+library(sf)
+
+nc <- system.file("shape/nc.shp", package = "sf") %>%
+  st_read() %>% 
+  st_transform(4326) %>%
+  highlight_key()
+
+map <- leaflet(nc) %>%
+  addTiles() %>%
+  addPolygons(
+    opacity = 1,
+    color = 'white',
+    weight = .25,
+    fillOpacity = .5,
+    fillColor = 'blue',
+    smoothFactor = 0
+  )
+
+p <- plot_ly(nc) %>% 
+  add_markers(x = ~BIR74, y = ~SID79) %>%
+  layout(dragmode = "lasso") %>%
+  highlight("plotly_selected")
+
+crosstalk::bscols(map, p)
+```
+
+```{r leaflet-polygons, echo = FALSE, fig.cap = "(ref:leaflet-polygons)"}
+include_vimeo("307598814")
+```
+
+
+### Generalized pairs plots {#ggally-ggpairs}
+
+Section \@ref(scatterplot-matrices) introduced the generalized pairs plot made via `GGally::ggpairs()` which, like `ggplot()`, partially supports graphical queries. The brushing in Figure \@ref(fig:linked-ggally) demonstrates how the scatterplots can respond to a graphical queries (allowing us to see how these relationships behave in specific subsections of the data space), but for the same reasons outlined in \@ref(statistical-queries-ggplot), the statistical summaries (e.g., the density plots and correlations) don't respond to the graphical query.
+
+```r
+highlight_key(iris) %>%
+  GGally::ggpairs(aes(color = Species), columns = 1:4) %>%
+  ggplotly() %>%
+  highlight("plotly_selected")
+```
+
+```{r linked-ggally, echo = FALSE, fig.cap = "(ref:linked-ggally)"}
+include_vimeo("307788027")
+```
+
+### Querying diagnostic plots {#ggally-ggnostic}
+
+In addition to the `ggpairs()` function for generalized pairs plots, the **GGally** packages also has a `ggnostic()` function which generates a matrix of diagnostic plots from a model object using **ggplot2**. Each column of this matrix represents a different explanatory variable and each row represents a different diagnostic measure. Figure \@ref(fig:ggnostic) shows the default display for a linear model, which includes residuals (resid), estimates of residual standard deviation when a particular observation is excluded (sigma), diagonals from the projection matrix (hat), and cooks distance (cooksd). 
+
+```r
+library(dplyr)
+library(GGally)
+
+mtcars %>%
+  # for better tick labels
+  mutate(am = recode(am, `0` = "automatic", `1` = "manual")) %>%
+  lm(mpg ~ wt + qsec + am, data = .) %>%
+  ggnostic(mapping = aes(color = am)) %>%
+  ggplotly()
+```
+
+```{r ggnostic, echo = FALSE, fig.cap="(ref:ggnostic)"}
+include_vimeo("307788157")
+```
+
+Injecting interactivity into `ggnostic()` via `ggplotly()` enhances the diagnostic plot in at least two ways. Coloring by a factor variable in the model allows us to highlight that region of the design matrix by selecting a relevant statistical summary, which can help avoid overplotting when dealing with numerous factor levels. For example, in Figure \@ref(fig:ggnostic), the user first highlights diagnostics for cars with manual transmission (in blue), then cars with automatic transmission (in red). Perhaps more widely useful is the ability to highlight individual observations since most of these diagnostics are designed to identify highly influential or unusual observations.
+
+In Figure \@ref(fig:ggnostic), there is one observation with a noticeably high value of `cooksd`, which suggests the observation has a large influence on the fitted model. Clicking on that point highlights its corresponding diagnostic measures, plotted against each explanatory variable. Doing so makes it obvious that this observation is influential since it has a unusually high response/residual in a fairly sparse region of the design space (i.e., it has a pretty high value of `wt`) and removing it would significantly reduce the estimated standard deviation (`sigma`). By comparison, the other two observations with similar values of `wt` have a response value very close to the overall mean, so even though their value of `hat` is high, their value of `sigma` is low.
+
+#### Subset queries via list-columns
+
+All the graphical querying examples thus far use `highlight_key()` to attach values from atomic vector of a data frame to graphical marker(s), but what non-atomic vectors (i.e., list-columns)? When it comes to *emitting* events, there is no real difference -- **plotly** will "inform the world" of a set of selection values, which is the union of all data values in the graphical query. However, as Figure \@ref(fig:list-column-simple) demonstrates, when **plotly** receives a list-column query, it will highlight graphical markers with data value(s) that are a subset of the selected values. For example, when the point [3, 3] is queried, **plotly** will highlight all markers that represent a subset of `{A, B, C}`, which is why both [1, 1] (representing the set `{A}`) and (2, 2) (representing the set `{A, B}`) are highlighted.
+
+```{r, eval = FALSE}
+d <- tibble::tibble(
+  x = 1:4, 
+  y = 1:4,
+  key = lapply(1:4, function(x) LETTERS[seq_len(x)]),
+  txt = sapply(key, function(x) sprintf("{%s}", paste(x, collapse = ", ")))
+)
+highlight_key(d, ~key) %>%
+  plot_ly(x = ~x, y = ~y, text = ~txt, hoverinfo = "text") %>%
+  highlight("plotly_selected", color = "red") %>%
+  layout(dragmode = "lasso")
+```
+
+```{r list-column-simple, echo = FALSE, fig.cap = "(ref:list-column-simple)"}
+include_vimeo("307788086")
+```
+
+One compelling use case for subset queries is dendograms. In fact, **plotly** provides a `plot_dendro()` function for making dendrograms with support for subset queries. Figure \@ref(fig:dendro) gives an example of brushing a branch of a dendrogram to query leafs that are similar in some sense. Any dendrogram object can be provided to `plot_dendro()`, but this particular example visualizes the similarity of US states in terms of their arrest statistics via a hierarchical clustering model on the `USArrests` dataset. 
+
+```{r, eval = FALSE}
+hc <- hclust(dist(USArrests), "ave")
+dend1 <- as.dendrogram(hc)
+plot_dendro(dend1, height = 600) %>% 
+  hide_legend() %>% 
+  highlight("plotly_selected", persistent = TRUE, dynamic = TRUE)
+```
+
+```{r dendro, echo = FALSE, fig.cap = "(ref:dendro)"}
+include_vimeo("307788070")
+```
+
+Figure \@ref(fig:tour-USArrests) links the dendrogram from Figure \@ref(fig:dendro) to a map of the US and a grand tour of the arrest statistics to better understand and diagnose a hierarchical clustering methodology. By highlighting branches of the dendrogram, we can effectively choose a partitioning of the states into similar groups, and see how that model choice projects to the data space^[Typically statistical models are diagnosed by visualizing data in the model space rather than model(s) in the data space. As @model-vis-paper points, the latter approach can be a very effective way to better understand and diagnosis statistical models.] through a grand tour. The grand tour is a special kind of animation that interpolates between random 2D projections of numeric data allowing the viewer to perceive the shape of a high-dimensional point cloud [@grand-tour]. Note how the grouping portrayed in Figure \@ref(fig:tour-USArrests) does a fairly good job of staying separated in the grand tour.
+
+```{r, eval = FALSE}
+demo("animation-tour-USArrests", package = "plotly")
+```
+
+```{r tour-USArrests, echo = FALSE, fig.cap = "(ref:tour-USArrests)"}
+include_vimeo("307788058")
+```
+
+<!--
+Figure \@ref(fig:tour-USArrests) makes use of [hierarchial selection](#hierarchial-selection) to select all the states (as well as all the child nodes) under a given node in both the dendrogram and the grand tour. This effectively provides a model selection tool in an unsupervised setting where one may choose a number of clusters by choosing relevant nodes in the dendrogram and viewing the model fit projected onto the data space. As shown in Figure \@ref(fig:tour-USArrests), after picking the 3 most obvious clusters, it looks as though a straight line could be drawn to completely separate the groups in the initial projection of the tour -- which suggests a split along this linear combination of these variables would provide a good classifier.^[In this situation, it may be desirable to retrieve the relevant linear combination after finding it. Since the slider displays the value of the current frame, one may go back to the data used to create the visualization, subset it to this value, and retrieve this linear combination.]
+
+The code to generate Figure \@ref(fig:tour-USArrests), as well as a few other examples of the grand tour and linking brushing can be found in the package demos. To run the code for Figure \@ref(fig:tour-USArrests), run `demo("tour-USArrests", package = "plotly")`. To see a list of the other available demos, run `readLines(system.file("demo/00Index", package = "plotly"))`.
+-->
+
+## Limitations
+
+The graphical querying framework presented here is for posing database queries between multiple graphs via direct manipulation. For serious statistical analysis, one often needs to link other data views (i.e., text-based summaries, tables, etc) in other arbitrary ways. For these use cases, the R package **shiny** makes it very easy to build on concepts we've already covered to build more powerful client-server applications entirely in R, without having to learn any HTML, CSS, or JavaScript. The next chapter \@ref(linking-views-with-shiny) gives a brief introduction to **shiny**, then dives right into concepts related to linking plotly graphics to other arbitrary views.
+
+<!--
+Even within the scope of data views as graphical queries, there are numerous features **plotly** doesn't currently have, but would be nice to have in the future. 
+1. More statistical trace types
+2. More control over selection sequence logic (e.g., AND, XOR, etc)
+3. Tracking, downloading, restoring of graphical queries
+-->

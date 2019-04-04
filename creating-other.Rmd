@@ -1,0 +1,154 @@
+# 2D frequencies {#frequencies-2D}
+
+## Rectangular binning in plotly.js
+
+The **plotly** package provides two functions for displaying rectangular bins: `add_heatmap()` and `add_histogram2d()`. For numeric data, the `add_heatmap()` function is a 2D analog of `add_bars()` (bins must be pre-computed), and the `add_histogram2d()` function is a 2D analog of `add_histogram()` (bins can be computed in the browser). Thus, I recommend `add_histogram2d()` for exploratory purposes, since you don't have to think about how to perform binning. It also provides a useful [`zsmooth`](https://plot.ly/r/reference/#histogram2d-zsmooth) attribute for effectively increasing the number of bins (currently, "best" performs a [bi-linear interpolation](https://en.wikipedia.org/wiki/Bilinear_interpolation), a type of nearest neighbors algorithm), and [`nbinsx`](https://plot.ly/r/reference/#histogram2d-nbinsx)/[`nbinsy`](https://plot.ly/r/reference/#histogram2d-nbinsy) attributes to set the number of bins in the x and/or y directions. Figure \@ref(fig:histogram2d) compares three different uses of `add_histogram()`: (1) plotly.js' default binning algorithm, (2) the default plus smoothing, (3) setting the number of bins in the x and y directions. Its also worth noting that filled contours, instead of bins, can be used in any of these cases by using `histogram2dcontour()` instead of `histogram2d()`.
+
+```r
+p <- plot_ly(diamonds, x = ~log(carat), y = ~log(price))
+subplot(
+  add_histogram2d(p) %>%
+    colorbar(title = "default") %>%
+    layout(xaxis = list(title = "default")),
+  add_histogram2d(p, zsmooth = "best") %>%
+    colorbar(title = "zsmooth") %>%
+    layout(xaxis = list(title = "zsmooth")),
+  add_histogram2d(p, nbinsx = 60, nbinsy = 60) %>%
+    colorbar(title = "nbins") %>%
+    layout(xaxis = list(title = "nbins")),
+  shareY = TRUE, titleX = TRUE
+)
+```
+
+```{r histogram2d, echo = FALSE, fig.cap = "(ref:histogram2d)"}
+knitr::include_graphics("images/histogram2d.svg")
+```
+
+## Rectangular binning in R {#rectangular-binning-in-r}
+
+In [Bars & histograms](#bars-histograms), we leveraged a number of algorithms in R for computing the "optimal" number of bins for a histogram, via `hist()`, and routing those results to `add_bars()`. There is a surprising lack of research and computational tools for the 2D analog, and among the research that does exist, solutions usually depend on characteristics of the unknown underlying distribution, so the typical approach is to assume a Gaussian form [@mde]. Practically speaking, that assumption is not very useful, but 2D kernel density estimation provides a useful alternative that tends to be more robust to changes in distributional form. Although kernel density estimation requires choice of kernel and a bandwidth parameter, the `kde2d()` function from the **MASS** package provides a well-supported rule-of-thumb for estimating the bandwidth of a Gaussian kernel density [@MASS]. Figure \@ref(fig:heatmap-corr-diamonds) uses `kde2d()` to estimate a 2D density, scales the relative frequency to an absolute frequency, then uses the `add_heatmap()` function to display the results as a heatmap.
+
+```r
+kde_count <- function(x, y, ...) {
+  kde <- MASS::kde2d(x, y, ...)
+  df <- with(kde, setNames(expand.grid(x, y), c("x", "y")))
+  # The 'z' returned by kde2d() is a proportion, 
+  # but we can scale it to a count
+  df$count <- with(kde, c(z) * length(x) * diff(x)[1] * diff(y)[1])
+  data.frame(df)
+}
+
+kd <- with(diamonds, kde_count(log(carat), log(price), n = 30))
+plot_ly(kd, x = ~x, y = ~y, z = ~count) %>% 
+  add_heatmap() %>%
+  colorbar(title = "Number of diamonds")
+```
+
+```{r heatmap-corr-diamonds, echo = FALSE, fig.cap = "(ref:heatmap-corr-diamonds)"}
+knitr::include_graphics("images/heatmap-corr-diamonds.svg")
+```
+
+## Categorical axes
+
+The functions `add_histogram()`, `add_histogram2contour()`, and `add_heatmap()` all support categorical axes. Thus, `add_histogram()` _can_ be used to easily display 2-way contingency tables, but since its easier to compare values along a common scale rather than compare colors [@graphical-perception], I recommend creating [grouped bar charts](#multiple-discrete-distributions) instead. The `add_heatmap()` function can still be useful for categorical axes, however, as it allows us to display whatever quantity we want along the z axis (color).
+
+Figure \@ref(fig:correlation) uses `add_heatmap()` to display a correlation matrix. Notice how the `limits` arguments in the `colorbar()` function can be used to expand the limits of the color scale to reflect the range of possible correlations (something that is not easily done in plotly.js).
+
+```r
+corr <- cor(dplyr::select_if(diamonds, is.numeric))
+plot_ly(x = rownames(corr), y = colnames(corr), z = corr, colors = "RdBu") %>%
+  add_heatmap() %>%
+  colorbar(limits = c(-1, 1))
+```
+
+```{r correlation, echo = FALSE, fig.cap = "(ref:correlation)"}
+knitr::include_graphics("images/correlation.svg")
+```
+
+# 3D charts
+
+## Markers
+
+As it turns out, by simply adding a `z` attribute `plot_ly()` will know how to render markers, lines, and paths in three dimensions. That means, all the techniques we learned in Sections \@ref(markers) and \@ref(lines) can re-used for 3D charts:
+
+```r
+plot_ly(mpg, x = ~cty, y = ~hwy, z = ~cyl) %>%
+  add_markers(color = ~cyl)
+```
+
+```{r 3D-scatterplot, echo = FALSE, fig.cap = "(ref:3D-scatterplot)"}
+knitr::include_graphics("images/3D-scatterplot.svg")
+```
+
+## Paths
+
+To make a path in 3D, use `add_paths()` in the same way you would for a 2D path, but add a third variable `z`, as Figure \@ref(fig:3D-paths) does.
+
+```r
+plot_ly(mpg, x = ~cty, y = ~hwy, z = ~cyl) %>%
+  add_paths(color = ~displ)
+```
+
+```{r 3D-paths, echo = FALSE, fig.cap = "(ref:3D-paths)"}
+knitr::include_graphics("images/3D-paths.png")
+```
+
+## Lines
+
+Figure \@ref(fig:3D-lines) uses `add_lines()` instead of `add_paths()` to ensure the points are connected by the x axis instead of the row ordering.
+
+```r
+plot_ly(mpg, x = ~cty, y = ~hwy, z = ~cyl) %>%
+  add_lines(color = ~displ)
+```
+
+```{r 3D-lines, echo = FALSE, fig.cap = "(ref:3D-lines)"}
+knitr::include_graphics("images/3D-lines.png")
+```
+
+As with non-3D lines, you can make multiple lines by specifying a grouping variable.
+
+```r
+plot_ly(mpg, x = ~cty, y = ~hwy, z = ~cyl) %>%
+  group_by(cyl) %>%
+  add_lines(color = ~displ)
+```
+
+```{r 3D-lines-groups, echo = FALSE, fig.cap = "(ref:3D-lines-groups)"}
+knitr::include_graphics("images/3D-lines-groups.png")
+```
+
+## Axes
+
+For 3D plots, be aware that the axis objects are a part of the [`scene`](https://plot.ly/r/reference/#layout-scene) definition, which is part of the `layout()`. That is, if you wanted to set axis titles (e.g., Figure \@ref(fig:3D-axes)), or something else specific to the axis definition, the relation between axes (i.e., [`aspectratio`](https://plot.ly/r/reference/#layout-scene-aspectratio)), or the default setting of the camera (i.e., [`camera`](https://plot.ly/r/reference/#layout-scene-camera)); you would do so via the `scence`.
+
+```r
+plot_ly(mpg, x = ~cty, y = ~hwy, z = ~cyl) %>%
+  add_lines(color = ~displ) %>%
+  layout(
+    scene = list(
+      xaxis = list(title = "MPG city"),
+      yaxis = list(title = "MPG highway"),
+      zaxis = list(title = "Number of cylinders")
+    )
+  )
+```
+
+```{r 3D-axes, echo = FALSE, fig.cap = "(ref:3D-axes)"}
+knitr::include_graphics("images/3D-axes.png")
+```
+
+
+## Surfaces
+
+Creating 3D surfaces with `add_surface()` is a lot like creating heatmaps with `add_heatmap()`. In fact, you can even create 3D surfaces over categorical x/y (try changing `add_heatmap()` to `add_surface()` in Figure \@ref(fig:correlation))! That being said, there should be a sensible ordering to the x/y axes in a surface plot since plotly.js interpolates z values. Usually the 3D surface is over a continuous region, as is done in Figure \@ref(fig:surface) to display the height of a volcano. If a numeric matrix is provided to z as in Figure \@ref(fig:surface), the x and y attributes do not have to be provided, but if they are, the length of x should match the number of columns in the matrix and y should match the number of rows.
+
+```r
+x <- seq_len(nrow(volcano)) + 100
+y <- seq_len(ncol(volcano)) + 500
+plot_ly() %>% add_surface(x = ~x, y = ~y, z = ~volcano)
+```
+
+```{r surface, echo = FALSE, fig.cap = "(ref:surface)"}
+knitr::include_graphics("images/surface.png")
+```

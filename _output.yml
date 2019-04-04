@@ -1,13 +1,9 @@
 bookdown::gitbook:
-  css: [css/plotly.css, css/style.css]
-  split_by: section
+  css: [css/plotly.css, css/style.css, css/summary-fix.css]
+  split_by: chapter
   config:
     toc:
-      collapse: subsection
-      before: |
-        <li><a href="https://consulting.cpsievert.me">Need help? Work with Carson!</a></li>
-      after: |
-        <li><a href="https://bookdown.org" target="blank">Published with bookdown</a></li>
+      collapse: section
     download: no
     edit:
       link: https://github.com/cpsievert/plotly_book/edit/master/%s
@@ -15,6 +11,7 @@ bookdown::gitbook:
     sharing: no
   includes:
     after_body:
+      - includes/rstudio-cloud.html
       - includes/ga.html
 
 bookdown::html_chapters:
@@ -22,7 +19,19 @@ bookdown::html_chapters:
 
 bookdown::pdf_book:
   includes:
-    in_header: preamble.tex
-  keep_tex: yes
+    in_header: latex/preamble.tex
+    before_body: latex/before_body.tex
+    after_body: latex/after_body.tex
+  keep_tex: true
+  dev: "cairo_pdf"
   latex_engine: xelatex
   citation_package: natbib
+  template: null
+  pandoc_args: --top-level-division=chapter
+  toc_depth: 3
+  toc_unnumbered: false
+  toc_appendix: true
+  quote_footer: ["\\VA{", "}{}"]
+
+bookdown::epub_book:
+  stylesheet: css/style.css

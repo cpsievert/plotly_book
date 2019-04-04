@@ -1,0 +1,192 @@
+# (PART) Publishing views {-}
+
+# Introduction
+
+This chapter shows you how to save and embed your **plotly** graphs within larger HTML documents, interactively edit (i.e., post-process) them, and export to static file formats -- all of which can be useful tools for creating 'publication-quality' graphics. Static images can be created either from the command line (via the `orca()` function) or from the interactive graphic itself. The former is great if you need to export many images at once and the latter is convenient if you need to export a manually edited version of the default view (e.g., Figure \@ref(fig:edit-county-labels)). All the R code in this chapter runs entirely locally using 100% free and open source software with no calls to external services.
+
+```{r publish-banner, echo = FALSE}
+knitr::include_graphics("images/publish.svg")
+```
+
+# Saving and embedding HTML {#saving}
+
+Any widget made from any **htmlwidgets** package (e.g., **plotly**, **leaflet**, **DT**, etc) can be saved as a standalone HTML file via the `htmlwidgets::saveWidget()` function. By default, it produces a completely self-contained HTML file, meaning that all the necessary JavaScript and CSS dependency files are bundled inside the HTML file. This makes it very easy to share a widget as a single HTML file. In this case, consider using the `partial_bundle()` function to reduce the size of the bundled files. By default, it automatically determines a reduced version of plotly.js that is sufficient for rendering your graphic. This can lead to a substantial reduction in the overall file size, especially if you're using basic chart types:
+
+```{r, message = TRUE}
+p <- plot_ly(x = 1:10, y = 1:10) %>% add_markers()
+widget_file_size <- function(p) {
+  d <- tempdir()
+  withr::with_dir(d, htmlwidgets::saveWidget(p, "index.html"))
+  f <- file.path(d, "index.html")
+  mb <- round(file.info(f)$size / 1e6, 3)
+  message("File is: ", mb," MB")
+}
+widget_file_size(p)
+widget_file_size(partial_bundle(p))
+```
+
+If you want to embed numerous widgets in a larger HTML document (e.g., via HTML `<iframe>`s), *self-contained* HTML is not recommended. That's because, if you embed numerous self-contained widgets inside a larger document, your browser has to repeatedly parse the same dependencies over and over. Instead, if you save all the dependency files externally into a single directory, the browser will only have to parse those dependencies once, which can dramatically improve responsiveness. You can do this by setting `selfcontained = FALSE` and specifying a fixed `libdir` in `saveWidget()`. It's also worth noting that using `htmlwidgets::saveWidget()` with `selfcontained = FALSE` is essentially the same as using `htmltools::save_html()` which saves arbitrary HTML content to a file. The `htmltools::save_html()` function is useful for saving numerous htmlwidgets (e.g., Figure \@ref(fig:fluid) or \@ref(fig:flexbox)) and/or other custom HTML markup (e.g., Figure \@ref(fig:correlation-client-side)) in a single HTML page. 
+
+```r
+library(htmlwidgets)
+p <- plot_ly(x = rnorm(100))
+saveWidget(p, "p1.html", selfcontained = F, libdir = "lib")
+saveWidget(p, "p2.html", selfcontained = F, libdir = "lib")
+```
+
+In this case, if you wanted to share `"p1.html"` and/or `"p2.html"` with someone else, make sure to include the `libdir` folder, perhaps via a zip file:
+
+```r
+zip("p1.zip", c("p1.html", "lib"))
+zip("p2.zip", c("p2.html", "lib"))
+```
+
+Embedding these HTML files via an HTML `<iframe>` is convenient not only for re-using a widget in various parent documents, but also for preventing any JavaScript and CSS in the parent document from negatively impacting how the widget renders. Rather than writing the HTML `<iframe>` tag directly, I recommend using `htmltools::tags$iframe()` -- this will allow you to leverage **bookdown**'s figure captioning, numbering, and automatic snapshots for non-HTML output:
+
+    ```{r}`r ''`
+    htmltools::tags$iframe(
+      src = "p1.html", 
+      scrolling = "no", 
+      seamless = "seamless",
+      frameBorder = "0"
+    )
+    ```
+
+A great tool that helps automate this sort of workflow with responsive iframes is the **widgetframe** package [@widgetframe]. See the 'widgetframe and knitr' vignette for documentation of options for controling where, how, and if external dependencies are stored on the file system when using it inside a **knitr**/**rmarkdown** document.
+
+```r
+browseVignettes("widgetframe")
+```
+
+# Exporting static images
+
+## With code
+
+Any **plotly** object can be saved as a static image via the `orca()` function. To use it, you'll need the `orca` command-line utility (CLI). This CLI can be installed via node.js, conda, or a standalone binary from <https://github.com/plotly/orca/releases>. Figure \@ref(fig:orca) demonstrates how `orca()` can generate a svg (or pdf) that can then be imported into Adobe Illustrator for post-processing. Although it's a nice option to have, importing into Adobe Illustrator might not enable as nice of a workflow as using **plotly**'s native support for editable layout components in the browser, then exporting to svg/pdf (as shown in Figure \@ref(fig:edit-county-labels)). 
+
+```{r orca, echo = FALSE, fig.cap="(ref:orca)"}
+include_vimeo(307598492)
+```
+
+## From a browser
+
+Exporting an image from a browser is a nice option if you need to perform edits before exporting or if you'd like others to share your work. By default, the 'download plot' icon in the modebar will download to png and use the `height` and `width` of the plot, but these defaults can be altered via the plot's configuration:
+
+```r
+plot_ly() %>%
+  config(
+    toImageButtonOptions = list(
+      format = "svg",
+      filename = "myplot",
+      width = 600,
+      height = 700
+    )
+  )
+```
+
+```{r toImageSVG, echo = FALSE, fig.cap = "(ref:toImageSVG)"}
+knitr::include_graphics("images/toImageSVG.png")
+```
+
+## Sizing exports
+
+It's worth noting that the height and width of a static image must be specified in pixels, which is intuitive for most file formats (png, jpeg, svg, etc) but when exporting to pdf, you might want to specify the size in inches. If you multiply the DPI of your machine's display by the number of inches you want, you'll get the desired result. So, if you want a 8x11 pdf, and are on a typical 96 DPI display, you can do:
+
+```r
+orca(plot_ly(), width = 8 * 96, height = 11 * 96)
+```
+
+On the other hand, if you're performing interactive editing and exporting, you may want to set a fixed size for the plot:
+
+```r
+plot_ly(width = 8 * 96, height = 11 * 96) %>%
+  config(toImageButtonOptions = list(format = "svg"))
+```
+
+# Editing views for publishing {#editing-views}
+
+Numerous layout components of a **plotly** graph can be directly manipulated, including annotation text and placement (more on this in section \@ref(edit-events)). In addition, the download (aka, toImage) button can be customized to export a static version to different file types including: svg, png, jpeg, and webp. Since svg can be easily converted to pdf, this effectively means we can edit a graph in a browser to perform touch-ups, then export to a high-quality pdf. At least currently, this workflow is recommended over first exporting to pdf (via `orca()`) then using Adobe Illustrator to manipulate the vectors, especially for adjusting the placement of annotations. 
+
+Figure \@ref(fig:edit-county-labels) demonstrates this workflow on a choropleth map of estimated income in Minnesota by county where the top 10 counties by total income are labeled.^[Yes, this is [essentially a population map](https://xkcd.com/1138/). A more informative visual would show income per person within a given county. I decided against showing the more informative version so the code would be more concise.] For visuals like this, automated algorithms for placing the labels may not yield polished results, so it can be nice to have the option to adjust the placement manually. Although pressing 'download plot' exports a static version of the current state of the plot, there currently isn't an official way to save the state of these manual edits in the HTML version. You could, however, create a shiny app that listens to the `'plotly_relayout'` event to obtain the new annotation positions (see, for example, Figure \@ref(fig:shiny-edit-annotations)) and translate that information into code. 
+
+```{r, eval=FALSE, summary="Click to show code"}
+library(dplyr)
+library(sf)
+library(purrr)
+library(tidycensus)
+library(USAboundaries)
+
+# obtain geographical information for each county in MN
+mn_sf <- us_counties(states = "MN")
+
+# get income information for each county in MN
+mn_income <- get_acs(geography = "county", variables = "B19013_001", state = "MN") %>%
+  mutate(
+    NAME = sub("County, Minnesota", "", NAME),
+    county = reorder(NAME, estimate),
+    color = scales::col_numeric("viridis", NULL)(estimate)
+  )
+
+# find center of each county (for placing annotations)
+mn_center <- mn_sf %>%
+  st_centroid() %>%
+  mutate(
+    x = map_dbl(geometry, 1),
+    y = map_dbl(geometry, 2)
+  )
+
+# get top 10 counties by income with their x/y center location
+top10labels <- mn_income %>%
+  top_n(10, estimate) %>%
+  left_join(mn_center, by = c("GEOID" = "geoid"))
+
+# the map and top 10 county labels
+map <- plot_ly() %>%
+  add_sf(
+    data = left_join(mn_sf, mn_income, by = c("geoid" = "GEOID")),
+    color = ~I(color),
+    split = ~NAME,
+    stroke = I("black"),
+    span = I(1),
+    hoverinfo = "none"
+  ) %>%
+  add_annotations(
+    data = select(top10labels, NAME, x, y),
+    text = ~NAME,
+    x = ~x,
+    y = ~y
+  ) 
+
+# the dot-plot
+bars <- ggplot(mn_income, aes(x = estimate, y = county)) +
+  geom_errorbarh(aes(xmin = estimate - moe, xmax = estimate + moe)) +
+  geom_point(aes(color = color), size = 2) +
+  scale_color_identity()
+
+# make manual edits in the browser, then click the 
+# 'toImage' button to export an svg file
+ggplotly(bars, dynamicTicks = TRUE, tooltip = "y", height = 8 * 96, width = 11 * 96) %>%
+  subplot(map, nrows = 1, widths = c(0.3, 0.7)) %>%
+  layout(showlegend = FALSE) %>%
+  config(
+    edits = list(
+      annotationPosition = TRUE,
+      annotationTail = TRUE,
+      annotationText = TRUE
+    ),
+    toImageButtonOptions = list(format = "svg")
+  )
+```
+
+```{r edit-county-labels, echo = FALSE, fig.cap="(ref:edit-county-labels)"}
+include_vimeo(309371928)
+```
+
+After pressing the "download plot" button to export svg, then the **rsvg** package can be used to convert the svg to pdf [@rsvg].
+
+```r
+# This is the directory that my browser places downloads...
+# you may have to change this to your download directory
+download_dir <- "~/Downloads/"
+withr::with_dir(download_dir, rsvg::rsvg_pdf("newplot.svg", "mn.pdf"))
+```

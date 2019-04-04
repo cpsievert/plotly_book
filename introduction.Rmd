@@ -1,0 +1,211 @@
+\mainmatter
+
+# Introduction
+
+## Why interactive web graphics *from R*?
+
+As @r4ds argue, the exploratory phase of a data science workflow (Figure \@ref(fig:workflow)) requires lots of iteration between data manipulation, visualization, and modeling. Acheiving these tasks through a programming language like `R` offers the opportunity to scale and automate tasks, document and track them, and reliably reproduce their output. That power, however, typically comes at the cost of increasing the amount of cognitive load involved relative to a GUI-based system.^[For more on the benefits of using code over a GUI to perform data analysis, see @data-science-gui.] `R` packages like the **tidyverse** have been incredibly successful due to their ability to limit cognitive load without removing the benefits of performing analysis via code. Moreover, the **tidyverse**'s unifying principles of designing for humans, consistency, and composabilty makes iteration within and between these stages seamless -- an important but often overlooked challenge in exploratory data analysis (EDA) [@tidy-principles].
+
+```{r workflow, echo = FALSE, fig.cap="(ref:workflow)"}
+knitr::include_graphics("images/workflow.svg")
+```
+
+In fact, packages within the **tidyverse** such as **dplyr** (transformation) and **ggplot2** (visualization) are such productive tools that many analysts use _static_ **ggplot2** graphics for EDA. Then, when it comes to communicating results, some analysts switch to another tool or language altogether (e.g., JavaScript) to generate interactive web graphics presenting their most important findings [@flowingdata-r]; [@nyt-r]. Unfortunately, this requires a heavy context switch that requires a totally different skillset and impedes productivity. Moreover, for the average analyst, the opportunity costs involved with becoming component with the complex world of web technologies is simply not worth the required investment. 
+
+Even before the web, interactive graphics were shown to have great promise in aiding the exploration of high-dimensional data [@Cook:2007uk]. The ASA maintains an incredible video library, <http://stat-graphics.org/movies/>, documenting the use of interactive statistical graphics for tasks that otherwise wouldn't have been easy or possible using numerical summaries and/or static graphics alone. Roughly speaking, these tasks tend to fall under three categories:
+
+* Identifying structure that would otherwise go missing [@prim9].
+* Diagnosing models and understanding algorithms [@model-vis-paper].
+* Aiding the sense-making process by searching for information quickly without fully specified questions [@Unwin:1999vp].
+
+Today, you can find and run some of these and similar Graphical User Interface (GUI) systems for creating interactive graphics: `DataDesk` <https://datadescription.com/>, `GGobi` <http://www.ggobi.org/>, `Mondrian` <http://www.theusrus.de/Mondrian/>, `JMP` <https://www.jmp.com>, `Tableau` <https://www.tableau.com/>. Although these GUI-based systems have nice properties, they don't gel with a code-based workflow: any tasks you complete through a GUI likely can't be replicated without human intervention. That means, if at any point, the data changes, and analysis outputs must be regenerated, you need to remember precisely how to reproduce the outcome, which isn't necessarily easy, trustworthy, or economical. Moreover, GUI-based systems are typically 'closed' systems that don't allow themselves to be easily customized, extended, or integrated with another system.
+
+Programming interactive graphics allows you to leverage all the benefits of a code-based workflow while also helping with tasks that are difficult to accomplish with code alone. For an example, if you were to visualize engine displacement (`displ`) versus miles per gallon (`hwy`) using the `mpg` dataset, you might wonder: "what are these cars with an unusually high value of `hwy` given their `displ`?" Rather than trying to write code to query those observations, it would be more easier and intuitive to draw an outline around the points to query the data behind them.
+
+```{r mpg-static, fig.cap = "(ref:mpg-static)"}
+library(ggplot2)
+ggplot(mpg, aes(displ, hwy)) + geom_point()
+```
+
+Figure \@ref(fig:mpg-lasso) demonstrates how we can transform Figure \@ref(fig:mpg-static) into an interactive version that can be used to query and inspect points of interest. The framework that enables this kind of linked brushing is discussed in depth within Chapter \@ref(graphical-queries), but the point here is that the added effort required to enable such functionality is relatively small. This is important, because although interactivity _can_ augment exploration by allowing us to pursue follow-up questions, it's typically only _practical_ when we can create and alter them quickly. That's because, in a true exploratory setting, you have to make lots of visualizations, and investigate lots of follow-up questions, before stumbling across something truly valuable.
+
+```r
+library(plotly)
+m <- highlight_key(mpg)
+p <- ggplot(m, aes(displ, hwy)) + geom_point()
+gg <- highlight(ggplotly(p), "plotly_selected")
+crosstalk::bscols(gg, DT::datatable(m))
+```
+
+```{r mpg-lasso, echo=FALSE, fig.cap="(ref:mpg-lasso)"}
+include_vimeo("324366759")
+```
+
+When a valuable insight surfaces, since the code behind Figure \@ref(fig:mpg-lasso) generates HTML, the web-based graphic can be easily shared with collaborators through email and/or incorporated inside a larger automated report or website. Moreover, since these interactive graphics are based on the **htmlwidgets** framework, they work seamlessly inside of larger **rmarkdown** documents, inside **shiny** apps, `RStudio`, `Jupyter` notebooks, the `R` prompt, and more. Being able to share interactive graphics with collaborators through these different mediums enhances the conversation -- your colleagues can point out things you may not yet have considered and, in some cases, they can get immediate responses from the graphics themselves.
+
+In the final stages of an analysis, when it comes time to publish your work to a general audience, rather than relying on the audience to interact with the graphics and discover insight for themselves, it's always a good idea to clearly highlight your findings. For example, from Figure \@ref(fig:mpg-lasso), we've learned that most of these unusual points can be explained by a single feature of the data (`model == 'corvette'`). As shown in Figure \@ref(fig:mpg-mark-hull), the `geom_mark_hull()` function from the **ggforce** package provides a helpful way to annotate those points with a hull. Moreover, as Chapter \@ref(editing-views) demonstrates, it can also be helpful to add and/or edit annotations interactively when preparing a graphic for publication.
+
+```{r mpg-mark-hull, fig.cap="(ref:mpg-mark-hull)"}
+library(ggforce)
+ggplot(mpg, aes(displ, hwy)) + 
+  geom_point() +
+  geom_mark_hull(aes(filter = model == "corvette", label = model)) +
+  labs(
+    title = "Fuel economy data from 1999 and 2008 for 38 popular models of car",
+    caption = "Source: https://fueleconomy.gov/",
+    x = "Engine Displacement", 
+    y = "Miles Per Gallon"
+  )
+```
+
+This simple example quickly shows how interactive web graphics can assist EDA (for another, slightly more in-depth example, see Chapter \@ref(intro-ggplotly)). Being able to program these graphics from `R` allows one to combine their functionality within a world-class computing environment for data analysis and statistics. Programming interactive graphics may not be as intuitive as using a GUI-based system, but making the investment pays dividends in terms of workflow improvements: automation, scaling, provenance, and flexibility.
+
+## What you will learn {#what-you-will-learn}
+
+This book provides a foundation for learning how to make interactive web-based graphics for data analysis from `R` via **plotly**, without assuming any prior experience with web technologies. The goal is to provide the context you need to go beyond copying existing **plotly** examples to having a useful mental model of the underlying framework, its capabilities, and how it fits into the larger R ecosystem. By learning this mental model, you'll have a better understanding of how to create more sophisticated visualizatons, fix common issues, improve performance, understand the limitations, and even contribute back to the project itself. You may already be familiar with existing **plotly** documentation (e.g., <https://plot.ly/r/>), which is essentially a language-agnostic how-to guide, but this book is meant to be more wholistic tutorial written by and for the R user.
+
+This book also focuses primarily on features that are unique to the **plotly** R package (i.e., things that don't work the same for Python or JavaScript). This ranges from creation of a single graph using the `plot_ly()` special named arguments that make it easier to map data to visuals:
+
+```r
+plot_ly(diamonds, x = ~cut, color = ~clarity, colors = "Accent")
+```
+
+```{r intro-show-hide-preview, echo = FALSE, fig.cap = "(ref:intro-show-hide-preview)"}
+include_vimeo("315707813")
+```
+
+To its ability to link multiple data views purely client-side (see Chapter \@ref(graphical-queries)):
+
+```{r storms-preview, echo = FALSE, fig.cap = "(ref:storms-preview)"}
+include_vimeo("257149623")
+```
+
+To advanced server-side linking with **shiny** to implement responsive and scalable crossfilters (see Section \@ref(crossfilter)):
+
+```{r shiny-crossfilter-preview, echo = FALSE, fig.cap = "(ref:shiny-crossfilter-preview)"}
+include_vimeo("318129502")
+```
+
+By going through the code behind these examples, you'll that many of them leverage other `R` packages in their implementation. To highlight a few of the R packages that you'll see:
+
+* __dplyr__ and __tidyr__
+  * For transforming data into a form suitable for the visualization method.
+* __ggplot2__ and friends (e.g., __GGally__, __ggmosaic__, etc)
+  * For creating **plotly** visualizations that would be tedious to implement without `ggplotly()`.
+* __sf__, __rnaturalearth__, __cartogram__
+  * For obtaining and working with geo-spatial data structures in R.
+* __stats__, __MASS__, __broom__, and __forecast__
+  * For working with statistical models and summaries.
+* __shiny__
+  * For running R code in response to user input. 
+* __htmltools__, __htmlwidgets__
+  * For combining multiple views and saving the result.
+
+This book contains six parts and each part contains numerous chapters. A summary of each part is provided below.
+
+1. _Creating views:_ introduces the process of transforming data into graphics via **plotly**'s programmatic interface. It focuses mostly on `plot_ly()`, which can interface directly with the underlying plotly.js graphing library, but emphasis is put on features unique to the `R` package that make it easier to transform data into graphics. Another way to create graphs with **plotly** is to use the `ggplotly()` function to transform **ggplot2** graphs into **plotly** graphs. Chapter \@ref(intro-ggplotly) discusses when and why `ggplotly()` might be desirable to `plot_ly()`. It's also worth mentioning that this part (nor the book as a whole) does not intend to cover every possible chart type and option available in **plotly** -- it's more of a presentation of the most generally useful techniques with the greater `R` ecosystem in mind. For a more exhaustive gallery of examples of what **plotly** itself is capable of, see <https://plot.ly/r/>.
+
+2. _Publishing views:_ discusses various techniques for exporting (as well as embedding) **plotly** graphs to various file formats (e.g., HTML, svg, pdf, png, etc). Also, Chapter \@ref(editing-views) demonstrates how one could leverage editable layout components HTML to touch-up a graph, then export to a static file format of interest before publication. Indeed, this book was created using the techniques from this section.
+
+3. _Combining multiple views:_ demonstrates how to combine multiple data views into a single web page (arranging) or graphic (animation). Most of these techniques are shown using **plotly** graphs, but techniques from Section \@ref(arranging-htmlwidgets) extend to any HTML content generated via **htmltools** (which includes **htmlwidgets**).
+
+4. _Linking multiple views:_ provides an overview of the two models for linking **plotly** graph(s) to other data views. The first model, covered in Chapter \@ref(graphical-queries), outlines **plotly**'s support for linking views purely client-side, meaning the resulting graphs render in any web browser on any machine without requiring external software. The second model, covered in Chapter \@ref(linking-views-with-shiny), demonstrates how to link **plotly** with other views via **shiny**, a reactive web application framework for `R`. Relatively speaking, the second model grants the `R` user way more power and flexbility, but comes at the cost of requiring more computational infrastructure. That being said, RStudio provides accessible resources for deploying **shiny** apps <https://shiny.rstudio.com/articles/#deployment>.
+
+5. _Custom behavior with JavaScript:_ demonstrates various ways to customize **plotly** graphs by writing custom JavaScript to handle certain user events. This part of the book is designed to be approachable for `R` users that want learn just enough JavaScript to **plotly** to do something it doesn't "natively" support. 
+
+6. _Various special topics_: offers a grab-bag of topics that address common questions, mostly related to the customization of **plotly** graphs in `R`. 
+
+You might already notice that this book often uses the term 'view' or 'data view', so here we take a moment to frame its use in a wider context. As @Wills2008 puts it: "a 'data view' is anything that gives the user a way of examining data so as to gain insight and understanding. A data view is usually thought of as a barchart, scatterplot, or other traditional statistical graphic, but we use the term more generally, including 'views' such as the results of a regression analysis, a neural net prediction, or a set of descriptive statistics". In this book, more often than not, the term 'view' typically refers to a **plotly** graph or other **htmlwidgets** (e.g., **DT**, **leaflet**, etc). In particular, Chapter \@ref(graphical-queries) is all about linking multiple **htmlwidgets** together through a graphical database querying framework. However, the term 'view' takes on a more general interpretation in Chapter \@ref(linking-views-with-shiny) since the reactive programming framework that **shiny** provides allows us to have a more general conversation surrounding linked data views.
+
+
+## What you won't learn (much of)
+
+### Web technologies
+
+Although this book is fundamentally about creating web graphics, it does not aim to teach you web technologies (e.g., HTML, SVG, CSS, JavaScript, etc). It's true that mastering these technologies grants you the ability to build really impressive websites, but even expert web developers would say their skillset is much better suited for expository rather than exploratory visualization. That's because, most web programming tools are not well-suited for the exploratory phase of a data science workflow where iteration between data visualization, transformation, and modeling is a necessary task that often impedes hypothesis generation and sense-making. As a result, for most data analysts whose primary function is to derive insight from data, the opportunity costs involved with mastering web technologies is usually not worth the investment.
+
+That being said, learning a little about web technologies can have a relatively large payoff with directed learning and instruction. In Chapter \@ref(javascript), you'll learn how to customize **plotly** graphs with JavaScript -- even if you haven't seen JavaScript before, this Chapter should be approachable, insightful, and provide you with some useful examples.
+
+### d3js
+
+The JavaScript library D3 is a great tool for data visualization assuming you're familiar with web technologies and are primarily interested in expository (not exploratory) visualization. There are already lots of great resources for learning D3, including the numerous books [@murray-d3]; [@meeks-d3]. It's worth noting, however, if you do know D3, you can easily leverage it from a web page that are already a **plotly** graph, as demonstrated in Figure \@ref(fig:correlation-client-side).
+
+### ggplot2
+
+The book does contain some **ggplot2** code examples (which are then converted to **plotly** via `ggplotly()`), but it's not designed to teach you **ggplot2**. For those looking to learn **ggplot2**, I recommend using the learning materials listed at <https://ggplot2.tidyverse.org>.
+
+### Graphical data analysis
+
+How to perform data analysis via graphics (carefully, correctly, and creatively) is a large topic unto itself. Although this book does have examples of graphical data analysis, it does not aim to provide a comprehensive foundation. For nice comprehensive resources on the topic, see [@unwin-graphical-analysis] and [@ggobi:2007].
+
+### Data visualization best practices
+
+Encoding information in a graphic (concisely and effectively) is a large topic unto itself. Although this book does have some ramblings related to best practices in data visualization, it does not aim to provide a comprehensive foundation. For some approachable and fun resources on the topic, see [@tufte-dataviz]; [@yau-dataviz]; [@healey-dataviz]; [@claus-dataviz].
+
+## Prerequisites
+
+For those new to `R` and/or data visualization, [R for Data Science](https://r4ds.had.co.nz/) provides a excellent foundation for understanding the vast majority of concepts covered in this book [@r4ds]. In particular, if you have a solid grasp on [Part I: Explore](https://r4ds.had.co.nz/explore-intro.html), [Part II: Wrangle](https://r4ds.had.co.nz/wrangle-intro.html), and [Part III: Program](https://r4ds.had.co.nz/program-intro.html), you should be able to understand most everything here. Although not explicitly covered, the book does make references to (and was creating using) **rmarkdown**, so if you're new to **rmarkdown**, I also recommend reading the [R Markdown chapter](https://r4ds.had.co.nz/r-markdown.html).
+
+## Run code examples
+
+This book includes many code examples in an effort to teach the art and science behind creating interactive web-based graphics using **plotly**. To see the actual interactive result of the code (rather than a video or static version), you'll want to run the code examples in a suitable computational environment. Visit <http://bit.ly/plotly-book-cloud> for a cloud-based instance of RStudio with all the required software to run the code examples in this book. If, instead, you'd like to run examples on your local machine, you can install all the necessary R packages with:
+
+```r
+if (!require(remotes)) install.packages("remotes")
+remotes::install_github("cpsievert/plotly_book")
+```
+
+## Getting help and learning more
+
+As @r4ds states, "This book is not an island; there is no single resource that will allow you to master `R` [or **plotly**]. As you start to apply the techniques described in this book to your own data you will soon find questions that I do not answer. This section describes a few tips on how to get help, and to help you keep learning." [These tips](https://r4ds.had.co.nz/introduction.html#getting-help-and-learning-more) on how to get help (e.g., Google, StackOverflow, Twitter, etc) also apply to getting help with **plotly**. [RStudio's community](https://community.rstudio.com/tags/plotly) is another great place to ask broader questions about all things `R` and **plotly**. It's worth mentioning that the `R` community is incredibly welcoming, compassionate, and generous; especially if you can demonstrate that you've done your research and/or [provide minimally reproducible example of your problem](https://www.tidyverse.org/help/). 
+
+## Acknowledgements
+
+This book wouldn't be possible without the generous assistance and mentorship of many people:
+
+* Heike Hofmann and Di Cook for their mentorship and many helpful conversations about interactive graphics.
+* Toby Dylan Hocking for many helpful conversations, his mentorship in the `R` packages **animint** and **plotly**, and laying the original foundation behind `ggplotly()`.
+* Joe Cheng for many helpful conversations and inspiring section \@ref(graphical-queries).
+* Étienne Tétreault-Pinard, Alex Johnson, and the other plotly.js core developers for responding to my feature requests and bug reports.
+* Yihui Xie for his work on **knitr**, **rmarkdown**, **bookdown**, [bookdown-crc](https://github.com/yihui/bookdown-crc), and responding to my feature requests.
+* Anthony Unwin for helpful feedback, suggestions, and for inspiring Figure \@ref(fig:epl).
+* Hadley Wickham and the **ggplot2** team for maintaining **ggplot2**.
+* Hadley Wickham and Garret Grolemund for writing _R for Data Science_ and allowing me to model this introduction after their introduction. 
+* Kent Russell for contributions to **plotly** and writing **reactR**.
+* Adam Loy for inspiring Figure \@ref(fig:profile-pyramid).
+
+## Colophon
+
+An online version of this book is available at https://plotly-r.com. It will continue to evolve in between reprints of the physical book. The source of the book is available at https://github.com/cpsievert/plotly_book. The book is powered by https://bookdown.org which makes it easy to turn `R` markdown files into HTML, PDF, and EPUB.
+
+This book was built with the following computing environment:
+
+```{r}
+devtools::session_info("plotly")
+```
+  
+<!--
+# Why interactive web graphics in R? {#why-web-graphics}
+
+* Data science workflow
+* Interactivity augments exploration
+    * Some historical context and examples (https://talks.cpsievert.me/20180202/#7)
+    * "Interactive graphics enable the analyst to pursue follow-up questions" -- Cook & Swayne, GGobi book, p15
+    * A case study of US election data
+* GUI and command-line - conflict or synergy? https://talks.cpsievert.me/20180305/#12
+* Web-based visualization
+    * New capabilites (e.g. easy sharing, portability) brings new set of concerns (e.g., client-server, security, etc)
+    * Great tools for expository vis (d3.js, vega, plotly.js)
+    * Lack of tools for exploratory vis (i.e. tools for iteration)
+* Why **plotly** for R?
+  * MIT-licensed software built with plotly.js and htmlwidgets
+    * Perhaps mention the plotly.js development pace
+    * Users can opt into plotly cloud 
+    * Mention orca? 
+  * Built on sound visualization and programming principles:
+    * The Grammar of Graphics
+    * Pure functional programming
+    * Two approaches, one object
+  * Works well with the tidyverse
+-->
+    

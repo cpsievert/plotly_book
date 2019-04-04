@@ -1,0 +1,564 @@
+# Scattered foundations {#scatter-traces}
+
+As we learned in Section \@ref(intro-plotly-js), a plotly.js figure contains one (or more) trace(s), and every trace has a type. The trace type scatter is great for drawing low-level geometries (e.g., points, lines, text, and polygons) and provides the foundation for many `add_*()` functions (e.g., `add_markers()`, `add_lines()`, `add_paths()`, `add_segments()`, `add_ribbons()`, `add_area()`, and `add_polygons()`) as well as many `ggplotly()` charts. These scatter-based layers provide a more convenient interface to special cases of the scatter trace by doing a bit of data wrangling and transformation under-the-hood before mapping to scatter trace(s). For a simple example, `add_lines()` ensures lines are drawn according to the ordering of `x`, which is desirable for a time series plotting. This behavior is subtly different than `add_paths()` which uses row ordering instead.
+
+```r
+library(plotly)
+data(economics, package = "ggplot2")
+
+# sort economics by psavert, just to 
+# show difference between paths and lines
+p <- economics %>%
+  arrange(psavert) %>%
+  plot_ly(x = ~date, y = ~psavert)
+
+add_paths(p)
+add_lines(p)
+```
+
+```{r scatter-intro, echo = FALSE, fig.cap="(ref:scatter-intro)"}
+knitr::include_graphics("images/scatter-intro.svg")
+```
+
+Section \@ref(intro-plotly) introduced 'aesthetic mapping' arguments (unique to the R package) which make it easier to map data to visual properties (e.g., `color`, `linetype`, etc). In addition to these arguments, **dplyr** groupings can be used to ensure there is at least one geometry per group. The top panel of Figure \@ref(fig:scatter-intro) demonstrates how `group_by()` could be used to effectively wrap the time series from Figure \@ref(fig:scatter-intro) by year, which can be useful for visualizing annual seasonality. Another approach to generating at least one geometry per 'group' is to provide categorical variable to a relevant aesthetic (e.g., `color`), as shown in the bottom panel of Figure \@ref(fig:scatter-intro).
+
+```r
+library(lubridate)
+econ <- economics %>%
+  mutate(yr = year(date), mnth = month(date))
+
+# one trace (more performant, but less interactive)
+econ %>%
+  group_by(yr) %>%
+  plot_ly(x = ~mnth, y = ~uempmed) %>%
+  add_lines(text = ~yr)
+
+# multiple traces (less performant, but more interactive)
+plot_ly(econ, x = ~mnth, y = ~uempmed) %>%
+  add_lines(color = ~ordered(yr))
+  
+# the split argument guarantees one trace per group level (regardless of the variable type)
+# this is useful if you want a consistent visual properties over multiple traces 
+# plot_ly(econ, x = ~mnth, y = ~uempmed) %>%
+#   add_lines(split = ~yr, color = I("black"))
+```
+
+```{r scatter-lines, echo = FALSE, fig.cap="(ref:scatter-lines)"}
+include_vimeo("316679591")
+```
+
+Not only do these plots differ in visual appearance, they also differ in interactive capabilties, computational performance, and underlying implementation. That's because, the grouping approach (top panel of Figure \@ref(fig:scatter-lines)) uses just one plotly.js trace (more performant, less interactive), whereas the `color` approach (bottom panel of Figure \@ref(fig:scatter-lines)) generates one trace per line/year. In this case, the benefit of having multiple traces is that we can perform interactive filtering via the legend and compare multiple y-values at a given x. The cost of having those capabilities is that plots starts to be become sluggish after a few hundred traces, whereas thousands of lines can be rendered fairly easily in one trace. See Chapter \@ref(performance) for more details on scaling and performance.
+
+These features make it easier to get started using plotly.js, but it still pays off to learn how to use plotly.js directly. You won't find plotly.js attributes listed as explicit arguments in any **plotly** function (except for the special `type` attribute), but they are passed along verbatim to the plotly.js figure definition through the `...` operator. The scatter-based layers in this chapter fix the `type` plotly.js attribute to `"scatter"` as well as the [`mode`](https://plot.ly/r/reference/#scatter-mode) (e.g., `add_markers()` uses `mode='markers'` etc), but you could also use the lower-level `add_trace()` to work more directly with plotly.js. For example, Figure \@ref(fig:tooltip-praise) shows how to render markers, lines, and text in the same scatter trace. It also demonstrates how to leverage *nested* plotly.js attributes, like [`textfont`](https://plot.ly/r/reference/#scatter-textfont) and [`xaxis`](https://plot.ly/r/reference/#layout-xaxis) -- these attributes contain other attributes, so you need to supply a suitable named list to these arguments.
+
+```r
+set.seed(99)
+plot_ly() %>%
+ add_trace(
+   type = "scatter",
+   mode = "markers+lines+text",
+   x = 4:6, 
+   y = 4:6,
+   text = replicate(3, praise::praise("You are ${adjective}! 🙌")),
+   textposition = "right",
+   hoverinfo = "text",
+   textfont = list(family = "Roboto Condensed", size = 16)
+ ) %>%
+ layout(xaxis = list(range = c(3, 8)))
+```
+
+```{r tooltip-praise, echo = FALSE, fig.cap="(ref:tooltip-praise)"}
+knitr::include_graphics("images/tooltip-praise.png")
+```
+
+
+
+If you are new to plotly.js, I recommend taking a bit of time to look through the plotly.js attributes that are available to the scatter trace type and think how you might be able to use them. Most of these attributes work for other trace types as well, so learning an attribute once for a specific plot can pay off in other contexts as well. The online plotly.js figure reference, <https://plot.ly/r/reference/#scatter>, is a decent place to search and learn about the attributes, but I recommend using the `schema()` function instead for a few reasons:
+
+* `schema()` provides a bit more information than the online docs (e.g., value types, default values, acceptable ranges, etc).
+* The interface makes it a bit easier to traverse and discover new attributes.
+* You can be absolutely sure it matches the version used in the R package (the online docs might use a different – probably older – version).
+
+```r
+schema()
+```
+
+```{r schema, echo = FALSE, fig.cap="(ref:schema)", out.width = "40%"}
+knitr::include_graphics("images/schema.png")
+```
+
+The sections that follow in this chapter demonstrate various type of data views using scatter-based layers. In attempt to avoid duplication of documentation, a particular emphasis is put on features only currently availble from the R package (e.g. the aesthetic mapping arguments).
+
+## Markers
+
+This section details scatter traces with a `mode` of `"markers"` (i.e., `add_markers()`). For simplicity, many of the examples here use `add_markers()` with a numeric x and y axis, which results in scatterplot -- a common way to visualize the association between two quantitative variables.  The content that follows is still relevant markers displayed non-numeric x and y (aka dot pots) as shown in Section \@ref(dot-plots)
+
+### Alpha blending {#marker-alpha}
+
+As @unwin-graphical-analysis notes, scatterplots can be useful for exposing other important features including: casual relationships, outliers, clusters, gaps, barriers, and conditional relationships. A common problem with scatterplots however is overplotting, meaning that there are multiple observations occupying the same (or similar) x/y locations. Figure \@ref(fig:scatterplots) demonstrates one way to combat overplotting via alpha blending. When dealing with tens of thousands of points (or more), consider using `toWebGL()` to render plots using Canvas rather than SVG (more in Chapter \@ref(performance), or leveraging 2D density estimation (section \@ref(rectangular-binning-in-r)).
+
+```r
+subplot(
+  plot_ly(mpg, x = ~cty, y = ~hwy, name = "default"),
+  plot_ly(mpg, x = ~cty, y = ~hwy) %>% 
+    add_markers(alpha = 0.2, name = "alpha")
+)
+```
+
+
+
+```{r scatterplots, echo = FALSE, fig.cap = "(ref:scatterplots)"}
+knitr::include_graphics("images/scatterplots.svg")
+```
+
+### Colors {#marker-color}
+
+As discussed in \@ref(intro-plotly-js), mapping a discrete variable to `color` produces one trace per category, which is desirable for it's legend and hover properties. On the other hand, mapping a *numeric* variable to `color` produces one trace, as well as a [colorbar](https://plot.ly/r/reference/#scatter-marker-colorbar) guide for visually decoding colors back to data values. The `colorbar()` function can be used to customize the appearance of this automatically generated guide. The default colorscale is viridis, a perceptually-uniform colorscale (even when converted to black-and-white), and perceivable even to those with common forms of color blindness [@viridis]. Viridis is also the default colorscale for ordered factors.
+
+```r
+p <- plot_ly(mpg, x = ~cty, y = ~hwy, alpha = 0.5)
+subplot(
+  add_markers(p, color = ~cyl, showlegend = FALSE) %>% 
+    colorbar(title = "Viridis"),
+  add_markers(p, color = ~factor(cyl))
+)
+```
+
+```{r color-types, echo = FALSE, fig.cap = "(ref:color-types)"}
+knitr::include_graphics("images/color-types.svg")
+```
+
+There are numerous ways to alter the default color scale via the `colors` argument. This argument excepts one of the following: (1) a color brewer palette name (see the row names of `RColorBrewer::brewer.pal.info` for valid names), (2) a vector of colors to interpolate, or (3) a color interpolation function like `colorRamp()` or `scales::colour_ramp()`. Although this grants a lot of flexibility, one should be conscious of using a sequential colorscale for numeric variables (& ordered factors) as shown in \@ref(fig:color-numeric), and a qualitative colorscale for discrete variables as shown in \@ref(fig:color-discrete).
+
+```r
+col1 <- c("#132B43", "#56B1F7")
+col2 <- viridisLite::inferno(10)
+col3 <- colorRamp(c("red", "white", "blue"))
+subplot(
+  add_markers(p, color = ~cyl, colors = col1) %>%
+    colorbar(title = "ggplot2 default"),
+  add_markers(p, color = ~cyl, colors = col2) %>% 
+    colorbar(title = "Inferno"),
+  add_markers(p, color = ~cyl, colors = col3) %>% 
+    colorbar(title = "colorRamp")
+) %>% hide_legend()
+```
+
+```{r color-numeric, echo = FALSE, fig.cap = "(ref:color-numeric)"}
+knitr::include_graphics("images/color-numeric.svg")
+```
+
+```r
+col1 <- "Accent"
+col2 <- colorRamp(c("red", "blue"))
+col3 <- c(`4` = "red", `5` = "black", `6` = "blue", `8` = "green")
+subplot(
+  add_markers(p, color = ~factor(cyl), colors = col1),
+  add_markers(p, color = ~factor(cyl), colors = col2),
+  add_markers(p, color = ~factor(cyl), colors = col3)
+) %>% hide_legend()
+```
+
+```{r color-discrete, echo = FALSE, fig.cap = "(ref:color-discrete)"}
+knitr::include_graphics("images/color-discrete.svg")
+```
+
+As introduced in Figure \@ref(fig:intro-range), color codes can be specified manually (i.e., avoid mapping data values to a visual range) by using the `I()` function. Figure \@ref(fig:color-manual) provides a simple example using `add_markers()`. Any color understood by the `col2rgb()` function from the **grDevices** package can be used in this way. Chapter \@ref(working-with-colors) provides even more details about working with different color specifications when specifying colors manually.
+
+```r
+add_markers(p, color = I("black"))
+```
+
+```{r color-manual, echo = FALSE, fig.cap = "(ref:color-manual)"}
+knitr::include_graphics("images/color-manual.svg")
+```
+
+The `color` argument is meant to control the 'fill-color' of a geometric object, whereas `stroke` (section \@ref(marker-stroke)) is meant to control the 'outline-color' of a geometric object. In the case of `add_markers()`, than means `color` maps to the plotly.js attribute [`marker.color`](https://plot.ly/r/reference/#scatter-marker-color) and `stroke` maps to [`marker.line.color`](https://plot.ly/r/reference/#scatter-marker-line-color). Not all, but many, marker symbols have a notion of stroke.
+
+### Symbols {#marker-symbol}
+
+The `symbol` argument can be used to map data values to the `marker.symbol` plotly.js attribute. It uses the same semantics that we've already seen for `color`:
+
+* A numeric mapping generates trace.
+* A discrete mapping generates multiple traces (one trace per category).
+* The plural, `symbols`, can be used to specify the visual range for the mapping.
+* Mappings are avoided entirely through `I()`.
+
+For example, the left panel of Figure \@ref(fig:symbol-factor) uses a numeric mapping and the right panel uses a discrete mapping. As a result, the left panel is linked to the first legend entry, whereas the right panel is linked to the bottom three legend entries. When plotting multiple traces and no color is specifed, the plotly.js [colorway](https://plot.ly/r/reference/#layout-colorway) is applied (i.e., each trace will be rendered a different color). To set a fixed color, you can set the color of every trace generated from this layer with `color = I("black")`, or similar.
+
+```r
+p <- plot_ly(mpg, x = ~cty, y = ~hwy, alpha = 0.3) 
+subplot(
+  add_markers(p, symbol = ~cyl, name = "A single trace"),
+  add_markers(p, symbol = ~factor(cyl), color = I("black"))
+)
+```
+
+```{r symbol-factor, echo = FALSE, fig.cap = "(ref:symbol-factor)"}
+knitr::include_graphics("images/symbol-factor.svg")
+```
+
+There are two ways to specify the visual range of `symbols`: (1) numeric codes (interpreted as a `pch` codes) or (2) a character string specifying a valid `marker.symbol` value. Figure \@ref(fig:symbol-factor-range) uses pch codes (left panel) as well as their corresponding `marker.symbol` name (right panel) to specify the visual range.
+
+```r
+subplot(
+  add_markers(p, symbol = ~cyl, symbols = c(17, 18, 19)),
+  add_markers(
+    p, color = I("black"),
+    symbol = ~factor(cyl), symbols = c("triangle-up", "diamond", "circle")
+  )
+)
+```
+
+```{r symbol-factor-range, echo = FALSE, fig.cap = "(ref:symbol-factor-range)"}
+knitr::include_graphics("images/symbol-factor-range.svg")
+```
+
+These `symbols` (i.e., the visual range) can also be supplied directly to `symbol` through `I()`. For example, Figure \@ref(fig:symbol-factor-manual) fixes the marker symbol to a diamond shape. 
+
+```r
+plot_ly(mpg, x = ~cty, y = ~hwy) %>%
+  add_markers(symbol = I(18), alpha = 0.5)
+```
+
+```{r symbol-factor-manual, echo = FALSE, fig.cap = "(ref:symbol-factor-manual)"}
+knitr::include_graphics("images/symbol-factor-manual.svg")
+```
+
+If you'd like to see all the symbols available to **plotly**, as well as a method for supplying your own custom glyphs, see Chapter \@ref(working-with-symbols).
+
+### Stroke and span {#marker-stroke}
+
+The `stroke` argument follows the same semantics as `color` and `symbol` when it comes to variable mappings and specifying visual ranges. Typically you don't want to map data values to `stroke`, you just want to specify a fixed outline color. For example, Figure \@ref(fig:stroke-manual) modifies Figure \@ref(fig:symbol-factor-manual) to simply add a black outline. By default, the `span`, or width of the stroke, is zero, you'll likely want to set the width to be around one pixel.
+
+```r
+plot_ly(mpg, x = ~cty, y = ~hwy) %>%
+  add_markers(symbol = I(18), alpha = 0.5, stroke = I("black"), span = I(1))
+```
+
+```{r stroke-manual, echo = FALSE, fig.cap = "(ref:stroke-manual)"}
+knitr::include_graphics("images/symbol-factor-range.svg")
+```
+
+### Size {#marker-size}
+
+For scatterplots, the `size` argument controls the area of markers (unless otherwise specified via [sizemode](https://plot.ly/r/reference/#scatter-marker-sizemode)), and _must_ be a numeric variable. The `sizes` argument controls the minimum and maximum size of circles, in pixels:
+
+```r
+p <- plot_ly(mpg, x = ~cty, y = ~hwy, alpha = 0.3) 
+subplot(
+  add_markers(p, size = ~cyl, name = "default"),
+  add_markers(p, size = ~cyl, sizes = c(1, 500), name = "custom")
+)
+```
+
+```{r sizes, echo = FALSE, fig.cap = "(ref:sizes)"}
+knitr::include_graphics("images/sizes.svg")
+```
+
+Similar to other arguments, `I()` can be used to specify the size directly. In the case of markers, `size` controls the [`marker.size`](https://plot.ly/r/reference/#scatter-marker-size) plotly.js attribute. Remember, you always have the option to set this attribute directly by doing something similar to Figure \@ref(fig:sizes-manual).
+
+```r
+plot_ly(mpg, x = ~cty, y = ~hwy, alpha = 0.3, marker = list(size = 10))
+```
+
+```{r sizes-manual, echo = FALSE, fig.cap = "(ref:sizes-manual)"}
+knitr::include_graphics("images/sizes-manual.svg")
+```
+
+
+### Dotplots & error bars {#dot-plots}
+
+A dotplot is similar to a scatterplot, except instead of two numeric axes, one is categorical. The usual goal of a dotplot is to compare value(s) on a numerical scale over numerous categories. In this context, dotplots are preferable to pie charts since comparing position along a common scale is much easier than comparing angle or area [@graphical-perception]; [@crowdsourcing-graphical-perception]. Furthermore, dotplots can be preferable to bar charts, especially when comparing values within a narrow range far away from 0 [@few-values]. Also, when presenting point estimates, and uncertainty associated with those estimates, bar charts tend to exaggerate the difference in point estimates, and lose focus on uncertainty [@messing].
+
+A popular application for dotplots (with error bars) is the so-called "coefficient plot" for visualizing the point estimates of coefficients and their standard error. The `coefplot()` function in the **coefplot** package [@coefplot] and the `ggcoef()` function in the **GGally** both produce coefficient plots for many types of model objects in R using **ggplot2**, which we can translate to plotly via `ggplotly()`. Since these packages use points and segments to draw the coefficient plots, the hover information is not the best, and it'd be better to use [error objects](https://plot.ly/r/reference/#scatter-error_x). Figure \@ref(fig:coefplot) uses the `tidy()` function from the **broom** package [@broom] to obtain a data frame with one row per model coefficient, and produce a coefficient plot with error bars along the x-axis. 
+
+```r
+library(broom)
+library(forcats)
+
+# Fit a full-factorial linear model
+m <- lm(Sepal.Length ~ Sepal.Width * Petal.Length * Petal.Width, data = iris)
+
+# (1) get a tidy() data structure of covariate-level info (e.g., point estimate, standard error, etc)
+# (2) make sure term column is a factor ordered by the estimate
+# (3) plot estimate by term with an error bar for the standard error
+tidy(m) %>% 
+  mutate(term = fct_reorder(term, estimate)) %>%
+  plot_ly(x = ~estimate, y = ~term) %>%
+  add_markers(
+    error_x = ~list(value = std.error), 
+    color = I("black"),
+    hoverinfo = "x"
+  )
+```
+
+```{r coefplot, echo = FALSE, fig.cap = "(ref:coefplot)"}
+knitr::include_graphics("images/coefplot.png")
+```
+
+## Lines
+
+Many of the same principles we learned about aesthetic mappings with respect to markers (Section \@ref(markers)) also apply to lines.^[At the time of writing, the plotly.js attributes [`line.width` and `line.color`](https://github.com/plotly/plotly.js/issues/147) do not support multiple values, meaning a single line trace can only have one width/color in 2D line plot, and consequently numeric `color`/`size` mappings won't work. This isn't necessarily true for 3D paths/lines and there will likely be support these features for 2D paths/lines in WebGL in the near future.] Moreover, at the start of this chapter (namely Figure \@ref(fig:scatter-lines)) we also learned how to use **dplyr**'s `group_by()` to ensure there is at least one geometry (in this case, line) per group. We also learned the difference between `add_paths()` and `add_lines()` -- the former draws lines according to row ordering whereas the latter draw them according to `x`. In this chapter, we'll learn about `linetype`/`linetype`, an aesthetic that applies to lines and polygons. We'll also discuss some other important chart types that can be implemented with `add_paths()`, `add_lines()`, and `add_segments()`. 
+
+### Linetypes
+
+Generally speaking, it's hard to perceive more than 8 different colors/linetypes/symbols in a given plot, so sometimes we have to filter data to use these effectively. Here we use the **dplyr** package to find the top 5 cities in terms of average monthly sales (`top5`), then effectively filter the original data to contain just these cities via `semi_join()`. As Figure \@ref(fig:linetypes) demonstrates, once we have the data filtered, mapping city to `color` or `linetype` is trivial. The color palette can be altered via the `colors` argument, and follows the same rules as [scatterplots](#scatterplots). The linetype palette can be altered via the `linetypes` argument, and accepts R's [`lty` values](https://github.com/wch/r-source/blob/e5b21d0397c607883ff25cca379687b86933d730/src/library/graphics/man/par.Rd#L726-L743) or plotly.js [dash values](https://plot.ly/r/reference/#scatter-line-dash).
+
+```r
+library(dplyr)
+top5 <- txhousing %>%
+  group_by(city) %>%
+  summarise(m = mean(sales, na.rm = TRUE)) %>%
+  arrange(desc(m)) %>%
+  top_n(5)
+
+tx5 <- semi_join(txhousing, top5, by = "city")
+
+plot_ly(tx5, x = ~date, y = ~median) %>%
+  add_lines(linetype = ~city)
+```
+
+```{r linetypes, echo = FALSE, fig.cap = "(ref:linetypes)"}
+knitr::include_graphics("images/linetypes.svg")
+```
+
+If you'd like to control exactly which linetype is used to encode a particular data value, you can provide a named character vector, like in Figure \@ref(fig:linetypes-manual). Note that this is similar to how we provided a discrete colorscale manually for markers in Figure \@ref(fig:color-discrete). 
+
+```r
+ltys <- c(
+  Austin = "dashdot",
+  `Collin County` = "longdash",
+  Dallas = "dash",
+  Houston = "solid",
+  `San Antonio` = "dot"
+)
+
+plot_ly(tx5, x = ~date, y = ~median) %>%
+  add_lines(linetype = ~city, linetypes = ltys)
+```
+
+```{r linetypes-manual, echo = FALSE, fig.cap = "(ref:linetypes-manual)"}
+knitr::include_graphics("images/linetypes-manual.svg")
+```
+
+
+### Segments
+
+The `add_segments()` function essentially provides a way to connect two points [(`x`, `y`) to (`xend`, `yend`)] with a line. Segments form the building blocks for numerous useful chart types, including slopegraphs, dumbell charts, candlestick charts, and more. Slopegraphs and dumbell charts are useful for comparing numeric values across numerous categories. Candlestick charts are typically used for visualizing change in a financial asset over time. 
+
+Segments can also provide a useful alternative to `add_bars()` (covered in Section \@ref(bars-histograms)), especially for animations. In particular, Figure \@ref(fig:profile-pyramid) of Section \@ref(animation-support) shows how implement an animated population pyramid using segments instead of bars.
+
+#### Slopegraph
+
+The slope graph, made popular by @tufte2001, is a great way to compare the change in a measurement across numerous groups. This change could be along either a discrete or a continuous axis. For a continuous axis, the slopegraph could be thought of as a decomposition of a line graph into multiple segments. The **slopegraph** R package provides a succinct interface for creating slopegraphs with base or **ggplot2** graphics and also some convenient data sets which we'll make use of here [@slopegraph]. Figure \@ref(fig:slopegraph) recreates an example from @tufte2001, using the `gdp` data set from **slopegraph**, and demonstrates a common issue with labelling in slopegraphs -- it's easy to have overlapping labels when anchoring labels on data values. For that reason, this implementation leverages **plotly** ability to interactively edit annotation positions. See Section \@ref(editing-views) for similar examples of 'editing views'.
+
+```{r, eval = FALSE, summary = "Click to show code"}
+data(gdp, package = "slopegraph")
+gdp$Country <- row.names(gdp)
+
+plot_ly(gdp) %>%
+  add_segments(
+    x = 1, xend = 2,
+    y = ~Year1970, yend = ~Year1979,
+    color = I("gray90")
+  ) %>%
+  add_annotations(
+    x = 1, y = ~Year1970, 
+    text = ~paste(Country, "  ", Year1970), 
+    xanchor = "right", showarrow = FALSE
+  ) %>%
+  add_annotations(
+    x = 2, y = ~Year1979, 
+    text = ~paste(Year1979, "  ", Country),
+    xanchor = "left", showarrow = FALSE
+  ) %>%
+  layout(
+    title = "Current Receipts of Goverment as a Percentage of Gross Domestic Product",
+    showlegend = FALSE,
+    xaxis = list(
+      range = c(0, 3),
+      ticktext = c("1970", "1979"),
+      tickvals = c(1, 2),
+      zeroline = FALSE
+    ),
+    yaxis = list(
+      title = "",
+      showgrid = FALSE,
+      showticks = FALSE,
+      showticklabels = FALSE
+    )
+  ) %>% 
+  config(edits = list(annotationPosition = TRUE))
+```
+
+```{r slopegraph, echo = FALSE, fig.cap = "(ref:slopegraph)"}
+include_vimeo("327585190")
+```
+
+
+#### Dumbell
+
+So called dumbell charts are similar in concept to slope graphs, but not quite as general. They are typically used to compare two different classes of numeric values across numerous groups. Figure \@ref(fig:dumbell) uses the dumbell approach to show average miles per gallon city and highway for different car models. With a dumbell chart, it's always a good idea to order the categories by a sensible metric -- for Figure \@ref(fig:dumbell), the categories are ordered by the city miles per gallon.
+
+```r
+mpg %>%
+  group_by(model) %>%
+  summarise(c = mean(cty), h = mean(hwy)) %>%
+  mutate(model = forcats::fct_reorder(model, c)) %>%
+  plot_ly() %>%
+  add_segments(
+    x = ~c, y = ~model,
+    xend = ~h, yend = ~model, 
+    color = I("gray"), showlegend = FALSE
+  ) %>%
+  add_markers(
+    x = ~c, y = ~model, 
+    color = I("blue"), 
+    name = "mpg city"
+  ) %>%
+  add_markers(
+    x = ~h, y = ~model, 
+    color = I("red"),
+    name  = "mpg highway"
+  ) %>%
+  layout(xaxis = list(title = "Miles per gallon"))
+```
+
+```{r dumbell, echo = FALSE, fig.cap = "(ref:dumbell)"}
+knitr::include_graphics("images/dumbell.svg")
+```
+
+#### Candlestick
+
+Figure \@ref(fig:candlestick) uses the **quantmod** package [@quantmod] to obtain stock price data for Microsoft and plots two segments for each day: one to encode the opening/closing values, and one to encode the daily high/low.
+
+```r
+library(quantmod)
+msft <- getSymbols("MSFT", auto.assign = F)
+dat <- as.data.frame(msft)
+dat$date <- index(msft)
+dat <- subset(dat, date >= "2016-01-01")
+
+names(dat) <- sub("^MSFT\\.", "", names(dat))
+
+plot_ly(dat, x = ~date, xend = ~date, color = ~Close > Open, 
+        colors = c("red", "forestgreen"), hoverinfo = "none") %>%
+  add_segments(y = ~Low, yend = ~High, size = I(1)) %>%
+  add_segments(y = ~Open, yend = ~Close, size = I(3)) %>%
+  layout(showlegend = FALSE, yaxis = list(title = "Price")) %>%
+  rangeslider()
+```
+
+```{r candlestick, echo = FALSE, fig.cap = "(ref:candlestick)"}
+knitr::include_graphics("images/candlestick.svg")
+```
+
+### Density plots
+
+In Section \@ref(bars-histograms), we leverage a number of algorithms in R for computing the "optimal" number of bins for a histogram, via `hist()`, and routing those results to `add_bars()`. We can leverage the `density()` function for computing kernel density estimates in a similar way, and route the results to `add_lines()`, as is done in \@ref(fig:densities).
+
+```r
+kerns <- c("gaussian", "epanechnikov", "rectangular", 
+          "triangular", "biweight", "cosine", "optcosine")
+p <- plot_ly()
+for (k in kerns) {
+  d <- density(economics$pce, kernel = k, na.rm = TRUE)
+  p <- add_lines(p, x = d$x, y = d$y, name = k)
+}
+p
+```
+
+```{r densities, echo = FALSE, fig.cap = "(ref:densities)"}
+knitr::include_graphics("images/densities.svg")
+```
+
+
+```{r, eval = FALSE, echo = FALSE}
+bws <- seq(1, 10, seq = 1)
+p <- plot_ly()
+for (i in seq_along(kerns)) {
+  d <- density(txhousing$median, kernel = kerns[[i]], na.rm = TRUE)
+  p <- p %>% add_lines(x = d$x, y = d$y, frame = kerns[[i]])
+}
+p
+```
+
+
+### Parallel Coordinates
+
+One very useful, but often overlooked, visualization technique is the parallel coordinates plot. Parallel coordinates provide a way to compare values along a common (or non-aligned) positional scale(s) -- the most basic of all perceptual tasks -- in more than 3 dimensions [@graphical-perception]. Usually each line represents every measurement for a given row (or observation) in a data set. It's true that plotly.js provides a trace type, parcoords, specifically for parallel coordinates, but 
+
+When measurements are on very different scales, some care must be taken, and variables must transformed to be put on a common scale. As Figure \@ref(fig:pcp-common) shows, even when variables are measured on a similar scale, it can still be informative to transform variables in different ways.
+
+```r
+iris$obs <- seq_len(nrow(iris))
+iris_pcp <- function(transform = identity) {
+  iris[] <- purrr::map_if(iris, is.numeric, transform)
+  tidyr::gather(iris, variable, value, -Species, -obs) %>% 
+    group_by(obs) %>% 
+    plot_ly(x = ~variable, y = ~value, color = ~Species) %>% 
+    add_lines(alpha = 0.3)
+}
+subplot(
+  iris_pcp(), 
+  iris_pcp(scale),
+  iris_pcp(scales::rescale),
+  nrows = 3, shareX = TRUE
+) %>% hide_legend()
+```
+
+```{r pcp-common, echo = FALSE, fig.cap = "(ref:pcp-common)"}
+knitr::include_graphics("images/pcp-common.svg")
+```
+
+It is also worth noting that the **GGally** offers a `ggparcoord()` function which creates parallel coordinate plots via **ggplot2**, which we can convert to plotly via `ggplotly()`. Thanks to the [linked highlighting](#linking-views-without-shiny) framework, parallel coordinates created in this way could be linked to lower dimensional (but sometimes higher resolution) graphics of related data to guide multi-variate data exploration. The **pedestrians** package provides some examples of linking parallel coordinates to other views such as a grand tour for exposing unusual features in a high-dimensional space [@pedestrians].
+
+
+## Polygons
+
+The `add_polygons()` function is essentially equivalent to `add_paths()` with the [fill](https://plot.ly/r/reference/#scatter-fill) attribute set to "toself". Polygons form the basis for other, higher-level scatter-based layers (e.g., `add_ribbons()` and `add_sf()`) that don't have a dedicated plotly.js trace type. Polygons can be use to draw many things, but perhaps the most familiar application where you *might* want to use `add_polygons()` is to draw geo-spatial objects. If and when you use `add_polygons()` to draw a map, make sure you fix the aspect ratio (e.g. [`xaxis.scaleanchor`](https://plot.ly/r/reference/#layout-xaxis-scaleanchor)). On the other hand, Section \@ref(maps-custom) shows you how to make a custom maps using the **sf** package and `add_sf()`, which is a bit a work to get started, but is absolutely worth the investment.
+
+```r
+base <- map_data("world", "canada") %>%
+  group_by(group) %>%
+  plotly_empty(x = ~long, y = ~lat, alpha = 0.2) %>%
+  layout(showlegend = FALSE, xaxis = list(scaleanchor = "y"))
+  
+base %>%
+  add_polygons(hoverinfo = "none", color = I("black")) %>%
+  add_markers(text = ~paste(name, "<br />", pop), hoverinfo = "text", 
+              color = I("red"), data = maps::canada.cities)
+```
+
+```{r map-canada, echo = FALSE, fig.cap = "(ref:map-canada)"}
+knitr::include_graphics("images/map-canada.png")
+```
+
+As discussion surrounding Figure \@ref(fig:split-color) points out, scatter-based polygon layers (i.e., `add_polygons()`, `add_ribbons()`, etc) render all the polygons using one plotly.js trace by default. This approach is computationally efficient, but it's not always desirable (e.g. can't have multiple fills per trace, interactivity is relatively limited). To work around the limitations, consider using `split` (or `color` with a discrete variable) to split the polygon data into multiple traces. Figure \@ref(fig:map-canada-split) demonstrates using `split` which will impose plotly.js' colorway to each trace (i.e., subregion) and leverage `hoveron` to generate one tooltip per sub-region.
+
+```r
+add_polygons(base, split = ~subregion, hoveron = "fills")
+```
+
+```{r map-canada-split, echo = FALSE, fig.cap = "(ref:map-canada-split)"}
+knitr::include_graphics("images/map-canada-split.png")
+```
+
+### Ribbons
+
+Ribbons are useful for showing uncertainty bounds as a function of x. The `add_ribbons()` function creates ribbons and requires the arguments: `x`, `ymin`, and `ymax`. The `augment()` function from the **broom** package appends observational-level model components (e.g., fitted values stored as a new column `.fitted`) which is useful for extracting those components in a convenient form for visualization. Figure \@ref(fig:broom-lm) shows the fitted values and uncertainty bounds from a linear model object.
+
+```r
+m <- lm(mpg ~ wt, data = mtcars)
+broom::augment(m) %>%
+  plot_ly(x = ~wt, showlegend = FALSE) %>%
+  add_markers(y = ~mpg, color = I("black")) %>%
+  add_ribbons(ymin = ~.fitted - 1.96 * .se.fit, 
+              ymax = ~.fitted + 1.96 * .se.fit, color = I("gray80")) %>%
+  add_lines(y = ~.fitted, color = I("steelblue"))
+```
+
+```{r broom-lm, echo = FALSE, fig.cap = "(ref:broom-lm)"}
+knitr::include_graphics("images/broom-lm.svg")
+```
