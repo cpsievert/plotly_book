@@ -96,7 +96,7 @@ include_vimeo("307597640")
 
 ### Statistical queries with `ggplotly()` {#statistical-queries-ggplot}
 
-Compared to `plot_ly()`, statistical queries (client-side) with `ggplotly()` are fundamentally limited. That's because, the statistical R functions that **ggplot2** relies on to generate the graphical layers can't necessarily be recomputed with different input data in your web browser. That being said, this is really only an issue when attempting to *target* a **ggplot2** layer with a non-identity statistic (e.g., `geom_smooth()`, `stat_summary()`, etc). In that case, one should consider linking views server-side, as covered in section \@ref(linking-server-side). 
+Compared to `plot_ly()`, statistical queries (client-side) with `ggplotly()` are fundamentally limited. That's because, the statistical R functions that **ggplot2** relies on to generate the graphical layers can't necessarily be recomputed with different input data in your web browser. That being said, this is really only an issue when attempting to *target* a **ggplot2** layer with a non-identity statistic (e.g., `geom_smooth()`, `stat_summary()`, etc). In that case, one should consider linking views server-side, as covered in section \@ref(linking-views-with-shiny). 
 
 As Figure \@ref(fig:smooth-highlight) demonstrates, you can still have a **ggplot2** layer with a non-identity statistic serve as the *source* of a selection. In that case, `ggplotly()` will automatically attach all the input values of the querying variable into the creation of the relevant graphical object (e.g. the fitted line). That is why, in the example below, when a fitted line is hovered upon, all the points belonging to that particular group are highlighted, even when the querying variable is the row index.
 
@@ -129,7 +129,7 @@ In summary, we've learned numerous things about statistical queries:
 
 * A statistical trace (e.g., `add_histogram()`, `add_boxplot()`, etc) can be used as both the source and target of a graphical query. 
 * When a statistical trace is the target of a graphical query, it's often desirable to have the row index assigned as the querying variable.
-* A **ggplot2** layer can be used as the source of a graphical query, but when it is the target, non-trivial statistical functions can not be recomputed client-side. In that case, one should consider linking views server side, as covered in section \@ref(linking-server-side).
+* A **ggplot2** layer can be used as the source of a graphical query, but when it is the target, non-trivial statistical functions can not be recomputed client-side. In that case, one should consider linking views server side, as covered in section \@ref(linking-views-with-shiny).
 
 ### Geo-spatial queries
 
@@ -376,7 +376,7 @@ The code to generate Figure \@ref(fig:tour-USArrests), as well as a few other ex
 
 ## Limitations
 
-The graphical querying framework presented here is for posing database queries between multiple graphs via direct manipulation. For serious statistical analysis, one often needs to link other data views (i.e., text-based summaries, tables, etc) in other arbitrary ways. For these use cases, the R package **shiny** makes it very easy to build on concepts we've already covered to build more powerful client-server applications entirely in R, without having to learn any HTML, CSS, or JavaScript. The next chapter \@ref(linking-server-side) gives a brief introduction to **shiny**, then dives right into concepts related to linking plotly graphics to other arbitrary views.
+The graphical querying framework presented here is for posing database queries between multiple graphs via direct manipulation. For serious statistical analysis, one often needs to link other data views (i.e., text-based summaries, tables, etc) in other arbitrary ways. For these use cases, the R package **shiny** makes it very easy to build on concepts we've already covered to build more powerful client-server applications entirely in R, without having to learn any HTML, CSS, or JavaScript. The next chapter \@ref(linking-views-with-shiny) gives a brief introduction to **shiny**, then dives right into concepts related to linking plotly graphics to other arbitrary views.
 
 <!--
 Even within the scope of data views as graphical queries, there are numerous features **plotly** doesn't currently have, but would be nice to have in the future. 

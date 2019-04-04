@@ -13,7 +13,7 @@ ggplotly(gg)
 ```
 
 ```{r animation-ggplotly, echo = FALSE, fig.cap = "(ref:animation-ggplotly)"}
-knitr::include_graphics("screenshots/animation-ggplotly.png")
+knitr::include_graphics("images/animation-ggplotly.png")
 ```
 
 As long as a `frame` variable is provided, an animation is produced with play/pause button(s) and a slider component for controlling the animation. These components can be removed or customized via the `animation_button()` and `animation_slider()` functions. Moreover, various animation options, like the amount of time between frames, the smooth transition duration, and the type of transition easing may be altered via the `animation_opts()` function. Figure \@ref(fig:animation-opts) shows the same data as Figure \@ref(fig:animation-ggplotly), but doubles the amount of time between frames, uses linear transition easing, places the animation buttons closer to the slider, and modifies the default `currentvalue.prefix` settings for the slider.
@@ -36,7 +36,7 @@ base %>%
 ```
 
 ```{r animation-opts, echo = FALSE, fig.cap = "(ref:animation-opts)"}
-knitr::include_graphics("screenshots/animation-opts.png")
+knitr::include_graphics("images/animation-opts.png")
 ```
 
 If `frame` is a numeric variable (or a character string), frames are always ordered in increasing (alphabetical) order; but for factors, the ordering reflects the ordering of the levels. Consequently, factors provide the most control over the ordering of frames. In Figure \@ref(fig:animation-factors), the continents (i.e., frames) are ordered according their average life expectancy across countries within the continent. Furthermore, since there is no meaningful relationship between objects in different frames of Figure \@ref(fig:animation-factors), the smooth transition duration is set to 0. This helps avoid any confusion that there is a meaningful connection between the smooth transitions. Note that these options control both animations triggered by the play button or via the slider. 
@@ -54,7 +54,7 @@ base %>%
 ```
 
 ```{r animation-factors, echo = FALSE, fig.cap = "(ref:animation-factors)"}
-knitr::include_graphics("screenshots/animation-factors.png")
+knitr::include_graphics("images/animation-factors.png")
 ```
 
 Both the `frame` and `ids` attributes operate on the trace level -- meaning that we can target specific layers of the graph to be animated. One obvious use case for this is to provide a background which displays every possible frame (which is not animated) and overlay the animated frames onto that background. Figure \@ref(fig:animation-targets) shows the same information as Figure \@ref(fig:animation-opts), but layers animated frames on top of a background of all the frames. As a result, it is easier to put a specific year into a global context.
@@ -67,7 +67,7 @@ base %>%
 ```
 
 ```{r animation-targets, echo = FALSE, fig.cap = "(ref:animation-targets)"}
-knitr::include_graphics("screenshots/animation-targets.png")
+knitr::include_graphics("images/animation-targets.png")
 ```
 
 ## Animation support {#animation-support}

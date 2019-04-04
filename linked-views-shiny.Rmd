@@ -1,11 +1,11 @@
-# Server-side linking with shiny {#linking-server-side}
+# Server-side linking with shiny {#linking-views-with-shiny}
 
 Section \@ref(graphical-queries) covers an approach to linking views client-side with graphical database queries, but not every linked data view can be reasonably framed as a database query. If you need more control, you have at least two more options: add custom JavaScript (covered in section \@ref(javascript)) and/or link views server-side via a web application. Some concepts useful for the former approach are covered in \@ref(javascript), but this chapter is all about the latter approach.
 
 There are several different frameworks for creating web applications via R, but we'll focus our attention on linking **plotly** graphs with **shiny** -- an R package for creating reactive web applications entirely in R. **Shiny**'s reactive programming model allows R programmers to build upon their existing R knowledge and create data-driven web applications without any prior web programming experience. **Shiny** itself is largely agnostic to the engine used to render data views (that is, you can incorporate any sort of R output), but **shiny** itself also adds some special support for interacting with static R graphics and images [@shiny-plot-interaction].
 
 When linking graphics in a web application, there are tradeoffs to consider when using static R plots over web-based graphics. As it turns out, those tradeoffs complement nicely with the relative strengths and weaknesses of linking views with **plotly**, making their combination a powerful toolkit for linking views on the web from R. **Shiny** itself provides a way to access events with static graphics made with any of the following R packages: **graphics**, **ggplot2**, and **lattice**. These packages are very mature, fully-featured, well-tested, and support a incredibly wide range of graphics, but since they must be regenerated on the server, they are fundamentally limited from an interactive graphics perspective. Comparatively speaking, **plotly** does not have the same range and history, but it does provide more options and control over interactivity. More specifically, because **plotly** is inherently web-based, it allows for more control over how the graphics update in response to user input (e.g., change the color of a few points instead of redrawing the entire image). This idea is explored in more depth in section \@ref(proxies).
-  
+
 This chapter teaches you how to use **plotly** graphs inside **shiny**, how to get those graphics communicating with other types of data views, and how to do it all efficiently. Section \@ref(hello-shiny) provides an introduction to **shiny** it's reactive programming model, Section \@ref(shiny-plotly-inputs) shows how to leverage **plotly** inputs in **shiny** to coordinate multiple views, Section \@ref(proxies) shows how to respond to input changes efficiently, and Section \@ref(advanced-applications) demonstrates some advanced applications.
 
 ## Embedding plotly in shiny {#hello-shiny}
@@ -183,7 +183,7 @@ server <- function(input, output, session) {
             xref = "paper",
             yref = "paper"
           )
-      )) %>%
+        )) %>%
       config(editable = TRUE)
   })
   
@@ -532,7 +532,7 @@ server <- function(input, output, session) {
       layout(showlegend = FALSE)
     
     if (!input$smooth) return(p)
-      
+    
     add_lines(p, data = dpred, x = ~x, y = ~yhat, color = I("red"))
   })
   

@@ -211,7 +211,7 @@ knitr::include_graphics("images/subplot-trellis.svg")
 
 #### ggplot2 subplots
 
-It's possible to combine the convenience of **ggplot2**'s `facet_wrap()`/`facet_grid()` with the more flexibile arrangement capabilities of `subplot()`. Figure \@ref(fig:ggplot2-subplots) does this to show two different views of the `economics_long` data: the left-hand column displays each variable along time while the right-hand column shows violin plots of each variable. For the implementation, each column is created through `ggplot2::facet_wrap()`, but then the trellis displays are combined with `subplot()`. In this case, **ggplot2** objects are passed directly to `subplot()`, but you can also use `ggplotly()` for finer control over the conversion of **ggplot2** to **plotly** (see also Chapter \@ref(modifying-ggplotly)) before supplying that result to `subplot()`.
+It's possible to combine the convenience of **ggplot2**'s `facet_wrap()`/`facet_grid()` with the more flexibile arrangement capabilities of `subplot()`. Figure \@ref(fig:ggplot2-subplots) does this to show two different views of the `economics_long` data: the left-hand column displays each variable along time while the right-hand column shows violin plots of each variable. For the implementation, each column is created through `ggplot2::facet_wrap()`, but then the trellis displays are combined with `subplot()`. In this case, **ggplot2** objects are passed directly to `subplot()`, but you can also use `ggplotly()` for finer control over the conversion of **ggplot2** to **plotly** (see also Chapter \@ref(improving-ggplotly)) before supplying that result to `subplot()`.
 
 ```r
 gg1 <- ggplot(economics_long, aes(date, value)) + geom_line() +
