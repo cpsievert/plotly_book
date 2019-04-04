@@ -25,7 +25,7 @@
 <meta name="author" content="Carson Sievert">
 
 
-<meta name="date" content="2019-04-01">
+<meta name="date" content="2019-04-04">
 
   <meta name="viewport" content="width=device-width, initial-scale=1">
   <meta name="apple-mobile-web-app-capable" content="yes">
@@ -511,7 +511,7 @@ server &lt;-<span class="st"> </span><span class="cf">function</span>(input, out
             <span class="dt">xref =</span> <span class="st">&quot;paper&quot;</span>,
             <span class="dt">yref =</span> <span class="st">&quot;paper&quot;</span>
           )
-      )) <span class="op">%&gt;%</span>
+        )) <span class="op">%&gt;%</span>
 <span class="st">      </span><span class="kw">config</span>(<span class="dt">editable =</span> <span class="ot">TRUE</span>)
   })
   
@@ -607,9 +607,23 @@ ui &lt;-<span class="st"> </span><span class="kw">fluidPage</span>(
 
 server &lt;-<span class="st"> </span><span class="cf">function</span>(input, output, session) {
   
+  d &lt;-<span class="st"> </span>dplyr<span class="op">::</span><span class="kw">select_if</span>(iris, is.numeric)
+  
   output<span class="op">$</span>parcoords &lt;-<span class="st"> </span><span class="kw">renderPlotly</span>({
-    <span class="kw">plot_ly</span>(iris) <span class="op">%&gt;%</span>
-<span class="st">      </span><span class="kw">add_parcoords</span>() <span class="op">%&gt;%</span>
+    
+    dims &lt;-<span class="st"> </span><span class="kw">Map</span>(<span class="cf">function</span>(x, y) {
+      <span class="kw">list</span>(
+        <span class="dt">values =</span> x, 
+        <span class="dt">range =</span> <span class="kw">range</span>(x, <span class="dt">na.rm =</span> <span class="ot">TRUE</span>), 
+        <span class="dt">label =</span> y
+      )
+    }, d, <span class="kw">names</span>(d), <span class="dt">USE.NAMES =</span> <span class="ot">FALSE</span>)
+    
+    <span class="kw">plot_ly</span>() <span class="op">%&gt;%</span>
+<span class="st">      </span><span class="kw">add_trace</span>(
+        <span class="dt">type =</span> <span class="st">&quot;parcoords&quot;</span>,
+        <span class="dt">dimensions =</span> dims
+      ) <span class="op">%&gt;%</span>
 <span class="st">      </span><span class="kw">event_register</span>(<span class="st">&quot;plotly_restyle&quot;</span>)
   })
   
@@ -852,7 +866,7 @@ server &lt;-<span class="st"> </span><span class="cf">function</span>(input, out
 <span class="st">      </span><span class="kw">layout</span>(<span class="dt">showlegend =</span> <span class="ot">FALSE</span>)
     
     <span class="cf">if</span> (<span class="op">!</span>input<span class="op">$</span>smooth) <span class="kw">return</span>(p)
-      
+    
     <span class="kw">add_lines</span>(p, <span class="dt">data =</span> dpred, <span class="dt">x =</span> <span class="op">~</span>x, <span class="dt">y =</span> <span class="op">~</span>yhat, <span class="dt">color =</span> <span class="kw">I</span>(<span class="st">&quot;red&quot;</span>))
   })
   

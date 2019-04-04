@@ -25,7 +25,7 @@
 <meta name="author" content="Carson Sievert">
 
 
-<meta name="date" content="2019-04-01">
+<meta name="date" content="2019-04-04">
 
   <meta name="viewport" content="width=device-width, initial-scale=1">
   <meta name="apple-mobile-web-app-capable" content="yes">
@@ -349,9 +349,9 @@ widget_file_size &lt;-<span class="st"> </span><span class="cf">function</span>(
   <span class="kw">message</span>(<span class="st">&quot;File is: &quot;</span>, mb,<span class="st">&quot; MB&quot;</span>)
 }
 <span class="kw">widget_file_size</span>(p)
-<span class="co">#&gt; File is: 3.078 MB</span>
+<span class="co">#&gt; File is: 3.244 MB</span>
 <span class="kw">widget_file_size</span>(<span class="kw">partial_bundle</span>(p))
-<span class="co">#&gt; File is: 1.011 MB</span></code></pre>
+<span class="co">#&gt; File is: 1.045 MB</span></code></pre>
 <p>If you want to embed numerous widgets in a larger HTML document (e.g., via HTML <code>&lt;iframe&gt;</code>s), <em>self-contained</em> HTML is not recommended. That’s because, if you embed numerous self-contained widgets inside a larger document, your browser has to repeatedly parse the same dependencies over and over. Instead, if you save all the dependency files externally into a single directory, the browser will only have to parse those dependencies once, which can dramatically improve responsiveness. You can do this by setting <code>selfcontained = FALSE</code> and specifying a fixed <code>libdir</code> in <code>saveWidget()</code>. It’s also worth noting that using <code>htmlwidgets::saveWidget()</code> with <code>selfcontained = FALSE</code> is essentially the same as using <code>htmltools::save_html()</code> which saves arbitrary HTML content to a file. The <code>htmltools::save_html()</code> function is useful for saving numerous htmlwidgets (e.g., Figure <a href="arranging-views.html#fig:fluid">13.12</a> or <a href="arranging-views.html#fig:flexbox">13.13</a>) and/or other custom HTML markup (e.g., Figure <a href="client-side.html#fig:correlation-client-side">22.1</a>) in a single HTML page.</p>
 <pre class="sourceCode r"><code class="sourceCode r"><span class="kw">library</span>(htmlwidgets)
 p &lt;-<span class="st"> </span><span class="kw">plot_ly</span>(<span class="dt">x =</span> <span class="kw">rnorm</span>(<span class="dv">100</span>))

@@ -280,9 +280,23 @@ ui <- fluidPage(
 
 server <- function(input, output, session) {
   
+  d <- dplyr::select_if(iris, is.numeric)
+  
   output$parcoords <- renderPlotly({
-    plot_ly(iris) %>%
-      add_parcoords() %>%
+    
+    dims <- Map(function(x, y) {
+      list(
+        values = x, 
+        range = range(x, na.rm = TRUE), 
+        label = y
+      )
+    }, d, names(d), USE.NAMES = FALSE)
+    
+    plot_ly() %>%
+      add_trace(
+        type = "parcoords",
+        dimensions = dims
+      ) %>%
       event_register("plotly_restyle")
   })
   
