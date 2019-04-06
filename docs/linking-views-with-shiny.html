@@ -25,7 +25,7 @@
 <meta name="author" content="Carson Sievert">
 
 
-<meta name="date" content="2019-04-05">
+<meta name="date" content="2019-04-06">
 
   <meta name="viewport" content="width=device-width, initial-scale=1">
   <meta name="apple-mobile-web-app-capable" content="yes">
@@ -979,7 +979,7 @@ FIGURE 17.21: Using <code>Plotly.extendTraces()</code> to efficiently stream dat
 <p>This section combines concepts from prior sections in linking views with shiny and applies them towards some popular use cases.</p>
 <div id="drill-down" class="section level3">
 <h3><span class="header-section-number">17.4.1</span> Drill-down</h3>
-<p>Figure <a href="linking-views-with-shiny.html#fig:shiny-drill-down-pie">17.22</a> displays sales broken down by business category (e.g, Furniture, Office Supplies, Technology) in a pie chart. It allows the user to click on a slice of the pie to ‘drill-down’ into sub-categories of the chosen category. In terms of the implementation, the key aspect here is to maintain the state of the currently selected category via a <code>reactiveVal()</code> (see more in <a href="linking-views-with-shiny.html#reactive-vals">17.2.8</a>) and update that value when either a category is clicked or the “Back” button is pressed.</p>
+<p>Figure <a href="linking-views-with-shiny.html#fig:shiny-drill-down-pie">17.22</a> displays sales broken down by business category (e.g, Furniture, Office Supplies, Technology) in a pie chart. It allows the user to click on a slice of the pie to ‘drill-down’ into sub-categories of the chosen category. In terms of the implementation, the key aspect here is to maintain the state of the currently selected category via a <code>reactiveVal()</code> (see more in <a href="linking-views-with-shiny.html#reactive-vals">17.2.8</a>) and update that value when either a category is clicked or the “Back” button is pressed. This may seem like a lot of code to get a basic drill-down pie chart, but the core reactivity concepts in this implementation translate well to more complex drill-down applications.</p>
 <details>
 <p><summary>Click to show/hide the code</summary></p>
 <pre class="sourceCode r"><code class="sourceCode r"><span class="kw">library</span>(shiny)
@@ -1038,8 +1038,7 @@ server &lt;-<span class="st"> </span><span class="cf">function</span>(input, out
 FIGURE 17.22: A drill-down pie chart of sales by category. By clicking on a category (e.g., Furniture), the pie chart updates to display sales by sub-categories within Furniture.
 </p>
 </div>
-<p>A basic drill-down like Figure <a href="linking-views-with-shiny.html#fig:shiny-drill-down-pie">17.22</a> is somewhat useful on its own, but it becomes much more useful when linked to multiple views of the data.
-Figure <a href="linking-views-with-shiny.html#fig:shiny-drill-down-bar-time">17.23</a> improves on Figure <a href="linking-views-with-shiny.html#fig:shiny-drill-down-pie">17.22</a> to show sales over time by the category or sub-category (if a category is currently chosen). Note that the key aspect of implementation remains the same (i.e., maintaining state via <code>reactiveValue()</code>) – the main difference is that the time series view now also listens to changes in the currently selected category.</p>
+<p>A basic drill-down like Figure <a href="linking-views-with-shiny.html#fig:shiny-drill-down-pie">17.22</a> is somewhat useful on its own, but it becomes much more useful when linked to multiple views of the data. Figure <a href="linking-views-with-shiny.html#fig:shiny-drill-down-bar-time">17.23</a> improves on Figure <a href="linking-views-with-shiny.html#fig:shiny-drill-down-pie">17.22</a> to show sales over time by the category or sub-category (if a category is currently chosen). Note that the key aspect of implementation remains the same (i.e., maintaining state via <code>reactiveValue()</code>) – the main difference is that the time series view now also responds to changes in the currently selected category. That is, both views show sales by category when no category is selected, and sales by sub-category when a category is selected.</p>
 <details>
 <p><summary>Click to show/hide the code</summary></p>
 <pre class="sourceCode r"><code class="sourceCode r"><span class="kw">library</span>(shiny)
@@ -1117,9 +1116,165 @@ server &lt;-<span class="st"> </span><span class="cf">function</span>(input, out
 FIGURE 17.23: Coordinating drill-down across in multiple views. By clicking on a category (e.g., Technology), both the bar chart and the time-series updates to display sales within Technology.
 </p>
 </div>
-<p>Thus far, we’ve only seen one level of drill-down, what about multiple levels? Introducing multiple levels adds complexity not only the implementation, but also the user experience. Especially in a drill-down approach where the <em>same view</em> is being filtered, it can be difficult for the user to remember how they got to a particular view. Figure <a href="linking-views-with-shiny.html#fig:shiny-drill-down-bar-time-history">17.24</a> demonstrates how we could extend Figure <a href="linking-views-with-shiny.html#fig:shiny-drill-down-bar-time">17.23</a> to implement yet another level of drilling down (i.e., sub-category -&gt; product IDs) as well as populate a <code>selectInput()</code> dropdown for each active drill-down. Not only does this help the user to remember how they got to the particular view, but it also provides the ability to easily modify the sequence of drill-down events. In terms of implementation, the main idea is the very similar to before – we still store and update the state of each ‘drill-down’ in it’s own reactive value, but now when a ‘parent’ category changes (e.g., <code>category</code>) it should invalidate (i.e., clear) any currently selected ‘child’ categories (e.g., <code>sub_category</code>).</p>
+<p>Figures <a href="linking-views-with-shiny.html#fig:shiny-drill-down-pie">17.22</a> and <a href="linking-views-with-shiny.html#fig:shiny-drill-down-bar-time">17.23</a> demonstrate one level of drill-down…what about multiple levels? Introducing multiple levels adds complexity not only the implementation, but also the user experience. Especially in a drill-down approach where the <em>same view</em> is being filtered, it can be difficult for the user to remember how they got to a particular view. Figure <a href="linking-views-with-shiny.html#fig:shiny-drill-down-bar-time-history">17.24</a> demonstrates how we could extend Figure <a href="linking-views-with-shiny.html#fig:shiny-drill-down-bar-time">17.23</a> to implement yet another level of drilling down (i.e., category -&gt; sub-category -&gt; product IDs) as well as populate a <code>selectInput()</code> dropdown for each active drill-down category. Not only does this help the user to remember how they got to the particular view, but it also provides the ability to easily modify the sequence of drill-down events. In terms of implementation, the main idea is the very similar to before – we still store and update the state of each ‘drill-down’ in it’s own reactive value, but now when a ‘parent’ category changes (e.g., <code>category</code>) it should invalidate (i.e., clear) any currently selected ‘child’ categories (e.g., <code>sub_category</code>).</p>
 <details>
 <p><summary>Click to show/hide the code</summary></p>
+<pre class="sourceCode r"><code class="sourceCode r"><span class="kw">library</span>(shiny)
+<span class="kw">library</span>(plotly)
+<span class="kw">library</span>(dplyr)
+
+<span class="kw">data</span>(sales, <span class="dt">package =</span> <span class="st">&quot;plotlyBook&quot;</span>)
+categories &lt;-<span class="st"> </span><span class="kw">unique</span>(sales<span class="op">$</span>category)
+sub_categories &lt;-<span class="st"> </span><span class="kw">unique</span>(sales<span class="op">$</span>sub_category)
+ids &lt;-<span class="st"> </span><span class="kw">unique</span>(sales<span class="op">$</span>id)
+
+ui &lt;-<span class="st"> </span><span class="kw">fluidPage</span>(
+  <span class="kw">uiOutput</span>(<span class="st">&quot;history&quot;</span>),
+  <span class="kw">plotlyOutput</span>(<span class="st">&quot;bars&quot;</span>, <span class="dt">height =</span> <span class="dv">200</span>),
+  <span class="kw">plotlyOutput</span>(<span class="st">&quot;lines&quot;</span>, <span class="dt">height =</span> <span class="dv">300</span>)
+)
+
+server &lt;-<span class="st"> </span><span class="cf">function</span>(input, output, session) {
+  <span class="co"># These reactive values keep track of the drilldown state</span>
+  <span class="co"># (NULL means inactive)</span>
+  drills &lt;-<span class="st"> </span><span class="kw">reactiveValues</span>(
+    <span class="dt">category =</span> <span class="ot">NULL</span>,
+    <span class="dt">sub_category =</span> <span class="ot">NULL</span>,
+    <span class="dt">id =</span> <span class="ot">NULL</span>
+  )
+  <span class="co"># filter the data based on active drill-downs</span>
+  <span class="co"># also create a column, value, which keeps track of which</span>
+  <span class="co"># variable we&#39;re interested in </span>
+  sales_data &lt;-<span class="st"> </span><span class="kw">reactive</span>({
+    <span class="cf">if</span> (<span class="op">!</span><span class="kw">length</span>(drills<span class="op">$</span>category)) {
+      <span class="kw">return</span>(<span class="kw">mutate</span>(sales, <span class="dt">value =</span> category))
+    }
+    sales &lt;-<span class="st"> </span><span class="kw">filter</span>(sales, category <span class="op">%in%</span><span class="st"> </span>drills<span class="op">$</span>category)
+    <span class="cf">if</span> (<span class="op">!</span><span class="kw">length</span>(drills<span class="op">$</span>sub_category)) {
+      <span class="kw">return</span>(<span class="kw">mutate</span>(sales, <span class="dt">value =</span> sub_category))
+    }
+    sales &lt;-<span class="st"> </span><span class="kw">filter</span>(sales, sub_category <span class="op">%in%</span><span class="st"> </span>drills<span class="op">$</span>sub_category)
+    <span class="kw">mutate</span>(sales, <span class="dt">value =</span> id)
+  })
+  
+  <span class="co"># bar chart of sales by &#39;current level of category&#39;</span>
+  output<span class="op">$</span>bars &lt;-<span class="st"> </span><span class="kw">renderPlotly</span>({
+    d &lt;-<span class="st"> </span><span class="kw">count</span>(<span class="kw">sales_data</span>(), value, <span class="dt">wt =</span> sales)
+    
+    p &lt;-<span class="st"> </span><span class="kw">plot_ly</span>(d, <span class="dt">x =</span> <span class="op">~</span>value, <span class="dt">y =</span> <span class="op">~</span>n, <span class="dt">source =</span> <span class="st">&quot;bars&quot;</span>) <span class="op">%&gt;%</span>
+<span class="st">      </span><span class="kw">layout</span>(
+        <span class="dt">yaxis =</span> <span class="kw">list</span>(<span class="dt">title =</span> <span class="st">&quot;Total Sales&quot;</span>), 
+        <span class="dt">xaxis =</span> <span class="kw">list</span>(<span class="dt">title =</span> <span class="st">&quot;&quot;</span>)
+      )
+    
+    <span class="cf">if</span> (<span class="op">!</span><span class="kw">length</span>(drills<span class="op">$</span>sub_category)) {
+      <span class="kw">add_bars</span>(p, <span class="dt">color =</span> <span class="op">~</span>value)
+    } <span class="cf">else</span> <span class="cf">if</span> (<span class="op">!</span><span class="kw">length</span>(drills<span class="op">$</span>id)) {
+      <span class="kw">add_bars</span>(p) <span class="op">%&gt;%</span>
+<span class="st">        </span><span class="kw">layout</span>(
+          <span class="dt">hovermode =</span> <span class="st">&quot;x&quot;</span>,
+          <span class="dt">xaxis =</span> <span class="kw">list</span>(<span class="dt">showticklabels =</span> <span class="ot">FALSE</span>)
+        )
+    } <span class="cf">else</span> {
+      <span class="co"># add a visual cue of which ID is selected</span>
+      <span class="kw">add_bars</span>(p) <span class="op">%&gt;%</span>
+<span class="st">        </span><span class="kw">filter</span>(value <span class="op">%in%</span><span class="st"> </span>drills<span class="op">$</span>id) <span class="op">%&gt;%</span>
+<span class="st">        </span><span class="kw">add_bars</span>(<span class="dt">color =</span> <span class="kw">I</span>(<span class="st">&quot;black&quot;</span>)) <span class="op">%&gt;%</span>
+<span class="st">        </span><span class="kw">layout</span>(
+          <span class="dt">hovermode =</span> <span class="st">&quot;x&quot;</span>, <span class="dt">xaxis =</span> <span class="kw">list</span>(<span class="dt">showticklabels =</span> <span class="ot">FALSE</span>),
+          <span class="dt">showlegend =</span> <span class="ot">FALSE</span>, <span class="dt">barmode =</span> <span class="st">&quot;overlay&quot;</span>
+        )
+    }
+  })
+  
+  <span class="co"># time-series chart of the sales</span>
+  output<span class="op">$</span>lines &lt;-<span class="st"> </span><span class="kw">renderPlotly</span>({
+    p &lt;-<span class="st"> </span><span class="cf">if</span> (<span class="op">!</span><span class="kw">length</span>(drills<span class="op">$</span>sub_category)) {
+      <span class="kw">sales_data</span>() <span class="op">%&gt;%</span>
+<span class="st">        </span><span class="kw">count</span>(order_date, value, <span class="dt">wt =</span> sales) <span class="op">%&gt;%</span>
+<span class="st">        </span><span class="kw">plot_ly</span>(<span class="dt">x =</span> <span class="op">~</span>order_date, <span class="dt">y =</span> <span class="op">~</span>n) <span class="op">%&gt;%</span>
+<span class="st">        </span><span class="kw">add_lines</span>(<span class="dt">color =</span> <span class="op">~</span>value)
+    } <span class="cf">else</span> <span class="cf">if</span> (<span class="op">!</span><span class="kw">length</span>(drills<span class="op">$</span>id)) {
+      <span class="kw">sales_data</span>() <span class="op">%&gt;%</span>
+<span class="st">        </span><span class="kw">count</span>(order_date, <span class="dt">wt =</span> sales) <span class="op">%&gt;%</span>
+<span class="st">        </span><span class="kw">plot_ly</span>(<span class="dt">x =</span> <span class="op">~</span>order_date, <span class="dt">y =</span> <span class="op">~</span>n) <span class="op">%&gt;%</span>
+<span class="st">        </span><span class="kw">add_lines</span>()
+    } <span class="cf">else</span> {
+      <span class="kw">sales_data</span>() <span class="op">%&gt;%</span>
+<span class="st">        </span><span class="kw">filter</span>(id <span class="op">%in%</span><span class="st"> </span>drills<span class="op">$</span>id) <span class="op">%&gt;%</span>
+<span class="st">        </span><span class="kw">select</span>(<span class="op">-</span>value) <span class="op">%&gt;%</span>
+<span class="st">        </span><span class="kw">plot_ly</span>() <span class="op">%&gt;%</span><span class="st"> </span>
+<span class="st">        </span><span class="kw">add_table</span>()
+    }
+    p <span class="op">%&gt;%</span>
+<span class="st">      </span><span class="kw">layout</span>(
+        <span class="dt">yaxis =</span> <span class="kw">list</span>(<span class="dt">title =</span> <span class="st">&quot;Total Sales&quot;</span>), 
+        <span class="dt">xaxis =</span> <span class="kw">list</span>(<span class="dt">title =</span> <span class="st">&quot;&quot;</span>)
+      )
+  })
+  
+  <span class="co"># control the state of the drilldown by clicking the bar graph</span>
+  <span class="kw">observeEvent</span>(<span class="kw">event_data</span>(<span class="st">&quot;plotly_click&quot;</span>, <span class="dt">source =</span> <span class="st">&quot;bars&quot;</span>), {
+    x &lt;-<span class="st"> </span><span class="kw">event_data</span>(<span class="st">&quot;plotly_click&quot;</span>, <span class="dt">source =</span> <span class="st">&quot;bars&quot;</span>)<span class="op">$</span>x
+    <span class="cf">if</span> (<span class="op">!</span><span class="kw">length</span>(x)) <span class="kw">return</span>()
+    
+    <span class="cf">if</span> (<span class="op">!</span><span class="kw">length</span>(drills<span class="op">$</span>category)) {
+      drills<span class="op">$</span>category &lt;-<span class="st"> </span>x
+    } <span class="cf">else</span> <span class="cf">if</span> (<span class="op">!</span><span class="kw">length</span>(drills<span class="op">$</span>sub_category)) {
+      drills<span class="op">$</span>sub_category &lt;-<span class="st"> </span>x
+    } <span class="cf">else</span> {
+      drills<span class="op">$</span>id &lt;-<span class="st"> </span>x
+    }
+  })
+  
+  <span class="co"># populate a `selectInput()` for each active drilldown </span>
+  output<span class="op">$</span>history &lt;-<span class="st"> </span><span class="kw">renderUI</span>({
+    <span class="cf">if</span> (<span class="op">!</span><span class="kw">length</span>(drills<span class="op">$</span>category)) <span class="kw">return</span>(<span class="st">&quot;Click the bar chart to drilldown&quot;</span>)
+    categoryInput &lt;-<span class="st"> </span><span class="kw">selectInput</span>(
+      <span class="st">&quot;category&quot;</span>, <span class="st">&quot;Category&quot;</span>, 
+      <span class="dt">choices =</span> categories, <span class="dt">selected =</span> drills<span class="op">$</span>category
+    )
+    <span class="cf">if</span> (<span class="op">!</span><span class="kw">length</span>(drills<span class="op">$</span>sub_category)) <span class="kw">return</span>(categoryInput)
+    sd &lt;-<span class="st"> </span><span class="kw">filter</span>(sales, category <span class="op">%in%</span><span class="st"> </span>drills<span class="op">$</span>category)
+    subCategoryInput &lt;-<span class="st"> </span><span class="kw">selectInput</span>(
+      <span class="st">&quot;sub_category&quot;</span>, <span class="st">&quot;Sub-category&quot;</span>, 
+      <span class="dt">choices =</span> <span class="kw">unique</span>(sd<span class="op">$</span>sub_category), 
+      <span class="dt">selected =</span> drills<span class="op">$</span>sub_category
+    )
+    <span class="cf">if</span> (<span class="op">!</span><span class="kw">length</span>(drills<span class="op">$</span>id)) {
+      <span class="kw">return</span>(<span class="kw">fluidRow</span>(
+        <span class="kw">column</span>(<span class="dv">3</span>, categoryInput), 
+        <span class="kw">column</span>(<span class="dv">3</span>, subCategoryInput)
+      ))
+    }
+    sd &lt;-<span class="st"> </span><span class="kw">filter</span>(sd, sub_category <span class="op">%in%</span><span class="st"> </span>drills<span class="op">$</span>sub_category)
+    idInput &lt;-<span class="st"> </span><span class="kw">selectInput</span>(
+      <span class="st">&quot;id&quot;</span>, <span class="st">&quot;Product ID&quot;</span>, 
+      <span class="dt">choices =</span> <span class="kw">unique</span>(sd<span class="op">$</span>id), <span class="dt">selected =</span> drills<span class="op">$</span>id
+    )
+    <span class="kw">fluidRow</span>(
+      <span class="kw">column</span>(<span class="dv">3</span>, categoryInput), 
+      <span class="kw">column</span>(<span class="dv">3</span>, subCategoryInput),
+      <span class="kw">column</span>(<span class="dv">3</span>, idInput)
+    )
+  })
+  
+  <span class="co"># control the state of the drilldown via the `selectInput()`s</span>
+  <span class="kw">observeEvent</span>(input<span class="op">$</span>category, {
+    drills<span class="op">$</span>category &lt;-<span class="st"> </span>input<span class="op">$</span>category
+    drills<span class="op">$</span>sub_category &lt;-<span class="st"> </span><span class="ot">NULL</span>
+    drills<span class="op">$</span>id &lt;-<span class="st"> </span><span class="ot">NULL</span>
+  })
+  <span class="kw">observeEvent</span>(input<span class="op">$</span>sub_category, {
+    drills<span class="op">$</span>sub_category &lt;-<span class="st"> </span>input<span class="op">$</span>sub_category
+    drills<span class="op">$</span>id &lt;-<span class="st"> </span><span class="ot">NULL</span>
+  })
+  <span class="kw">observeEvent</span>(input<span class="op">$</span>id, {
+    drills<span class="op">$</span>id &lt;-<span class="st"> </span>input<span class="op">$</span>id
+  })
+}
+
+<span class="kw">shinyApp</span>(ui, server)</code></pre>
 </details>
 <div class="figure" style="text-align: center"><span id="fig:shiny-drill-down-bar-time-history"></span>
 <iframe src="https://player.vimeo.com/video/328770954?title=0&amp;byline=0&amp;portrait=0" width="100%" height="400" frameborder="0" seamless="seamless" webkitAllowFullScreen mozallowfullscreen allowFullScreen></iframe>
