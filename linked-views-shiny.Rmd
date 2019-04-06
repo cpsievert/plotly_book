@@ -670,9 +670,309 @@ This section combines concepts from prior sections in linking views with shiny a
 
 ### Drill-down
 
-The so-called 'drill-down' chart tends to include a vague grouping of interactive graphics that allow one to generate new views based on interesting subset(s) of the data. In Figure \@ref(fig:shiny-drill-down), the first bar chart shows store sales broked down by their main categories. By clicking on a bar, one can drill-down into that category to see the breakdown of sub-categories within that category. From there, one may pick a sub-category to populate a time series of the corresponding sales; and futhermore, click on a particular date to see the actual sales records for that day. 
+Figure \@ref(fig:shiny-drill-down-pie) displays sales broken down by business category (e.g, Furniture, Office Supplies, Technology) in a pie chart. It allows the user to click on a slice of the pie to 'drill-down' into sub-categories of the chosen category. In terms of the implementation, the key aspect here is to maintain the state of the currently selected category via a `reactiveVal()` (see more in \@ref(reactive-vals)) and update that value when either a category is clicked or the "Back" button is pressed. This may seem like a lot of code to get a basic drill-down pie chart, but the core reactivity concepts in this implementation translate well to more complex drill-down applications.
 
-In a drill-down chart, a change in the top-level category should trigger changes to sub-categories, so to handle this logic correctly, you'll want to store selections in reactive values and update those values accordingly when relevant events occur. For example, note how in Figure \@ref(fig:shiny-drill-down), a click of a category clears the sub-category and order-date. Moreover, a change in a sub-category will clear the order-date, but doesn't change the category.
+```{r eval = FALSE, summary = "Click to show/hide the code"}
+library(shiny)
+library(dplyr)
+library(purrr) # just for `%||%`
+
+data(sales, package = "plotlyBook")
+categories <- unique(sales$category)
+
+ui <- fluidPage(plotlyOutput("pie"), uiOutput("back"))
+
+server <- function(input, output, session) {
+  # for maintaining the current category (i.e. selection)
+  current_category <- reactiveVal()
+  
+  # report sales by category, unless a category is chosen
+  sales_data <- reactive({
+    if (!length(current_category())) {
+      return(count(sales, category, wt = sales))
+    }
+    sales %>%
+      filter(category %in% current_category()) %>%
+      count(sub_category, wt = sales)
+  })
+  
+  # Note that pie charts don't currently attach the label/value 
+  # with the click data, but we can leverage `customdata` as a workaround
+  output$pie <- renderPlotly({
+    d <- setNames(sales_data(), c("labels", "values"))
+    plot_ly(d) %>%
+      add_pie(labels = ~labels, values = ~values, customdata = ~labels) %>%
+      layout(title = current_category() %||% "Total Sales")
+  })
+  
+  # update the current category if the clicked value matches a category
+  observe({
+    cd <- event_data("plotly_click")$customdata[[1]]
+    if (isTRUE(cd %in% categories)) current_category(cd)
+  })
+  
+  # populate back button if category is chosen
+  output$back <- renderUI({
+    if (length(current_category())) 
+      actionButton("clear", "Back", icon("chevron-left"))
+  })
+  
+  # clear the chosen category on back button press
+  observeEvent(input$clear, current_category(NULL))
+}
+
+shinyApp(ui, server)
+```
+
+```{r shiny-drill-down-pie, echo=FALSE, fig.cap="(ref:shiny-drill-down-pie)"}
+include_vimeo("328763167")
+```
+
+A basic drill-down like Figure \@ref(fig:shiny-drill-down-pie) is somewhat useful on its own, but it becomes much more useful when linked to multiple views of the data. Figure \@ref(fig:shiny-drill-down-bar-time) improves on Figure \@ref(fig:shiny-drill-down-pie) to show sales over time by the category or sub-category (if a category is currently chosen). Note that the key aspect of implementation remains the same (i.e., maintaining state via `reactiveValue()`) -- the main difference is that the time series view now also responds to changes in the currently selected category. That is, both views show sales by category when no category is selected, and sales by sub-category when a category is selected.
+
+```{r eval = FALSE, summary = "Click to show/hide the code"}
+library(shiny)
+library(dplyr)
+
+data(sales, package = "plotlyBook")
+categories <- unique(sales$category)
+
+ui <- fluidPage(
+  plotlyOutput("bar"),
+  uiOutput("back"),
+  plotlyOutput("time")
+)
+
+server <- function(input, output, session) {
+  
+  current_category <- reactiveVal()
+  
+  # report sales by category, unless a category is chosen
+  sales_data <- reactive({
+    if (!length(current_category())) {
+      return(count(sales, category, wt = sales))
+    }
+    sales %>%
+      filter(category %in% current_category()) %>%
+      count(sub_category, wt = sales)
+  })
+  
+  # the pie chart
+  output$bar <- renderPlotly({
+    d <- setNames(sales_data(), c("x", "y"))
+    
+    plot_ly(d) %>%
+      add_bars(x = ~x, y = ~y, color = ~x) %>%
+      layout(title = current_category() %||% "Total Sales")
+  })
+  
+  # same as sales_data
+  sales_data_time <- reactive({
+    if (!length(current_category())) {
+      return(count(sales, category, order_date, wt = sales))
+    }
+    sales %>%
+      filter(category %in% current_category()) %>%
+      count(sub_category, order_date, wt = sales)
+  })
+  
+  output$time <- renderPlotly({
+    d <- setNames(sales_data_time(), c("color", "x", "y"))
+    plot_ly(d) %>%
+      add_lines(x = ~x, y = ~y, color = ~color)
+  })
+  
+  # update the current category if the clicked value matches a category
+  observe({
+    cd <- event_data("plotly_click")$x
+    if (isTRUE(cd %in% categories)) current_category(cd)
+  })
+  
+  # populate back button if category is chosen
+  output$back <- renderUI({
+    if (length(current_category())) 
+      actionButton("clear", "Back", icon("chevron-left"))
+  })
+  
+  # clear the chosen category on back button press
+  observeEvent(input$clear, current_category(NULL))
+}
+
+shinyApp(ui, server)
+```
+
+```{r shiny-drill-down-bar-time, echo=FALSE, fig.cap="(ref:shiny-drill-down-bar-time)"}
+include_vimeo("328768848")
+```
+
+Figures \@ref(fig:shiny-drill-down-pie) and \@ref(fig:shiny-drill-down-bar-time) demonstrate one level of drill-down...what about multiple levels? Introducing multiple levels adds complexity not only the implementation, but also the user experience. Especially in a drill-down approach where the _same view_ is being filtered, it can be difficult for the user to remember how they got to a particular view. Figure \@ref(fig:shiny-drill-down-bar-time-history) demonstrates how we could extend Figure \@ref(fig:shiny-drill-down-bar-time) to implement yet another level of drilling down (i.e., category -> sub-category -> product IDs) as well as populate a `selectInput()` dropdown for each active drill-down category. Not only does this help the user to remember how they got to the particular view, but it also provides the ability to easily modify the sequence of drill-down events. In terms of implementation, the main idea is the very similar to before -- we still store and update the state of each 'drill-down' in it's own reactive value, but now when a 'parent' category changes (e.g., `category`) it should invalidate (i.e., clear) any currently selected 'child' categories (e.g., `sub_category`).
+
+```{r, eval = FALSE, summary = "Click to show/hide the code"}
+library(shiny)
+library(plotly)
+library(dplyr)
+
+data(sales, package = "plotlyBook")
+categories <- unique(sales$category)
+sub_categories <- unique(sales$sub_category)
+ids <- unique(sales$id)
+
+ui <- fluidPage(
+  uiOutput("history"),
+  plotlyOutput("bars", height = 200),
+  plotlyOutput("lines", height = 300)
+)
+
+server <- function(input, output, session) {
+  # These reactive values keep track of the drilldown state
+  # (NULL means inactive)
+  drills <- reactiveValues(
+    category = NULL,
+    sub_category = NULL,
+    id = NULL
+  )
+  # filter the data based on active drill-downs
+  # also create a column, value, which keeps track of which
+  # variable we're interested in 
+  sales_data <- reactive({
+    if (!length(drills$category)) {
+      return(mutate(sales, value = category))
+    }
+    sales <- filter(sales, category %in% drills$category)
+    if (!length(drills$sub_category)) {
+      return(mutate(sales, value = sub_category))
+    }
+    sales <- filter(sales, sub_category %in% drills$sub_category)
+    mutate(sales, value = id)
+  })
+  
+  # bar chart of sales by 'current level of category'
+  output$bars <- renderPlotly({
+    d <- count(sales_data(), value, wt = sales)
+    
+    p <- plot_ly(d, x = ~value, y = ~n, source = "bars") %>%
+      layout(
+        yaxis = list(title = "Total Sales"), 
+        xaxis = list(title = "")
+      )
+    
+    if (!length(drills$sub_category)) {
+      add_bars(p, color = ~value)
+    } else if (!length(drills$id)) {
+      add_bars(p) %>%
+        layout(
+          hovermode = "x",
+          xaxis = list(showticklabels = FALSE)
+        )
+    } else {
+      # add a visual cue of which ID is selected
+      add_bars(p) %>%
+        filter(value %in% drills$id) %>%
+        add_bars(color = I("black")) %>%
+        layout(
+          hovermode = "x", xaxis = list(showticklabels = FALSE),
+          showlegend = FALSE, barmode = "overlay"
+        )
+    }
+  })
+  
+  # time-series chart of the sales
+  output$lines <- renderPlotly({
+    p <- if (!length(drills$sub_category)) {
+      sales_data() %>%
+        count(order_date, value, wt = sales) %>%
+        plot_ly(x = ~order_date, y = ~n) %>%
+        add_lines(color = ~value)
+    } else if (!length(drills$id)) {
+      sales_data() %>%
+        count(order_date, wt = sales) %>%
+        plot_ly(x = ~order_date, y = ~n) %>%
+        add_lines()
+    } else {
+      sales_data() %>%
+        filter(id %in% drills$id) %>%
+        select(-value) %>%
+        plot_ly() %>% 
+        add_table()
+    }
+    p %>%
+      layout(
+        yaxis = list(title = "Total Sales"), 
+        xaxis = list(title = "")
+      )
+  })
+  
+  # control the state of the drilldown by clicking the bar graph
+  observeEvent(event_data("plotly_click", source = "bars"), {
+    x <- event_data("plotly_click", source = "bars")$x
+    if (!length(x)) return()
+    
+    if (!length(drills$category)) {
+      drills$category <- x
+    } else if (!length(drills$sub_category)) {
+      drills$sub_category <- x
+    } else {
+      drills$id <- x
+    }
+  })
+  
+  # populate a `selectInput()` for each active drilldown 
+  output$history <- renderUI({
+    if (!length(drills$category)) return("Click the bar chart to drilldown")
+    categoryInput <- selectInput(
+      "category", "Category", 
+      choices = categories, selected = drills$category
+    )
+    if (!length(drills$sub_category)) return(categoryInput)
+    sd <- filter(sales, category %in% drills$category)
+    subCategoryInput <- selectInput(
+      "sub_category", "Sub-category", 
+      choices = unique(sd$sub_category), 
+      selected = drills$sub_category
+    )
+    if (!length(drills$id)) {
+      return(fluidRow(
+        column(3, categoryInput), 
+        column(3, subCategoryInput)
+      ))
+    }
+    sd <- filter(sd, sub_category %in% drills$sub_category)
+    idInput <- selectInput(
+      "id", "Product ID", 
+      choices = unique(sd$id), selected = drills$id
+    )
+    fluidRow(
+      column(3, categoryInput), 
+      column(3, subCategoryInput),
+      column(3, idInput)
+    )
+  })
+  
+  # control the state of the drilldown via the `selectInput()`s
+  observeEvent(input$category, {
+    drills$category <- input$category
+    drills$sub_category <- NULL
+    drills$id <- NULL
+  })
+  observeEvent(input$sub_category, {
+    drills$sub_category <- input$sub_category
+    drills$id <- NULL
+  })
+  observeEvent(input$id, {
+    drills$id <- input$id
+  })
+}
+
+shinyApp(ui, server)
+```
+
+```{r shiny-drill-down-bar-time-history, echo=FALSE, fig.cap="(ref:shiny-drill-down-bar-time)"}
+include_vimeo("328770954")
+```
+
+Another way to make it easier for the user to recall their drill-down sequence is to generate a *new* view based on the selection. Figure \@ref(fig:shiny-drill-down) allows one to click on a category (e.g., Furniture) to generate another bar chart of sales broken down by that category's sub-categories (e.g., Bookcases, Chairs, etc). From there, a sub-category may be clicked to populate a time series of sales for that sub-category. Finally, by clicking on the time series, a table of sales from that date are displayed.
+
+Similar to Figure \@ref(fig:shiny-drill-down-bar-time-history), changes at a given category level causes invalidation of all child categories (in this case, all downstream views are cleared). For example, note how in Figure \@ref(fig:shiny-drill-down), a click of a category clears the sub-category and order-date. Moreover, a change in `sub_category` clears the `order_date`, but effect the current `category`.
 
 ```{r eval = FALSE, summary = "Click to show/hide the code"}
 library(shiny)

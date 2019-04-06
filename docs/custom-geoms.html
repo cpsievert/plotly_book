@@ -25,7 +25,7 @@
 <meta name="author" content="Carson Sievert">
 
 
-<meta name="date" content="2019-04-05">
+<meta name="date" content="2019-04-06">
 
   <meta name="viewport" content="width=device-width, initial-scale=1">
   <meta name="apple-mobile-web-app-capable" content="yes">
@@ -347,7 +347,7 @@ code span.wa { color: #60a0b0; font-weight: bold; font-style: italic; } /* Warni
 <span class="co">#&gt;     data &lt;- data[order(data[[&quot;x&quot;]]), ]</span>
 <span class="co">#&gt;     prefix_class(data, &quot;GeomPath&quot;)</span>
 <span class="co">#&gt; }</span>
-<span class="co">#&gt; &lt;bytecode: 0x7f9f8f3051f8&gt;</span>
+<span class="co">#&gt; &lt;bytecode: 0x7feb00cc4390&gt;</span>
 <span class="co">#&gt; &lt;environment: namespace:plotly&gt;</span></code></pre>
 <p>If you have implemented a custom geom, say <code>GeomCustom</code>, rest assured that the data passed to <code>to_basic()</code> will be of class <code>GeomCustom</code> when <code>ggplotly()</code> is called on a plot with your geom. And assuming <code>GeomCustom</code> may be reduced to another lower-level geom support by plotly, a <code>to_basic.GeomCustom()</code> method that transforms the data into a form suitable for that lower-level geom is sufficient for adding support. Moreover, note that the data passed to <code>to_basic()</code> is essentially the last form of the data <em>before</em> the render stage and <em>after</em> statistics have been performed. This makes it trivial to add support for geoms like <code>GeomXspline</code> from the <strong>ggalt</strong> package.</p>
 <pre class="sourceCode r"><code class="sourceCode r"><span class="kw">library</span>(ggalt)
@@ -357,7 +357,7 @@ code span.wa { color: #60a0b0; font-weight: bold; font-style: italic; } /* Warni
 <span class="co">#&gt;     data &lt;- data[order(data[[&quot;x&quot;]]), ]</span>
 <span class="co">#&gt;     prefix_class(data, &quot;GeomPath&quot;)</span>
 <span class="co">#&gt; }</span>
-<span class="co">#&gt; &lt;bytecode: 0x7f9f8536df90&gt;</span>
+<span class="co">#&gt; &lt;bytecode: 0x7feb01a9e120&gt;</span>
 <span class="co">#&gt; &lt;environment: namespace:plotly&gt;</span></code></pre>
 <p>As shown in Figure <a href="custom-geoms.html#fig:xspline">34.1</a>, once the conversion has been provided. Users can call <code>ggplotly()</code> on the ggplot object containing the custom geom just like any other ggplot object.</p>
 <pre class="sourceCode r"><code class="sourceCode r"><span class="co"># example from `help(geom_xspline)`</span>
