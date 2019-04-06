@@ -794,7 +794,7 @@ FIGURE 17.13: Retrieving the data observations that correspond to a particular b
 </div>
 <div id="reactive-vals" class="section level3">
 <h3><span class="header-section-number">17.2.8</span> Accumulating and managing event data</h3>
-<p>Currently all the events accessible through <code>event_data()</code> are <em>transient</em>. This means that, given an event like <code>"plotly_click"</code>, the value of <code>event_data()</code> will only reflect the most recent click information. However, in order to implement complex linked graphics with <em>persistent</em> qualities, like Figure <a href="client-side-linking.html#fig:txmissing-modes">16.3</a> or <a href="linking-views-with-shiny.html#fig:shiny-crossfilter">17.25</a>, you’ll need someway to accumulate and manage event data. The general mechanism that <strong>shiny</strong> provides to achieve this kind of task is <code>reactiveVal()</code> (or, the plural version, <code>reactiveValues()</code>), which essentially provides a way to create and manage input values entirely server-side.</p>
+<p>Currently all the events accessible through <code>event_data()</code> are <em>transient</em>. This means that, given an event like <code>"plotly_click"</code>, the value of <code>event_data()</code> will only reflect the most recent click information. However, in order to implement complex linked graphics with <em>persistent</em> qualities, like Figure <a href="client-side-linking.html#fig:txmissing-modes">16.3</a> or <a href="linking-views-with-shiny.html#fig:shiny-crossfilter">17.28</a>, you’ll need someway to accumulate and manage event data. The general mechanism that <strong>shiny</strong> provides to achieve this kind of task is <code>reactiveVal()</code> (or, the plural version, <code>reactiveValues()</code>), which essentially provides a way to create and manage input values entirely server-side.</p>
 <p>Figure <a href="linking-views-with-shiny.html#fig:shiny-hover-persist">17.14</a> demonstrates a shiny app that accumulates hover information and paints the hovered points in red. Every time a hover event is triggered, the corresponding car name is added to the set of selected cars, and everytime the plot is double-clicked that set is cleared. This general pattern of initializing a reactive value (i.e., <code>cars &lt;- reactiveVal()</code>), updating that value upon a suitable <code>observeEvent()</code> event with relevant <code>customdata</code>, and clearing that reactive value (i.e., <code>cars(NULL)</code>) in response to another event is a very useful pattern to can support essentially any sort of linked views paradigm because the logic behind the resolution of selection sequences is under your complete control in R. For example, <a href="linking-views-with-shiny.html#fig:shiny-hover-persist">17.14</a> simply adds accumulates the event data from <code>"plotly_hover"</code> (which is like a logical <code>OR</code> operations), but for other applications, you may need different logic, like the <code>AND</code>, <code>XOR</code>, etc.</p>
 <pre class="sourceCode r"><code class="sourceCode r"><span class="kw">plotly_example</span>(<span class="st">&quot;shiny&quot;</span>, <span class="st">&quot;event_data_persist&quot;</span>)</code></pre>
 <div class="figure" style="text-align: center"><span id="fig:shiny-hover-persist"></span>
@@ -979,8 +979,156 @@ FIGURE 17.21: Using <code>Plotly.extendTraces()</code> to efficiently stream dat
 <p>This section combines concepts from prior sections in linking views with shiny and applies them towards some popular use cases.</p>
 <div id="drill-down" class="section level3">
 <h3><span class="header-section-number">17.4.1</span> Drill-down</h3>
-<p>The so-called ‘drill-down’ chart tends to include a vague grouping of interactive graphics that allow one to generate new views based on interesting subset(s) of the data. In Figure <a href="linking-views-with-shiny.html#fig:shiny-drill-down">17.22</a>, the first bar chart shows store sales broked down by their main categories. By clicking on a bar, one can drill-down into that category to see the breakdown of sub-categories within that category. From there, one may pick a sub-category to populate a time series of the corresponding sales; and futhermore, click on a particular date to see the actual sales records for that day.</p>
-<p>In a drill-down chart, a change in the top-level category should trigger changes to sub-categories, so to handle this logic correctly, you’ll want to store selections in reactive values and update those values accordingly when relevant events occur. For example, note how in Figure <a href="linking-views-with-shiny.html#fig:shiny-drill-down">17.22</a>, a click of a category clears the sub-category and order-date. Moreover, a change in a sub-category will clear the order-date, but doesn’t change the category.</p>
+<p>Figure <a href="linking-views-with-shiny.html#fig:shiny-drill-down-pie">17.22</a> displays sales broken down by business category (e.g, Furniture, Office Supplies, Technology) in a pie chart. It allows the user to click on a slice of the pie to ‘drill-down’ into sub-categories of the chosen category. In terms of the implementation, the key aspect here is to maintain the state of the currently selected category via a <code>reactiveVal()</code> (see more in <a href="linking-views-with-shiny.html#reactive-vals">17.2.8</a>) and update that value when either a category is clicked or the “Back” button is pressed.</p>
+<details>
+<p><summary>Click to show/hide the code</summary></p>
+<pre class="sourceCode r"><code class="sourceCode r"><span class="kw">library</span>(shiny)
+<span class="kw">library</span>(dplyr)
+<span class="kw">library</span>(purrr) <span class="co"># just for `%||%`</span>
+
+<span class="kw">data</span>(sales, <span class="dt">package =</span> <span class="st">&quot;plotlyBook&quot;</span>)
+categories &lt;-<span class="st"> </span><span class="kw">unique</span>(sales<span class="op">$</span>category)
+
+ui &lt;-<span class="st"> </span><span class="kw">fluidPage</span>(<span class="kw">plotlyOutput</span>(<span class="st">&quot;pie&quot;</span>), <span class="kw">uiOutput</span>(<span class="st">&quot;back&quot;</span>))
+
+server &lt;-<span class="st"> </span><span class="cf">function</span>(input, output, session) {
+  <span class="co"># for maintaining the current category (i.e. selection)</span>
+  current_category &lt;-<span class="st"> </span><span class="kw">reactiveVal</span>()
+  
+  <span class="co"># report sales by category, unless a category is chosen</span>
+  sales_data &lt;-<span class="st"> </span><span class="kw">reactive</span>({
+    <span class="cf">if</span> (<span class="op">!</span><span class="kw">length</span>(<span class="kw">current_category</span>())) {
+      <span class="kw">return</span>(<span class="kw">count</span>(sales, category, <span class="dt">wt =</span> sales))
+    }
+    sales <span class="op">%&gt;%</span>
+<span class="st">      </span><span class="kw">filter</span>(category <span class="op">%in%</span><span class="st"> </span><span class="kw">current_category</span>()) <span class="op">%&gt;%</span>
+<span class="st">      </span><span class="kw">count</span>(sub_category, <span class="dt">wt =</span> sales)
+  })
+  
+  <span class="co"># Note that pie charts don&#39;t currently attach the label/value </span>
+  <span class="co"># with the click data, but we can leverage `customdata` as a workaround</span>
+  output<span class="op">$</span>pie &lt;-<span class="st"> </span><span class="kw">renderPlotly</span>({
+    d &lt;-<span class="st"> </span><span class="kw">setNames</span>(<span class="kw">sales_data</span>(), <span class="kw">c</span>(<span class="st">&quot;labels&quot;</span>, <span class="st">&quot;values&quot;</span>))
+    <span class="kw">plot_ly</span>(d) <span class="op">%&gt;%</span>
+<span class="st">      </span><span class="kw">add_pie</span>(<span class="dt">labels =</span> <span class="op">~</span>labels, <span class="dt">values =</span> <span class="op">~</span>values, <span class="dt">customdata =</span> <span class="op">~</span>labels) <span class="op">%&gt;%</span>
+<span class="st">      </span><span class="kw">layout</span>(<span class="dt">title =</span> <span class="kw">current_category</span>() <span class="op">%||%</span><span class="st"> &quot;Total Sales&quot;</span>)
+  })
+  
+  <span class="co"># update the current category if the clicked value matches a category</span>
+  <span class="kw">observe</span>({
+    cd &lt;-<span class="st"> </span><span class="kw">event_data</span>(<span class="st">&quot;plotly_click&quot;</span>)<span class="op">$</span>customdata[[<span class="dv">1</span>]]
+    <span class="cf">if</span> (<span class="kw">isTRUE</span>(cd <span class="op">%in%</span><span class="st"> </span>categories)) <span class="kw">current_category</span>(cd)
+  })
+  
+  <span class="co"># populate back button if category is chosen</span>
+  output<span class="op">$</span>back &lt;-<span class="st"> </span><span class="kw">renderUI</span>({
+    <span class="cf">if</span> (<span class="kw">length</span>(<span class="kw">current_category</span>())) 
+      <span class="kw">actionButton</span>(<span class="st">&quot;clear&quot;</span>, <span class="st">&quot;Back&quot;</span>, <span class="kw">icon</span>(<span class="st">&quot;chevron-left&quot;</span>))
+  })
+  
+  <span class="co"># clear the chosen category on back button press</span>
+  <span class="kw">observeEvent</span>(input<span class="op">$</span>clear, <span class="kw">current_category</span>(<span class="ot">NULL</span>))
+}
+
+<span class="kw">shinyApp</span>(ui, server)</code></pre>
+</details>
+<div class="figure" style="text-align: center"><span id="fig:shiny-drill-down-pie"></span>
+<iframe src="https://player.vimeo.com/video/328763167?title=0&amp;byline=0&amp;portrait=0" width="100%" height="400" frameborder="0" seamless="seamless" webkitAllowFullScreen mozallowfullscreen allowFullScreen></iframe>
+<p class="caption">
+FIGURE 17.22: A drill-down pie chart of sales by category. By clicking on a category (e.g., Furniture), the pie chart updates to display sales by sub-categories within Furniture.
+</p>
+</div>
+<p>A basic drill-down like Figure <a href="linking-views-with-shiny.html#fig:shiny-drill-down-pie">17.22</a> is somewhat useful on its own, but it becomes much more useful when linked to multiple views of the data.
+Figure <a href="linking-views-with-shiny.html#fig:shiny-drill-down-bar-time">17.23</a> improves on Figure <a href="linking-views-with-shiny.html#fig:shiny-drill-down-pie">17.22</a> to show sales over time by the category or sub-category (if a category is currently chosen). Note that the key aspect of implementation remains the same (i.e., maintaining state via <code>reactiveValue()</code>) – the main difference is that the time series view now also listens to changes in the currently selected category.</p>
+<details>
+<p><summary>Click to show/hide the code</summary></p>
+<pre class="sourceCode r"><code class="sourceCode r"><span class="kw">library</span>(shiny)
+<span class="kw">library</span>(dplyr)
+
+<span class="kw">data</span>(sales, <span class="dt">package =</span> <span class="st">&quot;plotlyBook&quot;</span>)
+categories &lt;-<span class="st"> </span><span class="kw">unique</span>(sales<span class="op">$</span>category)
+
+ui &lt;-<span class="st"> </span><span class="kw">fluidPage</span>(
+  <span class="kw">plotlyOutput</span>(<span class="st">&quot;bar&quot;</span>),
+  <span class="kw">uiOutput</span>(<span class="st">&quot;back&quot;</span>),
+  <span class="kw">plotlyOutput</span>(<span class="st">&quot;time&quot;</span>)
+)
+
+server &lt;-<span class="st"> </span><span class="cf">function</span>(input, output, session) {
+  
+  current_category &lt;-<span class="st"> </span><span class="kw">reactiveVal</span>()
+  
+  <span class="co"># report sales by category, unless a category is chosen</span>
+  sales_data &lt;-<span class="st"> </span><span class="kw">reactive</span>({
+    <span class="cf">if</span> (<span class="op">!</span><span class="kw">length</span>(<span class="kw">current_category</span>())) {
+      <span class="kw">return</span>(<span class="kw">count</span>(sales, category, <span class="dt">wt =</span> sales))
+    }
+    sales <span class="op">%&gt;%</span>
+<span class="st">      </span><span class="kw">filter</span>(category <span class="op">%in%</span><span class="st"> </span><span class="kw">current_category</span>()) <span class="op">%&gt;%</span>
+<span class="st">      </span><span class="kw">count</span>(sub_category, <span class="dt">wt =</span> sales)
+  })
+  
+  <span class="co"># the pie chart</span>
+  output<span class="op">$</span>bar &lt;-<span class="st"> </span><span class="kw">renderPlotly</span>({
+    d &lt;-<span class="st"> </span><span class="kw">setNames</span>(<span class="kw">sales_data</span>(), <span class="kw">c</span>(<span class="st">&quot;x&quot;</span>, <span class="st">&quot;y&quot;</span>))
+    
+    <span class="kw">plot_ly</span>(d) <span class="op">%&gt;%</span>
+<span class="st">      </span><span class="kw">add_bars</span>(<span class="dt">x =</span> <span class="op">~</span>x, <span class="dt">y =</span> <span class="op">~</span>y, <span class="dt">color =</span> <span class="op">~</span>x) <span class="op">%&gt;%</span>
+<span class="st">      </span><span class="kw">layout</span>(<span class="dt">title =</span> <span class="kw">current_category</span>() <span class="op">%||%</span><span class="st"> &quot;Total Sales&quot;</span>)
+  })
+  
+  <span class="co"># same as sales_data</span>
+  sales_data_time &lt;-<span class="st"> </span><span class="kw">reactive</span>({
+    <span class="cf">if</span> (<span class="op">!</span><span class="kw">length</span>(<span class="kw">current_category</span>())) {
+      <span class="kw">return</span>(<span class="kw">count</span>(sales, category, order_date, <span class="dt">wt =</span> sales))
+    }
+    sales <span class="op">%&gt;%</span>
+<span class="st">      </span><span class="kw">filter</span>(category <span class="op">%in%</span><span class="st"> </span><span class="kw">current_category</span>()) <span class="op">%&gt;%</span>
+<span class="st">      </span><span class="kw">count</span>(sub_category, order_date, <span class="dt">wt =</span> sales)
+  })
+  
+  output<span class="op">$</span>time &lt;-<span class="st"> </span><span class="kw">renderPlotly</span>({
+    d &lt;-<span class="st"> </span><span class="kw">setNames</span>(<span class="kw">sales_data_time</span>(), <span class="kw">c</span>(<span class="st">&quot;color&quot;</span>, <span class="st">&quot;x&quot;</span>, <span class="st">&quot;y&quot;</span>))
+    <span class="kw">plot_ly</span>(d) <span class="op">%&gt;%</span>
+<span class="st">      </span><span class="kw">add_lines</span>(<span class="dt">x =</span> <span class="op">~</span>x, <span class="dt">y =</span> <span class="op">~</span>y, <span class="dt">color =</span> <span class="op">~</span>color)
+  })
+  
+  <span class="co"># update the current category if the clicked value matches a category</span>
+  <span class="kw">observe</span>({
+    cd &lt;-<span class="st"> </span><span class="kw">event_data</span>(<span class="st">&quot;plotly_click&quot;</span>)<span class="op">$</span>x
+    <span class="cf">if</span> (<span class="kw">isTRUE</span>(cd <span class="op">%in%</span><span class="st"> </span>categories)) <span class="kw">current_category</span>(cd)
+  })
+  
+  <span class="co"># populate back button if category is chosen</span>
+  output<span class="op">$</span>back &lt;-<span class="st"> </span><span class="kw">renderUI</span>({
+    <span class="cf">if</span> (<span class="kw">length</span>(<span class="kw">current_category</span>())) 
+      <span class="kw">actionButton</span>(<span class="st">&quot;clear&quot;</span>, <span class="st">&quot;Back&quot;</span>, <span class="kw">icon</span>(<span class="st">&quot;chevron-left&quot;</span>))
+  })
+  
+  <span class="co"># clear the chosen category on back button press</span>
+  <span class="kw">observeEvent</span>(input<span class="op">$</span>clear, <span class="kw">current_category</span>(<span class="ot">NULL</span>))
+}
+
+<span class="kw">shinyApp</span>(ui, server)</code></pre>
+</details>
+<div class="figure" style="text-align: center"><span id="fig:shiny-drill-down-bar-time"></span>
+<iframe src="https://player.vimeo.com/video/328768848?title=0&amp;byline=0&amp;portrait=0" width="100%" height="400" frameborder="0" seamless="seamless" webkitAllowFullScreen mozallowfullscreen allowFullScreen></iframe>
+<p class="caption">
+FIGURE 17.23: Coordinating drill-down across in multiple views. By clicking on a category (e.g., Technology), both the bar chart and the time-series updates to display sales within Technology.
+</p>
+</div>
+<p>Thus far, we’ve only seen one level of drill-down, what about multiple levels? Introducing multiple levels adds complexity not only the implementation, but also the user experience. Especially in a drill-down approach where the <em>same view</em> is being filtered, it can be difficult for the user to remember how they got to a particular view. Figure <a href="linking-views-with-shiny.html#fig:shiny-drill-down-bar-time-history">17.24</a> demonstrates how we could extend Figure <a href="linking-views-with-shiny.html#fig:shiny-drill-down-bar-time">17.23</a> to implement yet another level of drilling down (i.e., sub-category -&gt; product IDs) as well as populate a <code>selectInput()</code> dropdown for each active drill-down. Not only does this help the user to remember how they got to the particular view, but it also provides the ability to easily modify the sequence of drill-down events. In terms of implementation, the main idea is the very similar to before – we still store and update the state of each ‘drill-down’ in it’s own reactive value, but now when a ‘parent’ category changes (e.g., <code>category</code>) it should invalidate (i.e., clear) any currently selected ‘child’ categories (e.g., <code>sub_category</code>).</p>
+<details>
+<p><summary>Click to show/hide the code</summary></p>
+</details>
+<div class="figure" style="text-align: center"><span id="fig:shiny-drill-down-bar-time-history"></span>
+<iframe src="https://player.vimeo.com/video/328770954?title=0&amp;byline=0&amp;portrait=0" width="100%" height="400" frameborder="0" seamless="seamless" webkitAllowFullScreen mozallowfullscreen allowFullScreen></iframe>
+<p class="caption">
+FIGURE 17.24: Coordinating drill-down across in multiple views. By clicking on a category (e.g., Technology), both the bar chart and the time-series updates to display sales within Technology.
+</p>
+</div>
+<p>Another way to make it easier for the user to recall their drill-down sequence is to generate a <em>new</em> view based on the selection. Figure <a href="linking-views-with-shiny.html#fig:shiny-drill-down">17.25</a> allows one to click on a category (e.g., Furniture) to generate another bar chart of sales broken down by that category’s sub-categories (e.g., Bookcases, Chairs, etc). From there, a sub-category may be clicked to populate a time series of sales for that sub-category. Finally, by clicking on the time series, a table of sales from that date are displayed.</p>
+<p>Similar to Figure <a href="linking-views-with-shiny.html#fig:shiny-drill-down-bar-time-history">17.24</a>, changes at a given category level causes invalidation of all child categories (in this case, all downstream views are cleared). For example, note how in Figure <a href="linking-views-with-shiny.html#fig:shiny-drill-down">17.25</a>, a click of a category clears the sub-category and order-date. Moreover, a change in <code>sub_category</code> clears the <code>order_date</code>, but effect the current <code>category</code>.</p>
 <details>
 <p><summary>Click to show/hide the code</summary></p>
 <pre class="sourceCode r"><code class="sourceCode r"><span class="kw">library</span>(shiny)
@@ -1074,14 +1222,14 @@ server &lt;-<span class="st"> </span><span class="cf">function</span>(input, out
 <div class="figure" style="text-align: center"><span id="fig:shiny-drill-down"></span>
 <iframe src="https://player.vimeo.com/video/307597838?title=0&amp;byline=0&amp;portrait=0" width="100%" height="400" frameborder="0" seamless="seamless" webkitAllowFullScreen mozallowfullscreen allowFullScreen></iframe>
 <p class="caption">
-FIGURE 17.22: Using a drill-down approach to navigating through sales data by category, sub-category, and order date.
+FIGURE 17.25: Using a drill-down approach to navigating through sales data by category, sub-category, and order date.
 </p>
 </div>
 </div>
 <div id="crossfilter" class="section level3">
 <h3><span class="header-section-number">17.4.2</span> Cross-filter</h3>
 <p>Somewhat related to the drill-down idea is so-called ‘cross-filter’ chart. The main difference between drill-down and cross-filter is that, with cross-filter, interactions don’t generate new charts – interactions impose a filter on the data shown in a fixed set of multiple views. The typical cross-filter implementation allows for multiple brushes (i.e., filters) and uses the intersection of those filters to the dataset displayed in those views. Implementing a scalable and responsive crossfilter with 3 or more views can get quite complicated – we’ll walk through some simple examples first for learning purposes, then progress to more sophicated and complex applications.</p>
-<p>Figure <a href="linking-views-with-shiny.html#fig:shiny-crossfilter-naive">17.23</a> demonstrates the simplest way to implement a cross-filter between <em>two</em> histograms. It uses the arrival (<code>arr_time</code>) and departure (<code>dep_time</code>) from the <code>flights</code> dataset via the <strong>nycflights13</strong> package <span class="citation">(Wickham <a href="#ref-nycflights13" role="doc-biblioref">2018</a><a href="#ref-nycflights13" role="doc-biblioref">a</a>)</span>. Notice how, in the implementation, the <code>dep_time</code> view is re-drawn from stratch everytime the <code>arr_time</code> brush changes (and vice-versa). Not only is it completely redrawn (i.e., it relies on <code>renderPlotly()</code> to perform the update), but it also uses <code>add_histogram()</code> which performs binning client-side (in the web browser). That means, every time a brush changes, the <strong>shiny</strong> server sends <em>all the raw data</em> to the browser and plotly.js redraws the histogram from scratch.</p>
+<p>Figure <a href="linking-views-with-shiny.html#fig:shiny-crossfilter-naive">17.26</a> demonstrates the simplest way to implement a cross-filter between <em>two</em> histograms. It uses the arrival (<code>arr_time</code>) and departure (<code>dep_time</code>) from the <code>flights</code> dataset via the <strong>nycflights13</strong> package <span class="citation">(Wickham <a href="#ref-nycflights13" role="doc-biblioref">2018</a><a href="#ref-nycflights13" role="doc-biblioref">a</a>)</span>. Notice how, in the implementation, the <code>dep_time</code> view is re-drawn from stratch everytime the <code>arr_time</code> brush changes (and vice-versa). Not only is it completely redrawn (i.e., it relies on <code>renderPlotly()</code> to perform the update), but it also uses <code>add_histogram()</code> which performs binning client-side (in the web browser). That means, every time a brush changes, the <strong>shiny</strong> server sends <em>all the raw data</em> to the browser and plotly.js redraws the histogram from scratch.</p>
 <details>
 <p><summary>Click to show code</summary></p>
 <pre class="sourceCode r"><code class="sourceCode r"><span class="kw">library</span>(shiny)
@@ -1124,15 +1272,15 @@ server &lt;-<span class="st"> </span><span class="cf">function</span>(input, out
 <div class="figure" style="text-align: center"><span id="fig:shiny-crossfilter-naive"></span>
 <iframe src="https://player.vimeo.com/video/318277110?title=0&amp;byline=0&amp;portrait=0" width="100%" height="400" frameborder="0" seamless="seamless" webkitAllowFullScreen mozallowfullscreen allowFullScreen></iframe>
 <p class="caption">
-FIGURE 17.23: A ‘naive’ crossfilter implementation linking arrival time with departure time of about 350,000 <code>flights</code> from the <strong>nycflights13</strong> package.
+FIGURE 17.26: A ‘naive’ crossfilter implementation linking arrival time with departure time of about 350,000 <code>flights</code> from the <strong>nycflights13</strong> package.
 </p>
 </div>
-<p>Although the video behind Figure <a href="linking-views-with-shiny.html#fig:shiny-crossfilter-naive">17.23</a> demonstrates the app is fairly responsive at 350,000 observations, this implementation won’t scale to much larger data, especially if being viewed a poor internet connection. I call this a ‘naive’ implementation because the reactive logic is easy to reason about, but it illustrates two common issues that we can address to gain speed improvements:</p>
+<p>Although the video behind Figure <a href="linking-views-with-shiny.html#fig:shiny-crossfilter-naive">17.26</a> demonstrates the app is fairly responsive at 350,000 observations, this implementation won’t scale to much larger data, especially if being viewed a poor internet connection. I call this a ‘naive’ implementation because the reactive logic is easy to reason about, but it illustrates two common issues that we can address to gain speed improvements:</p>
 <ol style="list-style-type: decimal">
 <li>More data than necessary being sent ‘over-the-wire’ (i.e., between the server and the client). This idea is not unique to <strong>shiny</strong> applications – with any web application framework it’s important to minimize the amount of data you’re requesting from a server if you want a responsive website.</li>
 <li>More client-side rendering work than necessary to achieve the request update.</li>
 </ol>
-<p>The implementation behind Figure <a href="linking-views-with-shiny.html#fig:shiny-crossfilter-naive">17.23</a> could improve in these areas by doing the following:</p>
+<p>The implementation behind Figure <a href="linking-views-with-shiny.html#fig:shiny-crossfilter-naive">17.26</a> could improve in these areas by doing the following:</p>
 <ol style="list-style-type: decimal">
 <li>Perform the binning server-side instead of client-side. This will reduce the amount of data needed to be sent from server to client so that responsiveness is less dependent on a good internet connection. Here we propose using <strong>ggstat</strong> for the server-side binning since it’s fairly fast and simple if you’re data can fit into memory <span class="citation">(Wickham <a href="#ref-ggstat" role="doc-biblioref">2016</a>)</span>. If your data does not fit into memory you could use something like <strong>dbplot</strong> to perform the binning in a database <span class="citation">(Ruiz <a href="#ref-dbplot" role="doc-biblioref">2018</a>)</span>.</li>
 <li>Perform less rendering work client-side. That is, instead of relying on <code>renderPlotly()</code> to re-render the chart from scratch everytime the charts need an update, we could instead modify just the bar heights (using the techniques from Section <a href="linking-views-with-shiny.html#proxies">17.3.1</a>).</li>
@@ -1211,40 +1359,40 @@ server &lt;-<span class="st"> </span><span class="cf">function</span>(input, out
 
 <span class="kw">shinyApp</span>(ui, server)</code></pre>
 </details>
-<p>Before we address the additional complexity that comes with linking 3 or more views, let’s consider targetting a 2D distribution in the cross-filter, as in Figure <a href="linking-views-with-shiny.html#fig:shiny-crossfilter-kde">17.24</a>. This approach uses <code>kde2d()</code> from the <strong>MASS</strong> package to summarize the 2D distribution server-side rather than attempting to show all the raw data in a scatterplot.<a href="#fn33" class="footnote-ref" id="fnref33"><sup>33</sup></a></p>
+<p>Before we address the additional complexity that comes with linking 3 or more views, let’s consider targetting a 2D distribution in the cross-filter, as in Figure <a href="linking-views-with-shiny.html#fig:shiny-crossfilter-kde">17.27</a>. This approach uses <code>kde2d()</code> from the <strong>MASS</strong> package to summarize the 2D distribution server-side rather than attempting to show all the raw data in a scatterplot.<a href="#fn33" class="footnote-ref" id="fnref33"><sup>33</sup></a></p>
 <pre class="sourceCode r"><code class="sourceCode r"><span class="kw">plotly_example</span>(<span class="st">&quot;shiny&quot;</span>, <span class="st">&quot;crossfilter_kde&quot;</span>)</code></pre>
 <div class="figure" style="text-align: center"><span id="fig:shiny-crossfilter-kde"></span>
 <iframe src="https://player.vimeo.com/video/318122403?title=0&amp;byline=0&amp;portrait=0" width="100%" height="400" frameborder="0" seamless="seamless" webkitAllowFullScreen mozallowfullscreen allowFullScreen></iframe>
 <p class="caption">
-FIGURE 17.24: Using kernel density estimation to responsively crossfilter a 2D distribution. This particular example shows how the relationship between diamond carat and price is dependent upon it’s depth.
+FIGURE 17.27: Using kernel density estimation to responsively crossfilter a 2D distribution. This particular example shows how the relationship between diamond carat and price is dependent upon it’s depth.
 </p>
 </div>
-<p>When linking 3 or more views in a crossfilter, it’s important to have a mechanism to maintain the state of all the active brushes. This is because, when updating a given view, it needs to know about <em>all</em> of the active brushes. The implementation behind Figure <a href="linking-views-with-shiny.html#fig:shiny-crossfilter">17.25</a> maintains the range of every active brush through a <code>reactiveValues()</code> variable named <code>brush_ranges</code>. Everytime a brush changes, the state of <code>brush_ranges</code> is updated, then used to filter the data down to the relevant observations. That filtered data is then binned and used to modify the bar heights of every view (except for the one being brushed).</p>
+<p>When linking 3 or more views in a crossfilter, it’s important to have a mechanism to maintain the state of all the active brushes. This is because, when updating a given view, it needs to know about <em>all</em> of the active brushes. The implementation behind Figure <a href="linking-views-with-shiny.html#fig:shiny-crossfilter">17.28</a> maintains the range of every active brush through a <code>reactiveValues()</code> variable named <code>brush_ranges</code>. Everytime a brush changes, the state of <code>brush_ranges</code> is updated, then used to filter the data down to the relevant observations. That filtered data is then binned and used to modify the bar heights of every view (except for the one being brushed).</p>
 <pre class="sourceCode r"><code class="sourceCode r"><span class="kw">plotly_example</span>(<span class="st">&quot;shiny&quot;</span>, <span class="st">&quot;crossfilter&quot;</span>)</code></pre>
 <div class="figure" style="text-align: center"><span id="fig:shiny-crossfilter"></span>
 <iframe src="https://player.vimeo.com/video/318129502?title=0&amp;byline=0&amp;portrait=0" width="100%" height="400" frameborder="0" seamless="seamless" webkitAllowFullScreen mozallowfullscreen allowFullScreen></iframe>
 <p class="caption">
-FIGURE 17.25: Crossfiltering 6 variables in the <code>flights</code> data from the <strong>nycflights13</strong> package <span class="citation">(Wickham <a href="#ref-nycflights13" role="doc-biblioref">2018</a><a href="#ref-nycflights13" role="doc-biblioref">a</a>)</span>. The filtering and binning logic occurs server-side resulting in a very minimal amount of data being sent between server and client (just the brush range and bar heights). Moreover, to perform the UI update, the client only has to tweak existing bar heights, so the overall user experience is quite responsive.
+FIGURE 17.28: Crossfiltering 6 variables in the <code>flights</code> data from the <strong>nycflights13</strong> package <span class="citation">(Wickham <a href="#ref-nycflights13" role="doc-biblioref">2018</a><a href="#ref-nycflights13" role="doc-biblioref">a</a>)</span>. The filtering and binning logic occurs server-side resulting in a very minimal amount of data being sent between server and client (just the brush range and bar heights). Moreover, to perform the UI update, the client only has to tweak existing bar heights, so the overall user experience is quite responsive.
 </p>
 </div>
-<p>One weakness of a typical crossfilter interface like Figure <a href="linking-views-with-shiny.html#fig:shiny-crossfilter">17.25</a> is that it’s difficult to make visual comparisons. That is, when a filter is applied, you lose a visual reference to the overall distribution and/or prior filter, making difficult to make meaningful comparisons. Figure <a href="linking-views-with-shiny.html#fig:shiny-crossfilter">17.25</a> modifies the logic of Figure <a href="linking-views-with-shiny.html#fig:shiny-crossfilter-compare">17.26</a> to enable filter comparisons by adding the ability to change the color of the brush. Moreover, for sake of demonstration and simplicity, it also allows for only one active filter per color (i.e., brushing within color is transient). One could borrow logic from Figure <a href="linking-views-with-shiny.html#fig:shiny-crossfilter">17.25</a> to allow multiple filters for each color, but this would require multiple <code>brush_ranges</code>.</p>
-<p>Since brushing within color is transient, in constrast to Figure <a href="linking-views-with-shiny.html#fig:shiny-crossfilter">17.25</a>, Figure <a href="linking-views-with-shiny.html#fig:shiny-crossfilter-compare">17.26</a> doesn’t have to track the state of all the active brushes. It does, however, need to display <em>relative</em> rather than absolute frequencies to facilitate comparison of small filter range(s) to the overall distribution. This particular implementation takes the overall distribution as a “base layer” that remains fixed and overlays a handful of “selection layers” – one for each possible brush color. These selection layers begin with a height of 0, but when the relevant brush fires the heights of the bars for the relevant layer is modified. This approach may seem like a hack, but it leads to a fluid user experience because it’s not much work to adjust the height of a bar that already exists.</p>
+<p>One weakness of a typical crossfilter interface like Figure <a href="linking-views-with-shiny.html#fig:shiny-crossfilter">17.28</a> is that it’s difficult to make visual comparisons. That is, when a filter is applied, you lose a visual reference to the overall distribution and/or prior filter, making difficult to make meaningful comparisons. Figure <a href="linking-views-with-shiny.html#fig:shiny-crossfilter">17.28</a> modifies the logic of Figure <a href="linking-views-with-shiny.html#fig:shiny-crossfilter-compare">17.29</a> to enable filter comparisons by adding the ability to change the color of the brush. Moreover, for sake of demonstration and simplicity, it also allows for only one active filter per color (i.e., brushing within color is transient). One could borrow logic from Figure <a href="linking-views-with-shiny.html#fig:shiny-crossfilter">17.28</a> to allow multiple filters for each color, but this would require multiple <code>brush_ranges</code>.</p>
+<p>Since brushing within color is transient, in constrast to Figure <a href="linking-views-with-shiny.html#fig:shiny-crossfilter">17.28</a>, Figure <a href="linking-views-with-shiny.html#fig:shiny-crossfilter-compare">17.29</a> doesn’t have to track the state of all the active brushes. It does, however, need to display <em>relative</em> rather than absolute frequencies to facilitate comparison of small filter range(s) to the overall distribution. This particular implementation takes the overall distribution as a “base layer” that remains fixed and overlays a handful of “selection layers” – one for each possible brush color. These selection layers begin with a height of 0, but when the relevant brush fires the heights of the bars for the relevant layer is modified. This approach may seem like a hack, but it leads to a fluid user experience because it’s not much work to adjust the height of a bar that already exists.</p>
 <pre class="sourceCode r"><code class="sourceCode r"><span class="kw">plotly_example</span>(<span class="st">&quot;shiny&quot;</span>, <span class="st">&quot;crossfilter_compare&quot;</span>)</code></pre>
 <div class="figure" style="text-align: center"><span id="fig:shiny-crossfilter-compare"></span>
 <iframe src="https://player.vimeo.com/video/327622610?title=0&amp;byline=0&amp;portrait=0" width="100%" height="400" frameborder="0" seamless="seamless" webkitAllowFullScreen mozallowfullscreen allowFullScreen></iframe>
 <p class="caption">
-FIGURE 17.26: Comparing filters with a dynamic color brush. This particular example compares ‘red eye’ flights (in green) to early morning flights (in orange). This makes it easier to see that delays occur more often for ‘red eye’ flights.
+FIGURE 17.29: Comparing filters with a dynamic color brush. This particular example compares ‘red eye’ flights (in green) to early morning flights (in orange). This makes it easier to see that delays occur more often for ‘red eye’ flights.
 </p>
 </div>
 </div>
 <div id="drag-brush" class="section level3">
 <h3><span class="header-section-number">17.4.3</span> A draggable brush</h3>
-<p>A <em>draggable</em> linked brush is great for conditioning via a moving window. For example, in a cross-filtering example like Figure <a href="linking-views-with-shiny.html#fig:shiny-crossfilter">17.25</a>, it would be nice to condition on a certain hour of day, then drag that hour interval along the axis to explore how the hourly distribution changes throughout the day. At the time of writing, plotly.js does not support a draggable brush, but we could implement one with a clever use of a editable rectangle shape. Figure <a href="linking-views-with-shiny.html#fig:shiny-drag-brush">17.27</a> demonstrates this idea in a <strong>shiny</strong> application by drawing a rectangle shape that mimics the plotly.js brush, then uses the <code>"plotly_relayout"</code> event to determine the limits of the brush (instead of the <code>"plotly_brushed"</code> or <code>"plotly_brushing"</code>).</p>
+<p>A <em>draggable</em> linked brush is great for conditioning via a moving window. For example, in a cross-filtering example like Figure <a href="linking-views-with-shiny.html#fig:shiny-crossfilter">17.28</a>, it would be nice to condition on a certain hour of day, then drag that hour interval along the axis to explore how the hourly distribution changes throughout the day. At the time of writing, plotly.js does not support a draggable brush, but we could implement one with a clever use of a editable rectangle shape. Figure <a href="linking-views-with-shiny.html#fig:shiny-drag-brush">17.30</a> demonstrates this idea in a <strong>shiny</strong> application by drawing a rectangle shape that mimics the plotly.js brush, then uses the <code>"plotly_relayout"</code> event to determine the limits of the brush (instead of the <code>"plotly_brushed"</code> or <code>"plotly_brushing"</code>).</p>
 <pre class="sourceCode r"><code class="sourceCode r"><span class="kw">plotly_example</span>(<span class="st">&quot;shiny&quot;</span>, <span class="st">&quot;drag_brush&quot;</span>)</code></pre>
 <div class="figure" style="text-align: center"><span id="fig:shiny-drag-brush"></span>
 <iframe src="https://player.vimeo.com/video/318330112?title=0&amp;byline=0&amp;portrait=0" width="100%" height="400" frameborder="0" seamless="seamless" webkitAllowFullScreen mozallowfullscreen allowFullScreen></iframe>
 <p class="caption">
-FIGURE 17.27: A draggable brush with both a transient and persistent mode. The dragging ability is done by mimicing the native plotly.js brush with an editable rectangle shape and listening to changes in that brush. The implementation of transient vs persistent mode is a matter of forgetting or remembering previous state(s) of the brush.
+FIGURE 17.30: A draggable brush with both a transient and persistent mode. The dragging ability is done by mimicing the native plotly.js brush with an editable rectangle shape and listening to changes in that brush. The implementation of transient vs persistent mode is a matter of forgetting or remembering previous state(s) of the brush.
 </p>
 </div>
 </div>
@@ -1255,10 +1403,10 @@ FIGURE 17.27: A draggable brush with both a transient and persistent mode. The d
 <div class="figure" style="text-align: center"><span id="fig:shiny-crosstalk-examples"></span>
 <iframe src="https://player.vimeo.com/video/207379729?title=0&amp;byline=0&amp;portrait=0" width="100%" height="400" frameborder="0" seamless="seamless" webkitAllowFullScreen mozallowfullscreen allowFullScreen></iframe>
 <p class="caption">
-FIGURE 17.28: Example of a <strong>shiny</strong> app that has <strong>crosstalk</strong> functionality embedded.
+FIGURE 17.31: Example of a <strong>shiny</strong> app that has <strong>crosstalk</strong> functionality embedded.
 </p>
 </div>
-<p>Sometimes <strong>shiny</strong> gets a bad rap for being too slow or unresponsive, but as we learned in sections <a href="linking-views-with-shiny.html#proxies">17.3.1</a> and <a href="linking-views-with-shiny.html#advanced-applications">17.4</a>, we can still have very advanced functionality as well as a good user experience – it just takes a bit more effort to optimize performance in some cases. In fact, one could argue that a server-client approach to crossfiltering, as done in Figure <a href="linking-views-with-shiny.html#fig:shiny-crossfilter">17.25</a> is more scalable than a purely client-side approach since the client wouldn’t need to know about the raw data – just the summary statistics. Nevertheless, sometimes linking views server side simply isn’t an option for you or your organization.</p>
+<p>Sometimes <strong>shiny</strong> gets a bad rap for being too slow or unresponsive, but as we learned in sections <a href="linking-views-with-shiny.html#proxies">17.3.1</a> and <a href="linking-views-with-shiny.html#advanced-applications">17.4</a>, we can still have very advanced functionality as well as a good user experience – it just takes a bit more effort to optimize performance in some cases. In fact, one could argue that a server-client approach to crossfiltering, as done in Figure <a href="linking-views-with-shiny.html#fig:shiny-crossfilter">17.28</a> is more scalable than a purely client-side approach since the client wouldn’t need to know about the raw data – just the summary statistics. Nevertheless, sometimes linking views server side simply isn’t an option for you or your organization.</p>
 <p>Maybe your IT administrator simply won’t allow you to distribute your work outside of a standalone HTML file. Figure <a href="linking-views-with-shiny.html#fig:shiny-corrplot">17.11</a> is just one example of a linked graphic that <em>could</em> be replicated using the graphical querying framework from section <a href="client-side-linking.html#graphical-queries">16.1</a>, but it would require pre-computing every possible view (which becomes un-manageable when there are many possible selections) and posing the update logic as a database query. When users are only allowed to select (e.g. click/hover) a single element at a time, the number of possible selections increases linearly with the number of elements, but when users are allowed to select any subset of elements (e.g., scatterplot brushing), the number of possible selection explodes (increases at a factorial rate). For example, adding a cell to Figure <a href="linking-views-with-shiny.html#fig:shiny-corrplot">17.11</a> only adds one possible selection, but if we added more states to Figure <a href="linking-views-with-shiny.html#fig:shiny-corrplot">17.11</a>, the number of possible states goes from 50! to 51!.</p>
 <p>Even in the case that you need a standalone HTML file and the R API that <strong>plotly</strong> provides doesn’t support the type of interactivity that you desire, you can always layer on additional JavaScript to hopefully achieve the functionality you desire. This can be useful for something as simple as opening a hyperlink when clicking on marker of a plotly graph – this topic is covered introduced in Chapter <a href="javascript.html#javascript">18</a>.</p>
 

@@ -729,7 +729,7 @@ include_vimeo("328763167")
 ```
 
 A basic drill-down like Figure \@ref(fig:shiny-drill-down-pie) is somewhat useful on its own, but it becomes much more useful when linked to multiple views of the data.
-Figure \@ref(fig:shiny-drill-down-pie-time) improves on Figure \@ref(fig:shiny-drill-down-pie) to show sales over time by the category or sub-category (if a category is currently chosen). Note that the key aspect of implementation remains the same (i.e., maintaining state via `reactiveValue()`) -- the main difference is that the time series view now also listens to changes in the currently selected category.
+Figure \@ref(fig:shiny-drill-down-bar-time) improves on Figure \@ref(fig:shiny-drill-down-pie) to show sales over time by the category or sub-category (if a category is currently chosen). Note that the key aspect of implementation remains the same (i.e., maintaining state via `reactiveValue()`) -- the main difference is that the time series view now also listens to changes in the currently selected category.
 
 ```{r eval = FALSE, summary = "Click to show/hide the code"}
 library(shiny)
@@ -802,22 +802,22 @@ server <- function(input, output, session) {
 shinyApp(ui, server)
 ```
 
-```{r shiny-drill-down-pie-time, echo=FALSE, fig.cap="(ref:shiny-drill-down-pie-time)"}
+```{r shiny-drill-down-bar-time, echo=FALSE, fig.cap="(ref:shiny-drill-down-bar-time)"}
 include_vimeo("328768848")
 ```
 
-Thus far, we've only seen one level of drill-down, what about multiple levels? Introducing multiple levels adds complexity not only the implementation, but also the user experience. Especially in a drill-down approach where the _same view_ is being filtered, it can be difficult for the user to remember how they got to a particular view. Figure \@ref(fig:shiny-drill-down-pie-time-history) demonstrates how we could extend Figure \@ref(fig:shiny-drill-down-pie-time) to implement yet another level of drilling down (i.e., sub-category -> product IDs) as well as populate a `selectInput()` dropdown for each active drill-down. Not only does this help the user to remember how they got to the particular view, but it also provides the ability to easily modify the sequence of drill-down events. In terms of implementation, the main idea is the very similar to before -- we still store and update the state of each 'drill-down' in it's own reactive value, but now when a 'parent' category changes (e.g., `category`) it should invalidate (i.e., clear) any currently selected 'child' categories (e.g., `sub_category`).
+Thus far, we've only seen one level of drill-down, what about multiple levels? Introducing multiple levels adds complexity not only the implementation, but also the user experience. Especially in a drill-down approach where the _same view_ is being filtered, it can be difficult for the user to remember how they got to a particular view. Figure \@ref(fig:shiny-drill-down-bar-time-history) demonstrates how we could extend Figure \@ref(fig:shiny-drill-down-bar-time) to implement yet another level of drilling down (i.e., sub-category -> product IDs) as well as populate a `selectInput()` dropdown for each active drill-down. Not only does this help the user to remember how they got to the particular view, but it also provides the ability to easily modify the sequence of drill-down events. In terms of implementation, the main idea is the very similar to before -- we still store and update the state of each 'drill-down' in it's own reactive value, but now when a 'parent' category changes (e.g., `category`) it should invalidate (i.e., clear) any currently selected 'child' categories (e.g., `sub_category`).
 
 ```{r, eval = FALSE, summary = "Click to show/hide the code"}
 ```
 
-```{r shiny-drill-down-pie-time-history, echo=FALSE, fig.cap="(ref:shiny-drill-down-pie-time)"}
+```{r shiny-drill-down-bar-time-history, echo=FALSE, fig.cap="(ref:shiny-drill-down-bar-time)"}
 include_vimeo("328770954")
 ```
 
 Another way to make it easier for the user to recall their drill-down sequence is to generate a *new* view based on the selection. Figure \@ref(fig:shiny-drill-down) allows one to click on a category (e.g., Furniture) to generate another bar chart of sales broken down by that category's sub-categories (e.g., Bookcases, Chairs, etc). From there, a sub-category may be clicked to populate a time series of sales for that sub-category. Finally, by clicking on the time series, a table of sales from that date are displayed.
 
-Similar to Figure \@ref(shiny-drill-down-pie-time-history), changes at a given category level causes invalidation of all child categories (in this case, all downstream views are cleared). For example, note how in Figure \@ref(fig:shiny-drill-down), a click of a category clears the sub-category and order-date. Moreover, a change in `sub_category` clears the `order_date`, but effect the current `category`.
+Similar to Figure \@ref(fig:shiny-drill-down-bar-time-history), changes at a given category level causes invalidation of all child categories (in this case, all downstream views are cleared). For example, note how in Figure \@ref(fig:shiny-drill-down), a click of a category clears the sub-category and order-date. Moreover, a change in `sub_category` clears the `order_date`, but effect the current `category`.
 
 ```{r eval = FALSE, summary = "Click to show/hide the code"}
 library(shiny)
