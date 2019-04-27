@@ -25,7 +25,7 @@
 <meta name="author" content="Carson Sievert">
 
 
-<meta name="date" content="2019-04-06">
+<meta name="date" content="2019-04-27">
 
   <meta name="viewport" content="width=device-width, initial-scale=1">
   <meta name="apple-mobile-web-app-capable" content="yes">
@@ -278,7 +278,7 @@ code span.wa { color: #60a0b0; font-weight: bold; font-style: italic; } /* Warni
 </ul></li>
 <li class="chapter" data-level="17.5" data-path="linking-views-with-shiny.html"><a href="linking-views-with-shiny.html#discussion"><i class="fa fa-check"></i><b>17.5</b> Discussion</a></li>
 </ul></li>
-<li class="part"><span><b>V Custom behavior with JavaScript</b></span></li>
+<li class="part"><span><b>V Event handling in JavaScript</b></span></li>
 <li class="chapter" data-level="18" data-path="javascript.html"><a href="javascript.html"><i class="fa fa-check"></i><b>18</b> Introduction</a></li>
 <li class="chapter" data-level="19" data-path="json.html"><a href="json.html"><i class="fa fa-check"></i><b>19</b> Working with JSON</a><ul>
 <li class="chapter" data-level="19.1" data-path="json.html"><a href="json.html#assignment-subsetting-and-iteration"><i class="fa fa-check"></i><b>19.1</b> Assignment, subsetting, and iteration</a></li>
@@ -356,7 +356,7 @@ code span.wa { color: #60a0b0; font-weight: bold; font-style: italic; } /* Warni
 FIGURE 27.1: Specifying a color in plotly.js’ supported format.
 </p>
 </div>
-<p>If you’re doing something specific to R, like using <code>ggplotly()</code> and/or the top-level <code>color</code>/<code>stroke</code> argument in <code>plot_ly()</code>, you’ll need to be careful to about specifying colors in way that R and <strong>plotly</strong> can understand. For example, at least currently, you can’t specify an hsl string in this way:</p>
+<p>If you’re doing something specific to R, like using <code>ggplotly()</code> and/or the top-level <code>color</code>/<code>colors</code>/<code>stroke</code>/<code>strokes</code> argument in <code>plot_ly()</code>, you’ll need to be careful to about specifying colors in way that R and <strong>plotly</strong> can understand. For example, at least currently, you can’t specify an hsl string in this way:</p>
 <pre class="sourceCode r"><code class="sourceCode r"><span class="kw">plot_ly</span>(<span class="dt">x =</span> <span class="dv">1</span>, <span class="dt">y =</span> <span class="dv">1</span>, <span class="dt">color =</span> <span class="kw">I</span>(<span class="st">&quot;hsl(0, 100%, 50%)&quot;</span>))
 <span class="co">#&gt; Error in grDevices::col2rgb(x, alpha = TRUE): invalid color name &#39;hsl(0, 100%, 50%)&#39;</span></code></pre>
 <p>Just like in <strong>ggplot2</strong>, you’ll have to specify a color in one of the following ways:</p>
@@ -369,7 +369,7 @@ FIGURE 27.1: Specifying a color in plotly.js’ supported format.
 <pre class="sourceCode r"><code class="sourceCode r"><span class="kw">library</span>(colorspace)
 red &lt;-<span class="st"> </span><span class="kw">hex</span>(<span class="kw">HLS</span>(<span class="dv">0</span>, <span class="fl">0.5</span>, <span class="dv">1</span>))
 <span class="kw">plot_ly</span>(<span class="dt">x =</span> iris<span class="op">$</span>Petal.Length, <span class="dt">color =</span> <span class="kw">I</span>(red))</code></pre>
-<p>If you’d like to learn more about how to use the <code>color</code> argument as well as specify different types of color palettes, see Section <a href="scatter-traces.html#scatter-traces">3</a>.</p>
+<p>If you’d like to see more examples of specifying colors, see Section <a href="scatter-traces.html#scatter-traces">3</a>.</p>
 </div>
 <h3>References</h3>
 <div id="refs" class="references">

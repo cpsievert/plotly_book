@@ -95,7 +95,7 @@ This section details scatter traces with a `mode` of `"markers"` (i.e., `add_mar
 
 ### Alpha blending {#marker-alpha}
 
-As @unwin-graphical-analysis notes, scatterplots can be useful for exposing other important features including: casual relationships, outliers, clusters, gaps, barriers, and conditional relationships. A common problem with scatterplots however is overplotting, meaning that there are multiple observations occupying the same (or similar) x/y locations. Figure \@ref(fig:scatterplots) demonstrates one way to combat overplotting via alpha blending. When dealing with tens of thousands of points (or more), consider using `toWebGL()` to render plots using Canvas rather than SVG (more in Chapter \@ref(performance), or leveraging 2D density estimation (section \@ref(rectangular-binning-in-r)).
+As @unwin-graphical-analysis notes, scatterplots can be useful for exposing other important features including: casual relationships, outliers, clusters, gaps, barriers, and conditional relationships. A common problem with scatterplots however is overplotting, meaning that there are multiple observations occupying the same (or similar) x/y locations. Figure \@ref(fig:scatterplots) demonstrates one way to combat overplotting via alpha blending. When dealing with tens of thousands of points (or more), consider using `toWebGL()` to render plots using Canvas rather than SVG (more in Chapter \@ref(performance), or leveraging 2D density estimation (Section \@ref(rectangular-binning-in-r)).
 
 ```r
 subplot(
@@ -113,7 +113,7 @@ knitr::include_graphics("images/scatterplots.svg")
 
 ### Colors {#marker-color}
 
-As discussed in \@ref(intro-plotly-js), mapping a discrete variable to `color` produces one trace per category, which is desirable for it's legend and hover properties. On the other hand, mapping a *numeric* variable to `color` produces one trace, as well as a [colorbar](https://plot.ly/r/reference/#scatter-marker-colorbar) guide for visually decoding colors back to data values. The `colorbar()` function can be used to customize the appearance of this automatically generated guide. The default colorscale is viridis, a perceptually-uniform colorscale (even when converted to black-and-white), and perceivable even to those with common forms of color blindness [@viridis]. Viridis is also the default colorscale for ordered factors.
+As discussed in Section \@ref(intro-plotly-js), mapping a discrete variable to `color` produces one trace per category, which is desirable for it's legend and hover properties. On the other hand, mapping a *numeric* variable to `color` produces one trace, as well as a [colorbar](https://plot.ly/r/reference/#scatter-marker-colorbar) guide for visually decoding colors back to data values. The `colorbar()` function can be used to customize the appearance of this automatically generated guide. The default colorscale is viridis, a perceptually-uniform colorscale (even when converted to black-and-white), and perceivable even to those with common forms of color blindness [@viridis]. Viridis is also the default colorscale for ordered factors.
 
 ```r
 p <- plot_ly(mpg, x = ~cty, y = ~hwy, alpha = 0.5)
@@ -173,7 +173,7 @@ add_markers(p, color = I("black"))
 knitr::include_graphics("images/color-manual.svg")
 ```
 
-The `color` argument is meant to control the 'fill-color' of a geometric object, whereas `stroke` (section \@ref(marker-stroke)) is meant to control the 'outline-color' of a geometric object. In the case of `add_markers()`, than means `color` maps to the plotly.js attribute [`marker.color`](https://plot.ly/r/reference/#scatter-marker-color) and `stroke` maps to [`marker.line.color`](https://plot.ly/r/reference/#scatter-marker-line-color). Not all, but many, marker symbols have a notion of stroke.
+The `color` argument is meant to control the 'fill-color' of a geometric object, whereas `stroke` (Section \@ref(marker-stroke)) is meant to control the 'outline-color' of a geometric object. In the case of `add_markers()`, that means `color` maps to the plotly.js attribute [`marker.color`](https://plot.ly/r/reference/#scatter-marker-color) and `stroke` maps to [`marker.line.color`](https://plot.ly/r/reference/#scatter-marker-line-color). Not all, but many, marker symbols have a notion of stroke.
 
 ### Symbols {#marker-symbol}
 
@@ -269,7 +269,7 @@ knitr::include_graphics("images/sizes-manual.svg")
 
 ### Dotplots & error bars {#dot-plots}
 
-A dotplot is similar to a scatterplot, except instead of two numeric axes, one is categorical. The usual goal of a dotplot is to compare value(s) on a numerical scale over numerous categories. In this context, dotplots are preferable to pie charts since comparing position along a common scale is much easier than comparing angle or area [@graphical-perception]; [@crowdsourcing-graphical-perception]. Furthermore, dotplots can be preferable to bar charts, especially when comparing values within a narrow range far away from 0 [@few-values]. Also, when presenting point estimates, and uncertainty associated with those estimates, bar charts tend to exaggerate the difference in point estimates, and lose focus on uncertainty [@messing].
+A dotplot is similar to a scatterplot, except instead of two numeric axes, one is categorical. The usual goal of a dotplot is to compare value(s) on a numerical scale over numerous categories. In this context, dotplots are preferable to pie charts since comparing position along a common scale is much easier than comparing angle or area [@graphical-perception; @crowdsourcing-graphical-perception]. Furthermore, dotplots can be preferable to bar charts, especially when comparing values within a narrow range far away from 0 [@few-values]. Also, when presenting point estimates, and uncertainty associated with those estimates, bar charts tend to exaggerate the difference in point estimates, and lose focus on uncertainty [@messing].
 
 A popular application for dotplots (with error bars) is the so-called "coefficient plot" for visualizing the point estimates of coefficients and their standard error. The `coefplot()` function in the **coefplot** package [@coefplot] and the `ggcoef()` function in the **GGally** both produce coefficient plots for many types of model objects in R using **ggplot2**, which we can translate to plotly via `ggplotly()`. Since these packages use points and segments to draw the coefficient plots, the hover information is not the best, and it'd be better to use [error objects](https://plot.ly/r/reference/#scatter-error_x). Figure \@ref(fig:coefplot) uses the `tidy()` function from the **broom** package [@broom] to obtain a data frame with one row per model coefficient, and produce a coefficient plot with error bars along the x-axis. 
 
@@ -456,7 +456,7 @@ knitr::include_graphics("images/candlestick.svg")
 
 ### Density plots
 
-In Section \@ref(bars-histograms), we leverage a number of algorithms in R for computing the "optimal" number of bins for a histogram, via `hist()`, and routing those results to `add_bars()`. We can leverage the `density()` function for computing kernel density estimates in a similar way, and route the results to `add_lines()`, as is done in \@ref(fig:densities).
+In Section \@ref(bars-histograms), we leverage a number of algorithms in R for computing the "optimal" number of bins for a histogram, via `hist()`, and routing those results to `add_bars()`. We can leverage the `density()` function for computing kernel density estimates in a similar way, and route the results to `add_lines()`, as is done in Figure \@ref(fig:densities).
 
 ```r
 kerns <- c("gaussian", "epanechnikov", "rectangular", 
@@ -487,7 +487,7 @@ p
 
 ### Parallel Coordinates
 
-One very useful, but often overlooked, visualization technique is the parallel coordinates plot. Parallel coordinates provide a way to compare values along a common (or non-aligned) positional scale(s) -- the most basic of all perceptual tasks -- in more than 3 dimensions [@graphical-perception]. Usually each line represents every measurement for a given row (or observation) in a data set. It's true that plotly.js provides a trace type, parcoords, specifically for parallel coordinates, but 
+One very useful, but often overlooked, visualization technique is the parallel coordinates plot. Parallel coordinates provide a way to compare values along a common (or non-aligned) positional scale(s) -- the most basic of all perceptual tasks -- in more than 3 dimensions [@graphical-perception]. Usually each line represents every measurement for a given row (or observation) in a data set. It's true that plotly.js provides a trace type, parcoords, specifically for parallel coordinates that offers desirable interactive capabilities (e.g. highlighting and reordering of axes).^[See <https://plot.ly/r/parallel-coordinates-plot/> for some interactive examples]. However, it can also be useful learn how to use `add_lines()` to implement parallel coordinates as it can offer more flexibility and control over the axis scales.
 
 When measurements are on very different scales, some care must be taken, and variables must transformed to be put on a common scale. As Figure \@ref(fig:pcp-common) shows, even when variables are measured on a similar scale, it can still be informative to transform variables in different ways.
 
@@ -517,7 +517,7 @@ It is also worth noting that the **GGally** offers a `ggparcoord()` function whi
 
 ## Polygons
 
-The `add_polygons()` function is essentially equivalent to `add_paths()` with the [fill](https://plot.ly/r/reference/#scatter-fill) attribute set to "toself". Polygons form the basis for other, higher-level scatter-based layers (e.g., `add_ribbons()` and `add_sf()`) that don't have a dedicated plotly.js trace type. Polygons can be use to draw many things, but perhaps the most familiar application where you *might* want to use `add_polygons()` is to draw geo-spatial objects. If and when you use `add_polygons()` to draw a map, make sure you fix the aspect ratio (e.g. [`xaxis.scaleanchor`](https://plot.ly/r/reference/#layout-xaxis-scaleanchor)). On the other hand, Section \@ref(maps-custom) shows you how to make a custom maps using the **sf** package and `add_sf()`, which is a bit a work to get started, but is absolutely worth the investment.
+The `add_polygons()` function is essentially equivalent to `add_paths()` with the [fill](https://plot.ly/r/reference/#scatter-fill) attribute set to "toself". Polygons form the basis for other, higher-level scatter-based layers (e.g., `add_ribbons()` and `add_sf()`) that don't have a dedicated plotly.js trace type. Polygons can be use to draw many things, but perhaps the most familiar application where you *might* want to use `add_polygons()` is to draw geo-spatial objects. If and when you use `add_polygons()` to draw a map, make sure you fix the aspect ratio (e.g. [`xaxis.scaleanchor`](https://plot.ly/r/reference/#layout-xaxis-scaleanchor)) and also consider using `plotly_empty()` over `plot_ly()` to hide axis labels, ticks, and the background grid. On the other hand, Section \@ref(maps-custom) shows you how to make a custom maps using the **sf** package and `add_sf()`, which is a bit of work to get started, but is absolutely worth the investment.
 
 ```r
 base <- map_data("world", "canada") %>%

@@ -161,7 +161,7 @@ Cartograms are an approach to reducing this misleading effect and grants another
 
 ### Simple features (sf) {#sf}
 
-The **sf** R package is a modern approach to working with geo-spatial data structures based on tidy data principles [@sf]; [@tidy-data]. The key idea behind **sf** is that it stores geo-spatial geometries in a [list-column](https://jennybc.github.io/purrr-tutorial/ls13_list-columns.html) of a data frame. This allows each row to represent the real unit of observation/interest -- whether it's a polygon, multi-polygon, point, line, or even a collection of these features -- and as a result, works seamlessly inside larger tidy workflows.^[This is way more intuitive compared to older workflows based on, say using `ggplot2::fortify()` to obtain a data structure where a row to represents particular point along a feature and having another column track which point belongs to each feature ([for example](https://gis.stackexchange.com/questions/165974/r-fortify-causing-polygons-to-tear)).
+The **sf** R package is a modern approach to working with geo-spatial data structures based on tidy data principles [@sf; @tidy-data]. The key idea behind **sf** is that it stores geo-spatial geometries in a [list-column](https://jennybc.github.io/purrr-tutorial/ls13_list-columns.html) of a data frame. This allows each row to represent the real unit of observation/interest -- whether it's a polygon, multi-polygon, point, line, or even a collection of these features -- and as a result, works seamlessly inside larger tidy workflows.^[This is way more intuitive compared to older workflows based on, say using `ggplot2::fortify()` to obtain a data structure where a row to represents particular point along a feature and having another column track which point belongs to each feature ([for example](https://gis.stackexchange.com/questions/165974/r-fortify-causing-polygons-to-tear)).
 ] The **sf** package itself does not really provide geo-spatial data -- it provides the framework and utilties for storing and computing on geo-spatial data structures in an opinionated way.
 
 There are numerous packages for accessing geo-spatial data as simple features data structures. A couple notable examples include **rnaturalearth** and **USAboundaries**. The **rnaturalearth** package is better for obtaining any map data in the world via an API provided by <https://www.naturalearthdata.com/> [@rnaturalearth]. The **USAboundaries** package is great for obtaining map data for the United States at any point in history [@USAboundaries]. It doesn't really matter what tool you use to obtain or create an **sf** object -- once you have one, `plot_ly()` knows how to render it:
@@ -221,7 +221,7 @@ plot_ly(
 knitr::include_graphics("images/split-text.png")
 ```
 
-Although the integrated mapping approaches (`plot_mapbox()` and `plot_geo()`) can render **sf** objects, the custom mapping approaches (`plot_ly()` and `geom_sf()`) are more flexible because they allow for any well-defined mapping projection. Working with and understanding map projections can be intimatidating for a causal map maker. Thankfully, there are nice resources for searching map projections in a human-friendly interface, like <http://spatialreference.org/>. Through this website, one can search desirable projections for a given portion of the globe and extract commands for projecting their geo-spatial objects into that projection. One way way to perform the projection is to supply the relevant PROJ4 command to the `st_transform()` function in **sf** [@PROJ].
+Although the integrated mapping approaches (`plot_mapbox()` and `plot_geo()`) can render **sf** objects, the custom mapping approaches (`plot_ly()` and `geom_sf()`) are more flexible because they allow for any well-defined mapping projection. Working with and understanding map projections can be intimatidating for a causal map maker. Thankfully, there are nice resources for searching map projections in a human-friendly interface, like <http://spatialreference.org/>. Through this website, one can search desirable projections for a given portion of the globe and extract commands for projecting their geo-spatial objects into that projection. One way to perform the projection is to supply the relevant PROJ4 command to the `st_transform()` function in **sf** [@PROJ].
 
 ```r
 # filter the world sf object down to canada
@@ -270,7 +270,7 @@ Analogous to the discussion surrounding \@ref(fig:scatter-lines), it pays to be 
 plot_mapbox(world_large, color = NA, stroke = I("black"), span = I(0.5))
 ```
 
-For those interested in learning more about geocomputation in R with **sf** and other great R packages like **sp** and **raster**, @geocomputation provides lots of nice and freely available learning resources [@sp]; [@raster].
+For those interested in learning more about geocomputation in R with **sf** and other great R packages like **sp** and **raster**, @geocomputation provides lots of nice and freely available learning resources [@sp; @raster].
 
 
 ### Cartograms {#cartograms}

@@ -8,7 +8,7 @@ The subsequent chapters within this 'Creating views' part dive into specific exa
 
 ## Intro to `plot_ly()` {#intro-plotly}
 
-Any graph made with the **plotly** R package is powered by the JavaScript library [plotly.js](https://github.com/plotly/plotly.js). The `plot_ly()` function provides a 'direct' interface to plotly.js with some additional abstractions to help reduce typing. These abstractions, inspired by the Grammar of Graphics and **ggplot2**, make it much faster to iterate from one graphic to another, making it easier to discover interesting features in the data [@Wilkinson:2005]; [@ggplot2]. To demonstrate, we'll use `plot_ly()` to explore the `diamonds` dataset from **ggplot2** and learn a bit how **plotly** and plotly.js work along the way.
+Any graph made with the **plotly** R package is powered by the JavaScript library [plotly.js](https://github.com/plotly/plotly.js). The `plot_ly()` function provides a 'direct' interface to plotly.js with some additional abstractions to help reduce typing. These abstractions, inspired by the Grammar of Graphics and **ggplot2**, make it much faster to iterate from one graphic to another, making it easier to discover interesting features in the data [@Wilkinson:2005; @ggplot2]. To demonstrate, we'll use `plot_ly()` to explore the `diamonds` dataset from **ggplot2** and learn a bit how **plotly** and plotly.js work along the way.
 
 ```{r}
 # load the plotly R package
@@ -32,13 +32,13 @@ plot_ly(diamonds, x = ~cut, color = ~clarity, colors = "Accent")
 knitr::include_graphics("images/intro-defaults.svg")
 ```
 
-The `plot_ly()` function has numerous arguments that are unique to the R package (e.g., `color`, `stroke`, `span`, `symbol`, `linetype`, etc) and make it easier to encode data as visual properties. By default, these arguments map values to a visual range defined by the plural form of the argument (e.g., `colors`, `strokes`, `spans`, `symbols`, `linetypes`, etc). Figure \@ref(fig:color-mapping) depicts how the combination of `color` (e.g., `clarity` levels) and `colors` (e.g., the `"Accent"` color palette from the **RColorBrewer** package) can be used to specify a mapping from data values to color codes. Besides providing a palette by name, one may also provide their own mapping function (e.g., `colorRamp()`), or even a set of custom color codes. See Chapter \@ref(scatter-traces) for many more examples and Chapter \@ref(working-with-colors) for more details about working with colors.
+The `plot_ly()` function has numerous arguments that are unique to the R package (e.g., `color`, `stroke`, `span`, `symbol`, `linetype`, etc) and make it easier to encode data variables (e.g., diamond clarity) as visual properties (e.g., color). By default, these arguments map values of a data variable to a visual range defined by the plural form of the argument. For example, in the bottom panel of \@ref(fig:intro-defaults), `color` is used to map each level of diamond clarity to a different color, then `colors` is used to specify the range of colors (which, in this case, the `"Accent"` color palette from the **RColorBrewer** package, but one can also supply custom color codes or a color palette function like `colorRamp()`). Figure \@ref(fig:color-mapping) provides a visual diagram of how this particular mapping works, but the same sort of idea can be applied to other visual properties like size, shape, linetype, etc.
 
 ```{r color-mapping, echo = FALSE, fig.cap = "(ref:color-mapping)", out.width = "45%"}
 knitr::include_graphics("images/color-mapping.svg")
 ```
 
-Since these arguments, by default, map values to a visual range, you will obtain unexpected results if you try to specify the visual range directly, as in the top portion of Figure \@ref(fig:intro-range). If you want to specify the visual range directly, use the `I()` function to declare this value to be taken 'AsIs', as in the bottom portion of Figure \@ref(fig:intro-range). As discussed in more detail in section \@ref(intro-plotly-js), these 'aesthetic mapping' arguments are not officially part of plotly.js, but the R package transform this information into valid plotly.js figures. Many other examples in the book will leverage these arguments, especially Chapter \@ref(scatter-traces). Another resource to learn more details about these arguments (especially their defaults) is the R documentation page available by entering `help(plot_ly)` in your R console.
+Since these arguments map data values to a visual range by default, you will obtain unexpected results if you try to specify the visual range directly, as in the top portion of Figure \@ref(fig:intro-range). If you want to specify the visual range directly, use the `I()` function to declare this value to be taken 'AsIs', as in the bottom portion of Figure \@ref(fig:intro-range). Throughout this book, you'll see lots of examples that leverage these arguments, especially in Chapter \@ref(scatter-traces).  Another good resource to learn more about these arguments (especially their defaults) is the R documentation page available by entering `help(plot_ly)` in your R console.
 
 ```r
 # doesn't produce black bars
@@ -118,7 +118,7 @@ diamonds %>%
 knitr::include_graphics("images/intro-dplyr.png")
 ```
 
-Before using multiple `add_*()` in a single plot, make sure that you actually want to show those layers of information on the same set of axes. If it makes sense to display the information on the same axes, consider making multiple **plotly** objects and combining them into as grid-like layout using `subplot()`, as described in Chapter \@ref(arranging-views). Also, when using **dplyr** verbs to modify the `data` underlying the **plotly** object, you can use the `plotly_data()` function to obtain the data at any point in time. This can be helpful for finding why something has 
+Before using multiple `add_*()` in a single plot, make sure that you actually want to show those layers of information on the same set of axes. If it makes sense to display the information on the same axes, consider making multiple **plotly** objects and combining them into as grid-like layout using `subplot()`, as described in Chapter \@ref(arranging-views). Also, when using **dplyr** verbs to modify the `data` underlying the **plotly** object, you can use the `plotly_data()` function to obtain the data at any point in time, which is primarily useful for debugging purposes (i.e., inspecting the data of a particular graphical layer).
 
 ```{r}
 diamonds %>%
@@ -129,7 +129,7 @@ diamonds %>%
   plotly_data()
 ```
 
-This introduction to `plot_ly()` has mainly focused on concepts unique to the R package **plotly** that are generally useful for creating most kinds of data views. The section outlines how **plotly** generates plotly.js figures and how to inspect the underlying data structure that plotly.js uses to render the graph. Not only is this information useful for debugging, but it's also a nice way to learn how to work with plotly.js directly, which you may need to improve performance in **shiny** apps (Chapter \@ref(proxies)) and/or for adding custom behavior with JavaScript (Chapter \@ref(javascript)).
+This introduction to `plot_ly()` has mainly focused on concepts unique to the R package **plotly** that are generally useful for creating most kinds of data views. The next section outlines how **plotly** generates plotly.js figures and how to inspect the underlying data structure that plotly.js uses to render the graph. Not only is this information useful for debugging, but it's also a nice way to learn how to work with plotly.js directly, which you may need to improve performance in **shiny** apps (Chapter \@ref(proxies)) and/or for adding custom behavior with JavaScript (Chapter \@ref(javascript)).
 
 ## Intro to plotly.js {#intro-plotly-js}
 
@@ -173,7 +173,7 @@ unique(purrr::map_chr(b$x$data, "type"))
 #> [1] "histogram"
 ```
 
-Here we've learned that **plotly** creates 8 histogram traces to generate the dodged bar chart: one trace for each level of `clarity`.^[Although the x-axis is discrete, plotly.js still considers this a histogram because it's generating it generates counts in the browser. Learn more about the difference between histograms and bar charts in section \@ref(bars-histograms).] Why one trace per category? As illustrated in Figure \@ref(fig:intro-show-hide), there are two main reasons: to populate a tooltip and legend entry for each level of `clarity` level.
+Here we've learned that **plotly** creates 8 histogram traces to generate the dodged bar chart: one trace for each level of `clarity`.^[Although the x-axis is discrete, plotly.js still considers this a histogram because it generates counts in the browser. Learn more about the difference between histograms and bar charts in Chapter \@ref(bars-histograms).] Why one trace per category? As illustrated in Figure \@ref(fig:intro-show-hide), there are two main reasons: to populate a tooltip and legend entry for each level of `clarity` level.
 
 ```{r intro-show-hide, echo = FALSE, fig.cap = "(ref:intro-show-hide)"}
 include_vimeo("315707813")
@@ -222,7 +222,7 @@ ggplotly(p)
 include_vimeo("322318131")
 ```
 
-In addition to supporting most of the 'core' **ggplot2** API, `ggplotly()` can automatically convert any **ggplot2** extension packages that return a 'standard' **ggplot2** object. By standard, I mean that the object is comprised of 'core' **ggplot2** data structures and not the result of custom geoms.^[As discussed in \@ref(custom-geoms), `ggplotly()` can actually convert custom geoms as well, but each one requires a custom hook, and many custom geoms are not yet supported.] Some great examples of R packages that extend **ggplot2** using core data structures are **ggforce**, **naniar**, and **GGally** [@ggforce]; [@naniar]; [@GGally]. 
+In addition to supporting most of the 'core' **ggplot2** API, `ggplotly()` can automatically convert any **ggplot2** extension packages that return a 'standard' **ggplot2** object. By standard, I mean that the object is comprised of 'core' **ggplot2** data structures and not the result of custom geoms.^[As discussed in \@ref(custom-geoms), `ggplotly()` can actually convert custom geoms as well, but each one requires a custom hook, and many custom geoms are not yet supported.] Some great examples of R packages that extend **ggplot2** using core data structures are **ggforce**, **naniar**, and **GGally** [@ggforce; @naniar; @GGally]. 
 
 Figure \@ref(fig:geom-sina) demonstrates another way of visualizing the same information found in Figure \@ref(fig:freqpoly-facet) using `geom_sina()` from the **ggforce** package (instead of `geom_freqpoly()`). This visualization jitters the raw data within the density for each group -- allowing us not only to see where the majority observations fall within a group, but also across all across all groups. By making this layer interactive, we can query individual points for more information and zoom into interesting regions. The second layer of Figure \@ref(fig:geom-sina) uses **ggplot2**'s `stat_summary()` to overlay a 95% confidence interval esimated via a bootstrap algorithm via the **Hmisc** package [@Hmisc].
 
@@ -298,7 +298,7 @@ It's also worth mentioning that `ggplotly()` conversions are not always perfect 
 -->
   
 <!--
-Recall from Section \@ref(intro-plotly) that in the layered grammar of graphics, a layer comprised of 5 components: aethestic mappings (e.g., assigning clarity to color), a geometric representation (e.g. rectangles, circles, etc), statistical transformations (e.g., sum, mean, etc), and positional adjustments (e.g., dodge, stack, etc). Generally speaking, `ggplotly()` is going to be a more complete and consistent approach to expressing layers that leverage statistical transformation(s). This is partly due to its thoughtful integration with other statistical computing R packages like **MASS**, **mgcv**, and **Hmisc** [@MASS]; [@Hmisc]; [@mgcv]. For example, the `stat_summary()` layer al
+Recall from Section \@ref(intro-plotly) that in the layered grammar of graphics, a layer comprised of 5 components: aethestic mappings (e.g., assigning clarity to color), a geometric representation (e.g. rectangles, circles, etc), statistical transformations (e.g., sum, mean, etc), and positional adjustments (e.g., dodge, stack, etc). Generally speaking, `ggplotly()` is going to be a more complete and consistent approach to expressing layers that leverage statistical transformation(s). This is partly due to its thoughtful integration with other statistical computing R packages like **MASS**, **mgcv**, and **Hmisc** [@MASS; @Hmisc; @mgcv]. For example, the `stat_summary()` layer al
 -->
 
 

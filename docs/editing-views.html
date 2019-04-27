@@ -25,7 +25,7 @@
 <meta name="author" content="Carson Sievert">
 
 
-<meta name="date" content="2019-04-06">
+<meta name="date" content="2019-04-27">
 
   <meta name="viewport" content="width=device-width, initial-scale=1">
   <meta name="apple-mobile-web-app-capable" content="yes">
@@ -278,7 +278,7 @@ code span.wa { color: #60a0b0; font-weight: bold; font-style: italic; } /* Warni
 </ul></li>
 <li class="chapter" data-level="17.5" data-path="linking-views-with-shiny.html"><a href="linking-views-with-shiny.html#discussion"><i class="fa fa-check"></i><b>17.5</b> Discussion</a></li>
 </ul></li>
-<li class="part"><span><b>V Custom behavior with JavaScript</b></span></li>
+<li class="part"><span><b>V Event handling in JavaScript</b></span></li>
 <li class="chapter" data-level="18" data-path="javascript.html"><a href="javascript.html"><i class="fa fa-check"></i><b>18</b> Introduction</a></li>
 <li class="chapter" data-level="19" data-path="json.html"><a href="json.html"><i class="fa fa-check"></i><b>19</b> Working with JSON</a><ul>
 <li class="chapter" data-level="19.1" data-path="json.html"><a href="json.html#assignment-subsetting-and-iteration"><i class="fa fa-check"></i><b>19.1</b> Assignment, subsetting, and iteration</a></li>
@@ -339,8 +339,8 @@ code span.wa { color: #60a0b0; font-weight: bold; font-style: italic; } /* Warni
             <section class="normal" id="section-">
 <div id="editing-views" class="section level1">
 <h1><span class="header-section-number">12</span> Editing views for publishing</h1>
-<p>Numerous layout components of a <strong>plotly</strong> graph can be directly manipulated, including annotation text and placement (more on this in section <a href="linking-views-with-shiny.html#edit-events">17.2.3</a>). In addition, the download (aka, toImage) button can be customized to export a static version to different file types including: svg, png, jpeg, and webp. Since svg can be easily converted to pdf, this effectively means we can edit a graph in a browser to perform touch-ups, then export to a high-quality pdf. At least currently, this workflow is recommended over first exporting to pdf (via <code>orca()</code>) then using Adobe Illustrator to manipulate the vectors, especially for adjusting the placement of annotations.</p>
-<p>Figure <a href="editing-views.html#fig:edit-county-labels">12.1</a> demonstrates this workflow on a choropleth map of estimated income in Minnesota by county where the top 10 counties by total income are labeled.<a href="#fn19" class="footnote-ref" id="fnref19"><sup>19</sup></a> For visuals like this, automated algorithms for placing the labels may not yield polished results, so it can be nice to have the option to adjust the placement manually. Although pressing ‘download plot’ exports a static version of the current state of the plot, there currently isn’t an official way to save the state of these manual edits in the HTML version. You could, however, create a shiny app that listens to the <code>'plotly_relayout'</code> event to obtain the new annotation positions (see, for example, Figure <a href="linking-views-with-shiny.html#fig:shiny-edit-annotations">17.5</a>) and translate that information into code.</p>
+<p>Numerous layout components of a <strong>plotly</strong> graph can be directly manipulated, including annotation text and placement (more on this in Section <a href="linking-views-with-shiny.html#edit-events">17.2.3</a>). In addition, the download (aka, toImage) button can be customized to export a static version to different file types including: svg, png, jpeg, and webp. Since svg can be easily converted to pdf, this effectively means we can edit a graph in a browser to perform touch-ups, then export to a high-quality pdf. At least currently, this workflow is recommended over first exporting to pdf (via <code>orca()</code>) then using Adobe Illustrator to manipulate the vectors, especially for adjusting the placement of annotations.</p>
+<p>Figure <a href="editing-views.html#fig:edit-county-labels">12.1</a> demonstrates this workflow on a choropleth map of estimated income in Minnesota by county where the top 10 counties by total income are labeled.<a href="#fn20" class="footnote-ref" id="fnref20"><sup>20</sup></a> For visuals like this, automated algorithms for placing the labels may not yield polished results, so it can be nice to have the option to adjust the placement manually. Although pressing ‘download plot’ exports a static version of the current state of the plot, there currently isn’t an official way to save the state of these manual edits in the HTML version. You could, however, create a shiny app that listens to the <code>'plotly_relayout'</code> event to obtain the new annotation positions (see, for example, Figure <a href="linking-views-with-shiny.html#fig:shiny-edit-annotations">17.5</a>) and translate that information into code.</p>
 <details>
 <p><summary>Click to show code</summary></p>
 <pre class="sourceCode r"><code class="sourceCode r"><span class="kw">library</span>(dplyr)
@@ -434,8 +434,8 @@ withr<span class="op">::</span><span class="kw">with_dir</span>(download_dir, rs
 </div>
 <div class="footnotes">
 <hr />
-<ol start="19">
-<li id="fn19"><p>Yes, this is <a href="https://xkcd.com/1138/">essentially a population map</a>. A more informative visual would show income per person within a given county. I decided against showing the more informative version so the code would be more concise.<a href="editing-views.html#fnref19" class="footnote-back">↩</a></p></li>
+<ol start="20">
+<li id="fn20"><p>Yes, this is <a href="https://xkcd.com/1138/">essentially a population map</a>. A more informative visual would show income per person within a given county. I decided against showing the more informative version so the code would be more concise.<a href="editing-views.html#fnref20" class="footnote-back">↩</a></p></li>
 </ol>
 </div>
 <script>

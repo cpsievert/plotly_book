@@ -19,7 +19,7 @@ Recall, from Figure \@ref(fig:intro-printing), when you print a **plotly** objec
 
 * `partial_bundle()`: This function attempts to reduce the size of the plotly.js bundle used to render the **plotly** graphs. The size of the default (i.e., main) plotly.js bundle is about 3MB, which can take a considerable amount of time to download with a slow internet connection, potentially leading to noticable lag in initial page load for consumers of the graph. As it turns out, the main bundle is not always necessary to render every graphs on a given website, so plotly.js provides [partial bundles](https://github.com/plotly/plotly.js/tree/master/dist#partial-bundles) that can render certain subsets of the graphing library. For instance, if you only need scatter, bar, or pie trace types, you can get away with the basic bundle which is currently under 1MB in size. This function is always safe to use when rendering a single **plotly** graph in a web page, but when rendering multiple graphs, you should take care not to include mutliple bundles in the same page.
 
-These two options may improve run-time performance without much of any thinking, but sometimes it's worth being more thoughtful about your visualization strategy by leveraging summaries (e.g., Section \@ref(navigating-many-views), Figure \@ref(fig:shiny-crossfilter-kde), Figure \@ref(fig:correlation-client-side)) as well as being more explicit about how a graph responds to changes in the underlying data (e.g., Section \@ref(proxies)). Mastering these more broad and complex subjects is critical for scaling interactive visualizations to truly large data^[Large data means different things to different people at different time periods. At the time of writing, I'd consider hundreds of millions of observations with at least a handful of variables to be large data.], especially in the case of linking multiple views, where computational 'tricks' such as pre-aggregating distributive (e.g., min, max, sum, count) and algebraic (e.g., mean, var, etc) statistics intelligently is a trademark of systems that enable real-time graphical queries of massive datasets [@2013-immens]; [@nanocubes]; [@2019-falcon]. As @bigvis points out, it's also important to consider the uncertainty in these computationally efficient statistics, as they aren't nearly as statistically robust as their holistic conterparts (e.g., mean vs median) that are more computationally intensive.
+These two options may improve run-time performance without much of any thinking, but sometimes it's worth being more thoughtful about your visualization strategy by leveraging summaries (e.g., Section \@ref(navigating-many-views), Figure \@ref(fig:shiny-crossfilter-kde), Figure \@ref(fig:correlation-client-side)) as well as being more explicit about how a graph responds to changes in the underlying data (e.g., Section \@ref(proxies)). Mastering these more broad and complex subjects is critical for scaling interactive visualizations to truly large data^[Large data means different things to different people at different time periods. At the time of writing, I'd consider hundreds of millions of observations with at least a handful of variables to be large data.], especially in the case of linking multiple views, where computational 'tricks' such as pre-aggregating distributive (e.g., min, max, sum, count) and algebraic (e.g., mean, var, etc) statistics intelligently is a trademark of systems that enable real-time graphical queries of massive datasets [@2013-immens; @nanocubes; @2019-falcon]. As @bigvis points out, it's also important to consider the uncertainty in these computationally efficient statistics, as they aren't nearly as statistically robust as their holistic conterparts (e.g., mean vs median) that are more computationally intensive.
 
 Since latency in interactive graphics is known to make exploratory data analysis a more challenging task [@2014-latency], systems that optimize run over build performance are typically preferrable. This is especially true for visualizations that *others* are consuming, but in a typical EDA context, where the person creating the visualization is main consumer, build time performance is also important factor because it also presents a hurdle to the analytical thought process. It's hard to give general advice on improving build-time performance in general, but a great first step in doing so is to profile the speed of your R code with something like the **profvis** package. This will at least let you know if the slowness you're experiencing is due to your own R code.
 
@@ -112,14 +112,14 @@ plot_ly(z = ~volcano) %>%
 knitr::include_graphics("images/tooltip-format-heatmap.png")
 ```
 
-It's admittedly difficult to remember where to specify these `hoverformat` attributes, so if you want a combination of custom text and formatting of computed values you can use `hovertemplate`, which overrides `hoverinfo` and allows you to fully specify the tooltip in one consistent location. For a full description of this attribute, see <https://plot.ly/r/reference/#scatter-hovertemplate>.
+It's admittedly difficult to remember where to specify these `hoverformat` attributes, so if you want a combination of custom text and formatting of computed values you can use `hovertemplate`, which overrides `hoverinfo` and allows you to fully specify the tooltip in a single attribute. It does this through special markup rules for inserting and formating data values inside a string. Figure \@ref(fig:hovertemplate) provides an example of inserting `x` and `y` in the tooltip through the special `%{variable:format}` markup as well as customization of the secondary box through `<extra>` tag. For a full description of this attribute, including the formatting rules, see <https://plot.ly/r/reference/#scatter-hovertemplate>.
 
 ```r
 set.seed(10)
 plot_ly(x = rnorm(100, 0, 1e5)) %>%
   add_histogram(
     histnorm = "density",
-    hovertemplate = "The height is %{y:.1e} <extra>That's very small!</extra>"
+    hovertemplate = "The height between <br> (%{x}) <br> is %{y:.1e} <extra>That's small!</extra>"
   )
 ```
 
@@ -365,7 +365,7 @@ plot_ly(x = iris$Petal.Length, marker = list(color = "hsl(0, 100%, 50%)"))
 knitr::include_graphics("images/color-plotly-js.png")
 ```
 
-If you're doing something specific to R, like using `ggplotly()` and/or the top-level `color`/`stroke` argument in `plot_ly()`, you'll need to be careful to about specifying colors in way that R and **plotly** can understand. For example, at least currently, you can't specify an hsl string in this way:
+If you're doing something specific to R, like using `ggplotly()` and/or the top-level `color`/`colors`/`stroke`/`strokes` argument in `plot_ly()`, you'll need to be careful to about specifying colors in way that R and **plotly** can understand. For example, at least currently, you can't specify an hsl string in this way:
 
 ```{r, error = TRUE}
 plot_ly(x = 1, y = 1, color = I("hsl(0, 100%, 50%)"))
@@ -385,7 +385,7 @@ red <- hex(HLS(0, 0.5, 1))
 plot_ly(x = iris$Petal.Length, color = I(red))
 ```
 
-If you'd like to learn more about how to use the `color` argument as well as specify different types of color palettes, see Section \@ref(scatter-traces).
+If you'd like to see more examples of specifying colors, see Section \@ref(scatter-traces).
 
 # Working with symbols and glyphs {#working-with-symbols}
 
@@ -898,7 +898,7 @@ knitr::include_graphics("images/StatDensity2d.svg")
 
 # Translating custom ggplot2 geoms {#custom-geoms}
 
-Version 2.0.0 of __ggplot2__ introduced a way for other R packages to implement custom geoms. Some great examples include: __ggrepel__, __ggalt__, __ggraph__, __geomnet__, __ggmosaic__ and __ggtern__ [@ggalt]; [@ggraph]; [@geomnet]; [@ggmosaic]; [@ggtern].^[There are many other useful extension packages that are listed on this website -- <https://www.ggplot2-exts.org>] Although the `ggplotly()` function translates most of the geoms bundled with the __ggplot2__ package, it has no way of knowing about the rendering rules for custom geoms. The __plotly__ package does, however, provide 2 generic functions based on the S3 scheme that can leveraged to inform `ggplotly()` about these rules [@S3].^[For those new to S3, <http://adv-r.had.co.nz/S3.html> provides an approachable introduction and overview [@adv-r].] To date, the __ggmosaic__ and __ggalt__ packages have taken advantage of this infrastructure to provide translations of their custom geoms to plotly.
+Version 2.0.0 of __ggplot2__ introduced a way for other R packages to implement custom geoms. Some great examples include: __ggrepel__, __ggalt__, __ggraph__, __geomnet__, __ggmosaic__ and __ggtern__ [@ggalt; @ggraph; @geomnet; @ggmosaic; @ggtern].^[There are many other useful extension packages that are listed on this website -- <https://www.ggplot2-exts.org>] Although the `ggplotly()` function translates most of the geoms bundled with the __ggplot2__ package, it has no way of knowing about the rendering rules for custom geoms. The __plotly__ package does, however, provide 2 generic functions based on the S3 scheme that can leveraged to inform `ggplotly()` about these rules [@S3].^[For those new to S3, <http://adv-r.had.co.nz/S3.html> provides an approachable introduction and overview [@adv-r].] To date, the __ggmosaic__ and __ggalt__ packages have taken advantage of this infrastructure to provide translations of their custom geoms to plotly.
 
 In __ggplot2__, many geoms are special cases of other geoms. For example, `geom_line()` is equivalent to `geom_path()` once the data is sorted by the x variable. For cases like this, when a geom can be reduced to another lower-level (i.e., basic) geom, authors just have to write a method for the `to_basic()` generic function in __plotly__. In fact, within the package itself, the `to_basic()` function has a `GeomLine` method which simply sorts the data by the x variable then returns it with a class of `GeomPath` prefixed.
 

@@ -25,7 +25,7 @@
 <meta name="author" content="Carson Sievert">
 
 
-<meta name="date" content="2019-04-06">
+<meta name="date" content="2019-04-27">
 
   <meta name="viewport" content="width=device-width, initial-scale=1">
   <meta name="apple-mobile-web-app-capable" content="yes">
@@ -278,7 +278,7 @@ code span.wa { color: #60a0b0; font-weight: bold; font-style: italic; } /* Warni
 </ul></li>
 <li class="chapter" data-level="17.5" data-path="linking-views-with-shiny.html"><a href="linking-views-with-shiny.html#discussion"><i class="fa fa-check"></i><b>17.5</b> Discussion</a></li>
 </ul></li>
-<li class="part"><span><b>V Custom behavior with JavaScript</b></span></li>
+<li class="part"><span><b>V Event handling in JavaScript</b></span></li>
 <li class="chapter" data-level="18" data-path="javascript.html"><a href="javascript.html"><i class="fa fa-check"></i><b>18</b> Introduction</a></li>
 <li class="chapter" data-level="19" data-path="json.html"><a href="json.html"><i class="fa fa-check"></i><b>19</b> Working with JSON</a><ul>
 <li class="chapter" data-level="19.1" data-path="json.html"><a href="json.html#assignment-subsetting-and-iteration"><i class="fa fa-check"></i><b>19.1</b> Assignment, subsetting, and iteration</a></li>
@@ -344,7 +344,7 @@ code span.wa { color: #60a0b0; font-weight: bold; font-style: italic; } /* Warni
 <h2><span class="header-section-number">4.1</span> Integrated maps</h2>
 <div id="overview-1" class="section level3">
 <h3><span class="header-section-number">4.1.1</span> Overview</h3>
-<p>If you have fairly simple latitude/longitude data and want to make a quick map, you may want to try one of <strong>plotly</strong>’s integrated mapping options (i.e., <code>plot_mapbox()</code> and <code>plot_geo()</code>). Generally speaking, you can treat these constructor functions as a drop-in replacement for <code>plot_ly()</code> and get a dynamic basemap rendered behind your data. Furthermore, all the scatter-based layers we learned about in Section <a href="scatter-traces.html#scatter-traces">3</a> work as you’d expect it to with <code>plot_ly()</code>.<a href="#fn11" class="footnote-ref" id="fnref11"><sup>11</sup></a> For example, Figure <a href="maps.html#fig:mapbox-bubble">4.1</a> uses <code>plot_mapbox()</code> and <code>add_markers()</code> to create a bubble chart:</p>
+<p>If you have fairly simple latitude/longitude data and want to make a quick map, you may want to try one of <strong>plotly</strong>’s integrated mapping options (i.e., <code>plot_mapbox()</code> and <code>plot_geo()</code>). Generally speaking, you can treat these constructor functions as a drop-in replacement for <code>plot_ly()</code> and get a dynamic basemap rendered behind your data. Furthermore, all the scatter-based layers we learned about in Section <a href="scatter-traces.html#scatter-traces">3</a> work as you’d expect it to with <code>plot_ly()</code>.<a href="#fn12" class="footnote-ref" id="fnref12"><sup>12</sup></a> For example, Figure <a href="maps.html#fig:mapbox-bubble">4.1</a> uses <code>plot_mapbox()</code> and <code>add_markers()</code> to create a bubble chart:</p>
 <pre class="sourceCode r"><code class="sourceCode r"><span class="kw">plot_mapbox</span>(maps<span class="op">::</span>canada.cities) <span class="op">%&gt;%</span>
 <span class="st">  </span><span class="kw">add_markers</span>(
     <span class="dt">x =</span> <span class="op">~</span>long, 
@@ -379,7 +379,7 @@ styles
 FIGURE 4.2: Zooming in on earth satellite imagery using <code>plot_mapbox()</code>.
 </p>
 </div>
-<p>Figure <a href="maps.html#fig:mapbox-style-dropdown">4.3</a> demonstrates how to create an integrated plotly.js dropdown menu to control the basemap style via the <a href="https://plot.ly/r/reference/#layout-updatemenus-items-updatemenu-buttons"><code>layout.updatemenus</code></a> attribute. The idea behind an integrated plotly.js dropdown is to supply a list of buttons (i.e., menu items) where each button invokes a plotly.js method with some arguments. In this case, each button uses the <a href="https://plot.ly/javascript/plotlyjs-function-reference/">relayout</a> method to modify the <code>layout.mapbox.style</code> attribute.<a href="#fn12" class="footnote-ref" id="fnref12"><sup>12</sup></a></p>
+<p>Figure <a href="maps.html#fig:mapbox-style-dropdown">4.3</a> demonstrates how to create an integrated plotly.js dropdown menu to control the basemap style via the <a href="https://plot.ly/r/reference/#layout-updatemenus-items-updatemenu-buttons"><code>layout.updatemenus</code></a> attribute. The idea behind an integrated plotly.js dropdown is to supply a list of buttons (i.e., menu items) where each button invokes a plotly.js method with some arguments. In this case, each button uses the <a href="https://plot.ly/javascript/plotlyjs-function-reference/">relayout</a> method to modify the <code>layout.mapbox.style</code> attribute.<a href="#fn13" class="footnote-ref" id="fnref13"><sup>13</sup></a></p>
 <pre class="sourceCode r"><code class="sourceCode r">style_buttons &lt;-<span class="st"> </span><span class="kw">lapply</span>(styles, <span class="cf">function</span>(s) {
   <span class="kw">list</span>(<span class="dt">label =</span> s, <span class="dt">method =</span> <span class="st">&quot;relayout&quot;</span>, <span class="dt">args =</span> <span class="kw">list</span>(<span class="st">&quot;mapbox.style&quot;</span>, s))
 })
@@ -434,7 +434,7 @@ geo &lt;-<span class="st"> </span><span class="kw">list</span>(
 <div class="figure" style="text-align: center"><span id="fig:geo-flights"></span>
 <iframe src="https://player.vimeo.com/video/317358033?title=0&amp;byline=0&amp;portrait=0" width="100%" height="400" frameborder="0" seamless="seamless" webkitAllowFullScreen mozallowfullscreen allowFullScreen></iframe>
 <p class="caption">
-FIGURE 4.4: A mapbox powered bubble chart showing the population of various cities in Canada.
+FIGURE 4.4: Using the integrated orthographic projection to visualize flight patterns on a ‘3D’ globe.
 </p>
 </div>
 <p>One nice thing about <code>plot_geo()</code> is that it automatically projects geometries into the proper coordinate system defined by the map projection. For example, in Figure <a href="maps.html#fig:maps">4.5</a> the simple line segment is straight when using <code>plot_mapbox()</code> yet curved when using <code>plot_geo()</code>. It’s possible to acheive the same effect using <code>plot_ly()</code> or <code>plot_mapbox()</code>, but the relevant marker/line/polygon data has to be put into an <strong>sf</strong> data structure before rendering (see Section <a href="maps.html#sf">4.2.1</a> for more details).</p>
@@ -454,9 +454,9 @@ map2 &lt;-<span class="st"> </span><span class="kw">plot_geo</span>() <span clas
 <span class="kw">library</span>(htmltools)
 <span class="kw">browsable</span>(<span class="kw">tagList</span>(map1, map2))</code></pre>
 <div class="figure" style="text-align: center"><span id="fig:maps"></span>
-<img src="images/maps.png" alt="Three different ways to render a map. On the top left is plotly’s default cartesian coordinate system, on the top right is plotly’s custom geographic layout, and on the bottom is mapbox." width="100%" />
+<img src="images/maps.png" alt="A comparison of plotly’s integrated mapping solutions: plot_mapbox() (top) and plot_geo() (bottom). The plot_geo() approach will transform line segments to correctly reflect their projection into a non-cartesian coordinate system." width="100%" />
 <p class="caption">
-FIGURE 4.5: Three different ways to render a map. On the top left is plotly’s default cartesian coordinate system, on the top right is plotly’s custom geographic layout, and on the bottom is mapbox.
+FIGURE 4.5: A comparison of <strong>plotly</strong>’s integrated mapping solutions: <code>plot_mapbox()</code> (top) and <code>plot_geo()</code> (bottom). The <code>plot_geo()</code> approach will transform line segments to correctly reflect their projection into a non-cartesian coordinate system.
 </p>
 </div>
 </div>
@@ -491,7 +491,7 @@ FIGURE 4.6: A map of U.S. population density using the <code>state.x77</code> da
 <h2><span class="header-section-number">4.2</span> Custom maps</h2>
 <div id="sf" class="section level3">
 <h3><span class="header-section-number">4.2.1</span> Simple features (sf)</h3>
-<p>The <strong>sf</strong> R package is a modern approach to working with geo-spatial data structures based on tidy data principles <span class="citation">(Pebesma <a href="#ref-sf" role="doc-biblioref">2018</a>)</span>; <span class="citation">(Wickham <a href="#ref-tidy-data" role="doc-biblioref">2014</a><a href="#ref-tidy-data" role="doc-biblioref">b</a>)</span>. The key idea behind <strong>sf</strong> is that it stores geo-spatial geometries in a <a href="https://jennybc.github.io/purrr-tutorial/ls13_list-columns.html">list-column</a> of a data frame. This allows each row to represent the real unit of observation/interest – whether it’s a polygon, multi-polygon, point, line, or even a collection of these features – and as a result, works seamlessly inside larger tidy workflows.<a href="#fn13" class="footnote-ref" id="fnref13"><sup>13</sup></a> The <strong>sf</strong> package itself does not really provide geo-spatial data – it provides the framework and utilties for storing and computing on geo-spatial data structures in an opinionated way.</p>
+<p>The <strong>sf</strong> R package is a modern approach to working with geo-spatial data structures based on tidy data principles <span class="citation">(Pebesma <a href="#ref-sf" role="doc-biblioref">2018</a>; Wickham <a href="#ref-tidy-data" role="doc-biblioref">2014</a><a href="#ref-tidy-data" role="doc-biblioref">b</a>)</span>. The key idea behind <strong>sf</strong> is that it stores geo-spatial geometries in a <a href="https://jennybc.github.io/purrr-tutorial/ls13_list-columns.html">list-column</a> of a data frame. This allows each row to represent the real unit of observation/interest – whether it’s a polygon, multi-polygon, point, line, or even a collection of these features – and as a result, works seamlessly inside larger tidy workflows.<a href="#fn14" class="footnote-ref" id="fnref14"><sup>14</sup></a> The <strong>sf</strong> package itself does not really provide geo-spatial data – it provides the framework and utilties for storing and computing on geo-spatial data structures in an opinionated way.</p>
 <p>There are numerous packages for accessing geo-spatial data as simple features data structures. A couple notable examples include <strong>rnaturalearth</strong> and <strong>USAboundaries</strong>. The <strong>rnaturalearth</strong> package is better for obtaining any map data in the world via an API provided by <a href="https://www.naturalearthdata.com/" class="uri">https://www.naturalearthdata.com/</a> <span class="citation">(South <a href="#ref-rnaturalearth" role="doc-biblioref">2017</a>)</span>. The <strong>USAboundaries</strong> package is great for obtaining map data for the United States at any point in history <span class="citation">(Mullen and Bratt <a href="#ref-USAboundaries" role="doc-biblioref">2018</a>)</span>. It doesn’t really matter what tool you use to obtain or create an <strong>sf</strong> object – once you have one, <code>plot_ly()</code> knows how to render it:</p>
 <pre class="sourceCode r"><code class="sourceCode r"><span class="kw">library</span>(rnaturalearth)
 world &lt;-<span class="st"> </span><span class="kw">ne_countries</span>(<span class="dt">returnclass =</span> <span class="st">&quot;sf&quot;</span>)
@@ -540,7 +540,7 @@ FIGURE 4.9: Using <code>split</code> and <code>color</code> to create a chorople
 FIGURE 4.10: Using <code>split</code>, <code>text</code>, and <code>hoveron='fills'</code> to display a tooltip specific to each Canadian province.
 </p>
 </div>
-<p>Although the integrated mapping approaches (<code>plot_mapbox()</code> and <code>plot_geo()</code>) can render <strong>sf</strong> objects, the custom mapping approaches (<code>plot_ly()</code> and <code>geom_sf()</code>) are more flexible because they allow for any well-defined mapping projection. Working with and understanding map projections can be intimatidating for a causal map maker. Thankfully, there are nice resources for searching map projections in a human-friendly interface, like <a href="http://spatialreference.org/" class="uri">http://spatialreference.org/</a>. Through this website, one can search desirable projections for a given portion of the globe and extract commands for projecting their geo-spatial objects into that projection. One way way to perform the projection is to supply the relevant PROJ4 command to the <code>st_transform()</code> function in <strong>sf</strong> <span class="citation">(PROJ contributors <a href="#ref-PROJ" role="doc-biblioref">2018</a>)</span>.</p>
+<p>Although the integrated mapping approaches (<code>plot_mapbox()</code> and <code>plot_geo()</code>) can render <strong>sf</strong> objects, the custom mapping approaches (<code>plot_ly()</code> and <code>geom_sf()</code>) are more flexible because they allow for any well-defined mapping projection. Working with and understanding map projections can be intimatidating for a causal map maker. Thankfully, there are nice resources for searching map projections in a human-friendly interface, like <a href="http://spatialreference.org/" class="uri">http://spatialreference.org/</a>. Through this website, one can search desirable projections for a given portion of the globe and extract commands for projecting their geo-spatial objects into that projection. One way to perform the projection is to supply the relevant PROJ4 command to the <code>st_transform()</code> function in <strong>sf</strong> <span class="citation">(PROJ contributors <a href="#ref-PROJ" role="doc-biblioref">2018</a>)</span>.</p>
 <pre class="sourceCode r"><code class="sourceCode r"><span class="co"># filter the world sf object down to canada</span>
 canada &lt;-<span class="st"> </span><span class="kw">filter</span>(world, name <span class="op">==</span><span class="st"> &quot;Canada&quot;</span>)
 <span class="co"># coerce cities lat/long data to an official sf object</span>
@@ -579,7 +579,7 @@ world_large &lt;-<span class="st"> </span><span class="kw">ne_countries</span>(<
 <span class="co">#&gt; [1] 548121</span></code></pre>
 <p>Analogous to the discussion surrounding <a href="scatter-traces.html#fig:scatter-lines">3.2</a>, it pays to be aware of the tradeoffs involved with rendering <strong>plotly</strong> graphics using one or many traces, and knowledgable about how to leverage either approach. Specifically, by default, <strong>plotly</strong> attempts to render all simple features in a single trace, which is performant, but doesn’t have a lot of interactivity.</p>
 <pre class="sourceCode r"><code class="sourceCode r"><span class="kw">plot_mapbox</span>(world_large, <span class="dt">color =</span> <span class="ot">NA</span>, <span class="dt">stroke =</span> <span class="kw">I</span>(<span class="st">&quot;black&quot;</span>), <span class="dt">span =</span> <span class="kw">I</span>(<span class="fl">0.5</span>))</code></pre>
-<p>For those interested in learning more about geocomputation in R with <strong>sf</strong> and other great R packages like <strong>sp</strong> and <strong>raster</strong>, <span class="citation">Robin Lovelace (<a href="#ref-geocomputation" role="doc-biblioref">2019</a>)</span> provides lots of nice and freely available learning resources <span class="citation">(Pebesma and Bivand <a href="#ref-sp" role="doc-biblioref">2005</a>)</span>; <span class="citation">(Hijmans <a href="#ref-raster" role="doc-biblioref">2019</a>)</span>.</p>
+<p>For those interested in learning more about geocomputation in R with <strong>sf</strong> and other great R packages like <strong>sp</strong> and <strong>raster</strong>, <span class="citation">Robin Lovelace (<a href="#ref-geocomputation" role="doc-biblioref">2019</a>)</span> provides lots of nice and freely available learning resources <span class="citation">(Pebesma and Bivand <a href="#ref-sp" role="doc-biblioref">2005</a>; Hijmans <a href="#ref-raster" role="doc-biblioref">2019</a>)</span>.</p>
 </div>
 <div id="cartograms" class="section level3">
 <h3><span class="header-section-number">4.2.2</span> Cartograms</h3>
@@ -710,10 +710,10 @@ FIGURE 4.15: A tile cartogram of U.S. population in 2016.
 </div>
 <div class="footnotes">
 <hr />
-<ol start="11">
-<li id="fn11"><p>Unfortunately, non-scatter traces currently don’t work with <code>plot_mapbox()</code>/ <code>plot_geo()</code> meaning that, for one, raster (i.e., heatmap) maps are not natively supported.<a href="maps.html#fnref11" class="footnote-back">↩</a></p></li>
-<li id="fn12"><p>To see more examples of creating and using plotly.js’ integrated dropdown functionality to modify graphs, see <a href="https://plot.ly/r/dropdowns/" class="uri">https://plot.ly/r/dropdowns/</a><a href="maps.html#fnref12" class="footnote-back">↩</a></p></li>
-<li id="fn13"><p>This is way more intuitive compared to older workflows based on, say using <code>ggplot2::fortify()</code> to obtain a data structure where a row to represents particular point along a feature and having another column track which point belongs to each feature (<a href="https://gis.stackexchange.com/questions/165974/r-fortify-causing-polygons-to-tear">for example</a>).<a href="maps.html#fnref13" class="footnote-back">↩</a></p></li>
+<ol start="12">
+<li id="fn12"><p>Unfortunately, non-scatter traces currently don’t work with <code>plot_mapbox()</code>/ <code>plot_geo()</code> meaning that, for one, raster (i.e., heatmap) maps are not natively supported.<a href="maps.html#fnref12" class="footnote-back">↩</a></p></li>
+<li id="fn13"><p>To see more examples of creating and using plotly.js’ integrated dropdown functionality to modify graphs, see <a href="https://plot.ly/r/dropdowns/" class="uri">https://plot.ly/r/dropdowns/</a><a href="maps.html#fnref13" class="footnote-back">↩</a></p></li>
+<li id="fn14"><p>This is way more intuitive compared to older workflows based on, say using <code>ggplot2::fortify()</code> to obtain a data structure where a row to represents particular point along a feature and having another column track which point belongs to each feature (<a href="https://gis.stackexchange.com/questions/165974/r-fortify-causing-polygons-to-tear">for example</a>).<a href="maps.html#fnref14" class="footnote-back">↩</a></p></li>
 </ol>
 </div>
 <script>

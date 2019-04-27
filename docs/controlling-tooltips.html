@@ -25,7 +25,7 @@
 <meta name="author" content="Carson Sievert">
 
 
-<meta name="date" content="2019-04-06">
+<meta name="date" content="2019-04-27">
 
   <meta name="viewport" content="width=device-width, initial-scale=1">
   <meta name="apple-mobile-web-app-capable" content="yes">
@@ -278,7 +278,7 @@ code span.wa { color: #60a0b0; font-weight: bold; font-style: italic; } /* Warni
 </ul></li>
 <li class="chapter" data-level="17.5" data-path="linking-views-with-shiny.html"><a href="linking-views-with-shiny.html#discussion"><i class="fa fa-check"></i><b>17.5</b> Discussion</a></li>
 </ul></li>
-<li class="part"><span><b>V Custom behavior with JavaScript</b></span></li>
+<li class="part"><span><b>V Event handling in JavaScript</b></span></li>
 <li class="chapter" data-level="18" data-path="javascript.html"><a href="javascript.html"><i class="fa fa-check"></i><b>18</b> Introduction</a></li>
 <li class="chapter" data-level="19" data-path="json.html"><a href="json.html"><i class="fa fa-check"></i><b>19</b> Working with JSON</a><ul>
 <li class="chapter" data-level="19.1" data-path="json.html"><a href="json.html#assignment-subsetting-and-iteration"><i class="fa fa-check"></i><b>19.1</b> Assignment, subsetting, and iteration</a></li>
@@ -342,7 +342,7 @@ code span.wa { color: #60a0b0; font-weight: bold; font-style: italic; } /* Warni
 <div id="tooltip-text" class="section level2">
 <h2><span class="header-section-number">25.1</span> <code>plot_ly()</code> tooltips</h2>
 <p>There are two main approaches to controlling the tooltip: <code>hoverinfo</code> and <code>hovertemplate</code>. I suggest starting with the former approach since it’s simpler, more mature, and enjoys universal support across trace types. On the other hand, <code>hovertemplate</code> does offer a convenient approach for flexible control over tooltip text, so it can be useful as well.</p>
-<p>The <code>hoverinfo</code> attribute controls what other plot attributes are shown into the tooltip text. The default value of <code>hoverinfo</code> is <code>x+y+text+name</code> (you can verify this with <code>schema()</code>), meaning that plotly.js will use the relevant values of <code>x</code>, <code>y</code>, <code>text</code>, and <code>name</code> to populate the tooltip text. As in Figure <a href="controlling-tooltips.html#fig:custom-tooltip-plotly">25.1</a> shows, you can supply custom text (without the other ‘calculated values’) by supplying a character string <code>text</code> and setting <code>hoverinfo = "text"</code>. The character string can include Glyphs, unicode characters, a some (white-listed) HTML entities and tags.<a href="#fn39" class="footnote-ref" id="fnref39"><sup>39</sup></a> At least currently, plotly.js doesn’t support rendering of <a href="https://github.com/plotly/plotly.js/issues/559">LaTeX</a> or images in the tooltip, but as demonstrated in Figure <a href="supplying-custom-data.html#fig:tooltip-image">21.3</a>, if you know some HTML/JavaScript, you can always build your own custom tooltip.</p>
+<p>The <code>hoverinfo</code> attribute controls what other plot attributes are shown into the tooltip text. The default value of <code>hoverinfo</code> is <code>x+y+text+name</code> (you can verify this with <code>schema()</code>), meaning that plotly.js will use the relevant values of <code>x</code>, <code>y</code>, <code>text</code>, and <code>name</code> to populate the tooltip text. As in Figure <a href="controlling-tooltips.html#fig:custom-tooltip-plotly">25.1</a> shows, you can supply custom text (without the other ‘calculated values’) by supplying a character string <code>text</code> and setting <code>hoverinfo = "text"</code>. The character string can include Glyphs, unicode characters, a some (white-listed) HTML entities and tags.<a href="#fn43" class="footnote-ref" id="fnref43"><sup>43</sup></a> At least currently, plotly.js doesn’t support rendering of <a href="https://github.com/plotly/plotly.js/issues/559">LaTeX</a> or images in the tooltip, but as demonstrated in Figure <a href="supplying-custom-data.html#fig:tooltip-image">21.3</a>, if you know some HTML/JavaScript, you can always build your own custom tooltip.</p>
 <pre class="sourceCode r"><code class="sourceCode r"><span class="kw">library</span>(tibble)
 <span class="kw">library</span>(forcats)
 
@@ -416,12 +416,12 @@ FIGURE 25.3: Using <code>xaxis.hoverformat</code> to round aggregated values dis
 FIGURE 25.4: Formatting the displayed <code>z</code> values in a heatmap using <code>zhoverformat</code>.
 </p>
 </div>
-<p>It’s admittedly difficult to remember where to specify these <code>hoverformat</code> attributes, so if you want a combination of custom text and formatting of computed values you can use <code>hovertemplate</code>, which overrides <code>hoverinfo</code> and allows you to fully specify the tooltip in one consistent location. For a full description of this attribute, see <a href="https://plot.ly/r/reference/#scatter-hovertemplate" class="uri">https://plot.ly/r/reference/#scatter-hovertemplate</a>.</p>
+<p>It’s admittedly difficult to remember where to specify these <code>hoverformat</code> attributes, so if you want a combination of custom text and formatting of computed values you can use <code>hovertemplate</code>, which overrides <code>hoverinfo</code> and allows you to fully specify the tooltip in a single attribute. It does this through special markup rules for inserting and formating data values inside a string. Figure <a href="controlling-tooltips.html#fig:hovertemplate">25.5</a> provides an example of inserting <code>x</code> and <code>y</code> in the tooltip through the special <code>%{variable:format}</code> markup as well as customization of the secondary box through <code>&lt;extra&gt;</code> tag. For a full description of this attribute, including the formatting rules, see <a href="https://plot.ly/r/reference/#scatter-hovertemplate" class="uri">https://plot.ly/r/reference/#scatter-hovertemplate</a>.</p>
 <pre class="sourceCode r"><code class="sourceCode r"><span class="kw">set.seed</span>(<span class="dv">10</span>)
 <span class="kw">plot_ly</span>(<span class="dt">x =</span> <span class="kw">rnorm</span>(<span class="dv">100</span>, <span class="dv">0</span>, <span class="fl">1e5</span>)) <span class="op">%&gt;%</span>
 <span class="st">  </span><span class="kw">add_histogram</span>(
     <span class="dt">histnorm =</span> <span class="st">&quot;density&quot;</span>,
-    <span class="dt">hovertemplate =</span> <span class="st">&quot;The height is %{y:.1e} &lt;extra&gt;That&#39;s very small!&lt;/extra&gt;&quot;</span>
+    <span class="dt">hovertemplate =</span> <span class="st">&quot;The height between &lt;br&gt; (%{x}) &lt;br&gt; is %{y:.1e} &lt;extra&gt;That&#39;s small!&lt;/extra&gt;&quot;</span>
   )</code></pre>
 <div class="figure" style="text-align: center"><span id="fig:hovertemplate"></span>
 <img src="images/hovertemplate.png" alt="Using the hovertemplate attribute to reference computed variables and their display format inside a custom string." width="100%" />
@@ -546,8 +546,8 @@ FIGURE 25.12: Using the <code>hoverlabel</code> attribute with <code>ggplotly()<
 </div>
 <div class="footnotes">
 <hr />
-<ol start="39">
-<li id="fn39"><p>If you find a tag or entity that you want isn’t supported, please request it to be added in the plotly.js repo <a href="https://github.com/plotly/plotly.js/issues/new" class="uri">https://github.com/plotly/plotly.js/issues/new</a><a href="controlling-tooltips.html#fnref39" class="footnote-back">↩</a></p></li>
+<ol start="43">
+<li id="fn43"><p>If you find a tag or entity that you want isn’t supported, please request it to be added in the plotly.js repo <a href="https://github.com/plotly/plotly.js/issues/new" class="uri">https://github.com/plotly/plotly.js/issues/new</a><a href="controlling-tooltips.html#fnref43" class="footnote-back">↩</a></p></li>
 </ol>
 </div>
 <script>

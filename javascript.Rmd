@@ -1,10 +1,23 @@
-# (PART) Custom behavior with JavaScript {-}
+# (PART) Event handling in JavaScript {-}
 
 # Introduction {#javascript}
 
-The same plotly.js events that we accessed in **shiny** through `event_data()` in section \@ref(shiny-plotly-inputs) can also be leveraged purely client-side with some custom JavaScript (JS). That means, by knowing a little bit about JS and the plotly.js library, we can extend graphs created with the R package to have custom behavior without requiring a client-server application. This portion of the book focuses on writing custom responses to commonly used plotly.js events, but a lot of the same tools and techniques could be used to extend these graphs in other ways as well.
+The same plotly.js events that we leveraged in **shiny** through `event_data()` in Section \@ref(shiny-plotly-inputs) can also be handled using JavaScript (JS) instead of R, which offers numerous advantages:
 
-To add a custom JS event handler to a **plotly** graph, you can leverage the `onRender()` function from the **htmlwidgets** package. This R function accepts a JS function as a string and calls that function when the widget is done rendering in the browser. The JS function needs (at least) one argument, `el`, which is the Document Object Model (DOM) element containing the **plotly** graph. Figure \@ref(fig:console-log) shows how you could use `onRender()` to log (and inspect) the DOM element to your browser's JS console. You can open the console of any browser (including RStudio!) with right-click -> "Inspect Element" -> "Console" tab (or similar). To demonstrate some useful DOM element's properties, Figure \@ref(fig:console-log) uses Firefox to inspect the element as a global variable, but as Figure \@ref(fig:console-log-event) shows, Chrome currently offers better tools for code debugging the JS function provided to `onRender()`  (e.g., setting breakpoints in virtual memory).
+1. Your web browser natively understands JS, so writing event handlers in JS instead of R offers the potential of having a purely client-side webpage instead of client-server app, making the end result easier to share, host, and maintain.^[Comparatively speaking, client-server apps require way more runtime software dependencies. In the case of **shiny** apps, RStudio provides accessible resources for hosting shiny apps https://shiny.rstudio.com/articles/#deployment, but using these services to host apps that encounters lots of traffic will either cost money and/or time for setting up the proper computational infrastructure.] That being said, the effort required to rewrite a 'heavy-duty' client-server app as a 'light-weight' client-side webpage isn't always worth the investment; so before doing so, you should have a clear vision for the interactivity you desire, be fairly confident that vision won't change in the future, and have a use-case that doesn't require sophisicated statistical computations to be run dynamically in response to user events (i.e., it's not practical or feasible to pre-compute).^[Compared to JS, R has way more facilities for statistical computing.]
+2. There are certain things you can do in JS that you can't necessarily do in R, such as accessing the web browser's `window` API to open hyperlinks in response to plotly.js click events (e.g., Figure \@ref(fig:click-open)).
+3. JS event handlers can be noticably faster than running comparable code on an external R process, especially with a slow internet connection.
+
+For those new to JS, you may find it helpful to compare code examples from this part of the book to code examples from Section \@ref(proxies).^[In fact, converting some examples from that section from **shiny** to JavaScript/HTML would be a good exercise!] That's because, the `plotlyProxy()` interface which powers that section is just an R interface to [plotly.js' JavaScript functions](https://plot.ly/javascript/plotlyjs-function-reference), and is primarily for updating graphs within an event handler. Therefore, if you understand how the examples in that section work, you can translate a good amount of that knowledge to a JS context as well.
+However, when handling these events in JS instead of R, you'll want to be familiar with JavaScript Object Notation (JSON), which is introduced in Chapter \@ref(json). That chapter also offers a minimal JS programming foundation for manipulating JSON, then Chapter \@ref(js-event-handlers) quickly covers how to attach JS event handlers to various plotly.js events, which is really all that's required to loosely understand the bulk of the examples in Chapters \@ref(supplying-custom-data) and \@ref(client-side).
+
+<!--
+This portion of the book focuses on writing custom event handlers to commonly used plotly.js events, but a lot of the same tools and techniques covered here could be used to extend these graphs in other ways as well.
+-->
+
+An important thing to know about when doing any sort of web development is how to open and navigate web browsers developer tools. Through the developer tools, you can access a JS console to run and test out JS code, inpsect and debug the JS/CSS/HTML code behind a website, query components of the Document Object Model (DOM), inspect network traffic, and much more. In our use case of writing plotly.js event handlers, the JS console will come in handy especially to see what information a plotly.js event is firing (think of it as the analog of printing output to the R console in a shiny app), before writing the actual event handler. To open the console of a web browser (including RStudio), you can likely do: right-click -> "Inspect Element" -> "Console" tab (or similar).
+
+One way to write a custom event handler for a **plotly** graph is to leverage the `onRender()` function from the **htmlwidgets** package. This R function accepts a JS function as a string and calls that function when the widget is done rendering in the browser. The JS function needs (at least) one argument, `el`, which is the Document Object Model (DOM) element containing the **plotly** graph. It's worth noting that `htmlwidgets::onRender()` serves a more general purpose than registering plotly.js event handlers, so you could use it to a bunch other things, such as adding conditional logic based on information stored in `el`. Figure \@ref(fig:console-log) shows how you could use `onRender()` to log (and inspect) the DOM element to your browser's JS console. To demonstrate some useful DOM element's properties, Figure \@ref(fig:console-log) uses Firefox to inspect the element as a global variable, but as Figure \@ref(fig:console-log-event) shows, Chrome currently offers better tools for code debugging the JS function provided to `onRender()`  (e.g., setting breakpoints in virtual memory). 
 
 ```r
 library(htmlwidgets)
@@ -16,8 +29,7 @@ plot_ly(z = ~volcano) %>%
 include_vimeo("307598574", height = "700")
 ```
 
-If you're completely new to JavaScript and JSON, section \@ref(json) provides a foundation for understanding the subsequent sections, but those already familiar can skip ahead to section \@ref(js-event-handlers).
-
+If you're completely new to JS and JSON, Section \@ref(json) provides a foundation for understanding the subsequent sections, but those already familiar can skip ahead to Section \@ref(js-event-handlers), which shows how to log plotly.js event data to the JS console via `htmlwidgets::onRender()`.
 
 # Working with JSON {#json}
 
@@ -96,7 +108,7 @@ arr.map(function(item) { return typeof item == "number" ? item + 1 : item; });
 // ["hello", "world", 11]
 ```
 
-There are a handful of other useful [array](https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/Array) and [object](https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/Object) methods, but to keep things focused, we'll only cover what's required to comprehend section \@ref(js-event-handlers). A couple examples in that section use the `filter()` method, which like `map()` applies a function to each array element, but expects a logical expression and returns only the elements that meet the condition.
+There are a handful of other useful [array](https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/Array) and [object](https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/Object) methods, but to keep things focused, we'll only cover what's required to comprehend Section \@ref(js-event-handlers). A couple examples in that section use the `filter()` method, which like `map()` applies a function to each array element, but expects a logical expression and returns only the elements that meet the condition.
 
 ```js
 arr.filter(function(item) { return typeof item == "string"; });
@@ -115,7 +127,7 @@ jsonlite::toJSON("A string in R", auto_unbox = TRUE)
 #> "A string in R"
 ```
 
-It's worth noting that plotly.js, which consumes JSON objects, has specific expectations and rules about scalars versus arrays of length 1. If you're calling the plotly.js library directly in JS, as we'll see later in section \@ref(js-event-handlers), you'll need to be mindful of the difference between scalars and arrays of length 1. Some attributes, like `text` and `marker.size`, accept both scalars and arrays and apply different rules based on the difference. Some other attributes, like `x`, `y`, and `z` only accept arrays and will error out if given a scalar. To learn about these rules and expectations, you can use the `schema()` function from R to inspect plotly.js' specification as shown in Figure \@ref(fig:json-schema). Note that attributes with a `val_type` of `'data_array'` require an array while attributes with an `arrayOk: true` field accept either scalars or arrays.
+It's worth noting that plotly.js, which consumes JSON objects, has specific expectations and rules about scalars versus arrays of length 1. If you're calling the plotly.js library directly in JS, as we'll see later in Section \@ref(js-event-handlers), you'll need to be mindful of the difference between scalars and arrays of length 1. Some attributes, like `text` and `marker.size`, accept both scalars and arrays and apply different rules based on the difference. Some other attributes, like `x`, `y`, and `z` only accept arrays and will error out if given a scalar. To learn about these rules and expectations, you can use the `schema()` function from R to inspect plotly.js' specification as shown in Figure \@ref(fig:json-schema). Note that attributes with a `val_type` of `'data_array'` require an array while attributes with an `arrayOk: true` field accept either scalars or arrays.
 
 ```r
 schema()
@@ -163,7 +175,7 @@ include_vimeo("307597974", height = "700")
 
 # Supplying custom data
 
-As covered in section \@ref(shiny-plotly-inputs), it's often useful to supply meta-information (i.e. custom data) to graphical marker(s) and use that information when responding to a event. For example, suppose we'd like each point in a scatterplot to act like a hyperlink to a different webpage. In order to do so, we can supply a url to each point (as metadata) and instruct the browser to open the relevant hyperlink on a click event. Figure \@ref(fig:click-open) does exactly this by supplying urls to each point in R through the `customdata` attribute and defining a custom JS event to `window.open()` the relevant `url` upon a click event. In this case, since each point represents one row of data, the `d.point` is an array of length 1, so we may obtain the `url` of the clicked point with `d.points[0].customdata`.
+As covered in Section \@ref(shiny-plotly-inputs), it's often useful to supply meta-information (i.e. custom data) to graphical marker(s) and use that information when responding to a event. For example, suppose we'd like each point in a scatterplot to act like a hyperlink to a different webpage. In order to do so, we can supply a url to each point (as metadata) and instruct the browser to open the relevant hyperlink on a click event. Figure \@ref(fig:click-open) does exactly this by supplying urls to each point in R through the `customdata` attribute and defining a custom JS event to `window.open()` the relevant `url` upon a click event. In this case, since each point represents one row of data, the `d.point` is an array of length 1, so we may obtain the `url` of the clicked point with `d.points[0].customdata`.
 
 ```r
 library(htmlwidgets)
@@ -239,7 +251,7 @@ plot_ly(hoverinfo = "none") %>%
 include_vimeo("310466116")
 ```
 
-On the JS side, the `customdata` attribute is designed to support _any_ JS array of appropriate length, so if you need to supply numerous custom values to particular marker(s), list-columns in R provides a nice way to do so. Figure \@ref(fig:tx-annotate) leverages this idea to  bind both the `city` and `sales` values to each point along a time series and display those values on hover. It also demonstrates how one can use the graphical querying framework from section \@ref(graphical-queries) in tandem with a custom JS event. That is, `highlight_key()` and `highlight()` control the highlighting of the time series, while the custom JS event adds the plot annotation (all based on the same `"plotly_hover"` event). In this case, the highlighting, annotations, and circle shapes are triggered by a `"plotly_hover"` event and they all work in tandem because event handlers are cumulative. That means, if you wanted, you could register multiple custom handlers for a particular event.
+On the JS side, the `customdata` attribute is designed to support _any_ JS array of appropriate length, so if you need to supply numerous custom values to particular marker(s), list-columns in R provides a nice way to do so. Figure \@ref(fig:tx-annotate) leverages this idea to  bind both the `city` and `sales` values to each point along a time series and display those values on hover. It also demonstrates how one can use the graphical querying framework from Section \@ref(graphical-queries) in tandem with a custom JS event. That is, `highlight_key()` and `highlight()` control the highlighting of the time series, while the custom JS event adds the plot annotation (all based on the same `"plotly_hover"` event). In this case, the highlighting, annotations, and circle shapes are triggered by a `"plotly_hover"` event and they all work in tandem because event handlers are cumulative. That means, if you wanted, you could register multiple custom handlers for a particular event.
 
 ```r
 library(purrr)
@@ -293,7 +305,7 @@ include_vimeo("307598624")
 
 ## Web infrastructure
 
-Sometimes supplying `customdata` isn't the best way to acheive a particular interactive feature. In those cases, you likely want to leverage other R lower-level interfaces to web technologies. Recall from section \@ref(arranging-htmlwidgets) that **htmlwidgets** objects are a special case of **htmltools** tags. That means, you can always complement your widget(s) with arbitrary HTML content by adding additional tags. Figure \@ref(fig:correlation-client-side) leverages this idea to place an empty HTML `<div>` container below the correlation heatmap which is then populated with a **plotly** scatterplot upon clicking a cell. As it turns out, you *could* implement Figure \@ref(fig:correlation-client-side) by binding x/y data to each heatmap cell via `customdata`, but that would require the browser to store twice the amount of data as what's required here. Instead, this approach seralizes the input data (`mtcars`) into a JSON file via **jsonlite** so the webpage can read and parse the full dataset once and select just the two required columns when required (on click). There are a lot of ways to read JSON in JavaScript, but here we use the d3.js library's `d3.json()` since **plotly** already comes bundled with the library [@d3js]. Also, since the HTML file is reading the JSON from disk, most browsers won't render the HTML file directly (at least, by default, for security reasons). To get around that, we can start up a simple web server from R using **servr** to serve both the HTML and JSON in way that your browser will deem safe to run [@servr].
+Sometimes supplying `customdata` isn't the best way to acheive a particular interactive feature. In those cases, you likely want to leverage other R lower-level interfaces to web technologies. Recall from Section \@ref(arranging-htmlwidgets) that **htmlwidgets** objects are a special case of **htmltools** tags. That means, you can always complement your widget(s) with arbitrary HTML content by adding additional tags. Figure \@ref(fig:correlation-client-side) leverages this idea to place an empty HTML `<div>` container below the correlation heatmap which is then populated with a **plotly** scatterplot upon clicking a cell. As it turns out, you *could* implement Figure \@ref(fig:correlation-client-side) by binding x/y data to each heatmap cell via `customdata`, but that would require the browser to store twice the amount of data as what's required here. Instead, this approach seralizes the input data (`mtcars`) into a JSON file via **jsonlite** so the webpage can read and parse the full dataset once and select just the two required columns when required (on click). There are a lot of ways to read JSON in JavaScript, but here we use the d3.js library's `d3.json()` since **plotly** already comes bundled with the library [@d3js]. Also, since the HTML file is reading the JSON from disk, most browsers won't render the HTML file directly (at least, by default, for security reasons). To get around that, we can start up a simple web server from R using **servr** to serve both the HTML and JSON in way that your browser will deem safe to run [@servr].
 
 ```{r, eval = FALSE, summary = "Click to see code"}
 library(plotly)
@@ -301,7 +313,7 @@ library(htmltools)
 
 nms <- names(mtcars)
 
-p <- plot_ly(d, colors = "RdBu") %>%
+p <- plot_ly(colors = "RdBu") %>%
   add_heatmap(
     x = nms, 
     y = nms, 
