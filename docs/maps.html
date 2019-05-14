@@ -1,13 +1,12 @@
 <!DOCTYPE html>
-<html >
-
+<html xmlns="http://www.w3.org/1999/xhtml" lang="" xml:lang="">
 <head>
 
-  <meta charset="UTF-8">
-  <meta http-equiv="X-UA-Compatible" content="IE=edge">
+  <meta charset="utf-8" />
+  <meta http-equiv="X-UA-Compatible" content="IE=edge" />
   <title>4 Maps | Interactive web-based data visualization with R, plotly, and shiny</title>
-  <meta name="description" content="A useR guide to creating highly interactive graphics for exploratory and expository visualization.">
-  <meta name="generator" content="bookdown  and GitBook 2.6.7">
+  <meta name="description" content="A useR guide to creating highly interactive graphics for exploratory and expository visualization." />
+  <meta name="generator" content="bookdown 0.10 and GitBook 2.6.7" />
 
   <meta property="og:title" content="4 Maps | Interactive web-based data visualization with R, plotly, and shiny" />
   <meta property="og:type" content="book" />
@@ -22,14 +21,14 @@
   <meta name="twitter:description" content="A useR guide to creating highly interactive graphics for exploratory and expository visualization." />
   
 
-<meta name="author" content="Carson Sievert">
+<meta name="author" content="Carson Sievert" />
 
 
-<meta name="date" content="2019-04-27">
+<meta name="date" content="2019-05-14" />
 
-  <meta name="viewport" content="width=device-width, initial-scale=1">
-  <meta name="apple-mobile-web-app-capable" content="yes">
-  <meta name="apple-mobile-web-app-status-bar-style" content="black">
+  <meta name="viewport" content="width=device-width, initial-scale=1" />
+  <meta name="apple-mobile-web-app-capable" content="yes" />
+  <meta name="apple-mobile-web-app-status-bar-style" content="black" />
   
   
 <link rel="prev" href="scatter-traces.html">
@@ -358,7 +357,7 @@ code span.wa { color: #60a0b0; font-weight: bold; font-style: italic; } /* Warni
 <div class="figure" style="text-align: center"><span id="fig:mapbox-bubble"></span>
 <iframe src="https://player.vimeo.com/video/317352934?title=0&amp;byline=0&amp;portrait=0" width="100%" height="400" frameborder="0" seamless="seamless" webkitAllowFullScreen mozallowfullscreen allowFullScreen></iframe>
 <p class="caption">
-FIGURE 4.1: A mapbox powered bubble chart showing the population of various cities in Canada.
+FIGURE 4.1: A mapbox powered bubble chart showing the population of various cities in Canada. For the interactive, see <a href="https://plotly-r.com/interactives/mapbox-bubble.html" class="uri">https://plotly-r.com/interactives/mapbox-bubble.html</a>
 </p>
 </div>
 <p>The Mapbox basemap styling is controlled through the <a href="https://plot.ly/r/reference/#layout-mapbox-style"><code>layout.mapbox.style</code></a> attribute. The <strong>plotly</strong> package comes with support for 7 different styles, but you can also supply a custom URL to a <a href="https://docs.mapbox.com/help/tutorials/create-a-custom-style/">custom mapbox style</a>. To obtain all the pre-packaged basemap style names, you can grab them from the official plotly.js <code>schema()</code>:</p>
@@ -376,7 +375,7 @@ styles
 <div class="figure" style="text-align: center"><span id="fig:satellite"></span>
 <iframe src="https://player.vimeo.com/video/326683897?title=0&amp;byline=0&amp;portrait=0" width="100%" height="400" frameborder="0" seamless="seamless" webkitAllowFullScreen mozallowfullscreen allowFullScreen></iframe>
 <p class="caption">
-FIGURE 4.2: Zooming in on earth satellite imagery using <code>plot_mapbox()</code>.
+FIGURE 4.2: Zooming in on earth satellite imagery using <code>plot_mapbox()</code>. For the interactive, see <a href="https://plotly-r.com/interactives/satellite.html" class="uri">https://plotly-r.com/interactives/satellite.html</a>
 </p>
 </div>
 <p>Figure <a href="maps.html#fig:mapbox-style-dropdown">4.3</a> demonstrates how to create an integrated plotly.js dropdown menu to control the basemap style via the <a href="https://plot.ly/r/reference/#layout-updatemenus-items-updatemenu-buttons"><code>layout.updatemenus</code></a> attribute. The idea behind an integrated plotly.js dropdown is to supply a list of buttons (i.e., menu items) where each button invokes a plotly.js method with some arguments. In this case, each button uses the <a href="https://plot.ly/javascript/plotlyjs-function-reference/">relayout</a> method to modify the <code>layout.mapbox.style</code> attribute.<a href="#fn13" class="footnote-ref" id="fnref13"><sup>13</sup></a></p>
@@ -393,7 +392,7 @@ FIGURE 4.2: Zooming in on earth satellite imagery using <code>plot_mapbox()</cod
 <div class="figure" style="text-align: center"><span id="fig:mapbox-style-dropdown"></span>
 <iframe src="https://player.vimeo.com/video/326684625?title=0&amp;byline=0&amp;portrait=0" width="100%" height="400" frameborder="0" seamless="seamless" webkitAllowFullScreen mozallowfullscreen allowFullScreen></iframe>
 <p class="caption">
-FIGURE 4.3: Providing a dropdown menu to control the styling of the mapbox baselayer.
+FIGURE 4.3: Providing a dropdown menu to control the styling of the mapbox baselayer. For the interactive, see <a href="https://plotly-r.com/interactives/mapbox-style-dropdown.html" class="uri">https://plotly-r.com/interactives/mapbox-style-dropdown.html</a>
 </p>
 </div>
 <p>The other integrated mapping solution in <strong>plotly</strong> is <code>plot_geo()</code>. Compared to <code>plot_mapbox()</code>, this approach has support for different mapping projections, but styling the basemap is limited and can be more cumbersome. Figure <a href="maps.html#fig:geo-flights">4.4</a> demonstrates using <code>plot_geo()</code> in conjunction with <code>add_markers()</code> and <code>add_segments()</code> to visualize flight paths within the United States. Whereas <code>plot_mapbox()</code> is fixed to a mercator projection, the <code>plot_geo()</code> constructor has a handful of different projection available to it, including the orthographic projection which gives the illusion of the 3D globe.</p>
@@ -434,7 +433,7 @@ geo &lt;-<span class="st"> </span><span class="kw">list</span>(
 <div class="figure" style="text-align: center"><span id="fig:geo-flights"></span>
 <iframe src="https://player.vimeo.com/video/317358033?title=0&amp;byline=0&amp;portrait=0" width="100%" height="400" frameborder="0" seamless="seamless" webkitAllowFullScreen mozallowfullscreen allowFullScreen></iframe>
 <p class="caption">
-FIGURE 4.4: Using the integrated orthographic projection to visualize flight patterns on a ‘3D’ globe.
+FIGURE 4.4: Using the integrated orthographic projection to visualize flight patterns on a ‘3D’ globe. For the interactive, see <a href="https://plotly-r.com/interactives/geo-flights.html" class="uri">https://plotly-r.com/interactives/geo-flights.html</a>
 </p>
 </div>
 <p>One nice thing about <code>plot_geo()</code> is that it automatically projects geometries into the proper coordinate system defined by the map projection. For example, in Figure <a href="maps.html#fig:maps">4.5</a> the simple line segment is straight when using <code>plot_mapbox()</code> yet curved when using <code>plot_geo()</code>. It’s possible to acheive the same effect using <code>plot_ly()</code> or <code>plot_mapbox()</code>, but the relevant marker/line/polygon data has to be put into an <strong>sf</strong> data structure before rendering (see Section <a href="maps.html#sf">4.2.1</a> for more details).</p>
@@ -454,7 +453,7 @@ map2 &lt;-<span class="st"> </span><span class="kw">plot_geo</span>() <span clas
 <span class="kw">library</span>(htmltools)
 <span class="kw">browsable</span>(<span class="kw">tagList</span>(map1, map2))</code></pre>
 <div class="figure" style="text-align: center"><span id="fig:maps"></span>
-<img src="images/maps.png" alt="A comparison of plotly’s integrated mapping solutions: plot_mapbox() (top) and plot_geo() (bottom). The plot_geo() approach will transform line segments to correctly reflect their projection into a non-cartesian coordinate system." width="100%" />
+<img src="images/maps.png" alt="A comparison of plotly’s integrated mapping solutions: plot_mapbox() (top) and plot_geo() (bottom). The plot_geo() approach will transform line segments to correctly reflect their projection into a non-cartesian coordinate system." width="100%" data-url="/interactives/maps.html" />
 <p class="caption">
 FIGURE 4.5: A comparison of <strong>plotly</strong>’s integrated mapping solutions: <code>plot_mapbox()</code> (top) and <code>plot_geo()</code> (bottom). The <code>plot_geo()</code> approach will transform line segments to correctly reflect their projection into a non-cartesian coordinate system.
 </p>
@@ -478,7 +477,7 @@ g &lt;-<span class="st"> </span><span class="kw">list</span>(
   ) <span class="op">%&gt;%</span>
 <span class="st">  </span><span class="kw">layout</span>(<span class="dt">geo =</span> g)</code></pre>
 <div class="figure" style="text-align: center"><span id="fig:us-density"></span>
-<img src="images/us-density.svg" alt="A map of U.S. population density using the state.x77 data from the datasets package." width="100%" />
+<img src="images/us-density.svg" alt="A map of U.S. population density using the state.x77 data from the datasets package." width="100%" data-url="/interactives/us-density.html" />
 <p class="caption">
 FIGURE 4.6: A map of U.S. population density using the <code>state.x77</code> data from the <strong>datasets</strong> package.
 </p>
@@ -499,7 +498,7 @@ world &lt;-<span class="st"> </span><span class="kw">ne_countries</span>(<span c
 <span class="co">#&gt; [1] &quot;sf&quot;    &quot;data.frame&quot;</span>
 <span class="kw">plot_ly</span>(world, <span class="dt">color =</span> <span class="kw">I</span>(<span class="st">&quot;gray90&quot;</span>), <span class="dt">stroke =</span> <span class="kw">I</span>(<span class="st">&quot;black&quot;</span>), <span class="dt">span =</span> <span class="kw">I</span>(<span class="dv">1</span>))</code></pre>
 <div class="figure" style="text-align: center"><span id="fig:world"></span>
-<img src="images/world.svg" alt="Rendering all the world’s countries using plot_ly() and the ne_countries() function from the rnaturalearth package." width="100%" />
+<img src="images/world.svg" alt="Rendering all the world’s countries using plot_ly() and the ne_countries() function from the rnaturalearth package." width="100%" data-url="/interactives/world.html" />
 <p class="caption">
 FIGURE 4.7: Rendering all the world’s countries using <code>plot_ly()</code> and the <code>ne_countries()</code> function from the <strong>rnaturalearth</strong> package.
 </p>
@@ -519,7 +518,7 @@ FIGURE 4.8: A diagram of a simple features data frame. The geometry column track
 <pre class="sourceCode r"><code class="sourceCode r">canada &lt;-<span class="st"> </span><span class="kw">ne_states</span>(<span class="dt">country =</span> <span class="st">&quot;Canada&quot;</span>, <span class="dt">returnclass =</span> <span class="st">&quot;sf&quot;</span>)
 <span class="kw">plot_ly</span>(canada, <span class="dt">split =</span> <span class="op">~</span>name, <span class="dt">color =</span> <span class="op">~</span>provnum_ne)</code></pre>
 <div class="figure" style="text-align: center"><span id="fig:split-color"></span>
-<img src="images/split-color.svg" alt="Using split and color to create a choropleth map of provinces in Canada." width="100%" />
+<img src="images/split-color.svg" alt="Using split and color to create a choropleth map of provinces in Canada." width="100%" data-url="/interactives/split-color.html" />
 <p class="caption">
 FIGURE 4.9: Using <code>split</code> and <code>color</code> to create a choropleth map of provinces in Canada.
 </p>
@@ -535,7 +534,7 @@ FIGURE 4.9: Using <code>split</code> and <code>color</code> to create a chorople
   <span class="dt">showlegend =</span> <span class="ot">FALSE</span>
 )</code></pre>
 <div class="figure" style="text-align: center"><span id="fig:split-text"></span>
-<img src="images/split-text.png" alt="Using split, text, and hoveron='fills' to display a tooltip specific to each Canadian province." width="100%" />
+<img src="images/split-text.png" alt="Using split, text, and hoveron='fills' to display a tooltip specific to each Canadian province." width="100%" data-url="/interactives/split-text.html" />
 <p class="caption">
 FIGURE 4.10: Using <code>split</code>, <code>text</code>, and <code>hoveron='fills'</code> to display a tooltip specific to each Canadian province.
 </p>
@@ -565,7 +564,7 @@ p &lt;-<span class="st"> </span><span class="kw">ggplot</span>() <span class="op
 <span class="st">  </span><span class="kw">geom_sf</span>(<span class="dt">data =</span> cities, <span class="kw">aes</span>(<span class="dt">size =</span> pop), <span class="dt">color =</span> <span class="st">&quot;red&quot;</span>, <span class="dt">alpha =</span> <span class="fl">0.3</span>)
 <span class="kw">ggplotly</span>(p)</code></pre>
 <div class="figure" style="text-align: center"><span id="fig:canada-ggplotly"></span>
-<img src="images/canada-ggplotly.svg" alt="The population of various Canadian cities rendered on a custom basemap using a Mollweide projection." width="100%" />
+<img src="images/canada-ggplotly.svg" alt="The population of various Canadian cities rendered on a custom basemap using a Mollweide projection." width="100%" data-url="/interactives/canada-ggplotly.html" />
 <p class="caption">
 FIGURE 4.11: The population of various Canadian cities rendered on a custom basemap using a Mollweide projection.
 </p>
@@ -602,7 +601,7 @@ us_cont &lt;-<span class="st"> </span><span class="kw">cartogram_cont</span>(<sp
 <span class="st">  </span><span class="kw">layout</span>(<span class="dt">showlegend =</span> <span class="ot">FALSE</span>) <span class="op">%&gt;%</span>
 <span class="st">  </span><span class="kw">colorbar</span>(<span class="dt">title =</span> <span class="st">&quot;Population </span><span class="ch">\n</span><span class="st"> 2014&quot;</span>)</code></pre>
 <div class="figure" style="text-align: center"><span id="fig:cartogram"></span>
-<img src="images/cartogram.png" alt="A cartogram of US population in 2014. A cartogram sizes the area of geo-spatial objects proportional to some metric (e.g., population)." width="100%" />
+<img src="images/cartogram.png" alt="A cartogram of US population in 2014. A cartogram sizes the area of geo-spatial objects proportional to some metric (e.g., population)." width="100%" data-url="/interactives/cartogram.html" />
 <p class="caption">
 FIGURE 4.12: A cartogram of US population in 2014. A cartogram sizes the area of geo-spatial objects proportional to some metric (e.g., population).
 </p>
@@ -627,14 +626,14 @@ us_dor &lt;-<span class="st"> </span><span class="kw">cartogram_dorling</span>(u
   ) <span class="op">%&gt;%</span>
 <span class="st">  </span><span class="kw">layout</span>(<span class="dt">showlegend =</span> <span class="ot">FALSE</span>)</code></pre>
 <div class="figure" style="text-align: center"><span id="fig:cartogram-dorling"></span>
-<img src="images/cartogram-dorling.svg" alt="A dorling cartogram of US population in 2014. A dorling cartogram sizes the circles proportional to some metric (e.g., population)." width="100%" />
+<img src="images/cartogram-dorling.svg" alt="A dorling cartogram of US population in 2014. A dorling cartogram sizes the circles proportional to some metric (e.g., population)." width="100%" data-url="/interactives/cartogram-dorling.html" />
 <p class="caption">
 FIGURE 4.13: A dorling cartogram of US population in 2014. A dorling cartogram sizes the circles proportional to some metric (e.g., population).
 </p>
 </div>
 <p>Figure <a href="maps.html#fig:cartogram-ncont">4.14</a> demonstrates a non-continuous cartogram of US population in 2014 from <span class="citation">Olson, J. M. (<a href="#ref-Olson" role="doc-biblioref">1976</a>)</span>. In contrast to the Dorling cartogram, this approach does preserve the shape of polygons. The implementation behind Figure <a href="maps.html#fig:cartogram-ncont">4.14</a> is to simply take the implementation of Figure <a href="maps.html#fig:cartogram-dorling">4.13</a> and change <code>cartogram_dorling()</code> to <code>cartogram_ncont()</code>.</p>
 <div class="figure" style="text-align: center"><span id="fig:cartogram-ncont"></span>
-<img src="images/cartogram-ncont.svg" alt="A non-continguous cartogram of US population in 2014 that preserves shape." width="100%" />
+<img src="images/cartogram-ncont.svg" alt="A non-continguous cartogram of US population in 2014 that preserves shape." width="100%" data-url="/interactives/cartogram-ncont.html" />
 <p class="caption">
 FIGURE 4.14: A non-continguous cartogram of US population in 2014 that preserves shape.
 </p>
@@ -645,7 +644,7 @@ tiles &lt;-<span class="st"> </span><span class="kw">geojson_read</span>(<span c
 tiles_sf &lt;-<span class="st"> </span><span class="kw">st_as_sf</span>(tiles)
 <span class="kw">plot_ly</span>(tiles_sf, <span class="dt">split =</span> <span class="op">~</span>name)</code></pre>
 <div class="figure" style="text-align: center"><span id="fig:cartogram-tiles"></span>
-<img src="images/cartogram-tiles.svg" alt="A tile cartogram of U.S. population in 2016." width="100%" />
+<img src="images/cartogram-tiles.svg" alt="A tile cartogram of U.S. population in 2016." width="100%" data-url="/interactives/cartogram-tiles.html" />
 <p class="caption">
 FIGURE 4.15: A tile cartogram of U.S. population in 2016.
 </p>
@@ -656,56 +655,56 @@ FIGURE 4.15: A tile cartogram of U.S. population in 2016.
 </div>
 <h3>References</h3>
 <div id="refs" class="references">
-<div id="ref-RCore">
-<p>R Core Team. 2016. <em>R: A Language and Environment for Statistical Computing</em>. Vienna, Austria: R Foundation for Statistical Computing. <a href="https://www.R-project.org/">https://www.R-project.org/</a>.</p>
-</div>
-<div id="ref-election-maps">
-<p>Newman, Mark. 2016. “Maps of the 2016 Us Presidential Election Results.” Blog. <a href="http://www-personal.umich.edu/~mejn/election/2016/">http://www-personal.umich.edu/~mejn/election/2016/</a>.</p>
-</div>
-<div id="ref-sf">
-<p>Pebesma, Edzer. 2018. <em>Sf: Simple Features for R</em>. <a href="https://CRAN.R-project.org/package=sf">https://CRAN.R-project.org/package=sf</a>.</p>
-</div>
-<div id="ref-tidy-data">
-<p>Wickham, Hadley. 2014b. “Tidy Data.” <em>The Journal of Statistical Software</em> 59 (10). <a href="http://www.jstatsoft.org/v59/i10/">http://www.jstatsoft.org/v59/i10/</a>.</p>
-</div>
-<div id="ref-rnaturalearth">
-<p>South, Andy. 2017. <em>Rnaturalearth: World Map Data from Natural Earth</em>. <a href="https://CRAN.R-project.org/package=rnaturalearth">https://CRAN.R-project.org/package=rnaturalearth</a>.</p>
-</div>
-<div id="ref-USAboundaries">
-<p>Mullen, Lincoln A., and Jordan Bratt. 2018. “USAboundaries: Historical and Contemporary Boundaries of the United States of America.” <em>Journal of Open Source Software</em> 3 (23): 314. <a href="https://doi.org/10.21105/joss.00314">https://doi.org/10.21105/joss.00314</a>.</p>
-</div>
-<div id="ref-PROJ">
-<p>PROJ contributors. 2018. <em>PROJ Coordinate Transformation Software Library</em>. Open Source Geospatial Foundation. <a href="https://proj4.org/">https://proj4.org/</a>.</p>
-</div>
-<div id="ref-ggplotly-blog-post">
-<p>Sievert, Carson. 2018b. “Learning from and Improving Upon Ggplotly Conversions.” Blog. <a href="https://blog.cpsievert.me/2018/01/30/learning-improving-ggplotly-geom-sf/">https://blog.cpsievert.me/2018/01/30/learning-improving-ggplotly-geom-sf/</a>.</p>
-</div>
-<div id="ref-geocomputation">
-<p>Robin Lovelace, Jannes Muenchow, Jakub Nowosad. 2019. <em>Geocomputation with R</em>. Chapman and Hall/CRC.</p>
-</div>
-<div id="ref-sp">
-<p>Pebesma, Edzer J., and Roger S. Bivand. 2005. “Classes and Methods for Spatial Data in R.” <em>R News</em> 5 (2): 9–13. <a href="https://CRAN.R-project.org/doc/Rnews/">https://CRAN.R-project.org/doc/Rnews/</a>.</p>
-</div>
-<div id="ref-raster">
-<p>Hijmans, Robert J. 2019. <em>Raster: Geographic Data Analysis and Modeling</em>. <a href="https://CRAN.R-project.org/package=raster">https://CRAN.R-project.org/package=raster</a>.</p>
-</div>
-<div id="ref-cartogram-vis">
-<p>Nusrat S, Alam MJ, Kobourov S. 2018. “Evaluating Cartogram Effectiveness.” <em>IEEE Trans Vis Comput Graph</em>. <a href="https://doi.org/10.1109/TVCG.2016.2642109">https://doi.org/10.1109/TVCG.2016.2642109</a>.</p>
-</div>
-<div id="ref-cartogram">
-<p>Jeworutzki, Sebastian. 2018. <em>Cartogram: Create Cartograms with R</em>. <a href="https://CRAN.R-project.org/package=cartogram">https://CRAN.R-project.org/package=cartogram</a>.</p>
-</div>
-<div id="ref-Dougenik">
-<p>James A. Dougenik, Nicholas R. Chrisman, Duane R. Niemeyer. 1985. “An Algorithm to Construct Continuous Area Cartograms.” <em>The Professional Geographer</em>.</p>
+<div id="ref-geojsonio">
+<p>Chamberlain, Scott, and Andy Teucher. 2018. <em>Geojsonio: Convert Data from and to ’Geojson’ or ’Topojson’</em>. <a href="https://CRAN.R-project.org/package=geojsonio">https://CRAN.R-project.org/package=geojsonio</a>.</p>
 </div>
 <div id="ref-Dorling">
 <p>Dorling, D. 1996. “Area Cartograms: Their Use and Creation.” <em>Concepts and Techniques in Modern Geography (CATMOG)</em>.</p>
 </div>
+<div id="ref-raster">
+<p>Hijmans, Robert J. 2019. <em>Raster: Geographic Data Analysis and Modeling</em>. <a href="https://CRAN.R-project.org/package=raster">https://CRAN.R-project.org/package=raster</a>.</p>
+</div>
+<div id="ref-Dougenik">
+<p>James A. Dougenik, Nicholas R. Chrisman, Duane R. Niemeyer. 1985. “An Algorithm to Construct Continuous Area Cartograms.” <em>The Professional Geographer</em>.</p>
+</div>
+<div id="ref-cartogram">
+<p>Jeworutzki, Sebastian. 2018. <em>Cartogram: Create Cartograms with R</em>. <a href="https://CRAN.R-project.org/package=cartogram">https://CRAN.R-project.org/package=cartogram</a>.</p>
+</div>
+<div id="ref-USAboundaries">
+<p>Mullen, Lincoln A., and Jordan Bratt. 2018. “USAboundaries: Historical and Contemporary Boundaries of the United States of America.” <em>Journal of Open Source Software</em> 3 (23): 314. <a href="https://doi.org/10.21105/joss.00314">https://doi.org/10.21105/joss.00314</a>.</p>
+</div>
+<div id="ref-election-maps">
+<p>Newman, Mark. 2016. “Maps of the 2016 Us Presidential Election Results.” Blog. <a href="http://www-personal.umich.edu/~mejn/election/2016/">http://www-personal.umich.edu/~mejn/election/2016/</a>.</p>
+</div>
+<div id="ref-cartogram-vis">
+<p>Nusrat S, Alam MJ, Kobourov S. 2018. “Evaluating Cartogram Effectiveness.” <em>IEEE Trans Vis Comput Graph</em>. <a href="https://doi.org/10.1109/TVCG.2016.2642109">https://doi.org/10.1109/TVCG.2016.2642109</a>.</p>
+</div>
 <div id="ref-Olson">
 <p>Olson, J. M. 1976. “Noncontiguous Area Cartograms.” <em>The Professional Geographer</em>.</p>
 </div>
-<div id="ref-geojsonio">
-<p>Chamberlain, Scott, and Andy Teucher. 2018. <em>Geojsonio: Convert Data from and to ’Geojson’ or ’Topojson’</em>. <a href="https://CRAN.R-project.org/package=geojsonio">https://CRAN.R-project.org/package=geojsonio</a>.</p>
+<div id="ref-sf">
+<p>Pebesma, Edzer. 2018. <em>Sf: Simple Features for R</em>. <a href="https://CRAN.R-project.org/package=sf">https://CRAN.R-project.org/package=sf</a>.</p>
+</div>
+<div id="ref-sp">
+<p>Pebesma, Edzer J., and Roger S. Bivand. 2005. “Classes and Methods for Spatial Data in R.” <em>R News</em> 5 (2): 9–13. <a href="https://CRAN.R-project.org/doc/Rnews/">https://CRAN.R-project.org/doc/Rnews/</a>.</p>
+</div>
+<div id="ref-PROJ">
+<p>PROJ contributors. 2018. <em>PROJ Coordinate Transformation Software Library</em>. Open Source Geospatial Foundation. <a href="https://proj4.org/">https://proj4.org/</a>.</p>
+</div>
+<div id="ref-RCore">
+<p>R Core Team. 2016. <em>R: A Language and Environment for Statistical Computing</em>. Vienna, Austria: R Foundation for Statistical Computing. <a href="https://www.R-project.org/">https://www.R-project.org/</a>.</p>
+</div>
+<div id="ref-geocomputation">
+<p>Robin Lovelace, Jannes Muenchow, Jakub Nowosad. 2019. <em>Geocomputation with R</em>. Chapman and Hall/CRC.</p>
+</div>
+<div id="ref-ggplotly-blog-post">
+<p>Sievert, Carson. 2018b. “Learning from and Improving Upon Ggplotly Conversions.” Blog. <a href="https://blog.cpsievert.me/2018/01/30/learning-improving-ggplotly-geom-sf/">https://blog.cpsievert.me/2018/01/30/learning-improving-ggplotly-geom-sf/</a>.</p>
+</div>
+<div id="ref-rnaturalearth">
+<p>South, Andy. 2017. <em>Rnaturalearth: World Map Data from Natural Earth</em>. <a href="https://CRAN.R-project.org/package=rnaturalearth">https://CRAN.R-project.org/package=rnaturalearth</a>.</p>
+</div>
+<div id="ref-tidy-data">
+<p>Wickham, Hadley. 2014b. “Tidy Data.” <em>The Journal of Statistical Software</em> 59 (10). <a href="http://www.jstatsoft.org/v59/i10/">http://www.jstatsoft.org/v59/i10/</a>.</p>
 </div>
 </div>
 <div class="footnotes">
@@ -740,6 +739,37 @@ FIGURE 4.15: A tile cartogram of U.S. population in 2016.
   gtag('js', new Date());
 
   gtag('config', 'UA-60116966-3');
+</script>
+<script>
+window.onload = function() {
+
+  var imgs = document.querySelectorAll('img');
+
+  // Upon clicking an image, open a new window with the
+  // dimensions of the image, pointing the `data-url` link
+  var on_click = function (e) {
+    var d = e.target.dataset || {};
+    if (d.url) {
+      // Add some extra height for the modebar
+      var height = 'height=' + (e.target.clientHeight * 1.05);
+      var width = 'width=' + e.target.clientWidth;
+      var param = 'location=yes,' + height + ',' + width + ',scrollbars=yes,status=yes';
+      window.open(e.target.dataset.url, '_blank', param);
+    }
+  };
+
+  var on_hover = function (e) {
+    var d = e.target.dataset || {};
+    if (d.url) {
+      e.target.style.cursor = 'pointer';
+    }
+  };
+
+  for (var i = 0; i < imgs.length; i++) {
+    imgs[i].addEventListener('click', on_click);
+    imgs[i].addEventListener('mouseover', on_hover);
+  }
+};
 </script>
             </section>
 

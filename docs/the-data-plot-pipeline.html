@@ -1,13 +1,12 @@
 <!DOCTYPE html>
-<html >
-
+<html xmlns="http://www.w3.org/1999/xhtml" lang="" xml:lang="">
 <head>
 
-  <meta charset="UTF-8">
-  <meta http-equiv="X-UA-Compatible" content="IE=edge">
+  <meta charset="utf-8" />
+  <meta http-equiv="X-UA-Compatible" content="IE=edge" />
   <title>32 The data-plot-pipeline | Interactive web-based data visualization with R, plotly, and shiny</title>
-  <meta name="description" content="A useR guide to creating highly interactive graphics for exploratory and expository visualization.">
-  <meta name="generator" content="bookdown  and GitBook 2.6.7">
+  <meta name="description" content="A useR guide to creating highly interactive graphics for exploratory and expository visualization." />
+  <meta name="generator" content="bookdown 0.10 and GitBook 2.6.7" />
 
   <meta property="og:title" content="32 The data-plot-pipeline | Interactive web-based data visualization with R, plotly, and shiny" />
   <meta property="og:type" content="book" />
@@ -22,14 +21,14 @@
   <meta name="twitter:description" content="A useR guide to creating highly interactive graphics for exploratory and expository visualization." />
   
 
-<meta name="author" content="Carson Sievert">
+<meta name="author" content="Carson Sievert" />
 
 
-<meta name="date" content="2019-04-27">
+<meta name="date" content="2019-05-14" />
 
-  <meta name="viewport" content="width=device-width, initial-scale=1">
-  <meta name="apple-mobile-web-app-capable" content="yes">
-  <meta name="apple-mobile-web-app-status-bar-style" content="black">
+  <meta name="viewport" content="width=device-width, initial-scale=1" />
+  <meta name="apple-mobile-web-app-capable" content="yes" />
+  <meta name="apple-mobile-web-app-status-bar-style" content="black" />
   
   
 <link rel="prev" href="mathjax.html">
@@ -349,7 +348,7 @@ allCities <span class="op">%&gt;%</span>
 <span class="st">  </span><span class="kw">filter</span>(city <span class="op">==</span><span class="st"> &quot;Houston&quot;</span>) <span class="op">%&gt;%</span>
 <span class="st">  </span><span class="kw">add_lines</span>(<span class="dt">name =</span> <span class="st">&quot;Houston&quot;</span>)</code></pre>
 <div class="figure" style="text-align: center"><span id="fig:houston2"></span>
-<img src="images/houston2.svg" alt="Monthly median house prices over time for 46 Texan cities (in blue). Houston is highlighted in orange." width="100%" />
+<img src="images/houston2.svg" alt="Monthly median house prices over time for 46 Texan cities (in blue). Houston is highlighted in orange." width="100%" data-url="/interactives/houston2.html" />
 <p class="caption">
 FIGURE 32.1: Monthly median house prices over time for 46 Texan cities (in blue). Houston is highlighted in orange.
 </p>
@@ -364,7 +363,7 @@ FIGURE 32.1: Monthly median house prices over time for 46 Texan cities (in blue)
 <span class="st">      </span><span class="kw">add_lines</span>(<span class="dt">name =</span> <span class="st">&quot;San Antonio&quot;</span>)
   })</code></pre>
 <div class="figure" style="text-align: center"><span id="fig:houston-vs-sa"></span>
-<img src="images/houston-vs-sa.svg" alt="Monthly median house price in Houston and San Antonio in comparison to other Texan cities." width="100%" />
+<img src="images/houston-vs-sa.svg" alt="Monthly median house price in Houston and San Antonio in comparison to other Texan cities." width="100%" data-url="/interactives/houston-vs-sa.html" />
 <p class="caption">
 FIGURE 32.2: Monthly median house price in Houston and San Antonio in comparison to other Texan cities.
 </p>
@@ -393,7 +392,7 @@ allCities <span class="op">%&gt;%</span>
 <span class="st">  </span><span class="kw">add_fun</span>(layer_city, <span class="st">&quot;Houston&quot;</span>) <span class="op">%&gt;%</span>
 <span class="st">  </span><span class="kw">add_fun</span>(layer_city, <span class="st">&quot;San Antonio&quot;</span>)</code></pre>
 <div class="figure" style="text-align: center"><span id="fig:summary"></span>
-<img src="images/summary.svg" alt="First, second, and third quartile of median monthly house price in Texas." width="100%" />
+<img src="images/summary.svg" alt="First, second, and third quartile of median monthly house price in Texas." width="100%" data-url="/interactives/summary.html" />
 <p class="caption">
 FIGURE 32.3: First, second, and third quartile of median monthly house price in Texas.
 </p>
@@ -424,7 +423,7 @@ txhousing <span class="op">%&gt;%</span>
 <span class="st">  </span><span class="kw">add_fun</span>(layer_iqr) <span class="op">%&gt;%</span>
 <span class="st">  </span><span class="kw">add_fun</span>(layer_forecast)</code></pre>
 <div class="figure" style="text-align: center"><span id="fig:forecast"></span>
-<img src="images/forecast.svg" alt="Layering on a 4-year forecast from a exponential smoothing state space model." width="100%" />
+<img src="images/forecast.svg" alt="Layering on a 4-year forecast from a exponential smoothing state space model." width="100%" data-url="/interactives/forecast.html" />
 <p class="caption">
 FIGURE 32.4: Layering on a 4-year forecast from a exponential smoothing state space model.
 </p>
@@ -468,6 +467,37 @@ FIGURE 32.4: Layering on a 4-year forecast from a exponential smoothing state sp
   gtag('js', new Date());
 
   gtag('config', 'UA-60116966-3');
+</script>
+<script>
+window.onload = function() {
+
+  var imgs = document.querySelectorAll('img');
+
+  // Upon clicking an image, open a new window with the
+  // dimensions of the image, pointing the `data-url` link
+  var on_click = function (e) {
+    var d = e.target.dataset || {};
+    if (d.url) {
+      // Add some extra height for the modebar
+      var height = 'height=' + (e.target.clientHeight * 1.05);
+      var width = 'width=' + e.target.clientWidth;
+      var param = 'location=yes,' + height + ',' + width + ',scrollbars=yes,status=yes';
+      window.open(e.target.dataset.url, '_blank', param);
+    }
+  };
+
+  var on_hover = function (e) {
+    var d = e.target.dataset || {};
+    if (d.url) {
+      e.target.style.cursor = 'pointer';
+    }
+  };
+
+  for (var i = 0; i < imgs.length; i++) {
+    imgs[i].addEventListener('click', on_click);
+    imgs[i].addEventListener('mouseover', on_hover);
+  }
+};
 </script>
             </section>
 

@@ -1,13 +1,12 @@
 <!DOCTYPE html>
-<html >
-
+<html xmlns="http://www.w3.org/1999/xhtml" lang="" xml:lang="">
 <head>
 
-  <meta charset="UTF-8">
-  <meta http-equiv="X-UA-Compatible" content="IE=edge">
+  <meta charset="utf-8" />
+  <meta http-equiv="X-UA-Compatible" content="IE=edge" />
   <title>5 Bars &amp; histograms | Interactive web-based data visualization with R, plotly, and shiny</title>
-  <meta name="description" content="A useR guide to creating highly interactive graphics for exploratory and expository visualization.">
-  <meta name="generator" content="bookdown  and GitBook 2.6.7">
+  <meta name="description" content="A useR guide to creating highly interactive graphics for exploratory and expository visualization." />
+  <meta name="generator" content="bookdown 0.10 and GitBook 2.6.7" />
 
   <meta property="og:title" content="5 Bars &amp; histograms | Interactive web-based data visualization with R, plotly, and shiny" />
   <meta property="og:type" content="book" />
@@ -22,14 +21,14 @@
   <meta name="twitter:description" content="A useR guide to creating highly interactive graphics for exploratory and expository visualization." />
   
 
-<meta name="author" content="Carson Sievert">
+<meta name="author" content="Carson Sievert" />
 
 
-<meta name="date" content="2019-04-27">
+<meta name="date" content="2019-05-14" />
 
-  <meta name="viewport" content="width=device-width, initial-scale=1">
-  <meta name="apple-mobile-web-app-capable" content="yes">
-  <meta name="apple-mobile-web-app-status-bar-style" content="black">
+  <meta name="viewport" content="width=device-width, initial-scale=1" />
+  <meta name="apple-mobile-web-app-capable" content="yes" />
+  <meta name="apple-mobile-web-app-status-bar-style" content="black" />
   
   
 <link rel="prev" href="maps.html">
@@ -353,7 +352,7 @@ price_hist &lt;-<span class="st"> </span><span class="cf">function</span>(<span 
   <span class="dt">nrows =</span> <span class="dv">4</span>, <span class="dt">shareX =</span> <span class="ot">TRUE</span>
 )</code></pre>
 <div class="figure" style="text-align: center"><span id="fig:bars-numeric"></span>
-<img src="images/bars-numeric.svg" alt="plotly.js’s default binning algorithm versus R’s hist() default." width="100%" />
+<img src="images/bars-numeric.svg" alt="plotly.js’s default binning algorithm versus R’s hist() default." width="100%" data-url="/interactives/bars-numeric.html" />
 <p class="caption">
 FIGURE 5.1: plotly.js’s default binning algorithm versus R’s <code>hist()</code> default.
 </p>
@@ -369,7 +368,7 @@ p2 &lt;-<span class="st"> </span>diamonds <span class="op">%&gt;%</span>
 
 <span class="kw">subplot</span>(p1, p2) <span class="op">%&gt;%</span><span class="st"> </span><span class="kw">hide_legend</span>()</code></pre>
 <div class="figure" style="text-align: center"><span id="fig:bars-discrete"></span>
-<img src="images/bars-discrete.svg" alt="Number of diamonds by cut." width="100%" />
+<img src="images/bars-discrete.svg" alt="Number of diamonds by cut." width="100%" data-url="/interactives/bars-discrete.html" />
 <p class="caption">
 FIGURE 5.2: Number of diamonds by cut.
 </p>
@@ -391,7 +390,7 @@ diamonds <span class="op">%&gt;%</span>
 <span class="st">  </span><span class="kw">subplot</span>(<span class="dt">nrows =</span> <span class="dv">2</span>, <span class="dt">shareX =</span> <span class="ot">TRUE</span>, <span class="dt">titleX =</span> <span class="ot">FALSE</span>) <span class="op">%&gt;%</span>
 <span class="st">  </span><span class="kw">hide_legend</span>()</code></pre>
 <div class="figure" style="text-align: center"><span id="fig:many-prices"></span>
-<img src="images/many-prices.svg" alt="A trellis display of diamond price by diamond clarity." width="100%" />
+<img src="images/many-prices.svg" alt="A trellis display of diamond price by diamond clarity." width="100%" data-url="/interactives/many-prices.html" />
 <p class="caption">
 FIGURE 5.3: A trellis display of diamond price by diamond clarity.
 </p>
@@ -403,7 +402,7 @@ FIGURE 5.3: A trellis display of diamond price by diamond clarity.
 <pre class="sourceCode r"><code class="sourceCode r"><span class="kw">plot_ly</span>(diamonds, <span class="dt">x =</span> <span class="op">~</span>cut, <span class="dt">color =</span> <span class="op">~</span>clarity) <span class="op">%&gt;%</span>
 <span class="st">  </span><span class="kw">add_histogram</span>()</code></pre>
 <div class="figure" style="text-align: center"><span id="fig:cut-by-clarity"></span>
-<img src="images/cut-by-clarity.svg" alt="A grouped bar chart." width="100%" />
+<img src="images/cut-by-clarity.svg" alt="A grouped bar chart." width="100%" data-url="/interactives/cut-by-clarity.html" />
 <p class="caption">
 FIGURE 5.4: A grouped bar chart.
 </p>
@@ -419,7 +418,7 @@ cc2 <span class="op">%&gt;%</span>
 <span class="st">  </span><span class="kw">add_bars</span>() <span class="op">%&gt;%</span>
 <span class="st">  </span><span class="kw">layout</span>(<span class="dt">barmode =</span> <span class="st">&quot;stack&quot;</span>)</code></pre>
 <div class="figure" style="text-align: center"><span id="fig:cut-by-clarity-prop"></span>
-<img src="images/cut-by-clarity-prop.svg" alt="A stacked bar chart showing the proportion of diamond clarity within cut." width="100%" />
+<img src="images/cut-by-clarity-prop.svg" alt="A stacked bar chart showing the proportion of diamond clarity within cut." width="100%" data-url="/interactives/cut-by-clarity-prop.html" />
 <p class="caption">
 FIGURE 5.5: A stacked bar chart showing the proportion of diamond clarity within cut.
 </p>
@@ -430,7 +429,7 @@ p &lt;-<span class="st"> </span><span class="kw">ggplot</span>(<span class="dt">
 <span class="st">  </span><span class="kw">geom_mosaic</span>(<span class="kw">aes</span>(<span class="dt">weight =</span> n, <span class="dt">x =</span> <span class="kw">product</span>(cut), <span class="dt">fill =</span> clarity))
 <span class="kw">ggplotly</span>(p)</code></pre>
 <div class="figure" style="text-align: center"><span id="fig:ggmosaic"></span>
-<img src="images/ggmosaic.svg" alt="Using ggmosaic and ggplotly() to create advanced interactive visualizations of categorical data." width="100%" />
+<img src="images/ggmosaic.svg" alt="Using ggmosaic and ggplotly() to create advanced interactive visualizations of categorical data." width="100%" data-url="/interactives/ggmosaic.html" />
 <p class="caption">
 FIGURE 5.6: Using <strong>ggmosaic</strong> and <code>ggplotly()</code> to create advanced interactive visualizations of categorical data.
 </p>
@@ -439,20 +438,20 @@ FIGURE 5.6: Using <strong>ggmosaic</strong> and <code>ggplotly()</code> to creat
 </div>
 <h3>References</h3>
 <div id="refs" class="references">
-<div id="ref-Sturges">
-<p>Sturges, Herbert A. 1926. “The Choice of a Class Interval.” <em>Journal of the American Statistical Association</em> 21 (153): 65–66. <a href="https://doi.org/10.1080/01621459.1926.10502161">https://doi.org/10.1080/01621459.1926.10502161</a>.</p>
-</div>
 <div id="ref-FD">
 <p>Freedman, D., and P. Diaconis. 1981. “On the Histogram as a Density Estimator: L2 Theory.” <em>Zeitschrift Für Wahrscheinlichkeitstheorie Und Verwandte Gebiete</em> 57: 453–76.</p>
 </div>
-<div id="ref-hist-scott">
-<p>Scott, David W. 1979. “On Optimal and Data-Based Histograms.” <em>Biometrika</em> 66: 605–10.</p>
+<div id="ref-ggmosaic">
+<p>Jeppson, Haley, Heike Hofmann, and Di Cook. 2016. <em>Ggmosaic: Mosaic Plots in the ’Ggplot2’ Framework</em>. <a href="http://github.com/haleyjeppson/ggmosaic">http://github.com/haleyjeppson/ggmosaic</a>.</p>
 </div>
 <div id="ref-histogram">
 <p>Mildenberger, Thoralf, Yves Rozenholc, and David Zasada. 2009. <em>Histogram: Construction of Regular and Irregular Histograms with Different Options for Automatic Choice of Bins</em>. <a href="https://CRAN.R-project.org/package=histogram">https://CRAN.R-project.org/package=histogram</a>.</p>
 </div>
-<div id="ref-ggmosaic">
-<p>Jeppson, Haley, Heike Hofmann, and Di Cook. 2016. <em>Ggmosaic: Mosaic Plots in the ’Ggplot2’ Framework</em>. <a href="http://github.com/haleyjeppson/ggmosaic">http://github.com/haleyjeppson/ggmosaic</a>.</p>
+<div id="ref-hist-scott">
+<p>Scott, David W. 1979. “On Optimal and Data-Based Histograms.” <em>Biometrika</em> 66: 605–10.</p>
+</div>
+<div id="ref-Sturges">
+<p>Sturges, Herbert A. 1926. “The Choice of a Class Interval.” <em>Journal of the American Statistical Association</em> 21 (153): 65–66. <a href="https://doi.org/10.1080/01621459.1926.10502161">https://doi.org/10.1080/01621459.1926.10502161</a>.</p>
 </div>
 </div>
 <div class="footnotes">
@@ -488,6 +487,37 @@ FIGURE 5.6: Using <strong>ggmosaic</strong> and <code>ggplotly()</code> to creat
   gtag('js', new Date());
 
   gtag('config', 'UA-60116966-3');
+</script>
+<script>
+window.onload = function() {
+
+  var imgs = document.querySelectorAll('img');
+
+  // Upon clicking an image, open a new window with the
+  // dimensions of the image, pointing the `data-url` link
+  var on_click = function (e) {
+    var d = e.target.dataset || {};
+    if (d.url) {
+      // Add some extra height for the modebar
+      var height = 'height=' + (e.target.clientHeight * 1.05);
+      var width = 'width=' + e.target.clientWidth;
+      var param = 'location=yes,' + height + ',' + width + ',scrollbars=yes,status=yes';
+      window.open(e.target.dataset.url, '_blank', param);
+    }
+  };
+
+  var on_hover = function (e) {
+    var d = e.target.dataset || {};
+    if (d.url) {
+      e.target.style.cursor = 'pointer';
+    }
+  };
+
+  for (var i = 0; i < imgs.length; i++) {
+    imgs[i].addEventListener('click', on_click);
+    imgs[i].addEventListener('mouseover', on_hover);
+  }
+};
 </script>
             </section>
 

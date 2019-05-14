@@ -16,7 +16,7 @@ add_paths(p)
 add_lines(p)
 ```
 
-```{r scatter-intro, echo = FALSE, fig.cap="(ref:scatter-intro)"}
+```{r scatter-intro, echo = FALSE, fig.cap="(ref:scatter-intro)", out.extra = 'data-url="/interactives/scatter-intro.html"'}
 knitr::include_graphics("images/scatter-intro.svg")
 ```
 
@@ -67,7 +67,7 @@ plot_ly() %>%
  layout(xaxis = list(range = c(3, 8)))
 ```
 
-```{r tooltip-praise, echo = FALSE, fig.cap="(ref:tooltip-praise)"}
+```{r tooltip-praise, echo = FALSE, fig.cap="(ref:tooltip-praise)", out.extra = 'data-url="/interactives/tooltip-praise.html"'}
 knitr::include_graphics("images/tooltip-praise.png")
 ```
 
@@ -83,7 +83,7 @@ If you are new to plotly.js, I recommend taking a bit of time to look through th
 schema()
 ```
 
-```{r schema, echo = FALSE, fig.cap="(ref:schema)", out.width = "40%"}
+```{r schema, echo = FALSE, fig.cap="(ref:schema)", out.width = "40%", out.extra = 'data-url="/interactives/schema.html"'}
 knitr::include_graphics("images/schema.png")
 ```
 
@@ -105,9 +105,7 @@ subplot(
 )
 ```
 
-
-
-```{r scatterplots, echo = FALSE, fig.cap = "(ref:scatterplots)"}
+```{r scatterplots, echo = FALSE, fig.cap = "(ref:scatterplots)", out.extra = 'data-url="/interactives/scatterplots.html"'}
 knitr::include_graphics("images/scatterplots.svg")
 ```
 
@@ -124,7 +122,7 @@ subplot(
 )
 ```
 
-```{r color-types, echo = FALSE, fig.cap = "(ref:color-types)"}
+```{r color-types, echo = FALSE, fig.cap = "(ref:color-types)", out.extra = 'data-url="/interactives/color-types.html"'}
 knitr::include_graphics("images/color-types.svg")
 ```
 
@@ -144,7 +142,7 @@ subplot(
 ) %>% hide_legend()
 ```
 
-```{r color-numeric, echo = FALSE, fig.cap = "(ref:color-numeric)"}
+```{r color-numeric, echo = FALSE, fig.cap = "(ref:color-numeric)", out.extra = 'data-url="/interactives/color-numeric.html"'}
 knitr::include_graphics("images/color-numeric.svg")
 ```
 
@@ -159,7 +157,7 @@ subplot(
 ) %>% hide_legend()
 ```
 
-```{r color-discrete, echo = FALSE, fig.cap = "(ref:color-discrete)"}
+```{r color-discrete, echo = FALSE, fig.cap = "(ref:color-discrete)", out.extra = 'data-url="/interactives/color-discrete.html"'}
 knitr::include_graphics("images/color-discrete.svg")
 ```
 
@@ -169,7 +167,7 @@ As introduced in Figure \@ref(fig:intro-range), color codes can be specified man
 add_markers(p, color = I("black"))
 ```
 
-```{r color-manual, echo = FALSE, fig.cap = "(ref:color-manual)"}
+```{r color-manual, echo = FALSE, fig.cap = "(ref:color-manual)", out.extra = 'data-url="/interactives/color-manual.html"'}
 knitr::include_graphics("images/color-manual.svg")
 ```
 
@@ -194,7 +192,7 @@ subplot(
 )
 ```
 
-```{r symbol-factor, echo = FALSE, fig.cap = "(ref:symbol-factor)"}
+```{r symbol-factor, echo = FALSE, fig.cap = "(ref:symbol-factor)", out.extra = 'data-url="/interactives/symbol-factor.html"'}
 knitr::include_graphics("images/symbol-factor.svg")
 ```
 
@@ -210,7 +208,7 @@ subplot(
 )
 ```
 
-```{r symbol-factor-range, echo = FALSE, fig.cap = "(ref:symbol-factor-range)"}
+```{r symbol-factor-range, echo = FALSE, fig.cap = "(ref:symbol-factor-range)", out.extra = 'data-url="/interactives/symbol-factor-range.html"'}
 knitr::include_graphics("images/symbol-factor-range.svg")
 ```
 
@@ -221,7 +219,7 @@ plot_ly(mpg, x = ~cty, y = ~hwy) %>%
   add_markers(symbol = I(18), alpha = 0.5)
 ```
 
-```{r symbol-factor-manual, echo = FALSE, fig.cap = "(ref:symbol-factor-manual)"}
+```{r symbol-factor-manual, echo = FALSE, fig.cap = "(ref:symbol-factor-manual)", out.extra = 'data-url="/interactives/symbol-factor-manual.html"'}
 knitr::include_graphics("images/symbol-factor-manual.svg")
 ```
 
@@ -236,8 +234,8 @@ plot_ly(mpg, x = ~cty, y = ~hwy) %>%
   add_markers(symbol = I(18), alpha = 0.5, stroke = I("black"), span = I(1))
 ```
 
-```{r stroke-manual, echo = FALSE, fig.cap = "(ref:stroke-manual)"}
-knitr::include_graphics("images/symbol-factor-range.svg")
+```{r stroke-manual, echo = FALSE, fig.cap = "(ref:stroke-manual)", out.extra = 'data-url="/interactives/stroke-manual.html"'}
+knitr::include_graphics("images/symbol-manual.svg")
 ```
 
 ### Size {#marker-size}
@@ -252,17 +250,17 @@ subplot(
 )
 ```
 
-```{r sizes, echo = FALSE, fig.cap = "(ref:sizes)"}
+```{r sizes, echo = FALSE, fig.cap = "(ref:sizes)", out.extra = 'data-url="/interactives/sizes.html"'}
 knitr::include_graphics("images/sizes.svg")
 ```
 
 Similar to other arguments, `I()` can be used to specify the size directly. In the case of markers, `size` controls the [`marker.size`](https://plot.ly/r/reference/#scatter-marker-size) plotly.js attribute. Remember, you always have the option to set this attribute directly by doing something similar to Figure \@ref(fig:sizes-manual).
 
 ```r
-plot_ly(mpg, x = ~cty, y = ~hwy, alpha = 0.3, marker = list(size = 10))
+plot_ly(mpg, x = ~cty, y = ~hwy, alpha = 0.3, size = I(30))
 ```
 
-```{r sizes-manual, echo = FALSE, fig.cap = "(ref:sizes-manual)"}
+```{r sizes-manual, echo = FALSE, fig.cap = "(ref:sizes-manual)", out.extra = 'data-url="/interactives/sizes-manual.html"'}
 knitr::include_graphics("images/sizes-manual.svg")
 ```
 
@@ -274,17 +272,14 @@ A dotplot is similar to a scatterplot, except instead of two numeric axes, one i
 A popular application for dotplots (with error bars) is the so-called "coefficient plot" for visualizing the point estimates of coefficients and their standard error. The `coefplot()` function in the **coefplot** package [@coefplot] and the `ggcoef()` function in the **GGally** both produce coefficient plots for many types of model objects in R using **ggplot2**, which we can translate to plotly via `ggplotly()`. Since these packages use points and segments to draw the coefficient plots, the hover information is not the best, and it'd be better to use [error objects](https://plot.ly/r/reference/#scatter-error_x). Figure \@ref(fig:coefplot) uses the `tidy()` function from the **broom** package [@broom] to obtain a data frame with one row per model coefficient, and produce a coefficient plot with error bars along the x-axis. 
 
 ```r
-library(broom)
-library(forcats)
-
 # Fit a full-factorial linear model
 m <- lm(Sepal.Length ~ Sepal.Width * Petal.Length * Petal.Width, data = iris)
 
 # (1) get a tidy() data structure of covariate-level info (e.g., point estimate, standard error, etc)
 # (2) make sure term column is a factor ordered by the estimate
 # (3) plot estimate by term with an error bar for the standard error
-tidy(m) %>% 
-  mutate(term = fct_reorder(term, estimate)) %>%
+broom::tidy(m) %>% 
+  mutate(term = forcats::fct_reorder(term, estimate)) %>%
   plot_ly(x = ~estimate, y = ~term) %>%
   add_markers(
     error_x = ~list(value = std.error), 
@@ -293,7 +288,7 @@ tidy(m) %>%
   )
 ```
 
-```{r coefplot, echo = FALSE, fig.cap = "(ref:coefplot)"}
+```{r coefplot, echo = FALSE, fig.cap = "(ref:coefplot)", , out.extra = 'data-url="/interactives/coefplot.html"'}
 knitr::include_graphics("images/coefplot.png")
 ```
 
@@ -319,7 +314,7 @@ plot_ly(tx5, x = ~date, y = ~median) %>%
   add_lines(linetype = ~city)
 ```
 
-```{r linetypes, echo = FALSE, fig.cap = "(ref:linetypes)"}
+```{r linetypes, echo = FALSE, fig.cap = "(ref:linetypes)", out.extra = 'data-url="/interactives/linetypes.html"'}
 knitr::include_graphics("images/linetypes.svg")
 ```
 
@@ -338,7 +333,7 @@ plot_ly(tx5, x = ~date, y = ~median) %>%
   add_lines(linetype = ~city, linetypes = ltys)
 ```
 
-```{r linetypes-manual, echo = FALSE, fig.cap = "(ref:linetypes-manual)"}
+```{r linetypes-manual, echo = FALSE, fig.cap = "(ref:linetypes-manual)", out.extra = 'data-url="/interactives/linetypes-manual.html"'}
 knitr::include_graphics("images/linetypes-manual.svg")
 ```
 
@@ -425,7 +420,7 @@ mpg %>%
   layout(xaxis = list(title = "Miles per gallon"))
 ```
 
-```{r dumbell, echo = FALSE, fig.cap = "(ref:dumbell)"}
+```{r dumbell, echo = FALSE, fig.cap = "(ref:dumbell)", out.extra = 'data-url="/interactives/dumbell.html"'}
 knitr::include_graphics("images/dumbell.svg")
 ```
 
@@ -450,7 +445,7 @@ plot_ly(dat, x = ~date, xend = ~date, color = ~Close > Open,
   rangeslider()
 ```
 
-```{r candlestick, echo = FALSE, fig.cap = "(ref:candlestick)"}
+```{r candlestick, echo = FALSE, fig.cap = "(ref:candlestick)", out.extra = 'data-url="/interactives/candlestick.html"'}
 knitr::include_graphics("images/candlestick.svg")
 ```
 
@@ -469,7 +464,7 @@ for (k in kerns) {
 p
 ```
 
-```{r densities, echo = FALSE, fig.cap = "(ref:densities)"}
+```{r densities, echo = FALSE, fig.cap = "(ref:densities)", out.extra = 'data-url="/interactives/densities.html"'}
 knitr::include_graphics("images/densities.svg")
 ```
 
@@ -508,7 +503,7 @@ subplot(
 ) %>% hide_legend()
 ```
 
-```{r pcp-common, echo = FALSE, fig.cap = "(ref:pcp-common)"}
+```{r pcp-common, echo = FALSE, fig.cap = "(ref:pcp-common)", out.extra = 'data-url="/interactives/pcp-common.html"'}
 knitr::include_graphics("images/pcp-common.svg")
 ```
 
@@ -531,7 +526,7 @@ base %>%
               color = I("red"), data = maps::canada.cities)
 ```
 
-```{r map-canada, echo = FALSE, fig.cap = "(ref:map-canada)"}
+```{r map-canada, echo = FALSE, fig.cap = "(ref:map-canada)", out.extra = 'data-url="/interactives/map-canada.html"'}
 knitr::include_graphics("images/map-canada.png")
 ```
 
@@ -541,7 +536,7 @@ As discussion surrounding Figure \@ref(fig:split-color) points out, scatter-base
 add_polygons(base, split = ~subregion, hoveron = "fills")
 ```
 
-```{r map-canada-split, echo = FALSE, fig.cap = "(ref:map-canada-split)"}
+```{r map-canada-split, echo = FALSE, fig.cap = "(ref:map-canada-split)", out.extra = 'data-url="/interactives/map-canada-split.html"'}
 knitr::include_graphics("images/map-canada-split.png")
 ```
 
@@ -559,6 +554,6 @@ broom::augment(m) %>%
   add_lines(y = ~.fitted, color = I("steelblue"))
 ```
 
-```{r broom-lm, echo = FALSE, fig.cap = "(ref:broom-lm)"}
+```{r broom-lm, echo = FALSE, fig.cap = "(ref:broom-lm)", out.extra = 'data-url="/interactives/broom-lm.html"'}
 knitr::include_graphics("images/broom-lm.svg")
 ```

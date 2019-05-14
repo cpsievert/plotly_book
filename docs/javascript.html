@@ -1,13 +1,12 @@
 <!DOCTYPE html>
-<html >
-
+<html xmlns="http://www.w3.org/1999/xhtml" lang="" xml:lang="">
 <head>
 
-  <meta charset="UTF-8">
-  <meta http-equiv="X-UA-Compatible" content="IE=edge">
+  <meta charset="utf-8" />
+  <meta http-equiv="X-UA-Compatible" content="IE=edge" />
   <title>18 Introduction | Interactive web-based data visualization with R, plotly, and shiny</title>
-  <meta name="description" content="A useR guide to creating highly interactive graphics for exploratory and expository visualization.">
-  <meta name="generator" content="bookdown  and GitBook 2.6.7">
+  <meta name="description" content="A useR guide to creating highly interactive graphics for exploratory and expository visualization." />
+  <meta name="generator" content="bookdown 0.10 and GitBook 2.6.7" />
 
   <meta property="og:title" content="18 Introduction | Interactive web-based data visualization with R, plotly, and shiny" />
   <meta property="og:type" content="book" />
@@ -22,14 +21,14 @@
   <meta name="twitter:description" content="A useR guide to creating highly interactive graphics for exploratory and expository visualization." />
   
 
-<meta name="author" content="Carson Sievert">
+<meta name="author" content="Carson Sievert" />
 
 
-<meta name="date" content="2019-04-27">
+<meta name="date" content="2019-05-14" />
 
-  <meta name="viewport" content="width=device-width, initial-scale=1">
-  <meta name="apple-mobile-web-app-capable" content="yes">
-  <meta name="apple-mobile-web-app-status-bar-style" content="black">
+  <meta name="viewport" content="width=device-width, initial-scale=1" />
+  <meta name="apple-mobile-web-app-capable" content="yes" />
+  <meta name="apple-mobile-web-app-status-bar-style" content="black" />
   
   
 <link rel="prev" href="linking-views-with-shiny.html">
@@ -358,7 +357,7 @@ This portion of the book focuses on writing custom event handlers to commonly us
 <div class="figure" style="text-align: center"><span id="fig:console-log"></span>
 <iframe src="https://player.vimeo.com/video/307598574?title=0&amp;byline=0&amp;portrait=0" width="100%" height="700" frameborder="0" seamless="seamless" webkitAllowFullScreen mozallowfullscreen allowFullScreen></iframe>
 <p class="caption">
-FIGURE 18.1: Using <code>htmlwidgets::onRender()</code> to inspect the relevant DOM instance containing the <strong>plotly</strong> graph and information related to it’s current display. The <code>_fullData</code> and <code>_fullLayout</code> attributes bound to the element are ‘internal’ (meaning relying on this information in production code is discouraged), but do provide a useful description of the chart’s current state, especially if you need access to computations done by plotly.js (e.g., axis tick placement).
+FIGURE 18.1: Using <code>htmlwidgets::onRender()</code> to inspect the relevant DOM instance containing the <strong>plotly</strong> graph and information related to it’s current display. The <code>_fullData</code> and <code>_fullLayout</code> attributes bound to the element are ‘internal’ (meaning relying on this information in production code is discouraged), but do provide a useful description of the chart’s current state, especially if you need access to computations done by plotly.js (e.g., axis tick placement). For the interactive, see <a href="https://plotly-r.com/interactives/console-log.html" class="uri">https://plotly-r.com/interactives/console-log.html</a>
 </p>
 </div>
 <p>If you’re completely new to JS and JSON, Section <a href="json.html#json">19</a> provides a foundation for understanding the subsequent sections, but those already familiar can skip ahead to Section <a href="js-event-handlers.html#js-event-handlers">20</a>, which shows how to log plotly.js event data to the JS console via <code>htmlwidgets::onRender()</code>.</p>
@@ -395,6 +394,37 @@ FIGURE 18.1: Using <code>htmlwidgets::onRender()</code> to inspect the relevant 
   gtag('js', new Date());
 
   gtag('config', 'UA-60116966-3');
+</script>
+<script>
+window.onload = function() {
+
+  var imgs = document.querySelectorAll('img');
+
+  // Upon clicking an image, open a new window with the
+  // dimensions of the image, pointing the `data-url` link
+  var on_click = function (e) {
+    var d = e.target.dataset || {};
+    if (d.url) {
+      // Add some extra height for the modebar
+      var height = 'height=' + (e.target.clientHeight * 1.05);
+      var width = 'width=' + e.target.clientWidth;
+      var param = 'location=yes,' + height + ',' + width + ',scrollbars=yes,status=yes';
+      window.open(e.target.dataset.url, '_blank', param);
+    }
+  };
+
+  var on_hover = function (e) {
+    var d = e.target.dataset || {};
+    if (d.url) {
+      e.target.style.cursor = 'pointer';
+    }
+  };
+
+  for (var i = 0; i < imgs.length; i++) {
+    imgs[i].addEventListener('click', on_click);
+    imgs[i].addEventListener('mouseover', on_hover);
+  }
+};
 </script>
             </section>
 

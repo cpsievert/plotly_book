@@ -12,7 +12,7 @@ gg <- ggplot(gapminder, aes(gdpPercap, lifeExp, color = continent)) +
 ggplotly(gg)
 ```
 
-```{r animation-ggplotly, echo = FALSE, fig.cap = "(ref:animation-ggplotly)"}
+```{r animation-ggplotly, echo = FALSE, fig.cap = "(ref:animation-ggplotly)", out.extra = 'data-url="/interactives/animation-ggplotly.html"'}
 knitr::include_graphics("images/animation-ggplotly.png")
 ```
 
@@ -35,7 +35,7 @@ base %>%
   )
 ```
 
-```{r animation-opts, echo = FALSE, fig.cap = "(ref:animation-opts)"}
+```{r animation-opts, echo = FALSE, fig.cap = "(ref:animation-opts)", out.extra = 'data-url="/interactives/animation-opts.html"'}
 knitr::include_graphics("images/animation-opts.png")
 ```
 
@@ -53,7 +53,7 @@ base %>%
   animation_opts(frame = 1000, transition = 0, redraw = FALSE)
 ```
 
-```{r animation-factors, echo = FALSE, fig.cap = "(ref:animation-factors)"}
+```{r animation-factors, echo = FALSE, fig.cap = "(ref:animation-factors)", out.extra = 'data-url="/interactives/animation-factors.html"'}
 knitr::include_graphics("images/animation-factors.png")
 ```
 
@@ -61,12 +61,12 @@ Both the `frame` and `ids` attributes operate on the trace level -- meaning that
 
 ```r
 base %>%
-  add_markers(color = ~continent, alpha = 0.2, showlegend = F) %>%
+  add_markers(color = ~continent, alpha = 0.2, alpha_stroke = 0.2, showlegend = F) %>%
   add_markers(color = ~continent, frame = ~year, ids = ~country) %>%
   animation_opts(1000, redraw = FALSE)
 ```
 
-```{r animation-targets, echo = FALSE, fig.cap = "(ref:animation-targets)"}
+```{r animation-targets, echo = FALSE, fig.cap = "(ref:animation-targets)", out.extra = 'data-url="/interactives/animation-targets.html"'}
 knitr::include_graphics("images/animation-targets.png")
 ```
 

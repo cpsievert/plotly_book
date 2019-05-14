@@ -32,7 +32,7 @@ opts_chunk$set(
   collapse = TRUE,
   cache = TRUE,
   fig.show = "hold",
-  fig.align="center"
+  fig.align = "center"
 )
 
 # conditionally global chunk options
@@ -47,8 +47,7 @@ if (knitr::is_latex_output()) {
   )
 }
 if (knitr::is_html_output()) {
-  # https://github.com/hafen/lazyrmd
-  opts_chunk$set(out.width = "100%", lazy = TRUE)
+  opts_chunk$set(out.width = "100%")
   
   knit_hooks$set(summary = function(before, options, envir) {
     if (length(options$summary)) {

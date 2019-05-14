@@ -1,13 +1,12 @@
 <!DOCTYPE html>
-<html >
-
+<html xmlns="http://www.w3.org/1999/xhtml" lang="" xml:lang="">
 <head>
 
-  <meta charset="UTF-8">
-  <meta http-equiv="X-UA-Compatible" content="IE=edge">
+  <meta charset="utf-8" />
+  <meta http-equiv="X-UA-Compatible" content="IE=edge" />
   <title>3 Scattered foundations | Interactive web-based data visualization with R, plotly, and shiny</title>
-  <meta name="description" content="A useR guide to creating highly interactive graphics for exploratory and expository visualization.">
-  <meta name="generator" content="bookdown  and GitBook 2.6.7">
+  <meta name="description" content="A useR guide to creating highly interactive graphics for exploratory and expository visualization." />
+  <meta name="generator" content="bookdown 0.10 and GitBook 2.6.7" />
 
   <meta property="og:title" content="3 Scattered foundations | Interactive web-based data visualization with R, plotly, and shiny" />
   <meta property="og:type" content="book" />
@@ -22,14 +21,14 @@
   <meta name="twitter:description" content="A useR guide to creating highly interactive graphics for exploratory and expository visualization." />
   
 
-<meta name="author" content="Carson Sievert">
+<meta name="author" content="Carson Sievert" />
 
 
-<meta name="date" content="2019-04-27">
+<meta name="date" content="2019-05-14" />
 
-  <meta name="viewport" content="width=device-width, initial-scale=1">
-  <meta name="apple-mobile-web-app-capable" content="yes">
-  <meta name="apple-mobile-web-app-status-bar-style" content="black">
+  <meta name="viewport" content="width=device-width, initial-scale=1" />
+  <meta name="apple-mobile-web-app-capable" content="yes" />
+  <meta name="apple-mobile-web-app-status-bar-style" content="black" />
   
   
 <link rel="prev" href="overview.html">
@@ -352,7 +351,7 @@ p &lt;-<span class="st"> </span>economics <span class="op">%&gt;%</span>
 <span class="kw">add_paths</span>(p)
 <span class="kw">add_lines</span>(p)</code></pre>
 <div class="figure" style="text-align: center"><span id="fig:scatter-intro"></span>
-<img src="images/scatter-intro.svg" alt="The difference between add_paths() and add_lines(): the top panel connects observations according to the ordering of psavert (personal savings rate), whereas the bottom panel connects observations according to the ordering of x (the date)." width="100%" />
+<img src="images/scatter-intro.svg" alt="The difference between add_paths() and add_lines(): the top panel connects observations according to the ordering of psavert (personal savings rate), whereas the bottom panel connects observations according to the ordering of x (the date)." width="100%" data-url="/interactives/scatter-intro.html" />
 <p class="caption">
 FIGURE 3.1: The difference between <code>add_paths()</code> and <code>add_lines()</code>: the top panel connects observations according to the ordering of <code>psavert</code> (personal savings rate), whereas the bottom panel connects observations according to the ordering of <code>x</code> (the date).
 </p>
@@ -379,7 +378,7 @@ econ <span class="op">%&gt;%</span>
 <div class="figure" style="text-align: center"><span id="fig:scatter-lines"></span>
 <iframe src="https://player.vimeo.com/video/316679591?title=0&amp;byline=0&amp;portrait=0" width="100%" height="400" frameborder="0" seamless="seamless" webkitAllowFullScreen mozallowfullscreen allowFullScreen></iframe>
 <p class="caption">
-FIGURE 3.2: Drawing multiple lines using <strong>dplyr</strong> groups (top panel) versus a categorical <code>color</code> mapping (bottom panel). Comparatively speaking, the bottom panel has more interactive capabilites (e.g., legend-based filtering and multiple tooltips), but it does not scale as well with many lines.
+FIGURE 3.2: Drawing multiple lines using <strong>dplyr</strong> groups (top panel) versus a categorical <code>color</code> mapping (bottom panel). Comparatively speaking, the bottom panel has more interactive capabilites (e.g., legend-based filtering and multiple tooltips), but it does not scale as well with many lines. For the interactive, see <a href="https://plotly-r.com/interactives/scatter-lines.html" class="uri">https://plotly-r.com/interactives/scatter-lines.html</a>
 </p>
 </div>
 <p>Not only do these plots differ in visual appearance, they also differ in interactive capabilties, computational performance, and underlying implementation. That’s because, the grouping approach (top panel of Figure <a href="scatter-traces.html#fig:scatter-lines">3.2</a>) uses just one plotly.js trace (more performant, less interactive), whereas the <code>color</code> approach (bottom panel of Figure <a href="scatter-traces.html#fig:scatter-lines">3.2</a>) generates one trace per line/year. In this case, the benefit of having multiple traces is that we can perform interactive filtering via the legend and compare multiple y-values at a given x. The cost of having those capabilities is that plots starts to be become sluggish after a few hundred traces, whereas thousands of lines can be rendered fairly easily in one trace. See Chapter <a href="performance.html#performance">24</a> for more details on scaling and performance.</p>
@@ -398,7 +397,7 @@ FIGURE 3.2: Drawing multiple lines using <strong>dplyr</strong> groups (top pane
  ) <span class="op">%&gt;%</span>
 <span class="st"> </span><span class="kw">layout</span>(<span class="dt">xaxis =</span> <span class="kw">list</span>(<span class="dt">range =</span> <span class="kw">c</span>(<span class="dv">3</span>, <span class="dv">8</span>)))</code></pre>
 <div class="figure" style="text-align: center"><span id="fig:tooltip-praise"></span>
-<img src="images/tooltip-praise.png" alt="Using the generic add_trace() function to render markers, lines, and text in a single scatter trace. This add_trace() function, as well as any add_*() function allows you to directly specify plotly.js attributes." width="100%" />
+<img src="images/tooltip-praise.png" alt="Using the generic add_trace() function to render markers, lines, and text in a single scatter trace. This add_trace() function, as well as any add_*() function allows you to directly specify plotly.js attributes." width="100%" data-url="/interactives/tooltip-praise.html" />
 <p class="caption">
 FIGURE 3.3: Using the generic <code>add_trace()</code> function to render markers, lines, and text in a single scatter trace. This <code>add_trace()</code> function, as well as any <code>add_*()</code> function allows you to directly specify plotly.js attributes.
 </p>
@@ -411,25 +410,25 @@ FIGURE 3.3: Using the generic <code>add_trace()</code> function to render marker
 </ul>
 <pre class="sourceCode r"><code class="sourceCode r"><span class="kw">schema</span>()</code></pre>
 <div class="figure" style="text-align: center"><span id="fig:schema"></span>
-<img src="images/schema.png" alt="Using schema() function to traverse through the attributes available to a given trace type (e.g., scatter)" width="40%" />
+<img src="images/schema.png" alt="Using schema() function to traverse through the attributes available to a given trace type (e.g., scatter)" width="40%" data-url="/interactives/schema.html" />
 <p class="caption">
 FIGURE 3.4: Using <code>schema()</code> function to traverse through the attributes available to a given trace type (e.g., scatter)
 </p>
 </div>
-<p>The sections that follow in this chapter demonstrate various type of data views using scatter-based layers. In attempt to avoid duplication of documentation, a particular emphasis is put on features only currently availble from the R package (e.g. the aesthetic mapping arguments).</p>
+<p>The sections that follow in this chapter demonstrate various type of data views using scatter-based layers. In attempt to avoid duplication of documentation, a particular emphasis is put on features only currently availble from the R package (e.g., the aesthetic mapping arguments).</p>
 <div id="markers" class="section level2">
 <h2><span class="header-section-number">3.1</span> Markers</h2>
-<p>This section details scatter traces with a <code>mode</code> of <code>"markers"</code> (i.e., <code>add_markers()</code>). For simplicity, many of the examples here use <code>add_markers()</code> with a numeric x and y axis, which results in scatterplot – a common way to visualize the association between two quantitative variables. The content that follows is still relevant markers displayed non-numeric x and y (aka dot pots) as shown in Section <a href="scatter-traces.html#dot-plots">3.1.6</a></p>
+<p>This section details scatter traces with a <code>mode</code> of <code>"markers"</code> (i.e., <code>add_markers()</code>). For simplicity, many of the examples here use <code>add_markers()</code> with a numeric x and y axis, which results in scatterplot – a common way to visualize the association between two quantitative variables. The content that follows is still relevant markers displayed non-numeric x and y (aka dot pots) as shown in Section <a href="scatter-traces.html#dot-plots">3.1.6</a>.</p>
 <div id="marker-alpha" class="section level3">
 <h3><span class="header-section-number">3.1.1</span> Alpha blending</h3>
-<p>As <span class="citation">Unwin (<a href="#ref-unwin-graphical-analysis" role="doc-biblioref">2015</a>)</span> notes, scatterplots can be useful for exposing other important features including: casual relationships, outliers, clusters, gaps, barriers, and conditional relationships. A common problem with scatterplots however is overplotting, meaning that there are multiple observations occupying the same (or similar) x/y locations. Figure <a href="scatter-traces.html#fig:scatterplots">3.5</a> demonstrates one way to combat overplotting via alpha blending. When dealing with tens of thousands of points (or more), consider using <code>toWebGL()</code> to render plots using Canvas rather than SVG (more in Chapter <a href="performance.html#performance">24</a>, or leveraging 2D density estimation (Section <a href="frequencies-2D.html#rectangular-binning-in-r">7.2</a>).</p>
+<p>As <span class="citation">Unwin (<a href="#ref-unwin-graphical-analysis" role="doc-biblioref">2015</a>)</span> notes, scatterplots can be useful for exposing other important features including: casual relationships, outliers, clusters, gaps, barriers, and conditional relationships. A common problem with scatterplots, however is overplotting, meaning that there are multiple observations occupying the same (or similar) x/y locations. Figure <a href="scatter-traces.html#fig:scatterplots">3.5</a> demonstrates one way to combat overplotting via alpha blending. When dealing with tens of thousands of points (or more), consider using <code>toWebGL()</code> to render plots using Canvas rather than SVG (more in Chapter <a href="performance.html#performance">24</a>, or leveraging 2D density estimation (Section <a href="frequencies-2D.html#rectangular-binning-in-r">7.2</a>).</p>
 <pre class="sourceCode r"><code class="sourceCode r"><span class="kw">subplot</span>(
   <span class="kw">plot_ly</span>(mpg, <span class="dt">x =</span> <span class="op">~</span>cty, <span class="dt">y =</span> <span class="op">~</span>hwy, <span class="dt">name =</span> <span class="st">&quot;default&quot;</span>),
   <span class="kw">plot_ly</span>(mpg, <span class="dt">x =</span> <span class="op">~</span>cty, <span class="dt">y =</span> <span class="op">~</span>hwy) <span class="op">%&gt;%</span><span class="st"> </span>
 <span class="st">    </span><span class="kw">add_markers</span>(<span class="dt">alpha =</span> <span class="fl">0.2</span>, <span class="dt">name =</span> <span class="st">&quot;alpha&quot;</span>)
 )</code></pre>
 <div class="figure" style="text-align: center"><span id="fig:scatterplots"></span>
-<img src="images/scatterplots.svg" alt="Combating overplotting in a scatterplot with alpha blending." width="100%" />
+<img src="images/scatterplots.svg" alt="Combating overplotting in a scatterplot with alpha blending." width="100%" data-url="/interactives/scatterplots.html" />
 <p class="caption">
 FIGURE 3.5: Combating overplotting in a scatterplot with alpha blending.
 </p>
@@ -445,12 +444,12 @@ FIGURE 3.5: Combating overplotting in a scatterplot with alpha blending.
   <span class="kw">add_markers</span>(p, <span class="dt">color =</span> <span class="op">~</span><span class="kw">factor</span>(cyl))
 )</code></pre>
 <div class="figure" style="text-align: center"><span id="fig:color-types"></span>
-<img src="images/color-types.svg" alt="Variations on a numeric color mapping." width="100%" />
+<img src="images/color-types.svg" alt="Variations on a numeric color mapping." width="100%" data-url="/interactives/color-types.html" />
 <p class="caption">
 FIGURE 3.6: Variations on a numeric color mapping.
 </p>
 </div>
-<p>There are numerous ways to alter the default color scale via the <code>colors</code> argument. This argument excepts one of the following: (1) a color brewer palette name (see the row names of <code>RColorBrewer::brewer.pal.info</code> for valid names), (2) a vector of colors to interpolate, or (3) a color interpolation function like <code>colorRamp()</code> or <code>scales::colour_ramp()</code>. Although this grants a lot of flexibility, one should be conscious of using a sequential colorscale for numeric variables (&amp; ordered factors) as shown in <a href="scatter-traces.html#fig:color-numeric">3.7</a>, and a qualitative colorscale for discrete variables as shown in <a href="scatter-traces.html#fig:color-discrete">3.8</a>.</p>
+<p>There are numerous ways to alter the default color scale via the <code>colors</code> argument. This argument excepts one of the following: (1) a color brewer palette name (see the row names of <code>RColorBrewer::brewer.pal.info</code> for valid names), (2) a vector of colors to interpolate, or (3) a color interpolation function like <code>colorRamp()</code> or <code>scales::colour_ramp()</code>. Although this grants a lot of flexibility, one should be conscious of using a sequential colorscale for numeric variables (&amp; ordered factors) as shown in Figure <a href="scatter-traces.html#fig:color-numeric">3.7</a>, and a qualitative colorscale for discrete variables as shown in Figure <a href="scatter-traces.html#fig:color-discrete">3.8</a>.</p>
 <pre class="sourceCode r"><code class="sourceCode r">col1 &lt;-<span class="st"> </span><span class="kw">c</span>(<span class="st">&quot;#132B43&quot;</span>, <span class="st">&quot;#56B1F7&quot;</span>)
 col2 &lt;-<span class="st"> </span>viridisLite<span class="op">::</span><span class="kw">inferno</span>(<span class="dv">10</span>)
 col3 &lt;-<span class="st"> </span><span class="kw">colorRamp</span>(<span class="kw">c</span>(<span class="st">&quot;red&quot;</span>, <span class="st">&quot;white&quot;</span>, <span class="st">&quot;blue&quot;</span>))
@@ -463,7 +462,7 @@ col3 &lt;-<span class="st"> </span><span class="kw">colorRamp</span>(<span class
 <span class="st">    </span><span class="kw">colorbar</span>(<span class="dt">title =</span> <span class="st">&quot;colorRamp&quot;</span>)
 ) <span class="op">%&gt;%</span><span class="st"> </span><span class="kw">hide_legend</span>()</code></pre>
 <div class="figure" style="text-align: center"><span id="fig:color-numeric"></span>
-<img src="images/color-numeric.svg" alt="Three variations on a numeric color mapping." width="100%" />
+<img src="images/color-numeric.svg" alt="Three variations on a numeric color mapping." width="100%" data-url="/interactives/color-numeric.html" />
 <p class="caption">
 FIGURE 3.7: Three variations on a numeric color mapping.
 </p>
@@ -477,7 +476,7 @@ col3 &lt;-<span class="st"> </span><span class="kw">c</span>(<span class="st">`<
   <span class="kw">add_markers</span>(p, <span class="dt">color =</span> <span class="op">~</span><span class="kw">factor</span>(cyl), <span class="dt">colors =</span> col3)
 ) <span class="op">%&gt;%</span><span class="st"> </span><span class="kw">hide_legend</span>()</code></pre>
 <div class="figure" style="text-align: center"><span id="fig:color-discrete"></span>
-<img src="images/color-discrete.svg" alt="Three variations on a discrete color mapping." width="100%" />
+<img src="images/color-discrete.svg" alt="Three variations on a discrete color mapping." width="100%" data-url="/interactives/color-discrete.html" />
 <p class="caption">
 FIGURE 3.8: Three variations on a discrete color mapping.
 </p>
@@ -485,7 +484,7 @@ FIGURE 3.8: Three variations on a discrete color mapping.
 <p>As introduced in Figure <a href="overview.html#fig:intro-range">2.3</a>, color codes can be specified manually (i.e., avoid mapping data values to a visual range) by using the <code>I()</code> function. Figure <a href="scatter-traces.html#fig:color-manual">3.9</a> provides a simple example using <code>add_markers()</code>. Any color understood by the <code>col2rgb()</code> function from the <strong>grDevices</strong> package can be used in this way. Chapter <a href="working-with-colors.html#working-with-colors">27</a> provides even more details about working with different color specifications when specifying colors manually.</p>
 <pre class="sourceCode r"><code class="sourceCode r"><span class="kw">add_markers</span>(p, <span class="dt">color =</span> <span class="kw">I</span>(<span class="st">&quot;black&quot;</span>))</code></pre>
 <div class="figure" style="text-align: center"><span id="fig:color-manual"></span>
-<img src="images/color-manual.svg" alt="Setting a fixed color directly using I()." width="100%" />
+<img src="images/color-manual.svg" alt="Setting a fixed color directly using I()." width="100%" data-url="/interactives/color-manual.html" />
 <p class="caption">
 FIGURE 3.9: Setting a fixed color directly using <code>I()</code>.
 </p>
@@ -508,7 +507,7 @@ FIGURE 3.9: Setting a fixed color directly using <code>I()</code>.
   <span class="kw">add_markers</span>(p, <span class="dt">symbol =</span> <span class="op">~</span><span class="kw">factor</span>(cyl), <span class="dt">color =</span> <span class="kw">I</span>(<span class="st">&quot;black&quot;</span>))
 )</code></pre>
 <div class="figure" style="text-align: center"><span id="fig:symbol-factor"></span>
-<img src="images/symbol-factor.svg" alt="Mapping symbol to a numeric variable (left panel) and a factor (right panel)." width="100%" />
+<img src="images/symbol-factor.svg" alt="Mapping symbol to a numeric variable (left panel) and a factor (right panel)." width="100%" data-url="/interactives/symbol-factor.html" />
 <p class="caption">
 FIGURE 3.10: Mapping symbol to a numeric variable (left panel) and a factor (right panel).
 </p>
@@ -522,7 +521,7 @@ FIGURE 3.10: Mapping symbol to a numeric variable (left panel) and a factor (rig
   )
 )</code></pre>
 <div class="figure" style="text-align: center"><span id="fig:symbol-factor-range"></span>
-<img src="images/symbol-factor-range.svg" alt="Specifying the visual range of symbols." width="100%" />
+<img src="images/symbol-factor-range.svg" alt="Specifying the visual range of symbols." width="100%" data-url="/interactives/symbol-factor-range.html" />
 <p class="caption">
 FIGURE 3.11: Specifying the visual range of <code>symbols</code>.
 </p>
@@ -531,7 +530,7 @@ FIGURE 3.11: Specifying the visual range of <code>symbols</code>.
 <pre class="sourceCode r"><code class="sourceCode r"><span class="kw">plot_ly</span>(mpg, <span class="dt">x =</span> <span class="op">~</span>cty, <span class="dt">y =</span> <span class="op">~</span>hwy) <span class="op">%&gt;%</span>
 <span class="st">  </span><span class="kw">add_markers</span>(<span class="dt">symbol =</span> <span class="kw">I</span>(<span class="dv">18</span>), <span class="dt">alpha =</span> <span class="fl">0.5</span>)</code></pre>
 <div class="figure" style="text-align: center"><span id="fig:symbol-factor-manual"></span>
-<img src="images/symbol-factor-manual.svg" alt="Setting a fixed symbol directly using I()." width="100%" />
+<img src="images/symbol-factor-manual.svg" alt="Setting a fixed symbol directly using I()." width="100%" data-url="/interactives/symbol-factor-manual.html" />
 <p class="caption">
 FIGURE 3.12: Setting a fixed symbol directly using <code>I()</code>.
 </p>
@@ -544,7 +543,7 @@ FIGURE 3.12: Setting a fixed symbol directly using <code>I()</code>.
 <pre class="sourceCode r"><code class="sourceCode r"><span class="kw">plot_ly</span>(mpg, <span class="dt">x =</span> <span class="op">~</span>cty, <span class="dt">y =</span> <span class="op">~</span>hwy) <span class="op">%&gt;%</span>
 <span class="st">  </span><span class="kw">add_markers</span>(<span class="dt">symbol =</span> <span class="kw">I</span>(<span class="dv">18</span>), <span class="dt">alpha =</span> <span class="fl">0.5</span>, <span class="dt">stroke =</span> <span class="kw">I</span>(<span class="st">&quot;black&quot;</span>), <span class="dt">span =</span> <span class="kw">I</span>(<span class="dv">1</span>))</code></pre>
 <div class="figure" style="text-align: center"><span id="fig:stroke-manual"></span>
-<img src="images/symbol-factor-range.svg" alt="Using stroke and span to control the outline color as well as the width of that outline." width="100%" />
+<img src="images/symbol-manual.svg" alt="Using stroke and span to control the outline color as well as the width of that outline." width="100%" data-url="/interactives/stroke-manual.html" />
 <p class="caption">
 FIGURE 3.13: Using <code>stroke</code> and <code>span</code> to control the outline color as well as the width of that outline.
 </p>
@@ -559,15 +558,15 @@ FIGURE 3.13: Using <code>stroke</code> and <code>span</code> to control the outl
   <span class="kw">add_markers</span>(p, <span class="dt">size =</span> <span class="op">~</span>cyl, <span class="dt">sizes =</span> <span class="kw">c</span>(<span class="dv">1</span>, <span class="dv">500</span>), <span class="dt">name =</span> <span class="st">&quot;custom&quot;</span>)
 )</code></pre>
 <div class="figure" style="text-align: center"><span id="fig:sizes"></span>
-<img src="images/sizes.svg" alt="Controlling the size range via sizes (measured in pixels)." width="100%" />
+<img src="images/sizes.svg" alt="Controlling the size range via sizes (measured in pixels)." width="100%" data-url="/interactives/sizes.html" />
 <p class="caption">
 FIGURE 3.14: Controlling the size range via <code>sizes</code> (measured in pixels).
 </p>
 </div>
 <p>Similar to other arguments, <code>I()</code> can be used to specify the size directly. In the case of markers, <code>size</code> controls the <a href="https://plot.ly/r/reference/#scatter-marker-size"><code>marker.size</code></a> plotly.js attribute. Remember, you always have the option to set this attribute directly by doing something similar to Figure <a href="scatter-traces.html#fig:sizes-manual">3.15</a>.</p>
-<pre class="sourceCode r"><code class="sourceCode r"><span class="kw">plot_ly</span>(mpg, <span class="dt">x =</span> <span class="op">~</span>cty, <span class="dt">y =</span> <span class="op">~</span>hwy, <span class="dt">alpha =</span> <span class="fl">0.3</span>, <span class="dt">marker =</span> <span class="kw">list</span>(<span class="dt">size =</span> <span class="dv">10</span>))</code></pre>
+<pre class="sourceCode r"><code class="sourceCode r"><span class="kw">plot_ly</span>(mpg, <span class="dt">x =</span> <span class="op">~</span>cty, <span class="dt">y =</span> <span class="op">~</span>hwy, <span class="dt">alpha =</span> <span class="fl">0.3</span>, <span class="dt">size =</span> <span class="kw">I</span>(<span class="dv">30</span>))</code></pre>
 <div class="figure" style="text-align: center"><span id="fig:sizes-manual"></span>
-<img src="images/sizes-manual.svg" alt="Setting a fixed marker size directly using marker.size." width="100%" />
+<img src="images/sizes-manual.svg" alt="Setting a fixed marker size directly using marker.size." width="100%" data-url="/interactives/sizes-manual.html" />
 <p class="caption">
 FIGURE 3.15: Setting a fixed marker size directly using <code>marker.size</code>.
 </p>
@@ -577,17 +576,14 @@ FIGURE 3.15: Setting a fixed marker size directly using <code>marker.size</code>
 <h3><span class="header-section-number">3.1.6</span> Dotplots &amp; error bars</h3>
 <p>A dotplot is similar to a scatterplot, except instead of two numeric axes, one is categorical. The usual goal of a dotplot is to compare value(s) on a numerical scale over numerous categories. In this context, dotplots are preferable to pie charts since comparing position along a common scale is much easier than comparing angle or area <span class="citation">(Cleveland and McGill <a href="#ref-graphical-perception" role="doc-biblioref">1984</a>; Bostock <a href="#ref-crowdsourcing-graphical-perception" role="doc-biblioref">2010</a>)</span>. Furthermore, dotplots can be preferable to bar charts, especially when comparing values within a narrow range far away from 0 <span class="citation">(Few <a href="#ref-few-values" role="doc-biblioref">2006</a>)</span>. Also, when presenting point estimates, and uncertainty associated with those estimates, bar charts tend to exaggerate the difference in point estimates, and lose focus on uncertainty <span class="citation">(Messing <a href="#ref-messing" role="doc-biblioref">2012</a>)</span>.</p>
 <p>A popular application for dotplots (with error bars) is the so-called “coefficient plot” for visualizing the point estimates of coefficients and their standard error. The <code>coefplot()</code> function in the <strong>coefplot</strong> package <span class="citation">(Lander <a href="#ref-coefplot" role="doc-biblioref">2016</a>)</span> and the <code>ggcoef()</code> function in the <strong>GGally</strong> both produce coefficient plots for many types of model objects in R using <strong>ggplot2</strong>, which we can translate to plotly via <code>ggplotly()</code>. Since these packages use points and segments to draw the coefficient plots, the hover information is not the best, and it’d be better to use <a href="https://plot.ly/r/reference/#scatter-error_x">error objects</a>. Figure <a href="scatter-traces.html#fig:coefplot">3.16</a> uses the <code>tidy()</code> function from the <strong>broom</strong> package <span class="citation">(Robinson <a href="#ref-broom" role="doc-biblioref">2016</a>)</span> to obtain a data frame with one row per model coefficient, and produce a coefficient plot with error bars along the x-axis.</p>
-<pre class="sourceCode r"><code class="sourceCode r"><span class="kw">library</span>(broom)
-<span class="kw">library</span>(forcats)
-
-<span class="co"># Fit a full-factorial linear model</span>
+<pre class="sourceCode r"><code class="sourceCode r"><span class="co"># Fit a full-factorial linear model</span>
 m &lt;-<span class="st"> </span><span class="kw">lm</span>(Sepal.Length <span class="op">~</span><span class="st"> </span>Sepal.Width <span class="op">*</span><span class="st"> </span>Petal.Length <span class="op">*</span><span class="st"> </span>Petal.Width, <span class="dt">data =</span> iris)
 
 <span class="co"># (1) get a tidy() data structure of covariate-level info (e.g., point estimate, standard error, etc)</span>
 <span class="co"># (2) make sure term column is a factor ordered by the estimate</span>
 <span class="co"># (3) plot estimate by term with an error bar for the standard error</span>
-<span class="kw">tidy</span>(m) <span class="op">%&gt;%</span><span class="st"> </span>
-<span class="st">  </span><span class="kw">mutate</span>(<span class="dt">term =</span> <span class="kw">fct_reorder</span>(term, estimate)) <span class="op">%&gt;%</span>
+broom<span class="op">::</span><span class="kw">tidy</span>(m) <span class="op">%&gt;%</span><span class="st"> </span>
+<span class="st">  </span><span class="kw">mutate</span>(<span class="dt">term =</span> forcats<span class="op">::</span><span class="kw">fct_reorder</span>(term, estimate)) <span class="op">%&gt;%</span>
 <span class="st">  </span><span class="kw">plot_ly</span>(<span class="dt">x =</span> <span class="op">~</span>estimate, <span class="dt">y =</span> <span class="op">~</span>term) <span class="op">%&gt;%</span>
 <span class="st">  </span><span class="kw">add_markers</span>(
     <span class="dt">error_x =</span> <span class="op">~</span><span class="kw">list</span>(<span class="dt">value =</span> std.error), 
@@ -595,7 +591,7 @@ m &lt;-<span class="st"> </span><span class="kw">lm</span>(Sepal.Length <span cl
     <span class="dt">hoverinfo =</span> <span class="st">&quot;x&quot;</span>
   )</code></pre>
 <div class="figure" style="text-align: center"><span id="fig:coefplot"></span>
-<img src="images/coefplot.png" alt="A coefficient plot." width="100%" />
+<img src="images/coefplot.png" alt="A coefficient plot." width="100%" data-url="/interactives/coefplot.html" />
 <p class="caption">
 FIGURE 3.16: A coefficient plot.
 </p>
@@ -620,7 +616,7 @@ tx5 &lt;-<span class="st"> </span><span class="kw">semi_join</span>(txhousing, t
 <span class="kw">plot_ly</span>(tx5, <span class="dt">x =</span> <span class="op">~</span>date, <span class="dt">y =</span> <span class="op">~</span>median) <span class="op">%&gt;%</span>
 <span class="st">  </span><span class="kw">add_lines</span>(<span class="dt">linetype =</span> <span class="op">~</span>city)</code></pre>
 <div class="figure" style="text-align: center"><span id="fig:linetypes"></span>
-<img src="images/linetypes.svg" alt="Using color and/or linetype to differentiate groups of lines." width="100%" />
+<img src="images/linetypes.svg" alt="Using color and/or linetype to differentiate groups of lines." width="100%" data-url="/interactives/linetypes.html" />
 <p class="caption">
 FIGURE 3.17: Using <code>color</code> and/or <code>linetype</code> to differentiate groups of lines.
 </p>
@@ -637,7 +633,7 @@ FIGURE 3.17: Using <code>color</code> and/or <code>linetype</code> to differenti
 <span class="kw">plot_ly</span>(tx5, <span class="dt">x =</span> <span class="op">~</span>date, <span class="dt">y =</span> <span class="op">~</span>median) <span class="op">%&gt;%</span>
 <span class="st">  </span><span class="kw">add_lines</span>(<span class="dt">linetype =</span> <span class="op">~</span>city, <span class="dt">linetypes =</span> ltys)</code></pre>
 <div class="figure" style="text-align: center"><span id="fig:linetypes-manual"></span>
-<img src="images/linetypes-manual.svg" alt="Providing a named character vector to linetypes in order to control exactly what linetype gets mapped to which city." width="100%" />
+<img src="images/linetypes-manual.svg" alt="Providing a named character vector to linetypes in order to control exactly what linetype gets mapped to which city." width="100%" data-url="/interactives/linetypes-manual.html" />
 <p class="caption">
 FIGURE 3.18: Providing a named character vector to linetypes in order to control exactly what linetype gets mapped to which city.
 </p>
@@ -646,10 +642,10 @@ FIGURE 3.18: Providing a named character vector to linetypes in order to control
 <div id="segments" class="section level3">
 <h3><span class="header-section-number">3.2.2</span> Segments</h3>
 <p>The <code>add_segments()</code> function essentially provides a way to connect two points [(<code>x</code>, <code>y</code>) to (<code>xend</code>, <code>yend</code>)] with a line. Segments form the building blocks for numerous useful chart types, including slopegraphs, dumbell charts, candlestick charts, and more. Slopegraphs and dumbell charts are useful for comparing numeric values across numerous categories. Candlestick charts are typically used for visualizing change in a financial asset over time.</p>
-<p>Segments can also provide a useful alternative to <code>add_bars()</code> (covered in Section <a href="bars-histograms.html#bars-histograms">5</a>), especially for animations. In particular, Figure <a href="animating-views.html#fig:profile-pyramid">14.5</a> of Section <a href="animating-views.html#animation-support">14.2</a> shows how implement an animated population pyramid using segments instead of bars.</p>
+<p>Segments can also provide a useful alternative to <code>add_bars()</code> (covered in Chapter <a href="bars-histograms.html#bars-histograms">5</a>), especially for animations. In particular, Figure <a href="animating-views.html#fig:profile-pyramid">14.5</a> of Section <a href="animating-views.html#animation-support">14.2</a> shows how implement an animated population pyramid using segments instead of bars.</p>
 <div id="slopegraph" class="section level4">
 <h4><span class="header-section-number">3.2.2.1</span> Slopegraph</h4>
-<p>The slope graph, made popular by <span class="citation">Tufte (<a href="#ref-tufte2001" role="doc-biblioref">2001</a><a href="#ref-tufte2001" role="doc-biblioref">b</a>)</span>, is a great way to compare the change in a measurement across numerous groups. This change could be along either a discrete or a continuous axis. For a continuous axis, the slopegraph could be thought of as a decomposition of a line graph into multiple segments. The <strong>slopegraph</strong> R package provides a succinct interface for creating slopegraphs with base or <strong>ggplot2</strong> graphics and also some convenient data sets which we’ll make use of here <span class="citation">(Leeper <a href="#ref-slopegraph" role="doc-biblioref">2017</a>)</span>. Figure <a href="scatter-traces.html#fig:slopegraph">3.19</a> recreates an example from <span class="citation">Tufte (<a href="#ref-tufte2001" role="doc-biblioref">2001</a><a href="#ref-tufte2001" role="doc-biblioref">b</a>)</span>, using the <code>gdp</code> data set from <strong>slopegraph</strong>, and demonstrates a common issue with labelling in slopegraphs – it’s easy to have overlapping labels when anchoring labels on data values. For that reason, this implementation leverages <strong>plotly</strong> ability to interactively edit annotation positions. See Section <a href="editing-views.html#editing-views">12</a> for similar examples of ‘editing views’.</p>
+<p>The slope graph, made popular by <span class="citation">Tufte (<a href="#ref-tufte2001" role="doc-biblioref">2001</a><a href="#ref-tufte2001" role="doc-biblioref">b</a>)</span>, is a great way to compare the change in a measurement across numerous groups. This change could be along either a discrete or a continuous axis. For a continuous axis, the slopegraph could be thought of as a decomposition of a line graph into multiple segments. The <strong>slopegraph</strong> R package provides a succinct interface for creating slopegraphs with base or <strong>ggplot2</strong> graphics and also some convenient data sets which we’ll make use of here <span class="citation">(Leeper <a href="#ref-slopegraph" role="doc-biblioref">2017</a>)</span>. Figure <a href="scatter-traces.html#fig:slopegraph">3.19</a> recreates an example from <span class="citation">Tufte (<a href="#ref-tufte2001" role="doc-biblioref">2001</a><a href="#ref-tufte2001" role="doc-biblioref">b</a>)</span>, using the <code>gdp</code> data set from <strong>slopegraph</strong>, and demonstrates a common issue with labelling in slopegraphs – it’s easy to have overlapping labels when anchoring labels on data values. For that reason, this implementation leverages <strong>plotly</strong> ability to interactively edit annotation positions. See Chapter <a href="editing-views.html#editing-views">12</a> for similar examples of ‘editing views’.</p>
 <details>
 <p><summary>Click to show code</summary></p>
 <pre class="sourceCode r"><code class="sourceCode r"><span class="kw">data</span>(gdp, <span class="dt">package =</span> <span class="st">&quot;slopegraph&quot;</span>)
@@ -692,7 +688,7 @@ gdp<span class="op">$</span>Country &lt;-<span class="st"> </span><span class="k
 <div class="figure" style="text-align: center"><span id="fig:slopegraph"></span>
 <iframe src="https://player.vimeo.com/video/327585190?title=0&amp;byline=0&amp;portrait=0" width="100%" height="400" frameborder="0" seamless="seamless" webkitAllowFullScreen mozallowfullscreen allowFullScreen></iframe>
 <p class="caption">
-FIGURE 3.19: Interactively editing the label positioning in a slopegraph.
+FIGURE 3.19: Interactively editing the label positioning in a slopegraph. For the interactive, see <a href="https://plotly-r.com/interactives/slopegraph.html" class="uri">https://plotly-r.com/interactives/slopegraph.html</a>
 </p>
 </div>
 </div>
@@ -721,7 +717,7 @@ FIGURE 3.19: Interactively editing the label positioning in a slopegraph.
   ) <span class="op">%&gt;%</span>
 <span class="st">  </span><span class="kw">layout</span>(<span class="dt">xaxis =</span> <span class="kw">list</span>(<span class="dt">title =</span> <span class="st">&quot;Miles per gallon&quot;</span>))</code></pre>
 <div class="figure" style="text-align: center"><span id="fig:dumbell"></span>
-<img src="images/dumbell.svg" alt="A dumbell chart of mile per gallon city vs highway by model of car." width="100%" />
+<img src="images/dumbell.svg" alt="A dumbell chart of mile per gallon city vs highway by model of car." width="100%" data-url="/interactives/dumbell.html" />
 <p class="caption">
 FIGURE 3.20: A dumbell chart of mile per gallon city vs highway by model of car.
 </p>
@@ -745,7 +741,7 @@ dat &lt;-<span class="st"> </span><span class="kw">subset</span>(dat, date <span
 <span class="st">  </span><span class="kw">layout</span>(<span class="dt">showlegend =</span> <span class="ot">FALSE</span>, <span class="dt">yaxis =</span> <span class="kw">list</span>(<span class="dt">title =</span> <span class="st">&quot;Price&quot;</span>)) <span class="op">%&gt;%</span>
 <span class="st">  </span><span class="kw">rangeslider</span>()</code></pre>
 <div class="figure" style="text-align: center"><span id="fig:candlestick"></span>
-<img src="images/candlestick.svg" alt="A candlestick chart built out of segments" width="100%" />
+<img src="images/candlestick.svg" alt="A candlestick chart built out of segments" width="100%" data-url="/interactives/candlestick.html" />
 <p class="caption">
 FIGURE 3.21: A candlestick chart built out of segments
 </p>
@@ -754,7 +750,7 @@ FIGURE 3.21: A candlestick chart built out of segments
 </div>
 <div id="density-plots" class="section level3">
 <h3><span class="header-section-number">3.2.3</span> Density plots</h3>
-<p>In Section <a href="bars-histograms.html#bars-histograms">5</a>, we leverage a number of algorithms in R for computing the “optimal” number of bins for a histogram, via <code>hist()</code>, and routing those results to <code>add_bars()</code>. We can leverage the <code>density()</code> function for computing kernel density estimates in a similar way, and route the results to <code>add_lines()</code>, as is done in Figure <a href="scatter-traces.html#fig:densities">3.22</a>.</p>
+<p>In Chapter <a href="bars-histograms.html#bars-histograms">5</a>, we leverage a number of algorithms in R for computing the “optimal” number of bins for a histogram, via <code>hist()</code>, and routing those results to <code>add_bars()</code>. We can leverage the <code>density()</code> function for computing kernel density estimates in a similar way, and route the results to <code>add_lines()</code>, as is done in Figure <a href="scatter-traces.html#fig:densities">3.22</a>.</p>
 <pre class="sourceCode r"><code class="sourceCode r">kerns &lt;-<span class="st"> </span><span class="kw">c</span>(<span class="st">&quot;gaussian&quot;</span>, <span class="st">&quot;epanechnikov&quot;</span>, <span class="st">&quot;rectangular&quot;</span>, 
           <span class="st">&quot;triangular&quot;</span>, <span class="st">&quot;biweight&quot;</span>, <span class="st">&quot;cosine&quot;</span>, <span class="st">&quot;optcosine&quot;</span>)
 p &lt;-<span class="st"> </span><span class="kw">plot_ly</span>()
@@ -764,7 +760,7 @@ p &lt;-<span class="st"> </span><span class="kw">plot_ly</span>()
 }
 p</code></pre>
 <div class="figure" style="text-align: center"><span id="fig:densities"></span>
-<img src="images/densities.svg" alt="Various kernel density estimates." width="100%" />
+<img src="images/densities.svg" alt="Various kernel density estimates." width="100%" data-url="/interactives/densities.html" />
 <p class="caption">
 FIGURE 3.22: Various kernel density estimates.
 </p>
@@ -772,7 +768,7 @@ FIGURE 3.22: Various kernel density estimates.
 </div>
 <div id="parallel-coordinates" class="section level3">
 <h3><span class="header-section-number">3.2.4</span> Parallel Coordinates</h3>
-<p>One very useful, but often overlooked, visualization technique is the parallel coordinates plot. Parallel coordinates provide a way to compare values along a common (or non-aligned) positional scale(s) – the most basic of all perceptual tasks – in more than 3 dimensions <span class="citation">(Cleveland and McGill <a href="#ref-graphical-perception" role="doc-biblioref">1984</a>)</span>. Usually each line represents every measurement for a given row (or observation) in a data set. It’s true that plotly.js provides a trace type, parcoords, specifically for parallel coordinates that offers desirable interactive capabilities (e.g. highlighting and reordering of axes).<a href="#fn11" class="footnote-ref" id="fnref11"><sup>11</sup></a>. However, it can also be useful learn how to use <code>add_lines()</code> to implement parallel coordinates as it can offer more flexibility and control over the axis scales.</p>
+<p>One very useful, but often overlooked, visualization technique is the parallel coordinates plot. Parallel coordinates provide a way to compare values along a common (or non-aligned) positional scale(s) – the most basic of all perceptual tasks – in more than 3 dimensions <span class="citation">(Cleveland and McGill <a href="#ref-graphical-perception" role="doc-biblioref">1984</a>)</span>. Usually each line represents every measurement for a given row (or observation) in a data set. It’s true that plotly.js provides a trace type, parcoords, specifically for parallel coordinates that offers desirable interactive capabilities (e.g., highlighting and reordering of axes).<a href="#fn11" class="footnote-ref" id="fnref11"><sup>11</sup></a>. However, it can also be useful learn how to use <code>add_lines()</code> to implement parallel coordinates as it can offer more flexibility and control over the axis scales.</p>
 <p>When measurements are on very different scales, some care must be taken, and variables must transformed to be put on a common scale. As Figure <a href="scatter-traces.html#fig:pcp-common">3.23</a> shows, even when variables are measured on a similar scale, it can still be informative to transform variables in different ways.</p>
 <pre class="sourceCode r"><code class="sourceCode r">iris<span class="op">$</span>obs &lt;-<span class="st"> </span><span class="kw">seq_len</span>(<span class="kw">nrow</span>(iris))
 iris_pcp &lt;-<span class="st"> </span><span class="cf">function</span>(<span class="dt">transform =</span> identity) {
@@ -789,7 +785,7 @@ iris_pcp &lt;-<span class="st"> </span><span class="cf">function</span>(<span cl
   <span class="dt">nrows =</span> <span class="dv">3</span>, <span class="dt">shareX =</span> <span class="ot">TRUE</span>
 ) <span class="op">%&gt;%</span><span class="st"> </span><span class="kw">hide_legend</span>()</code></pre>
 <div class="figure" style="text-align: center"><span id="fig:pcp-common"></span>
-<img src="images/pcp-common.svg" alt="Parallel coordinates plots of the Iris dataset. The top panel shows all variables on a common scale. The middle panel scales each variable to have mean of 0 and standard deviation of 1. In the bottom panel, each variable is scaled to have a minimum of 0 and a maximum of 1." width="100%" />
+<img src="images/pcp-common.svg" alt="Parallel coordinates plots of the Iris dataset. The top panel shows all variables on a common scale. The middle panel scales each variable to have mean of 0 and standard deviation of 1. In the bottom panel, each variable is scaled to have a minimum of 0 and a maximum of 1." width="100%" data-url="/interactives/pcp-common.html" />
 <p class="caption">
 FIGURE 3.23: Parallel coordinates plots of the Iris dataset. The top panel shows all variables on a common scale. The middle panel scales each variable to have mean of 0 and standard deviation of 1. In the bottom panel, each variable is scaled to have a minimum of 0 and a maximum of 1.
 </p>
@@ -799,7 +795,7 @@ FIGURE 3.23: Parallel coordinates plots of the Iris dataset. The top panel shows
 </div>
 <div id="polygons" class="section level2">
 <h2><span class="header-section-number">3.3</span> Polygons</h2>
-<p>The <code>add_polygons()</code> function is essentially equivalent to <code>add_paths()</code> with the <a href="https://plot.ly/r/reference/#scatter-fill">fill</a> attribute set to “toself”. Polygons form the basis for other, higher-level scatter-based layers (e.g., <code>add_ribbons()</code> and <code>add_sf()</code>) that don’t have a dedicated plotly.js trace type. Polygons can be use to draw many things, but perhaps the most familiar application where you <em>might</em> want to use <code>add_polygons()</code> is to draw geo-spatial objects. If and when you use <code>add_polygons()</code> to draw a map, make sure you fix the aspect ratio (e.g. <a href="https://plot.ly/r/reference/#layout-xaxis-scaleanchor"><code>xaxis.scaleanchor</code></a>) and also consider using <code>plotly_empty()</code> over <code>plot_ly()</code> to hide axis labels, ticks, and the background grid. On the other hand, Section <a href="maps.html#maps-custom">4.2</a> shows you how to make a custom maps using the <strong>sf</strong> package and <code>add_sf()</code>, which is a bit of work to get started, but is absolutely worth the investment.</p>
+<p>The <code>add_polygons()</code> function is essentially equivalent to <code>add_paths()</code> with the <a href="https://plot.ly/r/reference/#scatter-fill">fill</a> attribute set to “toself”. Polygons form the basis for other, higher-level scatter-based layers (e.g., <code>add_ribbons()</code> and <code>add_sf()</code>) that don’t have a dedicated plotly.js trace type. Polygons can be use to draw many things, but perhaps the most familiar application where you <em>might</em> want to use <code>add_polygons()</code> is to draw geo-spatial objects. If and when you use <code>add_polygons()</code> to draw a map, make sure you fix the aspect ratio (e.g., <a href="https://plot.ly/r/reference/#layout-xaxis-scaleanchor"><code>xaxis.scaleanchor</code></a>) and also consider using <code>plotly_empty()</code> over <code>plot_ly()</code> to hide axis labels, ticks, and the background grid. On the other hand, Section <a href="maps.html#maps-custom">4.2</a> shows you how to make a custom maps using the <strong>sf</strong> package and <code>add_sf()</code>, which is a bit of work to get started, but is absolutely worth the investment.</p>
 <pre class="sourceCode r"><code class="sourceCode r">base &lt;-<span class="st"> </span><span class="kw">map_data</span>(<span class="st">&quot;world&quot;</span>, <span class="st">&quot;canada&quot;</span>) <span class="op">%&gt;%</span>
 <span class="st">  </span><span class="kw">group_by</span>(group) <span class="op">%&gt;%</span>
 <span class="st">  </span><span class="kw">plotly_empty</span>(<span class="dt">x =</span> <span class="op">~</span>long, <span class="dt">y =</span> <span class="op">~</span>lat, <span class="dt">alpha =</span> <span class="fl">0.2</span>) <span class="op">%&gt;%</span>
@@ -810,15 +806,15 @@ base <span class="op">%&gt;%</span>
 <span class="st">  </span><span class="kw">add_markers</span>(<span class="dt">text =</span> <span class="op">~</span><span class="kw">paste</span>(name, <span class="st">&quot;&lt;br /&gt;&quot;</span>, pop), <span class="dt">hoverinfo =</span> <span class="st">&quot;text&quot;</span>, 
               <span class="dt">color =</span> <span class="kw">I</span>(<span class="st">&quot;red&quot;</span>), <span class="dt">data =</span> maps<span class="op">::</span>canada.cities)</code></pre>
 <div class="figure" style="text-align: center"><span id="fig:map-canada"></span>
-<img src="images/map-canada.png" alt="Using add_polygons() to make a map of Canada and major Canadian cities via data provided by the maps package (Richard A. Becker, Ray Brownrigg. Enhancements by Thomas P Minka, and Deckmyn. 2018)." width="100%" />
+<img src="images/map-canada.png" alt="Using add_polygons() to make a map of Canada and major Canadian cities via data provided by the maps package." width="100%" data-url="/interactives/map-canada.html" />
 <p class="caption">
-FIGURE 3.24: Using <code>add_polygons()</code> to make a map of Canada and major Canadian cities via data provided by the <strong>maps</strong> package <span class="citation">(Richard A. Becker, Ray Brownrigg. Enhancements by Thomas P Minka, and Deckmyn. <a href="#ref-maps" role="doc-biblioref">2018</a>)</span>.
+FIGURE 3.24: Using <code>add_polygons()</code> to make a map of Canada and major Canadian cities via data provided by the <strong>maps</strong> package.
 </p>
 </div>
-<p>As discussion surrounding Figure <a href="maps.html#fig:split-color">4.9</a> points out, scatter-based polygon layers (i.e., <code>add_polygons()</code>, <code>add_ribbons()</code>, etc) render all the polygons using one plotly.js trace by default. This approach is computationally efficient, but it’s not always desirable (e.g. can’t have multiple fills per trace, interactivity is relatively limited). To work around the limitations, consider using <code>split</code> (or <code>color</code> with a discrete variable) to split the polygon data into multiple traces. Figure <a href="scatter-traces.html#fig:map-canada-split">3.25</a> demonstrates using <code>split</code> which will impose plotly.js’ colorway to each trace (i.e., subregion) and leverage <code>hoveron</code> to generate one tooltip per sub-region.</p>
+<p>As discussion surrounding Figure <a href="maps.html#fig:split-color">4.9</a> points out, scatter-based polygon layers (i.e., <code>add_polygons()</code>, <code>add_ribbons()</code>, etc) render all the polygons using one plotly.js trace by default. This approach is computationally efficient, but it’s not always desirable (e.g., can’t have multiple fills per trace, interactivity is relatively limited). To work around the limitations, consider using <code>split</code> (or <code>color</code> with a discrete variable) to split the polygon data into multiple traces. Figure <a href="scatter-traces.html#fig:map-canada-split">3.25</a> demonstrates using <code>split</code> which will impose plotly.js’ colorway to each trace (i.e., subregion) and leverage <code>hoveron</code> to generate one tooltip per sub-region.</p>
 <pre class="sourceCode r"><code class="sourceCode r"><span class="kw">add_polygons</span>(base, <span class="dt">split =</span> <span class="op">~</span>subregion, <span class="dt">hoveron =</span> <span class="st">&quot;fills&quot;</span>)</code></pre>
 <div class="figure" style="text-align: center"><span id="fig:map-canada-split"></span>
-<img src="images/map-canada-split.png" alt="Using split to render polygons with different fills and interactive properties." width="100%" />
+<img src="images/map-canada-split.png" alt="Using split to render polygons with different fills and interactive properties." width="100%" data-url="/interactives/map-canada-split.html" />
 <p class="caption">
 FIGURE 3.25: Using <code>split</code> to render polygons with different fills and interactive properties.
 </p>
@@ -834,7 +830,7 @@ broom<span class="op">::</span><span class="kw">augment</span>(m) <span class="o
               <span class="dt">ymax =</span> <span class="op">~</span>.fitted <span class="op">+</span><span class="st"> </span><span class="fl">1.96</span> <span class="op">*</span><span class="st"> </span>.se.fit, <span class="dt">color =</span> <span class="kw">I</span>(<span class="st">&quot;gray80&quot;</span>)) <span class="op">%&gt;%</span>
 <span class="st">  </span><span class="kw">add_lines</span>(<span class="dt">y =</span> <span class="op">~</span>.fitted, <span class="dt">color =</span> <span class="kw">I</span>(<span class="st">&quot;steelblue&quot;</span>))</code></pre>
 <div class="figure" style="text-align: center"><span id="fig:broom-lm"></span>
-<img src="images/broom-lm.svg" alt="Plotting fitted values and uncertainty bounds of a linear model via the broom package." width="100%" />
+<img src="images/broom-lm.svg" alt="Plotting fitted values and uncertainty bounds of a linear model via the broom package." width="100%" data-url="/interactives/broom-lm.html" />
 <p class="caption">
 FIGURE 3.26: Plotting fitted values and uncertainty bounds of a linear model via the <strong>broom</strong> package.
 </p>
@@ -845,35 +841,29 @@ FIGURE 3.26: Plotting fitted values and uncertainty bounds of a linear model via
 </div>
 <h3>References</h3>
 <div id="refs" class="references">
-<div id="ref-unwin-graphical-analysis">
-<p>Unwin, Antony. 2015. <em>Graphical Data Analysis with R</em>. CRC Press. <a href="http://www.gradaanwr.net">http://www.gradaanwr.net</a>.</p>
-</div>
 <div id="ref-viridis">
 <p>Berkeley Institute for Data Science. 2016. “Mpl Colormaps.” 2016. <a href="http://web.archive.org/web/20160601125258/http://bids.github.io/colormap/">http://web.archive.org/web/20160601125258/http://bids.github.io/colormap/</a>.</p>
-</div>
-<div id="ref-graphical-perception">
-<p>Cleveland, William S, and Robert McGill. 1984. “Graphical Perception: Theory, Experimentation, and Application to the Development of Graphical Methods.” <em>Journal of the American Statistical Association</em> 79 (September): 531–54.</p>
 </div>
 <div id="ref-crowdsourcing-graphical-perception">
 <p>Bostock, Jeffrey Heer AND Michael. 2010. “Crowdsourcing Graphical Perception: Using Mechanical Turk to Assess Visualization Design.” In <em>ACM Human Factors in Computing Systems (Chi)</em>, 203–12. <a href="http://vis.stanford.edu/papers/crowdsourcing-graphical-perception">http://vis.stanford.edu/papers/crowdsourcing-graphical-perception</a>.</p>
 </div>
+<div id="ref-graphical-perception">
+<p>Cleveland, William S, and Robert McGill. 1984. “Graphical Perception: Theory, Experimentation, and Application to the Development of Graphical Methods.” <em>Journal of the American Statistical Association</em> 79 (September): 531–54.</p>
+</div>
 <div id="ref-few-values">
 <p>Few, Stephen. 2006. “Data Visualization: Rules for Encoding Values in Graph.” 2006. <a href="https://web.archive.org/web/20160404214629/http://www.perceptualedge.com/articles/b-eye/encoding_values_in_graph.pdf">https://web.archive.org/web/20160404214629/http://www.perceptualedge.com/articles/b-eye/encoding_values_in_graph.pdf</a>.</p>
-</div>
-<div id="ref-messing">
-<p>Messing, Solomon. 2012. “Visualization Series: Insight from Cleveland and Tufte on Plotting Numeric Data by Groups.” 2012. <a href="http://web.archive.org/web/20160602202734/https://solomonmessing.wordpress.com/2012/03/04/visualization-series-insight-from-cleveland-and-tufte-on-plotting-numeric-data-by-groups/">http://web.archive.org/web/20160602202734/https://solomonmessing.wordpress.com/2012/03/04/visualization-series-insight-from-cleveland-and-tufte-on-plotting-numeric-data-by-groups/</a>.</p>
 </div>
 <div id="ref-coefplot">
 <p>Lander, Jared P. 2016. <em>Coefplot: Plots Coefficients from Fitted Models</em>. <a href="https://CRAN.R-project.org/package=coefplot">https://CRAN.R-project.org/package=coefplot</a>.</p>
 </div>
-<div id="ref-broom">
-<p>Robinson, David. 2016. <em>Broom: Convert Statistical Analysis Objects into Tidy Data Frames</em>. <a href="https://CRAN.R-project.org/package=broom">https://CRAN.R-project.org/package=broom</a>.</p>
-</div>
-<div id="ref-tufte2001">
-<p>Tufte, Edward. 2001b. <em>The Visual Display of Quantitative Information</em>. Cheshire, Conn: Graphics Press.</p>
-</div>
 <div id="ref-slopegraph">
 <p>Leeper, Thomas J. 2017. <em>Slopegraph: Edward Tufte-Inspired Slopegraphs</em>.</p>
+</div>
+<div id="ref-messing">
+<p>Messing, Solomon. 2012. “Visualization Series: Insight from Cleveland and Tufte on Plotting Numeric Data by Groups.” 2012. <a href="http://web.archive.org/web/20160602202734/https://solomonmessing.wordpress.com/2012/03/04/visualization-series-insight-from-cleveland-and-tufte-on-plotting-numeric-data-by-groups/">http://web.archive.org/web/20160602202734/https://solomonmessing.wordpress.com/2012/03/04/visualization-series-insight-from-cleveland-and-tufte-on-plotting-numeric-data-by-groups/</a>.</p>
+</div>
+<div id="ref-broom">
+<p>Robinson, David. 2016. <em>Broom: Convert Statistical Analysis Objects into Tidy Data Frames</em>. <a href="https://CRAN.R-project.org/package=broom">https://CRAN.R-project.org/package=broom</a>.</p>
 </div>
 <div id="ref-quantmod">
 <p>Ryan, Jeffrey A. 2016. <em>Quantmod: Quantitative Financial Modelling Framework</em>. <a href="https://CRAN.R-project.org/package=quantmod">https://CRAN.R-project.org/package=quantmod</a>.</p>
@@ -881,8 +871,11 @@ FIGURE 3.26: Plotting fitted values and uncertainty bounds of a linear model via
 <div id="ref-pedestrians">
 <p>Sievert, Carson. 2019a. <em>Pedestrians: Tools for Exploring Melbourne’s Pedestrian Data</em>. <a href="https://github.com/cpsievert/pedestrians">https://github.com/cpsievert/pedestrians</a>.</p>
 </div>
-<div id="ref-maps">
-<p>Richard A. Becker, Original S code by, Allan R. Wilks. R version by Ray Brownrigg. Enhancements by Thomas P Minka, and Alex Deckmyn. 2018. <em>Maps: Draw Geographical Maps</em>. <a href="https://CRAN.R-project.org/package=maps">https://CRAN.R-project.org/package=maps</a>.</p>
+<div id="ref-tufte2001">
+<p>Tufte, Edward. 2001b. <em>The Visual Display of Quantitative Information</em>. Cheshire, Conn: Graphics Press.</p>
+</div>
+<div id="ref-unwin-graphical-analysis">
+<p>Unwin, Antony. 2015. <em>Graphical Data Analysis with R</em>. CRC Press. <a href="http://www.gradaanwr.net">http://www.gradaanwr.net</a>.</p>
 </div>
 </div>
 <div class="footnotes">
@@ -916,6 +909,37 @@ FIGURE 3.26: Plotting fitted values and uncertainty bounds of a linear model via
   gtag('js', new Date());
 
   gtag('config', 'UA-60116966-3');
+</script>
+<script>
+window.onload = function() {
+
+  var imgs = document.querySelectorAll('img');
+
+  // Upon clicking an image, open a new window with the
+  // dimensions of the image, pointing the `data-url` link
+  var on_click = function (e) {
+    var d = e.target.dataset || {};
+    if (d.url) {
+      // Add some extra height for the modebar
+      var height = 'height=' + (e.target.clientHeight * 1.05);
+      var width = 'width=' + e.target.clientWidth;
+      var param = 'location=yes,' + height + ',' + width + ',scrollbars=yes,status=yes';
+      window.open(e.target.dataset.url, '_blank', param);
+    }
+  };
+
+  var on_hover = function (e) {
+    var d = e.target.dataset || {};
+    if (d.url) {
+      e.target.style.cursor = 'pointer';
+    }
+  };
+
+  for (var i = 0; i < imgs.length; i++) {
+    imgs[i].addEventListener('click', on_click);
+    imgs[i].addEventListener('mouseover', on_hover);
+  }
+};
 </script>
             </section>
 

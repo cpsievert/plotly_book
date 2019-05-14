@@ -1,13 +1,12 @@
 <!DOCTYPE html>
-<html >
-
+<html xmlns="http://www.w3.org/1999/xhtml" lang="" xml:lang="">
 <head>
 
-  <meta charset="UTF-8">
-  <meta http-equiv="X-UA-Compatible" content="IE=edge">
+  <meta charset="utf-8" />
+  <meta http-equiv="X-UA-Compatible" content="IE=edge" />
   <title>24 Improving performance | Interactive web-based data visualization with R, plotly, and shiny</title>
-  <meta name="description" content="A useR guide to creating highly interactive graphics for exploratory and expository visualization.">
-  <meta name="generator" content="bookdown  and GitBook 2.6.7">
+  <meta name="description" content="A useR guide to creating highly interactive graphics for exploratory and expository visualization." />
+  <meta name="generator" content="bookdown 0.10 and GitBook 2.6.7" />
 
   <meta property="og:title" content="24 Improving performance | Interactive web-based data visualization with R, plotly, and shiny" />
   <meta property="og:type" content="book" />
@@ -22,14 +21,14 @@
   <meta name="twitter:description" content="A useR guide to creating highly interactive graphics for exploratory and expository visualization." />
   
 
-<meta name="author" content="Carson Sievert">
+<meta name="author" content="Carson Sievert" />
 
 
-<meta name="date" content="2019-04-27">
+<meta name="date" content="2019-05-14" />
 
-  <meta name="viewport" content="width=device-width, initial-scale=1">
-  <meta name="apple-mobile-web-app-capable" content="yes">
-  <meta name="apple-mobile-web-app-status-bar-style" content="black">
+  <meta name="viewport" content="width=device-width, initial-scale=1" />
+  <meta name="apple-mobile-web-app-capable" content="yes" />
+  <meta name="apple-mobile-web-app-status-bar-style" content="black" />
   
   
 <link rel="prev" href="is-plotly-free-secure.html">
@@ -349,20 +348,20 @@ code span.wa { color: #60a0b0; font-weight: bold; font-style: italic; } /* Warni
 </div>
 <h3>References</h3>
 <div id="refs" class="references">
+<div id="ref-2019-falcon">
+<p>Heer, Dominik Moritz AND Bill Howe AND Jeffrey. 2019. “Falcon: Balancing Interactive Latency and Resolution Sensitivity for Scalable Linked Visualizations.” In <em>ACM Human Factors in Computing Systems (Chi)</em>. <a href="http://idl.cs.washington.edu/papers/falcon">http://idl.cs.washington.edu/papers/falcon</a>.</p>
+</div>
 <div id="ref-2013-immens">
 <p>Heer, Zhicheng Liu AND Biye Jiang AND Jeffrey. 2013. “ImMens: Real-Time Visual Querying of Big Data.” <em>Computer Graphics Forum (Proc. EuroVis)</em> 32 (3). <a href="http://idl.cs.washington.edu/papers/immens">http://idl.cs.washington.edu/papers/immens</a>.</p>
 </div>
-<div id="ref-2019-falcon">
-<p>Heer, Dominik Moritz AND Bill Howe AND Jeffrey. 2019. “Falcon: Balancing Interactive Latency and Resolution Sensitivity for Scalable Linked Visualizations.” In <em>ACM Human Factors in Computing Systems (Chi)</em>. <a href="http://idl.cs.washington.edu/papers/falcon">http://idl.cs.washington.edu/papers/falcon</a>.</p>
+<div id="ref-2014-latency">
+<p>Heer, Zhicheng Liu AND Jeffrey. 2014. “The Effects of Interactive Latency on Exploratory Visual Analysis.” <em>IEEE Trans. Visualization &amp; Comp. Graphics (Proc. InfoVis)</em>. <a href="http://idl.cs.washington.edu/papers/latency">http://idl.cs.washington.edu/papers/latency</a>.</p>
 </div>
 <div id="ref-nanocubes">
 <p>Lins, Lauro, James T. Klosowski, and and Carlos Scheidegger. 2013. “Nanocubes for Real-Time Exploration of Spatiotemporal Datasets.” <em>Visualization and Computer Graphics, IEEE Transactions</em>.</p>
 </div>
 <div id="ref-bigvis">
 <p>Wickham, Hadley. 2013. “Bin-Summarise-Smooth: A Framework for Visualising Large Data.” had.co.nz.</p>
-</div>
-<div id="ref-2014-latency">
-<p>Heer, Zhicheng Liu AND Jeffrey. 2014. “The Effects of Interactive Latency on Exploratory Visual Analysis.” <em>IEEE Trans. Visualization &amp; Comp. Graphics (Proc. InfoVis)</em>. <a href="http://idl.cs.washington.edu/papers/latency">http://idl.cs.washington.edu/papers/latency</a>.</p>
 </div>
 </div>
 <div class="footnotes">
@@ -395,6 +394,37 @@ code span.wa { color: #60a0b0; font-weight: bold; font-style: italic; } /* Warni
   gtag('js', new Date());
 
   gtag('config', 'UA-60116966-3');
+</script>
+<script>
+window.onload = function() {
+
+  var imgs = document.querySelectorAll('img');
+
+  // Upon clicking an image, open a new window with the
+  // dimensions of the image, pointing the `data-url` link
+  var on_click = function (e) {
+    var d = e.target.dataset || {};
+    if (d.url) {
+      // Add some extra height for the modebar
+      var height = 'height=' + (e.target.clientHeight * 1.05);
+      var width = 'width=' + e.target.clientWidth;
+      var param = 'location=yes,' + height + ',' + width + ',scrollbars=yes,status=yes';
+      window.open(e.target.dataset.url, '_blank', param);
+    }
+  };
+
+  var on_hover = function (e) {
+    var d = e.target.dataset || {};
+    if (d.url) {
+      e.target.style.cursor = 'pointer';
+    }
+  };
+
+  for (var i = 0; i < imgs.length; i++) {
+    imgs[i].addEventListener('click', on_click);
+    imgs[i].addEventListener('mouseover', on_hover);
+  }
+};
 </script>
             </section>
 

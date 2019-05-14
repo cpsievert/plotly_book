@@ -75,7 +75,6 @@ The `renderPlotly()` function renders anything that the `plotly_build()` functio
 
 ```{r eval = FALSE, summary = "Click to show/hide the code"}
 library(shiny)
-library(plotly)
 
 cities <- unique(txhousing$city)
 
@@ -204,7 +203,6 @@ Figure \@ref(fig:shiny-drag-circle) demonstrates directly manipulating a circle 
 
 ```{r eval = FALSE, summary = "Click to show/hide the code"}
 library(shiny)
-library(plotly)
 
 ui <- fluidPage(
   plotlyOutput("p"),
@@ -248,7 +246,7 @@ include_vimeo("327619858")
 Figure \@ref(fig:interactive-lm) demonstrates a linear model that reacts to edited circle shape positions using the `"plotly_relayout"` event in **shiny**. This interactive tool is an effective way to visualize the impact of high leverage points on a linear model fit. The main idea is to have the model fit (as well as it's summary and predicted values) depend on the current state of x and y values, which here is stored and updated via `reactiveValues()`. Section \@ref(reactive-vals) has more examples of using reactive values to maintain state within a **shiny** application.
 
 ```r
-plotly_example("shiny", "drag_marker")
+plotly_example("shiny", "drag_markers")
 ```
 
 ```{r interactive-lm, echo=FALSE, fig.cap = "(ref:interactive-lm)"}
@@ -270,7 +268,6 @@ include_vimeo("307597984")
 Remember every **graph** has two critical components: data (i.e., traces) and layout. Similar to how `"plotly_relayout"` reports partial modifications to the layout, the `"plotly_restyle"` event reports partial modification to traces. Compared to `"plotly_relayout"`, there aren't very many native direct manipulation events that would trigger a `"plotly_restyle"` event. For example, zoom/pan events, camera changes, editing annotations/shapes/etc all trigger a `"plotly_relayout"` event, but not many traces allow you to directly manipulate their properties. One notable exception is the `"parcoords"` trace type which has native support for brushing lines along an axis dimension(s). As Figure \@ref(fig:shiny-parcoords) demonstrates, these brush events emit a `"plotly_restyle"` event with the range(s) of the highlighted dimension.
 
 ```{r eval = FALSE, summary = "Click to show/hide the code"}
-library(plotly)
 library(shiny)
 
 ui <- fluidPage(
@@ -627,7 +624,7 @@ One un-intuitive thing about `Plotly.restyle()` is that it fully replaces object
 All **plotly** figures have two main components: traces (i.e., mapping from data to visuals) and layout. The plotly.js function `Plotly.relayout()` modifies the layout component, so it can control a wide variety of things such titles, axis definitions, annotations, shapes, and many other things. It can even be used to change the basemap layer of a Mapbox-powered layout, as in Figure \@ref(fig:shiny-mapbox-relayout). Note how this example uses `schema()` to grab all the pre-packaged basemap layers and create a dropdown of those options, but you can also provide a URL to a [custom basemap style](https://www.mapbox.com/help/create-a-custom-style/).
 
 ```r
-plotly_example("shiny", "proxy_relayout")
+plotly_example("shiny", "proxy_mapbox")
 ```
 
 ```{r shiny-mapbox-relayout, echo = FALSE, fig.cap="(ref:shiny-mapbox-relayout)"}
