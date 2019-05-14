@@ -1,13 +1,12 @@
 <!DOCTYPE html>
-<html >
-
+<html xmlns="http://www.w3.org/1999/xhtml" lang="" xml:lang="">
 <head>
 
-  <meta charset="UTF-8">
-  <meta http-equiv="X-UA-Compatible" content="IE=edge">
+  <meta charset="utf-8" />
+  <meta http-equiv="X-UA-Compatible" content="IE=edge" />
   <title>25 Controlling tooltips | Interactive web-based data visualization with R, plotly, and shiny</title>
-  <meta name="description" content="A useR guide to creating highly interactive graphics for exploratory and expository visualization.">
-  <meta name="generator" content="bookdown  and GitBook 2.6.7">
+  <meta name="description" content="A useR guide to creating highly interactive graphics for exploratory and expository visualization." />
+  <meta name="generator" content="bookdown 0.10 and GitBook 2.6.7" />
 
   <meta property="og:title" content="25 Controlling tooltips | Interactive web-based data visualization with R, plotly, and shiny" />
   <meta property="og:type" content="book" />
@@ -22,14 +21,14 @@
   <meta name="twitter:description" content="A useR guide to creating highly interactive graphics for exploratory and expository visualization." />
   
 
-<meta name="author" content="Carson Sievert">
+<meta name="author" content="Carson Sievert" />
 
 
-<meta name="date" content="2019-04-27">
+<meta name="date" content="2019-05-14" />
 
-  <meta name="viewport" content="width=device-width, initial-scale=1">
-  <meta name="apple-mobile-web-app-capable" content="yes">
-  <meta name="apple-mobile-web-app-status-bar-style" content="black">
+  <meta name="viewport" content="width=device-width, initial-scale=1" />
+  <meta name="apple-mobile-web-app-capable" content="yes" />
+  <meta name="apple-mobile-web-app-status-bar-style" content="black" />
   
   
 <link rel="prev" href="performance.html">
@@ -574,6 +573,37 @@ FIGURE 25.12: Using the <code>hoverlabel</code> attribute with <code>ggplotly()<
   gtag('js', new Date());
 
   gtag('config', 'UA-60116966-3');
+</script>
+<script>
+window.onload = function() {
+
+  var imgs = document.querySelectorAll('img');
+
+  // Upon clicking an image, open a new window with the
+  // dimensions of the image, pointing the `data-url` link
+  var on_click = function (e) {
+    var d = e.target.dataset || {};
+    if (d.url) {
+      // Add some extra height for the modebar
+      var height = 'height=' + (e.target.clientHeight * 1.05);
+      var width = 'width=' + e.target.clientWidth;
+      var param = 'location=yes,' + height + ',' + width + ',scrollbars=yes,status=yes';
+      window.open(e.target.dataset.url, '_blank', param);
+    }
+  };
+
+  var on_hover = function (e) {
+    var d = e.target.dataset || {};
+    if (d.url) {
+      e.target.style.cursor = 'pointer';
+    }
+  };
+
+  for (var i = 0; i < imgs.length; i++) {
+    imgs[i].addEventListener('click', on_click);
+    imgs[i].addEventListener('mouseover', on_hover);
+  }
+};
 </script>
             </section>
 

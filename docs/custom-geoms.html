@@ -1,13 +1,12 @@
 <!DOCTYPE html>
-<html >
-
+<html xmlns="http://www.w3.org/1999/xhtml" lang="" xml:lang="">
 <head>
 
-  <meta charset="UTF-8">
-  <meta http-equiv="X-UA-Compatible" content="IE=edge">
+  <meta charset="utf-8" />
+  <meta http-equiv="X-UA-Compatible" content="IE=edge" />
   <title>34 Translating custom ggplot2 geoms | Interactive web-based data visualization with R, plotly, and shiny</title>
-  <meta name="description" content="A useR guide to creating highly interactive graphics for exploratory and expository visualization.">
-  <meta name="generator" content="bookdown  and GitBook 2.6.7">
+  <meta name="description" content="A useR guide to creating highly interactive graphics for exploratory and expository visualization." />
+  <meta name="generator" content="bookdown 0.10 and GitBook 2.6.7" />
 
   <meta property="og:title" content="34 Translating custom ggplot2 geoms | Interactive web-based data visualization with R, plotly, and shiny" />
   <meta property="og:type" content="book" />
@@ -22,14 +21,14 @@
   <meta name="twitter:description" content="A useR guide to creating highly interactive graphics for exploratory and expository visualization." />
   
 
-<meta name="author" content="Carson Sievert">
+<meta name="author" content="Carson Sievert" />
 
 
-<meta name="date" content="2019-04-27">
+<meta name="date" content="2019-05-14" />
 
-  <meta name="viewport" content="width=device-width, initial-scale=1">
-  <meta name="apple-mobile-web-app-capable" content="yes">
-  <meta name="apple-mobile-web-app-status-bar-style" content="black">
+  <meta name="viewport" content="width=device-width, initial-scale=1" />
+  <meta name="apple-mobile-web-app-capable" content="yes" />
+  <meta name="apple-mobile-web-app-status-bar-style" content="black" />
   
   
 <link rel="prev" href="improving-ggplotly.html">
@@ -347,7 +346,7 @@ code span.wa { color: #60a0b0; font-weight: bold; font-style: italic; } /* Warni
 <span class="co">#&gt;     data &lt;- data[order(data[[&quot;x&quot;]]), ]</span>
 <span class="co">#&gt;     prefix_class(data, &quot;GeomPath&quot;)</span>
 <span class="co">#&gt; }</span>
-<span class="co">#&gt; &lt;bytecode: 0x7feb00cc4390&gt;</span>
+<span class="co">#&gt; &lt;bytecode: 0x7fe3fc7f5308&gt;</span>
 <span class="co">#&gt; &lt;environment: namespace:plotly&gt;</span></code></pre>
 <p>If you have implemented a custom geom, say <code>GeomCustom</code>, rest assured that the data passed to <code>to_basic()</code> will be of class <code>GeomCustom</code> when <code>ggplotly()</code> is called on a plot with your geom. And assuming <code>GeomCustom</code> may be reduced to another lower-level geom support by plotly, a <code>to_basic.GeomCustom()</code> method that transforms the data into a form suitable for that lower-level geom is sufficient for adding support. Moreover, note that the data passed to <code>to_basic()</code> is essentially the last form of the data <em>before</em> the render stage and <em>after</em> statistics have been performed. This makes it trivial to add support for geoms like <code>GeomXspline</code> from the <strong>ggalt</strong> package.</p>
 <pre class="sourceCode r"><code class="sourceCode r"><span class="kw">library</span>(ggalt)
@@ -357,7 +356,7 @@ code span.wa { color: #60a0b0; font-weight: bold; font-style: italic; } /* Warni
 <span class="co">#&gt;     data &lt;- data[order(data[[&quot;x&quot;]]), ]</span>
 <span class="co">#&gt;     prefix_class(data, &quot;GeomPath&quot;)</span>
 <span class="co">#&gt; }</span>
-<span class="co">#&gt; &lt;bytecode: 0x7feb01a9e120&gt;</span>
+<span class="co">#&gt; &lt;bytecode: 0x7fe4013f53f0&gt;</span>
 <span class="co">#&gt; &lt;environment: namespace:plotly&gt;</span></code></pre>
 <p>As shown in Figure <a href="custom-geoms.html#fig:xspline">34.1</a>, once the conversion has been provided. Users can call <code>ggplotly()</code> on the ggplot object containing the custom geom just like any other ggplot object.</p>
 <pre class="sourceCode r"><code class="sourceCode r"><span class="co"># example from `help(geom_xspline)`</span>
@@ -383,23 +382,23 @@ FIGURE 34.1: Converting GeomXspline from the <strong>ggalt</strong> package to p
 </div>
 <h3>References</h3>
 <div id="refs" class="references">
-<div id="ref-ggalt">
-<p>Rudis, Bob. 2016. <em>Ggalt: Extra Coordinate Systems, Geoms and Statistical Transformations for ’Ggplot2’</em>. <a href="https://CRAN.R-project.org/package=ggalt">https://CRAN.R-project.org/package=ggalt</a>.</p>
-</div>
-<div id="ref-ggraph">
-<p>Pedersen, Thomas Lin. 2016. <em>Ggraph: An Implementation of Grammar of Graphics for Graphs and Networks</em>.</p>
-</div>
-<div id="ref-geomnet">
-<p>Tyner, Samantha, and Heike Hofmann. 2016. <em>Geomnet: Network Visualization in the ’Ggplot2’ Framework</em>. <a href="https://CRAN.R-project.org/package=geomnet">https://CRAN.R-project.org/package=geomnet</a>.</p>
-</div>
-<div id="ref-ggmosaic">
-<p>Jeppson, Haley, Heike Hofmann, and Di Cook. 2016. <em>Ggmosaic: Mosaic Plots in the ’Ggplot2’ Framework</em>. <a href="http://github.com/haleyjeppson/ggmosaic">http://github.com/haleyjeppson/ggmosaic</a>.</p>
+<div id="ref-S3">
+<p>Chambers, J. M. 1992. “Classes and Methods: Object-Oriented Programming in S.” In <em>Statistical Models in S</em>, edited by J. M. Chambers and T. J. Hastie. Wadsworth &amp; Brooks/Cole.</p>
 </div>
 <div id="ref-ggtern">
 <p>Hamilton, Nicholas. 2016. <em>Ggtern: An Extension to ’Ggplot2’, for the Creation of Ternary Diagrams</em>. <a href="https://CRAN.R-project.org/package=ggtern">https://CRAN.R-project.org/package=ggtern</a>.</p>
 </div>
-<div id="ref-S3">
-<p>Chambers, J. M. 1992. “Classes and Methods: Object-Oriented Programming in S.” In <em>Statistical Models in S</em>, edited by J. M. Chambers and T. J. Hastie. Wadsworth &amp; Brooks/Cole.</p>
+<div id="ref-ggmosaic">
+<p>Jeppson, Haley, Heike Hofmann, and Di Cook. 2016. <em>Ggmosaic: Mosaic Plots in the ’Ggplot2’ Framework</em>. <a href="http://github.com/haleyjeppson/ggmosaic">http://github.com/haleyjeppson/ggmosaic</a>.</p>
+</div>
+<div id="ref-ggraph">
+<p>Pedersen, Thomas Lin. 2016. <em>Ggraph: An Implementation of Grammar of Graphics for Graphs and Networks</em>.</p>
+</div>
+<div id="ref-ggalt">
+<p>Rudis, Bob. 2016. <em>Ggalt: Extra Coordinate Systems, Geoms and Statistical Transformations for ’Ggplot2’</em>. <a href="https://CRAN.R-project.org/package=ggalt">https://CRAN.R-project.org/package=ggalt</a>.</p>
+</div>
+<div id="ref-geomnet">
+<p>Tyner, Samantha, and Heike Hofmann. 2016. <em>Geomnet: Network Visualization in the ’Ggplot2’ Framework</em>. <a href="https://CRAN.R-project.org/package=geomnet">https://CRAN.R-project.org/package=geomnet</a>.</p>
 </div>
 </div>
 <div class="footnotes">
@@ -433,6 +432,37 @@ FIGURE 34.1: Converting GeomXspline from the <strong>ggalt</strong> package to p
   gtag('js', new Date());
 
   gtag('config', 'UA-60116966-3');
+</script>
+<script>
+window.onload = function() {
+
+  var imgs = document.querySelectorAll('img');
+
+  // Upon clicking an image, open a new window with the
+  // dimensions of the image, pointing the `data-url` link
+  var on_click = function (e) {
+    var d = e.target.dataset || {};
+    if (d.url) {
+      // Add some extra height for the modebar
+      var height = 'height=' + (e.target.clientHeight * 1.05);
+      var width = 'width=' + e.target.clientWidth;
+      var param = 'location=yes,' + height + ',' + width + ',scrollbars=yes,status=yes';
+      window.open(e.target.dataset.url, '_blank', param);
+    }
+  };
+
+  var on_hover = function (e) {
+    var d = e.target.dataset || {};
+    if (d.url) {
+      e.target.style.cursor = 'pointer';
+    }
+  };
+
+  for (var i = 0; i < imgs.length; i++) {
+    imgs[i].addEventListener('click', on_click);
+    imgs[i].addEventListener('mouseover', on_hover);
+  }
+};
 </script>
             </section>
 

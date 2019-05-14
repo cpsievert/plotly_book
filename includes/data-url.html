@@ -1,0 +1,31 @@
+<script>
+window.onload = function() {
+
+  var imgs = document.querySelectorAll('img');
+
+  // Upon clicking an image, open a new window with the
+  // dimensions of the image, pointing the `data-url` link
+  var on_click = function (e) {
+    var d = e.target.dataset || {};
+    if (d.url) {
+      // Add some extra height for the modebar
+      var height = 'height=' + (e.target.clientHeight * 1.05);
+      var width = 'width=' + e.target.clientWidth;
+      var param = 'location=yes,' + height + ',' + width + ',scrollbars=yes,status=yes';
+      window.open(e.target.dataset.url, '_blank', param);
+    }
+  };
+
+  var on_hover = function (e) {
+    var d = e.target.dataset || {};
+    if (d.url) {
+      e.target.style.cursor = 'pointer';
+    }
+  };
+
+  for (var i = 0; i < imgs.length; i++) {
+    imgs[i].addEventListener('click', on_click);
+    imgs[i].addEventListener('mouseover', on_hover);
+  }
+};
+</script>
