@@ -353,7 +353,7 @@ mtcars <span class="op">%&gt;%</span>
 <div class="figure" style="text-align: center"><span id="fig:link-intro"></span>
 <iframe src="https://player.vimeo.com/video/317134071?title=0&amp;byline=0&amp;portrait=0" width="100%" height="400" frameborder="0" seamless="seamless" webkitAllowFullScreen mozallowfullscreen allowFullScreen></iframe>
 <p class="caption">
-FIGURE 16.1: A visual depiction of how <code>highlight_key()</code> attaches metadata to graphical elements to enable graphical database queries. Each point represents a different car and the number of cylinders (<code>cyl</code>) is assigned as metadata so that when a particular point is queried all points with the same number of cylinders are highlighted.
+FIGURE 16.1: A visual depiction of how <code>highlight_key()</code> attaches metadata to graphical elements to enable graphical database queries. Each point represents a different car and the number of cylinders (<code>cyl</code>) is assigned as metadata so that when a particular point is queried all points with the same number of cylinders are highlighted. For the interactive, see <a href="https://plotly-r.com/interactives/link-intro.html" class="uri">https://plotly-r.com/interactives/link-intro.html</a>
 </p>
 </div>
 <p>Generally speaking, <code>highlight_key()</code> assigns data values to graphical marks so that when graphical mark(s) are <em>directly manipulated</em> through the <code>on</code> event, it uses the corresponding data values (call it <code>$SELECTION_VALUE</code>) to perform an SQL query of the following form.</p>
@@ -377,7 +377,7 @@ base <span class="op">%&gt;%</span>
 <div class="figure" style="text-align: center"><span id="fig:txmissing"></span>
 <iframe src="https://player.vimeo.com/video/317137926?title=0&amp;byline=0&amp;portrait=0" width="100%" height="400" frameborder="0" seamless="seamless" webkitAllowFullScreen mozallowfullscreen allowFullScreen></iframe>
 <p class="caption">
-FIGURE 16.2: Graphical query of housing prices in various Texas cities. The query in this particular example must be triggered through clicking directly on a time series.
+FIGURE 16.2: Graphical query of housing prices in various Texas cities. The query in this particular example must be triggered through clicking directly on a time series. For the interactive, see <a href="https://plotly-r.com/interactives/txmissing.html" class="uri">https://plotly-r.com/interactives/txmissing.html</a>
 </p>
 </div>
 <p>Querying a city via direct manipulation is somewhat helpful for focusing on a particular time series, but it’s not so helpful for querying a city by name and/or comparing multiple cities at once. As it turns out, <strong>plotly</strong> makes it easy to add a selectize.js powered dropdown widget for querying by name (aka indirect manipulation) by setting <code>selectize = TRUE</code>.<a href="#fn24" class="footnote-ref" id="fnref24"><sup>24</sup></a> When it comes to comparing multiple cities, we want to be able to both retain previous selections (<code>persistent = TRUE</code>) as well as control the highlighting color (<code>dynamic = TRUE</code>). This videos explains how to use these features in Figure <a href="client-side-linking.html#fig:txmissing-modes">16.3</a> to compare pricing across different cities.</p>
@@ -471,7 +471,7 @@ select &lt;-<span class="st"> </span><span class="kw">highlight</span>(
 <div class="figure" style="text-align: center"><span id="fig:filter-highlight"></span>
 <iframe src="https://player.vimeo.com/video/307598256?title=0&amp;byline=0&amp;portrait=0" width="100%" height="400" frameborder="0" seamless="seamless" webkitAllowFullScreen mozallowfullscreen allowFullScreen></iframe>
 <p class="caption">
-FIGURE 16.7: Comparing filter to highlight events. Filter events completely remove existing marks and rescales axes to the remaining data.
+FIGURE 16.7: Comparing filter to highlight events. Filter events completely remove existing marks and rescales axes to the remaining data. For the interactive, see <a href="https://plotly-r.com/interactives/filter-highlight.html" class="uri">https://plotly-r.com/interactives/filter-highlight.html</a>
 </p>
 </div>
 <p>When using multiple filter widgets to filter the same dataset, as done in Figure <a href="client-side-linking.html#fig:multiple-filter-widgets">16.8</a>, you should avoid referencing a non-unique querying variable (i.e., key-column) in the <code>SharedData</code> object used to populate the filter widgets. Remember that the default behavior of <code>highlight_key()</code> and <code>SharedData$new()</code> is to use the row-index (which is unique). This ensures the intersection of multiple filtering widgets queries the correct subset of data.</p>
@@ -491,7 +491,7 @@ widgets &lt;-<span class="st"> </span><span class="kw">bscols</span>(
 <div class="figure" style="text-align: center"><span id="fig:multiple-filter-widgets"></span>
 <iframe src="https://player.vimeo.com/video/307598347?title=0&amp;byline=0&amp;portrait=0" width="100%" height="400" frameborder="0" seamless="seamless" webkitAllowFullScreen mozallowfullscreen allowFullScreen></iframe>
 <p class="caption">
-FIGURE 16.8: Filtering on multiple variables.
+FIGURE 16.8: Filtering on multiple variables. For the interactive, see <a href="https://plotly-r.com/interactives/multiple-filter-widgets.html" class="uri">https://plotly-r.com/interactives/multiple-filter-widgets.html</a>
 </p>
 </div>
 <p>As Figure <a href="client-side-linking.html#fig:plotly-leaflet-filter">16.9</a> demonstrates, filter and highlight events can work in conjunction with various <strong>htmlwidgets</strong>. In fact, since the semantics of filter are more well-defined than highlight, linking filter events across <strong>htmlwidgets</strong> via <strong>crosstalk</strong> should generally be more well-supported.<a href="#fn26" class="footnote-ref" id="fnref26"><sup>26</sup></a></p>
@@ -515,7 +515,7 @@ map &lt;-<span class="st"> </span><span class="kw">leaflet</span>(eqs) <span cla
 <div class="figure" style="text-align: center"><span id="fig:plotly-leaflet-filter"></span>
 <iframe src="https://player.vimeo.com/video/307597495?title=0&amp;byline=0&amp;portrait=0" width="100%" height="400" frameborder="0" seamless="seamless" webkitAllowFullScreen mozallowfullscreen allowFullScreen></iframe>
 <p class="caption">
-FIGURE 16.9: Linking <strong>plotly</strong> and <strong>leaflet</strong> through both <strong>filter</strong> and <strong>highlight</strong> events.
+FIGURE 16.9: Linking <strong>plotly</strong> and <strong>leaflet</strong> through both <strong>filter</strong> and <strong>highlight</strong> events. For the interactive, see <a href="https://plotly-r.com/interactives/plotly-leaflet-filter.html" class="uri">https://plotly-r.com/interactives/plotly-leaflet-filter.html</a>
 </p>
 </div>
 <p>When combining filter and highlight events, one (current) limitation to be aware of is that the highlighting variable has to be nested inside filter variable(s). For example, in Figure <a href="client-side-linking.html#fig:gapminder-filter-highlight">16.10</a>, we can filter by continent and highlight by country, but there is currently no way to highlight by contintent and filter by country.</p>
@@ -533,7 +533,7 @@ p &lt;-<span class="st"> </span><span class="kw">plot_ly</span>(g) <span class="
 <div class="figure" style="text-align: center"><span id="fig:gapminder-filter-highlight"></span>
 <iframe src="https://player.vimeo.com/video/307598672?title=0&amp;byline=0&amp;portrait=0" width="100%" height="400" frameborder="0" seamless="seamless" webkitAllowFullScreen mozallowfullscreen allowFullScreen></iframe>
 <p class="caption">
-FIGURE 16.10: Combining filtering and highlighting with non-unique querying variables.
+FIGURE 16.10: Combining filtering and highlighting with non-unique querying variables. For the interactive, see <a href="https://plotly-r.com/interactives/gapminder-filter-highlight.html" class="uri">https://plotly-r.com/interactives/gapminder-filter-highlight.html</a>
 </p>
 </div>
 <!--
@@ -570,7 +570,7 @@ gg &lt;-<span class="st"> </span><span class="kw">ggplot</span>(g, <span class="
 <div class="figure" style="text-align: center"><span id="fig:gapminder-highlight-animation"></span>
 <iframe src="https://player.vimeo.com/video/307789187?title=0&amp;byline=0&amp;portrait=0" width="100%" height="400" frameborder="0" seamless="seamless" webkitAllowFullScreen mozallowfullscreen allowFullScreen></iframe>
 <p class="caption">
-FIGURE 16.11: Highlighting the relationship between GDP per capita and life expectancy in the Americas and tracking that relationship through several decades.
+FIGURE 16.11: Highlighting the relationship between GDP per capita and life expectancy in the Americas and tracking that relationship through several decades. For the interactive, see <a href="https://plotly-r.com/interactives/gapminder-highlight-animation.html" class="uri">https://plotly-r.com/interactives/gapminder-highlight-animation.html</a>
 </p>
 </div>
 <p>In addition to highlighting objects within an animation, objects may also be linked between animations. Figure <a href="client-side-linking.html#fig:animation-gapminder">16.12</a> links two animated views: on the left-hand side is population density by country and on the right-hand side is GDP per capita versus life expectancy. By default, all of the years are shown in black and the current year is shown in red. By pressing play to animate through the years, we can see that all three of these variables have increased (on average) fairly consistently over time. By linking the animated layers, we may condition on an interesting region of this data space to make comparisons in the overall relationship over time.</p>
@@ -599,7 +599,7 @@ p2 &lt;-<span class="st"> </span><span class="kw">plot_ly</span>(gap, <span clas
 <div class="figure" style="text-align: center"><span id="fig:animation-gapminder"></span>
 <iframe src="https://player.vimeo.com/video/307789070?title=0&amp;byline=0&amp;portrait=0" width="100%" height="400" frameborder="0" seamless="seamless" webkitAllowFullScreen mozallowfullscreen allowFullScreen></iframe>
 <p class="caption">
-FIGURE 16.12: Comparing the evolution in the relationship between per capita GDP and life expectancy in countries with large populations (red) and small populations (blue).
+FIGURE 16.12: Comparing the evolution in the relationship between per capita GDP and life expectancy in countries with large populations (red) and small populations (blue). For the interactive, see <a href="https://plotly-r.com/interactives/animation-gapminder.html" class="uri">https://plotly-r.com/interactives/animation-gapminder.html</a>
 </p>
 </div>
 <!--
@@ -621,7 +621,7 @@ IDEAS:
 <div class="figure" style="text-align: center"><span id="fig:epl"></span>
 <iframe src="https://player.vimeo.com/video/307598973?title=0&amp;byline=0&amp;portrait=0" width="100%" height="400" frameborder="0" seamless="seamless" webkitAllowFullScreen mozallowfullscreen allowFullScreen></iframe>
 <p class="caption">
-FIGURE 16.13: Graphical querying in a facetted worm chart of English Premier League football teams between 2007 and 2015. The combination of direct and indirect manipulation with the dynamic color brush makes it easy to make comparisons between good and/or bad teams relative to their known rivals. This particular comparison of Man U vs Arsenal demonstrates that, for the most part, Man U performed better from 2007 to 2015, expect in 2013.
+FIGURE 16.13: Graphical querying in a facetted worm chart of English Premier League football teams between 2007 and 2015. The combination of direct and indirect manipulation with the dynamic color brush makes it easy to make comparisons between good and/or bad teams relative to their known rivals. This particular comparison of Man U vs Arsenal demonstrates that, for the most part, Man U performed better from 2007 to 2015, expect in 2013. For the interactive, see <a href="https://plotly-r.com/interactives/epl.html" class="uri">https://plotly-r.com/interactives/epl.html</a>
 </p>
 </div>
 <p>The demo above requires some fairly advanced data pre-processing, so to learn how to implement graphical queries in trellis displays, let’s work with more minimal examples. Figure <a href="client-side-linking.html#fig:trellis-txhousing">16.14</a> gives us yet another look at the <code>txhousing</code> dataset. This time we focus on just four cities and give each city it’s own panel in the trellis display by leveraging <code>facet_wrap()</code> from <strong>ggplot2</strong>. Within each panel, we’ll wrap the house price time series by year by putting the month on the x-axis and grouping by year. Then, to link these panels, we can ulitize year as a querying variable. As a result, not only do we have the ability to analyze annual trends within city, but we can also query specific years to compare unusual or interesting years both within and across cities.</p>
@@ -681,7 +681,7 @@ FIGURE 16.15: Using <code>plot_ly()</code> instead of <code>ggplotly()</code> to
 <div class="figure" style="text-align: center"><span id="fig:2-way-anova"></span>
 <iframe src="https://player.vimeo.com/video/307580944?title=0&amp;byline=0&amp;portrait=0" width="100%" height="400" frameborder="0" seamless="seamless" webkitAllowFullScreen mozallowfullscreen allowFullScreen></iframe>
 <p class="caption">
-FIGURE 16.16: Linking a (jittered) dotplot of engine displacement by number of cylinders with boxplots of miles per gallon split by class and a bar chart of Dynamic 2-way ANOVA.
+FIGURE 16.16: Linking a (jittered) dotplot of engine displacement by number of cylinders with boxplots of miles per gallon split by class and a bar chart of Dynamic 2-way ANOVA. For the interactive, see <a href="https://plotly-r.com/interactives/2-way-anova.html" class="uri">https://plotly-r.com/interactives/2-way-anova.html</a>
 </p>
 </div>
 <p>When using a statistical trace type with graphical queries, it’s often desirable to set the querying variable as the row index. That’s because, with a statistical trace, numerous data values are attached to each graphical mark; and in that case, it’s most intuitive if each value queries just one observation. Figure <a href="client-side-linking.html#fig:mpg-linked-bars">16.17</a> gives a simple example of linking a (dynamic) bar chart with a scatterplot in this way to allow us to query interesting regions of the data space defined by engine displacement (<code>disp</code>), miles per gallon highway (<code>hwy</code>), and the class of car (<code>class</code>). Notice how selections can derive from either view, and since we’ve specified <code>"plotly_selected"</code> as the <code>on</code> event, either rectangular or lasso selections can be used to trigger the query.</p>
@@ -699,7 +699,7 @@ base &lt;-<span class="st"> </span><span class="kw">plot_ly</span>(d, <span clas
 <div class="figure" style="text-align: center"><span id="fig:mpg-linked-bars"></span>
 <iframe src="https://player.vimeo.com/video/307598219?title=0&amp;byline=0&amp;portrait=0" width="100%" height="400" frameborder="0" seamless="seamless" webkitAllowFullScreen mozallowfullscreen allowFullScreen></iframe>
 <p class="caption">
-FIGURE 16.17: Linking a bar chart with a scatterplot to query interesting regions of the data space defined by engine displacement (<code>disp</code>), miles per gallon highway (<code>hwy</code>), and the class of car (<code>class</code>). Notice how, by using <code>add_histogram()</code>, the number of cars within each class is dynamically computed by plotly.js.
+FIGURE 16.17: Linking a bar chart with a scatterplot to query interesting regions of the data space defined by engine displacement (<code>disp</code>), miles per gallon highway (<code>hwy</code>), and the class of car (<code>class</code>). Notice how, by using <code>add_histogram()</code>, the number of cars within each class is dynamically computed by plotly.js. For the interactive, see <a href="https://plotly-r.com/interactives/mpg-linked-bars.html" class="uri">https://plotly-r.com/interactives/mpg-linked-bars.html</a>
 </p>
 </div>
 <p>Figure <a href="client-side-linking.html#fig:mpg-linked">16.18</a> adds two more statistical trace types to Figure <a href="client-side-linking.html#fig:mpg-linked-bars">16.17</a> to further explore how miles per gallon highway is related to fuel type (<code>fl</code>) and front/rear/4 wheel drive (<code>drv</code>). In particular, one can effectively condition on these discrete variables to see how the other distributions respond by brushing and dragging over markers. For example, in Figure <a href="client-side-linking.html#fig:mpg-linked">16.18</a>, front-wheel drive cars are highlighted in red, then 4-wheel drive cars in blue, and as a result, we can see that the main effect of going from 4 to front wheel-drive is are also large interaction effect sizes with regular and diesel fuel types.</p>
@@ -722,7 +722,7 @@ base &lt;-<span class="st"> </span><span class="kw">plot_ly</span>(d, <span clas
 <div class="figure" style="text-align: center"><span id="fig:mpg-linked"></span>
 <iframe src="https://player.vimeo.com/video/307597640?title=0&amp;byline=0&amp;portrait=0" width="100%" height="400" frameborder="0" seamless="seamless" webkitAllowFullScreen mozallowfullscreen allowFullScreen></iframe>
 <p class="caption">
-FIGURE 16.18: Using statistical queries to perform a 2-way ANOVA on the <code>mpg</code> dataset. Cars with front-wheel drive are highlighted in red and 4-wheel drive highlighted in blue. The dynamically rendered boxplots by fuel type indicate significant interaction effects.
+FIGURE 16.18: Using statistical queries to perform a 2-way ANOVA on the <code>mpg</code> dataset. Cars with front-wheel drive are highlighted in red and 4-wheel drive highlighted in blue. The dynamically rendered boxplots by fuel type indicate significant interaction effects. For the interactive, see <a href="https://plotly-r.com/interactives/mpg-linked.html" class="uri">https://plotly-r.com/interactives/mpg-linked.html</a>
 </p>
 </div>
 </div>
@@ -739,7 +739,7 @@ p &lt;-<span class="st"> </span><span class="kw">ggplot</span>(m, <span class="k
 <div class="figure" style="text-align: center"><span id="fig:smooth-highlight"></span>
 <iframe src="https://player.vimeo.com/video/307788164?title=0&amp;byline=0&amp;portrait=0" width="100%" height="400" frameborder="0" seamless="seamless" webkitAllowFullScreen mozallowfullscreen allowFullScreen></iframe>
 <p class="caption">
-FIGURE 16.19: Engine displacement versus highway miles per gallon by class of car. The linear model for each class, as well as the individual observations, can be selected by hovering over the line of fitted values. An individual observation can also be selected by hovering over the relevant point.
+FIGURE 16.19: Engine displacement versus highway miles per gallon by class of car. The linear model for each class, as well as the individual observations, can be selected by hovering over the line of fitted values. An individual observation can also be selected by hovering over the relevant point. For the interactive, see <a href="https://plotly-r.com/interactives/smooth-highlight.html" class="uri">https://plotly-r.com/interactives/smooth-highlight.html</a>
 </p>
 </div>
 <p>Figure <a href="client-side-linking.html#fig:smooth-highlight">16.19</a> demonstrates highlighting in a single view when the querying variable is the row index, but the linking could also be done by matching the querying variable with the <strong>ggplot2</strong> group of interest, as is done in Figure <a href="client-side-linking.html#fig:ggplotly-linked-densities">16.20</a>. This way, when a user highlights an individual point, it highlights the entire group instead of just that point.</p>
@@ -750,7 +750,7 @@ p2 &lt;-<span class="st"> </span><span class="kw">ggplot</span>(m, <span class="
 <div class="figure" style="text-align: center"><span id="fig:ggplotly-linked-densities"></span>
 <iframe src="https://player.vimeo.com/video/307597927?title=0&amp;byline=0&amp;portrait=0" width="100%" height="400" frameborder="0" seamless="seamless" webkitAllowFullScreen mozallowfullscreen allowFullScreen></iframe>
 <p class="caption">
-FIGURE 16.20: Clicking on a density estimate to highlight all the raw observations that went into that estimate.
+FIGURE 16.20: Clicking on a density estimate to highlight all the raw observations that went into that estimate. For the interactive, see <a href="https://plotly-r.com/interactives/ggplotly-linked-densities.html" class="uri">https://plotly-r.com/interactives/ggplotly-linked-densities.html</a>
 </p>
 </div>
 <p>In summary, we’ve learned numerous things about statistical queries:</p>
@@ -767,7 +767,7 @@ FIGURE 16.20: Clicking on a density estimate to highlight all the raw observatio
 <div class="figure" style="text-align: center"><span id="fig:storms"></span>
 <iframe src="https://player.vimeo.com/video/257149623?title=0&amp;byline=0&amp;portrait=0" width="100%" height="400" frameborder="0" seamless="seamless" webkitAllowFullScreen mozallowfullscreen allowFullScreen></iframe>
 <p class="caption">
-FIGURE 16.21: Linking a 3D globe with tropical storm paths to a 2D view of the storm altitude versus distance traveled.
+FIGURE 16.21: Linking a 3D globe with tropical storm paths to a 2D view of the storm altitude versus distance traveled. For the interactive, see <a href="https://plotly-r.com/interactives/storms.html" class="uri">https://plotly-r.com/interactives/storms.html</a>
 </p>
 </div>
 <p>A more widely used approach to geo-spatial data visualization is to render lat/lon data on a basemap layer that updates in response to zoom events. The <code>plot_mapbox()</code> function from <strong>plotly</strong> does this via integration with <a href="https://www.mapbox.com/">mapbox</a>. Figure <a href="client-side-linking.html#fig:mapbox-quakes">16.22</a> uses <code>plot_mapbox()</code> highlighting earthquakes west of Fiji to compare the relative frequency of their magnitude and number of reporting stations (to the overall relative frequency).</p>
@@ -800,7 +800,7 @@ crosstalk<span class="op">::</span><span class="kw">bscols</span>(histograms, ma
 <div class="figure" style="text-align: center"><span id="fig:mapbox-quakes"></span>
 <iframe src="https://player.vimeo.com/video/307597784?title=0&amp;byline=0&amp;portrait=0" width="100%" height="400" frameborder="0" seamless="seamless" webkitAllowFullScreen mozallowfullscreen allowFullScreen></iframe>
 <p class="caption">
-FIGURE 16.22: Querying earthquakes by location and displaying their a histogram of their magnitude and number of stations.
+FIGURE 16.22: Querying earthquakes by location and displaying their a histogram of their magnitude and number of stations. For the interactive, see <a href="https://plotly-r.com/interactives/mapbox-quakes.html" class="uri">https://plotly-r.com/interactives/mapbox-quakes.html</a>
 </p>
 </div>
 <p>Every 2D mapping approach in <strong>plotly</strong> (e.g., <code>plot_mapbox()</code>, <code>plot_ly()</code>, <code>geom_sf()</code>) has a special understanding of the simple features data structure provided by the <strong>sf</strong> package. <span class="citation">Sievert (<a href="#ref-ggplotly-blog-post" role="doc-biblioref">2018</a><a href="#ref-ggplotly-blog-post" role="doc-biblioref">b</a>)</span> and <span class="citation">Sievert (<a href="#ref-sf-blog-post" role="doc-biblioref">2018</a><a href="#ref-sf-blog-post" role="doc-biblioref">c</a>)</span> goes more in depth about simple features support in <strong>plotly</strong> and provides more examples of graphical queries and animation with simple features, but Figure <a href="client-side-linking.html#fig:mapbox-bars">16.23</a> demonstrates a clever ‘trick’ to get bi-directional brushing between polygon centroids and a histogram showing a numerical summary of the polygons. The main idea is to leverage the <code>st_centroid()</code> function from <strong>sf</strong> to get the polygons centroids, then link those points to the histogram via <code>highlight_key()</code>.</p>
@@ -827,7 +827,7 @@ crosstalk<span class="op">::</span><span class="kw">bscols</span>(<span class="d
 <div class="figure" style="text-align: center"><span id="fig:mapbox-bars"></span>
 <iframe src="https://player.vimeo.com/video/307598178?title=0&amp;byline=0&amp;portrait=0" width="100%" height="400" frameborder="0" seamless="seamless" webkitAllowFullScreen mozallowfullscreen allowFullScreen></iframe>
 <p class="caption">
-FIGURE 16.23: Graphically querying North Carolina by location and area.
+FIGURE 16.23: Graphically querying North Carolina by location and area. For the interactive, see <a href="https://plotly-r.com/interactives/mapbox-bars.html" class="uri">https://plotly-r.com/interactives/mapbox-bars.html</a>
 </p>
 </div>
 </div>
@@ -838,7 +838,7 @@ FIGURE 16.23: Graphically querying North Carolina by location and area.
 <div class="figure" style="text-align: center"><span id="fig:sf-dt"></span>
 <iframe src="https://player.vimeo.com/video/307597509?title=0&amp;byline=0&amp;portrait=0" width="100%" height="400" frameborder="0" seamless="seamless" webkitAllowFullScreen mozallowfullscreen allowFullScreen></iframe>
 <p class="caption">
-FIGURE 16.24: Linking a <code>plot_ly()</code>-based map with a <code>datatable()</code> from the <strong>DT</strong> package.
+FIGURE 16.24: Linking a <code>plot_ly()</code>-based map with a <code>datatable()</code> from the <strong>DT</strong> package. For the interactive, see <a href="https://plotly-r.com/interactives/sf-dt.html" class="uri">https://plotly-r.com/interactives/sf-dt.html</a>
 </p>
 </div>
 <p>As already shown in Section <a href="client-side-linking.html#filter">16.2</a>, <strong>plotly</strong> can share graphical queries with <strong>leaflet</strong>. Some of the more advanced features (e.g., persistent selection with dynamic color brush) are not yet officially supported, but you can still leverage these experimental features by installing the experimental versions of <strong>leaflet</strong> referenced in the code below. For example, in Figure <a href="client-side-linking.html#fig:leaflet-persistent">16.25</a>, persistent selection with dynamic colors allows one to first highlight earthquakes with a magnitude of 5 or higher in red, then earthquakes with a magnitude of 4.5 or lower, and the corresponding earthquakes are highlighted in the leaflet map. This reveals an interesting relationship in magnitude and geographic location, and <strong>leaflet</strong> provides the ability to zoom and pan on the map to investigate regions that have a high density of quakes.</p>
@@ -864,7 +864,7 @@ withr<span class="op">::</span><span class="kw">with_options</span>(
 <div class="figure" style="text-align: center"><span id="fig:leaflet-persistent"></span>
 <iframe src="https://player.vimeo.com/video/307787997?title=0&amp;byline=0&amp;portrait=0" width="100%" height="400" frameborder="0" seamless="seamless" webkitAllowFullScreen mozallowfullscreen allowFullScreen></iframe>
 <p class="caption">
-FIGURE 16.25: Linking views between plotly and leaflet to explore the relation between magnitude and geographic location of earthquakes around Fiji.
+FIGURE 16.25: Linking views between plotly and leaflet to explore the relation between magnitude and geographic location of earthquakes around Fiji. For the interactive, see <a href="https://plotly-r.com/interactives/leaflet-persistent.html" class="uri">https://plotly-r.com/interactives/leaflet-persistent.html</a>
 </p>
 </div>
 <p>Figure <a href="client-side-linking.html#fig:leaflet-polygons">16.26</a> uses another experimental feature of querying <strong>leaflet</strong> polygons in response to direct manipulation of a <strong>plotly</strong> graph.</p>
@@ -898,7 +898,7 @@ crosstalk<span class="op">::</span><span class="kw">bscols</span>(map, p)</code>
 <div class="figure" style="text-align: center"><span id="fig:leaflet-polygons"></span>
 <iframe src="https://player.vimeo.com/video/307598814?title=0&amp;byline=0&amp;portrait=0" width="100%" height="400" frameborder="0" seamless="seamless" webkitAllowFullScreen mozallowfullscreen allowFullScreen></iframe>
 <p class="caption">
-FIGURE 16.26: Querying polygons on a <strong>leaflet</strong> map in response to direct manipulation of a <strong>plotly</strong> graph.
+FIGURE 16.26: Querying polygons on a <strong>leaflet</strong> map in response to direct manipulation of a <strong>plotly</strong> graph. For the interactive, see <a href="https://plotly-r.com/interactives/leaflet-polygons.html" class="uri">https://plotly-r.com/interactives/leaflet-polygons.html</a>
 </p>
 </div>
 </div>
@@ -931,7 +931,7 @@ mtcars <span class="op">%&gt;%</span>
 <div class="figure" style="text-align: center"><span id="fig:ggnostic"></span>
 <iframe src="https://player.vimeo.com/video/307788157?title=0&amp;byline=0&amp;portrait=0" width="100%" height="400" frameborder="0" seamless="seamless" webkitAllowFullScreen mozallowfullscreen allowFullScreen></iframe>
 <p class="caption">
-FIGURE 16.28: Graphical queries applied to multiple diagnostic plots of a linear model. The <code>ggplotly()</code> function has a special method for <code>ggnostic()</code> that adds graphical queries automatically with support for both individual observations (e.g. points) as well as meaningful groups (e.g., automatic vs manual).
+FIGURE 16.28: Graphical queries applied to multiple diagnostic plots of a linear model. The <code>ggplotly()</code> function has a special method for <code>ggnostic()</code> that adds graphical queries automatically with support for both individual observations (e.g. points) as well as meaningful groups (e.g., automatic vs manual). For the interactive, see <a href="https://plotly-r.com/interactives/ggnostic.html" class="uri">https://plotly-r.com/interactives/ggnostic.html</a>
 </p>
 </div>
 <p>Injecting interactivity into <code>ggnostic()</code> via <code>ggplotly()</code> enhances the diagnostic plot in at least two ways. Coloring by a factor variable in the model allows us to highlight that region of the design matrix by selecting a relevant statistical summary, which can help avoid overplotting when dealing with numerous factor levels. For example, in Figure <a href="client-side-linking.html#fig:ggnostic">16.28</a>, the user first highlights diagnostics for cars with manual transmission (in blue), then cars with automatic transmission (in red). Perhaps more widely useful is the ability to highlight individual observations since most of these diagnostics are designed to identify highly influential or unusual observations.</p>
@@ -952,7 +952,7 @@ FIGURE 16.28: Graphical queries applied to multiple diagnostic plots of a linear
 <div class="figure" style="text-align: center"><span id="fig:list-column-simple"></span>
 <iframe src="https://player.vimeo.com/video/307788086?title=0&amp;byline=0&amp;portrait=0" width="100%" height="400" frameborder="0" seamless="seamless" webkitAllowFullScreen mozallowfullscreen allowFullScreen></iframe>
 <p class="caption">
-FIGURE 16.29: A simple example of subset queries via a list-column.
+FIGURE 16.29: A simple example of subset queries via a list-column. For the interactive, see <a href="https://plotly-r.com/interactives/list-column-simple.html" class="uri">https://plotly-r.com/interactives/list-column-simple.html</a>
 </p>
 </div>
 <p>One compelling use case for subset queries is dendograms. In fact, <strong>plotly</strong> provides a <code>plot_dendro()</code> function for making dendrograms with support for subset queries. Figure <a href="client-side-linking.html#fig:dendro">16.30</a> gives an example of brushing a branch of a dendrogram to query leafs that are similar in some sense. Any dendrogram object can be provided to <code>plot_dendro()</code>, but this particular example visualizes the similarity of US states in terms of their arrest statistics via a hierarchical clustering model on the <code>USArrests</code> dataset.</p>
@@ -964,7 +964,7 @@ dend1 &lt;-<span class="st"> </span><span class="kw">as.dendrogram</span>(hc)
 <div class="figure" style="text-align: center"><span id="fig:dendro"></span>
 <iframe src="https://player.vimeo.com/video/307788070?title=0&amp;byline=0&amp;portrait=0" width="100%" height="400" frameborder="0" seamless="seamless" webkitAllowFullScreen mozallowfullscreen allowFullScreen></iframe>
 <p class="caption">
-FIGURE 16.30: Leveraging hierarchical selection and persistent brushing to paint branches of a dendrogram.
+FIGURE 16.30: Leveraging hierarchical selection and persistent brushing to paint branches of a dendrogram. For the interactive, see <a href="https://plotly-r.com/interactives/dendro.html" class="uri">https://plotly-r.com/interactives/dendro.html</a>
 </p>
 </div>
 <p>Figure <a href="client-side-linking.html#fig:tour-USArrests">16.31</a> links the dendrogram from Figure <a href="client-side-linking.html#fig:dendro">16.30</a> to a map of the US and a grand tour of the arrest statistics to better understand and diagnose a hierarchical clustering methodology. By highlighting branches of the dendrogram, we can effectively choose a partitioning of the states into similar groups, and see how that model choice projects to the data space<a href="#fn28" class="footnote-ref" id="fnref28"><sup>28</sup></a> through a grand tour. The grand tour is a special kind of animation that interpolates between random 2D projections of numeric data allowing the viewer to perceive the shape of a high-dimensional point cloud <span class="citation">(Asimov <a href="#ref-grand-tour" role="doc-biblioref">1985</a>)</span>. Note how the grouping portrayed in Figure <a href="client-side-linking.html#fig:tour-USArrests">16.31</a> does a fairly good job of staying separated in the grand tour.</p>
@@ -972,7 +972,7 @@ FIGURE 16.30: Leveraging hierarchical selection and persistent brushing to paint
 <div class="figure" style="text-align: center"><span id="fig:tour-USArrests"></span>
 <iframe src="https://player.vimeo.com/video/307788058?title=0&amp;byline=0&amp;portrait=0" width="100%" height="400" frameborder="0" seamless="seamless" webkitAllowFullScreen mozallowfullscreen allowFullScreen></iframe>
 <p class="caption">
-FIGURE 16.31: Linking a dendrogram to a grand tour and map of the <code>USArrests</code> data to visualize a classification in 5 dimensions.
+FIGURE 16.31: Linking a dendrogram to a grand tour and map of the <code>USArrests</code> data to visualize a classification in 5 dimensions. For the interactive, see <a href="https://plotly-r.com/interactives/tour-USArrests.html" class="uri">https://plotly-r.com/interactives/tour-USArrests.html</a>
 </p>
 </div>
 <!--

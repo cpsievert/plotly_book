@@ -124,7 +124,7 @@ library(htmltools)
 browsable(tagList(map1, map2))
 ```
 
-```{r maps, echo = FALSE, fig.cap = "(ref:maps)"}
+```{r maps, echo = FALSE, fig.cap = "(ref:maps)", out.extra = 'data-url="/interactives/maps.html"'}
 knitr::include_graphics("images/maps.png")
 ```
 
@@ -149,7 +149,7 @@ plot_geo() %>%
   layout(geo = g)
 ```
 
-```{r us-density, echo = FALSE, fig.cap = "(ref:us-density)"}
+```{r us-density, echo = FALSE, fig.cap = "(ref:us-density)", out.extra = 'data-url="/interactives/us-density.html"'}
 knitr::include_graphics("images/us-density.svg")
 ```
 
@@ -175,7 +175,7 @@ class(world)
 plot_ly(world, color = I("gray90"), stroke = I("black"), span = I(1))
 ```
 
-```{r world, echo = FALSE, fig.cap = "(ref:world)"}
+```{r world, echo = FALSE, fig.cap = "(ref:world)", out.extra = 'data-url="/interactives/world.html"'}
 knitr::include_graphics("images/world.svg")
 ```
 
@@ -199,7 +199,7 @@ canada <- ne_states(country = "Canada", returnclass = "sf")
 plot_ly(canada, split = ~name, color = ~provnum_ne)
 ```
 
-```{r split-color, echo = FALSE, fig.cap = "(ref:split-color)"}
+```{r split-color, echo = FALSE, fig.cap = "(ref:split-color)", out.extra = 'data-url="/interactives/split-color.html"'}
 knitr::include_graphics("images/split-color.svg")
 ```
 
@@ -217,7 +217,7 @@ plot_ly(
 )
 ```
 
-```{r split-text, echo = FALSE, fig.cap = "(ref:split-text)"}
+```{r split-text, echo = FALSE, fig.cap = "(ref:split-text)", out.extra = 'data-url="/interactives/split-text.html"'}
 knitr::include_graphics("images/split-text.png")
 ```
 
@@ -249,7 +249,7 @@ p <- ggplot() +
 ggplotly(p)
 ```
 
-```{r canada-ggplotly, echo = FALSE, fig.cap = "(ref:canada-ggplotly)"}
+```{r canada-ggplotly, echo = FALSE, fig.cap = "(ref:canada-ggplotly)", out.extra = 'data-url="/interactives/canada-ggplotly.html"'}
 knitr::include_graphics("images/canada-ggplotly.svg")
 ```
 
@@ -297,7 +297,7 @@ plot_ly(us_cont) %>%
   colorbar(title = "Population \n 2014")
 ```
 
-```{r cartogram, echo = FALSE, fig.cap = "(ref:cartogram)"}
+```{r cartogram, echo = FALSE, fig.cap = "(ref:cartogram)", out.extra = 'data-url="/interactives/cartogram.html"'}
 knitr::include_graphics("images/cartogram.png")
 ```
 
@@ -324,13 +324,13 @@ plot_ly(stroke = I("black"), span = I(1)) %>%
   layout(showlegend = FALSE)
 ```
 
-```{r cartogram-dorling, echo = FALSE, fig.cap = "(ref:cartogram-dorling)"}
+```{r cartogram-dorling, echo = FALSE, fig.cap = "(ref:cartogram-dorling)", out.extra = 'data-url="/interactives/cartogram-dorling.html"'}
 knitr::include_graphics("images/cartogram-dorling.svg")
 ```
 
 Figure \@ref(fig:cartogram-ncont) demonstrates a non-continuous cartogram of US population in 2014 from @Olson. In contrast to the Dorling cartogram, this approach does preserve the shape of polygons. The implementation behind Figure \@ref(fig:cartogram-ncont) is to simply take the implementation of Figure \@ref(fig:cartogram-dorling) and change `cartogram_dorling()` to `cartogram_ncont()`.
 
-```{r cartogram-ncont, echo = FALSE, fig.cap = "(ref:cartogram-ncont)"}
+```{r cartogram-ncont, echo = FALSE, fig.cap = "(ref:cartogram-ncont)", out.extra = 'data-url="/interactives/cartogram-ncont.html"'}
 knitr::include_graphics("images/cartogram-ncont.svg")
 ```
 
@@ -343,6 +343,6 @@ tiles_sf <- st_as_sf(tiles)
 plot_ly(tiles_sf, split = ~name)
 ```
 
-```{r cartogram-tiles, echo = FALSE, fig.cap = "(ref:cartogram-tiles)"}
+```{r cartogram-tiles, echo = FALSE, fig.cap = "(ref:cartogram-tiles)", out.extra = 'data-url="/interactives/cartogram-tiles.html"'}
 knitr::include_graphics("images/cartogram-tiles.svg")
 ```

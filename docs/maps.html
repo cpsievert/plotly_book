@@ -357,7 +357,7 @@ code span.wa { color: #60a0b0; font-weight: bold; font-style: italic; } /* Warni
 <div class="figure" style="text-align: center"><span id="fig:mapbox-bubble"></span>
 <iframe src="https://player.vimeo.com/video/317352934?title=0&amp;byline=0&amp;portrait=0" width="100%" height="400" frameborder="0" seamless="seamless" webkitAllowFullScreen mozallowfullscreen allowFullScreen></iframe>
 <p class="caption">
-FIGURE 4.1: A mapbox powered bubble chart showing the population of various cities in Canada.
+FIGURE 4.1: A mapbox powered bubble chart showing the population of various cities in Canada. For the interactive, see <a href="https://plotly-r.com/interactives/mapbox-bubble.html" class="uri">https://plotly-r.com/interactives/mapbox-bubble.html</a>
 </p>
 </div>
 <p>The Mapbox basemap styling is controlled through the <a href="https://plot.ly/r/reference/#layout-mapbox-style"><code>layout.mapbox.style</code></a> attribute. The <strong>plotly</strong> package comes with support for 7 different styles, but you can also supply a custom URL to a <a href="https://docs.mapbox.com/help/tutorials/create-a-custom-style/">custom mapbox style</a>. To obtain all the pre-packaged basemap style names, you can grab them from the official plotly.js <code>schema()</code>:</p>
@@ -375,7 +375,7 @@ styles
 <div class="figure" style="text-align: center"><span id="fig:satellite"></span>
 <iframe src="https://player.vimeo.com/video/326683897?title=0&amp;byline=0&amp;portrait=0" width="100%" height="400" frameborder="0" seamless="seamless" webkitAllowFullScreen mozallowfullscreen allowFullScreen></iframe>
 <p class="caption">
-FIGURE 4.2: Zooming in on earth satellite imagery using <code>plot_mapbox()</code>.
+FIGURE 4.2: Zooming in on earth satellite imagery using <code>plot_mapbox()</code>. For the interactive, see <a href="https://plotly-r.com/interactives/satellite.html" class="uri">https://plotly-r.com/interactives/satellite.html</a>
 </p>
 </div>
 <p>Figure <a href="maps.html#fig:mapbox-style-dropdown">4.3</a> demonstrates how to create an integrated plotly.js dropdown menu to control the basemap style via the <a href="https://plot.ly/r/reference/#layout-updatemenus-items-updatemenu-buttons"><code>layout.updatemenus</code></a> attribute. The idea behind an integrated plotly.js dropdown is to supply a list of buttons (i.e., menu items) where each button invokes a plotly.js method with some arguments. In this case, each button uses the <a href="https://plot.ly/javascript/plotlyjs-function-reference/">relayout</a> method to modify the <code>layout.mapbox.style</code> attribute.<a href="#fn13" class="footnote-ref" id="fnref13"><sup>13</sup></a></p>
@@ -392,7 +392,7 @@ FIGURE 4.2: Zooming in on earth satellite imagery using <code>plot_mapbox()</cod
 <div class="figure" style="text-align: center"><span id="fig:mapbox-style-dropdown"></span>
 <iframe src="https://player.vimeo.com/video/326684625?title=0&amp;byline=0&amp;portrait=0" width="100%" height="400" frameborder="0" seamless="seamless" webkitAllowFullScreen mozallowfullscreen allowFullScreen></iframe>
 <p class="caption">
-FIGURE 4.3: Providing a dropdown menu to control the styling of the mapbox baselayer.
+FIGURE 4.3: Providing a dropdown menu to control the styling of the mapbox baselayer. For the interactive, see <a href="https://plotly-r.com/interactives/mapbox-style-dropdown.html" class="uri">https://plotly-r.com/interactives/mapbox-style-dropdown.html</a>
 </p>
 </div>
 <p>The other integrated mapping solution in <strong>plotly</strong> is <code>plot_geo()</code>. Compared to <code>plot_mapbox()</code>, this approach has support for different mapping projections, but styling the basemap is limited and can be more cumbersome. Figure <a href="maps.html#fig:geo-flights">4.4</a> demonstrates using <code>plot_geo()</code> in conjunction with <code>add_markers()</code> and <code>add_segments()</code> to visualize flight paths within the United States. Whereas <code>plot_mapbox()</code> is fixed to a mercator projection, the <code>plot_geo()</code> constructor has a handful of different projection available to it, including the orthographic projection which gives the illusion of the 3D globe.</p>
@@ -433,7 +433,7 @@ geo &lt;-<span class="st"> </span><span class="kw">list</span>(
 <div class="figure" style="text-align: center"><span id="fig:geo-flights"></span>
 <iframe src="https://player.vimeo.com/video/317358033?title=0&amp;byline=0&amp;portrait=0" width="100%" height="400" frameborder="0" seamless="seamless" webkitAllowFullScreen mozallowfullscreen allowFullScreen></iframe>
 <p class="caption">
-FIGURE 4.4: Using the integrated orthographic projection to visualize flight patterns on a ‘3D’ globe.
+FIGURE 4.4: Using the integrated orthographic projection to visualize flight patterns on a ‘3D’ globe. For the interactive, see <a href="https://plotly-r.com/interactives/geo-flights.html" class="uri">https://plotly-r.com/interactives/geo-flights.html</a>
 </p>
 </div>
 <p>One nice thing about <code>plot_geo()</code> is that it automatically projects geometries into the proper coordinate system defined by the map projection. For example, in Figure <a href="maps.html#fig:maps">4.5</a> the simple line segment is straight when using <code>plot_mapbox()</code> yet curved when using <code>plot_geo()</code>. It’s possible to acheive the same effect using <code>plot_ly()</code> or <code>plot_mapbox()</code>, but the relevant marker/line/polygon data has to be put into an <strong>sf</strong> data structure before rendering (see Section <a href="maps.html#sf">4.2.1</a> for more details).</p>
