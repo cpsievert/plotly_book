@@ -392,7 +392,7 @@ FIGURE 33.1: Adding <code>dynamicTicks</code>, a <code>rangeslider()</code>, and
 <span class="st">   </span><span class="kw">geom_point</span>() <span class="op">+</span><span class="st"> </span><span class="kw">geom_smooth</span>()
 <span class="kw">ggplotly</span>(p)</code></pre>
 <div class="figure" style="text-align: center"><span id="fig:simple-scatterplot"></span>
-<img src="images/simple-scatterplot.png" alt="A scatterplot with a fitted line and confidence band." width="100%" />
+<img src="images/simple-scatterplot.png" alt="A scatterplot with a fitted line and confidence band." width="100%" data-url="/interactives/simple-scatterplot.html" />
 <p class="caption">
 FIGURE 33.2: A scatterplot with a fitted line and confidence band.
 </p>
@@ -400,7 +400,7 @@ FIGURE 33.2: A scatterplot with a fitted line and confidence band.
 <p>The <strong>ggplot2</strong> package doesn’t provide an API for interactive features, but by changing the <a href="https://plot.ly/r/reference/#scatter-hoverinfo">hoverinfo</a> attribute to <code>"none"</code>, we can turn off hover for the relevant traces. This sort of task (i.e. modifying trace attribute values) is best achieved through the <code>style()</code> function. Before using it, you may want to study the underlying traces with <code>plotly_json()</code> which uses the <strong>listviewer</strong> package to display a convenient interactive view of the JSON object sent to plotly.js <span class="citation">(de Jong and Russell <a href="#ref-listviewer" role="doc-biblioref">2016</a>)</span>. By clicking on the arrow next to the data element, you can see the traces (data) behind the plot. As shown in Figure <a href="improving-ggplotly.html#fig:listviewer">33.3</a>, we have three traces: one for the <code>geom_point()</code> layer and two for the <code>geom_smooth()</code> layer.</p>
 <pre class="sourceCode r"><code class="sourceCode r"><span class="kw">plotly_json</span>(p)</code></pre>
 <div class="figure" style="text-align: center"><span id="fig:listviewer"></span>
-<img src="images/listviewer.png" alt="Using listviewer to inspect the JSON representation of a plotly object." width="100%" />
+<img src="images/listviewer.png" alt="Using listviewer to inspect the JSON representation of a plotly object." width="100%" data-url="/interactives/listviewer.html" />
 <p class="caption">
 FIGURE 33.3: Using listviewer to inspect the JSON representation of a plotly object.
 </p>
@@ -408,7 +408,7 @@ FIGURE 33.3: Using listviewer to inspect the JSON representation of a plotly obj
 <p>This output indicates that the fitted line and confidence band are implemented in the 2nd and 3rd trace of the plotly object, so to turn off the hover of those traces:</p>
 <pre class="sourceCode r"><code class="sourceCode r"><span class="kw">style</span>(p, <span class="dt">hoverinfo =</span> <span class="st">&quot;none&quot;</span>, <span class="dt">traces =</span> <span class="dv">2</span><span class="op">:</span><span class="dv">3</span>)</code></pre>
 <div class="figure" style="text-align: center"><span id="fig:style-hoverinfo"></span>
-<img src="images/style-hoverinfo.png" alt="Using the style() function to modify hoverinfo attribute values of a plotly object created via ggplotly() (by default, ggplotly() displays hoverinfo for all traces). In this case, the hoverinfo for a fitted line and error bounds are hidden." width="100%" />
+<img src="images/style-hoverinfo.png" alt="Using the style() function to modify hoverinfo attribute values of a plotly object created via ggplotly() (by default, ggplotly() displays hoverinfo for all traces). In this case, the hoverinfo for a fitted line and error bounds are hidden." width="100%" data-url="/interactives/style-hoverinfo.html" />
 <p class="caption">
 FIGURE 33.4: Using the <code>style()</code> function to modify hoverinfo attribute values of a plotly object created via <code>ggplotly()</code> (by default, <code>ggplotly()</code> displays hoverinfo for all traces). In this case, the hoverinfo for a fitted line and error bounds are hidden.
 </p>
@@ -448,7 +448,7 @@ p <span class="op">%&gt;%</span>
 <span class="st">      </span><span class="kw">add_annotations</span>(<span class="st">&quot;Minimum uncertainty&quot;</span>)
   })</code></pre>
 <div class="figure" style="text-align: center"><span id="fig:se-annotations"></span>
-<img src="images/se-annotations.svg" alt="Leveraging data associated with a geom_smooth() layer to display additional information about the model fit." width="100%" />
+<img src="images/se-annotations.svg" alt="Leveraging data associated with a geom_smooth() layer to display additional information about the model fit." width="100%" data-url="/interactives/se-annotations.html" />
 <p class="caption">
 FIGURE 33.5: Leveraging data associated with a <code>geom_smooth()</code> layer to display additional information about the model fit.
 </p>
@@ -466,7 +466,7 @@ FIGURE 33.5: Leveraging data associated with a <code>geom_smooth()</code> layer 
     <span class="dt">color =</span> <span class="kw">I</span>(<span class="st">&quot;black&quot;</span>), <span class="dt">size =</span> <span class="kw">I</span>(<span class="dv">9</span>)
   )</code></pre>
 <div class="figure" style="text-align: center"><span id="fig:StatBin"></span>
-<img src="images/StatBin.svg" alt="Leveraging output from StatBin to add annotations to a stacked bar chart (created via geom_bar()) which makes it easier to compare bar heights." width="100%" />
+<img src="images/StatBin.svg" alt="Leveraging output from StatBin to add annotations to a stacked bar chart (created via geom_bar()) which makes it easier to compare bar heights." width="100%" data-url="/interactives/StatBin.html" />
 <p class="caption">
 FIGURE 33.6: Leveraging output from <code>StatBin</code> to add annotations to a stacked bar chart (created via <code>geom_bar()</code>) which makes it easier to compare bar heights.
 </p>
@@ -482,7 +482,7 @@ FIGURE 33.6: Leveraging output from <code>StatBin</code> to add annotations to a
     <span class="dt">text =</span> <span class="op">~</span>level, <span class="dt">size =</span> <span class="kw">I</span>(<span class="dv">9</span>), <span class="dt">color =</span> <span class="kw">I</span>(<span class="st">&quot;black&quot;</span>), <span class="dt">hoverinfo =</span> <span class="st">&quot;none&quot;</span>
   )</code></pre>
 <div class="figure" style="text-align: center"><span id="fig:StatDensity2d"></span>
-<img src="images/StatDensity2d.svg" alt="Leveraging output from StatDensity2d to add annotations to contour levels." width="100%" />
+<img src="images/StatDensity2d.svg" alt="Leveraging output from StatDensity2d to add annotations to contour levels." width="100%" data-url="/interactives/StatDensity2d.html" />
 <p class="caption">
 FIGURE 33.7: Leveraging output from <code>StatDensity2d</code> to add annotations to contour levels.
 </p>

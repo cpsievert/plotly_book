@@ -347,7 +347,7 @@ gg &lt;-<span class="st"> </span><span class="kw">ggplot</span>(gapminder, <span
 <span class="st">  </span><span class="kw">scale_x_log10</span>()
 <span class="kw">ggplotly</span>(gg)</code></pre>
 <div class="figure" style="text-align: center"><span id="fig:animation-ggplotly"></span>
-<img src="images/animation-ggplotly.png" alt="Animation of the evolution in the relationship between GDP per capita and life expectancy in numerous countries." width="100%" />
+<img src="images/animation-ggplotly.png" alt="Animation of the evolution in the relationship between GDP per capita and life expectancy in numerous countries." width="100%" data-url="/interactives/animation-ggplotly.html" />
 <p class="caption">
 FIGURE 14.1: Animation of the evolution in the relationship between GDP per capita and life expectancy in numerous countries.
 </p>
@@ -368,7 +368,7 @@ base <span class="op">%&gt;%</span>
     <span class="dt">currentvalue =</span> <span class="kw">list</span>(<span class="dt">prefix =</span> <span class="st">&quot;YEAR &quot;</span>, <span class="dt">font =</span> <span class="kw">list</span>(<span class="dt">color=</span><span class="st">&quot;red&quot;</span>))
   )</code></pre>
 <div class="figure" style="text-align: center"><span id="fig:animation-opts"></span>
-<img src="images/animation-opts.png" alt="Modifying animation defaults with animation_opts(), animation_button(), and animation_slider()." width="100%" />
+<img src="images/animation-opts.png" alt="Modifying animation defaults with animation_opts(), animation_button(), and animation_slider()." width="100%" data-url="/interactives/animation-opts.html" />
 <p class="caption">
 FIGURE 14.2: Modifying animation defaults with <code>animation_opts()</code>, <code>animation_button()</code>, and <code>animation_slider()</code>.
 </p>
@@ -384,18 +384,18 @@ base <span class="op">%&gt;%</span>
 <span class="st">  </span><span class="kw">hide_legend</span>() <span class="op">%&gt;%</span>
 <span class="st">  </span><span class="kw">animation_opts</span>(<span class="dt">frame =</span> <span class="dv">1000</span>, <span class="dt">transition =</span> <span class="dv">0</span>, <span class="dt">redraw =</span> <span class="ot">FALSE</span>)</code></pre>
 <div class="figure" style="text-align: center"><span id="fig:animation-factors"></span>
-<img src="images/animation-factors.png" alt="Animation of GDP per capita versus life expectancy by continent. The ordering of the contintents goes from lowest average (across countries) life expectancy to highest." width="100%" />
+<img src="images/animation-factors.png" alt="Animation of GDP per capita versus life expectancy by continent. The ordering of the contintents goes from lowest average (across countries) life expectancy to highest." width="100%" data-url="/interactives/animation-factors.html" />
 <p class="caption">
 FIGURE 14.3: Animation of GDP per capita versus life expectancy by continent. The ordering of the contintents goes from lowest average (across countries) life expectancy to highest.
 </p>
 </div>
 <p>Both the <code>frame</code> and <code>ids</code> attributes operate on the trace level – meaning that we can target specific layers of the graph to be animated. One obvious use case for this is to provide a background which displays every possible frame (which is not animated) and overlay the animated frames onto that background. Figure <a href="animating-views.html#fig:animation-targets">14.4</a> shows the same information as Figure <a href="animating-views.html#fig:animation-opts">14.2</a>, but layers animated frames on top of a background of all the frames. As a result, it is easier to put a specific year into a global context.</p>
 <pre class="sourceCode r"><code class="sourceCode r">base <span class="op">%&gt;%</span>
-<span class="st">  </span><span class="kw">add_markers</span>(<span class="dt">color =</span> <span class="op">~</span>continent, <span class="dt">alpha =</span> <span class="fl">0.2</span>, <span class="dt">showlegend =</span> F) <span class="op">%&gt;%</span>
+<span class="st">  </span><span class="kw">add_markers</span>(<span class="dt">color =</span> <span class="op">~</span>continent, <span class="dt">alpha =</span> <span class="fl">0.2</span>, <span class="dt">alpha_stroke =</span> <span class="fl">0.2</span>, <span class="dt">showlegend =</span> F) <span class="op">%&gt;%</span>
 <span class="st">  </span><span class="kw">add_markers</span>(<span class="dt">color =</span> <span class="op">~</span>continent, <span class="dt">frame =</span> <span class="op">~</span>year, <span class="dt">ids =</span> <span class="op">~</span>country) <span class="op">%&gt;%</span>
 <span class="st">  </span><span class="kw">animation_opts</span>(<span class="dv">1000</span>, <span class="dt">redraw =</span> <span class="ot">FALSE</span>)</code></pre>
 <div class="figure" style="text-align: center"><span id="fig:animation-targets"></span>
-<img src="images/animation-targets.png" alt="Overlaying animated frames on top of a background of all possible frames." width="100%" />
+<img src="images/animation-targets.png" alt="Overlaying animated frames on top of a background of all possible frames." width="100%" data-url="/interactives/animation-targets.html" />
 <p class="caption">
 FIGURE 14.4: Overlaying animated frames on top of a background of all possible frames.
 </p>
