@@ -6,7 +6,7 @@
   <meta http-equiv="X-UA-Compatible" content="IE=edge" />
   <title>6 Boxplots | Interactive web-based data visualization with R, plotly, and shiny</title>
   <meta name="description" content="A useR guide to creating highly interactive graphics for exploratory and expository visualization." />
-  <meta name="generator" content="bookdown 0.10 and GitBook 2.6.7" />
+  <meta name="generator" content="bookdown 0.13.2 and GitBook 2.6.7" />
 
   <meta property="og:title" content="6 Boxplots | Interactive web-based data visualization with R, plotly, and shiny" />
   <meta property="og:type" content="book" />
@@ -24,15 +24,15 @@
 <meta name="author" content="Carson Sievert" />
 
 
-<meta name="date" content="2019-05-14" />
+<meta name="date" content="2019-09-13" />
 
   <meta name="viewport" content="width=device-width, initial-scale=1" />
   <meta name="apple-mobile-web-app-capable" content="yes" />
   <meta name="apple-mobile-web-app-status-bar-style" content="black" />
   
   
-<link rel="prev" href="bars-histograms.html">
-<link rel="next" href="frequencies-2D.html">
+<link rel="prev" href="bars-histograms.html"/>
+<link rel="next" href="frequencies-2D.html"/>
 <script src="libs/jquery/jquery.min.js"></script>
 <link href="libs/gitbook/css/style.css" rel="stylesheet" />
 <link href="libs/gitbook/css/plugin-table.css" rel="stylesheet" />
@@ -61,26 +61,27 @@
 
 
 <style type="text/css">
-a.sourceLine { display: inline-block; line-height: 1.25; }
-a.sourceLine { pointer-events: none; color: inherit; text-decoration: inherit; }
-a.sourceLine:empty { height: 1.2em; }
+code.sourceCode > span { display: inline-block; line-height: 1.25; }
+code.sourceCode > span { color: inherit; text-decoration: inherit; }
+code.sourceCode > span:empty { height: 1.2em; }
 .sourceCode { overflow: visible; }
 code.sourceCode { white-space: pre; position: relative; }
-div.sourceCode { margin: 1em 0; }
 pre.sourceCode { margin: 0; }
 @media screen {
 div.sourceCode { overflow: auto; }
 }
 @media print {
 code.sourceCode { white-space: pre-wrap; }
-a.sourceLine { text-indent: -1em; padding-left: 1em; }
+code.sourceCode > span { text-indent: -5em; padding-left: 5em; }
 }
-pre.numberSource a.sourceLine
-  { position: relative; left: -4em; }
-pre.numberSource a.sourceLine::before
-  { content: attr(title);
+pre.numberSource code
+  { counter-reset: source-line 0; }
+pre.numberSource code > span
+  { position: relative; left: -4em; counter-increment: source-line; }
+pre.numberSource code > span > a:first-child::before
+  { content: counter(source-line);
     position: relative; left: -1em; text-align: right; vertical-align: baseline;
-    border: none; pointer-events: all; display: inline-block;
+    border: none; display: inline-block;
     -webkit-touch-callout: none; -webkit-user-select: none;
     -khtml-user-select: none; -moz-user-select: none;
     -ms-user-select: none; user-select: none;
@@ -89,9 +90,9 @@ pre.numberSource a.sourceLine::before
   }
 pre.numberSource { margin-left: 3em; border-left: 1px solid #aaaaaa;  padding-left: 4px; }
 div.sourceCode
-  {  }
+  {   }
 @media screen {
-a.sourceLine::before { text-decoration: underline; }
+code.sourceCode > span > a:first-child::before { text-decoration: underline; }
 }
 code span.al { color: #ff0000; font-weight: bold; } /* Alert */
 code span.an { color: #60a0b0; font-weight: bold; font-style: italic; } /* Annotation */
@@ -339,14 +340,14 @@ code span.wa { color: #60a0b0; font-weight: bold; font-style: italic; } /* Warni
 <div id="boxplots" class="section level1">
 <h1><span class="header-section-number">6</span> Boxplots</h1>
 <p>Boxplots encode the five number summary of a numeric variable, and provide a decent way to compare many numeric distributions. The visual task of comparing multiple boxplots is relatively easy (i.e., compare position along a common scale) compared to some common alternatives (e.g., a trellis display of histograms, like <a href="bars-histograms.html#fig:bars-numeric">5.1</a>), but the boxplot is sometimes inadequate for capturing complex (e.g., multi-modal) distributions (in this case, a frequency polygon, like Figure <a href="overview.html#fig:freqpoly">2.9</a> provides a nice alternative). The <code>add_boxplot()</code> function requires one numeric variable, and guarantees boxplots are <a href="https://plot.ly/r/reference/#box-orientation">oriented</a> correctly, regardless of whether the numeric variable is placed on the x or y scale. As Figure <a href="boxplots.html#fig:cut-boxes">6.1</a> shows, on the axis orthogonal to the numeric axis, you can provide a discrete variable (for conditioning) or supply a single value (to name the axis category).</p>
-<pre class="sourceCode r"><code class="sourceCode r">p &lt;-<span class="st"> </span><span class="kw">plot_ly</span>(diamonds, <span class="dt">y =</span> <span class="op">~</span>price, <span class="dt">color =</span> <span class="kw">I</span>(<span class="st">&quot;black&quot;</span>), 
-             <span class="dt">alpha =</span> <span class="fl">0.1</span>, <span class="dt">boxpoints =</span> <span class="st">&quot;suspectedoutliers&quot;</span>)
-p1 &lt;-<span class="st"> </span>p <span class="op">%&gt;%</span><span class="st"> </span><span class="kw">add_boxplot</span>(<span class="dt">x =</span> <span class="st">&quot;Overall&quot;</span>)
-p2 &lt;-<span class="st"> </span>p <span class="op">%&gt;%</span><span class="st"> </span><span class="kw">add_boxplot</span>(<span class="dt">x =</span> <span class="op">~</span>cut)
-<span class="kw">subplot</span>(
-  p1, p2, <span class="dt">shareY =</span> <span class="ot">TRUE</span>,
-  <span class="dt">widths =</span> <span class="kw">c</span>(<span class="fl">0.2</span>, <span class="fl">0.8</span>), <span class="dt">margin =</span> <span class="dv">0</span>
-) <span class="op">%&gt;%</span><span class="st"> </span><span class="kw">hide_legend</span>()</code></pre>
+<div class="sourceCode" id="cb76"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb76-1"><a href="boxplots.html#cb76-1"></a>p &lt;-<span class="st"> </span><span class="kw">plot_ly</span>(diamonds, <span class="dt">y =</span> <span class="op">~</span>price, <span class="dt">color =</span> <span class="kw">I</span>(<span class="st">&quot;black&quot;</span>), </span>
+<span id="cb76-2"><a href="boxplots.html#cb76-2"></a>             <span class="dt">alpha =</span> <span class="fl">0.1</span>, <span class="dt">boxpoints =</span> <span class="st">&quot;suspectedoutliers&quot;</span>)</span>
+<span id="cb76-3"><a href="boxplots.html#cb76-3"></a>p1 &lt;-<span class="st"> </span>p <span class="op">%&gt;%</span><span class="st"> </span><span class="kw">add_boxplot</span>(<span class="dt">x =</span> <span class="st">&quot;Overall&quot;</span>)</span>
+<span id="cb76-4"><a href="boxplots.html#cb76-4"></a>p2 &lt;-<span class="st"> </span>p <span class="op">%&gt;%</span><span class="st"> </span><span class="kw">add_boxplot</span>(<span class="dt">x =</span> <span class="op">~</span>cut)</span>
+<span id="cb76-5"><a href="boxplots.html#cb76-5"></a><span class="kw">subplot</span>(</span>
+<span id="cb76-6"><a href="boxplots.html#cb76-6"></a>  p1, p2, <span class="dt">shareY =</span> <span class="ot">TRUE</span>,</span>
+<span id="cb76-7"><a href="boxplots.html#cb76-7"></a>  <span class="dt">widths =</span> <span class="kw">c</span>(<span class="fl">0.2</span>, <span class="fl">0.8</span>), <span class="dt">margin =</span> <span class="dv">0</span></span>
+<span id="cb76-8"><a href="boxplots.html#cb76-8"></a>) <span class="op">%&gt;%</span><span class="st"> </span><span class="kw">hide_legend</span>()</span></code></pre></div>
 <div class="figure" style="text-align: center"><span id="fig:cut-boxes"></span>
 <img src="images/cut-boxes.svg" alt="Overall diamond price and price by cut." width="100%" data-url="/interactives/cut-boxes.html" />
 <p class="caption">
@@ -354,9 +355,9 @@ FIGURE 6.1: Overall diamond price and price by cut.
 </p>
 </div>
 <p>If you want to partition by more than one discrete variable, you could use the interaction of those variables to the discrete axis, and coloring by the nested variable, as Figure <a href="boxplots.html#fig:cut-by-clarity-boxes">6.2</a> does with diamond clarity and cut. Another approach would be to use a trellis display, similar to Figure <a href="arranging-views.html#fig:subplot-trellis">13.9</a>.</p>
-<pre class="sourceCode r"><code class="sourceCode r"><span class="kw">plot_ly</span>(diamonds, <span class="dt">x =</span> <span class="op">~</span>price, <span class="dt">y =</span> <span class="op">~</span><span class="kw">interaction</span>(clarity, cut)) <span class="op">%&gt;%</span>
-<span class="st">  </span><span class="kw">add_boxplot</span>(<span class="dt">color =</span> <span class="op">~</span>clarity) <span class="op">%&gt;%</span>
-<span class="st">  </span><span class="kw">layout</span>(<span class="dt">yaxis =</span> <span class="kw">list</span>(<span class="dt">title =</span> <span class="st">&quot;&quot;</span>))</code></pre>
+<div class="sourceCode" id="cb77"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb77-1"><a href="boxplots.html#cb77-1"></a><span class="kw">plot_ly</span>(diamonds, <span class="dt">x =</span> <span class="op">~</span>price, <span class="dt">y =</span> <span class="op">~</span><span class="kw">interaction</span>(clarity, cut)) <span class="op">%&gt;%</span></span>
+<span id="cb77-2"><a href="boxplots.html#cb77-2"></a><span class="st">  </span><span class="kw">add_boxplot</span>(<span class="dt">color =</span> <span class="op">~</span>clarity) <span class="op">%&gt;%</span></span>
+<span id="cb77-3"><a href="boxplots.html#cb77-3"></a><span class="st">  </span><span class="kw">layout</span>(<span class="dt">yaxis =</span> <span class="kw">list</span>(<span class="dt">title =</span> <span class="st">&quot;&quot;</span>))</span></code></pre></div>
 <div class="figure" style="text-align: center"><span id="fig:cut-by-clarity-boxes"></span>
 <img src="images/cut-by-clarity-boxes.svg" alt="Diamond prices by cut and clarity." width="100%" data-url="/interactives/cut-by-clarity-boxes.html" />
 <p class="caption">
@@ -364,33 +365,27 @@ FIGURE 6.2: Diamond prices by cut and clarity.
 </p>
 </div>
 <p>It is also helpful to sort the boxplots according to something meaningful, such as the median price. Figure <a href="boxplots.html#fig:cut-by-clarity-boxes-sorted">6.3</a> presents the same information as Figure <a href="boxplots.html#fig:cut-by-clarity-boxes">6.2</a>, but sorts the boxplots by their median, and makes it immediately clear that diamonds with a cut of “SI2” have the highest diamond price, on average.</p>
-<pre class="sourceCode r"><code class="sourceCode r">d &lt;-<span class="st"> </span>diamonds <span class="op">%&gt;%</span>
-<span class="st">  </span><span class="kw">mutate</span>(<span class="dt">cc =</span> <span class="kw">interaction</span>(clarity, cut))
-
-<span class="co"># interaction levels sorted by median price</span>
-lvls &lt;-<span class="st"> </span>d <span class="op">%&gt;%</span>
-<span class="st">  </span><span class="kw">group_by</span>(cc) <span class="op">%&gt;%</span>
-<span class="st">  </span><span class="kw">summarise</span>(<span class="dt">m =</span> <span class="kw">median</span>(price)) <span class="op">%&gt;%</span>
-<span class="st">  </span><span class="kw">arrange</span>(m) <span class="op">%&gt;%</span>
-<span class="st">  </span><span class="kw">pull</span>(cc)
-
-<span class="kw">plot_ly</span>(d, <span class="dt">x =</span> <span class="op">~</span>price, <span class="dt">y =</span> <span class="op">~</span><span class="kw">factor</span>(cc, lvls)) <span class="op">%&gt;%</span>
-<span class="st">  </span><span class="kw">add_boxplot</span>(<span class="dt">color =</span> <span class="op">~</span>clarity) <span class="op">%&gt;%</span>
-<span class="st">  </span><span class="kw">layout</span>(<span class="dt">yaxis =</span> <span class="kw">list</span>(<span class="dt">title =</span> <span class="st">&quot;&quot;</span>))</code></pre>
+<div class="sourceCode" id="cb78"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb78-1"><a href="boxplots.html#cb78-1"></a>d &lt;-<span class="st"> </span>diamonds <span class="op">%&gt;%</span></span>
+<span id="cb78-2"><a href="boxplots.html#cb78-2"></a><span class="st">  </span><span class="kw">mutate</span>(<span class="dt">cc =</span> <span class="kw">interaction</span>(clarity, cut))</span>
+<span id="cb78-3"><a href="boxplots.html#cb78-3"></a></span>
+<span id="cb78-4"><a href="boxplots.html#cb78-4"></a><span class="co"># interaction levels sorted by median price</span></span>
+<span id="cb78-5"><a href="boxplots.html#cb78-5"></a>lvls &lt;-<span class="st"> </span>d <span class="op">%&gt;%</span></span>
+<span id="cb78-6"><a href="boxplots.html#cb78-6"></a><span class="st">  </span><span class="kw">group_by</span>(cc) <span class="op">%&gt;%</span></span>
+<span id="cb78-7"><a href="boxplots.html#cb78-7"></a><span class="st">  </span><span class="kw">summarise</span>(<span class="dt">m =</span> <span class="kw">median</span>(price)) <span class="op">%&gt;%</span></span>
+<span id="cb78-8"><a href="boxplots.html#cb78-8"></a><span class="st">  </span><span class="kw">arrange</span>(m) <span class="op">%&gt;%</span></span>
+<span id="cb78-9"><a href="boxplots.html#cb78-9"></a><span class="st">  </span><span class="kw">pull</span>(cc)</span>
+<span id="cb78-10"><a href="boxplots.html#cb78-10"></a></span>
+<span id="cb78-11"><a href="boxplots.html#cb78-11"></a><span class="kw">plot_ly</span>(d, <span class="dt">x =</span> <span class="op">~</span>price, <span class="dt">y =</span> <span class="op">~</span><span class="kw">factor</span>(cc, lvls)) <span class="op">%&gt;%</span></span>
+<span id="cb78-12"><a href="boxplots.html#cb78-12"></a><span class="st">  </span><span class="kw">add_boxplot</span>(<span class="dt">color =</span> <span class="op">~</span>clarity) <span class="op">%&gt;%</span></span>
+<span id="cb78-13"><a href="boxplots.html#cb78-13"></a><span class="st">  </span><span class="kw">layout</span>(<span class="dt">yaxis =</span> <span class="kw">list</span>(<span class="dt">title =</span> <span class="st">&quot;&quot;</span>))</span></code></pre></div>
 <div class="figure" style="text-align: center"><span id="fig:cut-by-clarity-boxes-sorted"></span>
 <img src="images/cut-by-clarity-boxes-sorted.svg" alt="Diamond prices by cut and clarity, sorted by price median." width="100%" data-url="/interactives/cut-by-clarity-boxes-sorted.html" />
 <p class="caption">
 FIGURE 6.3: Diamond prices by cut and clarity, sorted by price median.
 </p>
 </div>
-<p>Similar to <code>add_histogram()</code>, <code>add_boxplot()</code> sends the raw data to the browser, and lets plotly.js compute summary statistics. Unfortunately, plotly.js does not yet allow precomputed statistics for boxplots.<a href="#fn19" class="footnote-ref" id="fnref19"><sup>19</sup></a></p>
+<p>Similar to <code>add_histogram()</code>, <code>add_boxplot()</code> sends the raw data to the browser, and lets plotly.js compute summary statistics. Unfortunately, plotly.js does not yet allow precomputed statistics for boxplots.<a href="references.html#fn19" class="footnote-ref" id="fnref19"><sup>19</sup></a></p>
 
-</div>
-<div class="footnotes">
-<hr />
-<ol start="19">
-<li id="fn19"><p>Follow the issue here <a href="https://github.com/plotly/plotly.js/issues/1059" class="uri">https://github.com/plotly/plotly.js/issues/1059</a><a href="boxplots.html#fnref19" class="footnote-back">↩</a></p></li>
-</ol>
 </div>
 <script>
   var header = document.querySelector(".book-header");

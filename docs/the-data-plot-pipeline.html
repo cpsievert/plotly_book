@@ -6,7 +6,7 @@
   <meta http-equiv="X-UA-Compatible" content="IE=edge" />
   <title>32 The data-plot-pipeline | Interactive web-based data visualization with R, plotly, and shiny</title>
   <meta name="description" content="A useR guide to creating highly interactive graphics for exploratory and expository visualization." />
-  <meta name="generator" content="bookdown 0.10 and GitBook 2.6.7" />
+  <meta name="generator" content="bookdown 0.13.2 and GitBook 2.6.7" />
 
   <meta property="og:title" content="32 The data-plot-pipeline | Interactive web-based data visualization with R, plotly, and shiny" />
   <meta property="og:type" content="book" />
@@ -24,15 +24,15 @@
 <meta name="author" content="Carson Sievert" />
 
 
-<meta name="date" content="2019-05-14" />
+<meta name="date" content="2019-09-13" />
 
   <meta name="viewport" content="width=device-width, initial-scale=1" />
   <meta name="apple-mobile-web-app-capable" content="yes" />
   <meta name="apple-mobile-web-app-status-bar-style" content="black" />
   
   
-<link rel="prev" href="mathjax.html">
-<link rel="next" href="improving-ggplotly.html">
+<link rel="prev" href="mathjax.html"/>
+<link rel="next" href="improving-ggplotly.html"/>
 <script src="libs/jquery/jquery.min.js"></script>
 <link href="libs/gitbook/css/style.css" rel="stylesheet" />
 <link href="libs/gitbook/css/plugin-table.css" rel="stylesheet" />
@@ -61,26 +61,27 @@
 
 
 <style type="text/css">
-a.sourceLine { display: inline-block; line-height: 1.25; }
-a.sourceLine { pointer-events: none; color: inherit; text-decoration: inherit; }
-a.sourceLine:empty { height: 1.2em; }
+code.sourceCode > span { display: inline-block; line-height: 1.25; }
+code.sourceCode > span { color: inherit; text-decoration: inherit; }
+code.sourceCode > span:empty { height: 1.2em; }
 .sourceCode { overflow: visible; }
 code.sourceCode { white-space: pre; position: relative; }
-div.sourceCode { margin: 1em 0; }
 pre.sourceCode { margin: 0; }
 @media screen {
 div.sourceCode { overflow: auto; }
 }
 @media print {
 code.sourceCode { white-space: pre-wrap; }
-a.sourceLine { text-indent: -1em; padding-left: 1em; }
+code.sourceCode > span { text-indent: -5em; padding-left: 5em; }
 }
-pre.numberSource a.sourceLine
-  { position: relative; left: -4em; }
-pre.numberSource a.sourceLine::before
-  { content: attr(title);
+pre.numberSource code
+  { counter-reset: source-line 0; }
+pre.numberSource code > span
+  { position: relative; left: -4em; counter-increment: source-line; }
+pre.numberSource code > span > a:first-child::before
+  { content: counter(source-line);
     position: relative; left: -1em; text-align: right; vertical-align: baseline;
-    border: none; pointer-events: all; display: inline-block;
+    border: none; display: inline-block;
     -webkit-touch-callout: none; -webkit-user-select: none;
     -khtml-user-select: none; -moz-user-select: none;
     -ms-user-select: none; user-select: none;
@@ -89,9 +90,9 @@ pre.numberSource a.sourceLine::before
   }
 pre.numberSource { margin-left: 3em; border-left: 1px solid #aaaaaa;  padding-left: 4px; }
 div.sourceCode
-  {  }
+  {   }
 @media screen {
-a.sourceLine::before { text-decoration: underline; }
+code.sourceCode > span > a:first-child::before { text-decoration: underline; }
 }
 code span.al { color: #ff0000; font-weight: bold; } /* Alert */
 code span.an { color: #60a0b0; font-weight: bold; font-style: italic; } /* Annotation */
@@ -339,29 +340,29 @@ code span.wa { color: #60a0b0; font-weight: bold; font-style: italic; } /* Warni
 <div id="the-data-plot-pipeline" class="section level1">
 <h1><span class="header-section-number">32</span> The data-plot-pipeline</h1>
 <p>As Chapter <a href="overview.html#intro-plotly">2.1</a> first introduced, we can express multi-layer <strong>plotly</strong> graphs as a sequence (or, more specifically, a directed acyclic graph) of <strong>dplyr</strong> data manipulations and mappings to visuals. For example, to create Figure <a href="the-data-plot-pipeline.html#fig:houston2">32.1</a>, we could group <code>txhousing</code> by <code>city</code> to ensure the first layer of <code>add_lines()</code> draws a different line for each city, then <code>filter()</code> down to Houston so that the second call to <code>add_lines()</code> draws only Houston.</p>
-<pre class="sourceCode r"><code class="sourceCode r">allCities &lt;-<span class="st"> </span>txhousing <span class="op">%&gt;%</span>
-<span class="st">  </span><span class="kw">group_by</span>(city) <span class="op">%&gt;%</span>
-<span class="st">  </span><span class="kw">plot_ly</span>(<span class="dt">x =</span> <span class="op">~</span>date, <span class="dt">y =</span> <span class="op">~</span>median) <span class="op">%&gt;%</span>
-<span class="st">  </span><span class="kw">add_lines</span>(<span class="dt">alpha =</span> <span class="fl">0.2</span>, <span class="dt">name =</span> <span class="st">&quot;Texan Cities&quot;</span>, <span class="dt">hoverinfo =</span> <span class="st">&quot;none&quot;</span>)
-  
-allCities <span class="op">%&gt;%</span>
-<span class="st">  </span><span class="kw">filter</span>(city <span class="op">==</span><span class="st"> &quot;Houston&quot;</span>) <span class="op">%&gt;%</span>
-<span class="st">  </span><span class="kw">add_lines</span>(<span class="dt">name =</span> <span class="st">&quot;Houston&quot;</span>)</code></pre>
+<div class="sourceCode" id="cb244"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb244-1"><a href="the-data-plot-pipeline.html#cb244-1"></a>allCities &lt;-<span class="st"> </span>txhousing <span class="op">%&gt;%</span></span>
+<span id="cb244-2"><a href="the-data-plot-pipeline.html#cb244-2"></a><span class="st">  </span><span class="kw">group_by</span>(city) <span class="op">%&gt;%</span></span>
+<span id="cb244-3"><a href="the-data-plot-pipeline.html#cb244-3"></a><span class="st">  </span><span class="kw">plot_ly</span>(<span class="dt">x =</span> <span class="op">~</span>date, <span class="dt">y =</span> <span class="op">~</span>median) <span class="op">%&gt;%</span></span>
+<span id="cb244-4"><a href="the-data-plot-pipeline.html#cb244-4"></a><span class="st">  </span><span class="kw">add_lines</span>(<span class="dt">alpha =</span> <span class="fl">0.2</span>, <span class="dt">name =</span> <span class="st">&quot;Texan Cities&quot;</span>, <span class="dt">hoverinfo =</span> <span class="st">&quot;none&quot;</span>)</span>
+<span id="cb244-5"><a href="the-data-plot-pipeline.html#cb244-5"></a>  </span>
+<span id="cb244-6"><a href="the-data-plot-pipeline.html#cb244-6"></a>allCities <span class="op">%&gt;%</span></span>
+<span id="cb244-7"><a href="the-data-plot-pipeline.html#cb244-7"></a><span class="st">  </span><span class="kw">filter</span>(city <span class="op">==</span><span class="st"> &quot;Houston&quot;</span>) <span class="op">%&gt;%</span></span>
+<span id="cb244-8"><a href="the-data-plot-pipeline.html#cb244-8"></a><span class="st">  </span><span class="kw">add_lines</span>(<span class="dt">name =</span> <span class="st">&quot;Houston&quot;</span>)</span></code></pre></div>
 <div class="figure" style="text-align: center"><span id="fig:houston2"></span>
 <img src="images/houston2.svg" alt="Monthly median house prices over time for 46 Texan cities (in blue). Houston is highlighted in orange." width="100%" data-url="/interactives/houston2.html" />
 <p class="caption">
 FIGURE 32.1: Monthly median house prices over time for 46 Texan cities (in blue). Houston is highlighted in orange.
 </p>
 </div>
-<p>Sometimes the directed acyclic graph property of a <strong>magrittr</strong> pipeline can be too restrictive for certain types of plots. In this example, after filtering the data down to Houston, there is no way to recover the original data inside the pipeline. The <code>add_fun()</code> function helps to work-around this restriction<a href="#fn44" class="footnote-ref" id="fnref44"><sup>44</sup></a> – it works by applying a function to the plotly object, but does not affect the data associated with the plotly object. This effectively provides a way to isolate data transformations within the pipeline<a href="#fn45" class="footnote-ref" id="fnref45"><sup>45</sup></a>. Figure <a href="the-data-plot-pipeline.html#fig:houston-vs-sa">32.2</a> uses this idea to highlight both Houston and San Antonio.</p>
-<pre class="sourceCode r"><code class="sourceCode r">allCities <span class="op">%&gt;%</span>
-<span class="st">  </span><span class="kw">add_fun</span>(<span class="cf">function</span>(plot) {
-    plot <span class="op">%&gt;%</span><span class="st"> </span><span class="kw">filter</span>(city <span class="op">==</span><span class="st"> &quot;Houston&quot;</span>) <span class="op">%&gt;%</span><span class="st"> </span><span class="kw">add_lines</span>(<span class="dt">name =</span> <span class="st">&quot;Houston&quot;</span>)
-  }) <span class="op">%&gt;%</span>
-<span class="st">  </span><span class="kw">add_fun</span>(<span class="cf">function</span>(plot) {
-    plot <span class="op">%&gt;%</span><span class="st"> </span><span class="kw">filter</span>(city <span class="op">==</span><span class="st"> &quot;San Antonio&quot;</span>) <span class="op">%&gt;%</span><span class="st"> </span>
-<span class="st">      </span><span class="kw">add_lines</span>(<span class="dt">name =</span> <span class="st">&quot;San Antonio&quot;</span>)
-  })</code></pre>
+<p>Sometimes the directed acyclic graph property of a <strong>magrittr</strong> pipeline can be too restrictive for certain types of plots. In this example, after filtering the data down to Houston, there is no way to recover the original data inside the pipeline. The <code>add_fun()</code> function helps to work-around this restriction<a href="references.html#fn44" class="footnote-ref" id="fnref44"><sup>44</sup></a> – it works by applying a function to the plotly object, but does not affect the data associated with the plotly object. This effectively provides a way to isolate data transformations within the pipeline<a href="references.html#fn45" class="footnote-ref" id="fnref45"><sup>45</sup></a>. Figure <a href="the-data-plot-pipeline.html#fig:houston-vs-sa">32.2</a> uses this idea to highlight both Houston and San Antonio.</p>
+<div class="sourceCode" id="cb245"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb245-1"><a href="the-data-plot-pipeline.html#cb245-1"></a>allCities <span class="op">%&gt;%</span></span>
+<span id="cb245-2"><a href="the-data-plot-pipeline.html#cb245-2"></a><span class="st">  </span><span class="kw">add_fun</span>(<span class="cf">function</span>(plot) {</span>
+<span id="cb245-3"><a href="the-data-plot-pipeline.html#cb245-3"></a>    plot <span class="op">%&gt;%</span><span class="st"> </span><span class="kw">filter</span>(city <span class="op">==</span><span class="st"> &quot;Houston&quot;</span>) <span class="op">%&gt;%</span><span class="st"> </span><span class="kw">add_lines</span>(<span class="dt">name =</span> <span class="st">&quot;Houston&quot;</span>)</span>
+<span id="cb245-4"><a href="the-data-plot-pipeline.html#cb245-4"></a>  }) <span class="op">%&gt;%</span></span>
+<span id="cb245-5"><a href="the-data-plot-pipeline.html#cb245-5"></a><span class="st">  </span><span class="kw">add_fun</span>(<span class="cf">function</span>(plot) {</span>
+<span id="cb245-6"><a href="the-data-plot-pipeline.html#cb245-6"></a>    plot <span class="op">%&gt;%</span><span class="st"> </span><span class="kw">filter</span>(city <span class="op">==</span><span class="st"> &quot;San Antonio&quot;</span>) <span class="op">%&gt;%</span><span class="st"> </span></span>
+<span id="cb245-7"><a href="the-data-plot-pipeline.html#cb245-7"></a><span class="st">      </span><span class="kw">add_lines</span>(<span class="dt">name =</span> <span class="st">&quot;San Antonio&quot;</span>)</span>
+<span id="cb245-8"><a href="the-data-plot-pipeline.html#cb245-8"></a>  })</span></code></pre></div>
 <div class="figure" style="text-align: center"><span id="fig:houston-vs-sa"></span>
 <img src="images/houston-vs-sa.svg" alt="Monthly median house price in Houston and San Antonio in comparison to other Texan cities." width="100%" data-url="/interactives/houston-vs-sa.html" />
 <p class="caption">
@@ -369,28 +370,28 @@ FIGURE 32.2: Monthly median house price in Houston and San Antonio in comparison
 </p>
 </div>
 <p>It is useful to think of the function supplied to <code>add_fun()</code> as a “layer” function – a function that accepts a plot object as input, possibly applies a transformation to the data, and maps that data to visual objects. To make layering functions more modular, flexible, and expressive, the <code>add_fun()</code> allows you to pass additional arguments to a layer function. Figure <a href="the-data-plot-pipeline.html#fig:summary">32.3</a> makes use of this pattern, by creating a reusable function for layering both a particular city as well as the first, second, and third quartile of median monthly house sales (by city).</p>
-<pre class="sourceCode r"><code class="sourceCode r"><span class="co"># reusable function for highlighting a particular city</span>
-layer_city &lt;-<span class="st"> </span><span class="cf">function</span>(plot, name) {
-  plot <span class="op">%&gt;%</span><span class="st"> </span><span class="kw">filter</span>(city <span class="op">==</span><span class="st"> </span>name) <span class="op">%&gt;%</span><span class="st"> </span><span class="kw">add_lines</span>(<span class="dt">name =</span> name)
-}
-
-<span class="co"># reusable function for plotting overall median &amp; IQR</span>
-layer_iqr &lt;-<span class="st"> </span><span class="cf">function</span>(plot) {
-  plot <span class="op">%&gt;%</span>
-<span class="st">    </span><span class="kw">group_by</span>(date) <span class="op">%&gt;%</span><span class="st"> </span>
-<span class="st">    </span><span class="kw">summarise</span>(
-      <span class="dt">q1 =</span> <span class="kw">quantile</span>(median, <span class="fl">0.25</span>, <span class="dt">na.rm =</span> <span class="ot">TRUE</span>),
-      <span class="dt">m =</span> <span class="kw">median</span>(median, <span class="dt">na.rm =</span> <span class="ot">TRUE</span>),
-      <span class="dt">q3 =</span> <span class="kw">quantile</span>(median, <span class="fl">0.75</span>, <span class="dt">na.rm =</span> <span class="ot">TRUE</span>)
-    ) <span class="op">%&gt;%</span>
-<span class="st">    </span><span class="kw">add_lines</span>(<span class="dt">y =</span> <span class="op">~</span>m, <span class="dt">name =</span> <span class="st">&quot;median&quot;</span>, <span class="dt">color =</span> <span class="kw">I</span>(<span class="st">&quot;black&quot;</span>)) <span class="op">%&gt;%</span>
-<span class="st">    </span><span class="kw">add_ribbons</span>(<span class="dt">ymin =</span> <span class="op">~</span>q1, <span class="dt">ymax =</span> <span class="op">~</span>q3, <span class="dt">name =</span> <span class="st">&quot;IQR&quot;</span>, <span class="dt">color =</span> <span class="kw">I</span>(<span class="st">&quot;black&quot;</span>))
-}
-
-allCities <span class="op">%&gt;%</span>
-<span class="st">  </span><span class="kw">add_fun</span>(layer_iqr) <span class="op">%&gt;%</span>
-<span class="st">  </span><span class="kw">add_fun</span>(layer_city, <span class="st">&quot;Houston&quot;</span>) <span class="op">%&gt;%</span>
-<span class="st">  </span><span class="kw">add_fun</span>(layer_city, <span class="st">&quot;San Antonio&quot;</span>)</code></pre>
+<div class="sourceCode" id="cb246"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb246-1"><a href="the-data-plot-pipeline.html#cb246-1"></a><span class="co"># reusable function for highlighting a particular city</span></span>
+<span id="cb246-2"><a href="the-data-plot-pipeline.html#cb246-2"></a>layer_city &lt;-<span class="st"> </span><span class="cf">function</span>(plot, name) {</span>
+<span id="cb246-3"><a href="the-data-plot-pipeline.html#cb246-3"></a>  plot <span class="op">%&gt;%</span><span class="st"> </span><span class="kw">filter</span>(city <span class="op">==</span><span class="st"> </span>name) <span class="op">%&gt;%</span><span class="st"> </span><span class="kw">add_lines</span>(<span class="dt">name =</span> name)</span>
+<span id="cb246-4"><a href="the-data-plot-pipeline.html#cb246-4"></a>}</span>
+<span id="cb246-5"><a href="the-data-plot-pipeline.html#cb246-5"></a></span>
+<span id="cb246-6"><a href="the-data-plot-pipeline.html#cb246-6"></a><span class="co"># reusable function for plotting overall median &amp; IQR</span></span>
+<span id="cb246-7"><a href="the-data-plot-pipeline.html#cb246-7"></a>layer_iqr &lt;-<span class="st"> </span><span class="cf">function</span>(plot) {</span>
+<span id="cb246-8"><a href="the-data-plot-pipeline.html#cb246-8"></a>  plot <span class="op">%&gt;%</span></span>
+<span id="cb246-9"><a href="the-data-plot-pipeline.html#cb246-9"></a><span class="st">    </span><span class="kw">group_by</span>(date) <span class="op">%&gt;%</span><span class="st"> </span></span>
+<span id="cb246-10"><a href="the-data-plot-pipeline.html#cb246-10"></a><span class="st">    </span><span class="kw">summarise</span>(</span>
+<span id="cb246-11"><a href="the-data-plot-pipeline.html#cb246-11"></a>      <span class="dt">q1 =</span> <span class="kw">quantile</span>(median, <span class="fl">0.25</span>, <span class="dt">na.rm =</span> <span class="ot">TRUE</span>),</span>
+<span id="cb246-12"><a href="the-data-plot-pipeline.html#cb246-12"></a>      <span class="dt">m =</span> <span class="kw">median</span>(median, <span class="dt">na.rm =</span> <span class="ot">TRUE</span>),</span>
+<span id="cb246-13"><a href="the-data-plot-pipeline.html#cb246-13"></a>      <span class="dt">q3 =</span> <span class="kw">quantile</span>(median, <span class="fl">0.75</span>, <span class="dt">na.rm =</span> <span class="ot">TRUE</span>)</span>
+<span id="cb246-14"><a href="the-data-plot-pipeline.html#cb246-14"></a>    ) <span class="op">%&gt;%</span></span>
+<span id="cb246-15"><a href="the-data-plot-pipeline.html#cb246-15"></a><span class="st">    </span><span class="kw">add_lines</span>(<span class="dt">y =</span> <span class="op">~</span>m, <span class="dt">name =</span> <span class="st">&quot;median&quot;</span>, <span class="dt">color =</span> <span class="kw">I</span>(<span class="st">&quot;black&quot;</span>)) <span class="op">%&gt;%</span></span>
+<span id="cb246-16"><a href="the-data-plot-pipeline.html#cb246-16"></a><span class="st">    </span><span class="kw">add_ribbons</span>(<span class="dt">ymin =</span> <span class="op">~</span>q1, <span class="dt">ymax =</span> <span class="op">~</span>q3, <span class="dt">name =</span> <span class="st">&quot;IQR&quot;</span>, <span class="dt">color =</span> <span class="kw">I</span>(<span class="st">&quot;black&quot;</span>))</span>
+<span id="cb246-17"><a href="the-data-plot-pipeline.html#cb246-17"></a>}</span>
+<span id="cb246-18"><a href="the-data-plot-pipeline.html#cb246-18"></a></span>
+<span id="cb246-19"><a href="the-data-plot-pipeline.html#cb246-19"></a>allCities <span class="op">%&gt;%</span></span>
+<span id="cb246-20"><a href="the-data-plot-pipeline.html#cb246-20"></a><span class="st">  </span><span class="kw">add_fun</span>(layer_iqr) <span class="op">%&gt;%</span></span>
+<span id="cb246-21"><a href="the-data-plot-pipeline.html#cb246-21"></a><span class="st">  </span><span class="kw">add_fun</span>(layer_city, <span class="st">&quot;Houston&quot;</span>) <span class="op">%&gt;%</span></span>
+<span id="cb246-22"><a href="the-data-plot-pipeline.html#cb246-22"></a><span class="st">  </span><span class="kw">add_fun</span>(layer_city, <span class="st">&quot;San Antonio&quot;</span>)</span></code></pre></div>
 <div class="figure" style="text-align: center"><span id="fig:summary"></span>
 <img src="images/summary.svg" alt="First, second, and third quartile of median monthly house price in Texas." width="100%" data-url="/interactives/summary.html" />
 <p class="caption">
@@ -398,30 +399,30 @@ FIGURE 32.3: First, second, and third quartile of median monthly house price in 
 </p>
 </div>
 <p>A layering function does not have to be a data-plot-pipeline itself. Its only requirement on a layering function is that the first argument is a plot object and it returns a plot object. This provides an opportunity to say, fit a model to the plot data, extract the model components you desire, and map those components to visuals. Furthermore, since <strong>plotly</strong>’s <code>add_*()</code> functions don’t require a data.frame, you can supply those components directly to attributes (as long as they are well-defined), as done in Figure <a href="the-data-plot-pipeline.html#fig:forecast">32.4</a> via the <strong>forecast</strong> package <span class="citation">(Hyndman <a href="#ref-forecast" role="doc-biblioref">2018</a>)</span>.</p>
-<pre class="sourceCode r"><code class="sourceCode r"><span class="kw">library</span>(forecast)
-layer_forecast &lt;-<span class="st"> </span><span class="cf">function</span>(plot) {
-  d &lt;-<span class="st"> </span><span class="kw">plotly_data</span>(plot)
-  series &lt;-<span class="st"> </span><span class="kw">with</span>(d, 
-    <span class="kw">ts</span>(median, <span class="dt">frequency =</span> <span class="dv">12</span>, <span class="dt">start =</span> <span class="kw">c</span>(<span class="dv">2000</span>, <span class="dv">1</span>), <span class="dt">end =</span> <span class="kw">c</span>(<span class="dv">2015</span>, <span class="dv">7</span>))
-  )
-  fore &lt;-<span class="st"> </span><span class="kw">forecast</span>(<span class="kw">ets</span>(series), <span class="dt">h =</span> <span class="dv">48</span>, <span class="dt">level =</span> <span class="kw">c</span>(<span class="dv">80</span>, <span class="dv">95</span>))
-  plot <span class="op">%&gt;%</span>
-<span class="st">    </span><span class="kw">add_ribbons</span>(<span class="dt">x =</span> <span class="kw">time</span>(fore<span class="op">$</span>mean), <span class="dt">ymin =</span> fore<span class="op">$</span>lower[, <span class="dv">2</span>],
-                <span class="dt">ymax =</span> fore<span class="op">$</span>upper[, <span class="dv">2</span>], <span class="dt">color =</span> <span class="kw">I</span>(<span class="st">&quot;gray95&quot;</span>), 
-                <span class="dt">name =</span> <span class="st">&quot;95% confidence&quot;</span>, <span class="dt">inherit =</span> <span class="ot">FALSE</span>) <span class="op">%&gt;%</span>
-<span class="st">    </span><span class="kw">add_ribbons</span>(<span class="dt">x =</span> <span class="kw">time</span>(fore<span class="op">$</span>mean), <span class="dt">ymin =</span> fore<span class="op">$</span>lower[, <span class="dv">1</span>],
-                <span class="dt">ymax =</span> fore<span class="op">$</span>upper[, <span class="dv">1</span>], <span class="dt">color =</span> <span class="kw">I</span>(<span class="st">&quot;gray80&quot;</span>), 
-                <span class="dt">name =</span> <span class="st">&quot;80% confidence&quot;</span>, <span class="dt">inherit =</span> <span class="ot">FALSE</span>) <span class="op">%&gt;%</span>
-<span class="st">    </span><span class="kw">add_lines</span>(<span class="dt">x =</span> <span class="kw">time</span>(fore<span class="op">$</span>mean), <span class="dt">y =</span> fore<span class="op">$</span>mean, <span class="dt">color =</span> <span class="kw">I</span>(<span class="st">&quot;blue&quot;</span>), 
-              <span class="dt">name =</span> <span class="st">&quot;prediction&quot;</span>)
-}
-
-txhousing <span class="op">%&gt;%</span>
-<span class="st">  </span><span class="kw">group_by</span>(city) <span class="op">%&gt;%</span>
-<span class="st">  </span><span class="kw">plot_ly</span>(<span class="dt">x =</span> <span class="op">~</span>date, <span class="dt">y =</span> <span class="op">~</span>median) <span class="op">%&gt;%</span>
-<span class="st">  </span><span class="kw">add_lines</span>(<span class="dt">alpha =</span> <span class="fl">0.2</span>, <span class="dt">name =</span> <span class="st">&quot;Texan Cities&quot;</span>, <span class="dt">hoverinfo =</span> <span class="st">&quot;none&quot;</span>) <span class="op">%&gt;%</span>
-<span class="st">  </span><span class="kw">add_fun</span>(layer_iqr) <span class="op">%&gt;%</span>
-<span class="st">  </span><span class="kw">add_fun</span>(layer_forecast)</code></pre>
+<div class="sourceCode" id="cb247"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb247-1"><a href="the-data-plot-pipeline.html#cb247-1"></a><span class="kw">library</span>(forecast)</span>
+<span id="cb247-2"><a href="the-data-plot-pipeline.html#cb247-2"></a>layer_forecast &lt;-<span class="st"> </span><span class="cf">function</span>(plot) {</span>
+<span id="cb247-3"><a href="the-data-plot-pipeline.html#cb247-3"></a>  d &lt;-<span class="st"> </span><span class="kw">plotly_data</span>(plot)</span>
+<span id="cb247-4"><a href="the-data-plot-pipeline.html#cb247-4"></a>  series &lt;-<span class="st"> </span><span class="kw">with</span>(d, </span>
+<span id="cb247-5"><a href="the-data-plot-pipeline.html#cb247-5"></a>    <span class="kw">ts</span>(median, <span class="dt">frequency =</span> <span class="dv">12</span>, <span class="dt">start =</span> <span class="kw">c</span>(<span class="dv">2000</span>, <span class="dv">1</span>), <span class="dt">end =</span> <span class="kw">c</span>(<span class="dv">2015</span>, <span class="dv">7</span>))</span>
+<span id="cb247-6"><a href="the-data-plot-pipeline.html#cb247-6"></a>  )</span>
+<span id="cb247-7"><a href="the-data-plot-pipeline.html#cb247-7"></a>  fore &lt;-<span class="st"> </span><span class="kw">forecast</span>(<span class="kw">ets</span>(series), <span class="dt">h =</span> <span class="dv">48</span>, <span class="dt">level =</span> <span class="kw">c</span>(<span class="dv">80</span>, <span class="dv">95</span>))</span>
+<span id="cb247-8"><a href="the-data-plot-pipeline.html#cb247-8"></a>  plot <span class="op">%&gt;%</span></span>
+<span id="cb247-9"><a href="the-data-plot-pipeline.html#cb247-9"></a><span class="st">    </span><span class="kw">add_ribbons</span>(<span class="dt">x =</span> <span class="kw">time</span>(fore<span class="op">$</span>mean), <span class="dt">ymin =</span> fore<span class="op">$</span>lower[, <span class="dv">2</span>],</span>
+<span id="cb247-10"><a href="the-data-plot-pipeline.html#cb247-10"></a>                <span class="dt">ymax =</span> fore<span class="op">$</span>upper[, <span class="dv">2</span>], <span class="dt">color =</span> <span class="kw">I</span>(<span class="st">&quot;gray95&quot;</span>), </span>
+<span id="cb247-11"><a href="the-data-plot-pipeline.html#cb247-11"></a>                <span class="dt">name =</span> <span class="st">&quot;95% confidence&quot;</span>, <span class="dt">inherit =</span> <span class="ot">FALSE</span>) <span class="op">%&gt;%</span></span>
+<span id="cb247-12"><a href="the-data-plot-pipeline.html#cb247-12"></a><span class="st">    </span><span class="kw">add_ribbons</span>(<span class="dt">x =</span> <span class="kw">time</span>(fore<span class="op">$</span>mean), <span class="dt">ymin =</span> fore<span class="op">$</span>lower[, <span class="dv">1</span>],</span>
+<span id="cb247-13"><a href="the-data-plot-pipeline.html#cb247-13"></a>                <span class="dt">ymax =</span> fore<span class="op">$</span>upper[, <span class="dv">1</span>], <span class="dt">color =</span> <span class="kw">I</span>(<span class="st">&quot;gray80&quot;</span>), </span>
+<span id="cb247-14"><a href="the-data-plot-pipeline.html#cb247-14"></a>                <span class="dt">name =</span> <span class="st">&quot;80% confidence&quot;</span>, <span class="dt">inherit =</span> <span class="ot">FALSE</span>) <span class="op">%&gt;%</span></span>
+<span id="cb247-15"><a href="the-data-plot-pipeline.html#cb247-15"></a><span class="st">    </span><span class="kw">add_lines</span>(<span class="dt">x =</span> <span class="kw">time</span>(fore<span class="op">$</span>mean), <span class="dt">y =</span> fore<span class="op">$</span>mean, <span class="dt">color =</span> <span class="kw">I</span>(<span class="st">&quot;blue&quot;</span>), </span>
+<span id="cb247-16"><a href="the-data-plot-pipeline.html#cb247-16"></a>              <span class="dt">name =</span> <span class="st">&quot;prediction&quot;</span>)</span>
+<span id="cb247-17"><a href="the-data-plot-pipeline.html#cb247-17"></a>}</span>
+<span id="cb247-18"><a href="the-data-plot-pipeline.html#cb247-18"></a></span>
+<span id="cb247-19"><a href="the-data-plot-pipeline.html#cb247-19"></a>txhousing <span class="op">%&gt;%</span></span>
+<span id="cb247-20"><a href="the-data-plot-pipeline.html#cb247-20"></a><span class="st">  </span><span class="kw">group_by</span>(city) <span class="op">%&gt;%</span></span>
+<span id="cb247-21"><a href="the-data-plot-pipeline.html#cb247-21"></a><span class="st">  </span><span class="kw">plot_ly</span>(<span class="dt">x =</span> <span class="op">~</span>date, <span class="dt">y =</span> <span class="op">~</span>median) <span class="op">%&gt;%</span></span>
+<span id="cb247-22"><a href="the-data-plot-pipeline.html#cb247-22"></a><span class="st">  </span><span class="kw">add_lines</span>(<span class="dt">alpha =</span> <span class="fl">0.2</span>, <span class="dt">name =</span> <span class="st">&quot;Texan Cities&quot;</span>, <span class="dt">hoverinfo =</span> <span class="st">&quot;none&quot;</span>) <span class="op">%&gt;%</span></span>
+<span id="cb247-23"><a href="the-data-plot-pipeline.html#cb247-23"></a><span class="st">  </span><span class="kw">add_fun</span>(layer_iqr) <span class="op">%&gt;%</span></span>
+<span id="cb247-24"><a href="the-data-plot-pipeline.html#cb247-24"></a><span class="st">  </span><span class="kw">add_fun</span>(layer_forecast)</span></code></pre></div>
 <div class="figure" style="text-align: center"><span id="fig:forecast"></span>
 <img src="images/forecast.svg" alt="Layering on a 4-year forecast from a exponential smoothing state space model." width="100%" data-url="/interactives/forecast.html" />
 <p class="caption">
@@ -435,13 +436,6 @@ FIGURE 32.4: Layering on a 4-year forecast from a exponential smoothing state sp
 <div id="ref-forecast">
 <p>Hyndman, Rob J. 2018. <em>Forecast: Forecasting Functions for Time Series and Linear Models</em>. <a href="http://github.com/robjhyndman/forecast">http://github.com/robjhyndman/forecast</a>.</p>
 </div>
-</div>
-<div class="footnotes">
-<hr />
-<ol start="44">
-<li id="fn44"><p>Credit to Winston Chang and Hadley Wickham for this idea. The <code>add_fun()</code> is very much like <code>layer_f()</code> function in <strong>ggvis</strong>.<a href="the-data-plot-pipeline.html#fnref44" class="footnote-back">↩</a></p></li>
-<li id="fn45"><p>Also, effectively putting a <a href="http://www.memecreator.org/meme/yo-dawg-i-heard-u-like-pipelines-so-we-put-a-pipeline-in-your-pipeline">pipeline inside a pipeline</a><a href="the-data-plot-pipeline.html#fnref45" class="footnote-back">↩</a></p></li>
-</ol>
 </div>
 <script>
   var header = document.querySelector(".book-header");

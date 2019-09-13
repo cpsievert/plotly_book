@@ -6,7 +6,7 @@
   <meta http-equiv="X-UA-Compatible" content="IE=edge" />
   <title>11 Exporting static images | Interactive web-based data visualization with R, plotly, and shiny</title>
   <meta name="description" content="A useR guide to creating highly interactive graphics for exploratory and expository visualization." />
-  <meta name="generator" content="bookdown 0.10 and GitBook 2.6.7" />
+  <meta name="generator" content="bookdown 0.13.2 and GitBook 2.6.7" />
 
   <meta property="og:title" content="11 Exporting static images | Interactive web-based data visualization with R, plotly, and shiny" />
   <meta property="og:type" content="book" />
@@ -24,15 +24,15 @@
 <meta name="author" content="Carson Sievert" />
 
 
-<meta name="date" content="2019-05-14" />
+<meta name="date" content="2019-09-13" />
 
   <meta name="viewport" content="width=device-width, initial-scale=1" />
   <meta name="apple-mobile-web-app-capable" content="yes" />
   <meta name="apple-mobile-web-app-status-bar-style" content="black" />
   
   
-<link rel="prev" href="saving.html">
-<link rel="next" href="editing-views.html">
+<link rel="prev" href="saving.html"/>
+<link rel="next" href="editing-views.html"/>
 <script src="libs/jquery/jquery.min.js"></script>
 <link href="libs/gitbook/css/style.css" rel="stylesheet" />
 <link href="libs/gitbook/css/plugin-table.css" rel="stylesheet" />
@@ -61,26 +61,27 @@
 
 
 <style type="text/css">
-a.sourceLine { display: inline-block; line-height: 1.25; }
-a.sourceLine { pointer-events: none; color: inherit; text-decoration: inherit; }
-a.sourceLine:empty { height: 1.2em; }
+code.sourceCode > span { display: inline-block; line-height: 1.25; }
+code.sourceCode > span { color: inherit; text-decoration: inherit; }
+code.sourceCode > span:empty { height: 1.2em; }
 .sourceCode { overflow: visible; }
 code.sourceCode { white-space: pre; position: relative; }
-div.sourceCode { margin: 1em 0; }
 pre.sourceCode { margin: 0; }
 @media screen {
 div.sourceCode { overflow: auto; }
 }
 @media print {
 code.sourceCode { white-space: pre-wrap; }
-a.sourceLine { text-indent: -1em; padding-left: 1em; }
+code.sourceCode > span { text-indent: -5em; padding-left: 5em; }
 }
-pre.numberSource a.sourceLine
-  { position: relative; left: -4em; }
-pre.numberSource a.sourceLine::before
-  { content: attr(title);
+pre.numberSource code
+  { counter-reset: source-line 0; }
+pre.numberSource code > span
+  { position: relative; left: -4em; counter-increment: source-line; }
+pre.numberSource code > span > a:first-child::before
+  { content: counter(source-line);
     position: relative; left: -1em; text-align: right; vertical-align: baseline;
-    border: none; pointer-events: all; display: inline-block;
+    border: none; display: inline-block;
     -webkit-touch-callout: none; -webkit-user-select: none;
     -khtml-user-select: none; -moz-user-select: none;
     -ms-user-select: none; user-select: none;
@@ -89,9 +90,9 @@ pre.numberSource a.sourceLine::before
   }
 pre.numberSource { margin-left: 3em; border-left: 1px solid #aaaaaa;  padding-left: 4px; }
 div.sourceCode
-  {  }
+  {   }
 @media screen {
-a.sourceLine::before { text-decoration: underline; }
+code.sourceCode > span > a:first-child::before { text-decoration: underline; }
 }
 code span.al { color: #ff0000; font-weight: bold; } /* Alert */
 code span.an { color: #60a0b0; font-weight: bold; font-style: italic; } /* Annotation */
@@ -351,15 +352,15 @@ FIGURE 11.1: Using the <code>orca()</code> function to export a WebGL/Canvas bas
 <div id="from-a-browser" class="section level2">
 <h2><span class="header-section-number">11.2</span> From a browser</h2>
 <p>Exporting an image from a browser is a nice option if you need to perform edits before exporting or if you’d like others to share your work. By default, the ‘download plot’ icon in the modebar will download to png and use the <code>height</code> and <code>width</code> of the plot, but these defaults can be altered via the plot’s configuration:</p>
-<pre class="sourceCode r"><code class="sourceCode r"><span class="kw">plot_ly</span>() <span class="op">%&gt;%</span>
-<span class="st">  </span><span class="kw">config</span>(
-    <span class="dt">toImageButtonOptions =</span> <span class="kw">list</span>(
-      <span class="dt">format =</span> <span class="st">&quot;svg&quot;</span>,
-      <span class="dt">filename =</span> <span class="st">&quot;myplot&quot;</span>,
-      <span class="dt">width =</span> <span class="dv">600</span>,
-      <span class="dt">height =</span> <span class="dv">700</span>
-    )
-  )</code></pre>
+<div class="sourceCode" id="cb93"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb93-1"><a href="exporting-static-images.html#cb93-1"></a><span class="kw">plot_ly</span>() <span class="op">%&gt;%</span></span>
+<span id="cb93-2"><a href="exporting-static-images.html#cb93-2"></a><span class="st">  </span><span class="kw">config</span>(</span>
+<span id="cb93-3"><a href="exporting-static-images.html#cb93-3"></a>    <span class="dt">toImageButtonOptions =</span> <span class="kw">list</span>(</span>
+<span id="cb93-4"><a href="exporting-static-images.html#cb93-4"></a>      <span class="dt">format =</span> <span class="st">&quot;svg&quot;</span>,</span>
+<span id="cb93-5"><a href="exporting-static-images.html#cb93-5"></a>      <span class="dt">filename =</span> <span class="st">&quot;myplot&quot;</span>,</span>
+<span id="cb93-6"><a href="exporting-static-images.html#cb93-6"></a>      <span class="dt">width =</span> <span class="dv">600</span>,</span>
+<span id="cb93-7"><a href="exporting-static-images.html#cb93-7"></a>      <span class="dt">height =</span> <span class="dv">700</span></span>
+<span id="cb93-8"><a href="exporting-static-images.html#cb93-8"></a>    )</span>
+<span id="cb93-9"><a href="exporting-static-images.html#cb93-9"></a>  )</span></code></pre></div>
 <div class="figure" style="text-align: center"><span id="fig:toImageSVG"></span>
 <img src="images/toImageSVG.png" alt="Specifying options for static image exporting via the modebar. Clicking on the ‘download plot’ icon should prompt your browser to download a static svg file named ‘myplot.svg’." width="100%" data-url="/interactives/toImageSVG.html" />
 <p class="caption">
@@ -370,10 +371,10 @@ FIGURE 11.2: Specifying options for static image exporting via the modebar. Clic
 <div id="sizing-exports" class="section level2">
 <h2><span class="header-section-number">11.3</span> Sizing exports</h2>
 <p>It’s worth noting that the height and width of a static image must be specified in pixels, which is intuitive for most file formats (png, jpeg, svg, etc) but when exporting to pdf, you might want to specify the size in inches. If you multiply the DPI of your machine’s display by the number of inches you want, you’ll get the desired result. So, if you want a 8x11 pdf, and are on a typical 96 DPI display, you can do:</p>
-<pre class="sourceCode r"><code class="sourceCode r"><span class="kw">orca</span>(<span class="kw">plot_ly</span>(), <span class="dt">width =</span> <span class="dv">8</span> <span class="op">*</span><span class="st"> </span><span class="dv">96</span>, <span class="dt">height =</span> <span class="dv">11</span> <span class="op">*</span><span class="st"> </span><span class="dv">96</span>)</code></pre>
+<div class="sourceCode" id="cb94"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb94-1"><a href="exporting-static-images.html#cb94-1"></a><span class="kw">orca</span>(<span class="kw">plot_ly</span>(), <span class="dt">width =</span> <span class="dv">8</span> <span class="op">*</span><span class="st"> </span><span class="dv">96</span>, <span class="dt">height =</span> <span class="dv">11</span> <span class="op">*</span><span class="st"> </span><span class="dv">96</span>)</span></code></pre></div>
 <p>On the other hand, if you’re performing interactive editing and exporting, you may want to set a fixed size for the plot:</p>
-<pre class="sourceCode r"><code class="sourceCode r"><span class="kw">plot_ly</span>(<span class="dt">width =</span> <span class="dv">8</span> <span class="op">*</span><span class="st"> </span><span class="dv">96</span>, <span class="dt">height =</span> <span class="dv">11</span> <span class="op">*</span><span class="st"> </span><span class="dv">96</span>) <span class="op">%&gt;%</span>
-<span class="st">  </span><span class="kw">config</span>(<span class="dt">toImageButtonOptions =</span> <span class="kw">list</span>(<span class="dt">format =</span> <span class="st">&quot;svg&quot;</span>))</code></pre>
+<div class="sourceCode" id="cb95"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb95-1"><a href="exporting-static-images.html#cb95-1"></a><span class="kw">plot_ly</span>(<span class="dt">width =</span> <span class="dv">8</span> <span class="op">*</span><span class="st"> </span><span class="dv">96</span>, <span class="dt">height =</span> <span class="dv">11</span> <span class="op">*</span><span class="st"> </span><span class="dv">96</span>) <span class="op">%&gt;%</span></span>
+<span id="cb95-2"><a href="exporting-static-images.html#cb95-2"></a><span class="st">  </span><span class="kw">config</span>(<span class="dt">toImageButtonOptions =</span> <span class="kw">list</span>(<span class="dt">format =</span> <span class="st">&quot;svg&quot;</span>))</span></code></pre></div>
 </div>
 </div>
 <script>
