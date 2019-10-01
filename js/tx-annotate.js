@@ -1,3 +1,4 @@
+// Start of the tx-annotate.js file
 function(el) {
   el.on("plotly_hover", function(d) {
     var pt = d.points[0];

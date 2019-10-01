@@ -458,7 +458,8 @@ data_grid <- tags$div(id = "data-grid")
 
 # upon clicking the marker, populate a video 
 # in the DOM element with an id of 'video'
-p <- plot_ly(mtcars, x = ~wt, y = ~mpg, customdata = row.names(mtcars)) %>% 
+p <- plot_ly(mtcars, x = ~wt, y = ~mpg) %>%
+  add_markers(customdata = row.names(mtcars)) %>% 
   layout(dragmode = "select") %>%
   onRender(babel_transform(   
     "el => {

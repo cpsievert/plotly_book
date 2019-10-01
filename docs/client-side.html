@@ -145,7 +145,6 @@ code span.wa { color: #60a0b0; font-weight: bold; font-style: italic; } /* Warni
       <nav role="navigation">
 
 <ul class="summary">
-<li class="chapter" data-level="" data-path="index.html"><a href="index.html"><i class="fa fa-check"></i>Welcome</a></li>
 <li class="chapter" data-level="1" data-path="introduction.html"><a href="introduction.html"><i class="fa fa-check"></i><b>1</b> Introduction</a><ul>
 <li class="chapter" data-level="1.1" data-path="introduction.html"><a href="introduction.html#why-interactive-web-graphics-from-r"><i class="fa fa-check"></i><b>1.1</b> Why interactive web graphics <em>from R</em>?</a></li>
 <li class="chapter" data-level="1.2" data-path="introduction.html"><a href="introduction.html#what-you-will-learn"><i class="fa fa-check"></i><b>1.2</b> What you will learn</a></li>
@@ -467,34 +466,35 @@ code span.wa { color: #60a0b0; font-weight: bold; font-style: italic; } /* Warni
 <span id="cb210-8"><a href="client-side.html#cb210-8"></a></span>
 <span id="cb210-9"><a href="client-side.html#cb210-9"></a><span class="co"># upon clicking the marker, populate a video </span></span>
 <span id="cb210-10"><a href="client-side.html#cb210-10"></a><span class="co"># in the DOM element with an id of &#39;video&#39;</span></span>
-<span id="cb210-11"><a href="client-side.html#cb210-11"></a>p &lt;-<span class="st"> </span><span class="kw">plot_ly</span>(mtcars, <span class="dt">x =</span> <span class="op">~</span>wt, <span class="dt">y =</span> <span class="op">~</span>mpg, <span class="dt">customdata =</span> <span class="kw">row.names</span>(mtcars)) <span class="op">%&gt;%</span><span class="st"> </span></span>
-<span id="cb210-12"><a href="client-side.html#cb210-12"></a><span class="st">  </span><span class="kw">layout</span>(<span class="dt">dragmode =</span> <span class="st">&quot;select&quot;</span>) <span class="op">%&gt;%</span></span>
-<span id="cb210-13"><a href="client-side.html#cb210-13"></a><span class="st">  </span><span class="kw">onRender</span>(<span class="kw">babel_transform</span>(   </span>
-<span id="cb210-14"><a href="client-side.html#cb210-14"></a>    <span class="st">&quot;el =&gt; {</span></span>
-<span id="cb210-15"><a href="client-side.html#cb210-15"></a><span class="st">       var container = document.getElementById(&#39;data-grid&#39;);</span></span>
-<span id="cb210-16"><a href="client-side.html#cb210-16"></a><span class="st">       var columns = [</span></span>
-<span id="cb210-17"><a href="client-side.html#cb210-17"></a><span class="st">         {key: &#39;x&#39;, name: &#39;Weight&#39;}, </span></span>
-<span id="cb210-18"><a href="client-side.html#cb210-18"></a><span class="st">         {key: &#39;y&#39;, name: &#39;MPG&#39;}, </span></span>
-<span id="cb210-19"><a href="client-side.html#cb210-19"></a><span class="st">         {key: &#39;customdata&#39;, name: &#39;Model&#39;}</span></span>
-<span id="cb210-20"><a href="client-side.html#cb210-20"></a><span class="st">        ];</span></span>
-<span id="cb210-21"><a href="client-side.html#cb210-21"></a><span class="st">       el.on(&#39;plotly_selecting&#39;, d =&gt; {</span></span>
-<span id="cb210-22"><a href="client-side.html#cb210-22"></a><span class="st">          if (d.points) {</span></span>
-<span id="cb210-23"><a href="client-side.html#cb210-23"></a><span class="st">            var grid = &lt;ReactDataGrid </span></span>
-<span id="cb210-24"><a href="client-side.html#cb210-24"></a><span class="st">              columns={columns} </span></span>
-<span id="cb210-25"><a href="client-side.html#cb210-25"></a><span class="st">              rowGetter={i =&gt; d.points[i]} </span></span>
-<span id="cb210-26"><a href="client-side.html#cb210-26"></a><span class="st">              rowsCount={d.points.length} </span></span>
-<span id="cb210-27"><a href="client-side.html#cb210-27"></a><span class="st">            /&gt;;</span></span>
-<span id="cb210-28"><a href="client-side.html#cb210-28"></a><span class="st">            ReactDOM.render(grid, container);</span></span>
-<span id="cb210-29"><a href="client-side.html#cb210-29"></a><span class="st">          }</span></span>
-<span id="cb210-30"><a href="client-side.html#cb210-30"></a><span class="st">        });</span></span>
-<span id="cb210-31"><a href="client-side.html#cb210-31"></a><span class="st">        el.on(&#39;plotly_deselect&#39;, d =&gt; { </span></span>
-<span id="cb210-32"><a href="client-side.html#cb210-32"></a><span class="st">          ReactDOM.render(null, container); </span></span>
-<span id="cb210-33"><a href="client-side.html#cb210-33"></a><span class="st">        });</span></span>
-<span id="cb210-34"><a href="client-side.html#cb210-34"></a><span class="st">     }&quot;</span></span>
-<span id="cb210-35"><a href="client-side.html#cb210-35"></a>  ))</span>
-<span id="cb210-36"><a href="client-side.html#cb210-36"></a></span>
-<span id="cb210-37"><a href="client-side.html#cb210-37"></a><span class="co"># create the HTML page</span></span>
-<span id="cb210-38"><a href="client-side.html#cb210-38"></a><span class="kw">browsable</span>(<span class="kw">tagList</span>(p, data_grid, <span class="kw">html_dependency_react</span>(), data_grid_js))</span></code></pre></div>
+<span id="cb210-11"><a href="client-side.html#cb210-11"></a>p &lt;-<span class="st"> </span><span class="kw">plot_ly</span>(mtcars, <span class="dt">x =</span> <span class="op">~</span>wt, <span class="dt">y =</span> <span class="op">~</span>mpg) <span class="op">%&gt;%</span></span>
+<span id="cb210-12"><a href="client-side.html#cb210-12"></a><span class="st">  </span><span class="kw">add_markers</span>(<span class="dt">customdata =</span> <span class="kw">row.names</span>(mtcars)) <span class="op">%&gt;%</span><span class="st"> </span></span>
+<span id="cb210-13"><a href="client-side.html#cb210-13"></a><span class="st">  </span><span class="kw">layout</span>(<span class="dt">dragmode =</span> <span class="st">&quot;select&quot;</span>) <span class="op">%&gt;%</span></span>
+<span id="cb210-14"><a href="client-side.html#cb210-14"></a><span class="st">  </span><span class="kw">onRender</span>(<span class="kw">babel_transform</span>(   </span>
+<span id="cb210-15"><a href="client-side.html#cb210-15"></a>    <span class="st">&quot;el =&gt; {</span></span>
+<span id="cb210-16"><a href="client-side.html#cb210-16"></a><span class="st">       var container = document.getElementById(&#39;data-grid&#39;);</span></span>
+<span id="cb210-17"><a href="client-side.html#cb210-17"></a><span class="st">       var columns = [</span></span>
+<span id="cb210-18"><a href="client-side.html#cb210-18"></a><span class="st">         {key: &#39;x&#39;, name: &#39;Weight&#39;}, </span></span>
+<span id="cb210-19"><a href="client-side.html#cb210-19"></a><span class="st">         {key: &#39;y&#39;, name: &#39;MPG&#39;}, </span></span>
+<span id="cb210-20"><a href="client-side.html#cb210-20"></a><span class="st">         {key: &#39;customdata&#39;, name: &#39;Model&#39;}</span></span>
+<span id="cb210-21"><a href="client-side.html#cb210-21"></a><span class="st">        ];</span></span>
+<span id="cb210-22"><a href="client-side.html#cb210-22"></a><span class="st">       el.on(&#39;plotly_selecting&#39;, d =&gt; {</span></span>
+<span id="cb210-23"><a href="client-side.html#cb210-23"></a><span class="st">          if (d.points) {</span></span>
+<span id="cb210-24"><a href="client-side.html#cb210-24"></a><span class="st">            var grid = &lt;ReactDataGrid </span></span>
+<span id="cb210-25"><a href="client-side.html#cb210-25"></a><span class="st">              columns={columns} </span></span>
+<span id="cb210-26"><a href="client-side.html#cb210-26"></a><span class="st">              rowGetter={i =&gt; d.points[i]} </span></span>
+<span id="cb210-27"><a href="client-side.html#cb210-27"></a><span class="st">              rowsCount={d.points.length} </span></span>
+<span id="cb210-28"><a href="client-side.html#cb210-28"></a><span class="st">            /&gt;;</span></span>
+<span id="cb210-29"><a href="client-side.html#cb210-29"></a><span class="st">            ReactDOM.render(grid, container);</span></span>
+<span id="cb210-30"><a href="client-side.html#cb210-30"></a><span class="st">          }</span></span>
+<span id="cb210-31"><a href="client-side.html#cb210-31"></a><span class="st">        });</span></span>
+<span id="cb210-32"><a href="client-side.html#cb210-32"></a><span class="st">        el.on(&#39;plotly_deselect&#39;, d =&gt; { </span></span>
+<span id="cb210-33"><a href="client-side.html#cb210-33"></a><span class="st">          ReactDOM.render(null, container); </span></span>
+<span id="cb210-34"><a href="client-side.html#cb210-34"></a><span class="st">        });</span></span>
+<span id="cb210-35"><a href="client-side.html#cb210-35"></a><span class="st">     }&quot;</span></span>
+<span id="cb210-36"><a href="client-side.html#cb210-36"></a>  ))</span>
+<span id="cb210-37"><a href="client-side.html#cb210-37"></a></span>
+<span id="cb210-38"><a href="client-side.html#cb210-38"></a><span class="co"># create the HTML page</span></span>
+<span id="cb210-39"><a href="client-side.html#cb210-39"></a><span class="kw">browsable</span>(<span class="kw">tagList</span>(p, data_grid, <span class="kw">html_dependency_react</span>(), data_grid_js))</span></code></pre></div>
 </details>
 <iframe src="https://player.vimeo.com/video/325933744?title=0&amp;byline=0&amp;portrait=0" width="100%" height="400" frameborder="0" seamless="seamless" webkitAllowFullScreen mozallowfullscreen allowFullScreen></iframe>
 

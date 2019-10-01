@@ -145,7 +145,6 @@ code span.wa { color: #60a0b0; font-weight: bold; font-style: italic; } /* Warni
       <nav role="navigation">
 
 <ul class="summary">
-<li class="chapter" data-level="" data-path="index.html"><a href="index.html"><i class="fa fa-check"></i>Welcome</a></li>
 <li class="chapter" data-level="1" data-path="introduction.html"><a href="introduction.html"><i class="fa fa-check"></i><b>1</b> Introduction</a><ul>
 <li class="chapter" data-level="1.1" data-path="introduction.html"><a href="introduction.html#why-interactive-web-graphics-from-r"><i class="fa fa-check"></i><b>1.1</b> Why interactive web graphics <em>from R</em>?</a></li>
 <li class="chapter" data-level="1.2" data-path="introduction.html"><a href="introduction.html#what-you-will-learn"><i class="fa fa-check"></i><b>1.2</b> What you will learn</a></li>
@@ -351,7 +350,7 @@ code span.wa { color: #60a0b0; font-weight: bold; font-style: italic; } /* Warni
 <span id="cb257-3"><a href="custom-geoms.html#cb257-3"></a><span class="co">#&gt;   data &lt;- data[order(data[[&quot;x&quot;]]), ]</span></span>
 <span id="cb257-4"><a href="custom-geoms.html#cb257-4"></a><span class="co">#&gt;   prefix_class(data, &quot;GeomPath&quot;)</span></span>
 <span id="cb257-5"><a href="custom-geoms.html#cb257-5"></a><span class="co">#&gt; }</span></span>
-<span id="cb257-6"><a href="custom-geoms.html#cb257-6"></a><span class="co">#&gt; &lt;bytecode: 0x7ffa66a86830&gt;</span></span>
+<span id="cb257-6"><a href="custom-geoms.html#cb257-6"></a><span class="co">#&gt; &lt;bytecode: 0x7f9d012bf638&gt;</span></span>
 <span id="cb257-7"><a href="custom-geoms.html#cb257-7"></a><span class="co">#&gt; &lt;environment: namespace:plotly&gt;</span></span></code></pre></div>
 <p>If you have implemented a custom geom, say <code>GeomCustom</code>, rest assured that the data passed to <code>to_basic()</code> will be of class <code>GeomCustom</code> when <code>ggplotly()</code> is called on a plot with your geom. And assuming <code>GeomCustom</code> may be reduced to another lower-level geom support by plotly, a <code>to_basic.GeomCustom()</code> method that transforms the data into a form suitable for that lower-level geom is sufficient for adding support. Moreover, note that the data passed to <code>to_basic()</code> is essentially the last form of the data <em>before</em> the render stage and <em>after</em> statistics have been performed. This makes it trivial to add support for geoms like <code>GeomXspline</code> from the <strong>ggalt</strong> package.</p>
 <div class="sourceCode" id="cb258"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb258-1"><a href="custom-geoms.html#cb258-1"></a><span class="kw">library</span>(ggalt)</span>
