@@ -6,7 +6,7 @@
   <meta http-equiv="X-UA-Compatible" content="IE=edge" />
   <title>4 Maps | Interactive web-based data visualization with R, plotly, and shiny</title>
   <meta name="description" content="A useR guide to creating highly interactive graphics for exploratory and expository visualization." />
-  <meta name="generator" content="bookdown 0.13.2 and GitBook 2.6.7" />
+  <meta name="generator" content="bookdown 0.14.1 and GitBook 2.6.7" />
 
   <meta property="og:title" content="4 Maps | Interactive web-based data visualization with R, plotly, and shiny" />
   <meta property="og:type" content="book" />
@@ -40,6 +40,9 @@
 <link href="libs/gitbook/css/plugin-highlight.css" rel="stylesheet" />
 <link href="libs/gitbook/css/plugin-search.css" rel="stylesheet" />
 <link href="libs/gitbook/css/plugin-fontsettings.css" rel="stylesheet" />
+<link href="libs/gitbook/css/plugin-clipboard.css" rel="stylesheet" />
+
+
 
 
 
@@ -344,12 +347,12 @@ code span.wa { color: #60a0b0; font-weight: bold; font-style: italic; } /* Warni
 <div id="maps" class="section level1">
 <h1><span class="header-section-number">4</span> Maps</h1>
 <p>There are numerous ways to make a map with <strong>plotly</strong> – each with it’s own strengths and weaknesses. Generally speaking the approaches fall under two categories: integrated or custom. Integrated maps leverage plotly.js’ built-in support for rendering a basemap layer. Currently there are two supported ways of making integrated maps: either via <a href="https://www.mapbox.com/">Mapbox</a> or via an integrated d3.js powered basemap. The integrated approach is convenient if you need a quick map and don’t necessarily need sophisticated representations of geo-spatial objects. On the other hand, the custom mapping approach offers complete control since you’re providing all the information necessary to render the geo-spatial object(s). Section <a href="maps.html#maps-custom">4.2</a> covers making sophisticated maps (e.g., cartograms) using the <strong>sf</strong> R package, but it’s also possible to make custom <strong>plotly</strong> maps via other tools for geo-computing (e.g., <strong>sp</strong>, <strong>ggmap</strong>, etc).</p>
-<p>It’s worth noting that <strong>plotly</strong> aims to be a general purpose visualization library, and thus, doesn’t aim to be the most fully featured geo-spatial visualization toolkit. That said, there are benefits to using <strong>plotly</strong>-based maps since the mapping APIs are very similar to the rest of plotly, and you can leverage larger <strong>plotly</strong> ecosystem (e.g., linking views client side like Figure <a href="#fig:mapbox-bars"><strong>??</strong></a>). However, if you run into limitations with <strong>plotly</strong>’s mapping functionality, there is a very rich set of tools for <a href="https://geocompr.robinlovelace.net/adv-map.html#interactive-maps">interactive geospatial visualization in R</a>, including but not limited to: <strong>leaflet</strong>, <strong>mapview</strong>, <strong>mapedit</strong>, <strong>tmap</strong>, and <strong>mapdeck</strong> <span class="citation">(Robin Lovelace <a href="#ref-geocomputation" role="doc-biblioref">2019</a>)</span>.</p>
+<p>It’s worth noting that <strong>plotly</strong> aims to be a general purpose visualization library, and thus, doesn’t aim to be the most fully featured geo-spatial visualization toolkit. That said, there are benefits to using <strong>plotly</strong>-based maps since the mapping APIs are very similar to the rest of plotly, and you can leverage larger <strong>plotly</strong> ecosystem (e.g., linking views client side like Figure <a href="client-side-linking.html#fig:mapbox-bars">16.23</a>). However, if you run into limitations with <strong>plotly</strong>’s mapping functionality, there is a very rich set of tools for <a href="https://geocompr.robinlovelace.net/adv-map.html#interactive-maps">interactive geospatial visualization in R</a>, including but not limited to: <strong>leaflet</strong>, <strong>mapview</strong>, <strong>mapedit</strong>, <strong>tmap</strong>, and <strong>mapdeck</strong> <span class="citation">(Robin Lovelace <a href="#ref-geocomputation" role="doc-biblioref">2019</a>)</span>.</p>
 <div id="maps-integrated" class="section level2">
 <h2><span class="header-section-number">4.1</span> Integrated maps</h2>
 <div id="overview-1" class="section level3">
 <h3><span class="header-section-number">4.1.1</span> Overview</h3>
-<p>If you have fairly simple latitude/longitude data and want to make a quick map, you may want to try one of <strong>plotly</strong>’s integrated mapping options (i.e., <code>plot_mapbox()</code> and <code>plot_geo()</code>). Generally speaking, you can treat these constructor functions as a drop-in replacement for <code>plot_ly()</code> and get a dynamic basemap rendered behind your data. Furthermore, all the scatter-based layers we learned about in Section <a href="scatter-traces.html#scatter-traces">3</a> work as you’d expect it to with <code>plot_ly()</code>.<a href="references.html#fn12" class="footnote-ref" id="fnref12"><sup>12</sup></a> For example, Figure <a href="#fig:mapbox-bubble"><strong>??</strong></a> uses <code>plot_mapbox()</code> and <code>add_markers()</code> to create a bubble chart:</p>
+<p>If you have fairly simple latitude/longitude data and want to make a quick map, you may want to try one of <strong>plotly</strong>’s integrated mapping options (i.e., <code>plot_mapbox()</code> and <code>plot_geo()</code>). Generally speaking, you can treat these constructor functions as a drop-in replacement for <code>plot_ly()</code> and get a dynamic basemap rendered behind your data. Furthermore, all the scatter-based layers we learned about in Section <a href="scatter-traces.html#scatter-traces">3</a> work as you’d expect it to with <code>plot_ly()</code>.<a href="references.html#fn12" class="footnote-ref" id="fnref12"><sup>12</sup></a> For example, Figure <a href="maps.html#fig:mapbox-bubble">4.1</a> uses <code>plot_mapbox()</code> and <code>add_markers()</code> to create a bubble chart:</p>
 <div class="sourceCode" id="cb53"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb53-1"><a href="maps.html#cb53-1"></a><span class="kw">plot_mapbox</span>(maps<span class="op">::</span>canada.cities) <span class="op">%&gt;%</span></span>
 <span id="cb53-2"><a href="maps.html#cb53-2"></a><span class="st">  </span><span class="kw">add_markers</span>(</span>
 <span id="cb53-3"><a href="maps.html#cb53-3"></a>    <span class="dt">x =</span> <span class="op">~</span>long, </span>
@@ -360,24 +363,31 @@ code span.wa { color: #60a0b0; font-weight: bold; font-style: italic; } /* Warni
 <span id="cb53-8"><a href="maps.html#cb53-8"></a>    <span class="dt">text =</span> <span class="op">~</span><span class="kw">paste</span>(name, pop),</span>
 <span id="cb53-9"><a href="maps.html#cb53-9"></a>    <span class="dt">hoverinfo =</span> <span class="st">&quot;text&quot;</span></span>
 <span id="cb53-10"><a href="maps.html#cb53-10"></a>  )</span></code></pre></div>
+<div class="figure" style="text-align: center"><span id="fig:mapbox-bubble"></span>
 <iframe src="https://player.vimeo.com/video/317352934?title=0&amp;byline=0&amp;portrait=0" width="100%" height="400" frameborder="0" seamless="seamless" webkitAllowFullScreen mozallowfullscreen allowFullScreen></iframe>
+<p class="caption">
+FIGURE 4.1: A mapbox powered bubble chart showing the population of various cities in Canada. For the interactive, see <a href="https://plotly-r.com/interactives/mapbox-bubble.html" class="uri">https://plotly-r.com/interactives/mapbox-bubble.html</a>
+</p>
+</div>
 <p>The Mapbox basemap styling is controlled through the <a href="https://plot.ly/r/reference/#layout-mapbox-style"><code>layout.mapbox.style</code></a> attribute. The <strong>plotly</strong> package comes with support for 7 different styles, but you can also supply a custom URL to a <a href="https://docs.mapbox.com/help/tutorials/create-a-custom-style/">custom mapbox style</a>. To obtain all the pre-packaged basemap style names, you can grab them from the official plotly.js <code>schema()</code>:</p>
 <div class="sourceCode" id="cb54"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb54-1"><a href="maps.html#cb54-1"></a>styles &lt;-<span class="st"> </span><span class="kw">schema</span>()<span class="op">$</span>layout<span class="op">$</span>layoutAttributes<span class="op">$</span>mapbox<span class="op">$</span>style<span class="op">$</span>values</span>
 <span id="cb54-2"><a href="maps.html#cb54-2"></a>styles</span>
-<span id="cb54-3"><a href="maps.html#cb54-3"></a><span class="co">#&gt;  [1] &quot;basic&quot;             &quot;streets&quot;          </span></span>
-<span id="cb54-4"><a href="maps.html#cb54-4"></a><span class="co">#&gt;  [3] &quot;outdoors&quot;          &quot;light&quot;            </span></span>
-<span id="cb54-5"><a href="maps.html#cb54-5"></a><span class="co">#&gt;  [5] &quot;dark&quot;              &quot;satellite&quot;        </span></span>
-<span id="cb54-6"><a href="maps.html#cb54-6"></a><span class="co">#&gt;  [7] &quot;satellite-streets&quot; &quot;open-street-map&quot;  </span></span>
-<span id="cb54-7"><a href="maps.html#cb54-7"></a><span class="co">#&gt;  [9] &quot;white-bg&quot;          &quot;carto-positron&quot;   </span></span>
-<span id="cb54-8"><a href="maps.html#cb54-8"></a><span class="co">#&gt; [11] &quot;carto-darkmatter&quot;  &quot;stamen-terrain&quot;   </span></span>
-<span id="cb54-9"><a href="maps.html#cb54-9"></a><span class="co">#&gt; [13] &quot;stamen-toner&quot;      &quot;stamen-watercolor&quot;</span></span></code></pre></div>
-<p>Any one of these values can be used for a mapbox style. Figure <a href="#fig:satellite"><strong>??</strong></a> demonstrates the satellite earth imagery basemap.</p>
+<span id="cb54-3"><a href="maps.html#cb54-3"></a><span class="co">#&gt; [1] &quot;basic&quot;             &quot;streets&quot;          </span></span>
+<span id="cb54-4"><a href="maps.html#cb54-4"></a><span class="co">#&gt; [3] &quot;outdoors&quot;          &quot;light&quot;            </span></span>
+<span id="cb54-5"><a href="maps.html#cb54-5"></a><span class="co">#&gt; [5] &quot;dark&quot;              &quot;satellite&quot;        </span></span>
+<span id="cb54-6"><a href="maps.html#cb54-6"></a><span class="co">#&gt; [7] &quot;satellite-streets&quot;</span></span></code></pre></div>
+<p>Any one of these values can be used for a mapbox style. Figure <a href="maps.html#fig:satellite">4.2</a> demonstrates the satellite earth imagery basemap.</p>
 <div class="sourceCode" id="cb55"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb55-1"><a href="maps.html#cb55-1"></a><span class="kw">layout</span>(</span>
 <span id="cb55-2"><a href="maps.html#cb55-2"></a>  <span class="kw">plot_mapbox</span>(), </span>
 <span id="cb55-3"><a href="maps.html#cb55-3"></a>  <span class="dt">mapbox =</span> <span class="kw">list</span>(<span class="dt">style =</span> <span class="st">&quot;satellite&quot;</span>)</span>
 <span id="cb55-4"><a href="maps.html#cb55-4"></a>)</span></code></pre></div>
+<div class="figure" style="text-align: center"><span id="fig:satellite"></span>
 <iframe src="https://player.vimeo.com/video/326683897?title=0&amp;byline=0&amp;portrait=0" width="100%" height="400" frameborder="0" seamless="seamless" webkitAllowFullScreen mozallowfullscreen allowFullScreen></iframe>
-<p>Figure <a href="#fig:mapbox-style-dropdown"><strong>??</strong></a> demonstrates how to create an integrated plotly.js dropdown menu to control the basemap style via the <a href="https://plot.ly/r/reference/#layout-updatemenus-items-updatemenu-buttons"><code>layout.updatemenus</code></a> attribute. The idea behind an integrated plotly.js dropdown is to supply a list of buttons (i.e., menu items) where each button invokes a plotly.js method with some arguments. In this case, each button uses the <a href="https://plot.ly/javascript/plotlyjs-function-reference/">relayout</a> method to modify the <code>layout.mapbox.style</code> attribute.<a href="references.html#fn13" class="footnote-ref" id="fnref13"><sup>13</sup></a></p>
+<p class="caption">
+FIGURE 4.2: Zooming in on earth satellite imagery using <code>plot_mapbox()</code>. For the interactive, see <a href="https://plotly-r.com/interactives/satellite.html" class="uri">https://plotly-r.com/interactives/satellite.html</a>
+</p>
+</div>
+<p>Figure <a href="maps.html#fig:mapbox-style-dropdown">4.3</a> demonstrates how to create an integrated plotly.js dropdown menu to control the basemap style via the <a href="https://plot.ly/r/reference/#layout-updatemenus-items-updatemenu-buttons"><code>layout.updatemenus</code></a> attribute. The idea behind an integrated plotly.js dropdown is to supply a list of buttons (i.e., menu items) where each button invokes a plotly.js method with some arguments. In this case, each button uses the <a href="https://plot.ly/javascript/plotlyjs-function-reference/">relayout</a> method to modify the <code>layout.mapbox.style</code> attribute.<a href="references.html#fn13" class="footnote-ref" id="fnref13"><sup>13</sup></a></p>
 <div class="sourceCode" id="cb56"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb56-1"><a href="maps.html#cb56-1"></a>style_buttons &lt;-<span class="st"> </span><span class="kw">lapply</span>(styles, <span class="cf">function</span>(s) {</span>
 <span id="cb56-2"><a href="maps.html#cb56-2"></a>  <span class="kw">list</span>(</span>
 <span id="cb56-3"><a href="maps.html#cb56-3"></a>    <span class="dt">label =</span> s, </span>
@@ -392,8 +402,13 @@ code span.wa { color: #60a0b0; font-weight: bold; font-style: italic; } /* Warni
 <span id="cb56-12"><a href="maps.html#cb56-12"></a>    <span class="kw">list</span>(<span class="dt">y =</span> <span class="fl">0.8</span>, <span class="dt">buttons =</span> style_buttons)</span>
 <span id="cb56-13"><a href="maps.html#cb56-13"></a>  )</span>
 <span id="cb56-14"><a href="maps.html#cb56-14"></a>)</span></code></pre></div>
+<div class="figure" style="text-align: center"><span id="fig:mapbox-style-dropdown"></span>
 <iframe src="https://player.vimeo.com/video/326684625?title=0&amp;byline=0&amp;portrait=0" width="100%" height="400" frameborder="0" seamless="seamless" webkitAllowFullScreen mozallowfullscreen allowFullScreen></iframe>
-<p>The other integrated mapping solution in <strong>plotly</strong> is <code>plot_geo()</code>. Compared to <code>plot_mapbox()</code>, this approach has support for different mapping projections, but styling the basemap is limited and can be more cumbersome. Figure <a href="#fig:geo-flights"><strong>??</strong></a> demonstrates using <code>plot_geo()</code> in conjunction with <code>add_markers()</code> and <code>add_segments()</code> to visualize flight paths within the United States. Whereas <code>plot_mapbox()</code> is fixed to a mercator projection, the <code>plot_geo()</code> constructor has a handful of different projection available to it, including the orthographic projection which gives the illusion of the 3D globe.</p>
+<p class="caption">
+FIGURE 4.3: Providing a dropdown menu to control the styling of the mapbox baselayer. For the interactive, see <a href="https://plotly-r.com/interactives/mapbox-style-dropdown.html" class="uri">https://plotly-r.com/interactives/mapbox-style-dropdown.html</a>
+</p>
+</div>
+<p>The other integrated mapping solution in <strong>plotly</strong> is <code>plot_geo()</code>. Compared to <code>plot_mapbox()</code>, this approach has support for different mapping projections, but styling the basemap is limited and can be more cumbersome. Figure <a href="maps.html#fig:geo-flights">4.4</a> demonstrates using <code>plot_geo()</code> in conjunction with <code>add_markers()</code> and <code>add_segments()</code> to visualize flight paths within the United States. Whereas <code>plot_mapbox()</code> is fixed to a mercator projection, the <code>plot_geo()</code> constructor has a handful of different projection available to it, including the orthographic projection which gives the illusion of the 3D globe.</p>
 <details>
 <p><summary>Click to show code</summary></p>
 <div class="sourceCode" id="cb57"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb57-1"><a href="maps.html#cb57-1"></a><span class="kw">library</span>(plotly)</span>
@@ -432,8 +447,13 @@ code span.wa { color: #60a0b0; font-weight: bold; font-style: italic; } /* Warni
 <span id="cb57-34"><a href="maps.html#cb57-34"></a>  ) <span class="op">%&gt;%</span></span>
 <span id="cb57-35"><a href="maps.html#cb57-35"></a><span class="st">  </span><span class="kw">layout</span>(<span class="dt">geo =</span> geo, <span class="dt">showlegend =</span> <span class="ot">FALSE</span>)</span></code></pre></div>
 </details>
+<div class="figure" style="text-align: center"><span id="fig:geo-flights"></span>
 <iframe src="https://player.vimeo.com/video/317358033?title=0&amp;byline=0&amp;portrait=0" width="100%" height="400" frameborder="0" seamless="seamless" webkitAllowFullScreen mozallowfullscreen allowFullScreen></iframe>
-<p>One nice thing about <code>plot_geo()</code> is that it automatically projects geometries into the proper coordinate system defined by the map projection. For example, in Figure <a href="maps.html#fig:maps">4.1</a> the simple line segment is straight when using <code>plot_mapbox()</code> yet curved when using <code>plot_geo()</code>. It’s possible to achieve the same effect using <code>plot_ly()</code> or <code>plot_mapbox()</code>, but the relevant marker/line/polygon data has to be put into an <strong>sf</strong> data structure before rendering (see Section <a href="maps.html#sf">4.2.1</a> for more details).</p>
+<p class="caption">
+FIGURE 4.4: Using the integrated orthographic projection to visualize flight patterns on a ‘3D’ globe. For the interactive, see <a href="https://plotly-r.com/interactives/geo-flights.html" class="uri">https://plotly-r.com/interactives/geo-flights.html</a>
+</p>
+</div>
+<p>One nice thing about <code>plot_geo()</code> is that it automatically projects geometries into the proper coordinate system defined by the map projection. For example, in Figure <a href="maps.html#fig:maps">4.5</a> the simple line segment is straight when using <code>plot_mapbox()</code> yet curved when using <code>plot_geo()</code>. It’s possible to achieve the same effect using <code>plot_ly()</code> or <code>plot_mapbox()</code>, but the relevant marker/line/polygon data has to be put into an <strong>sf</strong> data structure before rendering (see Section <a href="maps.html#sf">4.2.1</a> for more details).</p>
 <div class="sourceCode" id="cb58"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb58-1"><a href="maps.html#cb58-1"></a>map1 &lt;-<span class="st"> </span><span class="kw">plot_mapbox</span>() <span class="op">%&gt;%</span><span class="st"> </span></span>
 <span id="cb58-2"><a href="maps.html#cb58-2"></a><span class="st">  </span><span class="kw">add_segments</span>(<span class="dt">x =</span> <span class="dv">-100</span>, <span class="dt">xend =</span> <span class="dv">-50</span>, <span class="dt">y =</span> <span class="dv">50</span>, <span class="dt">yend =</span> <span class="dv">75</span>) <span class="op">%&gt;%</span></span>
 <span id="cb58-3"><a href="maps.html#cb58-3"></a><span class="st">  </span><span class="kw">layout</span>(</span>
@@ -452,13 +472,13 @@ code span.wa { color: #60a0b0; font-weight: bold; font-style: italic; } /* Warni
 <div class="figure" style="text-align: center"><span id="fig:maps"></span>
 <img src="images/maps.png" alt="A comparison of plotly’s integrated mapping solutions: plot_mapbox() (top) and plot_geo() (bottom). The plot_geo() approach will transform line segments to correctly reflect their projection into a non-cartesian coordinate system." width="100%" data-url="/interactives/maps.html" />
 <p class="caption">
-FIGURE 4.1: A comparison of <strong>plotly</strong>’s integrated mapping solutions: <code>plot_mapbox()</code> (top) and <code>plot_geo()</code> (bottom). The <code>plot_geo()</code> approach will transform line segments to correctly reflect their projection into a non-cartesian coordinate system.
+FIGURE 4.5: A comparison of <strong>plotly</strong>’s integrated mapping solutions: <code>plot_mapbox()</code> (top) and <code>plot_geo()</code> (bottom). The <code>plot_geo()</code> approach will transform line segments to correctly reflect their projection into a non-cartesian coordinate system.
 </p>
 </div>
 </div>
 <div id="choropleths" class="section level3">
 <h3><span class="header-section-number">4.1.2</span> Choropleths</h3>
-<p>In addition to scatter-based layers, the <code>plot_geo()</code> constructor also supports a <a href="https://plot.ly/r/reference/#choropleth">choropleth</a> layer. Figure <a href="maps.html#fig:us-density">4.2</a> shows the population density of the U.S. via a choropleth, and also layers on markers for the state center locations, using the U.S. state data from the <strong>datasets</strong> package <span class="citation">(R Core Team <a href="#ref-RCore" role="doc-biblioref">2016</a>)</span>. By simply providing a <a href="https://plot.ly/r/reference/#choropleth-z"><code>z</code></a> attribute, <code>plotly_geo()</code> objects will try to create a choropleth, but you’ll also need to provide <a href="https://plot.ly/r/reference/#choropleth-locations"><code>locations</code></a> and a <a href="https://plot.ly/r/reference/#choropleth-locationmode"><code>locationmode</code></a>. It’s worth noting that the <code>locationmode</code> is currently limited to countries and US states, so if you need to a different geo-unit (e.g., counties, municipalities, etc), you can use the the custom mapping approach discussed in Section <a href="maps.html#maps-custom">4.2</a>.</p>
+<p>In addition to scatter-based layers, the <code>plot_geo()</code> constructor also supports a <a href="https://plot.ly/r/reference/#choropleth">choropleth</a> layer. Figure <a href="maps.html#fig:us-density">4.6</a> shows the population density of the U.S. via a choropleth, and also layers on markers for the state center locations, using the U.S. state data from the <strong>datasets</strong> package <span class="citation">(R Core Team <a href="#ref-RCore" role="doc-biblioref">2016</a>)</span>. By simply providing a <a href="https://plot.ly/r/reference/#choropleth-z"><code>z</code></a> attribute, <code>plotly_geo()</code> objects will try to create a choropleth, but you’ll also need to provide <a href="https://plot.ly/r/reference/#choropleth-locations"><code>locations</code></a> and a <a href="https://plot.ly/r/reference/#choropleth-locationmode"><code>locationmode</code></a>. It’s worth noting that the <code>locationmode</code> is currently limited to countries and US states, so if you need to a different geo-unit (e.g., counties, municipalities, etc), you can use the the custom mapping approach discussed in Section <a href="maps.html#maps-custom">4.2</a>.</p>
 <div class="sourceCode" id="cb59"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb59-1"><a href="maps.html#cb59-1"></a>density &lt;-<span class="st"> </span>state.x77[, <span class="st">&quot;Population&quot;</span>] <span class="op">/</span><span class="st"> </span>state.x77[, <span class="st">&quot;Area&quot;</span>]</span>
 <span id="cb59-2"><a href="maps.html#cb59-2"></a></span>
 <span id="cb59-3"><a href="maps.html#cb59-3"></a>g &lt;-<span class="st"> </span><span class="kw">list</span>(</span>
@@ -476,10 +496,10 @@ FIGURE 4.1: A comparison of <strong>plotly</strong>’s integrated mapping solut
 <div class="figure" style="text-align: center"><span id="fig:us-density"></span>
 <img src="images/us-density.svg" alt="A map of U.S. population density using the state.x77 data from the datasets package." width="100%" data-url="/interactives/us-density.html" />
 <p class="caption">
-FIGURE 4.2: A map of U.S. population density using the <code>state.x77</code> data from the <strong>datasets</strong> package.
+FIGURE 4.6: A map of U.S. population density using the <code>state.x77</code> data from the <strong>datasets</strong> package.
 </p>
 </div>
-<p>Figure <a href="maps.html#fig:us-density">4.2</a> helps illuminate a problem with choropleths from a graphical perception point of view. We typically use the color in choropleths to encode a numeric variable (e.g., GDP, net exports, average SAT score, etc) and the eye naturally perceives the area that a particular color covers as proportional to its overall effect. This ends up being misleading since the area the color covers typically has no sensible relationship with the data encoded by the color. A classic example of this misleading effect in action is in US election maps – the proportion of red to blue coloring is not representative of the overall popular vote <span class="citation">(Newman <a href="#ref-election-maps" role="doc-biblioref">2016</a>)</span>.</p>
+<p>Figure <a href="maps.html#fig:us-density">4.6</a> helps illuminate a problem with choropleths from a graphical perception point of view. We typically use the color in choropleths to encode a numeric variable (e.g., GDP, net exports, average SAT score, etc) and the eye naturally perceives the area that a particular color covers as proportional to its overall effect. This ends up being misleading since the area the color covers typically has no sensible relationship with the data encoded by the color. A classic example of this misleading effect in action is in US election maps – the proportion of red to blue coloring is not representative of the overall popular vote <span class="citation">(Newman <a href="#ref-election-maps" role="doc-biblioref">2016</a>)</span>.</p>
 <p>Cartograms are an approach to reducing this misleading effect and grants another dimension to encode data through the size of geo-spatial features. Section <a href="maps.html#cartograms">4.2.2</a> covers how to render cartograms in <strong>plotly</strong> using <strong>sf</strong> and <strong>cartogram</strong>.</p>
 </div>
 </div>
@@ -497,10 +517,10 @@ FIGURE 4.2: A map of U.S. population density using the <code>state.x77</code> da
 <div class="figure" style="text-align: center"><span id="fig:world"></span>
 <img src="images/world.svg" alt="Rendering all the world’s countries using plot_ly() and the ne_countries() function from the rnaturalearth package." width="100%" data-url="/interactives/world.html" />
 <p class="caption">
-FIGURE 4.3: Rendering all the world’s countries using <code>plot_ly()</code> and the <code>ne_countries()</code> function from the <strong>rnaturalearth</strong> package.
+FIGURE 4.7: Rendering all the world’s countries using <code>plot_ly()</code> and the <code>ne_countries()</code> function from the <strong>rnaturalearth</strong> package.
 </p>
 </div>
-<p>How does <code>plot_ly()</code> know how to render the countries? It’s because the geo-spatial features are encoded in special (geometry) list-column. Also, meta-data about the geo-spatial structure are retained as special attributes of the data. Figure <a href="maps.html#fig:view-sf">4.4</a> augments the print method for <strong>sf</strong> to data frames to demonstrate that all the information needed to render the countries (i.e., polygons) in Figure <a href="maps.html#fig:world">4.3</a> is contained within the <code>world</code> data frame. Note also, that <strong>sf</strong> provides special <strong>dplyr</strong> methods for this special class of data frame so that you can treat data manipulations as if it were a ‘tidy’ data structure. One thing about this method is that the special ‘geometry’ column is always retained – if we try to just select the <code>name</code> column, then we get both the name and the geometry.</p>
+<p>How does <code>plot_ly()</code> know how to render the countries? It’s because the geo-spatial features are encoded in special (geometry) list-column. Also, meta-data about the geo-spatial structure are retained as special attributes of the data. Figure <a href="maps.html#fig:view-sf">4.8</a> augments the print method for <strong>sf</strong> to data frames to demonstrate that all the information needed to render the countries (i.e., polygons) in Figure <a href="maps.html#fig:world">4.7</a> is contained within the <code>world</code> data frame. Note also, that <strong>sf</strong> provides special <strong>dplyr</strong> methods for this special class of data frame so that you can treat data manipulations as if it were a ‘tidy’ data structure. One thing about this method is that the special ‘geometry’ column is always retained – if we try to just select the <code>name</code> column, then we get both the name and the geometry.</p>
 <div class="sourceCode" id="cb61"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb61-1"><a href="maps.html#cb61-1"></a><span class="kw">library</span>(sf)</span>
 <span id="cb61-2"><a href="maps.html#cb61-2"></a>world <span class="op">%&gt;%</span></span>
 <span id="cb61-3"><a href="maps.html#cb61-3"></a><span class="st">  </span><span class="kw">select</span>(name) <span class="op">%&gt;%</span></span>
@@ -508,16 +528,16 @@ FIGURE 4.3: Rendering all the world’s countries using <code>plot_ly()</code> a
 <div class="figure" style="text-align: center"><span id="fig:view-sf"></span>
 <img src="images/view-sf.svg" alt="A diagram of a simple features data frame. The geometry column tracks the spatial features attached to each row in the data frame." width="100%" />
 <p class="caption">
-FIGURE 4.4: A diagram of a simple features data frame. The geometry column tracks the spatial features attached to each row in the data frame.
+FIGURE 4.8: A diagram of a simple features data frame. The geometry column tracks the spatial features attached to each row in the data frame.
 </p>
 </div>
-<p>There are actually 4 different ways to render <strong>sf</strong> objects with <strong>plotly</strong>: <code>plot_ly()</code>, <code>plot_mapbox()</code>, <code>plot_geo()</code>, and via <strong>ggplot2</strong>’s <code>geom_sf()</code>. These functions render multiple polygons using a <em>single</em> trace by default, which is fast, but you may want to leverage the added flexibility of multiple traces. For example, a given trace can only have one <code>fillcolor</code>, so it’s impossible to render multiple polygons with different colors using a single trace. For this reason, if you want to vary the color of multiple polygons, make sure the <code>split</code> by a unique identifier (e.g. <code>name</code>), as done in Figure <a href="maps.html#fig:split-color">4.5</a>. Note that, as discussed for line charts in Figure <a href="#fig:scatter-lines"><strong>??</strong></a>, using multiple traces automatically adds the ability to filter <code>name</code> via legend entries.</p>
+<p>There are actually 4 different ways to render <strong>sf</strong> objects with <strong>plotly</strong>: <code>plot_ly()</code>, <code>plot_mapbox()</code>, <code>plot_geo()</code>, and via <strong>ggplot2</strong>’s <code>geom_sf()</code>. These functions render multiple polygons using a <em>single</em> trace by default, which is fast, but you may want to leverage the added flexibility of multiple traces. For example, a given trace can only have one <code>fillcolor</code>, so it’s impossible to render multiple polygons with different colors using a single trace. For this reason, if you want to vary the color of multiple polygons, make sure the <code>split</code> by a unique identifier (e.g. <code>name</code>), as done in Figure <a href="maps.html#fig:split-color">4.9</a>. Note that, as discussed for line charts in Figure <a href="scatter-traces.html#fig:scatter-lines">3.2</a>, using multiple traces automatically adds the ability to filter <code>name</code> via legend entries.</p>
 <div class="sourceCode" id="cb62"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb62-1"><a href="maps.html#cb62-1"></a>canada &lt;-<span class="st"> </span><span class="kw">ne_states</span>(<span class="dt">country =</span> <span class="st">&quot;Canada&quot;</span>, <span class="dt">returnclass =</span> <span class="st">&quot;sf&quot;</span>)</span>
 <span id="cb62-2"><a href="maps.html#cb62-2"></a><span class="kw">plot_ly</span>(canada, <span class="dt">split =</span> <span class="op">~</span>name, <span class="dt">color =</span> <span class="op">~</span>provnum_ne)</span></code></pre></div>
 <div class="figure" style="text-align: center"><span id="fig:split-color"></span>
 <img src="images/split-color.svg" alt="Using split and color to create a choropleth map of provinces in Canada." width="100%" data-url="/interactives/split-color.html" />
 <p class="caption">
-FIGURE 4.5: Using <code>split</code> and <code>color</code> to create a choropleth map of provinces in Canada.
+FIGURE 4.9: Using <code>split</code> and <code>color</code> to create a choropleth map of provinces in Canada.
 </p>
 </div>
 <p>Another important feature for maps that may require you to <code>split</code> multiple polygons into multiple traces is the ability to display a different hover-on-fill for each polygon. By providing <code>text</code> that is unique within each polygon and specifying <code>hoveron='fills'</code>, the tooltip behavior is tied to the trace’s fill (instead of displayed at each point along the polygon).</p>
@@ -533,7 +553,7 @@ FIGURE 4.5: Using <code>split</code> and <code>color</code> to create a chorople
 <div class="figure" style="text-align: center"><span id="fig:split-text"></span>
 <img src="images/split-text.png" alt="Using split, text, and hoveron='fills' to display a tooltip specific to each Canadian province." width="100%" data-url="/interactives/split-text.html" />
 <p class="caption">
-FIGURE 4.6: Using <code>split</code>, <code>text</code>, and <code>hoveron='fills'</code> to display a tooltip specific to each Canadian province.
+FIGURE 4.10: Using <code>split</code>, <code>text</code>, and <code>hoveron='fills'</code> to display a tooltip specific to each Canadian province.
 </p>
 </div>
 <p>Although the integrated mapping approaches (<code>plot_mapbox()</code> and <code>plot_geo()</code>) can render <strong>sf</strong> objects, the custom mapping approaches (<code>plot_ly()</code> and <code>geom_sf()</code>) are more flexible because they allow for any well-defined mapping projection. Working with and understanding map projections can be intimidating for a causal map maker. Thankfully, there are nice resources for searching map projections in a human-friendly interface, like <a href="http://spatialreference.org/" class="uri">http://spatialreference.org/</a>. Through this website, one can search desirable projections for a given portion of the globe and extract commands for projecting their geo-spatial objects into that projection. One way to perform the projection is to supply the relevant PROJ4 command to the <code>st_transform()</code> function in <strong>sf</strong> <span class="citation">(PROJ contributors <a href="#ref-PROJ" role="doc-biblioref">2018</a>)</span>.</p>
@@ -564,17 +584,17 @@ FIGURE 4.6: Using <code>split</code>, <code>text</code>, and <code>hoveron='fill
 <div class="figure" style="text-align: center"><span id="fig:canada-ggplotly"></span>
 <img src="images/canada-ggplotly.svg" alt="The population of various Canadian cities rendered on a custom basemap using a Mollweide projection." width="100%" data-url="/interactives/canada-ggplotly.html" />
 <p class="caption">
-FIGURE 4.7: The population of various Canadian cities rendered on a custom basemap using a Mollweide projection.
+FIGURE 4.11: The population of various Canadian cities rendered on a custom basemap using a Mollweide projection.
 </p>
 </div>
-<p>Some geo-spatial objects have an unnecessarily high resolution for a given visualization. In these cases, you may want to consider simplifying the geo-spatial object to improve the speed of the R code and responsiveness of the visualization. For example, we could recreate Figure <a href="maps.html#fig:world">4.3</a> with a much higher resolution by specifying <code>scale = "large"</code> in <code>ne_countries()</code> this gives us a <strong>sf</strong> object with over 50 times more spatial coordinates than the default scale. The higher resolution allows us to zoom in better on more complex geo-spatial regions, but it allow leads to slower R code, larger HTML files, and slower responsiveness. <span class="citation">Sievert (<a href="#ref-ggplotly-blog-post" role="doc-biblioref">2018</a><a href="#ref-ggplotly-blog-post" role="doc-biblioref">b</a>)</span> explores this issue in more depth and demonstrates how to use the <code>st_simplify()</code> function from <strong>sf</strong> to simplify features before plotting them.</p>
+<p>Some geo-spatial objects have an unnecessarily high resolution for a given visualization. In these cases, you may want to consider simplifying the geo-spatial object to improve the speed of the R code and responsiveness of the visualization. For example, we could recreate Figure <a href="maps.html#fig:world">4.7</a> with a much higher resolution by specifying <code>scale = "large"</code> in <code>ne_countries()</code> this gives us a <strong>sf</strong> object with over 50 times more spatial coordinates than the default scale. The higher resolution allows us to zoom in better on more complex geo-spatial regions, but it allow leads to slower R code, larger HTML files, and slower responsiveness. <span class="citation">Sievert (<a href="#ref-ggplotly-blog-post" role="doc-biblioref">2018</a><a href="#ref-ggplotly-blog-post" role="doc-biblioref">b</a>)</span> explores this issue in more depth and demonstrates how to use the <code>st_simplify()</code> function from <strong>sf</strong> to simplify features before plotting them.</p>
 <div class="sourceCode" id="cb65"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb65-1"><a href="maps.html#cb65-1"></a><span class="kw">sum</span>(<span class="kw">rapply</span>(world<span class="op">$</span>geometry, nrow))</span>
 <span id="cb65-2"><a href="maps.html#cb65-2"></a><span class="co">#&gt; [1] 10586</span></span>
 <span id="cb65-3"><a href="maps.html#cb65-3"></a></span>
 <span id="cb65-4"><a href="maps.html#cb65-4"></a>world_large &lt;-<span class="st"> </span><span class="kw">ne_countries</span>(<span class="dt">scale =</span> <span class="st">&quot;large&quot;</span>, <span class="dt">returnclass =</span> <span class="st">&quot;sf&quot;</span>)</span>
 <span id="cb65-5"><a href="maps.html#cb65-5"></a><span class="kw">sum</span>(<span class="kw">rapply</span>(world_large<span class="op">$</span>geometry, nrow))</span>
 <span id="cb65-6"><a href="maps.html#cb65-6"></a><span class="co">#&gt; [1] 548121</span></span></code></pre></div>
-<p>Analogous to the discussion surrounding <a href="#fig:scatter-lines"><strong>??</strong></a>, it pays to be aware of the tradeoffs involved with rendering <strong>plotly</strong> graphics using one or many traces, and knowledgeable about how to leverage either approach. Specifically, by default, <strong>plotly</strong> attempts to render all simple features in a single trace, which is performant, but doesn’t have a lot of interactivity.</p>
+<p>Analogous to the discussion surrounding <a href="scatter-traces.html#fig:scatter-lines">3.2</a>, it pays to be aware of the tradeoffs involved with rendering <strong>plotly</strong> graphics using one or many traces, and knowledgeable about how to leverage either approach. Specifically, by default, <strong>plotly</strong> attempts to render all simple features in a single trace, which is performant, but doesn’t have a lot of interactivity.</p>
 <div class="sourceCode" id="cb66"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb66-1"><a href="maps.html#cb66-1"></a><span class="kw">plot_mapbox</span>(</span>
 <span id="cb66-2"><a href="maps.html#cb66-2"></a>  world_large, </span>
 <span id="cb66-3"><a href="maps.html#cb66-3"></a>  <span class="dt">color =</span> <span class="ot">NA</span>, </span>
@@ -586,7 +606,7 @@ FIGURE 4.7: The population of various Canadian cities rendered on a custom basem
 <div id="cartograms" class="section level3">
 <h3><span class="header-section-number">4.2.2</span> Cartograms</h3>
 <p>Cartograms distort the size of geo-spatial polygons to encode a numeric variable other than the land size. There are numerous types of cartograms and they are typically categorized by their ability to preserve shape and maintain contiguous regions. Cartograms has been shown to be an effective approach to both encode and teach about geo-spatial data, though the effects certainly vary by cartogram type <span class="citation">(Nusrat S, Alam MJ, Kobourov S. <a href="#ref-cartogram-vis" role="doc-biblioref">2018</a>)</span>.
-The R package <strong>cartogram</strong> provides an interface to several popular cartogram algorithms <span class="citation">(Jeworutzki <a href="#ref-cartogram" role="doc-biblioref">2018</a>)</span>. A number of other R packages provide cartogram algorithms, but the great thing about <strong>cartogram</strong> is that all the functions can take an <strong>sf</strong> (or <strong>sp</strong>) object as input and return an <strong>sf</strong> object. This makes it incredibly easy to go from raw spatial objects, to transformed objects, to visual. Figure <a href="maps.html#fig:cartogram">4.8</a> demonstrates a continuous area cartogram of US population in 2014 using a rubber sheet distortion algorithm from <span class="citation">James A. Dougenik, Nicholas R. Chrisman, Duane R. Niemeyer (<a href="#ref-Dougenik" role="doc-biblioref">1985</a>)</span>.</p>
+The R package <strong>cartogram</strong> provides an interface to several popular cartogram algorithms <span class="citation">(Jeworutzki <a href="#ref-cartogram" role="doc-biblioref">2018</a>)</span>. A number of other R packages provide cartogram algorithms, but the great thing about <strong>cartogram</strong> is that all the functions can take an <strong>sf</strong> (or <strong>sp</strong>) object as input and return an <strong>sf</strong> object. This makes it incredibly easy to go from raw spatial objects, to transformed objects, to visual. Figure <a href="maps.html#fig:cartogram">4.12</a> demonstrates a continuous area cartogram of US population in 2014 using a rubber sheet distortion algorithm from <span class="citation">James A. Dougenik, Nicholas R. Chrisman, Duane R. Niemeyer (<a href="#ref-Dougenik" role="doc-biblioref">1985</a>)</span>.</p>
 <div class="sourceCode" id="cb67"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb67-1"><a href="maps.html#cb67-1"></a><span class="kw">library</span>(cartogram)</span>
 <span id="cb67-2"><a href="maps.html#cb67-2"></a><span class="kw">library</span>(albersusa)</span>
 <span id="cb67-3"><a href="maps.html#cb67-3"></a></span>
@@ -606,10 +626,10 @@ The R package <strong>cartogram</strong> provides an interface to several popula
 <div class="figure" style="text-align: center"><span id="fig:cartogram"></span>
 <img src="images/cartogram.png" alt="A cartogram of US population in 2014. A cartogram sizes the area of geo-spatial objects proportional to some metric (e.g., population)." width="100%" data-url="/interactives/cartogram.html" />
 <p class="caption">
-FIGURE 4.8: A cartogram of US population in 2014. A cartogram sizes the area of geo-spatial objects proportional to some metric (e.g., population).
+FIGURE 4.12: A cartogram of US population in 2014. A cartogram sizes the area of geo-spatial objects proportional to some metric (e.g., population).
 </p>
 </div>
-<p>Figure <a href="maps.html#fig:cartogram-dorling">4.9</a> demonstrates a non-continuous Dorling cartogram of US population in 2014 from <span class="citation">Dorling, D (<a href="#ref-Dorling" role="doc-biblioref">1996</a>)</span>. This cartogram does not try to preserve the shape of polygons (i.e., states), but instead uses circles instead to represent each geo-spatial object, then encodes the variable of interest (i.e., population) using the area of the circle.</p>
+<p>Figure <a href="maps.html#fig:cartogram-dorling">4.13</a> demonstrates a non-continuous Dorling cartogram of US population in 2014 from <span class="citation">Dorling, D (<a href="#ref-Dorling" role="doc-biblioref">1996</a>)</span>. This cartogram does not try to preserve the shape of polygons (i.e., states), but instead uses circles instead to represent each geo-spatial object, then encodes the variable of interest (i.e., population) using the area of the circle.</p>
 <div class="sourceCode" id="cb68"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb68-1"><a href="maps.html#cb68-1"></a>us &lt;-<span class="st"> </span><span class="kw">usa_sf</span>(<span class="st">&quot;laea&quot;</span>)</span>
 <span id="cb68-2"><a href="maps.html#cb68-2"></a>us_dor &lt;-<span class="st"> </span><span class="kw">cartogram_dorling</span>(us, <span class="st">&quot;pop_2014&quot;</span>)</span>
 <span id="cb68-3"><a href="maps.html#cb68-3"></a></span>
@@ -631,17 +651,17 @@ FIGURE 4.8: A cartogram of US population in 2014. A cartogram sizes the area of 
 <div class="figure" style="text-align: center"><span id="fig:cartogram-dorling"></span>
 <img src="images/cartogram-dorling.svg" alt="A dorling cartogram of US population in 2014. A dorling cartogram sizes the circles proportional to some metric (e.g., population)." width="100%" data-url="/interactives/cartogram-dorling.html" />
 <p class="caption">
-FIGURE 4.9: A dorling cartogram of US population in 2014. A dorling cartogram sizes the circles proportional to some metric (e.g., population).
+FIGURE 4.13: A dorling cartogram of US population in 2014. A dorling cartogram sizes the circles proportional to some metric (e.g., population).
 </p>
 </div>
-<p>Figure <a href="maps.html#fig:cartogram-ncont">4.10</a> demonstrates a non-continuous cartogram of US population in 2014 from <span class="citation">Olson, J. M. (<a href="#ref-Olson" role="doc-biblioref">1976</a>)</span>. In contrast to the Dorling cartogram, this approach does preserve the shape of polygons. The implementation behind Figure <a href="maps.html#fig:cartogram-ncont">4.10</a> is to simply take the implementation of Figure <a href="maps.html#fig:cartogram-dorling">4.9</a> and change <code>cartogram_dorling()</code> to <code>cartogram_ncont()</code>.</p>
+<p>Figure <a href="maps.html#fig:cartogram-ncont">4.14</a> demonstrates a non-continuous cartogram of US population in 2014 from <span class="citation">Olson, J. M. (<a href="#ref-Olson" role="doc-biblioref">1976</a>)</span>. In contrast to the Dorling cartogram, this approach does preserve the shape of polygons. The implementation behind Figure <a href="maps.html#fig:cartogram-ncont">4.14</a> is to simply take the implementation of Figure <a href="maps.html#fig:cartogram-dorling">4.13</a> and change <code>cartogram_dorling()</code> to <code>cartogram_ncont()</code>.</p>
 <div class="figure" style="text-align: center"><span id="fig:cartogram-ncont"></span>
 <img src="images/cartogram-ncont.svg" alt="A non-contiguous cartogram of US population in 2014 that preserves shape." width="100%" data-url="/interactives/cartogram-ncont.html" />
 <p class="caption">
-FIGURE 4.10: A non-contiguous cartogram of US population in 2014 that preserves shape.
+FIGURE 4.14: A non-contiguous cartogram of US population in 2014 that preserves shape.
 </p>
 </div>
-<p>A popular class of contiguous cartograms that do not preserve shape are sometimes referred to as tile cartograms (aka tilegrams). At the time of writing, there doesn’t seem to be a great R package for <em>computing</em> tilegrams, but Pitch Interactive provides a nice web service where you can generate tilegrams from existing or custom data <a href="https://pitchinteractiveinc.github.io/tilegrams/" class="uri">https://pitchinteractiveinc.github.io/tilegrams/</a>. Moreover, the service allows you to download a TopoJSON file of the generated tilegram, which we can read in R and convert into an <strong>sf</strong> object via <strong>geojsonio</strong> <span class="citation">(Chamberlain and Teucher <a href="#ref-geojsonio" role="doc-biblioref">2018</a>)</span>. Figure <a href="maps.html#fig:cartogram-tiles">4.11</a> demonstrates a tilegram of U.S. Population in 2016 exported directly from Pitch’s free web service.</p>
+<p>A popular class of contiguous cartograms that do not preserve shape are sometimes referred to as tile cartograms (aka tilegrams). At the time of writing, there doesn’t seem to be a great R package for <em>computing</em> tilegrams, but Pitch Interactive provides a nice web service where you can generate tilegrams from existing or custom data <a href="https://pitchinteractiveinc.github.io/tilegrams/" class="uri">https://pitchinteractiveinc.github.io/tilegrams/</a>. Moreover, the service allows you to download a TopoJSON file of the generated tilegram, which we can read in R and convert into an <strong>sf</strong> object via <strong>geojsonio</strong> <span class="citation">(Chamberlain and Teucher <a href="#ref-geojsonio" role="doc-biblioref">2018</a>)</span>. Figure <a href="maps.html#fig:cartogram-tiles">4.15</a> demonstrates a tilegram of U.S. Population in 2016 exported directly from Pitch’s free web service.</p>
 <div class="sourceCode" id="cb69"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb69-1"><a href="maps.html#cb69-1"></a><span class="kw">library</span>(geojsonio)</span>
 <span id="cb69-2"><a href="maps.html#cb69-2"></a>tiles &lt;-<span class="st"> </span><span class="kw">geojson_read</span>(<span class="st">&quot;~/Downloads/tiles.topo.json&quot;</span>, <span class="dt">what =</span> <span class="st">&quot;sp&quot;</span>)</span>
 <span id="cb69-3"><a href="maps.html#cb69-3"></a>tiles_sf &lt;-<span class="st"> </span><span class="kw">st_as_sf</span>(tiles)</span>
@@ -649,7 +669,7 @@ FIGURE 4.10: A non-contiguous cartogram of US population in 2014 that preserves 
 <div class="figure" style="text-align: center"><span id="fig:cartogram-tiles"></span>
 <img src="images/cartogram-tiles.svg" alt="A tile cartogram of U.S. population in 2016." width="100%" data-url="/interactives/cartogram-tiles.html" />
 <p class="caption">
-FIGURE 4.11: A tile cartogram of U.S. population in 2016.
+FIGURE 4.15: A tile cartogram of U.S. population in 2016.
 </p>
 </div>
 
@@ -777,11 +797,13 @@ window.onload = function() {
   </div>
 <script src="libs/gitbook/js/app.min.js"></script>
 <script src="libs/gitbook/js/lunr.js"></script>
+<script src="libs/gitbook/js/clipboard.min.js"></script>
 <script src="libs/gitbook/js/plugin-search.js"></script>
 <script src="libs/gitbook/js/plugin-sharing.js"></script>
 <script src="libs/gitbook/js/plugin-fontsettings.js"></script>
 <script src="libs/gitbook/js/plugin-bookdown.js"></script>
 <script src="libs/gitbook/js/jquery.highlight.js"></script>
+<script src="libs/gitbook/js/plugin-clipboard.js"></script>
 <script>
 gitbook.require(["gitbook"], function(gitbook) {
 gitbook.start({

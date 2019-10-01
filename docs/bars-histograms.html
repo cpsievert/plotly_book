@@ -6,7 +6,7 @@
   <meta http-equiv="X-UA-Compatible" content="IE=edge" />
   <title>5 Bars &amp; histograms | Interactive web-based data visualization with R, plotly, and shiny</title>
   <meta name="description" content="A useR guide to creating highly interactive graphics for exploratory and expository visualization." />
-  <meta name="generator" content="bookdown 0.13.2 and GitBook 2.6.7" />
+  <meta name="generator" content="bookdown 0.14.1 and GitBook 2.6.7" />
 
   <meta property="og:title" content="5 Bars &amp; histograms | Interactive web-based data visualization with R, plotly, and shiny" />
   <meta property="og:type" content="book" />
@@ -40,6 +40,9 @@
 <link href="libs/gitbook/css/plugin-highlight.css" rel="stylesheet" />
 <link href="libs/gitbook/css/plugin-search.css" rel="stylesheet" />
 <link href="libs/gitbook/css/plugin-fontsettings.css" rel="stylesheet" />
+<link href="libs/gitbook/css/plugin-clipboard.css" rel="stylesheet" />
+
+
 
 
 
@@ -381,7 +384,7 @@ FIGURE 5.2: Number of diamonds by cut.
 </div>
 <div id="multiple-numeric-distributions" class="section level2">
 <h2><span class="header-section-number">5.1</span> Multiple numeric distributions</h2>
-<p>It is often useful to see how the numeric distribution changes with respect to a discrete variable. When using bars to visualize multiple numeric distributions, I recommend plotting each distribution on its own axis using a small multiples display, rather than trying to overlay them on a single axis.<a href="references.html#fn18" class="footnote-ref" id="fnref18"><sup>18</sup></a>. Chapter <a href="arranging-views.html#arranging-views">13</a>, and specifically Section <a href="arranging-views.html#trellis-displays-subplot">13.1.2.3</a>, discuss small multiples in more detail, but Figure <a href="arranging-views.html#fig:subplot-trellis">13.8</a> demonstrates how it be done with <code>plot_ly()</code> and <code>subplot()</code>. Note how the <code>one_plot()</code> function defines what to display on each panel, then a split-apply-recombine (i.e., <code>split()</code>, <code>lapply()</code>, <code>subplot()</code>) strategy is employed to generate the trellis display.</p>
+<p>It is often useful to see how the numeric distribution changes with respect to a discrete variable. When using bars to visualize multiple numeric distributions, I recommend plotting each distribution on its own axis using a small multiples display, rather than trying to overlay them on a single axis.<a href="references.html#fn18" class="footnote-ref" id="fnref18"><sup>18</sup></a>. Chapter <a href="arranging-views.html#arranging-views">13</a>, and specifically Section <a href="arranging-views.html#trellis-displays-subplot">13.1.2.3</a>, discuss small multiples in more detail, but Figure <a href="arranging-views.html#fig:subplot-trellis">13.9</a> demonstrates how it be done with <code>plot_ly()</code> and <code>subplot()</code>. Note how the <code>one_plot()</code> function defines what to display on each panel, then a split-apply-recombine (i.e., <code>split()</code>, <code>lapply()</code>, <code>subplot()</code>) strategy is employed to generate the trellis display.</p>
 <div class="sourceCode" id="cb72"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb72-1"><a href="bars-histograms.html#cb72-1"></a>one_plot &lt;-<span class="st"> </span><span class="cf">function</span>(d) {</span>
 <span id="cb72-2"><a href="bars-histograms.html#cb72-2"></a>  <span class="kw">plot_ly</span>(d, <span class="dt">x =</span> <span class="op">~</span>price) <span class="op">%&gt;%</span></span>
 <span id="cb72-3"><a href="bars-histograms.html#cb72-3"></a><span class="st">    </span><span class="kw">add_annotations</span>(</span>
@@ -527,11 +530,13 @@ window.onload = function() {
   </div>
 <script src="libs/gitbook/js/app.min.js"></script>
 <script src="libs/gitbook/js/lunr.js"></script>
+<script src="libs/gitbook/js/clipboard.min.js"></script>
 <script src="libs/gitbook/js/plugin-search.js"></script>
 <script src="libs/gitbook/js/plugin-sharing.js"></script>
 <script src="libs/gitbook/js/plugin-fontsettings.js"></script>
 <script src="libs/gitbook/js/plugin-bookdown.js"></script>
 <script src="libs/gitbook/js/jquery.highlight.js"></script>
+<script src="libs/gitbook/js/plugin-clipboard.js"></script>
 <script>
 gitbook.require(["gitbook"], function(gitbook) {
 gitbook.start({

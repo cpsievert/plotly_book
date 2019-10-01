@@ -6,7 +6,7 @@
   <meta http-equiv="X-UA-Compatible" content="IE=edge" />
   <title>6 Boxplots | Interactive web-based data visualization with R, plotly, and shiny</title>
   <meta name="description" content="A useR guide to creating highly interactive graphics for exploratory and expository visualization." />
-  <meta name="generator" content="bookdown 0.13.2 and GitBook 2.6.7" />
+  <meta name="generator" content="bookdown 0.14.1 and GitBook 2.6.7" />
 
   <meta property="og:title" content="6 Boxplots | Interactive web-based data visualization with R, plotly, and shiny" />
   <meta property="og:type" content="book" />
@@ -40,6 +40,9 @@
 <link href="libs/gitbook/css/plugin-highlight.css" rel="stylesheet" />
 <link href="libs/gitbook/css/plugin-search.css" rel="stylesheet" />
 <link href="libs/gitbook/css/plugin-fontsettings.css" rel="stylesheet" />
+<link href="libs/gitbook/css/plugin-clipboard.css" rel="stylesheet" />
+
+
 
 
 
@@ -343,7 +346,7 @@ code span.wa { color: #60a0b0; font-weight: bold; font-style: italic; } /* Warni
             <section class="normal" id="section-">
 <div id="boxplots" class="section level1">
 <h1><span class="header-section-number">6</span> Boxplots</h1>
-<p>Boxplots encode the five number summary of a numeric variable, and provide a decent way to compare many numeric distributions. The visual task of comparing multiple boxplots is relatively easy (i.e., compare position along a common scale) compared to some common alternatives (e.g., a trellis display of histograms, like <a href="bars-histograms.html#fig:bars-numeric">5.1</a>), but the boxplot is sometimes inadequate for capturing complex (e.g., multi-modal) distributions (in this case, a frequency polygon, like Figure <a href="overview.html#fig:freqpoly">2.8</a> provides a nice alternative). The <code>add_boxplot()</code> function requires one numeric variable, and guarantees boxplots are <a href="https://plot.ly/r/reference/#box-orientation">oriented</a> correctly, regardless of whether the numeric variable is placed on the x or y scale. As Figure <a href="boxplots.html#fig:cut-boxes">6.1</a> shows, on the axis orthogonal to the numeric axis, you can provide a discrete variable (for conditioning) or supply a single value (to name the axis category).</p>
+<p>Boxplots encode the five number summary of a numeric variable, and provide a decent way to compare many numeric distributions. The visual task of comparing multiple boxplots is relatively easy (i.e., compare position along a common scale) compared to some common alternatives (e.g., a trellis display of histograms, like <a href="bars-histograms.html#fig:bars-numeric">5.1</a>), but the boxplot is sometimes inadequate for capturing complex (e.g., multi-modal) distributions (in this case, a frequency polygon, like Figure <a href="overview.html#fig:freqpoly">2.9</a> provides a nice alternative). The <code>add_boxplot()</code> function requires one numeric variable, and guarantees boxplots are <a href="https://plot.ly/r/reference/#box-orientation">oriented</a> correctly, regardless of whether the numeric variable is placed on the x or y scale. As Figure <a href="boxplots.html#fig:cut-boxes">6.1</a> shows, on the axis orthogonal to the numeric axis, you can provide a discrete variable (for conditioning) or supply a single value (to name the axis category).</p>
 <div class="sourceCode" id="cb76"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb76-1"><a href="boxplots.html#cb76-1"></a>p &lt;-<span class="st"> </span><span class="kw">plot_ly</span>(diamonds, <span class="dt">y =</span> <span class="op">~</span>price, <span class="dt">color =</span> <span class="kw">I</span>(<span class="st">&quot;black&quot;</span>), </span>
 <span id="cb76-2"><a href="boxplots.html#cb76-2"></a>             <span class="dt">alpha =</span> <span class="fl">0.1</span>, <span class="dt">boxpoints =</span> <span class="st">&quot;suspectedoutliers&quot;</span>)</span>
 <span id="cb76-3"><a href="boxplots.html#cb76-3"></a>p1 &lt;-<span class="st"> </span>p <span class="op">%&gt;%</span><span class="st"> </span><span class="kw">add_boxplot</span>(<span class="dt">x =</span> <span class="st">&quot;Overall&quot;</span>)</span>
@@ -358,7 +361,7 @@ code span.wa { color: #60a0b0; font-weight: bold; font-style: italic; } /* Warni
 FIGURE 6.1: Overall diamond price and price by cut.
 </p>
 </div>
-<p>If you want to partition by more than one discrete variable, you could use the interaction of those variables to the discrete axis, and coloring by the nested variable, as Figure <a href="boxplots.html#fig:cut-by-clarity-boxes">6.2</a> does with diamond clarity and cut. Another approach would be to use a trellis display, similar to Figure <a href="arranging-views.html#fig:subplot-trellis">13.8</a>.</p>
+<p>If you want to partition by more than one discrete variable, you could use the interaction of those variables to the discrete axis, and coloring by the nested variable, as Figure <a href="boxplots.html#fig:cut-by-clarity-boxes">6.2</a> does with diamond clarity and cut. Another approach would be to use a trellis display, similar to Figure <a href="arranging-views.html#fig:subplot-trellis">13.9</a>.</p>
 <div class="sourceCode" id="cb77"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb77-1"><a href="boxplots.html#cb77-1"></a><span class="kw">plot_ly</span>(diamonds, <span class="dt">x =</span> <span class="op">~</span>price, <span class="dt">y =</span> <span class="op">~</span><span class="kw">interaction</span>(clarity, cut)) <span class="op">%&gt;%</span></span>
 <span id="cb77-2"><a href="boxplots.html#cb77-2"></a><span class="st">  </span><span class="kw">add_boxplot</span>(<span class="dt">color =</span> <span class="op">~</span>clarity) <span class="op">%&gt;%</span></span>
 <span id="cb77-3"><a href="boxplots.html#cb77-3"></a><span class="st">  </span><span class="kw">layout</span>(<span class="dt">yaxis =</span> <span class="kw">list</span>(<span class="dt">title =</span> <span class="st">&quot;&quot;</span>))</span></code></pre></div>
@@ -458,11 +461,13 @@ window.onload = function() {
   </div>
 <script src="libs/gitbook/js/app.min.js"></script>
 <script src="libs/gitbook/js/lunr.js"></script>
+<script src="libs/gitbook/js/clipboard.min.js"></script>
 <script src="libs/gitbook/js/plugin-search.js"></script>
 <script src="libs/gitbook/js/plugin-sharing.js"></script>
 <script src="libs/gitbook/js/plugin-fontsettings.js"></script>
 <script src="libs/gitbook/js/plugin-bookdown.js"></script>
 <script src="libs/gitbook/js/jquery.highlight.js"></script>
+<script src="libs/gitbook/js/plugin-clipboard.js"></script>
 <script>
 gitbook.require(["gitbook"], function(gitbook) {
 gitbook.start({

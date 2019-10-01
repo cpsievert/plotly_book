@@ -6,7 +6,7 @@
   <meta http-equiv="X-UA-Compatible" content="IE=edge" />
   <title>21 Supplying custom data | Interactive web-based data visualization with R, plotly, and shiny</title>
   <meta name="description" content="A useR guide to creating highly interactive graphics for exploratory and expository visualization." />
-  <meta name="generator" content="bookdown 0.13.2 and GitBook 2.6.7" />
+  <meta name="generator" content="bookdown 0.14.1 and GitBook 2.6.7" />
 
   <meta property="og:title" content="21 Supplying custom data | Interactive web-based data visualization with R, plotly, and shiny" />
   <meta property="og:type" content="book" />
@@ -40,6 +40,9 @@
 <link href="libs/gitbook/css/plugin-highlight.css" rel="stylesheet" />
 <link href="libs/gitbook/css/plugin-search.css" rel="stylesheet" />
 <link href="libs/gitbook/css/plugin-fontsettings.css" rel="stylesheet" />
+<link href="libs/gitbook/css/plugin-clipboard.css" rel="stylesheet" />
+
+
 
 
 
@@ -343,7 +346,7 @@ code span.wa { color: #60a0b0; font-weight: bold; font-style: italic; } /* Warni
             <section class="normal" id="section-">
 <div id="supplying-custom-data" class="section level1">
 <h1><span class="header-section-number">21</span> Supplying custom data</h1>
-<p>As covered in Section <a href="linking-views-with-shiny.html#shiny-plotly-inputs">17.2</a>, it’s often useful to supply meta-information (i.e. custom data) to graphical marker(s) and use that information when responding to a event. For example, suppose we’d like each point in a scatterplot to act like a hyperlink to a different webpage. In order to do so, we can supply a url to each point (as metadata) and instruct the browser to open the relevant hyperlink on a click event. Figure <a href="#fig:click-open"><strong>??</strong></a> does exactly this by supplying urls to each point in R through the <code>customdata</code> attribute and defining a custom JS event to <code>window.open()</code> the relevant <code>url</code> upon a click event. In this case, since each point represents one row of data, the <code>d.point</code> is an array of length 1, so we may obtain the <code>url</code> of the clicked point with <code>d.points[0].customdata</code>.</p>
+<p>As covered in Section <a href="linking-views-with-shiny.html#shiny-plotly-inputs">17.2</a>, it’s often useful to supply meta-information (i.e. custom data) to graphical marker(s) and use that information when responding to a event. For example, suppose we’d like each point in a scatterplot to act like a hyperlink to a different webpage. In order to do so, we can supply a url to each point (as metadata) and instruct the browser to open the relevant hyperlink on a click event. Figure <a href="supplying-custom-data.html#fig:click-open">21.1</a> does exactly this by supplying urls to each point in R through the <code>customdata</code> attribute and defining a custom JS event to <code>window.open()</code> the relevant <code>url</code> upon a click event. In this case, since each point represents one row of data, the <code>d.point</code> is an array of length 1, so we may obtain the <code>url</code> of the clicked point with <code>d.points[0].customdata</code>.</p>
 <div class="sourceCode" id="cb194"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb194-1"><a href="supplying-custom-data.html#cb194-1"></a><span class="kw">library</span>(htmlwidgets)</span>
 <span id="cb194-2"><a href="supplying-custom-data.html#cb194-2"></a></span>
 <span id="cb194-3"><a href="supplying-custom-data.html#cb194-3"></a>p &lt;-<span class="st"> </span><span class="kw">plot_ly</span>(mtcars, <span class="dt">x =</span> <span class="op">~</span>wt, <span class="dt">y =</span> <span class="op">~</span>mpg) <span class="op">%&gt;%</span></span>
@@ -361,8 +364,13 @@ code span.wa { color: #60a0b0; font-weight: bold; font-style: italic; } /* Warni
 <span id="cb194-15"><a href="supplying-custom-data.html#cb194-15"></a><span class="st">    });</span></span>
 <span id="cb194-16"><a href="supplying-custom-data.html#cb194-16"></a><span class="st">  }</span></span>
 <span id="cb194-17"><a href="supplying-custom-data.html#cb194-17"></a><span class="st">&quot;</span>)</span></code></pre></div>
+<div class="figure" style="text-align: center"><span id="fig:click-open"></span>
 <iframe src="https://player.vimeo.com/video/307598425?title=0&amp;byline=0&amp;portrait=0" width="100%" height="400" frameborder="0" seamless="seamless" webkitAllowFullScreen mozallowfullscreen allowFullScreen></iframe>
-<p>In addition to using <code>window.open()</code> to open the <code>url</code>, we could also add it to the plot as an annotation using the plotly.js function <code>Plotly.relayout()</code>, as done in Figure <a href="#fig:hover-annotate"><strong>??</strong></a>. Moreover, since plotly annotations support HTML markup, we can also treat that url as a true HTML hyperlink by wrapping it in an HTML <code>&lt;a&gt;</code> tag. In cases where your JS function starts to get complex, it can help to put that JS function in its own file, then use the R function <code>readLines()</code> to read it in as a string and pass along <code>onRender()</code> as done below:</p>
+<p class="caption">
+FIGURE 21.1: Attaching hyperlinks to each point in a scatterplot and using a custom JS event to open that Google search query upon clicking a point. For the interactive, see <a href="https://plotly-r.com/interactives/click-open.html" class="uri">https://plotly-r.com/interactives/click-open.html</a>
+</p>
+</div>
+<p>In addition to using <code>window.open()</code> to open the <code>url</code>, we could also add it to the plot as an annotation using the plotly.js function <code>Plotly.relayout()</code>, as done in Figure <a href="supplying-custom-data.html#fig:hover-annotate">21.2</a>. Moreover, since plotly annotations support HTML markup, we can also treat that url as a true HTML hyperlink by wrapping it in an HTML <code>&lt;a&gt;</code> tag. In cases where your JS function starts to get complex, it can help to put that JS function in its own file, then use the R function <code>readLines()</code> to read it in as a string and pass along <code>onRender()</code> as done below:</p>
 <div class="sourceCode" id="cb195"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb195-1"><a href="supplying-custom-data.html#cb195-1"></a><span class="kw">onRender</span>(p, <span class="kw">readLines</span>(<span class="st">&quot;js/hover-hyperlink.js&quot;</span>))</span></code></pre></div>
 <details>
 <p><summary>Click to show the ‘js/hover-hyperlink.js’ file</summary></p>
@@ -383,13 +391,18 @@ code span.wa { color: #60a0b0; font-weight: bold; font-style: italic; } /* Warni
 <span id="cb196-15"><a href="supplying-custom-data.html#cb196-15"></a> <span class="op">}</span>)<span class="op">;</span></span>
 <span id="cb196-16"><a href="supplying-custom-data.html#cb196-16"></a><span class="op">}</span></span></code></pre></div>
 </details>
+<div class="figure" style="text-align: center"><span id="fig:hover-annotate"></span>
 <iframe src="https://player.vimeo.com/video/327588345?title=0&amp;byline=0&amp;portrait=0" width="100%" height="400" frameborder="0" seamless="seamless" webkitAllowFullScreen mozallowfullscreen allowFullScreen></iframe>
+<p class="caption">
+FIGURE 21.2: Using <code>Plotly.relayout()</code> to add and change hyperlink in response to hover events. For the interactive, see <a href="https://plotly-r.com/interactives/hover-annotate.html" class="uri">https://plotly-r.com/interactives/hover-annotate.html</a>
+</p>
+</div>
 <div class="rmdtip">
 <p>
 When using <code>Plotly.relayout()</code>, or any other plotly.js function to modify a plot, you’ll need to know the id attribute of the relevant DOM instance that you want to manipulate. When working with a single object, you can simply use <code>el.id</code> to access the id attribute of that DOM instance. However, when trying to target another object, it gets trickier because id attributes are randomly generated by <strong>htmlwidgets</strong>. In that case, you likely want to pre-specify the id attribute so you can reference it client-side. You can pre-specify the id for any <strong>htmlwidgets</strong> object, say <code>widget</code>, by doing <code>widget$elementId &lt;- “myID”</code>.
 </p>
 </div>
-<p>The <code>customdata</code> attribute can hold any R object that can be serialized as JSON, so you could, for example, attach complex data to markers/lines/text/etc using base64 strings. This could be useful for a number of things such as displaying an image on hover or click. For security reasons, plotly.js doesn’t allow inserting images in the tooltip, but you can always define your own tooltip by hiding the tooltip (<code>hoverinfo='none'</code>), then populating your own tooltip with suitable manipulation of the DOM in response to <code>"plotly_hover"</code>/<code>"plotly_unhover"</code> events. Figure <a href="#fig:tooltip-image"><strong>??</strong></a> demonstrates how to leverage this infrastructure to display a png image in the top-left corner of a graph whenever a text label is hovered upon.<a href="references.html#fn39" class="footnote-ref" id="fnref39"><sup>39</sup></a></p>
+<p>The <code>customdata</code> attribute can hold any R object that can be serialized as JSON, so you could, for example, attach complex data to markers/lines/text/etc using base64 strings. This could be useful for a number of things such as displaying an image on hover or click. For security reasons, plotly.js doesn’t allow inserting images in the tooltip, but you can always define your own tooltip by hiding the tooltip (<code>hoverinfo='none'</code>), then populating your own tooltip with suitable manipulation of the DOM in response to <code>"plotly_hover"</code>/<code>"plotly_unhover"</code> events. Figure <a href="supplying-custom-data.html#fig:tooltip-image">21.3</a> demonstrates how to leverage this infrastructure to display a png image in the top-left corner of a graph whenever a text label is hovered upon.<a href="references.html#fn39" class="footnote-ref" id="fnref39"><sup>39</sup></a></p>
 <div class="sourceCode" id="cb197"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb197-1"><a href="supplying-custom-data.html#cb197-1"></a>x &lt;-<span class="st"> </span><span class="dv">1</span><span class="op">:</span><span class="dv">3</span> </span>
 <span id="cb197-2"><a href="supplying-custom-data.html#cb197-2"></a>y &lt;-<span class="st"> </span><span class="dv">1</span><span class="op">:</span><span class="dv">3</span></span>
 <span id="cb197-3"><a href="supplying-custom-data.html#cb197-3"></a>logos &lt;-<span class="st"> </span><span class="kw">c</span>(<span class="st">&quot;r-logo&quot;</span>, <span class="st">&quot;penguin&quot;</span>, <span class="st">&quot;rstudio&quot;</span>)</span>
@@ -440,16 +453,26 @@ When using <code>Plotly.relayout()</code>, or any other plotly.js function to mo
 <span id="cb198-34"><a href="supplying-custom-data.html#cb198-34"></a>  <span class="op">}</span>)<span class="op">;</span></span>
 <span id="cb198-35"><a href="supplying-custom-data.html#cb198-35"></a><span class="op">}</span></span></code></pre></div>
 </details>
+<div class="figure" style="text-align: center"><span id="fig:tooltip-image"></span>
 <iframe src="https://player.vimeo.com/video/310463565?title=0&amp;byline=0&amp;portrait=0" width="100%" height="400" frameborder="0" seamless="seamless" webkitAllowFullScreen mozallowfullscreen allowFullScreen></iframe>
-<p>It’s worth noting that the JavaScript that powers Figure <a href="#fig:tooltip-image"><strong>??</strong></a> works for other cartesian charts, even <code>heatmap</code> (as shown in Figure <a href="#fig:tooltip-image-heatmap"><strong>??</strong></a>), but it would need to be adapted for 3D charts types.</p>
+<p class="caption">
+FIGURE 21.3: Displaying an image on hover in a scatterplot. For the interactive, see <a href="https://plotly-r.com/interactives/tooltip-image.html" class="uri">https://plotly-r.com/interactives/tooltip-image.html</a>
+</p>
+</div>
+<p>It’s worth noting that the JavaScript that powers Figure <a href="supplying-custom-data.html#fig:tooltip-image">21.3</a> works for other cartesian charts, even <code>heatmap</code> (as shown in Figure <a href="supplying-custom-data.html#fig:tooltip-image-heatmap">21.4</a>), but it would need to be adapted for 3D charts types.</p>
 <div class="sourceCode" id="cb199"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb199-1"><a href="supplying-custom-data.html#cb199-1"></a><span class="kw">plot_ly</span>(<span class="dt">hoverinfo =</span> <span class="st">&quot;none&quot;</span>) <span class="op">%&gt;%</span></span>
 <span id="cb199-2"><a href="supplying-custom-data.html#cb199-2"></a><span class="st">  </span><span class="kw">add_heatmap</span>(</span>
 <span id="cb199-3"><a href="supplying-custom-data.html#cb199-3"></a>    <span class="dt">z =</span> <span class="kw">matrix</span>(<span class="dv">1</span><span class="op">:</span><span class="dv">9</span>, <span class="dt">nrow =</span> <span class="dv">3</span>), </span>
 <span id="cb199-4"><a href="supplying-custom-data.html#cb199-4"></a>    <span class="dt">customdata =</span> <span class="kw">matrix</span>(uris, <span class="dt">nrow =</span> <span class="dv">3</span>, <span class="dt">ncol =</span> <span class="dv">3</span>)</span>
 <span id="cb199-5"><a href="supplying-custom-data.html#cb199-5"></a>  ) <span class="op">%&gt;%</span></span>
 <span id="cb199-6"><a href="supplying-custom-data.html#cb199-6"></a><span class="st">  </span>htmlwidgets<span class="op">::</span><span class="kw">onRender</span>(<span class="kw">readLines</span>(<span class="st">&quot;js/tooltip-image.js&quot;</span>))</span></code></pre></div>
+<div class="figure" style="text-align: center"><span id="fig:tooltip-image-heatmap"></span>
 <iframe src="https://player.vimeo.com/video/310466116?title=0&amp;byline=0&amp;portrait=0" width="100%" height="400" frameborder="0" seamless="seamless" webkitAllowFullScreen mozallowfullscreen allowFullScreen></iframe>
-<p>On the JS side, the <code>customdata</code> attribute is designed to support <em>any</em> JS array of appropriate length, so if you need to supply numerous custom values to particular marker(s), list-columns in R provides a nice way to do so. Figure <a href="#fig:tx-annotate"><strong>??</strong></a> leverages this idea to bind both the <code>city</code> and <code>sales</code> values to each point along a time series and display those values on hover. It also demonstrates how one can use the graphical querying framework from Section <a href="client-side-linking.html#graphical-queries">16.1</a> in tandem with a custom JS event. That is, <code>highlight_key()</code> and <code>highlight()</code> control the highlighting of the time series, while the custom JS event adds the plot annotation (all based on the same <code>"plotly_hover"</code> event). In this case, the highlighting, annotations, and circle shapes are triggered by a <code>"plotly_hover"</code> event and they all work in tandem because event handlers are cumulative. That means, if you wanted, you could register multiple custom handlers for a particular event.</p>
+<p class="caption">
+FIGURE 21.4: Displaying an image on hover in a heatmap. For the interactive, see <a href="https://plotly-r.com/interactives/tooltip-image-heatmap.html" class="uri">https://plotly-r.com/interactives/tooltip-image-heatmap.html</a>
+</p>
+</div>
+<p>On the JS side, the <code>customdata</code> attribute is designed to support <em>any</em> JS array of appropriate length, so if you need to supply numerous custom values to particular marker(s), list-columns in R provides a nice way to do so. Figure <a href="supplying-custom-data.html#fig:tx-annotate">21.5</a> leverages this idea to bind both the <code>city</code> and <code>sales</code> values to each point along a time series and display those values on hover. It also demonstrates how one can use the graphical querying framework from Section <a href="client-side-linking.html#graphical-queries">16.1</a> in tandem with a custom JS event. That is, <code>highlight_key()</code> and <code>highlight()</code> control the highlighting of the time series, while the custom JS event adds the plot annotation (all based on the same <code>"plotly_hover"</code> event). In this case, the highlighting, annotations, and circle shapes are triggered by a <code>"plotly_hover"</code> event and they all work in tandem because event handlers are cumulative. That means, if you wanted, you could register multiple custom handlers for a particular event.</p>
 <div class="sourceCode" id="cb200"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb200-1"><a href="supplying-custom-data.html#cb200-1"></a><span class="kw">library</span>(purrr)</span>
 <span id="cb200-2"><a href="supplying-custom-data.html#cb200-2"></a></span>
 <span id="cb200-3"><a href="supplying-custom-data.html#cb200-3"></a>sales_hover &lt;-<span class="st"> </span>txhousing <span class="op">%&gt;%</span></span>
@@ -492,8 +515,13 @@ When using <code>Plotly.relayout()</code>, or any other plotly.js function to mo
 <span id="cb201-28"><a href="supplying-custom-data.html#cb201-28"></a>  <span class="op">}</span>)<span class="op">;</span></span>
 <span id="cb201-29"><a href="supplying-custom-data.html#cb201-29"></a><span class="op">}</span></span></code></pre></div>
 </details>
+<div class="figure" style="text-align: center"><span id="fig:tx-annotate"></span>
 <iframe src="https://player.vimeo.com/video/307597956?title=0&amp;byline=0&amp;portrait=0" width="100%" height="400" frameborder="0" seamless="seamless" webkitAllowFullScreen mozallowfullscreen allowFullScreen></iframe>
-<p>Sometimes supplying and accessing <code>customdata</code> alone is not quite enough for the task at hand. For instance, what if we wish to add the average monthly sales to the annotation for the city of interest in Figure <a href="#fig:tx-annotate"><strong>??</strong></a>? In cases like this, we may need to use <code>customdata</code> to query a portion of the plot’s input data, like Figure <a href="#fig:tx-annotate"><strong>??</strong></a> does to compute and display average sales for a given city. This implementation leverages the fact that each selected point (<code>pt</code>) contains a reference to the entire trace it derives from (<code>pt.data</code>). As discussion behind Figure <a href="#fig:scatter-lines"><strong>??</strong></a> noted, this particular plot has a <em>single trace</em> and uses missing values to create separate lines for each city. As a result, <code>pt.data.customdata</code> contains all the <code>customdata</code> we supplied from the R side, so to get all the <code>sales</code> for a given city, we first need to filter that array down to only the elements that are belong to that city (while being careful of missing values!).</p>
+<p class="caption">
+FIGURE 21.5: Combining the graphical querying framework from <a href="client-side-linking.html#graphical-queries">16.1</a> with a custom JS event handler to highlight a time series as well as circling the month selected. This example supplies a list-column to <code>customdata</code> in order to populate an informative title based on the user’s selection of city and month. For the interactive, see <a href="https://plotly-r.com/interactives/tx-annotate.html" class="uri">https://plotly-r.com/interactives/tx-annotate.html</a>
+</p>
+</div>
+<p>Sometimes supplying and accessing <code>customdata</code> alone is not quite enough for the task at hand. For instance, what if we wish to add the average monthly sales to the annotation for the city of interest in Figure <a href="supplying-custom-data.html#fig:tx-annotate">21.5</a>? In cases like this, we may need to use <code>customdata</code> to query a portion of the plot’s input data, like Figure <a href="supplying-custom-data.html#fig:tx-annotate">21.5</a> does to compute and display average sales for a given city. This implementation leverages the fact that each selected point (<code>pt</code>) contains a reference to the entire trace it derives from (<code>pt.data</code>). As discussion behind Figure <a href="scatter-traces.html#fig:scatter-lines">3.2</a> noted, this particular plot has a <em>single trace</em> and uses missing values to create separate lines for each city. As a result, <code>pt.data.customdata</code> contains all the <code>customdata</code> we supplied from the R side, so to get all the <code>sales</code> for a given city, we first need to filter that array down to only the elements that are belong to that city (while being careful of missing values!).</p>
 <div class="sourceCode" id="cb202"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb202-1"><a href="supplying-custom-data.html#cb202-1"></a><span class="kw">onRender</span>(sales_hover, <span class="kw">readLines</span>(<span class="st">&quot;js/tx-mean-sales.js&quot;</span>))</span></code></pre></div>
 <details>
 <p><summary>Click to show the ‘js/tx-mean-sales.js’ file</summary></p>
@@ -526,8 +554,13 @@ When using <code>Plotly.relayout()</code>, or any other plotly.js function to mo
 <span id="cb203-27"><a href="supplying-custom-data.html#cb203-27"></a>  <span class="op">}</span>)<span class="op">;</span></span>
 <span id="cb203-28"><a href="supplying-custom-data.html#cb203-28"></a><span class="op">}</span></span></code></pre></div>
 </details>
+<div class="figure" style="text-align: center"><span id="fig:tx-mean-sales"></span>
 <iframe src="https://player.vimeo.com/video/307598016?title=0&amp;byline=0&amp;portrait=0" width="100%" height="400" frameborder="0" seamless="seamless" webkitAllowFullScreen mozallowfullscreen allowFullScreen></iframe>
-<p>Figure <a href="#fig:tx-inset-plot"><strong>??</strong></a> uses the same <code>customdata</code> supplied to Figure <a href="#fig:tx-mean-sales"><strong>??</strong></a> in order to display a histogram of monthly sales for the relevant city on hover. In addition, it displays a vertical line on the histogram to reflect the monthly sales for the point closest to the mouse cursor. To do all this efficiently, it’s best to add the histogram trace on the first hover event using <code>Plotly.addTraces()</code>, then supply different <code>sales</code> data via <code>Plotly.restyle()</code> (generally speaking, <code>restyle()</code> is way less expensive than <code>addTraces()</code>). That’s why the implementation leverages the fact that the DOM element (<code>el</code>) contains a reference to the current graph data (<code>el.data</code>). If the current graph has a trace with type of histogram, then it adds a histogram trace; otherwise, it supplies new <code>x</code> values to the histogram.</p>
+<p class="caption">
+FIGURE 21.6: Displaying the average monthly sales for a city of interest on hover. This implementation supplies all the raw sales figures, then uses the hovered <code>customdata</code> value to query sales for the given city and display the average. For the interactive, see <a href="https://plotly-r.com/interactives/tx-mean-sales.html" class="uri">https://plotly-r.com/interactives/tx-mean-sales.html</a>
+</p>
+</div>
+<p>Figure <a href="supplying-custom-data.html#fig:tx-inset-plot">21.7</a> uses the same <code>customdata</code> supplied to Figure <a href="supplying-custom-data.html#fig:tx-mean-sales">21.6</a> in order to display a histogram of monthly sales for the relevant city on hover. In addition, it displays a vertical line on the histogram to reflect the monthly sales for the point closest to the mouse cursor. To do all this efficiently, it’s best to add the histogram trace on the first hover event using <code>Plotly.addTraces()</code>, then supply different <code>sales</code> data via <code>Plotly.restyle()</code> (generally speaking, <code>restyle()</code> is way less expensive than <code>addTraces()</code>). That’s why the implementation leverages the fact that the DOM element (<code>el</code>) contains a reference to the current graph data (<code>el.data</code>). If the current graph has a trace with type of histogram, then it adds a histogram trace; otherwise, it supplies new <code>x</code> values to the histogram.</p>
 <div class="sourceCode" id="cb204"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb204-1"><a href="supplying-custom-data.html#cb204-1"></a>sales_hover <span class="op">%&gt;%</span></span>
 <span id="cb204-2"><a href="supplying-custom-data.html#cb204-2"></a><span class="st">  </span><span class="kw">onRender</span>(<span class="kw">readLines</span>(<span class="st">&quot;js/tx-annotate.js&quot;</span>)) <span class="op">%&gt;%</span></span>
 <span id="cb204-3"><a href="supplying-custom-data.html#cb204-3"></a><span class="st">  </span><span class="kw">onRender</span>(<span class="kw">readLines</span>(<span class="st">&quot;js/tx-inset-plot.js&quot;</span>))</span></code></pre></div>
@@ -605,7 +638,12 @@ When using <code>Plotly.relayout()</code>, or any other plotly.js function to mo
 <span id="cb205-70"><a href="supplying-custom-data.html#cb205-70"></a>  <span class="op">}</span>)<span class="op">;</span></span>
 <span id="cb205-71"><a href="supplying-custom-data.html#cb205-71"></a><span class="op">}</span></span></code></pre></div>
 </details>
+<div class="figure" style="text-align: center"><span id="fig:tx-inset-plot"></span>
 <iframe src="https://player.vimeo.com/video/307598624?title=0&amp;byline=0&amp;portrait=0" width="100%" height="400" frameborder="0" seamless="seamless" webkitAllowFullScreen mozallowfullscreen allowFullScreen></iframe>
+<p class="caption">
+FIGURE 21.7: Adding another event handler to Figure <a href="supplying-custom-data.html#fig:tx-annotate">21.5</a> to draw an inset plot showing the distribution of monthly house sales. For the interactive, see <a href="https://plotly-r.com/interactives/tx-inset-plot.html" class="uri">https://plotly-r.com/interactives/tx-inset-plot.html</a>
+</p>
+</div>
 </div>
 <script>
   var header = document.querySelector(".book-header");
@@ -674,11 +712,13 @@ window.onload = function() {
   </div>
 <script src="libs/gitbook/js/app.min.js"></script>
 <script src="libs/gitbook/js/lunr.js"></script>
+<script src="libs/gitbook/js/clipboard.min.js"></script>
 <script src="libs/gitbook/js/plugin-search.js"></script>
 <script src="libs/gitbook/js/plugin-sharing.js"></script>
 <script src="libs/gitbook/js/plugin-fontsettings.js"></script>
 <script src="libs/gitbook/js/plugin-bookdown.js"></script>
 <script src="libs/gitbook/js/jquery.highlight.js"></script>
+<script src="libs/gitbook/js/plugin-clipboard.js"></script>
 <script>
 gitbook.require(["gitbook"], function(gitbook) {
 gitbook.start({

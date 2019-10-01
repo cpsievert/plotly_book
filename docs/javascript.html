@@ -6,7 +6,7 @@
   <meta http-equiv="X-UA-Compatible" content="IE=edge" />
   <title>18 Introduction | Interactive web-based data visualization with R, plotly, and shiny</title>
   <meta name="description" content="A useR guide to creating highly interactive graphics for exploratory and expository visualization." />
-  <meta name="generator" content="bookdown 0.13.2 and GitBook 2.6.7" />
+  <meta name="generator" content="bookdown 0.14.1 and GitBook 2.6.7" />
 
   <meta property="og:title" content="18 Introduction | Interactive web-based data visualization with R, plotly, and shiny" />
   <meta property="og:type" content="book" />
@@ -40,6 +40,9 @@
 <link href="libs/gitbook/css/plugin-highlight.css" rel="stylesheet" />
 <link href="libs/gitbook/css/plugin-search.css" rel="stylesheet" />
 <link href="libs/gitbook/css/plugin-fontsettings.css" rel="stylesheet" />
+<link href="libs/gitbook/css/plugin-clipboard.css" rel="stylesheet" />
+
+
 
 
 
@@ -346,7 +349,7 @@ code span.wa { color: #60a0b0; font-weight: bold; font-style: italic; } /* Warni
 <p>The same plotly.js events that we leveraged in <strong>shiny</strong> through <code>event_data()</code> in Section <a href="linking-views-with-shiny.html#shiny-plotly-inputs">17.2</a> can also be handled using JavaScript (JS) instead of R, which offers numerous advantages:</p>
 <ol style="list-style-type: decimal">
 <li>Your web browser natively understands JS, so writing event handlers in JS instead of R offers the potential of having a purely client-side webpage instead of client-server app, making the end result easier to share, host, and maintain.<a href="references.html#fn35" class="footnote-ref" id="fnref35"><sup>35</sup></a> That being said, the effort required to rewrite a ‘heavy-duty’ client-server app as a ‘light-weight’ client-side webpage isn’t always worth the investment; so before doing so, you should have a clear vision for the interactivity you desire, be fairly confident that vision won’t change in the future, and have a use-case that doesn’t require sophisticated statistical computations to be run dynamically in response to user events (i.e., it’s not practical or feasible to pre-compute).<a href="references.html#fn36" class="footnote-ref" id="fnref36"><sup>36</sup></a></li>
-<li>There are certain things you can do in JS that you can’t necessarily do in R, such as accessing the web browser’s <code>window</code> API to open hyperlinks in response to plotly.js click events (e.g., Figure <a href="#fig:click-open"><strong>??</strong></a>).</li>
+<li>There are certain things you can do in JS that you can’t necessarily do in R, such as accessing the web browser’s <code>window</code> API to open hyperlinks in response to plotly.js click events (e.g., Figure <a href="supplying-custom-data.html#fig:click-open">21.1</a>).</li>
 <li>JS event handlers can be noticeably faster than running comparable code on an external R process, especially with a slow internet connection.</li>
 </ol>
 <p>For those new to JS, you may find it helpful to compare code examples from this part of the book to code examples from Section <a href="linking-views-with-shiny.html#proxies">17.3.1</a>.<a href="references.html#fn37" class="footnote-ref" id="fnref37"><sup>37</sup></a> That’s because, the <code>plotlyProxy()</code> interface which powers that section is just an R interface to <a href="https://plot.ly/javascript/plotlyjs-function-reference">plotly.js’ JavaScript functions</a>, and is primarily for updating graphs within an event handler. Therefore, if you understand how the examples in that section work, you can translate a good amount of that knowledge to a JS context as well.
@@ -355,11 +358,16 @@ However, when handling these events in JS instead of R, you’ll want to be fami
 This portion of the book focuses on writing custom event handlers to commonly used plotly.js events, but a lot of the same tools and techniques covered here could be used to extend these graphs in other ways as well.
 -->
 <p>An important thing to know about when doing any sort of web development is how to open and navigate web browsers developer tools. Through the developer tools, you can access a JS console to run and test out JS code, inspect and debug the JS/CSS/HTML code behind a website, query components of the Document Object Model (DOM), inspect network traffic, and much more. In our use case of writing plotly.js event handlers, the JS console will come in handy especially to see what information a plotly.js event is firing (think of it as the analog of printing output to the R console in a shiny app), before writing the actual event handler. To open the console of a web browser (including RStudio), you can likely do: right-click -&gt; “Inspect Element” -&gt; “Console” tab (or similar).</p>
-<p>One way to write a custom event handler for a <strong>plotly</strong> graph is to leverage the <code>onRender()</code> function from the <strong>htmlwidgets</strong> package. This R function accepts a JS function as a string and calls that function when the widget is done rendering in the browser. The JS function needs (at least) one argument, <code>el</code>, which is the Document Object Model (DOM) element containing the <strong>plotly</strong> graph. It’s worth noting that <code>htmlwidgets::onRender()</code> serves a more general purpose than registering plotly.js event handlers, so you could use it to a bunch other things, such as adding conditional logic based on information stored in <code>el</code>. Figure <a href="#fig:console-log"><strong>??</strong></a> shows how you could use <code>onRender()</code> to log (and inspect) the DOM element to your browser’s JS console. To demonstrate some useful DOM element’s properties, Figure <a href="#fig:console-log"><strong>??</strong></a> uses Firefox to inspect the element as a global variable, but as Figure <a href="#fig:console-log-event"><strong>??</strong></a> shows, Chrome currently offers better tools for code debugging the JS function provided to <code>onRender()</code> (e.g., setting breakpoints in virtual memory).</p>
+<p>One way to write a custom event handler for a <strong>plotly</strong> graph is to leverage the <code>onRender()</code> function from the <strong>htmlwidgets</strong> package. This R function accepts a JS function as a string and calls that function when the widget is done rendering in the browser. The JS function needs (at least) one argument, <code>el</code>, which is the Document Object Model (DOM) element containing the <strong>plotly</strong> graph. It’s worth noting that <code>htmlwidgets::onRender()</code> serves a more general purpose than registering plotly.js event handlers, so you could use it to a bunch other things, such as adding conditional logic based on information stored in <code>el</code>. Figure <a href="javascript.html#fig:console-log">18.1</a> shows how you could use <code>onRender()</code> to log (and inspect) the DOM element to your browser’s JS console. To demonstrate some useful DOM element’s properties, Figure <a href="javascript.html#fig:console-log">18.1</a> uses Firefox to inspect the element as a global variable, but as Figure <a href="js-event-handlers.html#fig:console-log-event">20.1</a> shows, Chrome currently offers better tools for code debugging the JS function provided to <code>onRender()</code> (e.g., setting breakpoints in virtual memory).</p>
 <div class="sourceCode" id="cb180"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb180-1"><a href="javascript.html#cb180-1"></a><span class="kw">library</span>(htmlwidgets)</span>
 <span id="cb180-2"><a href="javascript.html#cb180-2"></a><span class="kw">plot_ly</span>(<span class="dt">z =</span> <span class="op">~</span>volcano) <span class="op">%&gt;%</span></span>
 <span id="cb180-3"><a href="javascript.html#cb180-3"></a><span class="st">  </span><span class="kw">onRender</span>(<span class="st">&quot;function(el) { console.log(el); }&quot;</span>)</span></code></pre></div>
+<div class="figure" style="text-align: center"><span id="fig:console-log"></span>
 <iframe src="https://player.vimeo.com/video/307598574?title=0&amp;byline=0&amp;portrait=0" width="100%" height="700" frameborder="0" seamless="seamless" webkitAllowFullScreen mozallowfullscreen allowFullScreen></iframe>
+<p class="caption">
+FIGURE 18.1: Using <code>htmlwidgets::onRender()</code> to inspect the relevant DOM instance containing the <strong>plotly</strong> graph and information related to it’s current display. The <code>_fullData</code> and <code>_fullLayout</code> attributes bound to the element are ‘internal’ (meaning relying on this information in production code is discouraged), but do provide a useful description of the chart’s current state, especially if you need access to computations done by plotly.js (e.g., axis tick placement). For the interactive, see <a href="https://plotly-r.com/interactives/console-log.html" class="uri">https://plotly-r.com/interactives/console-log.html</a>
+</p>
+</div>
 <p>If you’re completely new to JS and JSON, Section <a href="json.html#json">19</a> provides a foundation for understanding the subsequent sections, but those already familiar can skip ahead to Section <a href="js-event-handlers.html#js-event-handlers">20</a>, which shows how to log plotly.js event data to the JS console via <code>htmlwidgets::onRender()</code>.</p>
 </div>
 <script>
@@ -429,11 +437,13 @@ window.onload = function() {
   </div>
 <script src="libs/gitbook/js/app.min.js"></script>
 <script src="libs/gitbook/js/lunr.js"></script>
+<script src="libs/gitbook/js/clipboard.min.js"></script>
 <script src="libs/gitbook/js/plugin-search.js"></script>
 <script src="libs/gitbook/js/plugin-sharing.js"></script>
 <script src="libs/gitbook/js/plugin-fontsettings.js"></script>
 <script src="libs/gitbook/js/plugin-bookdown.js"></script>
 <script src="libs/gitbook/js/jquery.highlight.js"></script>
+<script src="libs/gitbook/js/plugin-clipboard.js"></script>
 <script>
 gitbook.require(["gitbook"], function(gitbook) {
 gitbook.start({

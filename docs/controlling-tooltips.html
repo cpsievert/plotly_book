@@ -6,7 +6,7 @@
   <meta http-equiv="X-UA-Compatible" content="IE=edge" />
   <title>25 Controlling tooltips | Interactive web-based data visualization with R, plotly, and shiny</title>
   <meta name="description" content="A useR guide to creating highly interactive graphics for exploratory and expository visualization." />
-  <meta name="generator" content="bookdown 0.13.2 and GitBook 2.6.7" />
+  <meta name="generator" content="bookdown 0.14.1 and GitBook 2.6.7" />
 
   <meta property="og:title" content="25 Controlling tooltips | Interactive web-based data visualization with R, plotly, and shiny" />
   <meta property="og:type" content="book" />
@@ -40,6 +40,9 @@
 <link href="libs/gitbook/css/plugin-highlight.css" rel="stylesheet" />
 <link href="libs/gitbook/css/plugin-search.css" rel="stylesheet" />
 <link href="libs/gitbook/css/plugin-fontsettings.css" rel="stylesheet" />
+<link href="libs/gitbook/css/plugin-clipboard.css" rel="stylesheet" />
+
+
 
 
 
@@ -346,7 +349,7 @@ code span.wa { color: #60a0b0; font-weight: bold; font-style: italic; } /* Warni
 <div id="tooltip-text" class="section level2">
 <h2><span class="header-section-number">25.1</span> <code>plot_ly()</code> tooltips</h2>
 <p>There are two main approaches to controlling the tooltip: <code>hoverinfo</code> and <code>hovertemplate</code>. I suggest starting with the former approach since it’s simpler, more mature, and enjoys universal support across trace types. On the other hand, <code>hovertemplate</code> does offer a convenient approach for flexible control over tooltip text, so it can be useful as well.</p>
-<p>The <code>hoverinfo</code> attribute controls what other plot attributes are shown into the tooltip text. The default value of <code>hoverinfo</code> is <code>x+y+text+name</code> (you can verify this with <code>schema()</code>), meaning that plotly.js will use the relevant values of <code>x</code>, <code>y</code>, <code>text</code>, and <code>name</code> to populate the tooltip text. As in Figure <a href="controlling-tooltips.html#fig:custom-tooltip-plotly">25.1</a> shows, you can supply custom text (without the other ‘calculated values’) by supplying a character string <code>text</code> and setting <code>hoverinfo = "text"</code>. The character string can include Glyphs, unicode characters, a some (white-listed) HTML entities and tags.<a href="references.html#fn43" class="footnote-ref" id="fnref43"><sup>43</sup></a> At least currently, plotly.js doesn’t support rendering of <a href="https://github.com/plotly/plotly.js/issues/559">LaTeX</a> or images in the tooltip, but as demonstrated in Figure <a href="#fig:tooltip-image"><strong>??</strong></a>, if you know some HTML/JavaScript, you can always build your own custom tooltip.</p>
+<p>The <code>hoverinfo</code> attribute controls what other plot attributes are shown into the tooltip text. The default value of <code>hoverinfo</code> is <code>x+y+text+name</code> (you can verify this with <code>schema()</code>), meaning that plotly.js will use the relevant values of <code>x</code>, <code>y</code>, <code>text</code>, and <code>name</code> to populate the tooltip text. As in Figure <a href="controlling-tooltips.html#fig:custom-tooltip-plotly">25.1</a> shows, you can supply custom text (without the other ‘calculated values’) by supplying a character string <code>text</code> and setting <code>hoverinfo = "text"</code>. The character string can include Glyphs, unicode characters, a some (white-listed) HTML entities and tags.<a href="references.html#fn43" class="footnote-ref" id="fnref43"><sup>43</sup></a> At least currently, plotly.js doesn’t support rendering of <a href="https://github.com/plotly/plotly.js/issues/559">LaTeX</a> or images in the tooltip, but as demonstrated in Figure <a href="supplying-custom-data.html#fig:tooltip-image">21.3</a>, if you know some HTML/JavaScript, you can always build your own custom tooltip.</p>
 <div class="sourceCode" id="cb211"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb211-1"><a href="controlling-tooltips.html#cb211-1"></a><span class="kw">library</span>(tibble)</span>
 <span id="cb211-2"><a href="controlling-tooltips.html#cb211-2"></a><span class="kw">library</span>(forcats)</span>
 <span id="cb211-3"><a href="controlling-tooltips.html#cb211-3"></a></span>
@@ -436,7 +439,7 @@ FIGURE 25.4: Formatting the displayed <code>z</code> values in a heatmap using <
 FIGURE 25.5: Using the <code>hovertemplate</code> attribute to reference computed variables and their display format inside a custom string.
 </p>
 </div>
-<p>If you need really specific control over the tooltip, you might consider hiding the tooltip altogether (using <code>hoverinfo='none'</code>) and defining your own tooltip. Defining your own tooltip, however, will require knowledge of HTML and JavaScript – see Figure <a href="#fig:tooltip-image"><strong>??</strong></a> for an example of how to display an image on hover instead of a tooltip.</p>
+<p>If you need really specific control over the tooltip, you might consider hiding the tooltip altogether (using <code>hoverinfo='none'</code>) and defining your own tooltip. Defining your own tooltip, however, will require knowledge of HTML and JavaScript – see Figure <a href="supplying-custom-data.html#fig:tooltip-image">21.3</a> for an example of how to display an image on hover instead of a tooltip.</p>
 </div>
 <div id="tooltip-text-ggplotly" class="section level2">
 <h2><span class="header-section-number">25.2</span> <code>ggplotly()</code> tooltips</h2>
@@ -622,11 +625,13 @@ window.onload = function() {
   </div>
 <script src="libs/gitbook/js/app.min.js"></script>
 <script src="libs/gitbook/js/lunr.js"></script>
+<script src="libs/gitbook/js/clipboard.min.js"></script>
 <script src="libs/gitbook/js/plugin-search.js"></script>
 <script src="libs/gitbook/js/plugin-sharing.js"></script>
 <script src="libs/gitbook/js/plugin-fontsettings.js"></script>
 <script src="libs/gitbook/js/plugin-bookdown.js"></script>
 <script src="libs/gitbook/js/jquery.highlight.js"></script>
+<script src="libs/gitbook/js/plugin-clipboard.js"></script>
 <script>
 gitbook.require(["gitbook"], function(gitbook) {
 gitbook.start({

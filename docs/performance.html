@@ -6,7 +6,7 @@
   <meta http-equiv="X-UA-Compatible" content="IE=edge" />
   <title>24 Improving performance | Interactive web-based data visualization with R, plotly, and shiny</title>
   <meta name="description" content="A useR guide to creating highly interactive graphics for exploratory and expository visualization." />
-  <meta name="generator" content="bookdown 0.13.2 and GitBook 2.6.7" />
+  <meta name="generator" content="bookdown 0.14.1 and GitBook 2.6.7" />
 
   <meta property="og:title" content="24 Improving performance | Interactive web-based data visualization with R, plotly, and shiny" />
   <meta property="og:type" content="book" />
@@ -40,6 +40,9 @@
 <link href="libs/gitbook/css/plugin-highlight.css" rel="stylesheet" />
 <link href="libs/gitbook/css/plugin-search.css" rel="stylesheet" />
 <link href="libs/gitbook/css/plugin-fontsettings.css" rel="stylesheet" />
+<link href="libs/gitbook/css/plugin-clipboard.css" rel="stylesheet" />
+
+
 
 
 
@@ -348,7 +351,7 @@ code span.wa { color: #60a0b0; font-weight: bold; font-style: italic; } /* Warni
 <li><p><code>toWebGL()</code>: This function attempts to render the chart using WebGL (i.e., Canvas) instead of Scalable Vector Graphics (SVG). The difference between these contexts is somewhat analogous to the difference between saving a static chart to png/jpeg (pixel based) versus pdf (vector based). Vector based graphics have the desirable property of producing sharp visuals that scale well to any size, but they don’t scale well in the number of vectors (e.g., points, lines, polygons, etc) that they need to render.</p></li>
 <li><p><code>partial_bundle()</code>: This function attempts to reduce the size of the plotly.js bundle used to render the <strong>plotly</strong> graphs. The size of the default (i.e., main) plotly.js bundle is about 3MB, which can take a considerable amount of time to download with a slow internet connection, potentially leading to noticeable lag in initial page load for consumers of the graph. As it turns out, the main bundle is not always necessary to render every graphs on a given website, so plotly.js provides <a href="https://github.com/plotly/plotly.js/tree/master/dist#partial-bundles">partial bundles</a> that can render certain subsets of the graphing library. For instance, if you only need scatter, bar, or pie trace types, you can get away with the basic bundle which is currently under 1MB in size. This function is always safe to use when rendering a single <strong>plotly</strong> graph in a web page, but when rendering multiple graphs, you should take care not to include multiple bundles in the same page.</p></li>
 </ul>
-<p>These two options may improve run-time performance without much of any thinking, but sometimes it’s worth being more thoughtful about your visualization strategy by leveraging summaries (e.g., Section <a href="arranging-views.html#navigating-many-views">13.3</a>, Figure <a href="#fig:shiny-crossfilter-kde"><strong>??</strong></a>, Figure <a href="#fig:correlation-client-side"><strong>??</strong></a>) as well as being more explicit about how a graph responds to changes in the underlying data (e.g., Section <a href="linking-views-with-shiny.html#proxies">17.3.1</a>). Mastering these more broad and complex subjects is critical for scaling interactive visualizations to truly large data<a href="references.html#fn42" class="footnote-ref" id="fnref42"><sup>42</sup></a>, especially in the case of linking multiple views, where computational ‘tricks’ such as pre-aggregating distributive (e.g., min, max, sum, count) and algebraic (e.g., mean, var, etc) statistics intelligently is a trademark of systems that enable real-time graphical queries of massive datasets <span class="citation">(Heer <a href="#ref-2013-immens" role="doc-biblioref">2013</a>, <a href="#ref-2019-falcon" role="doc-biblioref">2019</a>; Lins, Klosowski, and Carlos Scheidegger <a href="#ref-nanocubes" role="doc-biblioref">2013</a>)</span>. As <span class="citation">Wickham (<a href="#ref-bigvis" role="doc-biblioref">2013</a>)</span> points out, it’s also important to consider the uncertainty in these computationally efficient statistics, as they aren’t nearly as statistically robust as their holistic counterparts (e.g., mean vs median) that are more computationally intensive.</p>
+<p>These two options may improve run-time performance without much of any thinking, but sometimes it’s worth being more thoughtful about your visualization strategy by leveraging summaries (e.g., Section <a href="arranging-views.html#navigating-many-views">13.3</a>, Figure <a href="linking-views-with-shiny.html#fig:shiny-crossfilter-kde">17.27</a>, Figure <a href="client-side.html#fig:correlation-client-side">22.1</a>) as well as being more explicit about how a graph responds to changes in the underlying data (e.g., Section <a href="linking-views-with-shiny.html#proxies">17.3.1</a>). Mastering these more broad and complex subjects is critical for scaling interactive visualizations to truly large data<a href="references.html#fn42" class="footnote-ref" id="fnref42"><sup>42</sup></a>, especially in the case of linking multiple views, where computational ‘tricks’ such as pre-aggregating distributive (e.g., min, max, sum, count) and algebraic (e.g., mean, var, etc) statistics intelligently is a trademark of systems that enable real-time graphical queries of massive datasets <span class="citation">(Heer <a href="#ref-2013-immens" role="doc-biblioref">2013</a>, <a href="#ref-2019-falcon" role="doc-biblioref">2019</a>; Lins, Klosowski, and Carlos Scheidegger <a href="#ref-nanocubes" role="doc-biblioref">2013</a>)</span>. As <span class="citation">Wickham (<a href="#ref-bigvis" role="doc-biblioref">2013</a>)</span> points out, it’s also important to consider the uncertainty in these computationally efficient statistics, as they aren’t nearly as statistically robust as their holistic counterparts (e.g., mean vs median) that are more computationally intensive.</p>
 <p>Since latency in interactive graphics is known to make exploratory data analysis a more challenging task <span class="citation">(Heer <a href="#ref-2014-latency" role="doc-biblioref">2014</a>)</span>, systems that optimize run over build performance are typically preferable. This is especially true for visualizations that <em>others</em> are consuming, but in a typical EDA context, where the person creating the visualization is main consumer, build time performance is also important factor because it also presents a hurdle to the analytical thought process. It’s hard to give general advice on improving build-time performance in general, but a great first step in doing so is to profile the speed of your R code with something like the <strong>profvis</strong> package. This will at least let you know if the slowness you’re experiencing is due to your own R code.</p>
 </div>
 <h3>References</h3>
@@ -436,11 +439,13 @@ window.onload = function() {
   </div>
 <script src="libs/gitbook/js/app.min.js"></script>
 <script src="libs/gitbook/js/lunr.js"></script>
+<script src="libs/gitbook/js/clipboard.min.js"></script>
 <script src="libs/gitbook/js/plugin-search.js"></script>
 <script src="libs/gitbook/js/plugin-sharing.js"></script>
 <script src="libs/gitbook/js/plugin-fontsettings.js"></script>
 <script src="libs/gitbook/js/plugin-bookdown.js"></script>
 <script src="libs/gitbook/js/jquery.highlight.js"></script>
+<script src="libs/gitbook/js/plugin-clipboard.js"></script>
 <script>
 gitbook.require(["gitbook"], function(gitbook) {
 gitbook.start({

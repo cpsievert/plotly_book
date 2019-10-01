@@ -6,7 +6,7 @@
   <meta http-equiv="X-UA-Compatible" content="IE=edge" />
   <title>22 Leveraging web technologies from R | Interactive web-based data visualization with R, plotly, and shiny</title>
   <meta name="description" content="A useR guide to creating highly interactive graphics for exploratory and expository visualization." />
-  <meta name="generator" content="bookdown 0.13.2 and GitBook 2.6.7" />
+  <meta name="generator" content="bookdown 0.14.1 and GitBook 2.6.7" />
 
   <meta property="og:title" content="22 Leveraging web technologies from R | Interactive web-based data visualization with R, plotly, and shiny" />
   <meta property="og:type" content="book" />
@@ -40,6 +40,9 @@
 <link href="libs/gitbook/css/plugin-highlight.css" rel="stylesheet" />
 <link href="libs/gitbook/css/plugin-search.css" rel="stylesheet" />
 <link href="libs/gitbook/css/plugin-fontsettings.css" rel="stylesheet" />
+<link href="libs/gitbook/css/plugin-clipboard.css" rel="stylesheet" />
+
+
 
 
 
@@ -345,7 +348,7 @@ code span.wa { color: #60a0b0; font-weight: bold; font-style: italic; } /* Warni
 <h1><span class="header-section-number">22</span> Leveraging web technologies from R</h1>
 <div id="web-infrastructure" class="section level2">
 <h2><span class="header-section-number">22.1</span> Web infrastructure</h2>
-<p>Sometimes supplying <code>customdata</code> isn’t the best way to achieve a particular interactive feature. In those cases, you likely want to leverage other R lower-level interfaces to web technologies. Recall from Section <a href="arranging-views.html#arranging-htmlwidgets">13.2</a> that <strong>htmlwidgets</strong> objects are a special case of <strong>htmltools</strong> tags. That means, you can always complement your widget(s) with arbitrary HTML content by adding additional tags. Figure <a href="#fig:correlation-client-side"><strong>??</strong></a> leverages this idea to place an empty HTML <code>&lt;div&gt;</code> container below the correlation heatmap which is then populated with a <strong>plotly</strong> scatterplot upon clicking a cell. As it turns out, you <em>could</em> implement Figure <a href="#fig:correlation-client-side"><strong>??</strong></a> by binding x/y data to each heatmap cell via <code>customdata</code>, but that would require the browser to store twice the amount of data as what’s required here. Instead, this approach serializes the input data (<code>mtcars</code>) into a JSON file via <strong>jsonlite</strong> so the webpage can read and parse the full dataset once and select just the two required columns when required (on click). There are a lot of ways to read JSON in JavaScript, but here we use the d3.js library’s <code>d3.json()</code> since <strong>plotly</strong> already comes bundled with the library <span class="citation">(Heer <a href="#ref-d3js" role="doc-biblioref">2011</a>)</span>. Also, since the HTML file is reading the JSON from disk, most browsers won’t render the HTML file directly (at least, by default, for security reasons). To get around that, we can start up a simple web server from R using <strong>servr</strong> to serve both the HTML and JSON in way that your browser will deem safe to run <span class="citation">(Xie <a href="#ref-servr" role="doc-biblioref">2016</a>)</span>.</p>
+<p>Sometimes supplying <code>customdata</code> isn’t the best way to achieve a particular interactive feature. In those cases, you likely want to leverage other R lower-level interfaces to web technologies. Recall from Section <a href="arranging-views.html#arranging-htmlwidgets">13.2</a> that <strong>htmlwidgets</strong> objects are a special case of <strong>htmltools</strong> tags. That means, you can always complement your widget(s) with arbitrary HTML content by adding additional tags. Figure <a href="client-side.html#fig:correlation-client-side">22.1</a> leverages this idea to place an empty HTML <code>&lt;div&gt;</code> container below the correlation heatmap which is then populated with a <strong>plotly</strong> scatterplot upon clicking a cell. As it turns out, you <em>could</em> implement Figure <a href="client-side.html#fig:correlation-client-side">22.1</a> by binding x/y data to each heatmap cell via <code>customdata</code>, but that would require the browser to store twice the amount of data as what’s required here. Instead, this approach serializes the input data (<code>mtcars</code>) into a JSON file via <strong>jsonlite</strong> so the webpage can read and parse the full dataset once and select just the two required columns when required (on click). There are a lot of ways to read JSON in JavaScript, but here we use the d3.js library’s <code>d3.json()</code> since <strong>plotly</strong> already comes bundled with the library <span class="citation">(Heer <a href="#ref-d3js" role="doc-biblioref">2011</a>)</span>. Also, since the HTML file is reading the JSON from disk, most browsers won’t render the HTML file directly (at least, by default, for security reasons). To get around that, we can start up a simple web server from R using <strong>servr</strong> to serve both the HTML and JSON in way that your browser will deem safe to run <span class="citation">(Xie <a href="#ref-servr" role="doc-biblioref">2016</a>)</span>.</p>
 <details>
 <p><summary>Click to see code</summary></p>
 <div class="sourceCode" id="cb206"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb206-1"><a href="client-side.html#cb206-1"></a><span class="kw">library</span>(plotly)</span>
@@ -386,7 +389,12 @@ code span.wa { color: #60a0b0; font-weight: bold; font-style: italic; } /* Warni
 <span id="cb206-36"><a href="client-side.html#cb206-36"></a>  <span class="cf">if</span> (<span class="kw">interactive</span>()) servr<span class="op">::</span><span class="kw">httd</span>()</span>
 <span id="cb206-37"><a href="client-side.html#cb206-37"></a>})</span></code></pre></div>
 </details>
+<div class="figure" style="text-align: center"><span id="fig:correlation-client-side"></span>
 <iframe src="https://player.vimeo.com/video/307598118?title=0&amp;byline=0&amp;portrait=0" width="100%" height="700" frameborder="0" seamless="seamless" webkitAllowFullScreen mozallowfullscreen allowFullScreen></iframe>
+<p class="caption">
+FIGURE 22.1: Clicking on a correlation matrix to populate a scatterplot. For the interactive, see <a href="https://plotly-r.com/interactives/correlation-client-side.html" class="uri">https://plotly-r.com/interactives/correlation-client-side.html</a>
+</p>
+</div>
 </div>
 <div id="react" class="section level2">
 <h2><span class="header-section-number">22.2</span> Modern JS &amp; React</h2>
@@ -396,7 +404,7 @@ code span.wa { color: #60a0b0; font-weight: bold; font-style: italic; } /* Warni
 <span id="cb207-2"><a href="client-side.html#cb207-2"></a>  <span class="st">&quot;react-player&quot;</span>, </span>
 <span id="cb207-3"><a href="client-side.html#cb207-3"></a>  <span class="st">&quot;dist/ReactPlayer.standalone.js&quot;</span></span>
 <span id="cb207-4"><a href="client-side.html#cb207-4"></a>)</span></code></pre></div>
-<p>This <code>react-player</code> library provides a function called <code>renderReactPlayer()</code> that requires a placeholder (i.e., a DOM element) for inserting the video as well as a url (or file path) to the video. Figure <a href="#fig:react-player"><strong>??</strong></a> demonstrates how we could use it to render a YouTube video in response to a <strong>plotly</strong> click event:</p>
+<p>This <code>react-player</code> library provides a function called <code>renderReactPlayer()</code> that requires a placeholder (i.e., a DOM element) for inserting the video as well as a url (or file path) to the video. Figure <a href="client-side.html#fig:react-player">22.2</a> demonstrates how we could use it to render a YouTube video in response to a <strong>plotly</strong> click event:</p>
 <details>
 <p><summary>Click to see code</summary></p>
 <div class="sourceCode" id="cb208"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb208-1"><a href="client-side.html#cb208-1"></a><span class="kw">library</span>(htmltools)</span>
@@ -426,8 +434,13 @@ code span.wa { color: #60a0b0; font-weight: bold; font-style: italic; } /* Warni
 <span id="cb208-25"><a href="client-side.html#cb208-25"></a><span class="co"># create the HTML page</span></span>
 <span id="cb208-26"><a href="client-side.html#cb208-26"></a><span class="kw">browsable</span>(<span class="kw">tagList</span>(p, video, react_player))</span></code></pre></div>
 </details>
+<div class="figure" style="text-align: center"><span id="fig:react-player"></span>
 <iframe src="https://player.vimeo.com/video/315308561?title=0&amp;byline=0&amp;portrait=0" width="100%" height="700" frameborder="0" seamless="seamless" webkitAllowFullScreen mozallowfullscreen allowFullScreen></iframe>
-<p>This <code>react-player</code> React library is rather unique in that it provides a standalone function, <code>renderReactPlayer()</code>, that enables rendering of a React component without loading React itself or leveraging special React syntax like JSX. It’s more likely that the React component library will explicitly require you to import both React and ReactDOM. You could use <strong>runpkg</strong> to download these React/ReactDOM as well, but the <code>html_dependency_react()</code> function from <strong>reactR</strong> package makes this even easier <span class="citation">(Inc, Russell, and Dipert <a href="#ref-reactR" role="doc-biblioref">2019</a>)</span>. Furthermore, <strong>reactR</strong> provides a <code>babel_transform()</code> function which will compile modern JS (e.g., ES6, ES2017, etc) as well as special React markup (e.g., JSX) to a version of JS that all browsers support (e.g., ES5). For a toy example, Figure <a href="#fig:babel"><strong>??</strong></a> demonstrates how one could leverage ES6, React, and React’s JSX syntax to populate a <code>&lt;h1&gt;</code> title filled with a <code>customdata</code> message in response to a <strong>plotly</strong> click event.</p>
+<p class="caption">
+FIGURE 22.2: Using the <code>react-player</code> React component to render a video in response to a <code>'plotly_click'</code> event. For the interactive, see <a href="https://plotly-r.com/interactives/react-player.html" class="uri">https://plotly-r.com/interactives/react-player.html</a>
+</p>
+</div>
+<p>This <code>react-player</code> React library is rather unique in that it provides a standalone function, <code>renderReactPlayer()</code>, that enables rendering of a React component without loading React itself or leveraging special React syntax like JSX. It’s more likely that the React component library will explicitly require you to import both React and ReactDOM. You could use <strong>runpkg</strong> to download these React/ReactDOM as well, but the <code>html_dependency_react()</code> function from <strong>reactR</strong> package makes this even easier <span class="citation">(Inc, Russell, and Dipert <a href="#ref-reactR" role="doc-biblioref">2019</a>)</span>. Furthermore, <strong>reactR</strong> provides a <code>babel_transform()</code> function which will compile modern JS (e.g., ES6, ES2017, etc) as well as special React markup (e.g., JSX) to a version of JS that all browsers support (e.g., ES5). For a toy example, Figure <a href="client-side.html#fig:babel">22.3</a> demonstrates how one could leverage ES6, React, and React’s JSX syntax to populate a <code>&lt;h1&gt;</code> title filled with a <code>customdata</code> message in response to a <strong>plotly</strong> click event.</p>
 <details>
 <p><summary>Click to see code</summary></p>
 <div class="sourceCode" id="cb209"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb209-1"><a href="client-side.html#cb209-1"></a><span class="kw">library</span>(reactR)</span>
@@ -452,8 +465,13 @@ code span.wa { color: #60a0b0; font-weight: bold; font-style: italic; } /* Warni
 <span id="cb209-20"><a href="client-side.html#cb209-20"></a><span class="co"># create the HTML page</span></span>
 <span id="cb209-21"><a href="client-side.html#cb209-21"></a><span class="kw">browsable</span>(<span class="kw">tagList</span>(p, app, <span class="kw">html_dependency_react</span>()))</span></code></pre></div>
 </details>
+<div class="figure" style="text-align: center"><span id="fig:babel"></span>
 <iframe src="https://player.vimeo.com/video/315309034?title=0&amp;byline=0&amp;portrait=0" width="100%" height="400" frameborder="0" seamless="seamless" webkitAllowFullScreen mozallowfullscreen allowFullScreen></iframe>
-<p>For a more serious example, we could leverage another React component, named <code>react-data-grid</code>, to display the data within a <strong>plotly</strong> scatterplot brush, as done in Figure <a href="#fig:react-data-grid"><strong>??</strong></a>. Again, we can use <strong>runpkg</strong> to download a bundle of <code>react-data-grid</code>, but this library doesn’t come with <code>React</code>/<code>ReactDOM</code>, so we must explicitly include it this time around. In fact, this approach of explicitly importing and calling <code>ReactDOM.render()</code> on your component is a more common approach than the custom standalone interface approach (i.e., <code>renderReactPlayer()</code>) used in Figure <a href="#fig:react-player"><strong>??</strong></a>.</p>
+<p class="caption">
+FIGURE 22.3: Using <code>babel_transform()</code> to leverage ES6, React, and JSX. For the interactive, see <a href="https://plotly-r.com/interactives/babel.html" class="uri">https://plotly-r.com/interactives/babel.html</a>
+</p>
+</div>
+<p>For a more serious example, we could leverage another React component, named <code>react-data-grid</code>, to display the data within a <strong>plotly</strong> scatterplot brush, as done in Figure <a href="client-side.html#fig:react-data-grid">22.4</a>. Again, we can use <strong>runpkg</strong> to download a bundle of <code>react-data-grid</code>, but this library doesn’t come with <code>React</code>/<code>ReactDOM</code>, so we must explicitly include it this time around. In fact, this approach of explicitly importing and calling <code>ReactDOM.render()</code> on your component is a more common approach than the custom standalone interface approach (i.e., <code>renderReactPlayer()</code>) used in Figure <a href="client-side.html#fig:react-player">22.2</a>.</p>
 <details>
 <p><summary>Click to see code</summary></p>
 <div class="sourceCode" id="cb210"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb210-1"><a href="client-side.html#cb210-1"></a>data_grid_js &lt;-<span class="st"> </span>runpkg<span class="op">::</span><span class="kw">download_files</span>(</span>
@@ -496,7 +514,12 @@ code span.wa { color: #60a0b0; font-weight: bold; font-style: italic; } /* Warni
 <span id="cb210-38"><a href="client-side.html#cb210-38"></a><span class="co"># create the HTML page</span></span>
 <span id="cb210-39"><a href="client-side.html#cb210-39"></a><span class="kw">browsable</span>(<span class="kw">tagList</span>(p, data_grid, <span class="kw">html_dependency_react</span>(), data_grid_js))</span></code></pre></div>
 </details>
+<div class="figure" style="text-align: center"><span id="fig:react-data-grid"></span>
 <iframe src="https://player.vimeo.com/video/325933744?title=0&amp;byline=0&amp;portrait=0" width="100%" height="400" frameborder="0" seamless="seamless" webkitAllowFullScreen mozallowfullscreen allowFullScreen></iframe>
+<p class="caption">
+FIGURE 22.4: Using the <code>react-data-grid</code> React component to render a data table of the observation within a scatterplot brush. For the interactive, see <a href="https://plotly-r.com/interactives/react-data-grid.html" class="uri">https://plotly-r.com/interactives/react-data-grid.html</a>
+</p>
+</div>
 
 </div>
 </div>
@@ -585,11 +608,13 @@ window.onload = function() {
   </div>
 <script src="libs/gitbook/js/app.min.js"></script>
 <script src="libs/gitbook/js/lunr.js"></script>
+<script src="libs/gitbook/js/clipboard.min.js"></script>
 <script src="libs/gitbook/js/plugin-search.js"></script>
 <script src="libs/gitbook/js/plugin-sharing.js"></script>
 <script src="libs/gitbook/js/plugin-fontsettings.js"></script>
 <script src="libs/gitbook/js/plugin-bookdown.js"></script>
 <script src="libs/gitbook/js/jquery.highlight.js"></script>
+<script src="libs/gitbook/js/plugin-clipboard.js"></script>
 <script>
 gitbook.require(["gitbook"], function(gitbook) {
 gitbook.start({

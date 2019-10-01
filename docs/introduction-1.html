@@ -6,7 +6,7 @@
   <meta http-equiv="X-UA-Compatible" content="IE=edge" />
   <title>15 Introduction | Interactive web-based data visualization with R, plotly, and shiny</title>
   <meta name="description" content="A useR guide to creating highly interactive graphics for exploratory and expository visualization." />
-  <meta name="generator" content="bookdown 0.13.2 and GitBook 2.6.7" />
+  <meta name="generator" content="bookdown 0.14.1 and GitBook 2.6.7" />
 
   <meta property="og:title" content="15 Introduction | Interactive web-based data visualization with R, plotly, and shiny" />
   <meta property="og:type" content="book" />
@@ -40,6 +40,9 @@
 <link href="libs/gitbook/css/plugin-highlight.css" rel="stylesheet" />
 <link href="libs/gitbook/css/plugin-search.css" rel="stylesheet" />
 <link href="libs/gitbook/css/plugin-fontsettings.css" rel="stylesheet" />
+<link href="libs/gitbook/css/plugin-clipboard.css" rel="stylesheet" />
+
+
 
 
 
@@ -348,9 +351,9 @@ code span.wa { color: #60a0b0; font-weight: bold; font-style: italic; } /* Warni
 <p>A web application relies on a client-server relationship where the client’s (i.e., end user) web browser requests content from a remote server. This model is necessary whenever the webpage needs to execute computer code that is not natively supported by the client’s web browser. As Section <a href="linking-views-with-shiny.html#linking-views-with-shiny">17</a> details, the flexibility that a web application framework, like <strong>shiny</strong>, offers is an incredibly productive and powerful way to link multiple data views; but when it comes to distributing a web application, it introduces a lot of complexity and computational infrastructure that may or may not be necessary.</p>
 <p>Figure <a href="introduction-1.html#fig:server-client">15.1</a> is a basic illustration of the difference between a web application and a purely client-side web page. Thanks to <code>JavaScript</code> and <code>HTML5</code>, purely client-side web pages can still be dynamic without any software dependencies besides a modern web browser. In fact, Section <a href="client-side-linking.html#graphical-queries">16.1</a> outlines <strong>plotly</strong>’s graphical querying framework for linking multiple plots entirely client-side, which makes the result very easy to distribute (see Section <a href="saving.html#saving">10</a>). There are, of course, many useful examples of linked and dynamic views that can not be easily expressed as a database query, but a surprising amount actually can, and the remainder can likely be quickly implemented as a <strong>shiny</strong> web application.</p>
 <div class="figure" style="text-align: center"><span id="fig:server-client"></span>
-<img src="images/server-client.svg" alt="A diagram of the graphical querying framework underlying Figure 16.4." width="100%" />
+<img src="images/server-client.svg" alt="A diagram of the graphical querying framework underlying Figure 16.6." width="100%" />
 <p class="caption">
-FIGURE 15.1: A diagram of the graphical querying framework underlying Figure <a href="client-side-linking.html#fig:txhousing-aggregates">16.4</a>.
+FIGURE 15.1: A diagram of the graphical querying framework underlying Figure <a href="client-side-linking.html#fig:txhousing-aggregates">16.6</a>.
 </p>
 </div>
 <p>The graphical querying framework implemented by <strong>plotly</strong> is inspired by <span class="citation">Buja et al. (<a href="#ref-Buja:1991vh" role="doc-biblioref">1991</a>)</span>, where direct manipulation of graphical elements in multiple linked plots is used to perform data base queries and visually reveal high-dimensional structure in real-time. <span class="citation">D. Cook, Buja, and Swayne (<a href="#ref-Cook:2007uk" role="doc-biblioref">2007</a>)</span> goes on to argue this framework is preferable to posing data base queries dynamically via a menus, as described by <span class="citation">Ahlberg, Williamson, and Shneiderman (<a href="#ref-Ahlberg:1991" role="doc-biblioref">1991</a>)</span>, and goes on to state that “Multiple linked views are the optimal framework for posing queries about data”. The next section shows you how to implement similar graphical queries in a standalone webpage using R code.</p>
@@ -440,11 +443,13 @@ window.onload = function() {
   </div>
 <script src="libs/gitbook/js/app.min.js"></script>
 <script src="libs/gitbook/js/lunr.js"></script>
+<script src="libs/gitbook/js/clipboard.min.js"></script>
 <script src="libs/gitbook/js/plugin-search.js"></script>
 <script src="libs/gitbook/js/plugin-sharing.js"></script>
 <script src="libs/gitbook/js/plugin-fontsettings.js"></script>
 <script src="libs/gitbook/js/plugin-bookdown.js"></script>
 <script src="libs/gitbook/js/jquery.highlight.js"></script>
+<script src="libs/gitbook/js/plugin-clipboard.js"></script>
 <script>
 gitbook.require(["gitbook"], function(gitbook) {
 gitbook.start({

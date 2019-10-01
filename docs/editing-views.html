@@ -6,7 +6,7 @@
   <meta http-equiv="X-UA-Compatible" content="IE=edge" />
   <title>12 Editing views for publishing | Interactive web-based data visualization with R, plotly, and shiny</title>
   <meta name="description" content="A useR guide to creating highly interactive graphics for exploratory and expository visualization." />
-  <meta name="generator" content="bookdown 0.13.2 and GitBook 2.6.7" />
+  <meta name="generator" content="bookdown 0.14.1 and GitBook 2.6.7" />
 
   <meta property="og:title" content="12 Editing views for publishing | Interactive web-based data visualization with R, plotly, and shiny" />
   <meta property="og:type" content="book" />
@@ -40,6 +40,9 @@
 <link href="libs/gitbook/css/plugin-highlight.css" rel="stylesheet" />
 <link href="libs/gitbook/css/plugin-search.css" rel="stylesheet" />
 <link href="libs/gitbook/css/plugin-fontsettings.css" rel="stylesheet" />
+<link href="libs/gitbook/css/plugin-clipboard.css" rel="stylesheet" />
+
+
 
 
 
@@ -344,7 +347,7 @@ code span.wa { color: #60a0b0; font-weight: bold; font-style: italic; } /* Warni
 <div id="editing-views" class="section level1">
 <h1><span class="header-section-number">12</span> Editing views for publishing</h1>
 <p>Numerous layout components of a <strong>plotly</strong> graph can be directly manipulated, including annotation text and placement (more on this in Section <a href="linking-views-with-shiny.html#edit-events">17.2.3</a>). In addition, the download (aka, toImage) button can be customized to export a static version to different file types including: svg, png, jpeg, and webp. Since svg can be easily converted to pdf, this effectively means we can edit a graph in a browser to perform touch-ups, then export to a high-quality pdf. At least currently, this workflow is recommended over first exporting to pdf (via <code>orca()</code>) then using Adobe Illustrator to manipulate the vectors, especially for adjusting the placement of annotations.</p>
-<p>Figure <a href="#fig:edit-county-labels"><strong>??</strong></a> demonstrates this workflow on a choropleth map of estimated income in Minnesota by county where the top 10 counties by total income are labeled.<a href="references.html#fn20" class="footnote-ref" id="fnref20"><sup>20</sup></a> For visuals like this, automated algorithms for placing the labels may not yield polished results, so it can be nice to have the option to adjust the placement manually. Although pressing ‘download plot’ exports a static version of the current state of the plot, there currently isn’t an official way to save the state of these manual edits in the HTML version. You could, however, create a shiny app that listens to the <code>'plotly_relayout'</code> event to obtain the new annotation positions (see, for example, Figure <a href="#fig:shiny-edit-annotations"><strong>??</strong></a>) and translate that information into code.</p>
+<p>Figure <a href="editing-views.html#fig:edit-county-labels">12.1</a> demonstrates this workflow on a choropleth map of estimated income in Minnesota by county where the top 10 counties by total income are labeled.<a href="references.html#fn20" class="footnote-ref" id="fnref20"><sup>20</sup></a> For visuals like this, automated algorithms for placing the labels may not yield polished results, so it can be nice to have the option to adjust the placement manually. Although pressing ‘download plot’ exports a static version of the current state of the plot, there currently isn’t an official way to save the state of these manual edits in the HTML version. You could, however, create a shiny app that listens to the <code>'plotly_relayout'</code> event to obtain the new annotation positions (see, for example, Figure <a href="linking-views-with-shiny.html#fig:shiny-edit-annotations">17.5</a>) and translate that information into code.</p>
 <details>
 <p><summary>Click to show code</summary></p>
 <div class="sourceCode" id="cb96"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb96-1"><a href="editing-views.html#cb96-1"></a><span class="kw">library</span>(dplyr)</span>
@@ -424,7 +427,12 @@ code span.wa { color: #60a0b0; font-weight: bold; font-style: italic; } /* Warni
 <span id="cb96-75"><a href="editing-views.html#cb96-75"></a>    <span class="dt">toImageButtonOptions =</span> <span class="kw">list</span>(<span class="dt">format =</span> <span class="st">&quot;svg&quot;</span>)</span>
 <span id="cb96-76"><a href="editing-views.html#cb96-76"></a>  )</span></code></pre></div>
 </details>
+<div class="figure" style="text-align: center"><span id="fig:edit-county-labels"></span>
 <iframe src="https://player.vimeo.com/video/309371928?title=0&amp;byline=0&amp;portrait=0" width="100%" height="400" frameborder="0" seamless="seamless" webkitAllowFullScreen mozallowfullscreen allowFullScreen></iframe>
+<p class="caption">
+FIGURE 12.1: Estimated total income by county in Minnesota. The top 10 counties are labeled with editable annotations. After manually adjusting the placement of county labels in a web browser, and zooming in on the top 10 counties in the dot plot, the ‘download plot’ button is used to export to svg. For the interactive, see <a href="https://plotly-r.com/interactives/edit-county-labels.html" class="uri">https://plotly-r.com/interactives/edit-county-labels.html</a>
+</p>
+</div>
 <p>After pressing the “download plot” button to export svg, then the <strong>rsvg</strong> package can be used to convert the svg to pdf <span class="citation">(Ooms <a href="#ref-rsvg" role="doc-biblioref">2018</a>)</span>.</p>
 <div class="sourceCode" id="cb97"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb97-1"><a href="editing-views.html#cb97-1"></a><span class="co"># This is the directory that my browser places downloads...</span></span>
 <span id="cb97-2"><a href="editing-views.html#cb97-2"></a><span class="co"># you may have to change this to your download directory</span></span>
@@ -510,11 +518,13 @@ window.onload = function() {
   </div>
 <script src="libs/gitbook/js/app.min.js"></script>
 <script src="libs/gitbook/js/lunr.js"></script>
+<script src="libs/gitbook/js/clipboard.min.js"></script>
 <script src="libs/gitbook/js/plugin-search.js"></script>
 <script src="libs/gitbook/js/plugin-sharing.js"></script>
 <script src="libs/gitbook/js/plugin-fontsettings.js"></script>
 <script src="libs/gitbook/js/plugin-bookdown.js"></script>
 <script src="libs/gitbook/js/jquery.highlight.js"></script>
+<script src="libs/gitbook/js/plugin-clipboard.js"></script>
 <script>
 gitbook.require(["gitbook"], function(gitbook) {
 gitbook.start({

@@ -6,7 +6,7 @@
   <meta http-equiv="X-UA-Compatible" content="IE=edge" />
   <title>14 Animating views | Interactive web-based data visualization with R, plotly, and shiny</title>
   <meta name="description" content="A useR guide to creating highly interactive graphics for exploratory and expository visualization." />
-  <meta name="generator" content="bookdown 0.13.2 and GitBook 2.6.7" />
+  <meta name="generator" content="bookdown 0.14.1 and GitBook 2.6.7" />
 
   <meta property="og:title" content="14 Animating views | Interactive web-based data visualization with R, plotly, and shiny" />
   <meta property="og:type" content="book" />
@@ -40,6 +40,9 @@
 <link href="libs/gitbook/css/plugin-highlight.css" rel="stylesheet" />
 <link href="libs/gitbook/css/plugin-search.css" rel="stylesheet" />
 <link href="libs/gitbook/css/plugin-fontsettings.css" rel="stylesheet" />
+<link href="libs/gitbook/css/plugin-clipboard.css" rel="stylesheet" />
+
+
 
 
 
@@ -411,7 +414,7 @@ FIGURE 14.4: Overlaying animated frames on top of a background of all possible f
 </div>
 <div id="animation-support" class="section level2">
 <h2><span class="header-section-number">14.2</span> Animation support</h2>
-<p>At the time of writing, the scatter plotly.js trace type is really the only trace type with full support for animation. That means, we need to get a little imaginative to animate certain things, like a population pyramid chart (essentially a bar chart) using <code>add_segments()</code> (a scatter-based layer) instead of <code>add_bars()</code> (a non-scatter layer). Figure <a href="#fig:profile-pyramid"><strong>??</strong></a> shows projections for male &amp; female population by age from 2018 to 2050 using data obtained via the <strong>idbr</strong> package <span class="citation">(Walker <a href="#ref-idbr" role="doc-biblioref">2018</a>)</span>.</p>
+<p>At the time of writing, the scatter plotly.js trace type is really the only trace type with full support for animation. That means, we need to get a little imaginative to animate certain things, like a population pyramid chart (essentially a bar chart) using <code>add_segments()</code> (a scatter-based layer) instead of <code>add_bars()</code> (a non-scatter layer). Figure <a href="animating-views.html#fig:profile-pyramid">14.5</a> shows projections for male &amp; female population by age from 2018 to 2050 using data obtained via the <strong>idbr</strong> package <span class="citation">(Walker <a href="#ref-idbr" role="doc-biblioref">2018</a>)</span>.</p>
 <div class="sourceCode" id="cb115"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb115-1"><a href="animating-views.html#cb115-1"></a><span class="kw">library</span>(idbr)</span>
 <span id="cb115-2"><a href="animating-views.html#cb115-2"></a><span class="kw">library</span>(dplyr)</span>
 <span id="cb115-3"><a href="animating-views.html#cb115-3"></a></span>
@@ -443,8 +446,13 @@ FIGURE 14.4: Overlaying animated frames on top of a background of all possible f
 <span id="cb115-29"><a href="animating-views.html#cb115-29"></a>    <span class="dt">frame =</span> <span class="op">~</span>time,</span>
 <span id="cb115-30"><a href="animating-views.html#cb115-30"></a>    <span class="dt">color =</span> <span class="op">~</span><span class="kw">factor</span>(SEX)</span>
 <span id="cb115-31"><a href="animating-views.html#cb115-31"></a>  )</span></code></pre></div>
+<div class="figure" style="text-align: center"><span id="fig:profile-pyramid"></span>
 <iframe src="https://player.vimeo.com/video/317101075?title=0&amp;byline=0&amp;portrait=0" width="100%" height="400" frameborder="0" seamless="seamless" webkitAllowFullScreen mozallowfullscreen allowFullScreen></iframe>
-<p>Although population pyramids are quite popular, they aren’t necessarily the best way to visualize this information, especially if the goal is to compare the population profiles over time. It’s much easier to compare them along a common scale, as done in Figure <a href="#fig:profile-lines"><strong>??</strong></a>. Note that, when animating lines in this fashion, it can help to set <a href="https://plot.ly/r/reference/#scatter-line-simplify"><code>line.simplify</code></a> to <code>FALSE</code> so that the number of points along the path are left unaffected.</p>
+<p class="caption">
+FIGURE 14.5: US population projections by age and gender from 2018 to 2050. This population pyramid is implemented with thick line segments to give the appearance of bars. For the interactive, see <a href="https://plotly-r.com/interactives/profile-pyramid.html" class="uri">https://plotly-r.com/interactives/profile-pyramid.html</a>
+</p>
+</div>
+<p>Although population pyramids are quite popular, they aren’t necessarily the best way to visualize this information, especially if the goal is to compare the population profiles over time. It’s much easier to compare them along a common scale, as done in Figure <a href="animating-views.html#fig:profile-lines">14.6</a>. Note that, when animating lines in this fashion, it can help to set <a href="https://plot.ly/r/reference/#scatter-line-simplify"><code>line.simplify</code></a> to <code>FALSE</code> so that the number of points along the path are left unaffected.</p>
 <div class="sourceCode" id="cb116"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb116-1"><a href="animating-views.html#cb116-1"></a><span class="kw">plot_ly</span>(us, <span class="dt">alpha  =</span> <span class="fl">0.5</span>) <span class="op">%&gt;%</span></span>
 <span id="cb116-2"><a href="animating-views.html#cb116-2"></a><span class="st">  </span><span class="kw">add_lines</span>(</span>
 <span id="cb116-3"><a href="animating-views.html#cb116-3"></a>    <span class="dt">x =</span> <span class="op">~</span>AGE, <span class="dt">y =</span> <span class="op">~</span><span class="kw">abs</span>(POP),</span>
@@ -453,7 +461,12 @@ FIGURE 14.4: Overlaying animated frames on top of a background of all possible f
 <span id="cb116-6"><a href="animating-views.html#cb116-6"></a>    <span class="dt">line =</span> <span class="kw">list</span>(<span class="dt">simplify =</span> <span class="ot">FALSE</span>)</span>
 <span id="cb116-7"><a href="animating-views.html#cb116-7"></a>  ) <span class="op">%&gt;%</span></span>
 <span id="cb116-8"><a href="animating-views.html#cb116-8"></a><span class="st">  </span><span class="kw">layout</span>(<span class="dt">yaxis =</span> <span class="kw">list</span>(<span class="dt">title =</span> <span class="st">&quot;US population&quot;</span>))</span></code></pre></div>
+<div class="figure" style="text-align: center"><span id="fig:profile-lines"></span>
 <iframe src="https://player.vimeo.com/video/317101952?title=0&amp;byline=0&amp;portrait=0" width="100%" height="400" frameborder="0" seamless="seamless" webkitAllowFullScreen mozallowfullscreen allowFullScreen></iframe>
+<p class="caption">
+FIGURE 14.6: Visualizing the same information in Figure <a href="animating-views.html#fig:profile-pyramid">14.5</a> using lines rather than segments. For the interactive, see <a href="https://plotly-r.com/interactives/profile-lines.html" class="uri">https://plotly-r.com/interactives/profile-lines.html</a>
+</p>
+</div>
 
 </div>
 </div>
@@ -536,11 +549,13 @@ window.onload = function() {
   </div>
 <script src="libs/gitbook/js/app.min.js"></script>
 <script src="libs/gitbook/js/lunr.js"></script>
+<script src="libs/gitbook/js/clipboard.min.js"></script>
 <script src="libs/gitbook/js/plugin-search.js"></script>
 <script src="libs/gitbook/js/plugin-sharing.js"></script>
 <script src="libs/gitbook/js/plugin-fontsettings.js"></script>
 <script src="libs/gitbook/js/plugin-bookdown.js"></script>
 <script src="libs/gitbook/js/jquery.highlight.js"></script>
+<script src="libs/gitbook/js/plugin-clipboard.js"></script>
 <script>
 gitbook.require(["gitbook"], function(gitbook) {
 gitbook.start({

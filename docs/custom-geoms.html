@@ -6,7 +6,7 @@
   <meta http-equiv="X-UA-Compatible" content="IE=edge" />
   <title>34 Translating custom ggplot2 geoms | Interactive web-based data visualization with R, plotly, and shiny</title>
   <meta name="description" content="A useR guide to creating highly interactive graphics for exploratory and expository visualization." />
-  <meta name="generator" content="bookdown 0.13.2 and GitBook 2.6.7" />
+  <meta name="generator" content="bookdown 0.14.1 and GitBook 2.6.7" />
 
   <meta property="og:title" content="34 Translating custom ggplot2 geoms | Interactive web-based data visualization with R, plotly, and shiny" />
   <meta property="og:type" content="book" />
@@ -40,6 +40,9 @@
 <link href="libs/gitbook/css/plugin-highlight.css" rel="stylesheet" />
 <link href="libs/gitbook/css/plugin-search.css" rel="stylesheet" />
 <link href="libs/gitbook/css/plugin-fontsettings.css" rel="stylesheet" />
+<link href="libs/gitbook/css/plugin-clipboard.css" rel="stylesheet" />
+
+
 
 
 
@@ -346,12 +349,13 @@ code span.wa { color: #60a0b0; font-weight: bold; font-style: italic; } /* Warni
 <p>Version 2.0.0 of <strong>ggplot2</strong> introduced a way for other R packages to implement custom geoms. Some great examples include: <strong>ggrepel</strong>, <strong>ggalt</strong>, <strong>ggraph</strong>, <strong>geomnet</strong>, <strong>ggmosaic</strong> and <strong>ggtern</strong> <span class="citation">(Rudis <a href="#ref-ggalt" role="doc-biblioref">2016</a>; Pedersen <a href="#ref-ggraph" role="doc-biblioref">2016</a>; Tyner and Hofmann <a href="#ref-geomnet" role="doc-biblioref">2016</a>; Jeppson, Hofmann, and Cook <a href="#ref-ggmosaic" role="doc-biblioref">2016</a>; Hamilton <a href="#ref-ggtern" role="doc-biblioref">2016</a>)</span>.<a href="references.html#fn48" class="footnote-ref" id="fnref48"><sup>48</sup></a> Although the <code>ggplotly()</code> function translates most of the geoms bundled with the <strong>ggplot2</strong> package, it has no way of knowing about the rendering rules for custom geoms. The <strong>plotly</strong> package does, however, provide 2 generic functions based on the S3 scheme that can leveraged to inform <code>ggplotly()</code> about these rules <span class="citation">(Chambers <a href="#ref-S3" role="doc-biblioref">1992</a>)</span>.<a href="references.html#fn49" class="footnote-ref" id="fnref49"><sup>49</sup></a> To date, the <strong>ggmosaic</strong> and <strong>ggalt</strong> packages have taken advantage of this infrastructure to provide translations of their custom geoms to plotly.</p>
 <p>In <strong>ggplot2</strong>, many geoms are special cases of other geoms. For example, <code>geom_line()</code> is equivalent to <code>geom_path()</code> once the data is sorted by the x variable. For cases like this, when a geom can be reduced to another lower-level (i.e., basic) geom, authors just have to write a method for the <code>to_basic()</code> generic function in <strong>plotly</strong>. In fact, within the package itself, the <code>to_basic()</code> function has a <code>GeomLine</code> method which simply sorts the data by the x variable then returns it with a class of <code>GeomPath</code> prefixed.</p>
 <div class="sourceCode" id="cb257"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb257-1"><a href="custom-geoms.html#cb257-1"></a><span class="kw">getS3method</span>(<span class="st">&quot;to_basic&quot;</span>, <span class="st">&quot;GeomLine&quot;</span>)</span>
-<span id="cb257-2"><a href="custom-geoms.html#cb257-2"></a><span class="co">#&gt; function(data, prestats_data, layout, params, p, ...) {</span></span>
-<span id="cb257-3"><a href="custom-geoms.html#cb257-3"></a><span class="co">#&gt;   data &lt;- data[order(data[[&quot;x&quot;]]), ]</span></span>
-<span id="cb257-4"><a href="custom-geoms.html#cb257-4"></a><span class="co">#&gt;   prefix_class(data, &quot;GeomPath&quot;)</span></span>
-<span id="cb257-5"><a href="custom-geoms.html#cb257-5"></a><span class="co">#&gt; }</span></span>
-<span id="cb257-6"><a href="custom-geoms.html#cb257-6"></a><span class="co">#&gt; &lt;bytecode: 0x7f9d012bf638&gt;</span></span>
-<span id="cb257-7"><a href="custom-geoms.html#cb257-7"></a><span class="co">#&gt; &lt;environment: namespace:plotly&gt;</span></span></code></pre></div>
+<span id="cb257-2"><a href="custom-geoms.html#cb257-2"></a><span class="co">#&gt; function (data, prestats_data, layout, params, p, ...) </span></span>
+<span id="cb257-3"><a href="custom-geoms.html#cb257-3"></a><span class="co">#&gt; {</span></span>
+<span id="cb257-4"><a href="custom-geoms.html#cb257-4"></a><span class="co">#&gt;     data &lt;- data[order(data[[&quot;x&quot;]]), ]</span></span>
+<span id="cb257-5"><a href="custom-geoms.html#cb257-5"></a><span class="co">#&gt;     prefix_class(data, &quot;GeomPath&quot;)</span></span>
+<span id="cb257-6"><a href="custom-geoms.html#cb257-6"></a><span class="co">#&gt; }</span></span>
+<span id="cb257-7"><a href="custom-geoms.html#cb257-7"></a><span class="co">#&gt; &lt;bytecode: 0x7f9210720958&gt;</span></span>
+<span id="cb257-8"><a href="custom-geoms.html#cb257-8"></a><span class="co">#&gt; &lt;environment: namespace:plotly&gt;</span></span></code></pre></div>
 <p>If you have implemented a custom geom, say <code>GeomCustom</code>, rest assured that the data passed to <code>to_basic()</code> will be of class <code>GeomCustom</code> when <code>ggplotly()</code> is called on a plot with your geom. And assuming <code>GeomCustom</code> may be reduced to another lower-level geom support by plotly, a <code>to_basic.GeomCustom()</code> method that transforms the data into a form suitable for that lower-level geom is sufficient for adding support. Moreover, note that the data passed to <code>to_basic()</code> is essentially the last form of the data <em>before</em> the render stage and <em>after</em> statistics have been performed. This makes it trivial to add support for geoms like <code>GeomXspline</code> from the <strong>ggalt</strong> package.</p>
 <div class="sourceCode" id="cb258"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb258-1"><a href="custom-geoms.html#cb258-1"></a><span class="kw">library</span>(ggalt)</span>
 <span id="cb258-2"><a href="custom-geoms.html#cb258-2"></a><span class="kw">getS3method</span>(<span class="st">&quot;to_basic&quot;</span>, <span class="st">&quot;GeomXspline&quot;</span>)</span></code></pre></div>
@@ -468,11 +472,13 @@ window.onload = function() {
   </div>
 <script src="libs/gitbook/js/app.min.js"></script>
 <script src="libs/gitbook/js/lunr.js"></script>
+<script src="libs/gitbook/js/clipboard.min.js"></script>
 <script src="libs/gitbook/js/plugin-search.js"></script>
 <script src="libs/gitbook/js/plugin-sharing.js"></script>
 <script src="libs/gitbook/js/plugin-fontsettings.js"></script>
 <script src="libs/gitbook/js/plugin-bookdown.js"></script>
 <script src="libs/gitbook/js/jquery.highlight.js"></script>
+<script src="libs/gitbook/js/plugin-clipboard.js"></script>
 <script>
 gitbook.require(["gitbook"], function(gitbook) {
 gitbook.start({

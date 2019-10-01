@@ -6,7 +6,7 @@
   <meta http-equiv="X-UA-Compatible" content="IE=edge" />
   <title>26 Control the modebar | Interactive web-based data visualization with R, plotly, and shiny</title>
   <meta name="description" content="A useR guide to creating highly interactive graphics for exploratory and expository visualization." />
-  <meta name="generator" content="bookdown 0.13.2 and GitBook 2.6.7" />
+  <meta name="generator" content="bookdown 0.14.1 and GitBook 2.6.7" />
 
   <meta property="og:title" content="26 Control the modebar | Interactive web-based data visualization with R, plotly, and shiny" />
   <meta property="og:type" content="book" />
@@ -40,6 +40,9 @@
 <link href="libs/gitbook/css/plugin-highlight.css" rel="stylesheet" />
 <link href="libs/gitbook/css/plugin-search.css" rel="stylesheet" />
 <link href="libs/gitbook/css/plugin-fontsettings.css" rel="stylesheet" />
+<link href="libs/gitbook/css/plugin-clipboard.css" rel="stylesheet" />
+
+
 
 
 
@@ -413,7 +416,7 @@ FIGURE 26.4: Specifying the full list of modebar buttons.
 </div>
 <div id="control-image-downloads" class="section level2">
 <h2><span class="header-section-number">26.5</span> Control image downloads</h2>
-<p>By default, the <code>toImage</code> modebar button downloads a png file using the current size and state of the graph. With <code>toImageButtonOptions</code>, one can specify different sizes and filetypes, which is particularly useful for obtaining a static pdf/webp/jpeg/etc image of the plot <em>after</em> components have been directly manipulated, as leveraged in Figure <a href="#fig:edit-county-labels"><strong>??</strong></a>. Here’s a basic example of configuring the <code>'toImage'</code> button to download an svg file that’s 200 x 100 pixels:</p>
+<p>By default, the <code>toImage</code> modebar button downloads a png file using the current size and state of the graph. With <code>toImageButtonOptions</code>, one can specify different sizes and filetypes, which is particularly useful for obtaining a static pdf/webp/jpeg/etc image of the plot <em>after</em> components have been directly manipulated, as leveraged in Figure <a href="editing-views.html#fig:edit-county-labels">12.1</a>. Here’s a basic example of configuring the <code>'toImage'</code> button to download an svg file that’s 200 x 100 pixels:</p>
 <div class="sourceCode" id="cb228"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb228-1"><a href="control-modebar.html#cb228-1"></a><span class="kw">plot_ly</span>() <span class="op">%&gt;%</span></span>
 <span id="cb228-2"><a href="control-modebar.html#cb228-2"></a><span class="st">  </span><span class="kw">config</span>(</span>
 <span id="cb228-3"><a href="control-modebar.html#cb228-3"></a>    <span class="dt">toImageButtonOptions =</span> <span class="kw">list</span>(</span>
@@ -498,11 +501,13 @@ window.onload = function() {
   </div>
 <script src="libs/gitbook/js/app.min.js"></script>
 <script src="libs/gitbook/js/lunr.js"></script>
+<script src="libs/gitbook/js/clipboard.min.js"></script>
 <script src="libs/gitbook/js/plugin-search.js"></script>
 <script src="libs/gitbook/js/plugin-sharing.js"></script>
 <script src="libs/gitbook/js/plugin-fontsettings.js"></script>
 <script src="libs/gitbook/js/plugin-bookdown.js"></script>
 <script src="libs/gitbook/js/jquery.highlight.js"></script>
+<script src="libs/gitbook/js/plugin-clipboard.js"></script>
 <script>
 gitbook.require(["gitbook"], function(gitbook) {
 gitbook.start({

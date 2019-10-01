@@ -6,7 +6,7 @@
   <meta http-equiv="X-UA-Compatible" content="IE=edge" />
   <title>11 Exporting static images | Interactive web-based data visualization with R, plotly, and shiny</title>
   <meta name="description" content="A useR guide to creating highly interactive graphics for exploratory and expository visualization." />
-  <meta name="generator" content="bookdown 0.13.2 and GitBook 2.6.7" />
+  <meta name="generator" content="bookdown 0.14.1 and GitBook 2.6.7" />
 
   <meta property="og:title" content="11 Exporting static images | Interactive web-based data visualization with R, plotly, and shiny" />
   <meta property="og:type" content="book" />
@@ -40,6 +40,9 @@
 <link href="libs/gitbook/css/plugin-highlight.css" rel="stylesheet" />
 <link href="libs/gitbook/css/plugin-search.css" rel="stylesheet" />
 <link href="libs/gitbook/css/plugin-fontsettings.css" rel="stylesheet" />
+<link href="libs/gitbook/css/plugin-clipboard.css" rel="stylesheet" />
+
+
 
 
 
@@ -345,8 +348,13 @@ code span.wa { color: #60a0b0; font-weight: bold; font-style: italic; } /* Warni
 <h1><span class="header-section-number">11</span> Exporting static images</h1>
 <div id="with-code" class="section level2">
 <h2><span class="header-section-number">11.1</span> With code</h2>
-<p>Any <strong>plotly</strong> object can be saved as a static image via the <code>orca()</code> function. To use it, you’ll need the <code>orca</code> command-line utility (CLI). This CLI can be installed via node.js, conda, or a standalone binary from <a href="https://github.com/plotly/orca/releases" class="uri">https://github.com/plotly/orca/releases</a>. Figure <a href="#fig:orca"><strong>??</strong></a> demonstrates how <code>orca()</code> can generate a svg (or pdf) that can then be imported into Adobe Illustrator for post-processing. Although it’s a nice option to have, importing into Adobe Illustrator might not enable as nice of a workflow as using <strong>plotly</strong>’s native support for editable layout components in the browser, then exporting to svg/pdf (as shown in Figure <a href="#fig:edit-county-labels"><strong>??</strong></a>).</p>
+<p>Any <strong>plotly</strong> object can be saved as a static image via the <code>orca()</code> function. To use it, you’ll need the <code>orca</code> command-line utility (CLI). This CLI can be installed via node.js, conda, or a standalone binary from <a href="https://github.com/plotly/orca/releases" class="uri">https://github.com/plotly/orca/releases</a>. Figure <a href="exporting-static-images.html#fig:orca">11.1</a> demonstrates how <code>orca()</code> can generate a svg (or pdf) that can then be imported into Adobe Illustrator for post-processing. Although it’s a nice option to have, importing into Adobe Illustrator might not enable as nice of a workflow as using <strong>plotly</strong>’s native support for editable layout components in the browser, then exporting to svg/pdf (as shown in Figure <a href="editing-views.html#fig:edit-county-labels">12.1</a>).</p>
+<div class="figure" style="text-align: center"><span id="fig:orca"></span>
 <iframe src="https://player.vimeo.com/video/307598492?title=0&amp;byline=0&amp;portrait=0" width="100%" height="400" frameborder="0" seamless="seamless" webkitAllowFullScreen mozallowfullscreen allowFullScreen></iframe>
+<p class="caption">
+FIGURE 11.1: Using the <code>orca()</code> function to export a WebGL/Canvas based <strong>plotly</strong> graphic to a static pdf file. The resulting pdf file can then be imported into Adobe Illustrator for post-processing. For the interactive, see <a href="https://plotly-r.com/interactives/orca.html" class="uri">https://plotly-r.com/interactives/orca.html</a>
+</p>
+</div>
 </div>
 <div id="from-a-browser" class="section level2">
 <h2><span class="header-section-number">11.2</span> From a browser</h2>
@@ -363,7 +371,7 @@ code span.wa { color: #60a0b0; font-weight: bold; font-style: italic; } /* Warni
 <div class="figure" style="text-align: center"><span id="fig:toImageSVG"></span>
 <img src="images/toImageSVG.png" alt="Specifying options for static image exporting via the modebar. Clicking on the ‘download plot’ icon should prompt your browser to download a static svg file named ‘myplot.svg’." width="100%" data-url="/interactives/toImageSVG.html" />
 <p class="caption">
-FIGURE 11.1: Specifying options for static image exporting via the modebar. Clicking on the ‘download plot’ icon should prompt your browser to download a static svg file named ‘myplot.svg’.
+FIGURE 11.2: Specifying options for static image exporting via the modebar. Clicking on the ‘download plot’ icon should prompt your browser to download a static svg file named ‘myplot.svg’.
 </p>
 </div>
 </div>
@@ -443,11 +451,13 @@ window.onload = function() {
   </div>
 <script src="libs/gitbook/js/app.min.js"></script>
 <script src="libs/gitbook/js/lunr.js"></script>
+<script src="libs/gitbook/js/clipboard.min.js"></script>
 <script src="libs/gitbook/js/plugin-search.js"></script>
 <script src="libs/gitbook/js/plugin-sharing.js"></script>
 <script src="libs/gitbook/js/plugin-fontsettings.js"></script>
 <script src="libs/gitbook/js/plugin-bookdown.js"></script>
 <script src="libs/gitbook/js/jquery.highlight.js"></script>
+<script src="libs/gitbook/js/plugin-clipboard.js"></script>
 <script>
 gitbook.require(["gitbook"], function(gitbook) {
 gitbook.start({

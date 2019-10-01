@@ -6,7 +6,7 @@
   <meta http-equiv="X-UA-Compatible" content="IE=edge" />
   <title>20 Adding custom event handlers | Interactive web-based data visualization with R, plotly, and shiny</title>
   <meta name="description" content="A useR guide to creating highly interactive graphics for exploratory and expository visualization." />
-  <meta name="generator" content="bookdown 0.13.2 and GitBook 2.6.7" />
+  <meta name="generator" content="bookdown 0.14.1 and GitBook 2.6.7" />
 
   <meta property="og:title" content="20 Adding custom event handlers | Interactive web-based data visualization with R, plotly, and shiny" />
   <meta property="og:type" content="book" />
@@ -40,6 +40,9 @@
 <link href="libs/gitbook/css/plugin-highlight.css" rel="stylesheet" />
 <link href="libs/gitbook/css/plugin-search.css" rel="stylesheet" />
 <link href="libs/gitbook/css/plugin-fontsettings.css" rel="stylesheet" />
+<link href="libs/gitbook/css/plugin-clipboard.css" rel="stylesheet" />
+
+
 
 
 
@@ -343,7 +346,7 @@ code span.wa { color: #60a0b0; font-weight: bold; font-style: italic; } /* Warni
             <section class="normal" id="section-">
 <div id="js-event-handlers" class="section level1">
 <h1><span class="header-section-number">20</span> Adding custom event handlers</h1>
-<p>When using <code>onRender()</code> to provide a JS function to be called upon static render of a <strong>plotly</strong> object, the relevant DOM element (<code>el</code>) has an <code>on()</code> method that accepts a function to be called whenever a plotly.js (or DOM) event occurs on that DOM element. Currently all plotly.js event handlers accept a function with a single argument, and that argument either contains nothing (e.g. <code>"plotly_afterplot"</code>, etc) or a single object with all the relevant information about the event (e.g. <code>"plotly_hover"</code>, <code>"plotly_selected"</code>, etc). Figure <a href="#fig:console-log-event"><strong>??</strong></a> logs and inspects data (<code>d</code>) emitted during the <code>"plotly_hover"</code>, <code>"plotly_click"</code>, and <code>"plotly_selected"</code> events. The object emitted for these events includes a key, named <code>points</code>, with information tying the selection back to the input data. The <code>points</code> key is always an array of object(s) where each object represents a different data point. This object contains any supplied <code>customdata</code>, the relevant <code>x</code>/<code>y</code> location, and a reference back to the input <code>data</code>.</p>
+<p>When using <code>onRender()</code> to provide a JS function to be called upon static render of a <strong>plotly</strong> object, the relevant DOM element (<code>el</code>) has an <code>on()</code> method that accepts a function to be called whenever a plotly.js (or DOM) event occurs on that DOM element. Currently all plotly.js event handlers accept a function with a single argument, and that argument either contains nothing (e.g. <code>"plotly_afterplot"</code>, etc) or a single object with all the relevant information about the event (e.g. <code>"plotly_hover"</code>, <code>"plotly_selected"</code>, etc). Figure <a href="js-event-handlers.html#fig:console-log-event">20.1</a> logs and inspects data (<code>d</code>) emitted during the <code>"plotly_hover"</code>, <code>"plotly_click"</code>, and <code>"plotly_selected"</code> events. The object emitted for these events includes a key, named <code>points</code>, with information tying the selection back to the input data. The <code>points</code> key is always an array of object(s) where each object represents a different data point. This object contains any supplied <code>customdata</code>, the relevant <code>x</code>/<code>y</code> location, and a reference back to the input <code>data</code>.</p>
 <div class="sourceCode" id="cb193"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb193-1"><a href="js-event-handlers.html#cb193-1"></a><span class="kw">library</span>(htmlwidgets)</span>
 <span id="cb193-2"><a href="js-event-handlers.html#cb193-2"></a><span class="kw">plot_ly</span>(mtcars, <span class="dt">x =</span> <span class="op">~</span>wt, <span class="dt">y =</span> <span class="op">~</span>mpg) <span class="op">%&gt;%</span></span>
 <span id="cb193-3"><a href="js-event-handlers.html#cb193-3"></a><span class="st">  </span><span class="kw">onRender</span>(<span class="st">&quot;</span></span>
@@ -359,7 +362,12 @@ code span.wa { color: #60a0b0; font-weight: bold; font-style: italic; } /* Warni
 <span id="cb193-13"><a href="js-event-handlers.html#cb193-13"></a><span class="st">      });</span></span>
 <span id="cb193-14"><a href="js-event-handlers.html#cb193-14"></a><span class="st">    }</span></span>
 <span id="cb193-15"><a href="js-event-handlers.html#cb193-15"></a><span class="st">  &quot;</span>)</span></code></pre></div>
+<div class="figure" style="text-align: center"><span id="fig:console-log-event"></span>
 <iframe src="https://player.vimeo.com/video/307597974?title=0&amp;byline=0&amp;portrait=0" width="100%" height="700" frameborder="0" seamless="seamless" webkitAllowFullScreen mozallowfullscreen allowFullScreen></iframe>
+<p class="caption">
+FIGURE 20.1: Inspecting event data for hover, click, and selected events. If a click or hover event does not derive from a statistical aggregation (e.g., boxplot, histogram, etc), the <code>points</code> array is of length 1; otherwise, the length corresponds to how many input values are represented in the selection. In Chrome, when you log an object to the console, you can click on a link to the JS source function where you can then set breakpoints. For the interactive, see <a href="https://plotly-r.com/interactives/console-log-event.html" class="uri">https://plotly-r.com/interactives/console-log-event.html</a>
+</p>
+</div>
 </div>
 <script>
   var header = document.querySelector(".book-header");
@@ -428,11 +436,13 @@ window.onload = function() {
   </div>
 <script src="libs/gitbook/js/app.min.js"></script>
 <script src="libs/gitbook/js/lunr.js"></script>
+<script src="libs/gitbook/js/clipboard.min.js"></script>
 <script src="libs/gitbook/js/plugin-search.js"></script>
 <script src="libs/gitbook/js/plugin-sharing.js"></script>
 <script src="libs/gitbook/js/plugin-fontsettings.js"></script>
 <script src="libs/gitbook/js/plugin-bookdown.js"></script>
 <script src="libs/gitbook/js/jquery.highlight.js"></script>
+<script src="libs/gitbook/js/plugin-clipboard.js"></script>
 <script>
 gitbook.require(["gitbook"], function(gitbook) {
 gitbook.start({

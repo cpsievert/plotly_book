@@ -6,7 +6,7 @@
   <meta http-equiv="X-UA-Compatible" content="IE=edge" />
   <title>2 Overview | Interactive web-based data visualization with R, plotly, and shiny</title>
   <meta name="description" content="A useR guide to creating highly interactive graphics for exploratory and expository visualization." />
-  <meta name="generator" content="bookdown 0.13.2 and GitBook 2.6.7" />
+  <meta name="generator" content="bookdown 0.14.1 and GitBook 2.6.7" />
 
   <meta property="og:title" content="2 Overview | Interactive web-based data visualization with R, plotly, and shiny" />
   <meta property="og:type" content="book" />
@@ -40,6 +40,9 @@
 <link href="libs/gitbook/css/plugin-highlight.css" rel="stylesheet" />
 <link href="libs/gitbook/css/plugin-search.css" rel="stylesheet" />
 <link href="libs/gitbook/css/plugin-fontsettings.css" rel="stylesheet" />
+<link href="libs/gitbook/css/plugin-clipboard.css" rel="stylesheet" />
+
+
 
 
 
@@ -501,21 +504,26 @@ FIGURE 2.6: A portion of the JSON data behind the bottom plot of Figure <a href=
 <span id="cb19-14"><a href="overview.html#cb19-14"></a><span class="co"># Every trace has a type of histogram</span></span>
 <span id="cb19-15"><a href="overview.html#cb19-15"></a><span class="kw">unique</span>(purrr<span class="op">::</span><span class="kw">map_chr</span>(b<span class="op">$</span>x<span class="op">$</span>data, <span class="st">&quot;type&quot;</span>))</span>
 <span id="cb19-16"><a href="overview.html#cb19-16"></a><span class="co">#&gt; [1] &quot;histogram&quot;</span></span></code></pre></div>
-<p>Here we’ve learned that <strong>plotly</strong> creates 8 histogram traces to generate the dodged bar chart: one trace for each level of <code>clarity</code>.<a href="references.html#fn6" class="footnote-ref" id="fnref6"><sup>6</sup></a> Why one trace per category? As illustrated in Figure <a href="#fig:intro-show-hide"><strong>??</strong></a>, there are two main reasons: to populate a tooltip and legend entry for each level of <code>clarity</code> level.</p>
+<p>Here we’ve learned that <strong>plotly</strong> creates 8 histogram traces to generate the dodged bar chart: one trace for each level of <code>clarity</code>.<a href="references.html#fn6" class="footnote-ref" id="fnref6"><sup>6</sup></a> Why one trace per category? As illustrated in Figure <a href="overview.html#fig:intro-show-hide">2.7</a>, there are two main reasons: to populate a tooltip and legend entry for each level of <code>clarity</code> level.</p>
+<div class="figure" style="text-align: center"><span id="fig:intro-show-hide"></span>
 <iframe src="https://player.vimeo.com/video/315707813?title=0&amp;byline=0&amp;portrait=0" width="100%" height="400" frameborder="0" seamless="seamless" webkitAllowFullScreen mozallowfullscreen allowFullScreen></iframe>
+<p class="caption">
+FIGURE 2.7: Leveraging two interactive features that require one trace per level of <code>clarity</code>: (1) Using ‘Compare data on hover’ mode to get counts for every level of <code>clarity</code> for a given level of <code>cut</code> and (2) Using the ability to hide/show clarity levels via their legend entries. For the interactive, see <a href="https://plotly-r.com/interactives/intro-show-hide.html" class="uri">https://plotly-r.com/interactives/intro-show-hide.html</a>
+</p>
+</div>
 <p>If we investigated further, we’d notice that <code>color</code> and <code>colors</code> are not officially part of the plotly.js figure definition – the <code>plotly_build()</code> function has effectively transformed that information into a sensible plotly.js figure definition (e.g., <code>marker.color</code> contains the actual bar color codes). In fact, the <code>color</code> argument in <code>plot_ly()</code> is just one example of an abstraction the R package has built on top of plotly.js to make it easier to map data values to visual attributes, and many of these are covered in Chapter <a href="scatter-traces.html#scatter-traces">3</a>.</p>
 </div>
 <div id="intro-ggplotly" class="section level2">
 <h2><span class="header-section-number">2.3</span> Intro to <code>ggplotly()</code></h2>
 <p>The <code>ggplotly()</code> function from the <strong>plotly</strong> package has the ability to translate <strong>ggplot2</strong> to <strong>plotly</strong>. This functionality can be really helpful for quickly adding interactivity to your existing <strong>ggplot2</strong> workflow.<a href="references.html#fn7" class="footnote-ref" id="fnref7"><sup>7</sup></a> Moreover, even if you know <code>plot_ly()</code> and plotly.js well, <code>ggplotly()</code> can still be desirable for creating visualizations that aren’t necessarily straight-forward to achieve without it. To demonstrate, let’s explore the relationship between <code>price</code> and other variables from the well-known <code>diamonds</code> dataset.</p>
-<p>Hexagonal binning (i.e., <code>geom_hex()</code>) is useful way to visualize a 2D density<a href="references.html#fn8" class="footnote-ref" id="fnref8"><sup>8</sup></a>, like the relationship between <code>price</code> and <code>carat</code> as shown in Figure <a href="overview.html#fig:hexbin">2.7</a>. From Figure <a href="overview.html#fig:hexbin">2.7</a>, we can see there is a strong positive linear relationship between the <em>log</em> of carat and price. It also shows that for many, the carat is only rounded to a particular number (indicated by the light blue bands) and no diamonds are priced around $1500. Making this plot interactive makes it easier to decode the hexagonal colors into the counts that they represent.</p>
+<p>Hexagonal binning (i.e., <code>geom_hex()</code>) is useful way to visualize a 2D density<a href="references.html#fn8" class="footnote-ref" id="fnref8"><sup>8</sup></a>, like the relationship between <code>price</code> and <code>carat</code> as shown in Figure <a href="overview.html#fig:hexbin">2.8</a>. From Figure <a href="overview.html#fig:hexbin">2.8</a>, we can see there is a strong positive linear relationship between the <em>log</em> of carat and price. It also shows that for many, the carat is only rounded to a particular number (indicated by the light blue bands) and no diamonds are priced around $1500. Making this plot interactive makes it easier to decode the hexagonal colors into the counts that they represent.</p>
 <div class="sourceCode" id="cb20"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb20-1"><a href="overview.html#cb20-1"></a>p &lt;-<span class="st"> </span><span class="kw">ggplot</span>(diamonds, <span class="kw">aes</span>(<span class="dt">x =</span> <span class="kw">log</span>(carat), <span class="dt">y =</span> <span class="kw">log</span>(price))) <span class="op">+</span><span class="st"> </span></span>
 <span id="cb20-2"><a href="overview.html#cb20-2"></a><span class="st">  </span><span class="kw">geom_hex</span>(<span class="dt">bins =</span> <span class="dv">100</span>)</span>
 <span id="cb20-3"><a href="overview.html#cb20-3"></a><span class="kw">ggplotly</span>(p)</span></code></pre></div>
 <div class="figure" style="text-align: center"><span id="fig:hexbin"></span>
 <img src="images/hexbin.png" alt="A hexbin plot of diamond carat versus price." width="100%" data-url="/interactives/hexbin.html" />
 <p class="caption">
-FIGURE 2.7: A hexbin plot of diamond carat versus price.
+FIGURE 2.8: A hexbin plot of diamond carat versus price.
 </p>
 </div>
 <p>I often use <code>ggplotly()</code> over <code>plot_ly()</code> to leverage <strong>ggplot2</strong>’s consistent and expressive interface for exploring statistical summaries across groups. For example, by including a discrete <code>color</code> variable (e.g., <code>cut</code>) with <code>geom_freqpoly()</code>, you get a frequency polygon for each level of that variable. This ability to quickly generate visual encodings of statistical summaries across an arbitrary number of groups works for basically any geom (e.g. <code>geom_boxplot()</code>, <code>geom_histogram()</code>, <code>geom_density()</code>, etc) and is a key feature of <strong>ggplot2</strong>.</p>
@@ -525,17 +533,22 @@ FIGURE 2.7: A hexbin plot of diamond carat versus price.
 <div class="figure" style="text-align: center"><span id="fig:freqpoly"></span>
 <img src="images/freqpoly.svg" alt="Frequency polygons of diamond price by diamond clarity. This visualization indicates there may be significant main effects." width="100%" />
 <p class="caption">
-FIGURE 2.8: Frequency polygons of diamond price by diamond clarity. This visualization indicates there may be significant main effects.
+FIGURE 2.9: Frequency polygons of diamond price by diamond clarity. This visualization indicates there may be significant main effects.
 </p>
 </div>
-<p>Now, to see how <code>price</code> varies with both <code>cut</code> and <code>clarity</code>, we could repeat this same visualization for each level of <code>cut</code>. This is where <strong>ggplot2</strong>’s <code>facet_wrap()</code> comes in handy. Moreover, to facilitate comparisons, we can have <code>geom_freqpoly()</code> display relative rather than absolute frequencies. By making this plot interactive, we can more easily compare particular levels of clarity (as shown in Figure <a href="#fig:freqpoly-facet"><strong>??</strong></a>) by leveraging the legend filtering capabilities.</p>
+<p>Now, to see how <code>price</code> varies with both <code>cut</code> and <code>clarity</code>, we could repeat this same visualization for each level of <code>cut</code>. This is where <strong>ggplot2</strong>’s <code>facet_wrap()</code> comes in handy. Moreover, to facilitate comparisons, we can have <code>geom_freqpoly()</code> display relative rather than absolute frequencies. By making this plot interactive, we can more easily compare particular levels of clarity (as shown in Figure <a href="overview.html#fig:freqpoly-facet">2.10</a>) by leveraging the legend filtering capabilities.</p>
 <div class="sourceCode" id="cb22"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb22-1"><a href="overview.html#cb22-1"></a>p &lt;-<span class="st"> </span><span class="kw">ggplot</span>(diamonds, <span class="kw">aes</span>(<span class="dt">x =</span> <span class="kw">log</span>(price), <span class="dt">color =</span> clarity)) <span class="op">+</span><span class="st"> </span></span>
 <span id="cb22-2"><a href="overview.html#cb22-2"></a><span class="st">    </span><span class="kw">geom_freqpoly</span>(<span class="dt">stat =</span> <span class="st">&quot;density&quot;</span>) <span class="op">+</span><span class="st"> </span></span>
 <span id="cb22-3"><a href="overview.html#cb22-3"></a><span class="st">    </span><span class="kw">facet_wrap</span>(<span class="op">~</span>cut)</span>
 <span id="cb22-4"><a href="overview.html#cb22-4"></a><span class="kw">ggplotly</span>(p)</span></code></pre></div>
+<div class="figure" style="text-align: center"><span id="fig:freqpoly-facet"></span>
 <iframe src="https://player.vimeo.com/video/322318131?title=0&amp;byline=0&amp;portrait=0" width="100%" height="400" frameborder="0" seamless="seamless" webkitAllowFullScreen mozallowfullscreen allowFullScreen></iframe>
+<p class="caption">
+FIGURE 2.10: Diamond price by clarity and cut. For the interactive, see <a href="https://plotly-r.com/interactives/freqpoly-facet.html" class="uri">https://plotly-r.com/interactives/freqpoly-facet.html</a>
+</p>
+</div>
 <p>In addition to supporting most of the ‘core’ <strong>ggplot2</strong> API, <code>ggplotly()</code> can automatically convert any <strong>ggplot2</strong> extension packages that return a ‘standard’ <strong>ggplot2</strong> object. By standard, I mean that the object is comprised of ‘core’ <strong>ggplot2</strong> data structures and not the result of custom geoms.<a href="references.html#fn9" class="footnote-ref" id="fnref9"><sup>9</sup></a> Some great examples of R packages that extend <strong>ggplot2</strong> using core data structures are <strong>ggforce</strong>, <strong>naniar</strong>, and <strong>GGally</strong> <span class="citation">(Pedersen <a href="#ref-ggforce" role="doc-biblioref">2019</a>; Tierney et al. <a href="#ref-naniar" role="doc-biblioref">2018</a>; Schloerke et al. <a href="#ref-GGally" role="doc-biblioref">2016</a>)</span>.</p>
-<p>Figure <a href="overview.html#fig:geom-sina">2.9</a> demonstrates another way of visualizing the same information found in Figure <a href="#fig:freqpoly-facet"><strong>??</strong></a> using <code>geom_sina()</code> from the <strong>ggforce</strong> package (instead of <code>geom_freqpoly()</code>). This visualization jitters the raw data within the density for each group – allowing us not only to see where the majority observations fall within a group, but also across all across all groups. By making this layer interactive, we can query individual points for more information and zoom into interesting regions. The second layer of Figure <a href="overview.html#fig:geom-sina">2.9</a> uses <strong>ggplot2</strong>’s <code>stat_summary()</code> to overlay a 95% confidence interval estimated via a bootstrap algorithm via the <strong>Hmisc</strong> package <span class="citation">(Harrell Jr, Charles Dupont, and others. <a href="#ref-Hmisc" role="doc-biblioref">2019</a>)</span>.</p>
+<p>Figure <a href="overview.html#fig:geom-sina">2.11</a> demonstrates another way of visualizing the same information found in Figure <a href="overview.html#fig:freqpoly-facet">2.10</a> using <code>geom_sina()</code> from the <strong>ggforce</strong> package (instead of <code>geom_freqpoly()</code>). This visualization jitters the raw data within the density for each group – allowing us not only to see where the majority observations fall within a group, but also across all across all groups. By making this layer interactive, we can query individual points for more information and zoom into interesting regions. The second layer of Figure <a href="overview.html#fig:geom-sina">2.11</a> uses <strong>ggplot2</strong>’s <code>stat_summary()</code> to overlay a 95% confidence interval estimated via a bootstrap algorithm via the <strong>Hmisc</strong> package <span class="citation">(Harrell Jr, Charles Dupont, and others. <a href="#ref-Hmisc" role="doc-biblioref">2019</a>)</span>.</p>
 <div class="sourceCode" id="cb23"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb23-1"><a href="overview.html#cb23-1"></a>p &lt;-<span class="st"> </span><span class="kw">ggplot</span>(diamonds, <span class="kw">aes</span>(<span class="dt">x=</span>clarity, <span class="dt">y=</span><span class="kw">log</span>(price), <span class="dt">color=</span>clarity)) <span class="op">+</span></span>
 <span id="cb23-2"><a href="overview.html#cb23-2"></a><span class="st">    </span>ggforce<span class="op">::</span><span class="kw">geom_sina</span>(<span class="dt">alpha =</span> <span class="fl">0.1</span>) <span class="op">+</span><span class="st"> </span></span>
 <span id="cb23-3"><a href="overview.html#cb23-3"></a><span class="st">    </span><span class="kw">stat_summary</span>(<span class="dt">fun.data =</span> <span class="st">&quot;mean_cl_boot&quot;</span>, <span class="dt">color =</span> <span class="st">&quot;black&quot;</span>) <span class="op">+</span></span>
@@ -546,10 +559,10 @@ FIGURE 2.8: Frequency polygons of diamond price by diamond clarity. This visuali
 <div class="figure" style="text-align: center"><span id="fig:geom-sina"></span>
 <img src="images/geom-sina.svg" alt="A sina plot of diamond price by clarity and cut." width="100%" />
 <p class="caption">
-FIGURE 2.9: A sina plot of diamond price by clarity and cut.
+FIGURE 2.11: A sina plot of diamond price by clarity and cut.
 </p>
 </div>
-<p>As noted by <span class="citation">Wickham and Grolemund (<a href="#ref-r4ds" role="doc-biblioref">2018</a>)</span>, it’s surprising that the diamond price would decline with an increase of diamond clarity. As it turns out, if we account for the carat of the diamond, then see that better diamond clarity does indeed lead to a higher diamond price, as shown in Figure <a href="overview.html#fig:geom-sina-resid">2.10</a>. Seeing such a strong pattern in the residuals of simple linear model of carat vs price indicates that our model could be greatly improved by adding <code>clarity</code> as a predictor of <code>price</code>.</p>
+<p>As noted by <span class="citation">Wickham and Grolemund (<a href="#ref-r4ds" role="doc-biblioref">2018</a>)</span>, it’s surprising that the diamond price would decline with an increase of diamond clarity. As it turns out, if we account for the carat of the diamond, then see that better diamond clarity does indeed lead to a higher diamond price, as shown in Figure <a href="overview.html#fig:geom-sina-resid">2.12</a>. Seeing such a strong pattern in the residuals of simple linear model of carat vs price indicates that our model could be greatly improved by adding <code>clarity</code> as a predictor of <code>price</code>.</p>
 <div class="sourceCode" id="cb24"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb24-1"><a href="overview.html#cb24-1"></a>m &lt;-<span class="st"> </span><span class="kw">lm</span>(<span class="kw">log</span>(price) <span class="op">~</span><span class="st"> </span><span class="kw">log</span>(carat), <span class="dt">data =</span> diamonds)</span>
 <span id="cb24-2"><a href="overview.html#cb24-2"></a>diamonds &lt;-<span class="st"> </span>modelr<span class="op">::</span><span class="kw">add_residuals</span>(diamonds, m)</span>
 <span id="cb24-3"><a href="overview.html#cb24-3"></a>p &lt;-<span class="st"> </span><span class="kw">ggplot</span>(diamonds, <span class="kw">aes</span>(<span class="dt">x =</span> clarity, <span class="dt">y =</span> resid, <span class="dt">color =</span> clarity)) <span class="op">+</span></span>
@@ -560,17 +573,22 @@ FIGURE 2.9: A sina plot of diamond price by clarity and cut.
 <div class="figure" style="text-align: center"><span id="fig:geom-sina-resid"></span>
 <img src="images/geom-sina-resid.svg" alt="A sina plot of diamond price by clarity and cut, after accounting for carat." width="100%" />
 <p class="caption">
-FIGURE 2.10: A sina plot of diamond price by clarity and cut, after accounting for carat.
+FIGURE 2.12: A sina plot of diamond price by clarity and cut, after accounting for carat.
 </p>
 </div>
-<p>As discussed in Chapter <a href="client-side-linking.html#ggally-ggnostic">16.4.7</a>, the <strong>GGally</strong> package provides a convenient interface for making similar types of model diagnostic visualizations via the <code>ggnostic()</code> function. It also provides a convenience function for visualizing the coefficient estimates and their standard errors via the <code>ggcoef()</code> function. Figure <a href="#fig:ggally"><strong>??</strong></a> shows how injecting interactivity into this plot allows us to query exact values and zoom in on the most interesting regions.</p>
+<p>As discussed in Chapter <a href="client-side-linking.html#ggally-ggnostic">16.4.7</a>, the <strong>GGally</strong> package provides a convenient interface for making similar types of model diagnostic visualizations via the <code>ggnostic()</code> function. It also provides a convenience function for visualizing the coefficient estimates and their standard errors via the <code>ggcoef()</code> function. Figure <a href="overview.html#fig:ggally">2.13</a> shows how injecting interactivity into this plot allows us to query exact values and zoom in on the most interesting regions.</p>
 <div class="sourceCode" id="cb25"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb25-1"><a href="overview.html#cb25-1"></a><span class="kw">library</span>(GGally)</span>
 <span id="cb25-2"><a href="overview.html#cb25-2"></a>m &lt;-<span class="st"> </span><span class="kw">lm</span>(<span class="kw">log</span>(price) <span class="op">~</span><span class="st"> </span><span class="kw">log</span>(carat) <span class="op">+</span><span class="st"> </span>cut, <span class="dt">data =</span> diamonds)</span>
 <span id="cb25-3"><a href="overview.html#cb25-3"></a>gg &lt;-<span class="st"> </span><span class="kw">ggcoef</span>(m)</span>
 <span id="cb25-4"><a href="overview.html#cb25-4"></a><span class="co"># dynamicTicks means generate new axis ticks on zoom</span></span>
 <span id="cb25-5"><a href="overview.html#cb25-5"></a><span class="kw">ggplotly</span>(gg, <span class="dt">dynamicTicks =</span> <span class="ot">TRUE</span>)</span></code></pre></div>
+<div class="figure" style="text-align: center"><span id="fig:ggally"></span>
 <iframe src="https://player.vimeo.com/video/322362701?title=0&amp;byline=0&amp;portrait=0" width="100%" height="400" frameborder="0" seamless="seamless" webkitAllowFullScreen mozallowfullscreen allowFullScreen></iframe>
-<p>Although the <code>diamonds</code> dataset does not contain any missing values, it’s a very common problem in real data analysis problems. The <strong>naniar</strong> package provides a suite of computational and visual resources for working with and revealing structure in missing values. All the <strong>ggplot2</strong> based visualizations return an object that can be converted by <code>ggplotly()</code>. Moreover, <strong>naniar</strong> provides a custom geom, <code>geom_miss_point()</code>, that can be useful for visualizing missingness structure. Figure <a href="overview.html#fig:naniar">2.11</a> demonstrates this by introducing fake missing values to the diamond price.</p>
+<p class="caption">
+FIGURE 2.13: Zooming in on a coefficient plot generated from the <code>ggcoef()</code> function from the <strong>GGally</strong> package. For the interactive, see <a href="https://plotly-r.com/interactives/ggally.html" class="uri">https://plotly-r.com/interactives/ggally.html</a>
+</p>
+</div>
+<p>Although the <code>diamonds</code> dataset does not contain any missing values, it’s a very common problem in real data analysis problems. The <strong>naniar</strong> package provides a suite of computational and visual resources for working with and revealing structure in missing values. All the <strong>ggplot2</strong> based visualizations return an object that can be converted by <code>ggplotly()</code>. Moreover, <strong>naniar</strong> provides a custom geom, <code>geom_miss_point()</code>, that can be useful for visualizing missingness structure. Figure <a href="overview.html#fig:naniar">2.14</a> demonstrates this by introducing fake missing values to the diamond price.</p>
 <div class="sourceCode" id="cb26"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb26-1"><a href="overview.html#cb26-1"></a><span class="kw">library</span>(naniar)</span>
 <span id="cb26-2"><a href="overview.html#cb26-2"></a><span class="co"># fake some missing data</span></span>
 <span id="cb26-3"><a href="overview.html#cb26-3"></a>diamonds<span class="op">$</span>price_miss &lt;-<span class="st"> </span><span class="kw">ifelse</span>(diamonds<span class="op">$</span>depth<span class="op">&gt;</span><span class="dv">60</span>, diamonds<span class="op">$</span>price, <span class="ot">NA</span>)</span>
@@ -582,7 +600,7 @@ FIGURE 2.10: A sina plot of diamond price by clarity and cut, after accounting f
 <div class="figure" style="text-align: center"><span id="fig:naniar"></span>
 <img src="images/naniar.svg" alt="Using the geom_miss_point() function from the naniar package to visualize missing values in relation to non-missing values. Missing values are shown in red." width="100%" />
 <p class="caption">
-FIGURE 2.11: Using the <code>geom_miss_point()</code> function from the <strong>naniar</strong> package to visualize missing values in relation to non-missing values. Missing values are shown in red.
+FIGURE 2.14: Using the <code>geom_miss_point()</code> function from the <strong>naniar</strong> package to visualize missing values in relation to non-missing values. Missing values are shown in red.
 </p>
 </div>
 <p>In short, the <strong>ggplot2</strong> ecosystem provides a world-class exploratory visualization toolkit, and having the ability to quickly insert interactivity such as hover, zoom, and filter via <code>ggplotly()</code> makes it even more powerful for exploratory analysis. In this introduction to <code>ggplotly()</code>, we’ve only seen relatively simple techniques that come for free out-of-the-box, but the true power of interactive graphics lies in linking multiple views. In that part of the book, you can find lots of examples of linking multiple (<code>ggplotly()</code> &amp; <code>plot_ly()</code>) graphs purely client-side as well as with <strong>shiny</strong>.</p>
@@ -704,11 +722,13 @@ window.onload = function() {
   </div>
 <script src="libs/gitbook/js/app.min.js"></script>
 <script src="libs/gitbook/js/lunr.js"></script>
+<script src="libs/gitbook/js/clipboard.min.js"></script>
 <script src="libs/gitbook/js/plugin-search.js"></script>
 <script src="libs/gitbook/js/plugin-sharing.js"></script>
 <script src="libs/gitbook/js/plugin-fontsettings.js"></script>
 <script src="libs/gitbook/js/plugin-bookdown.js"></script>
 <script src="libs/gitbook/js/jquery.highlight.js"></script>
+<script src="libs/gitbook/js/plugin-clipboard.js"></script>
 <script>
 gitbook.require(["gitbook"], function(gitbook) {
 gitbook.start({
