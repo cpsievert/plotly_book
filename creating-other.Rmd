@@ -20,7 +20,7 @@ subplot(
 )
 ```
 
-```{r histogram2d, echo = FALSE, fig.cap = "(ref:histogram2d)", out.extra = 'data-url="/interactives/histogram2d.html"'}
+```{r histogram2d, echo = FALSE, fig.cap = "(ref:histogram2d)", out.extra = if (knitr::is_html_output()) 'data-url="/interactives/histogram2d.html"'}
 knitr::include_graphics("images/histogram2d.svg")
 ```
 
@@ -44,7 +44,7 @@ plot_ly(kd, x = ~x, y = ~y, z = ~count) %>%
   colorbar(title = "Number of diamonds")
 ```
 
-```{r heatmap-corr-diamonds, echo = FALSE, fig.cap = "(ref:heatmap-corr-diamonds)", out.extra = 'data-url="/interactives/heatmap-corr-diamonds.html"'}
+```{r heatmap-corr-diamonds, echo = FALSE, fig.cap = "(ref:heatmap-corr-diamonds)", out.extra = if (knitr::is_html_output()) 'data-url="/interactives/heatmap-corr-diamonds.html"'}
 knitr::include_graphics("images/heatmap-corr-diamonds.svg")
 ```
 
@@ -56,12 +56,12 @@ Figure \@ref(fig:correlation) uses `add_heatmap()` to display a correlation matr
 
 ```r
 corr <- cor(dplyr::select_if(diamonds, is.numeric))
-plot_ly(x = rownames(corr), y = colnames(corr), z = corr, colors = "RdBu") %>%
-  add_heatmap() %>%
+plot_ly(colors = "RdBu") %>%
+  add_heatmap(x = rownames(corr), y = colnames(corr), z = corr) %>%
   colorbar(limits = c(-1, 1))
 ```
 
-```{r correlation, echo = FALSE, fig.cap = "(ref:correlation)", out.extra = 'data-url="/interactives/correlation.html"'}
+```{r correlation, echo = FALSE, fig.cap = "(ref:correlation)", out.extra = if (knitr::is_html_output()) 'data-url="/interactives/correlation.html"'}
 knitr::include_graphics("images/correlation.svg")
 ```
 
@@ -76,7 +76,7 @@ plot_ly(mpg, x = ~cty, y = ~hwy, z = ~cyl) %>%
   add_markers(color = ~cyl)
 ```
 
-```{r 3D-scatterplot, echo = FALSE, fig.cap = "(ref:3D-scatterplot)", out.extra = 'data-url="/interactives/3D-scatterplot.html"'}
+```{r 3D-scatterplot, echo = FALSE, fig.cap = "(ref:3D-scatterplot)", out.extra = if (knitr::is_html_output()) 'data-url="/interactives/3D-scatterplot.html"'}
 knitr::include_graphics("images/3D-scatterplot.svg")
 ```
 
@@ -89,7 +89,7 @@ plot_ly(mpg, x = ~cty, y = ~hwy, z = ~cyl) %>%
   add_paths(color = ~displ)
 ```
 
-```{r 3D-paths, echo = FALSE, fig.cap = "(ref:3D-paths)", out.extra = 'data-url="/interactives/3D-paths.html"'}
+```{r 3D-paths, echo = FALSE, fig.cap = "(ref:3D-paths)", out.extra = if (knitr::is_html_output()) 'data-url="/interactives/3D-paths.html"'}
 knitr::include_graphics("images/3D-paths.png")
 ```
 
@@ -102,7 +102,7 @@ plot_ly(mpg, x = ~cty, y = ~hwy, z = ~cyl) %>%
   add_lines(color = ~displ)
 ```
 
-```{r 3D-lines, echo = FALSE, fig.cap = "(ref:3D-lines)", out.extra = 'data-url="/interactives/3D-lines.html"'}
+```{r 3D-lines, echo = FALSE, fig.cap = "(ref:3D-lines)", out.extra = if (knitr::is_html_output()) 'data-url="/interactives/3D-lines.html"'}
 knitr::include_graphics("images/3D-lines.png")
 ```
 
@@ -114,7 +114,7 @@ plot_ly(mpg, x = ~cty, y = ~hwy, z = ~cyl) %>%
   add_lines(color = ~displ)
 ```
 
-```{r 3D-lines-groups, echo = FALSE, fig.cap = "(ref:3D-lines-groups)", out.extra = 'data-url="/interactives/3D-lines-groups.html"'}
+```{r 3D-lines-groups, echo = FALSE, fig.cap = "(ref:3D-lines-groups)", out.extra = if (knitr::is_html_output()) 'data-url="/interactives/3D-lines-groups.html"'}
 knitr::include_graphics("images/3D-lines-groups.png")
 ```
 
@@ -134,7 +134,7 @@ plot_ly(mpg, x = ~cty, y = ~hwy, z = ~cyl) %>%
   )
 ```
 
-```{r 3D-axes, echo = FALSE, fig.cap = "(ref:3D-axes)", out.extra = 'data-url="/interactives/3D-axes.html"'}
+```{r 3D-axes, echo = FALSE, fig.cap = "(ref:3D-axes)", out.extra = if (knitr::is_html_output()) 'data-url="/interactives/3D-axes.html"'}
 knitr::include_graphics("images/3D-axes.png")
 ```
 
@@ -149,6 +149,6 @@ y <- seq_len(ncol(volcano)) + 500
 plot_ly() %>% add_surface(x = ~x, y = ~y, z = ~volcano)
 ```
 
-```{r surface, echo = FALSE, fig.cap = "(ref:surface)", out.extra = 'data-url="/interactives/surface.html"'}
+```{r surface, echo = FALSE, fig.cap = "(ref:surface)", out.extra = if (knitr::is_html_output()) 'data-url="/interactives/surface.html"'}
 knitr::include_graphics("images/surface.png")
 ```

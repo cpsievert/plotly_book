@@ -1,5 +1,6 @@
 gitbook:
 	mkdir -p docs/images && cp images/* docs/images
+	mkdir -p docs/data-raw && cp data-raw/* docs/data-raw
 	mkdir -p docs/interactives && cp -r interactives/* docs/interactives
 	Rscript --quiet _render.R "bookdown::gitbook"
 	cp _redirects docs/

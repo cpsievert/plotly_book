@@ -8,7 +8,7 @@ These early systems were incredibly sophisticated, but the interactive graphics 
 
 A web application relies on a client-server relationship where the client's (i.e., end user) web browser requests content from a remote server. This model is necessary whenever the webpage needs to execute computer code that is not natively supported by the client's web browser. As Section \@ref(linking-views-with-shiny) details, the flexibility that a web application framework, like **shiny**, offers is an incredibly productive and powerful way to link multiple data views; but when it comes to distributing a web application, it introduces a lot of complexity and computational infrastructure that may or may not be necessary.
 
-Figure \@ref(fig:server-client) is a basic illustration of the difference between a web application and a purely client-side web page. Thanks to `JavaScript` and `HTML5`, purely client-side web pages can still be dynamic without any software dependencies besides a modern web browser. In fact, Section \@ref(graphical-queries) outlines **plotly**'s graphical querying framework for linking multiple plots entirely client-side, which makes the result very easy to distribute (see Section \@ref(saving)). There are, of course, many useful examples of linked and dynamic views that can not be easily expressed as a database query, but a suprising amount actually can, and the remainder can likely be quickly implemented as a **shiny** web application.
+Figure \@ref(fig:server-client) is a basic illustration of the difference between a web application and a purely client-side web page. Thanks to `JavaScript` and `HTML5`, purely client-side web pages can still be dynamic without any software dependencies besides a modern web browser. In fact, Section \@ref(graphical-queries) outlines **plotly**'s graphical querying framework for linking multiple plots entirely client-side, which makes the result very easy to distribute (see Section \@ref(saving)). There are, of course, many useful examples of linked and dynamic views that can not be easily expressed as a database query, but a surprising amount actually can, and the remainder can likely be quickly implemented as a **shiny** web application.
 
 ```{r server-client, echo = FALSE, fig.cap = "(ref:server-client)"}
 knitr::include_graphics("images/server-client.svg")
@@ -83,7 +83,13 @@ time_series <- base %>%
 ```
 
 ```r
-highlight(time_series, on = "plotly_click", selectize = TRUE, dynamic = TRUE, persistent = TRUE)
+highlight(
+  time_series, 
+  on = "plotly_click", 
+  selectize = TRUE, 
+  dynamic = TRUE, 
+  persistent = TRUE
+)
 ```
 
 ```{r txmissing-modes, echo = FALSE, fig.cap = "(ref:txmissing-modes)"}
@@ -112,13 +118,17 @@ time_series <- base %>%
 dot_plot <- base %>%
   summarise(miss = sum(is.na(median))) %>%
   filter(miss > 0) %>%
-  add_markers(x = ~miss, y = ~forcats::fct_reorder(city, miss), hoverinfo = "x+y") %>%
+  add_markers(
+    x = ~miss, 
+    y = ~forcats::fct_reorder(city, miss), 
+    hoverinfo = "x+y"
+  ) %>%
   layout(
     xaxis = list(title = "Number of months missing"),
     yaxis = list(title = "")
   ) 
 
-subplot(dot_plot, time_series, widths = c(0.2, 0.8), titleX = TRUE) %>%
+subplot(dot_plot, time_series, widths = c(.2, .8), titleX = TRUE) %>%
   layout(showlegend = FALSE) %>%
   highlight(on = "plotly_selected", dynamic = TRUE, selectize = TRUE)
 ```
@@ -160,10 +170,18 @@ time_series <- base %>%
 ```
 
 ```r
-hist <- base %>% add_histogram(x = ~median, histnorm = "probability density")
+hist <- add_histogram(
+  base,
+  x = ~median, 
+  histnorm = "probability density"
+)
 subplot(time_series, hist, nrows = 2) %>%
   layout(barmode = "overlay", showlegend = FALSE) %>%
-  highlight(dynamic = TRUE, selectize = TRUE, selected = attrs_selected(opacity = 0.3))
+  highlight(
+    dynamic = TRUE, 
+    selectize = TRUE, 
+    selected = attrs_selected(opacity = 0.3)
+  )
 ```
 
 ```{r txhousing-aggregates, echo = FALSE, fig.cap = "(ref:txhousing-aggregates)"}
@@ -256,7 +274,10 @@ As Figure \@ref(fig:plotly-leaflet-filter) demonstrates, filter and highlight ev
 library(leaflet)
 
 eqs <- highlight_key(quakes)
-stations <- filter_slider("station", "Number of Stations", eqs, ~stations)
+stations <- filter_slider(
+  "station", "Number of Stations", 
+  eqs, ~stations
+)
 
 p <- plot_ly(eqs, x = ~depth, y = ~mag) %>% 
   add_markers(alpha = 0.5) %>% 
@@ -276,12 +297,15 @@ bscols(
 include_vimeo("307597495")
 ```
 
-When combining filter and highlight events, one (current) limitation to be aware of is that the highlighting variable has to be nested inside filter variable(s). For example, in Figure \@ref(fig:gapminder-filter-highlight), we can filter by continent and highlight by country, but there is currently no way to highlight by contintent and filter by country.
+When combining filter and highlight events, one (current) limitation to be aware of is that the highlighting variable has to be nested inside filter variable(s). For example, in Figure \@ref(fig:gapminder-filter-highlight), we can filter by continent and highlight by country, but there is currently no way to highlight by continent and filter by country.
 
 ```r
 library(gapminder)
 g <- highlight_key(gapminder, ~country)
-continent_filter <- filter_select("filter", "Select a country", g, ~continent)
+continent_filter <- filter_select(
+  "filter", "Select a country", 
+  g, ~continent
+)
 
 p <- plot_ly(g) %>%
   group_by(country) %>%
@@ -326,7 +350,8 @@ The graphical querying framework (Section \@ref(graphical-queries)) works in tan
 
 ```r
 g <- highlight_key(gapminder, ~continent)
-gg <- ggplot(g, aes(gdpPercap, lifeExp, color = continent, frame = year)) +
+gg <- ggplot(g, aes(gdpPercap, lifeExp, 
+  color = continent, frame = year)) +
   geom_point(aes(size = pop, ids = country)) +
   geom_smooth(se = FALSE, method = "lm") +
   scale_x_log10()
@@ -350,20 +375,35 @@ gapKey <- highlight_key(gap, ~country)
 
 p1 <- plot_ly(gap, y = ~country, x = ~popDen, hoverinfo = "x") %>%
   add_markers(alpha = 0.1, color = I("black")) %>%
-  add_markers(data = gapKey, frame = ~year, ids = ~country, color = I("red")) %>%
+  add_markers(
+    data = gapKey, 
+    frame = ~year, 
+    ids = ~country, 
+    color = I("red")
+  ) %>%
   layout(xaxis = list(type = "log"))
 
 p2 <- plot_ly(gap, x = ~gdpPercap, y = ~lifeExp, size = ~popDen, 
               text = ~country, hoverinfo = "text") %>%
   add_markers(color = I("black"), alpha = 0.1) %>%
-  add_markers(data = gapKey, frame = ~year, ids = ~country, color = I("red")) %>%
+  add_markers(
+    data = gapKey, 
+    frame = ~year, 
+    ids = ~country, 
+    color = I("red")
+  ) %>%
   layout(xaxis = list(type = "log"))
 
 subplot(p1, p2, nrows = 1, widths = c(0.3, 0.7), titleX = TRUE) %>%
   hide_legend() %>%
   animation_opts(1000, redraw = FALSE) %>%
   layout(hovermode = "y", margin = list(l = 100)) %>%
-  highlight("plotly_selected", color = "blue", opacityDim = 1, hoverinfo = "none")
+  highlight(
+    "plotly_selected", 
+    color = "blue", 
+    opacityDim = 1, 
+    hoverinfo = "none"
+  )
 ```
 
 ```{r animation-gapminder, echo = FALSE, fig.cap = "(ref:animation-gapminder)"}

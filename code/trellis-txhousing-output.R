@@ -1,8 +1,9 @@
 if (knitr::is_html_output()) {
   library(dplyr)
+  cities <- c("Galveston", "Midland", "Odessa", "South Padre Island")
   txsmall <- txhousing %>%
     select(city, year, month, median) %>%
-    filter(city %in% c("Galveston", "Midland", "Odessa", "South Padre Island"))
+    filter(city %in% cities)
 
   txsmall %>%
     highlight_key(~year) %>% {
@@ -13,3 +14,4 @@ if (knitr::is_html_output()) {
 } else {
   knitr::include_graphics("images/trellis-txhousing.png")
 }
+

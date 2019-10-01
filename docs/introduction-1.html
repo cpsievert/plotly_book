@@ -24,7 +24,7 @@
 <meta name="author" content="Carson Sievert" />
 
 
-<meta name="date" content="2019-09-13" />
+<meta name="date" content="2019-10-01" />
 
   <meta name="viewport" content="width=device-width, initial-scale=1" />
   <meta name="apple-mobile-web-app-capable" content="yes" />
@@ -58,6 +58,11 @@
 <script src="libs/selectize/selectize.min.js"></script>
 <link href="libs/colourpicker/colourpicker.min.css" rel="stylesheet" />
 <script src="libs/colourpicker/colourpicker.min.js"></script>
+<link href="libs/datatables-css/datatables-crosstalk.css" rel="stylesheet" />
+<script src="libs/datatables-binding/datatables.js"></script>
+<link href="libs/dt-core/css/jquery.dataTables.min.css" rel="stylesheet" />
+<link href="libs/dt-core/css/jquery.dataTables.extra.css" rel="stylesheet" />
+<script src="libs/dt-core/js/jquery.dataTables.min.js"></script>
 
 
 <style type="text/css">
@@ -342,11 +347,11 @@ code span.wa { color: #60a0b0; font-weight: bold; font-style: italic; } /* Warni
 <p>Linking of multiple data views offers a powerful approach to visualization as well as communication of structure in high-dimensional data. In particular, linking of multiple 1-2 dimensional statistical graphics can often lead to insight that a single view could not possibly reveal. For decades, statisticians and computer scientists have been using and authoring systems for multiple linked views, many of which can be found in the <a href="http://stat-graphics.org/movies">ASA’s video library</a>. Some noteworthy videos include <a href="http://stat-graphics.org/movies/focussing-linking.html">focusing and linking</a>, <a href="http://stat-graphics.org/movies/missing-data.html">missing values</a>, and <a href="http://stat-graphics.org/movies/tour-de-france.html">exploring Tour De France data</a> <span class="citation">(Swayne, Cook, and Buja <a href="#ref-xgobi" role="doc-biblioref">1998</a>; Theus and Urbanek <a href="#ref-mondrianbook" role="doc-biblioref">2008</a>)</span>.</p>
 <p>These early systems were incredibly sophisticated, but the interactive graphics they produce are not easily shared, replicated, or incorporated in a larger document. Web technologies offer the infrastructure to address these issues, which is a big reason why many modern interactive graphics systems are now web based. When talking about interactive <em>web-based</em> graphics, it’s important to recognize the difference between a web application and a purely client-side webpage, especially when it comes to saving, sharing, and hosting the result.</p>
 <p>A web application relies on a client-server relationship where the client’s (i.e., end user) web browser requests content from a remote server. This model is necessary whenever the webpage needs to execute computer code that is not natively supported by the client’s web browser. As Section <a href="linking-views-with-shiny.html#linking-views-with-shiny">17</a> details, the flexibility that a web application framework, like <strong>shiny</strong>, offers is an incredibly productive and powerful way to link multiple data views; but when it comes to distributing a web application, it introduces a lot of complexity and computational infrastructure that may or may not be necessary.</p>
-<p>Figure <a href="introduction-1.html#fig:server-client">15.1</a> is a basic illustration of the difference between a web application and a purely client-side web page. Thanks to <code>JavaScript</code> and <code>HTML5</code>, purely client-side web pages can still be dynamic without any software dependencies besides a modern web browser. In fact, Section <a href="client-side-linking.html#graphical-queries">16.1</a> outlines <strong>plotly</strong>’s graphical querying framework for linking multiple plots entirely client-side, which makes the result very easy to distribute (see Section <a href="saving.html#saving">10</a>). There are, of course, many useful examples of linked and dynamic views that can not be easily expressed as a database query, but a suprising amount actually can, and the remainder can likely be quickly implemented as a <strong>shiny</strong> web application.</p>
+<p>Figure <a href="introduction-1.html#fig:server-client">15.1</a> is a basic illustration of the difference between a web application and a purely client-side web page. Thanks to <code>JavaScript</code> and <code>HTML5</code>, purely client-side web pages can still be dynamic without any software dependencies besides a modern web browser. In fact, Section <a href="client-side-linking.html#graphical-queries">16.1</a> outlines <strong>plotly</strong>’s graphical querying framework for linking multiple plots entirely client-side, which makes the result very easy to distribute (see Section <a href="saving.html#saving">10</a>). There are, of course, many useful examples of linked and dynamic views that can not be easily expressed as a database query, but a surprising amount actually can, and the remainder can likely be quickly implemented as a <strong>shiny</strong> web application.</p>
 <div class="figure" style="text-align: center"><span id="fig:server-client"></span>
-<img src="images/server-client.svg" alt="A diagram of the graphical querying framework underlying Figure 16.6." width="100%" />
+<img src="images/server-client.svg" alt="A diagram of the graphical querying framework underlying Figure 16.4." width="100%" />
 <p class="caption">
-FIGURE 15.1: A diagram of the graphical querying framework underlying Figure <a href="client-side-linking.html#fig:txhousing-aggregates">16.6</a>.
+FIGURE 15.1: A diagram of the graphical querying framework underlying Figure <a href="client-side-linking.html#fig:txhousing-aggregates">16.4</a>.
 </p>
 </div>
 <p>The graphical querying framework implemented by <strong>plotly</strong> is inspired by <span class="citation">Buja et al. (<a href="#ref-Buja:1991vh" role="doc-biblioref">1991</a>)</span>, where direct manipulation of graphical elements in multiple linked plots is used to perform data base queries and visually reveal high-dimensional structure in real-time. <span class="citation">D. Cook, Buja, and Swayne (<a href="#ref-Cook:2007uk" role="doc-biblioref">2007</a>)</span> goes on to argue this framework is preferable to posing data base queries dynamically via a menus, as described by <span class="citation">Ahlberg, Williamson, and Shneiderman (<a href="#ref-Ahlberg:1991" role="doc-biblioref">1991</a>)</span>, and goes on to state that “Multiple linked views are the optimal framework for posing queries about data”. The next section shows you how to implement similar graphical queries in a standalone webpage using R code.</p>

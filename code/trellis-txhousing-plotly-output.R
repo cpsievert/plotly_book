@@ -17,7 +17,11 @@ if (knitr::is_html_output()) {
           showarrow = FALSE
         )
     ) %>%
-    subplot(nrows = 2, margin = 0.05, shareY = TRUE, shareX = TRUE, titleY = FALSE)
+    subplot(
+      nrows = 2, margin = 0.05,
+      shareY = TRUE, shareX = TRUE, titleY = FALSE
+    )
 } else  {
   knitr::include_graphics("images/trellis-txhousing-plotly.png")
 }
+

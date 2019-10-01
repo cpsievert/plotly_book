@@ -5,7 +5,8 @@ The `add_bars()` and `add_histogram()` functions wrap the [bar](https://plot.ly/
 Figure \@ref(fig:bars-numeric) compares the default binning algorithm in plotly.js to a few different algorithms available in R via the `hist()` function. Although plotly.js has the ability to customize histogram bins via [`xbins`](https://plot.ly/r/reference/#histogram-xbins)/[`ybins`](https://plot.ly/r/reference/#histogram-ybins), R has diverse facilities for estimating the optimal number of bins in a histogram that we can easily leverage.^[Optimal in this context is the number of bins which minimizes the distance between the empirical histogram and the underlying density.] The `hist()` function alone allows us to reference 3 famous algorithms by name [@Sturges; @FD; @hist-scott], but there are also packages (e.g. the **histogram** package) which extend this interface to incorporate more methodology [@histogram]. The `price_hist()` function below wraps the `hist()` function to obtain the binning results, and map those bins to a plotly version of the histogram using `add_bars()`.
 
 ```r
-p1 <- plot_ly(diamonds, x = ~price) %>% add_histogram(name = "plotly.js")
+p1 <- plot_ly(diamonds, x = ~price) %>%
+  add_histogram(name = "plotly.js")
 
 price_hist <- function(method = "FD") {
   h <- hist(diamonds$price, breaks = method, plot = FALSE)
@@ -18,7 +19,7 @@ subplot(
 )
 ```
 
-```{r bars-numeric, echo = FALSE, fig.cap = "(ref:bars-numeric)", out.extra = 'data-url="/interactives/bars-numeric.html"'}
+```{r bars-numeric, echo = FALSE, fig.cap = "(ref:bars-numeric)", out.extra = if (knitr::is_html_output()) 'data-url="/interactives/bars-numeric.html"'}
 knitr::include_graphics("images/bars-numeric.svg")
 ```
 
@@ -36,7 +37,7 @@ p2 <- diamonds %>%
 subplot(p1, p2) %>% hide_legend()
 ```
 
-```{r bars-discrete, echo = FALSE, fig.cap = "(ref:bars-discrete)", out.extra = 'data-url="/interactives/bars-discrete.html"'}
+```{r bars-discrete, echo = FALSE, fig.cap = "(ref:bars-discrete)", out.extra = if (knitr::is_html_output()) 'data-url="/interactives/bars-discrete.html"'}
 knitr::include_graphics("images/bars-discrete.svg")
 ```
 
@@ -60,7 +61,7 @@ diamonds %>%
   hide_legend()
 ```
 
-```{r many-prices, echo = FALSE, fig.cap = "(ref:many-prices)", out.extra = 'data-url="/interactives/many-prices.html"'}
+```{r many-prices, echo = FALSE, fig.cap = "(ref:many-prices)", out.extra = if (knitr::is_html_output()) 'data-url="/interactives/many-prices.html"'}
 knitr::include_graphics("images/many-prices.svg")
 ```
 
@@ -74,7 +75,7 @@ plot_ly(diamonds, x = ~cut, color = ~clarity) %>%
   add_histogram()
 ```
 
-```{r cut-by-clarity, echo = FALSE, fig.cap = "(ref:cut-by-clarity)", out.extra = 'data-url="/interactives/cut-by-clarity.html"'}
+```{r cut-by-clarity, echo = FALSE, fig.cap = "(ref:cut-by-clarity)", out.extra = if (knitr::is_html_output()) 'data-url="/interactives/cut-by-clarity.html"'}
 knitr::include_graphics("images/cut-by-clarity.svg")
 ```
 
@@ -92,7 +93,7 @@ cc2 %>%
   layout(barmode = "stack")
 ```
 
-```{r cut-by-clarity-prop, echo = FALSE, fig.cap = "(ref:cut-by-clarity-prop)", out.extra = 'data-url="/interactives/cut-by-clarity-prop.html"'}
+```{r cut-by-clarity-prop, echo = FALSE, fig.cap = "(ref:cut-by-clarity-prop)", out.extra = if (knitr::is_html_output()) 'data-url="/interactives/cut-by-clarity-prop.html"'}
 knitr::include_graphics("images/cut-by-clarity-prop.svg")
 ```
 
@@ -105,7 +106,7 @@ p <- ggplot(data = cc) +
 ggplotly(p)
 ```
 
-```{r ggmosaic, echo = FALSE, fig.cap = "(ref:ggmosaic)", out.extra = 'data-url="/interactives/ggmosaic.html"'}
+```{r ggmosaic, echo = FALSE, fig.cap = "(ref:ggmosaic)", out.extra = if (knitr::is_html_output()) 'data-url="/interactives/ggmosaic.html"'}
 knitr::include_graphics("images/ggmosaic.svg")
 ```
 
@@ -124,7 +125,7 @@ subplot(
 ) %>% hide_legend()
 ```
 
-```{r cut-boxes, echo = FALSE, fig.cap = "(ref:cut-boxes)", out.extra = 'data-url="/interactives/bars-numeric.html"', out.extra = 'data-url="/interactives/cut-boxes.html"'}
+```{r cut-boxes, echo = FALSE, fig.cap = "(ref:cut-boxes)", out.extra = if (knitr::is_html_output()) 'data-url="/interactives/cut-boxes.html"'}
 knitr::include_graphics("images/cut-boxes.svg")
 ```
 
@@ -136,7 +137,7 @@ plot_ly(diamonds, x = ~price, y = ~interaction(clarity, cut)) %>%
   layout(yaxis = list(title = ""))
 ```
 
-```{r cut-by-clarity-boxes, echo = FALSE, fig.cap = "(ref:cut-by-clarity-boxes)", out.extra = 'data-url="/interactives/cut-by-clarity-boxes.html"'}
+```{r cut-by-clarity-boxes, echo = FALSE, fig.cap = "(ref:cut-by-clarity-boxes)", out.extra = if (knitr::is_html_output()) 'data-url="/interactives/cut-by-clarity-boxes.html"'}
 knitr::include_graphics("images/cut-by-clarity-boxes.svg")
 ```
 
@@ -159,7 +160,7 @@ plot_ly(d, x = ~price, y = ~factor(cc, lvls)) %>%
   layout(yaxis = list(title = ""))
 ```
 
-```{r cut-by-clarity-boxes-sorted, echo = FALSE, fig.cap = "(ref:cut-by-clarity-boxes-sorted)", out.extra = 'data-url="/interactives/cut-by-clarity-boxes-sorted.html"'}
+```{r cut-by-clarity-boxes-sorted, echo = FALSE, fig.cap = "(ref:cut-by-clarity-boxes-sorted)", out.extra = if (knitr::is_html_output()) 'data-url="/interactives/cut-by-clarity-boxes-sorted.html"'}
 knitr::include_graphics("images/cut-by-clarity-boxes-sorted.svg")
 ```
 

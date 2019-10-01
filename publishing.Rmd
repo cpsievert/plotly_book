@@ -2,7 +2,7 @@
 
 # Introduction {#publish}
 
-This chapter shows you how to save and embed your **plotly** graphs within larger HTML documents, interactively edit (i.e., post-process) them, and export to static file formats -- all of which can be useful tools for creating 'publication-quality' graphics. Static images can be created either from the command line (via the `orca()` function) or from the interactive graphic itself. The former is great if you need to export many images at once and the latter is convenient if you need to export a manually edited version of the default view (e.g., Figure \@ref(fig:edit-county-labels)). All the R code in this chapter runs entirely locally using 100% free and open source software with no calls to external services.
+This portion of the book, Publishing views, covers how to save **plotly** graphs as HTML, embed them within larger HTML documents, interactively edit (i.e., post-process) them, and export to static file formats -- all of which can be useful tools for creating 'publication-quality' graphics. Static images can be created either from the command line (via the `orca()` function) or from the interactive graphic itself. The former is great if you need to export many images at once and the latter is convenient if you need to export a manually edited version of the default view (e.g., Figure \@ref(fig:edit-county-labels)). All the R code in this chapter runs entirely locally using 100% free and open source software with no calls to external services.
 
 ```{r publish-banner, echo = FALSE}
 knitr::include_graphics("images/publish.svg")
@@ -84,7 +84,7 @@ plot_ly() %>%
   )
 ```
 
-```{r toImageSVG, echo = FALSE, fig.cap = "(ref:toImageSVG)", out.extra = 'data-url="/interactives/toImageSVG.html"'}
+```{r toImageSVG, echo = FALSE, fig.cap = "(ref:toImageSVG)", out.extra = if (knitr::is_html_output()) 'data-url="/interactives/toImageSVG.html"'}
 knitr::include_graphics("images/toImageSVG.png")
 ```
 
@@ -120,7 +120,11 @@ library(USAboundaries)
 mn_sf <- us_counties(states = "MN")
 
 # get income information for each county in MN
-mn_income <- get_acs(geography = "county", variables = "B19013_001", state = "MN") %>%
+mn_income <- get_acs(
+  geography = "county", 
+  variables = "B19013_001", 
+  state = "MN"
+  ) %>%
   mutate(
     NAME = sub("County, Minnesota", "", NAME),
     county = reorder(NAME, estimate),
@@ -165,7 +169,13 @@ bars <- ggplot(mn_income, aes(x = estimate, y = county)) +
 
 # make manual edits in the browser, then click the 
 # 'toImage' button to export an svg file
-ggplotly(bars, dynamicTicks = TRUE, tooltip = "y", height = 8 * 96, width = 11 * 96) %>%
+ggplotly(
+  bars, 
+  dynamicTicks = TRUE, 
+  tooltip = "y", 
+  height = 8 * 96, 
+  width = 11 * 96
+) %>%
   subplot(map, nrows = 1, widths = c(0.3, 0.7)) %>%
   layout(showlegend = FALSE) %>%
   config(
@@ -187,6 +197,8 @@ After pressing the "download plot" button to export svg, then the **rsvg** packa
 ```r
 # This is the directory that my browser places downloads...
 # you may have to change this to your download directory
-download_dir <- "~/Downloads/"
-withr::with_dir(download_dir, rsvg::rsvg_pdf("newplot.svg", "mn.pdf"))
+withr::with_dir(
+  "~/Downloads/", 
+  rsvg::rsvg_pdf("newplot.svg", "mn.pdf")
+)
 ```

@@ -24,7 +24,7 @@
 <meta name="author" content="Carson Sievert" />
 
 
-<meta name="date" content="2019-09-13" />
+<meta name="date" content="2019-10-01" />
 
   <meta name="viewport" content="width=device-width, initial-scale=1" />
   <meta name="apple-mobile-web-app-capable" content="yes" />
@@ -58,6 +58,11 @@
 <script src="libs/selectize/selectize.min.js"></script>
 <link href="libs/colourpicker/colourpicker.min.css" rel="stylesheet" />
 <script src="libs/colourpicker/colourpicker.min.js"></script>
+<link href="libs/datatables-css/datatables-crosstalk.css" rel="stylesheet" />
+<script src="libs/datatables-binding/datatables.js"></script>
+<link href="libs/dt-core/css/jquery.dataTables.min.css" rel="stylesheet" />
+<link href="libs/dt-core/css/jquery.dataTables.extra.css" rel="stylesheet" />
+<script src="libs/dt-core/js/jquery.dataTables.min.js"></script>
 
 
 <style type="text/css">
@@ -385,16 +390,19 @@ FIGURE 14.2: Modifying animation defaults with <code>animation_opts()</code>, <c
 <span id="cb113-8"><a href="animating-views.html#cb113-8"></a><span class="st">  </span><span class="kw">hide_legend</span>() <span class="op">%&gt;%</span></span>
 <span id="cb113-9"><a href="animating-views.html#cb113-9"></a><span class="st">  </span><span class="kw">animation_opts</span>(<span class="dt">frame =</span> <span class="dv">1000</span>, <span class="dt">transition =</span> <span class="dv">0</span>, <span class="dt">redraw =</span> <span class="ot">FALSE</span>)</span></code></pre></div>
 <div class="figure" style="text-align: center"><span id="fig:animation-factors"></span>
-<img src="images/animation-factors.png" alt="Animation of GDP per capita versus life expectancy by continent. The ordering of the contintents goes from lowest average (across countries) life expectancy to highest." width="100%" data-url="/interactives/animation-factors.html" />
+<img src="images/animation-factors.png" alt="Animation of GDP per capita versus life expectancy by continent. The ordering of the continents goes from lowest average (across countries) life expectancy to highest." width="100%" data-url="/interactives/animation-factors.html" />
 <p class="caption">
-FIGURE 14.3: Animation of GDP per capita versus life expectancy by continent. The ordering of the contintents goes from lowest average (across countries) life expectancy to highest.
+FIGURE 14.3: Animation of GDP per capita versus life expectancy by continent. The ordering of the continents goes from lowest average (across countries) life expectancy to highest.
 </p>
 </div>
 <p>Both the <code>frame</code> and <code>ids</code> attributes operate on the trace level – meaning that we can target specific layers of the graph to be animated. One obvious use case for this is to provide a background which displays every possible frame (which is not animated) and overlay the animated frames onto that background. Figure <a href="animating-views.html#fig:animation-targets">14.4</a> shows the same information as Figure <a href="animating-views.html#fig:animation-opts">14.2</a>, but layers animated frames on top of a background of all the frames. As a result, it is easier to put a specific year into a global context.</p>
 <div class="sourceCode" id="cb114"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb114-1"><a href="animating-views.html#cb114-1"></a>base <span class="op">%&gt;%</span></span>
-<span id="cb114-2"><a href="animating-views.html#cb114-2"></a><span class="st">  </span><span class="kw">add_markers</span>(<span class="dt">color =</span> <span class="op">~</span>continent, <span class="dt">alpha =</span> <span class="fl">0.2</span>, <span class="dt">alpha_stroke =</span> <span class="fl">0.2</span>, <span class="dt">showlegend =</span> F) <span class="op">%&gt;%</span></span>
-<span id="cb114-3"><a href="animating-views.html#cb114-3"></a><span class="st">  </span><span class="kw">add_markers</span>(<span class="dt">color =</span> <span class="op">~</span>continent, <span class="dt">frame =</span> <span class="op">~</span>year, <span class="dt">ids =</span> <span class="op">~</span>country) <span class="op">%&gt;%</span></span>
-<span id="cb114-4"><a href="animating-views.html#cb114-4"></a><span class="st">  </span><span class="kw">animation_opts</span>(<span class="dv">1000</span>, <span class="dt">redraw =</span> <span class="ot">FALSE</span>)</span></code></pre></div>
+<span id="cb114-2"><a href="animating-views.html#cb114-2"></a><span class="st">  </span><span class="kw">add_markers</span>(</span>
+<span id="cb114-3"><a href="animating-views.html#cb114-3"></a>    <span class="dt">color =</span> <span class="op">~</span>continent, <span class="dt">showlegend =</span> F,</span>
+<span id="cb114-4"><a href="animating-views.html#cb114-4"></a>    <span class="dt">alpha =</span> <span class="fl">0.2</span>, <span class="dt">alpha_stroke =</span> <span class="fl">0.2</span></span>
+<span id="cb114-5"><a href="animating-views.html#cb114-5"></a>  ) <span class="op">%&gt;%</span></span>
+<span id="cb114-6"><a href="animating-views.html#cb114-6"></a><span class="st">  </span><span class="kw">add_markers</span>(<span class="dt">color =</span> <span class="op">~</span>continent, <span class="dt">frame =</span> <span class="op">~</span>year, <span class="dt">ids =</span> <span class="op">~</span>country) <span class="op">%&gt;%</span></span>
+<span id="cb114-7"><a href="animating-views.html#cb114-7"></a><span class="st">  </span><span class="kw">animation_opts</span>(<span class="dv">1000</span>, <span class="dt">redraw =</span> <span class="ot">FALSE</span>)</span></code></pre></div>
 <div class="figure" style="text-align: center"><span id="fig:animation-targets"></span>
 <img src="images/animation-targets.png" alt="Overlaying animated frames on top of a background of all possible frames." width="100%" data-url="/interactives/animation-targets.html" />
 <p class="caption">
@@ -404,7 +412,7 @@ FIGURE 14.4: Overlaying animated frames on top of a background of all possible f
 </div>
 <div id="animation-support" class="section level2">
 <h2><span class="header-section-number">14.2</span> Animation support</h2>
-<p>At the time of writing, the scatter plotly.js trace type is really the only trace type with full support for animation. That means, we need to get a little imaginative to animate certain things, like a population pyramid chart (essentially a bar chart) using <code>add_segments()</code> (a scatter-based layer) instead of <code>add_bars()</code> (a non-scatter layer). Figure <a href="animating-views.html#fig:profile-pyramid">14.5</a> shows projections for male &amp; female population by age from 2018 to 2050 using data obtained via the <strong>idbr</strong> package <span class="citation">(Walker <a href="#ref-idbr" role="doc-biblioref">2018</a>)</span>.</p>
+<p>At the time of writing, the scatter plotly.js trace type is really the only trace type with full support for animation. That means, we need to get a little imaginative to animate certain things, like a population pyramid chart (essentially a bar chart) using <code>add_segments()</code> (a scatter-based layer) instead of <code>add_bars()</code> (a non-scatter layer). Figure <a href="#fig:profile-pyramid"><strong>??</strong></a> shows projections for male &amp; female population by age from 2018 to 2050 using data obtained via the <strong>idbr</strong> package <span class="citation">(Walker <a href="#ref-idbr" role="doc-biblioref">2018</a>)</span>.</p>
 <div class="sourceCode" id="cb115"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb115-1"><a href="animating-views.html#cb115-1"></a><span class="kw">library</span>(idbr)</span>
 <span id="cb115-2"><a href="animating-views.html#cb115-2"></a><span class="kw">library</span>(dplyr)</span>
 <span id="cb115-3"><a href="animating-views.html#cb115-3"></a></span>
@@ -436,13 +444,8 @@ FIGURE 14.4: Overlaying animated frames on top of a background of all possible f
 <span id="cb115-29"><a href="animating-views.html#cb115-29"></a>    <span class="dt">frame =</span> <span class="op">~</span>time,</span>
 <span id="cb115-30"><a href="animating-views.html#cb115-30"></a>    <span class="dt">color =</span> <span class="op">~</span><span class="kw">factor</span>(SEX)</span>
 <span id="cb115-31"><a href="animating-views.html#cb115-31"></a>  )</span></code></pre></div>
-<div class="figure" style="text-align: center"><span id="fig:profile-pyramid"></span>
 <iframe src="https://player.vimeo.com/video/317101075?title=0&amp;byline=0&amp;portrait=0" width="100%" height="400" frameborder="0" seamless="seamless" webkitAllowFullScreen mozallowfullscreen allowFullScreen></iframe>
-<p class="caption">
-FIGURE 14.5: US population projections by age and gender from 2018 to 2050. This population pyramid is implemented with thick line segments to give the appearance of bars. For the interactive, see <a href="https://plotly-r.com/interactives/profile-pyramid.html" class="uri">https://plotly-r.com/interactives/profile-pyramid.html</a>
-</p>
-</div>
-<p>Although population pyramids are quite popular, they aren’t necessarily the best way to visualize this information, especially if the goal is to compare the population profiles over time. It’s much easier to compare them along a common scale, as done in Figure <a href="animating-views.html#fig:profile-lines">14.6</a>. Note that, when animating lines in this fashion, it can help to set <a href="https://plot.ly/r/reference/#scatter-line-simplify"><code>line.simplify</code></a> to <code>FALSE</code> so that the number of points along the path are left unaffected.</p>
+<p>Although population pyramids are quite popular, they aren’t necessarily the best way to visualize this information, especially if the goal is to compare the population profiles over time. It’s much easier to compare them along a common scale, as done in Figure <a href="#fig:profile-lines"><strong>??</strong></a>. Note that, when animating lines in this fashion, it can help to set <a href="https://plot.ly/r/reference/#scatter-line-simplify"><code>line.simplify</code></a> to <code>FALSE</code> so that the number of points along the path are left unaffected.</p>
 <div class="sourceCode" id="cb116"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb116-1"><a href="animating-views.html#cb116-1"></a><span class="kw">plot_ly</span>(us, <span class="dt">alpha  =</span> <span class="fl">0.5</span>) <span class="op">%&gt;%</span></span>
 <span id="cb116-2"><a href="animating-views.html#cb116-2"></a><span class="st">  </span><span class="kw">add_lines</span>(</span>
 <span id="cb116-3"><a href="animating-views.html#cb116-3"></a>    <span class="dt">x =</span> <span class="op">~</span>AGE, <span class="dt">y =</span> <span class="op">~</span><span class="kw">abs</span>(POP),</span>
@@ -451,12 +454,7 @@ FIGURE 14.5: US population projections by age and gender from 2018 to 2050. This
 <span id="cb116-6"><a href="animating-views.html#cb116-6"></a>    <span class="dt">line =</span> <span class="kw">list</span>(<span class="dt">simplify =</span> <span class="ot">FALSE</span>)</span>
 <span id="cb116-7"><a href="animating-views.html#cb116-7"></a>  ) <span class="op">%&gt;%</span></span>
 <span id="cb116-8"><a href="animating-views.html#cb116-8"></a><span class="st">  </span><span class="kw">layout</span>(<span class="dt">yaxis =</span> <span class="kw">list</span>(<span class="dt">title =</span> <span class="st">&quot;US population&quot;</span>))</span></code></pre></div>
-<div class="figure" style="text-align: center"><span id="fig:profile-lines"></span>
 <iframe src="https://player.vimeo.com/video/317101952?title=0&amp;byline=0&amp;portrait=0" width="100%" height="400" frameborder="0" seamless="seamless" webkitAllowFullScreen mozallowfullscreen allowFullScreen></iframe>
-<p class="caption">
-FIGURE 14.6: Visualizing the same information in Figure <a href="animating-views.html#fig:profile-pyramid">14.5</a> using lines rather than segments. For the interactive, see <a href="https://plotly-r.com/interactives/profile-lines.html" class="uri">https://plotly-r.com/interactives/profile-lines.html</a>
-</p>
-</div>
 
 </div>
 </div>

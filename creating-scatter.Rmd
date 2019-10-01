@@ -16,7 +16,7 @@ add_paths(p)
 add_lines(p)
 ```
 
-```{r scatter-intro, echo = FALSE, fig.cap="(ref:scatter-intro)", out.extra = 'data-url="/interactives/scatter-intro.html"'}
+```{r scatter-intro, echo = FALSE, fig.cap="(ref:scatter-intro)", out.extra = if (knitr::is_html_output()) 'data-url="/interactives/scatter-intro.html"'}
 knitr::include_graphics("images/scatter-intro.svg")
 ```
 
@@ -27,18 +27,19 @@ library(lubridate)
 econ <- economics %>%
   mutate(yr = year(date), mnth = month(date))
 
-# one trace (more performant, but less interactive)
+# One trace (more performant, but less interactive)
 econ %>%
   group_by(yr) %>%
   plot_ly(x = ~mnth, y = ~uempmed) %>%
   add_lines(text = ~yr)
 
-# multiple traces (less performant, but more interactive)
+# Multiple traces (less performant, but more interactive)
 plot_ly(econ, x = ~mnth, y = ~uempmed) %>%
   add_lines(color = ~ordered(yr))
   
-# the split argument guarantees one trace per group level (regardless of the variable type)
-# this is useful if you want a consistent visual properties over multiple traces 
+# The split argument guarantees one trace per group level (regardless 
+# of the variable type). This is useful if you want a consistent visual
+# property over multiple traces 
 # plot_ly(econ, x = ~mnth, y = ~uempmed) %>%
 #   add_lines(split = ~yr, color = I("black"))
 ```
@@ -47,7 +48,7 @@ plot_ly(econ, x = ~mnth, y = ~uempmed) %>%
 include_vimeo("316679591")
 ```
 
-Not only do these plots differ in visual appearance, they also differ in interactive capabilties, computational performance, and underlying implementation. That's because, the grouping approach (top panel of Figure \@ref(fig:scatter-lines)) uses just one plotly.js trace (more performant, less interactive), whereas the `color` approach (bottom panel of Figure \@ref(fig:scatter-lines)) generates one trace per line/year. In this case, the benefit of having multiple traces is that we can perform interactive filtering via the legend and compare multiple y-values at a given x. The cost of having those capabilities is that plots starts to be become sluggish after a few hundred traces, whereas thousands of lines can be rendered fairly easily in one trace. See Chapter \@ref(performance) for more details on scaling and performance.
+Not only do these plots differ in visual appearance, they also differ in interactive capabilities, computational performance, and underlying implementation. That's because, the grouping approach (top panel of Figure \@ref(fig:scatter-lines)) uses just one plotly.js trace (more performant, less interactive), whereas the `color` approach (bottom panel of Figure \@ref(fig:scatter-lines)) generates one trace per line/year. In this case, the benefit of having multiple traces is that we can perform interactive filtering via the legend and compare multiple y-values at a given x. The cost of having those capabilities is that plots starts to be become sluggish after a few hundred traces, whereas thousands of lines can be rendered fairly easily in one trace. See Chapter \@ref(performance) for more details on scaling and performance.
 
 These features make it easier to get started using plotly.js, but it still pays off to learn how to use plotly.js directly. You won't find plotly.js attributes listed as explicit arguments in any **plotly** function (except for the special `type` attribute), but they are passed along verbatim to the plotly.js figure definition through the `...` operator. The scatter-based layers in this chapter fix the `type` plotly.js attribute to `"scatter"` as well as the [`mode`](https://plot.ly/r/reference/#scatter-mode) (e.g., `add_markers()` uses `mode='markers'` etc), but you could also use the lower-level `add_trace()` to work more directly with plotly.js. For example, Figure \@ref(fig:tooltip-praise) shows how to render markers, lines, and text in the same scatter trace. It also demonstrates how to leverage *nested* plotly.js attributes, like [`textfont`](https://plot.ly/r/reference/#scatter-textfont) and [`xaxis`](https://plot.ly/r/reference/#layout-xaxis) -- these attributes contain other attributes, so you need to supply a suitable named list to these arguments.
 
@@ -67,7 +68,7 @@ plot_ly() %>%
  layout(xaxis = list(range = c(3, 8)))
 ```
 
-```{r tooltip-praise, echo = FALSE, fig.cap="(ref:tooltip-praise)", out.extra = 'data-url="/interactives/tooltip-praise.html"'}
+```{r tooltip-praise, echo = FALSE, fig.cap="(ref:tooltip-praise)", out.extra = if (knitr::is_html_output()) 'data-url="/interactives/tooltip-praise.html"'}
 knitr::include_graphics("images/tooltip-praise.png")
 ```
 
@@ -83,11 +84,11 @@ If you are new to plotly.js, I recommend taking a bit of time to look through th
 schema()
 ```
 
-```{r schema, echo = FALSE, fig.cap="(ref:schema)", out.width = "40%", out.extra = 'data-url="/interactives/schema.html"'}
+```{r schema, echo = FALSE, fig.cap="(ref:schema)", out.width = "40%", out.extra = if (knitr::is_html_output()) 'data-url="/interactives/schema.html"'}
 knitr::include_graphics("images/schema.png")
 ```
 
-The sections that follow in this chapter demonstrate various type of data views using scatter-based layers. In attempt to avoid duplication of documentation, a particular emphasis is put on features only currently availble from the R package (e.g., the aesthetic mapping arguments).
+The sections that follow in this chapter demonstrate various type of data views using scatter-based layers. In attempt to avoid duplication of documentation, a particular emphasis is put on features only currently availbale from the R package (e.g., the aesthetic mapping arguments).
 
 ## Markers
 
@@ -105,7 +106,7 @@ subplot(
 )
 ```
 
-```{r scatterplots, echo = FALSE, fig.cap = "(ref:scatterplots)", out.extra = 'data-url="/interactives/scatterplots.html"'}
+```{r scatterplots, echo = FALSE, fig.cap = "(ref:scatterplots)", out.extra = if (knitr::is_html_output()) 'data-url="/interactives/scatterplots.html"'}
 knitr::include_graphics("images/scatterplots.svg")
 ```
 
@@ -122,7 +123,7 @@ subplot(
 )
 ```
 
-```{r color-types, echo = FALSE, fig.cap = "(ref:color-types)", out.extra = 'data-url="/interactives/color-types.html"'}
+```{r color-types, echo = FALSE, fig.cap = "(ref:color-types)", out.extra = if (knitr::is_html_output()) 'data-url="/interactives/color-types.html"'}
 knitr::include_graphics("images/color-types.svg")
 ```
 
@@ -142,7 +143,7 @@ subplot(
 ) %>% hide_legend()
 ```
 
-```{r color-numeric, echo = FALSE, fig.cap = "(ref:color-numeric)", out.extra = 'data-url="/interactives/color-numeric.html"'}
+```{r color-numeric, echo = FALSE, fig.cap = "(ref:color-numeric)", out.extra = if (knitr::is_html_output()) 'data-url="/interactives/color-numeric.html"'}
 knitr::include_graphics("images/color-numeric.svg")
 ```
 
@@ -157,7 +158,7 @@ subplot(
 ) %>% hide_legend()
 ```
 
-```{r color-discrete, echo = FALSE, fig.cap = "(ref:color-discrete)", out.extra = 'data-url="/interactives/color-discrete.html"'}
+```{r color-discrete, echo = FALSE, fig.cap = "(ref:color-discrete)", dout.extra = if (knitr::is_html_output()) 'data-url="interactives/color-discrete.html"'}
 knitr::include_graphics("images/color-discrete.svg")
 ```
 
@@ -167,7 +168,7 @@ As introduced in Figure \@ref(fig:intro-range), color codes can be specified man
 add_markers(p, color = I("black"))
 ```
 
-```{r color-manual, echo = FALSE, fig.cap = "(ref:color-manual)", out.extra = 'data-url="/interactives/color-manual.html"'}
+```{r color-manual, echo = FALSE, fig.cap = "(ref:color-manual)", out.extra = if (knitr::is_html_output()) 'data-url="/interactives/color-manual.html"'}
 knitr::include_graphics("images/color-manual.svg")
 ```
 
@@ -182,7 +183,7 @@ The `symbol` argument can be used to map data values to the `marker.symbol` plot
 * The plural, `symbols`, can be used to specify the visual range for the mapping.
 * Mappings are avoided entirely through `I()`.
 
-For example, the left panel of Figure \@ref(fig:symbol-factor) uses a numeric mapping and the right panel uses a discrete mapping. As a result, the left panel is linked to the first legend entry, whereas the right panel is linked to the bottom three legend entries. When plotting multiple traces and no color is specifed, the plotly.js [colorway](https://plot.ly/r/reference/#layout-colorway) is applied (i.e., each trace will be rendered a different color). To set a fixed color, you can set the color of every trace generated from this layer with `color = I("black")`, or similar.
+For example, the left panel of Figure \@ref(fig:symbol-factor) uses a numeric mapping and the right panel uses a discrete mapping. As a result, the left panel is linked to the first legend entry, whereas the right panel is linked to the bottom three legend entries. When plotting multiple traces and no color is specifeid, the plotly.js [colorway](https://plot.ly/r/reference/#layout-colorway) is applied (i.e., each trace will be rendered a different color). To set a fixed color, you can set the color of every trace generated from this layer with `color = I("black")`, or similar.
 
 ```r
 p <- plot_ly(mpg, x = ~cty, y = ~hwy, alpha = 0.3) 
@@ -192,7 +193,7 @@ subplot(
 )
 ```
 
-```{r symbol-factor, echo = FALSE, fig.cap = "(ref:symbol-factor)", out.extra = 'data-url="/interactives/symbol-factor.html"'}
+```{r symbol-factor, echo = FALSE, fig.cap = "(ref:symbol-factor)", out.extra = if (knitr::is_html_output()) 'data-url="/interactives/symbol-factor.html"'}
 knitr::include_graphics("images/symbol-factor.svg")
 ```
 
@@ -203,12 +204,13 @@ subplot(
   add_markers(p, symbol = ~cyl, symbols = c(17, 18, 19)),
   add_markers(
     p, color = I("black"),
-    symbol = ~factor(cyl), symbols = c("triangle-up", "diamond", "circle")
+    symbol = ~factor(cyl), 
+    symbols = c("triangle-up", "diamond", "circle")
   )
 )
 ```
 
-```{r symbol-factor-range, echo = FALSE, fig.cap = "(ref:symbol-factor-range)", out.extra = 'data-url="/interactives/symbol-factor-range.html"'}
+```{r symbol-factor-range, echo = FALSE, fig.cap = "(ref:symbol-factor-range)", out.extra = if (knitr::is_html_output()) 'data-url="/interactives/symbol-factor-range.html"'}
 knitr::include_graphics("images/symbol-factor-range.svg")
 ```
 
@@ -219,7 +221,7 @@ plot_ly(mpg, x = ~cty, y = ~hwy) %>%
   add_markers(symbol = I(18), alpha = 0.5)
 ```
 
-```{r symbol-factor-manual, echo = FALSE, fig.cap = "(ref:symbol-factor-manual)", out.extra = 'data-url="/interactives/symbol-factor-manual.html"'}
+```{r symbol-factor-manual, echo = FALSE, fig.cap = "(ref:symbol-factor-manual)", out.extra = if (knitr::is_html_output()) 'data-url="/interactives/symbol-factor-manual.html"'}
 knitr::include_graphics("images/symbol-factor-manual.svg")
 ```
 
@@ -230,11 +232,11 @@ If you'd like to see all the symbols available to **plotly**, as well as a metho
 The `stroke` argument follows the same semantics as `color` and `symbol` when it comes to variable mappings and specifying visual ranges. Typically you don't want to map data values to `stroke`, you just want to specify a fixed outline color. For example, Figure \@ref(fig:stroke-manual) modifies Figure \@ref(fig:symbol-factor-manual) to simply add a black outline. By default, the `span`, or width of the stroke, is zero, you'll likely want to set the width to be around one pixel.
 
 ```r
-plot_ly(mpg, x = ~cty, y = ~hwy) %>%
-  add_markers(symbol = I(18), alpha = 0.5, stroke = I("black"), span = I(1))
+plot_ly(mpg, x = ~cty, y = ~hwy, alpha = 0.5) %>%
+  add_markers(symbol = I(18), stroke = I("black"), span = I(1))
 ```
 
-```{r stroke-manual, echo = FALSE, fig.cap = "(ref:stroke-manual)", out.extra = 'data-url="/interactives/stroke-manual.html"'}
+```{r stroke-manual, echo = FALSE, fig.cap = "(ref:stroke-manual)", out.extra = if (knitr::is_html_output()) 'data-url="/interactives/stroke-manual.html"'}
 knitr::include_graphics("images/symbol-manual.svg")
 ```
 
@@ -250,7 +252,7 @@ subplot(
 )
 ```
 
-```{r sizes, echo = FALSE, fig.cap = "(ref:sizes)", out.extra = 'data-url="/interactives/sizes.html"'}
+```{r sizes, echo = FALSE, fig.cap = "(ref:sizes)", out.extra = if (knitr::is_html_output()) 'data-url="/interactives/sizes.html"'}
 knitr::include_graphics("images/sizes.svg")
 ```
 
@@ -260,7 +262,7 @@ Similar to other arguments, `I()` can be used to specify the size directly. In t
 plot_ly(mpg, x = ~cty, y = ~hwy, alpha = 0.3, size = I(30))
 ```
 
-```{r sizes-manual, echo = FALSE, fig.cap = "(ref:sizes-manual)", out.extra = 'data-url="/interactives/sizes-manual.html"'}
+```{r sizes-manual, echo = FALSE, fig.cap = "(ref:sizes-manual)", out.extra = if (knitr::is_html_output()) 'data-url="/interactives/sizes-manual.html"'}
 knitr::include_graphics("images/sizes-manual.svg")
 ```
 
@@ -273,9 +275,13 @@ A popular application for dotplots (with error bars) is the so-called "coefficie
 
 ```r
 # Fit a full-factorial linear model
-m <- lm(Sepal.Length ~ Sepal.Width * Petal.Length * Petal.Width, data = iris)
+m <- lm(
+  Sepal.Length ~ Sepal.Width * Petal.Length * Petal.Width, 
+  data = iris
+)
 
-# (1) get a tidy() data structure of covariate-level info (e.g., point estimate, standard error, etc)
+# (1) get a tidy() data structure of covariate-level info 
+# (e.g., point estimate, standard error, etc)
 # (2) make sure term column is a factor ordered by the estimate
 # (3) plot estimate by term with an error bar for the standard error
 broom::tidy(m) %>% 
@@ -288,7 +294,7 @@ broom::tidy(m) %>%
   )
 ```
 
-```{r coefplot, echo = FALSE, fig.cap = "(ref:coefplot)", , out.extra = 'data-url="/interactives/coefplot.html"'}
+```{r coefplot, echo = FALSE, fig.cap = "(ref:coefplot)", , out.extra = if (knitr::is_html_output()) 'data-url="/interactives/coefplot.html"'}
 knitr::include_graphics("images/coefplot.png")
 ```
 
@@ -314,7 +320,7 @@ plot_ly(tx5, x = ~date, y = ~median) %>%
   add_lines(linetype = ~city)
 ```
 
-```{r linetypes, echo = FALSE, fig.cap = "(ref:linetypes)", out.extra = 'data-url="/interactives/linetypes.html"'}
+```{r linetypes, echo = FALSE, fig.cap = "(ref:linetypes)", out.extra = if (knitr::is_html_output()) 'data-url="/interactives/linetypes.html"'}
 knitr::include_graphics("images/linetypes.svg")
 ```
 
@@ -333,7 +339,7 @@ plot_ly(tx5, x = ~date, y = ~median) %>%
   add_lines(linetype = ~city, linetypes = ltys)
 ```
 
-```{r linetypes-manual, echo = FALSE, fig.cap = "(ref:linetypes-manual)", out.extra = 'data-url="/interactives/linetypes-manual.html"'}
+```{r linetypes-manual, echo = FALSE, fig.cap = "(ref:linetypes-manual)", out.extra = if (knitr::is_html_output()) 'data-url="/interactives/linetypes-manual.html"'}
 knitr::include_graphics("images/linetypes-manual.svg")
 ```
 
@@ -369,7 +375,7 @@ plot_ly(gdp) %>%
     xanchor = "left", showarrow = FALSE
   ) %>%
   layout(
-    title = "Current Receipts of Goverment as a Percentage of Gross Domestic Product",
+    title = "Current Receipts of Govermnent as a Percentage of GDP",
     showlegend = FALSE,
     xaxis = list(
       range = c(0, 3),
@@ -420,7 +426,7 @@ mpg %>%
   layout(xaxis = list(title = "Miles per gallon"))
 ```
 
-```{r dumbell, echo = FALSE, fig.cap = "(ref:dumbell)", out.extra = 'data-url="/interactives/dumbell.html"'}
+```{r dumbell, echo = FALSE, fig.cap = "(ref:dumbell)", out.extra = if (knitr::is_html_output()) 'data-url="/interactives/dumbell.html"'}
 knitr::include_graphics("images/dumbell.svg")
 ```
 
@@ -445,7 +451,7 @@ plot_ly(dat, x = ~date, xend = ~date, color = ~Close > Open,
   rangeslider()
 ```
 
-```{r candlestick, echo = FALSE, fig.cap = "(ref:candlestick)", out.extra = 'data-url="/interactives/candlestick.html"'}
+```{r candlestick, echo = FALSE, fig.cap = "(ref:candlestick)", out.extra = if (knitr::is_html_output()) 'data-url="/interactives/candlestick.html"'}
 knitr::include_graphics("images/candlestick.svg")
 ```
 
@@ -464,7 +470,7 @@ for (k in kerns) {
 p
 ```
 
-```{r densities, echo = FALSE, fig.cap = "(ref:densities)", out.extra = 'data-url="/interactives/densities.html"'}
+```{r densities, echo = FALSE, fig.cap = "(ref:densities)", out.extra = if (knitr::is_html_output()) 'data-url="/interactives/densities.html"'}
 knitr::include_graphics("images/densities.svg")
 ```
 
@@ -503,7 +509,7 @@ subplot(
 ) %>% hide_legend()
 ```
 
-```{r pcp-common, echo = FALSE, fig.cap = "(ref:pcp-common)", out.extra = 'data-url="/interactives/pcp-common.html"'}
+```{r pcp-common, echo = FALSE, fig.cap = "(ref:pcp-common)", out.extra = if (knitr::is_html_output()) 'data-url="/interactives/pcp-common.html"'}
 knitr::include_graphics("images/pcp-common.svg")
 ```
 
@@ -526,7 +532,7 @@ base %>%
               color = I("red"), data = maps::canada.cities)
 ```
 
-```{r map-canada, echo = FALSE, fig.cap = "(ref:map-canada)", out.extra = 'data-url="/interactives/map-canada.html"'}
+```{r map-canada, echo = FALSE, fig.cap = "(ref:map-canada)", out.extra = if (knitr::is_html_output()) 'data-url="/interactives/map-canada.html"'}
 knitr::include_graphics("images/map-canada.png")
 ```
 
@@ -536,7 +542,7 @@ As discussion surrounding Figure \@ref(fig:split-color) points out, scatter-base
 add_polygons(base, split = ~subregion, hoveron = "fills")
 ```
 
-```{r map-canada-split, echo = FALSE, fig.cap = "(ref:map-canada-split)", out.extra = 'data-url="/interactives/map-canada-split.html"'}
+```{r map-canada-split, echo = FALSE, fig.cap = "(ref:map-canada-split)", out.extra = if (knitr::is_html_output()) 'data-url="/interactives/map-canada-split.html"'}
 knitr::include_graphics("images/map-canada-split.png")
 ```
 
@@ -550,10 +556,11 @@ broom::augment(m) %>%
   plot_ly(x = ~wt, showlegend = FALSE) %>%
   add_markers(y = ~mpg, color = I("black")) %>%
   add_ribbons(ymin = ~.fitted - 1.96 * .se.fit, 
-              ymax = ~.fitted + 1.96 * .se.fit, color = I("gray80")) %>%
+              ymax = ~.fitted + 1.96 * .se.fit, 
+              color = I("gray80")) %>%
   add_lines(y = ~.fitted, color = I("steelblue"))
 ```
 
-```{r broom-lm, echo = FALSE, fig.cap = "(ref:broom-lm)", out.extra = 'data-url="/interactives/broom-lm.html"'}
+```{r broom-lm, echo = FALSE, fig.cap = "(ref:broom-lm)", out.extra = if (knitr::is_html_output()) 'data-url="/interactives/broom-lm.html"'}
 knitr::include_graphics("images/broom-lm.svg")
 ```

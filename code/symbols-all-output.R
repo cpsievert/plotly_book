@@ -19,3 +19,4 @@ if (knitr::is_html_output()) {
 } else {
   knitr::include_graphics("images/symbols-all.png")
 }
+

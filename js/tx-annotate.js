@@ -4,7 +4,7 @@ function(el) {
     var cd = pt.customdata;
     var num = cd[1] ? cd[1] : "No";
     var ann = {
-      text: num + " homes were sold in " + cd[0] + ", TX in this month",
+      text: num + " homes were sold in "+cd[0]+", TX in this month",
       x: 0.5,
       y: 1,
       xref: "paper",

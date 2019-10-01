@@ -24,7 +24,7 @@
 <meta name="author" content="Carson Sievert" />
 
 
-<meta name="date" content="2019-09-13" />
+<meta name="date" content="2019-10-01" />
 
   <meta name="viewport" content="width=device-width, initial-scale=1" />
   <meta name="apple-mobile-web-app-capable" content="yes" />
@@ -58,6 +58,11 @@
 <script src="libs/selectize/selectize.min.js"></script>
 <link href="libs/colourpicker/colourpicker.min.css" rel="stylesheet" />
 <script src="libs/colourpicker/colourpicker.min.js"></script>
+<link href="libs/datatables-css/datatables-crosstalk.css" rel="stylesheet" />
+<script src="libs/datatables-binding/datatables.js"></script>
+<link href="libs/dt-core/css/jquery.dataTables.min.css" rel="stylesheet" />
+<link href="libs/dt-core/css/jquery.dataTables.extra.css" rel="stylesheet" />
+<script src="libs/dt-core/js/jquery.dataTables.min.js"></script>
 
 
 <style type="text/css">
@@ -339,7 +344,7 @@ code span.wa { color: #60a0b0; font-weight: bold; font-style: italic; } /* Warni
             <section class="normal" id="section-">
 <div id="boxplots" class="section level1">
 <h1><span class="header-section-number">6</span> Boxplots</h1>
-<p>Boxplots encode the five number summary of a numeric variable, and provide a decent way to compare many numeric distributions. The visual task of comparing multiple boxplots is relatively easy (i.e., compare position along a common scale) compared to some common alternatives (e.g., a trellis display of histograms, like <a href="bars-histograms.html#fig:bars-numeric">5.1</a>), but the boxplot is sometimes inadequate for capturing complex (e.g., multi-modal) distributions (in this case, a frequency polygon, like Figure <a href="overview.html#fig:freqpoly">2.9</a> provides a nice alternative). The <code>add_boxplot()</code> function requires one numeric variable, and guarantees boxplots are <a href="https://plot.ly/r/reference/#box-orientation">oriented</a> correctly, regardless of whether the numeric variable is placed on the x or y scale. As Figure <a href="boxplots.html#fig:cut-boxes">6.1</a> shows, on the axis orthogonal to the numeric axis, you can provide a discrete variable (for conditioning) or supply a single value (to name the axis category).</p>
+<p>Boxplots encode the five number summary of a numeric variable, and provide a decent way to compare many numeric distributions. The visual task of comparing multiple boxplots is relatively easy (i.e., compare position along a common scale) compared to some common alternatives (e.g., a trellis display of histograms, like <a href="bars-histograms.html#fig:bars-numeric">5.1</a>), but the boxplot is sometimes inadequate for capturing complex (e.g., multi-modal) distributions (in this case, a frequency polygon, like Figure <a href="overview.html#fig:freqpoly">2.8</a> provides a nice alternative). The <code>add_boxplot()</code> function requires one numeric variable, and guarantees boxplots are <a href="https://plot.ly/r/reference/#box-orientation">oriented</a> correctly, regardless of whether the numeric variable is placed on the x or y scale. As Figure <a href="boxplots.html#fig:cut-boxes">6.1</a> shows, on the axis orthogonal to the numeric axis, you can provide a discrete variable (for conditioning) or supply a single value (to name the axis category).</p>
 <div class="sourceCode" id="cb76"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb76-1"><a href="boxplots.html#cb76-1"></a>p &lt;-<span class="st"> </span><span class="kw">plot_ly</span>(diamonds, <span class="dt">y =</span> <span class="op">~</span>price, <span class="dt">color =</span> <span class="kw">I</span>(<span class="st">&quot;black&quot;</span>), </span>
 <span id="cb76-2"><a href="boxplots.html#cb76-2"></a>             <span class="dt">alpha =</span> <span class="fl">0.1</span>, <span class="dt">boxpoints =</span> <span class="st">&quot;suspectedoutliers&quot;</span>)</span>
 <span id="cb76-3"><a href="boxplots.html#cb76-3"></a>p1 &lt;-<span class="st"> </span>p <span class="op">%&gt;%</span><span class="st"> </span><span class="kw">add_boxplot</span>(<span class="dt">x =</span> <span class="st">&quot;Overall&quot;</span>)</span>
@@ -354,7 +359,7 @@ code span.wa { color: #60a0b0; font-weight: bold; font-style: italic; } /* Warni
 FIGURE 6.1: Overall diamond price and price by cut.
 </p>
 </div>
-<p>If you want to partition by more than one discrete variable, you could use the interaction of those variables to the discrete axis, and coloring by the nested variable, as Figure <a href="boxplots.html#fig:cut-by-clarity-boxes">6.2</a> does with diamond clarity and cut. Another approach would be to use a trellis display, similar to Figure <a href="arranging-views.html#fig:subplot-trellis">13.9</a>.</p>
+<p>If you want to partition by more than one discrete variable, you could use the interaction of those variables to the discrete axis, and coloring by the nested variable, as Figure <a href="boxplots.html#fig:cut-by-clarity-boxes">6.2</a> does with diamond clarity and cut. Another approach would be to use a trellis display, similar to Figure <a href="arranging-views.html#fig:subplot-trellis">13.8</a>.</p>
 <div class="sourceCode" id="cb77"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb77-1"><a href="boxplots.html#cb77-1"></a><span class="kw">plot_ly</span>(diamonds, <span class="dt">x =</span> <span class="op">~</span>price, <span class="dt">y =</span> <span class="op">~</span><span class="kw">interaction</span>(clarity, cut)) <span class="op">%&gt;%</span></span>
 <span id="cb77-2"><a href="boxplots.html#cb77-2"></a><span class="st">  </span><span class="kw">add_boxplot</span>(<span class="dt">color =</span> <span class="op">~</span>clarity) <span class="op">%&gt;%</span></span>
 <span id="cb77-3"><a href="boxplots.html#cb77-3"></a><span class="st">  </span><span class="kw">layout</span>(<span class="dt">yaxis =</span> <span class="kw">list</span>(<span class="dt">title =</span> <span class="st">&quot;&quot;</span>))</span></code></pre></div>

@@ -7,8 +7,10 @@ A facetted chart, also known as a trellis or small multiples display, is an effe
 Figure \@ref(fig:epl) is an example of making comparisons both within and across panels via graphical querying in a facetted chart. Each panel represents one year of English Premier League standings across time and each line represents a team (the querying variable). Since the x-axis represents the number of games within season and y-axis tracks cumulative points relative to the league average, lines with a positive slope represent above average performance and a negative slope represents below average performance. This design makes it easy to query a good (or bad) team for a particular year (via direct manipulation) to see who the team is as well as how they've compared to the competition in other years. In addition, the dynamic and persistent color brush allows us to query other teams to compare both within and across years. This example is shipped as a demo with the **plotly** package and uses data from the **engsoccerdata** package [@engsoccerdata]. Thanks to Antony Unwin for providing the initial idea and inspiration for Figure \@ref(fig:epl) [@unwin-epl].
 
 ```r
-# By entering this demo in your R console it will print out the actual source code necessary to recreate the graphic
-# Also, `demo(package = "plotly")` will list of all demos shipped with plotly
+# By entering this demo in your R console it will print out the 
+# actual source code necessary to recreate the graphic
+# Also, `demo(package = "plotly")` will list of all 
+# demos shipped with plotly
 demo("crosstalk-highlight-epl-2", package = "plotly")
 ```
 
@@ -16,7 +18,7 @@ demo("crosstalk-highlight-epl-2", package = "plotly")
 include_vimeo("307598973")
 ```
 
-The demo above requires some fairly advanced data pre-processing, so to learn how to implement graphical queries in trellis displays, let's work with more minimal examples. Figure \@ref(fig:trellis-txhousing) gives us yet another look at the `txhousing` dataset. This time we focus on just four cities and give each city it's own panel in the trellis display by leveraging `facet_wrap()` from **ggplot2**. Within each panel, we'll wrap the house price time series by year by putting the month on the x-axis and grouping by year. Then, to link these panels, we can ulitize year as a querying variable. As a result, not only do we have the ability to analyze annual trends within city, but we can also query specific years to compare unusual or interesting years both within and across cities.
+The demo above requires some fairly advanced data pre-processing, so to learn how to implement graphical queries in trellis displays, let's work with more minimal examples. Figure \@ref(fig:trellis-txhousing) gives us yet another look at the `txhousing` dataset. This time we focus on just four cities and give each city it's own panel in the trellis display by leveraging `facet_wrap()` from **ggplot2**. Within each panel, we'll wrap the house price time series by year by putting the month on the x-axis and grouping by year. Then, to link these panels, we'll assign year as a querying variable. As a result, not only do we have the ability to analyze annual trends within city, but we can also query specific years to compare unusual or interesting years both within and across cities.
 
 ```{r, eval = FALSE, code = readLines("code/trellis-txhousing.R")}
 ```
@@ -149,7 +151,7 @@ A more widely used approach to geo-spatial data visualization is to render lat/l
 eqs <- highlight_key(quakes)
  
 # you need a mapbox API key to use plot_mapbox()
-# https://www.mapbox.com/signup/?route-to=https://www.mapbox.com/studio/account/tokens/
+# https://www.mapbox.com/signup
 map <- plot_mapbox(eqs, x = ~long, y = ~lat) %>%
   add_markers(color = ~depth) %>%
   layout(
@@ -161,7 +163,10 @@ map <- plot_mapbox(eqs, x = ~long, y = ~lat) %>%
   highlight("plotly_selected")
  
 # shared properties of the two histograms
-hist_base <- plot_ly(eqs, color = I("black"), histnorm = "probability density") %>%
+hist_base <- plot_ly(
+    eqs, color = I("black"), 
+    histnorm = "probability density"
+  ) %>%
   layout(barmode = "overlay", showlegend = FALSE) %>%
   highlight(selected = attrs_selected(opacity = 0.5))
  
@@ -182,7 +187,7 @@ Every 2D mapping approach in **plotly** (e.g., `plot_mapbox()`, `plot_ly()`, `ge
 
 ```{r, eval = FALSE}
 library(sf)
-nc <- st_read(system.file("shape/nc.shp", package = "sf"), quiet = TRUE)
+nc <- st_read(system.file("shape/nc.shp", package = "sf"))
 nc_query <- highlight_key(nc, group = "sf-rocks")
 nc_centroid <- highlight_key(st_centroid(nc), group = "sf-rocks")
 
@@ -209,7 +214,7 @@ include_vimeo("307598178")
 
 ### Linking with other htmlwidgets
 
-The **plotly** package is able to share graphical queries with a limited set of other R packages that build upon the **htmlwidgets** standard. At the moment, graphical queries work best with **leaflet** and **DT**. Figure \@ref(fig:sf-dt) links **plotly** with **DT**, and since the data set linked bewteen the two is an **sf** data frame, each row of the table is linked to a polygon on the map through the row index of the same dataset.  
+The **plotly** package is able to share graphical queries with a limited set of other R packages that build upon the **htmlwidgets** standard. At the moment, graphical queries work best with **leaflet** and **DT**. Figure \@ref(fig:sf-dt) links **plotly** with **DT**, and since the data set linked between the two is an **sf** data frame, each row of the table is linked to a polygon on the map through the row index of the same dataset.  
 
 ```{r, eval = FALSE}
 demo("sf-dt", package = "plotly")
@@ -332,7 +337,9 @@ d <- tibble::tibble(
   x = 1:4, 
   y = 1:4,
   key = lapply(1:4, function(x) LETTERS[seq_len(x)]),
-  txt = sapply(key, function(x) sprintf("{%s}", paste(x, collapse = ", ")))
+  txt = sapply(key, function(x) {
+    sprintf("{%s}", paste(x, collapse = ", "))
+  })
 )
 highlight_key(d, ~key) %>%
   plot_ly(x = ~x, y = ~y, text = ~txt, hoverinfo = "text") %>%
@@ -344,7 +351,7 @@ highlight_key(d, ~key) %>%
 include_vimeo("307788086")
 ```
 
-One compelling use case for subset queries is dendograms. In fact, **plotly** provides a `plot_dendro()` function for making dendrograms with support for subset queries. Figure \@ref(fig:dendro) gives an example of brushing a branch of a dendrogram to query leafs that are similar in some sense. Any dendrogram object can be provided to `plot_dendro()`, but this particular example visualizes the similarity of US states in terms of their arrest statistics via a hierarchical clustering model on the `USArrests` dataset. 
+One compelling use case for subset queries is dendrograms. In fact, **plotly** provides a `plot_dendro()` function for making dendrograms with support for subset queries. Figure \@ref(fig:dendro) gives an example of brushing a branch of a dendrogram to query leafs that are similar in some sense. Any dendrogram object can be provided to `plot_dendro()`, but this particular example visualizes the similarity of US states in terms of their arrest statistics via a hierarchical clustering model on the `USArrests` dataset. 
 
 ```{r, eval = FALSE}
 hc <- hclust(dist(USArrests), "ave")
@@ -369,7 +376,7 @@ include_vimeo("307788058")
 ```
 
 <!--
-Figure \@ref(fig:tour-USArrests) makes use of [hierarchial selection](#hierarchial-selection) to select all the states (as well as all the child nodes) under a given node in both the dendrogram and the grand tour. This effectively provides a model selection tool in an unsupervised setting where one may choose a number of clusters by choosing relevant nodes in the dendrogram and viewing the model fit projected onto the data space. As shown in Figure \@ref(fig:tour-USArrests), after picking the 3 most obvious clusters, it looks as though a straight line could be drawn to completely separate the groups in the initial projection of the tour -- which suggests a split along this linear combination of these variables would provide a good classifier.^[In this situation, it may be desirable to retrieve the relevant linear combination after finding it. Since the slider displays the value of the current frame, one may go back to the data used to create the visualization, subset it to this value, and retrieve this linear combination.]
+Figure \@ref(fig:tour-USArrests) makes use of [hierarchical selection](#hierarchical-selection) to select all the states (as well as all the child nodes) under a given node in both the dendrogram and the grand tour. This effectively provides a model selection tool in an unsupervised setting where one may choose a number of clusters by choosing relevant nodes in the dendrogram and viewing the model fit projected onto the data space. As shown in Figure \@ref(fig:tour-USArrests), after picking the 3 most obvious clusters, it looks as though a straight line could be drawn to completely separate the groups in the initial projection of the tour -- which suggests a split along this linear combination of these variables would provide a good classifier.^[In this situation, it may be desirable to retrieve the relevant linear combination after finding it. Since the slider displays the value of the current frame, one may go back to the data used to create the visualization, subset it to this value, and retrieve this linear combination.]
 
 The code to generate Figure \@ref(fig:tour-USArrests), as well as a few other examples of the grand tour and linking brushing can be found in the package demos. To run the code for Figure \@ref(fig:tour-USArrests), run `demo("tour-USArrests", package = "plotly")`. To see a list of the other available demos, run `readLines(system.file("demo/00Index", package = "plotly"))`.
 -->

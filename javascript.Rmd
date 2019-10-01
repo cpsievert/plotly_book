@@ -4,9 +4,9 @@
 
 The same plotly.js events that we leveraged in **shiny** through `event_data()` in Section \@ref(shiny-plotly-inputs) can also be handled using JavaScript (JS) instead of R, which offers numerous advantages:
 
-1. Your web browser natively understands JS, so writing event handlers in JS instead of R offers the potential of having a purely client-side webpage instead of client-server app, making the end result easier to share, host, and maintain.^[Comparatively speaking, client-server apps require way more runtime software dependencies. In the case of **shiny** apps, RStudio provides accessible resources for hosting shiny apps https://shiny.rstudio.com/articles/#deployment, but using these services to host apps that encounters lots of traffic will either cost money and/or time for setting up the proper computational infrastructure.] That being said, the effort required to rewrite a 'heavy-duty' client-server app as a 'light-weight' client-side webpage isn't always worth the investment; so before doing so, you should have a clear vision for the interactivity you desire, be fairly confident that vision won't change in the future, and have a use-case that doesn't require sophisicated statistical computations to be run dynamically in response to user events (i.e., it's not practical or feasible to pre-compute).^[Compared to JS, R has way more facilities for statistical computing.]
+1. Your web browser natively understands JS, so writing event handlers in JS instead of R offers the potential of having a purely client-side webpage instead of client-server app, making the end result easier to share, host, and maintain.^[Comparatively speaking, client-server apps require way more runtime software dependencies. In the case of **shiny** apps, RStudio provides accessible resources for hosting shiny apps https://shiny.rstudio.com/articles/#deployment, but using these services to host apps that encounters lots of traffic will either cost money and/or time for setting up the proper computational infrastructure.] That being said, the effort required to rewrite a 'heavy-duty' client-server app as a 'light-weight' client-side webpage isn't always worth the investment; so before doing so, you should have a clear vision for the interactivity you desire, be fairly confident that vision won't change in the future, and have a use-case that doesn't require sophisticated statistical computations to be run dynamically in response to user events (i.e., it's not practical or feasible to pre-compute).^[Compared to JS, R has way more facilities for statistical computing.]
 2. There are certain things you can do in JS that you can't necessarily do in R, such as accessing the web browser's `window` API to open hyperlinks in response to plotly.js click events (e.g., Figure \@ref(fig:click-open)).
-3. JS event handlers can be noticably faster than running comparable code on an external R process, especially with a slow internet connection.
+3. JS event handlers can be noticeably faster than running comparable code on an external R process, especially with a slow internet connection.
 
 For those new to JS, you may find it helpful to compare code examples from this part of the book to code examples from Section \@ref(proxies).^[In fact, converting some examples from that section from **shiny** to JavaScript/HTML would be a good exercise!] That's because, the `plotlyProxy()` interface which powers that section is just an R interface to [plotly.js' JavaScript functions](https://plot.ly/javascript/plotlyjs-function-reference), and is primarily for updating graphs within an event handler. Therefore, if you understand how the examples in that section work, you can translate a good amount of that knowledge to a JS context as well.
 However, when handling these events in JS instead of R, you'll want to be familiar with JavaScript Object Notation (JSON), which is introduced in Chapter \@ref(json). That chapter also offers a minimal JS programming foundation for manipulating JSON, then Chapter \@ref(js-event-handlers) quickly covers how to attach JS event handlers to various plotly.js events, which is really all that's required to loosely understand the bulk of the examples in Chapters \@ref(supplying-custom-data) and \@ref(client-side).
@@ -15,7 +15,7 @@ However, when handling these events in JS instead of R, you'll want to be famili
 This portion of the book focuses on writing custom event handlers to commonly used plotly.js events, but a lot of the same tools and techniques covered here could be used to extend these graphs in other ways as well.
 -->
 
-An important thing to know about when doing any sort of web development is how to open and navigate web browsers developer tools. Through the developer tools, you can access a JS console to run and test out JS code, inpsect and debug the JS/CSS/HTML code behind a website, query components of the Document Object Model (DOM), inspect network traffic, and much more. In our use case of writing plotly.js event handlers, the JS console will come in handy especially to see what information a plotly.js event is firing (think of it as the analog of printing output to the R console in a shiny app), before writing the actual event handler. To open the console of a web browser (including RStudio), you can likely do: right-click -> "Inspect Element" -> "Console" tab (or similar).
+An important thing to know about when doing any sort of web development is how to open and navigate web browsers developer tools. Through the developer tools, you can access a JS console to run and test out JS code, inspect and debug the JS/CSS/HTML code behind a website, query components of the Document Object Model (DOM), inspect network traffic, and much more. In our use case of writing plotly.js event handlers, the JS console will come in handy especially to see what information a plotly.js event is firing (think of it as the analog of printing output to the R console in a shiny app), before writing the actual event handler. To open the console of a web browser (including RStudio), you can likely do: right-click -> "Inspect Element" -> "Console" tab (or similar).
 
 One way to write a custom event handler for a **plotly** graph is to leverage the `onRender()` function from the **htmlwidgets** package. This R function accepts a JS function as a string and calls that function when the widget is done rendering in the browser. The JS function needs (at least) one argument, `el`, which is the Document Object Model (DOM) element containing the **plotly** graph. It's worth noting that `htmlwidgets::onRender()` serves a more general purpose than registering plotly.js event handlers, so you could use it to a bunch other things, such as adding conditional logic based on information stored in `el`. Figure \@ref(fig:console-log) shows how you could use `onRender()` to log (and inspect) the DOM element to your browser's JS console. To demonstrate some useful DOM element's properties, Figure \@ref(fig:console-log) uses Firefox to inspect the element as a global variable, but as Figure \@ref(fig:console-log-event) shows, Chrome currently offers better tools for code debugging the JS function provided to `onRender()`  (e.g., setting breakpoints in virtual memory). 
 
@@ -33,7 +33,7 @@ If you're completely new to JS and JSON, Section \@ref(json) provides a foundati
 
 # Working with JSON {#json}
 
-JavaScript and other web technologies are intimidating and time-consuming to learn, but by borrowing some knowledge of R's data structures^[If you'd like a nice succinct overview on the topic, see http://adv-r.had.co.nz/Data-structures.html], we can get up and running with useful examples fairly quickly. JavaScript Object Notation (JSON) is a popular data-interchange format that JavaScript uses to work with data. As turns out, working with JSON in JS is somewhat similar to working with `list()`s in R -- both are recursive and heterogenous data structures that have similar semantics for accessing values. In JSON, there are three basic building blocks: objects, arrays, and primitive data types (e.g., number, string, boolean, `null`, `undefined`). 
+JavaScript and other web technologies are intimidating and time-consuming to learn, but by borrowing some knowledge of R's data structures^[If you'd like a nice succinct overview on the topic, see http://adv-r.had.co.nz/Data-structures.html], we can get up and running with useful examples fairly quickly. JavaScript Object Notation (JSON) is a popular data-interchange format that JavaScript uses to work with data. As turns out, working with JSON in JS is somewhat similar to working with `list()`s in R -- both are recursive and heterogeneous data structures that have similar semantics for accessing values. In JSON, there are three basic building blocks: objects, arrays, and primitive data types (e.g., number, string, boolean, `null`, `undefined`). 
 
 Loosely speaking, a JSON array is similar to a un-named `list()` in R and a JSON object is similar to an un-named `list()`. In fact, if you're already comfortable creating and subsetting named and un-named `list()`s in R, you can transfer some of that knowledge to JSON arrays and objects. 
 
@@ -90,7 +90,9 @@ arr.map(function(item) { return item + 1; });
 In R, both the `lapply()` and `purrr::map()` family of functions provide a similar functional interface. Also, note that operators like `+` in JS do even more type coercion than R, so although `item + 1` works for strings in JS, it would throw an error in R (an that's ok, most times you probably don't want to add a string to a number)! If instead, you wanted to only add 1 to numeric values, you could use `is.numeric()` in R within an if else statement.
 
 ```r
-purrr::map(arr, function(item) if (is.numeric(item)) item + 1 else item)
+purrr::map(arr, function(item) {
+  if (is.numeric(item)) item + 1 else item
+})
 #> [[1]]
 #> [1] "hello"
 #> 
@@ -101,10 +103,12 @@ purrr::map(arr, function(item) if (is.numeric(item)) item + 1 else item)
 #> [1] 11
 ```
 
-In JS, you can use the `typeof` keyword to get the data type as well as the conditional ternary operator (`condition ? exprT : exprF`) to acheive the same task.
+In JS, you can use the `typeof` keyword to get the data type as well as the conditional ternary operator (`condition ? exprT : exprF`) to achieve the same task.
 
 ```js
-arr.map(function(item) { return typeof item == "number" ? item + 1 : item; });
+arr.map(function(item) { 
+  return typeof item == "number" ? item + 1 : item; 
+});
 // ["hello", "world", 11]
 ```
 
@@ -137,7 +141,7 @@ schema()
 include_vimeo("307597826")
 ```
 
-In JSON, unlike R, there is no distinction between a heterogeneous and homogeneous collection of data types. In other words, in R, there is an important difference between `list(1, 2, 3)` and `c(1, 2, 3)` (the latter is an atomic vector and has a different set of rules). In JSON, there is no strict notion of a homogenous collection, so working with JSON arrays is essentially like being forced to use `list()` in R. This subtle fact can lead to some suprising results when trying to serialize R vectors as JSON arrays. For instance, if you wanted to create a JSON array, say `[1,"a",true]` using R objects, you may be tempted to do the following:
+In JSON, unlike R, there is no distinction between a heterogeneous and homogeneous collection of data types. In other words, in R, there is an important difference between `list(1, 2, 3)` and `c(1, 2, 3)` (the latter is an atomic vector and has a different set of rules). In JSON, there is no strict notion of a homogeneous collection, so working with JSON arrays is essentially like being forced to use `list()` in R. This subtle fact can lead to some surprising results when trying to serialize R vectors as JSON arrays. For instance, if you wanted to create a JSON array, say `[1,"a",true]` using R objects, you may be tempted to do the following:
 
 ```r
 jsonlite::toJSON(c(1, "a", TRUE))
@@ -162,9 +166,15 @@ library(htmlwidgets)
 plot_ly(mtcars, x = ~wt, y = ~mpg) %>%
   onRender("
     function(el) { 
-      el.on('plotly_hover', function(d) { console.log('Hover: ', d) });
-      el.on('plotly_click', function(d) { console.log('Click: ', d) });
-      el.on('plotly_selected', function(d) { console.log('Select: ', d) });
+      el.on('plotly_hover', function(d) { 
+        console.log('Hover: ', d); 
+      });
+      el.on('plotly_click', function(d) { 
+        console.log('Click: ', d);
+      });
+      el.on('plotly_selected', function(d) { 
+        console.log('Select: ', d); 
+      });
     }
   ")
 ```
@@ -225,8 +235,11 @@ x <- 1:3
 y <- 1:3
 logos <- c("r-logo", "penguin", "rstudio")
 # base64 encoded string of each image
-uris <- purrr::map_chr(logos, ~ base64enc::dataURI(file = sprintf("images/%s.png", .x)))
-# hoverinfo = "none" will hide the plotly.js tooltip, but the 'plotly_hover' event will still fire
+uris <- purrr::map_chr(
+  logos, ~ base64enc::dataURI(file = sprintf("images/%s.png", .x))
+)
+# hoverinfo = "none" will hide the plotly.js tooltip, but the 
+# plotly_hover event will still fire
 plot_ly(hoverinfo = "none") %>%
   add_text(x = x, y = y, customdata = uris, text = logos) %>%
   htmlwidgets::onRender(readLines("js/tooltip-image.js"))
@@ -243,7 +256,10 @@ It's worth noting that the JavaScript that powers Figure \@ref(fig:tooltip-image
 
 ```r
 plot_ly(hoverinfo = "none") %>%
-  add_heatmap(z = matrix(1:9, nrow = 3), customdata = matrix(uris, nrow = 3, ncol = 3)) %>%
+  add_heatmap(
+    z = matrix(1:9, nrow = 3), 
+    customdata = matrix(uris, nrow = 3, ncol = 3)
+  ) %>%
   htmlwidgets::onRender(readLines("js/tooltip-image.js"))
 ```
 
@@ -305,7 +321,7 @@ include_vimeo("307598624")
 
 ## Web infrastructure
 
-Sometimes supplying `customdata` isn't the best way to acheive a particular interactive feature. In those cases, you likely want to leverage other R lower-level interfaces to web technologies. Recall from Section \@ref(arranging-htmlwidgets) that **htmlwidgets** objects are a special case of **htmltools** tags. That means, you can always complement your widget(s) with arbitrary HTML content by adding additional tags. Figure \@ref(fig:correlation-client-side) leverages this idea to place an empty HTML `<div>` container below the correlation heatmap which is then populated with a **plotly** scatterplot upon clicking a cell. As it turns out, you *could* implement Figure \@ref(fig:correlation-client-side) by binding x/y data to each heatmap cell via `customdata`, but that would require the browser to store twice the amount of data as what's required here. Instead, this approach seralizes the input data (`mtcars`) into a JSON file via **jsonlite** so the webpage can read and parse the full dataset once and select just the two required columns when required (on click). There are a lot of ways to read JSON in JavaScript, but here we use the d3.js library's `d3.json()` since **plotly** already comes bundled with the library [@d3js]. Also, since the HTML file is reading the JSON from disk, most browsers won't render the HTML file directly (at least, by default, for security reasons). To get around that, we can start up a simple web server from R using **servr** to serve both the HTML and JSON in way that your browser will deem safe to run [@servr].
+Sometimes supplying `customdata` isn't the best way to achieve a particular interactive feature. In those cases, you likely want to leverage other R lower-level interfaces to web technologies. Recall from Section \@ref(arranging-htmlwidgets) that **htmlwidgets** objects are a special case of **htmltools** tags. That means, you can always complement your widget(s) with arbitrary HTML content by adding additional tags. Figure \@ref(fig:correlation-client-side) leverages this idea to place an empty HTML `<div>` container below the correlation heatmap which is then populated with a **plotly** scatterplot upon clicking a cell. As it turns out, you *could* implement Figure \@ref(fig:correlation-client-side) by binding x/y data to each heatmap cell via `customdata`, but that would require the browser to store twice the amount of data as what's required here. Instead, this approach serializes the input data (`mtcars`) into a JSON file via **jsonlite** so the webpage can read and parse the full dataset once and select just the two required columns when required (on click). There are a lot of ways to read JSON in JavaScript, but here we use the d3.js library's `d3.json()` since **plotly** already comes bundled with the library [@d3js]. Also, since the HTML file is reading the JSON from disk, most browsers won't render the HTML file directly (at least, by default, for security reasons). To get around that, we can start up a simple web server from R using **servr** to serve both the HTML and JSON in way that your browser will deem safe to run [@servr].
 
 ```{r, eval = FALSE, summary = "Click to see code"}
 library(plotly)
@@ -358,7 +374,10 @@ All the JavaScript (JS) we've seen thus far is natively supported by modern web 
 The R package **runpkg** makes it easy to download any [npm](https://www.npmjs.com/) (the main repository network for JS) package (via <https://unpkg.com/>) and include it in a web page generated through the **htmltools** package [@runpkg]. It does so by returning a `htmltools::htmlDependency()` object which encapsulates the downloaded files and includes the JS scripts (or CSS stylesheets) into any page that depends on that object. Here we use it to download a standalone bundle of a React library for rendering all sort of different video formats, called `react-player`.
 
 ```r
-react_player <- runpkg::download_files("react-player", "dist/ReactPlayer.standalone.js")
+react_player <- runpkg::download_files(
+  "react-player", 
+  "dist/ReactPlayer.standalone.js"
+)
 ```
 
 This `react-player` library provides a function called `renderReactPlayer()` that requires a placeholder (i.e., a DOM element) for inserting the video as well as a url (or file path) to the video. Figure \@ref(fig:react-player) demonstrates how we could use it to render a YouTube video in response to a **plotly** click event:
@@ -396,7 +415,7 @@ browsable(tagList(p, video, react_player))
 include_vimeo("315308561", height = "700")
 ```
 
-This `react-player` React library is rather unique in that it provides a standalone function, `renderReactPlayer()`, that enables rendering of a React component without loading React itself or leveraging special React syntax like JSX. It's more likely that the React component library will explictly require you to import both React and ReactDOM. You could use **runpkg** to download these React/ReactDOM as well, but the `html_dependency_react()` function from **reactR** package makes this even easier [@reactR]. Furthermore, **reactR** provides a `babel_transform()` function which will compile modern JS (e.g., ES6, ES2017, etc) as well as special React markup (e.g., JSX) to a version of JS that all browsers support (e.g., ES5). For a toy example, Figure \@ref(fig:babel) demonstrates how one could leverage ES6, React, and React's JSX syntax to populate a `<h1>` title filled with a `customdata` message in response to a **plotly** click event. 
+This `react-player` React library is rather unique in that it provides a standalone function, `renderReactPlayer()`, that enables rendering of a React component without loading React itself or leveraging special React syntax like JSX. It's more likely that the React component library will explicitly require you to import both React and ReactDOM. You could use **runpkg** to download these React/ReactDOM as well, but the `html_dependency_react()` function from **reactR** package makes this even easier [@reactR]. Furthermore, **reactR** provides a `babel_transform()` function which will compile modern JS (e.g., ES6, ES2017, etc) as well as special React markup (e.g., JSX) to a version of JS that all browsers support (e.g., ES5). For a toy example, Figure \@ref(fig:babel) demonstrates how one could leverage ES6, React, and React's JSX syntax to populate a `<h1>` title filled with a `customdata` message in response to a **plotly** click event. 
 
 ```{r, eval = FALSE, summary = "Click to see code"}
 library(reactR)
@@ -429,7 +448,10 @@ include_vimeo("315309034")
 For a more serious example, we could leverage another React component, named `react-data-grid`, to display the data within a **plotly** scatterplot brush, as done in Figure \@ref(fig:react-data-grid). Again, we can use **runpkg** to download a bundle of `react-data-grid`, but this library doesn't come with `React`/`ReactDOM`, so we must explicitly include it this time around. In fact, this approach of explicitly importing and calling `ReactDOM.render()` on your component is a more common approach than the custom standalone interface approach (i.e., `renderReactPlayer()`) used in Figure \@ref(fig:react-player).
 
 ```{r, eval = FALSE, summary = "Click to see code"}
-data_grid_js <- runpkg::download_files("react-data-grid", "dist/react-data-grid.min.js")
+data_grid_js <- runpkg::download_files(
+  "react-data-grid", 
+  "dist/react-data-grid.min.js"
+)
 
 # the data table placeholder
 data_grid <- tags$div(id = "data-grid")
@@ -441,14 +463,24 @@ p <- plot_ly(mtcars, x = ~wt, y = ~mpg, customdata = row.names(mtcars)) %>%
   onRender(babel_transform(   
     "el => {
        var container = document.getElementById('data-grid');
-       var columns = [{key: 'x', name: 'Weight'}, {key: 'y', name: 'MPG'}, {key: 'customdata', name: 'Model'}];
+       var columns = [
+         {key: 'x', name: 'Weight'}, 
+         {key: 'y', name: 'MPG'}, 
+         {key: 'customdata', name: 'Model'}
+        ];
        el.on('plotly_selecting', d => {
           if (d.points) {
-            var grid = <ReactDataGrid columns={columns} rowGetter={i => d.points[i]} rowsCount={d.points.length} />;
+            var grid = <ReactDataGrid 
+              columns={columns} 
+              rowGetter={i => d.points[i]} 
+              rowsCount={d.points.length} 
+            />;
             ReactDOM.render(grid, container);
           }
         });
-        el.on('plotly_deselect', d => { ReactDOM.render(null, container); });
+        el.on('plotly_deselect', d => { 
+          ReactDOM.render(null, container); 
+        });
      }"
   ))
 
