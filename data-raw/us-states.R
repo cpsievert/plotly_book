@@ -4,10 +4,11 @@ library(rnaturalearth)
 library(sf)
 library(geojsonio)
 
-usa <- ne_states(country = "United States", returnclass = "sf")
+usa <- ne_states(iso_a2 = "US", returnclass = "sf")
 usa <- usa %>%
   select(name) %>%
-  filter(!name %in% c("Alaska", "Hawaii"))
+  filter(!name %in% c("Alaska", "Hawaii")) %>%
+  st_transform(albersusa::us_laea_proj)
 
 st_write(
   usa,
