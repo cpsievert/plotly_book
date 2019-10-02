@@ -7,8 +7,7 @@ library(geojsonio)
 usa <- ne_states(iso_a2 = "US", returnclass = "sf")
 usa <- usa %>%
   select(name) %>%
-  filter(!name %in% c("Alaska", "Hawaii")) %>%
-  st_transform(albersusa::us_laea_proj)
+  filter(!name %in% c("Alaska", "Hawaii"))
 
 st_write(
   usa,
