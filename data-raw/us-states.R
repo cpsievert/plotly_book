@@ -1,29 +1,27 @@
-library(albersusa)
+# Generate a GeoJSON file of US state boundaries
+
+library(rnaturalearth)
+library(sf)
 library(geojsonio)
 
-sf::st_write(
-  usa_sf("laea"),
+usa <- ne_states(country = "United States", returnclass = "sf")
+usa <- usa %>%
+  select(name) %>%
+  filter(!name %in% c("Alaska", "Hawaii"))
+
+st_write(
+  usa,
   dsn = "data-raw/us-states.json",
   driver = "GeoJSON",
   delete_dsn = TRUE
 )
 
+# plotly.js is very insistent on there being a top-level
+# id that is linked to the location attribute
+# https://github.com/plotly/plotly.js/issues/4154#issuecomment-526198848
+# TODO: make this easier!!
 us <- geojson_read("data-raw/us-states.json")
 us$features <- Map(function(x, y) {
   x$id <- y; x
-}, us$features, usa_sf("laea")$name)
-geojson_write(us, file = "us-states.json")
-
-
-
-# Make sure there is a top-level id for each feature
-# as plotly.js will want us to link the location attribute
-# to this id. TODO: make this easier for others!
-# https://github.com/plotly/plotly.js/issues/4154#issuecomment-526198848
-us_list <- usa_sf("laea") %>%
-  sf_geojson() %>%
-  geojson_list()
-
-
-
-geojson_write(us_list, file = "data-raw/us-states.json")
+}, us$features, as.character(usa$name))
+jsonlite::write_json(us, path = "data-raw/us-states.json", auto_unbox = TRUE)
