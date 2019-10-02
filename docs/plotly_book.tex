@@ -192,6 +192,7 @@
   {\end{rmdblock}}
 
 \usepackage{makeidx}
+\newcommand{\indexc}[1]{\index{#1@\texttt{#1}}}
 \makeindex
 
 \urlstyle{tt}
@@ -224,7 +225,7 @@
 
 \title{Interactive web-based data visualization with R, plotly, and shiny}
 \author{Carson Sievert}
-\date{2019-10-01}
+\date{2019-10-02}
 
 \begin{document}
 \maketitle
@@ -587,7 +588,7 @@ This book was built with the following computing environment:
 \CommentTok{#>  collate  en_US.UTF-8                 }
 \CommentTok{#>  ctype    en_US.UTF-8                 }
 \CommentTok{#>  tz       America/Chicago             }
-\CommentTok{#>  date     2019-10-01                  }
+\CommentTok{#>  date     2019-10-02                  }
 \CommentTok{#> }
 \CommentTok{#> - Packages ------------------------------------------}
 \CommentTok{#>  package      * version    date       lib}
@@ -607,7 +608,7 @@ This book was built with the following computing environment:
 \CommentTok{#>  ellipsis       0.3.0      2019-09-20 [1]}
 \CommentTok{#>  fansi          0.4.0      2018-10-05 [1]}
 \CommentTok{#>  fastmap        1.0.0      2019-08-02 [1]}
-\CommentTok{#>  ggplot2      * 3.2.1      2019-08-10 [1]}
+\CommentTok{#>  ggplot2      * 3.2.1.9000 2019-10-01 [1]}
 \CommentTok{#>  glue           1.3.1      2019-03-12 [1]}
 \CommentTok{#>  gtable         0.3.0      2019-03-25 [1]}
 \CommentTok{#>  hexbin         1.27.3     2019-05-14 [1]}
@@ -674,7 +675,7 @@ This book was built with the following computing environment:
 \CommentTok{#>  CRAN (R 3.6.1)                       }
 \CommentTok{#>  CRAN (R 3.6.0)                       }
 \CommentTok{#>  Github (r-lib/fastmap@b104c2c)       }
-\CommentTok{#>  CRAN (R 3.6.0)                       }
+\CommentTok{#>  local                                }
 \CommentTok{#>  CRAN (R 3.6.0)                       }
 \CommentTok{#>  CRAN (R 3.6.0)                       }
 \CommentTok{#>  CRAN (R 3.6.0)                       }
@@ -742,6 +743,8 @@ The subsequent chapters within this `Creating views' part dive into specific exa
 \hypertarget{intro-plotly}{%
 \section{\texorpdfstring{Intro to \texttt{plot\_ly()}}{Intro to plot\_ly()}}\label{intro-plotly}}
 
+\index{plot\_ly()@\texttt{plot\_ly()}!Introduction}
+
 Any graph made with the \textbf{plotly} R package is powered by the JavaScript library \href{https://github.com/plotly/plotly.js}{plotly.js}. The \texttt{plot\_ly()} function provides a `direct' interface to plotly.js with some additional abstractions to help reduce typing. These abstractions, inspired by the Grammar of Graphics and \textbf{ggplot2}, make it much faster to iterate from one graphic to another, making it easier to discover interesting features in the data \citep{Wilkinson:2005, ggplot2}. To demonstrate, we'll use \texttt{plot\_ly()} to explore the \texttt{diamonds} dataset from \textbf{ggplot2} and learn a bit how \textbf{plotly} and plotly.js work along the way.
 
 \begin{Shaded}
@@ -798,6 +801,8 @@ The \texttt{plot\_ly()} function has numerous arguments that are unique to the R
 \end{figure}
 
 Since these arguments map data values to a visual range by default, you will obtain unexpected results if you try to specify the visual range directly, as in the top portion of Figure \ref{fig:intro-range}. If you want to specify the visual range directly, use the \texttt{I()} function to declare this value to be taken `AsIs', as in the bottom portion of Figure \ref{fig:intro-range}. Throughout this book, you'll see lots of examples that leverage these arguments, especially in Chapter \ref{scatter-traces}. Another good resource to learn more about these arguments (especially their defaults) is the R documentation page available by entering \texttt{help(plot\_ly)} in your R console.
+
+\index{plot\_ly()@\texttt{plot\_ly()}!I()@\texttt{I()}}
 
 \begin{Shaded}
 \begin{Highlighting}[]
@@ -866,6 +871,9 @@ As you'll learn more about in Chapter \ref{bars-histograms}, \textbf{plotly} has
 \end{Shaded}
 
 There are numerous other \texttt{add\_*()} functions that calculate statistics in the browser (e.g., \texttt{add\_histogram2d()}, \texttt{add\_contour()}, \texttt{add\_boxplot()}, etc), but most other functions aren't considered statistical. Making the distinction might not seem useful now, but they have their own respective trade-offs when it comes to speed and interactivity. Generally speaking, non-statistical layers will be faster and more responsive at run-time (since they require less computational work), whereas the statistical layers allow for more flexibility when it comes to client-side interactivity, as covered in Chapter \ref{client-side-linking}. Practically speaking, the difference in performance is often negligible -- the more common bottleneck occurs when attempting to render lots of graphical elements at a time (e.g., a scatterplot with a million points). In those scenarios, you likely want to render your plot in Canvas rather than SVG (the default) via \texttt{toWebGL()} -- for more information on improving performance, see Chapter \ref{performance}.
+
+\index{plot\_ly()@\texttt{plot\_ly()}!Layered mappings}
+\index{plot\_ly()@\texttt{plot\_ly()}!Dplyr integration}
 
 In many scenarios, it can be useful to combine multiple graphical layers into a single plot. In this case, it becomes useful to know a few things about \texttt{plot\_ly()}:
 
@@ -973,6 +981,10 @@ For illustration purposes, Figure \ref{fig:intro-printing} shows how this workfl
 \caption{A portion of the JSON data behind the bottom plot of Figure \ref{fig:intro-defaults}. This dodged bar chart has 8 layers of data (i.e., 8 traces) -- one for each level of \texttt{clarity}.}\label{fig:intro-json}
 \end{figure}
 
+\index{Plotly figure!Definition}
+\index{Plotly trace!Definition}
+\index{plotly\_json()@\texttt{plotly\_json()}}
+
 In plotly.js terminology, a \emph{figure} has two key components: \texttt{data} (aka, traces) and a \texttt{layout}. A \emph{trace} defines a mapping from data and visuals.\footnote{A trace is similar in concept to a layer (as defined in Section \ref{intro-plotly}, but it's not quite the same. In many cases, like the bottom panel of Figure \ref{fig:intro-defaults}, it makes sense to implement a single layer as multiple traces. This is due to the design of plotly.js and how traces are tied to legends and hover behavior.} Every trace has a \emph{type} (e.g., histogram, pie, scatter, etc) and the trace type determines what other attributes (i.e., visual and/or interactive properties, like \texttt{x}, \texttt{hoverinfo}, \texttt{name}) are available to control the trace mapping. That is, not every trace attribute is available to every trace type, but many attributes (e.g., the \texttt{name} of the trace) are available in every trace type and serve a similar purpose. From Figure \ref{fig:intro-json}, we can see that it takes multiple traces to generate the dodged bar chart, but instead of clicking through JSON viewer, sometimes it's easier to use \texttt{plotly\_build()} and compute on the plotly.js figure definition to verify certain things exist. Since \textbf{plotly} uses the \textbf{htmlwidgets} standard\footnote{The \textbf{htmlwidgets} package provides a foundation for other packages to implement R bindings to JavaScript libraries so that those bindings work in various contexts (e.g.~the R console, RStudio, inside \textbf{rmarkdown} documents, \textbf{shiny} apps, etc). For more info and examples, see the website \url{http://www.htmlwidgets.org}.}, the actual plotly.js figure definition appears under a list element named \texttt{x} \citep{htmlwidgets}.
 
 \begin{Shaded}
@@ -1011,6 +1023,8 @@ If we investigated further, we'd notice that \texttt{color} and \texttt{colors} 
 
 \hypertarget{intro-ggplotly}{%
 \section{\texorpdfstring{Intro to \texttt{ggplotly()}}{Intro to ggplotly()}}\label{intro-ggplotly}}
+
+\index{ggplotly()@\texttt{ggplotly()}!Introduction}
 
 The \texttt{ggplotly()} function from the \textbf{plotly} package has the ability to translate \textbf{ggplot2} to \textbf{plotly}. This functionality can be really helpful for quickly adding interactivity to your existing \textbf{ggplot2} workflow.\footnote{This section is not meant to teach you \textbf{ggplot2}, but rather to help point out when and why it might be preferable to \texttt{plot\_ly()}. If you're new to \textbf{ggplot2} and would like to learn it, see \ref{ggplot2}.} Moreover, even if you know \texttt{plot\_ly()} and plotly.js well, \texttt{ggplotly()} can still be desirable for creating visualizations that aren't necessarily straight-forward to achieve without it. To demonstrate, let's explore the relationship between \texttt{price} and other variables from the well-known \texttt{diamonds} dataset.
 
@@ -1076,6 +1090,8 @@ In addition to supporting most of the `core' \textbf{ggplot2} API, \texttt{ggplo
 
 Figure \ref{fig:geom-sina} demonstrates another way of visualizing the same information found in Figure \ref{fig:freqpoly-facet} using \texttt{geom\_sina()} from the \textbf{ggforce} package (instead of \texttt{geom\_freqpoly()}). This visualization jitters the raw data within the density for each group -- allowing us not only to see where the majority observations fall within a group, but also across all across all groups. By making this layer interactive, we can query individual points for more information and zoom into interesting regions. The second layer of Figure \ref{fig:geom-sina} uses \textbf{ggplot2}'s \texttt{stat\_summary()} to overlay a 95\% confidence interval estimated via a bootstrap algorithm via the \textbf{Hmisc} package \citep{Hmisc}.
 
+\index{ggplotly()@\texttt{ggplotly()}!ggforce}
+
 \begin{Shaded}
 \begin{Highlighting}[]
 \NormalTok{p <-}\StringTok{ }\KeywordTok{ggplot}\NormalTok{(diamonds, }\KeywordTok{aes}\NormalTok{(}\DataTypeTok{x=}\NormalTok{clarity, }\DataTypeTok{y=}\KeywordTok{log}\NormalTok{(price), }\DataTypeTok{color=}\NormalTok{clarity)) }\OperatorTok{+}
@@ -1120,6 +1136,8 @@ As noted by \citet{r4ds}, it's surprising that the diamond price would decline w
 \caption{A sina plot of diamond price by clarity and cut, after accounting for carat.}\label{fig:geom-sina-resid}
 \end{figure}
 
+\index{ggplotly()@\texttt{ggplotly()}!GGally}
+
 As discussed in Chapter \ref{ggally-ggnostic}, the \textbf{GGally} package provides a convenient interface for making similar types of model diagnostic visualizations via the \texttt{ggnostic()} function. It also provides a convenience function for visualizing the coefficient estimates and their standard errors via the \texttt{ggcoef()} function. Figure \ref{fig:ggally} shows how injecting interactivity into this plot allows us to query exact values and zoom in on the most interesting regions.
 
 \begin{Shaded}
@@ -1142,6 +1160,8 @@ As discussed in Chapter \ref{ggally-ggnostic}, the \textbf{GGally} package provi
 \end{figure}
 
 Although the \texttt{diamonds} dataset does not contain any missing values, it's a very common problem in real data analysis problems. The \textbf{naniar} package provides a suite of computational and visual resources for working with and revealing structure in missing values. All the \textbf{ggplot2} based visualizations return an object that can be converted by \texttt{ggplotly()}. Moreover, \textbf{naniar} provides a custom geom, \texttt{geom\_miss\_point()}, that can be useful for visualizing missingness structure. Figure \ref{fig:naniar} demonstrates this by introducing fake missing values to the diamond price.
+
+\index{ggplotly()@\texttt{ggplotly()}!naniar}
 
 \begin{Shaded}
 \begin{Highlighting}[]
@@ -1172,7 +1192,18 @@ It's also worth mentioning that \texttt{ggplotly()} conversions are not always p
 \hypertarget{scatter-traces}{%
 \chapter{Scattered foundations}\label{scatter-traces}}
 
+\index{Scatter trace type}
+
 As we learned in Section \ref{intro-plotly-js}, a plotly.js figure contains one (or more) trace(s), and every trace has a type. The trace type scatter is great for drawing low-level geometries (e.g., points, lines, text, and polygons) and provides the foundation for many \texttt{add\_*()} functions (e.g., \texttt{add\_markers()}, \texttt{add\_lines()}, \texttt{add\_paths()}, \texttt{add\_segments()}, \texttt{add\_ribbons()}, \texttt{add\_area()}, and \texttt{add\_polygons()}) as well as many \texttt{ggplotly()} charts. These scatter-based layers provide a more convenient interface to special cases of the scatter trace by doing a bit of data wrangling and transformation under-the-hood before mapping to scatter trace(s). For a simple example, \texttt{add\_lines()} ensures lines are drawn according to the ordering of \texttt{x}, which is desirable for a time series plotting. This behavior is subtly different than \texttt{add\_paths()} which uses row ordering instead.
+
+\index{
+  add\_trace()@\texttt{add\_trace()}!
+    add\_paths()@\texttt{add\_paths()}
+}
+\index{
+  add\_trace()@\texttt{add\_trace()}!
+    add\_lines()@\texttt{add\_lines()}
+}
 
 \begin{Shaded}
 \begin{Highlighting}[]
@@ -1200,6 +1231,11 @@ As we learned in Section \ref{intro-plotly-js}, a plotly.js figure contains one 
 \end{figure}
 
 Section \ref{intro-plotly} introduced `aesthetic mapping' arguments (unique to the R package) which make it easier to map data to visual properties (e.g., \texttt{color}, \texttt{linetype}, etc). In addition to these arguments, \textbf{dplyr} groupings can be used to ensure there is at least one geometry per group. The top panel of Figure \ref{fig:scatter-intro} demonstrates how \texttt{group\_by()} could be used to effectively wrap the time series from Figure \ref{fig:scatter-intro} by year, which can be useful for visualizing annual seasonality. Another approach to generating at least one geometry per `group' is to provide categorical variable to a relevant aesthetic (e.g., \texttt{color}), as shown in the bottom panel of Figure \ref{fig:scatter-intro}.
+
+\index{
+  plot\_ly()@\texttt{plot\_ly()}!
+    group\_by()@\texttt{group\_by()} vs \texttt{split}
+}
 
 \begin{Shaded}
 \begin{Highlighting}[]
@@ -1236,6 +1272,16 @@ Section \ref{intro-plotly} introduced `aesthetic mapping' arguments (unique to t
 
 Not only do these plots differ in visual appearance, they also differ in interactive capabilities, computational performance, and underlying implementation. That's because, the grouping approach (top panel of Figure \ref{fig:scatter-lines}) uses just one plotly.js trace (more performant, less interactive), whereas the \texttt{color} approach (bottom panel of Figure \ref{fig:scatter-lines}) generates one trace per line/year. In this case, the benefit of having multiple traces is that we can perform interactive filtering via the legend and compare multiple y-values at a given x. The cost of having those capabilities is that plots starts to be become sluggish after a few hundred traces, whereas thousands of lines can be rendered fairly easily in one trace. See Chapter \ref{performance} for more details on scaling and performance.
 
+\index{
+  add\_trace()@\texttt{add\_trace()}!
+    Introduction
+}
+\index{
+  plot\_ly()@\texttt{plot\_ly()}!
+    Special attributes!
+      Introduction
+}
+
 These features make it easier to get started using plotly.js, but it still pays off to learn how to use plotly.js directly. You won't find plotly.js attributes listed as explicit arguments in any \textbf{plotly} function (except for the special \texttt{type} attribute), but they are passed along verbatim to the plotly.js figure definition through the \texttt{...} operator. The scatter-based layers in this chapter fix the \texttt{type} plotly.js attribute to \texttt{"scatter"} as well as the \href{https://plot.ly/r/reference/\#scatter-mode}{\texttt{mode}} (e.g., \texttt{add\_markers()} uses \texttt{mode=\textquotesingle{}markers\textquotesingle{}} etc), but you could also use the lower-level \texttt{add\_trace()} to work more directly with plotly.js. For example, Figure \ref{fig:tooltip-praise} shows how to render markers, lines, and text in the same scatter trace. It also demonstrates how to leverage \emph{nested} plotly.js attributes, like \href{https://plot.ly/r/reference/\#scatter-textfont}{\texttt{textfont}} and \href{https://plot.ly/r/reference/\#layout-xaxis}{\texttt{xaxis}} -- these attributes contain other attributes, so you need to supply a suitable named list to these arguments.
 
 \begin{Shaded}
@@ -1264,6 +1310,9 @@ These features make it easier to get started using plotly.js, but it still pays 
 
 \caption{Using the generic \texttt{add\_trace()} function to render markers, lines, and text in a single scatter trace. This \texttt{add\_trace()} function, as well as any \texttt{add\_*()} function allows you to directly specify plotly.js attributes.}\label{fig:tooltip-praise}
 \end{figure}
+
+\index{Plotly figure!Reference}
+\index{schema()@\texttt{schema()}|seealso {Reference}}
 
 If you are new to plotly.js, I recommend taking a bit of time to look through the plotly.js attributes that are available to the scatter trace type and think how you might be able to use them. Most of these attributes work for other trace types as well, so learning an attribute once for a specific plot can pay off in other contexts as well. The online plotly.js figure reference, \url{https://plot.ly/r/reference/\#scatter}, is a decent place to search and learn about the attributes, but I recommend using the \texttt{schema()} function instead for a few reasons:
 
@@ -1297,10 +1346,21 @@ The sections that follow in this chapter demonstrate various type of data views 
 \hypertarget{markers}{%
 \section{Markers}\label{markers}}
 
+\index{
+  add\_trace()@\texttt{add\_trace()}!
+    add\_markers()@\texttt{add\_markers()}
+}
+
 This section details scatter traces with a \texttt{mode} of \texttt{"markers"} (i.e., \texttt{add\_markers()}). For simplicity, many of the examples here use \texttt{add\_markers()} with a numeric x and y axis, which results in scatterplot -- a common way to visualize the association between two quantitative variables. The content that follows is still relevant markers displayed non-numeric x and y (aka dot pots) as shown in Section \ref{dot-plots}.
 
 \hypertarget{marker-alpha}{%
 \subsection{Alpha blending}\label{marker-alpha}}
+
+\index{
+  plot\_ly()@\texttt{plot\_ly()}!
+    Special attributes!
+      alpha@\texttt{alpha}
+}
 
 As \citet{unwin-graphical-analysis} notes, scatterplots can be useful for exposing other important features including: casual relationships, outliers, clusters, gaps, barriers, and conditional relationships. A common problem with scatterplots, however is overplotting, meaning that there are multiple observations occupying the same (or similar) x/y locations. Figure \ref{fig:scatterplots} demonstrates one way to combat overplotting via alpha blending. When dealing with tens of thousands of points (or more), consider using \texttt{toWebGL()} to render plots using Canvas rather than SVG (more in Chapter \ref{performance}, or leveraging 2D density estimation (Section \ref{rectangular-binning-in-r}).
 
@@ -1325,6 +1385,13 @@ As \citet{unwin-graphical-analysis} notes, scatterplots can be useful for exposi
 
 \hypertarget{marker-color}{%
 \subsection{Colors}\label{marker-color}}
+
+\index{
+  plot\_ly()@\texttt{plot\_ly()}!
+    Special attributes!
+      color@\texttt{color} / \texttt{colors}
+}
+\index{colorbar()@\texttt{colorbar()}}
 
 As discussed in Section \ref{intro-plotly-js}, mapping a discrete variable to \texttt{color} produces one trace per category, which is desirable for it's legend and hover properties. On the other hand, mapping a \emph{numeric} variable to \texttt{color} produces one trace, as well as a \href{https://plot.ly/r/reference/\#scatter-marker-colorbar}{colorbar} guide for visually decoding colors back to data values. The \texttt{colorbar()} function can be used to customize the appearance of this automatically generated guide. The default colorscale is viridis, a perceptually-uniform colorscale (even when converted to black-and-white), and perceivable even to those with common forms of color blindness \citep{viridis}. Viridis is also the default colorscale for ordered factors.
 
@@ -1419,6 +1486,12 @@ The \texttt{color} argument is meant to control the `fill-color' of a geometric 
 \hypertarget{marker-symbol}{%
 \subsection{Symbols}\label{marker-symbol}}
 
+\index{
+  plot\_ly()@\texttt{plot\_ly()}!
+    Special attributes!
+      symbol@\texttt{symbol} / \texttt{symbols}
+}
+
 The \texttt{symbol} argument can be used to map data values to the \texttt{marker.symbol} plotly.js attribute. It uses the same semantics that we've already seen for \texttt{color}:
 
 \begin{itemize}
@@ -1501,6 +1574,17 @@ If you'd like to see all the symbols available to \textbf{plotly}, as well as a 
 \hypertarget{marker-stroke}{%
 \subsection{Stroke and span}\label{marker-stroke}}
 
+\index{
+  plot\_ly()@\texttt{plot\_ly()}!
+    Special attributes!
+      stroke@\texttt{stroke} / \texttt{strokes}
+}
+\index{
+  plot\_ly()@\texttt{plot\_ly()}!
+    Special attributes!
+      span@\texttt{span} / \texttt{spans}
+}
+
 The \texttt{stroke} argument follows the same semantics as \texttt{color} and \texttt{symbol} when it comes to variable mappings and specifying visual ranges. Typically you don't want to map data values to \texttt{stroke}, you just want to specify a fixed outline color. For example, Figure \ref{fig:stroke-manual} modifies Figure \ref{fig:symbol-factor-manual} to simply add a black outline. By default, the \texttt{span}, or width of the stroke, is zero, you'll likely want to set the width to be around one pixel.
 
 \begin{Shaded}
@@ -1521,6 +1605,12 @@ The \texttt{stroke} argument follows the same semantics as \texttt{color} and \t
 
 \hypertarget{marker-size}{%
 \subsection{Size}\label{marker-size}}
+
+\index{
+  plot\_ly()@\texttt{plot\_ly()}!
+    Special attributes!
+      size@\texttt{size} / \texttt{sizes}
+}
 
 For scatterplots, the \texttt{size} argument controls the area of markers (unless otherwise specified via \href{https://plot.ly/r/reference/\#scatter-marker-sizemode}{sizemode}), and \emph{must} be a numeric variable. The \texttt{sizes} argument controls the minimum and maximum size of circles, in pixels:
 
@@ -1563,6 +1653,12 @@ Similar to other arguments, \texttt{I()} can be used to specify the size directl
 \hypertarget{dot-plots}{%
 \subsection{Dotplots \& error bars}\label{dot-plots}}
 
+\index{Chart types!Dotplot}
+\index{
+  add\_markers()@\texttt{add\_markers()}!
+    Error bars
+}
+
 A dotplot is similar to a scatterplot, except instead of two numeric axes, one is categorical. The usual goal of a dotplot is to compare value(s) on a numerical scale over numerous categories. In this context, dotplots are preferable to pie charts since comparing position along a common scale is much easier than comparing angle or area \citep{graphical-perception, crowdsourcing-graphical-perception}. Furthermore, dotplots can be preferable to bar charts, especially when comparing values within a narrow range far away from 0 \citep{few-values}. Also, when presenting point estimates, and uncertainty associated with those estimates, bar charts tend to exaggerate the difference in point estimates, and lose focus on uncertainty \citep{messing}.
 
 A popular application for dotplots (with error bars) is the so-called ``coefficient plot'' for visualizing the point estimates of coefficients and their standard error. The \texttt{coefplot()} function in the \textbf{coefplot} package \citep{coefplot} and the \texttt{ggcoef()} function in the \textbf{GGally} both produce coefficient plots for many types of model objects in R using \textbf{ggplot2}, which we can translate to plotly via \texttt{ggplotly()}. Since these packages use points and segments to draw the coefficient plots, the hover information is not the best, and it'd be better to use \href{https://plot.ly/r/reference/\#scatter-error_x}{error objects}. Figure \ref{fig:coefplot} uses the \texttt{tidy()} function from the \textbf{broom} package \citep{broom} to obtain a data frame with one row per model coefficient, and produce a coefficient plot with error bars along the x-axis.
@@ -1602,10 +1698,21 @@ A popular application for dotplots (with error bars) is the so-called ``coeffici
 \hypertarget{lines}{%
 \section{Lines}\label{lines}}
 
+\index{
+  add\_trace()@\texttt{add\_trace()}!
+    add\_lines()@\texttt{add\_lines()}
+}
+
 Many of the same principles we learned about aesthetic mappings with respect to markers (Section \ref{markers}) also apply to lines.\footnote{At the time of writing, the plotly.js attributes \href{https://github.com/plotly/plotly.js/issues/147}{\texttt{line.width} and \texttt{line.color}} do not support multiple values, meaning a single line trace can only have one width/color in 2D line plot, and consequently numeric \texttt{color}/\texttt{size} mappings won't work. This isn't necessarily true for 3D paths/lines and there will likely be support these features for 2D paths/lines in WebGL in the near future.} Moreover, at the start of this chapter (namely Figure \ref{fig:scatter-lines}) we also learned how to use \textbf{dplyr}'s \texttt{group\_by()} to ensure there is at least one geometry (in this case, line) per group. We also learned the difference between \texttt{add\_paths()} and \texttt{add\_lines()} -- the former draws lines according to row ordering whereas the latter draw them according to \texttt{x}. In this chapter, we'll learn about \texttt{linetype}/\texttt{linetype}, an aesthetic that applies to lines and polygons. We'll also discuss some other important chart types that can be implemented with \texttt{add\_paths()}, \texttt{add\_lines()}, and \texttt{add\_segments()}.
 
 \hypertarget{linetypes}{%
 \subsection{Linetypes}\label{linetypes}}
+
+\index{
+  plot\_ly()@\texttt{plot\_ly()}!
+    Special attributes!
+      linetype@\texttt{linetype} / \texttt{linetypes}
+}
 
 Generally speaking, it's hard to perceive more than 8 different colors/linetypes/symbols in a given plot, so sometimes we have to filter data to use these effectively. Here we use the \textbf{dplyr} package to find the top 5 cities in terms of average monthly sales (\texttt{top5}), then effectively filter the original data to contain just these cities via \texttt{semi\_join()}. As Figure \ref{fig:linetypes} demonstrates, once we have the data filtered, mapping city to \texttt{color} or \texttt{linetype} is trivial. The color palette can be altered via the \texttt{colors} argument, and follows the same rules as \protect\hyperlink{scatterplots}{scatterplots}. The linetype palette can be altered via the \texttt{linetypes} argument, and accepts R's \href{https://github.com/wch/r-source/blob/e5b21d0397c607883ff25cca379687b86933d730/src/library/graphics/man/par.Rd\#L726-L743}{\texttt{lty} values} or plotly.js \href{https://plot.ly/r/reference/\#scatter-line-dash}{dash values}.
 
@@ -1663,12 +1770,25 @@ If you'd like to control exactly which linetype is used to encode a particular d
 \hypertarget{segments}{%
 \subsection{Segments}\label{segments}}
 
+\index{
+  add\_trace()@\texttt{add\_trace()}!
+    add\_segments()@\texttt{add\_segments()}
+}
+
 The \texttt{add\_segments()} function essentially provides a way to connect two points {[}(\texttt{x}, \texttt{y}) to (\texttt{xend}, \texttt{yend}){]} with a line. Segments form the building blocks for numerous useful chart types, including slopegraphs, dumbell charts, candlestick charts, and more. Slopegraphs and dumbell charts are useful for comparing numeric values across numerous categories. Candlestick charts are typically used for visualizing change in a financial asset over time.
 
 Segments can also provide a useful alternative to \texttt{add\_bars()} (covered in Chapter \ref{bars-histograms}), especially for animations. In particular, Figure \ref{fig:profile-pyramid} of Section \ref{animation-support} shows how implement an animated population pyramid using segments instead of bars.
 
 \hypertarget{slopegraph}{%
 \subsubsection{Slopegraph}\label{slopegraph}}
+
+\index{Chart types!Slopegraph}
+\index{Editable charts!Annotations}
+\index{add\_annotations()@\texttt{add\_annotations()}}
+\index{
+  layout()@\texttt{layout()}!
+    Axis attributes
+}
 
 The slope graph, made popular by \citet{tufte2001}, is a great way to compare the change in a measurement across numerous groups. This change could be along either a discrete or a continuous axis. For a continuous axis, the slopegraph could be thought of as a decomposition of a line graph into multiple segments. The \textbf{slopegraph} R package provides a succinct interface for creating slopegraphs with base or \textbf{ggplot2} graphics and also some convenient data sets which we'll make use of here \citep{slopegraph}. Figure \ref{fig:slopegraph} recreates an example from \citet{tufte2001}, using the \texttt{gdp} data set from \textbf{slopegraph}, and demonstrates a common issue with labelling in slopegraphs -- it's easy to have overlapping labels when anchoring labels on data values. For that reason, this implementation leverages \textbf{plotly} ability to interactively edit annotation positions. See Chapter \ref{editing-views} for similar examples of `editing views'.
 
@@ -1725,6 +1845,8 @@ The slope graph, made popular by \citet{tufte2001}, is a great way to compare th
 \hypertarget{dumbell}{%
 \subsubsection{Dumbell}\label{dumbell}}
 
+\index{Chart types!Dumbell}
+
 So called dumbell charts are similar in concept to slope graphs, but not quite as general. They are typically used to compare two different classes of numeric values across numerous groups. Figure \ref{fig:dumbell} uses the dumbell approach to show average miles per gallon city and highway for different car models. With a dumbell chart, it's always a good idea to order the categories by a sensible metric -- for Figure \ref{fig:dumbell}, the categories are ordered by the city miles per gallon.
 
 \begin{Shaded}
@@ -1765,6 +1887,8 @@ So called dumbell charts are similar in concept to slope graphs, but not quite a
 \hypertarget{candlestick}{%
 \subsubsection{Candlestick}\label{candlestick}}
 
+\index{Chart types!Candlestick}
+
 Figure \ref{fig:candlestick} uses the \textbf{quantmod} package \citep{quantmod} to obtain stock price data for Microsoft and plots two segments for each day: one to encode the opening/closing values, and one to encode the daily high/low.
 
 \begin{Shaded}
@@ -1798,6 +1922,8 @@ Figure \ref{fig:candlestick} uses the \textbf{quantmod} package \citep{quantmod}
 \hypertarget{density-plots}{%
 \subsection{Density plots}\label{density-plots}}
 
+\index{Chart types!Kernel densities}
+
 In Chapter \ref{bars-histograms}, we leverage a number of algorithms in R for computing the ``optimal'' number of bins for a histogram, via \texttt{hist()}, and routing those results to \texttt{add\_bars()}. We can leverage the \texttt{density()} function for computing kernel density estimates in a similar way, and route the results to \texttt{add\_lines()}, as is done in Figure \ref{fig:densities}.
 
 \begin{Shaded}
@@ -1824,6 +1950,8 @@ In Chapter \ref{bars-histograms}, we leverage a number of algorithms in R for co
 
 \hypertarget{parallel-coordinates}{%
 \subsection{Parallel Coordinates}\label{parallel-coordinates}}
+
+\index{Chart types!Parallel coordinates}
 
 One very useful, but often overlooked, visualization technique is the parallel coordinates plot. Parallel coordinates provide a way to compare values along a common (or non-aligned) positional scale(s) -- the most basic of all perceptual tasks -- in more than 3 dimensions \citep{graphical-perception}. Usually each line represents every measurement for a given row (or observation) in a data set. It's true that plotly.js provides a trace type, parcoords, specifically for parallel coordinates that offers desirable interactive capabilities (e.g., highlighting and reordering of axes).\footnote{See \url{https://plot.ly/r/parallel-coordinates-plot/} for some interactive examples}. However, it can also be useful learn how to use \texttt{add\_lines()} to implement parallel coordinates as it can offer more flexibility and control over the axis scales.
 
@@ -1861,6 +1989,11 @@ It is also worth noting that the \textbf{GGally} offers a \texttt{ggparcoord()} 
 
 \hypertarget{polygons}{%
 \section{Polygons}\label{polygons}}
+
+\index{
+  add\_trace()@\texttt{add\_trace()}!
+    add\_polygons()@\texttt{add\_polygons()}
+}
 
 The \texttt{add\_polygons()} function is essentially equivalent to \texttt{add\_paths()} with the \href{https://plot.ly/r/reference/\#scatter-fill}{fill} attribute set to ``toself''. Polygons form the basis for other, higher-level scatter-based layers (e.g., \texttt{add\_ribbons()} and \texttt{add\_sf()}) that don't have a dedicated plotly.js trace type. Polygons can be use to draw many things, but perhaps the most familiar application where you \emph{might} want to use \texttt{add\_polygons()} is to draw geo-spatial objects. If and when you use \texttt{add\_polygons()} to draw a map, make sure you fix the aspect ratio (e.g., \href{https://plot.ly/r/reference/\#layout-xaxis-scaleanchor}{\texttt{xaxis.scaleanchor}}) and also consider using \texttt{plotly\_empty()} over \texttt{plot\_ly()} to hide axis labels, ticks, and the background grid. On the other hand, Section \ref{maps-custom} shows you how to make a custom maps using the \textbf{sf} package and \texttt{add\_sf()}, which is a bit of work to get started, but is absolutely worth the investment.
 
@@ -1907,6 +2040,11 @@ As discussion surrounding Figure \ref{fig:split-color} points out, scatter-based
 \hypertarget{ribbons}{%
 \subsection{Ribbons}\label{ribbons}}
 
+\index{
+  add\_trace()@\texttt{add\_trace()}!
+    add\_ribbons()@\texttt{add\_ribbons()}
+}
+
 Ribbons are useful for showing uncertainty bounds as a function of x. The \texttt{add\_ribbons()} function creates ribbons and requires the arguments: \texttt{x}, \texttt{ymin}, and \texttt{ymax}. The \texttt{augment()} function from the \textbf{broom} package appends observational-level model components (e.g., fitted values stored as a new column \texttt{.fitted}) which is useful for extracting those components in a convenient form for visualization. Figure \ref{fig:broom-lm} shows the fitted values and uncertainty bounds from a linear model object.
 
 \begin{Shaded}
@@ -1943,6 +2081,10 @@ It's worth noting that \textbf{plotly} aims to be a general purpose visualizatio
 
 \hypertarget{overview-1}{%
 \subsection{Overview}\label{overview-1}}
+
+\index{
+  plot\_mapbox()@\texttt{plot\_mapbox()}
+}
 
 If you have fairly simple latitude/longitude data and want to make a quick map, you may want to try one of \textbf{plotly}'s integrated mapping options (i.e., \texttt{plot\_mapbox()} and \texttt{plot\_geo()}). Generally speaking, you can treat these constructor functions as a drop-in replacement for \texttt{plot\_ly()} and get a dynamic basemap rendered behind your data. Furthermore, all the scatter-based layers we learned about in Section \ref{scatter-traces} work as you'd expect it to with \texttt{plot\_ly()}.\footnote{Unfortunately, non-scatter traces currently don't work with \texttt{plot\_mapbox()}/ \texttt{plot\_geo()} meaning that, for one, raster (i.e., heatmap) maps are not natively supported.} For example, Figure \ref{fig:mapbox-bubble} uses \texttt{plot\_mapbox()} and \texttt{add\_markers()} to create a bubble chart:
 
@@ -2033,6 +2175,10 @@ Figure \ref{fig:mapbox-style-dropdown} demonstrates how to create an integrated 
 \caption{Providing a dropdown menu to control the styling of the mapbox baselayer. For a video demonstration of the interactive, see \url{https://bit.ly/mapbox-style-dropdown}. For the interactive, see \url{https://plotly-r.com/interactives/mapbox-style-dropdown.html}}\label{fig:mapbox-style-dropdown}
 \end{figure}
 
+\index{
+  plot\_geo()@\texttt{plot\_geo()}
+}
+
 The other integrated mapping solution in \textbf{plotly} is \texttt{plot\_geo()}. Compared to \texttt{plot\_mapbox()}, this approach has support for different mapping projections, but styling the basemap is limited and can be more cumbersome. Figure \ref{fig:geo-flights} demonstrates using \texttt{plot\_geo()} in conjunction with \texttt{add\_markers()} and \texttt{add\_segments()} to visualize flight paths within the United States. Whereas \texttt{plot\_mapbox()} is fixed to a mercator projection, the \texttt{plot\_geo()} constructor has a handful of different projection available to it, including the orthographic projection which gives the illusion of the 3D globe.
 
 \begin{Shaded}
@@ -2118,7 +2264,9 @@ One nice thing about \texttt{plot\_geo()} is that it automatically projects geom
 \hypertarget{choropleths}{%
 \subsection{Choropleths}\label{choropleths}}
 
-In addition to scatter-based layers, the \texttt{plot\_geo()} constructor also supports a \href{https://plot.ly/r/reference/\#choropleth}{choropleth} layer. Figure \ref{fig:us-density} shows the population density of the U.S. via a choropleth, and also layers on markers for the state center locations, using the U.S. state data from the \textbf{datasets} package \citep{RCore}. By simply providing a \href{https://plot.ly/r/reference/\#choropleth-z}{\texttt{z}} attribute, \texttt{plotly\_geo()} objects will try to create a choropleth, but you'll also need to provide \href{https://plot.ly/r/reference/\#choropleth-locations}{\texttt{locations}} and a \href{https://plot.ly/r/reference/\#choropleth-locationmode}{\texttt{locationmode}}. It's worth noting that the \texttt{locationmode} is currently limited to countries and US states, so if you need to a different geo-unit (e.g., counties, municipalities, etc), you can use the the custom mapping approach discussed in Section \ref{maps-custom}.
+In addition to scatter traces, both of the integrated mapping solutions (i.e., \texttt{plot\_mapbox()} and \texttt{plot\_geo()}) have an optimized choropleth trace type (i.e., the \href{https://plot.ly/r/reference/\#choroplethmapbox}{choroplethmapbox} and \href{https://plot.ly/r/reference/\#choropleth}{choropleth} trace types). The choropleth trace currently accepts three different \texttt{locationmode}s: either \texttt{"ISO-3"}, \texttt{"USA-states}, or \texttt{"country-names"}.
+
+Figure \ref{fig:us-density} shows the population density of the U.S. via a choropleth, and also layers on markers for the state center locations, using the U.S. state data from the \textbf{datasets} package \citep{RCore}. By simply providing a \href{https://plot.ly/r/reference/\#choropleth-z}{\texttt{z}} attribute, \texttt{plotly\_geo()} objects will try to create a choropleth, but you'll also need to provide \href{https://plot.ly/r/reference/\#choropleth-locations}{\texttt{locations}} and a \href{https://plot.ly/r/reference/\#choropleth-locationmode}{\texttt{locationmode}}. It's worth noting that the \texttt{locationmode} is currently limited to countries and US states, so if you need to a different geo-unit (e.g., counties, municipalities, etc), you should use the choroplethmapbox trace type and/or use a ``custom'' mapping approach as discussed in Section \ref{maps-custom}.
 
 \begin{Shaded}
 \begin{Highlighting}[]
@@ -2148,7 +2296,55 @@ In addition to scatter-based layers, the \texttt{plot\_geo()} constructor also s
 \caption{A map of U.S. population density using the \texttt{state.x77} data from the \textbf{datasets} package.}\label{fig:us-density}
 \end{figure}
 
-Figure \ref{fig:us-density} helps illuminate a problem with choropleths from a graphical perception point of view. We typically use the color in choropleths to encode a numeric variable (e.g., GDP, net exports, average SAT score, etc) and the eye naturally perceives the area that a particular color covers as proportional to its overall effect. This ends up being misleading since the area the color covers typically has no sensible relationship with the data encoded by the color. A classic example of this misleading effect in action is in US election maps -- the proportion of red to blue coloring is not representative of the overall popular vote \citep{election-maps}.
+Choroplethmapbox is more flexible than choropleth because you supply your own GeoJSON definition of the choropleth via the \texttt{geojson} attribute. Currently this attribute must be a URL pointing to a geojson file. Moreover, the \texttt{location} should point to a top-level id attribute of each feature within the geojson file. Figure \ref{fig:us-density-geojson} demonstrates how we could visualize the same information as Figure \ref{fig:us-density}, but this time using choroplethmapbox.
+
+\begin{Shaded}
+\begin{Highlighting}[]
+\KeywordTok{plot_ly}\NormalTok{() }\OperatorTok{%>%}
+\StringTok{  }\KeywordTok{add_trace}\NormalTok{(}
+    \DataTypeTok{type =} \StringTok{"choroplethmapbox"}\NormalTok{,}
+    \CommentTok{# See how this GeoJSON URL was generated, go to}
+    \CommentTok{# https://plotly-r.com/data-raw/us-states.R}
+    \DataTypeTok{geojson =} \KeywordTok{paste}\NormalTok{(}\KeywordTok{c}\NormalTok{(}
+      \StringTok{"https://gist.githubusercontent.com/cpsievert/"}\NormalTok{,}
+      \StringTok{"7cdcb444fb2670bd2767d349379ae886/raw/"}\NormalTok{,}
+      \StringTok{"cf5631bfd2e385891bb0a9788a179d7f023bf6c8/"}\NormalTok{, }
+      \StringTok{"us-states.json"}
+\NormalTok{    ), }\DataTypeTok{collapse =} \StringTok{""}\NormalTok{),}
+    \DataTypeTok{locations =} \KeywordTok{row.names}\NormalTok{(state.x77),}
+    \DataTypeTok{z =}\NormalTok{ state.x77[, }\StringTok{"Population"}\NormalTok{] }\OperatorTok{/}\StringTok{ }\NormalTok{state.x77[, }\StringTok{"Area"}\NormalTok{],}
+    \DataTypeTok{span =} \KeywordTok{I}\NormalTok{(}\DecValTok{0}\NormalTok{)}
+\NormalTok{  ) }\OperatorTok{%>%}
+\StringTok{  }\KeywordTok{layout}\NormalTok{(}
+    \DataTypeTok{mapbox =} \KeywordTok{list}\NormalTok{(}
+      \DataTypeTok{style =} \StringTok{"light"}\NormalTok{,}
+      \DataTypeTok{zoom =} \DecValTok{4}\NormalTok{,}
+      \DataTypeTok{center =} \KeywordTok{list}\NormalTok{(}\DataTypeTok{lon =} \FloatTok{-98.58}\NormalTok{, }\DataTypeTok{lat =} \FloatTok{39.82}\NormalTok{)}
+\NormalTok{    )}
+\NormalTok{  ) }\OperatorTok{%>%}
+\StringTok{  }\KeywordTok{config}\NormalTok{(}
+    \DataTypeTok{mapboxAccessToken =} \KeywordTok{Sys.getenv}\NormalTok{(}\StringTok{"MAPBOX_TOKEN"}\NormalTok{),}
+    \CommentTok{# Workaround to make sure image download uses full container}
+    \CommentTok{# size https://github.com/plotly/plotly.js/pull/3746}
+    \DataTypeTok{toImageButtonOptions =} \KeywordTok{list}\NormalTok{(}
+      \DataTypeTok{format =} \StringTok{"svg"}\NormalTok{, }
+      \DataTypeTok{width =} \OtherTok{NULL}\NormalTok{, }
+      \DataTypeTok{height =} \OtherTok{NULL}
+\NormalTok{    )}
+\NormalTok{  )}
+\end{Highlighting}
+\end{Shaded}
+
+\begin{figure}
+
+{\centering \includegraphics[width=\textwidth]{images/us-density-geojson} 
+
+}
+
+\caption{Another map of U.S. population density, this time using choroplethmapbox with a custom GeoJSON file.}\label{fig:us-density-geojson}
+\end{figure}
+
+Figures \ref{fig:us-density} and \ref{fig:us-density-geojson} aren't an ideal way to visualize state population a graphical perception point of view. We typically use the color in choropleths to encode a numeric variable (e.g., GDP, net exports, average SAT score, etc) and the eye naturally perceives the area that a particular color covers as proportional to its overall effect. This ends up being misleading since the area the color covers typically has no sensible relationship with the data encoded by the color. A classic example of this misleading effect in action is in US election maps -- the proportion of red to blue coloring is not representative of the overall popular vote \citep{election-maps}.
 
 Cartograms are an approach to reducing this misleading effect and grants another dimension to encode data through the size of geo-spatial features. Section \ref{cartograms} covers how to render cartograms in \textbf{plotly} using \textbf{sf} and \textbf{cartogram}.
 
@@ -8541,7 +8737,7 @@ In \textbf{ggplot2}, many geoms are special cases of other geoms. For example, \
 \CommentTok{#>     data <- data[order(data[["x"]]), ]}
 \CommentTok{#>     prefix_class(data, "GeomPath")}
 \CommentTok{#> \}}
-\CommentTok{#> <bytecode: 0x7fde3ecc9c58>}
+\CommentTok{#> <bytecode: 0x7fbaf64ff408>}
 \CommentTok{#> <environment: namespace:plotly>}
 \end{Highlighting}
 \end{Shaded}
@@ -8593,6 +8789,8 @@ In more complicated cases, where your custom geom can not be converted to a lowe
 
 \hypertarget{references}{%
 \chapter*{References}\label{references}}
+
+
 
 
 

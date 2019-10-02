@@ -24,7 +24,7 @@
 <meta name="author" content="Carson Sievert" />
 
 
-<meta name="date" content="2019-10-01" />
+<meta name="date" content="2019-10-02" />
 
   <meta name="viewport" content="width=device-width, initial-scale=1" />
   <meta name="apple-mobile-web-app-capable" content="yes" />
@@ -359,9 +359,9 @@ This portion of the book focuses on writing custom event handlers to commonly us
 -->
 <p>An important thing to know about when doing any sort of web development is how to open and navigate web browsers developer tools. Through the developer tools, you can access a JS console to run and test out JS code, inspect and debug the JS/CSS/HTML code behind a website, query components of the Document Object Model (DOM), inspect network traffic, and much more. In our use case of writing plotly.js event handlers, the JS console will come in handy especially to see what information a plotly.js event is firing (think of it as the analog of printing output to the R console in a shiny app), before writing the actual event handler. To open the console of a web browser (including RStudio), you can likely do: right-click -&gt; “Inspect Element” -&gt; “Console” tab (or similar).</p>
 <p>One way to write a custom event handler for a <strong>plotly</strong> graph is to leverage the <code>onRender()</code> function from the <strong>htmlwidgets</strong> package. This R function accepts a JS function as a string and calls that function when the widget is done rendering in the browser. The JS function needs (at least) one argument, <code>el</code>, which is the Document Object Model (DOM) element containing the <strong>plotly</strong> graph. It’s worth noting that <code>htmlwidgets::onRender()</code> serves a more general purpose than registering plotly.js event handlers, so you could use it to a bunch other things, such as adding conditional logic based on information stored in <code>el</code>. Figure <a href="javascript.html#fig:console-log">18.1</a> shows how you could use <code>onRender()</code> to log (and inspect) the DOM element to your browser’s JS console. To demonstrate some useful DOM element’s properties, Figure <a href="javascript.html#fig:console-log">18.1</a> uses Firefox to inspect the element as a global variable, but as Figure <a href="js-event-handlers.html#fig:console-log-event">20.1</a> shows, Chrome currently offers better tools for code debugging the JS function provided to <code>onRender()</code> (e.g., setting breakpoints in virtual memory).</p>
-<div class="sourceCode" id="cb180"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb180-1"><a href="javascript.html#cb180-1"></a><span class="kw">library</span>(htmlwidgets)</span>
-<span id="cb180-2"><a href="javascript.html#cb180-2"></a><span class="kw">plot_ly</span>(<span class="dt">z =</span> <span class="op">~</span>volcano) <span class="op">%&gt;%</span></span>
-<span id="cb180-3"><a href="javascript.html#cb180-3"></a><span class="st">  </span><span class="kw">onRender</span>(<span class="st">&quot;function(el) { console.log(el); }&quot;</span>)</span></code></pre></div>
+<div class="sourceCode" id="cb181"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb181-1"><a href="javascript.html#cb181-1"></a><span class="kw">library</span>(htmlwidgets)</span>
+<span id="cb181-2"><a href="javascript.html#cb181-2"></a><span class="kw">plot_ly</span>(<span class="dt">z =</span> <span class="op">~</span>volcano) <span class="op">%&gt;%</span></span>
+<span id="cb181-3"><a href="javascript.html#cb181-3"></a><span class="st">  </span><span class="kw">onRender</span>(<span class="st">&quot;function(el) { console.log(el); }&quot;</span>)</span></code></pre></div>
 <div class="figure" style="text-align: center"><span id="fig:console-log"></span>
 <iframe src="https://player.vimeo.com/video/307598574?title=0&amp;byline=0&amp;portrait=0" width="100%" height="700" frameborder="0" seamless="seamless" webkitAllowFullScreen mozallowfullscreen allowFullScreen></iframe>
 <p class="caption">

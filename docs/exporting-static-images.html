@@ -24,7 +24,7 @@
 <meta name="author" content="Carson Sievert" />
 
 
-<meta name="date" content="2019-10-01" />
+<meta name="date" content="2019-10-02" />
 
   <meta name="viewport" content="width=device-width, initial-scale=1" />
   <meta name="apple-mobile-web-app-capable" content="yes" />
@@ -359,15 +359,15 @@ FIGURE 11.1: Using the <code>orca()</code> function to export a WebGL/Canvas bas
 <div id="from-a-browser" class="section level2">
 <h2><span class="header-section-number">11.2</span> From a browser</h2>
 <p>Exporting an image from a browser is a nice option if you need to perform edits before exporting or if you’d like others to share your work. By default, the ‘download plot’ icon in the modebar will download to png and use the <code>height</code> and <code>width</code> of the plot, but these defaults can be altered via the plot’s configuration:</p>
-<div class="sourceCode" id="cb93"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb93-1"><a href="exporting-static-images.html#cb93-1"></a><span class="kw">plot_ly</span>() <span class="op">%&gt;%</span></span>
-<span id="cb93-2"><a href="exporting-static-images.html#cb93-2"></a><span class="st">  </span><span class="kw">config</span>(</span>
-<span id="cb93-3"><a href="exporting-static-images.html#cb93-3"></a>    <span class="dt">toImageButtonOptions =</span> <span class="kw">list</span>(</span>
-<span id="cb93-4"><a href="exporting-static-images.html#cb93-4"></a>      <span class="dt">format =</span> <span class="st">&quot;svg&quot;</span>,</span>
-<span id="cb93-5"><a href="exporting-static-images.html#cb93-5"></a>      <span class="dt">filename =</span> <span class="st">&quot;myplot&quot;</span>,</span>
-<span id="cb93-6"><a href="exporting-static-images.html#cb93-6"></a>      <span class="dt">width =</span> <span class="dv">600</span>,</span>
-<span id="cb93-7"><a href="exporting-static-images.html#cb93-7"></a>      <span class="dt">height =</span> <span class="dv">700</span></span>
-<span id="cb93-8"><a href="exporting-static-images.html#cb93-8"></a>    )</span>
-<span id="cb93-9"><a href="exporting-static-images.html#cb93-9"></a>  )</span></code></pre></div>
+<div class="sourceCode" id="cb94"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb94-1"><a href="exporting-static-images.html#cb94-1"></a><span class="kw">plot_ly</span>() <span class="op">%&gt;%</span></span>
+<span id="cb94-2"><a href="exporting-static-images.html#cb94-2"></a><span class="st">  </span><span class="kw">config</span>(</span>
+<span id="cb94-3"><a href="exporting-static-images.html#cb94-3"></a>    <span class="dt">toImageButtonOptions =</span> <span class="kw">list</span>(</span>
+<span id="cb94-4"><a href="exporting-static-images.html#cb94-4"></a>      <span class="dt">format =</span> <span class="st">&quot;svg&quot;</span>,</span>
+<span id="cb94-5"><a href="exporting-static-images.html#cb94-5"></a>      <span class="dt">filename =</span> <span class="st">&quot;myplot&quot;</span>,</span>
+<span id="cb94-6"><a href="exporting-static-images.html#cb94-6"></a>      <span class="dt">width =</span> <span class="dv">600</span>,</span>
+<span id="cb94-7"><a href="exporting-static-images.html#cb94-7"></a>      <span class="dt">height =</span> <span class="dv">700</span></span>
+<span id="cb94-8"><a href="exporting-static-images.html#cb94-8"></a>    )</span>
+<span id="cb94-9"><a href="exporting-static-images.html#cb94-9"></a>  )</span></code></pre></div>
 <div class="figure" style="text-align: center"><span id="fig:toImageSVG"></span>
 <img src="images/toImageSVG.png" alt="Specifying options for static image exporting via the modebar. Clicking on the ‘download plot’ icon should prompt your browser to download a static svg file named ‘myplot.svg’." width="100%" data-url="/interactives/toImageSVG.html" />
 <p class="caption">
@@ -378,10 +378,10 @@ FIGURE 11.2: Specifying options for static image exporting via the modebar. Clic
 <div id="sizing-exports" class="section level2">
 <h2><span class="header-section-number">11.3</span> Sizing exports</h2>
 <p>It’s worth noting that the height and width of a static image must be specified in pixels, which is intuitive for most file formats (png, jpeg, svg, etc) but when exporting to pdf, you might want to specify the size in inches. If you multiply the DPI of your machine’s display by the number of inches you want, you’ll get the desired result. So, if you want a 8x11 pdf, and are on a typical 96 DPI display, you can do:</p>
-<div class="sourceCode" id="cb94"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb94-1"><a href="exporting-static-images.html#cb94-1"></a><span class="kw">orca</span>(<span class="kw">plot_ly</span>(), <span class="dt">width =</span> <span class="dv">8</span> <span class="op">*</span><span class="st"> </span><span class="dv">96</span>, <span class="dt">height =</span> <span class="dv">11</span> <span class="op">*</span><span class="st"> </span><span class="dv">96</span>)</span></code></pre></div>
+<div class="sourceCode" id="cb95"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb95-1"><a href="exporting-static-images.html#cb95-1"></a><span class="kw">orca</span>(<span class="kw">plot_ly</span>(), <span class="dt">width =</span> <span class="dv">8</span> <span class="op">*</span><span class="st"> </span><span class="dv">96</span>, <span class="dt">height =</span> <span class="dv">11</span> <span class="op">*</span><span class="st"> </span><span class="dv">96</span>)</span></code></pre></div>
 <p>On the other hand, if you’re performing interactive editing and exporting, you may want to set a fixed size for the plot:</p>
-<div class="sourceCode" id="cb95"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb95-1"><a href="exporting-static-images.html#cb95-1"></a><span class="kw">plot_ly</span>(<span class="dt">width =</span> <span class="dv">8</span> <span class="op">*</span><span class="st"> </span><span class="dv">96</span>, <span class="dt">height =</span> <span class="dv">11</span> <span class="op">*</span><span class="st"> </span><span class="dv">96</span>) <span class="op">%&gt;%</span></span>
-<span id="cb95-2"><a href="exporting-static-images.html#cb95-2"></a><span class="st">  </span><span class="kw">config</span>(<span class="dt">toImageButtonOptions =</span> <span class="kw">list</span>(<span class="dt">format =</span> <span class="st">&quot;svg&quot;</span>))</span></code></pre></div>
+<div class="sourceCode" id="cb96"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb96-1"><a href="exporting-static-images.html#cb96-1"></a><span class="kw">plot_ly</span>(<span class="dt">width =</span> <span class="dv">8</span> <span class="op">*</span><span class="st"> </span><span class="dv">96</span>, <span class="dt">height =</span> <span class="dv">11</span> <span class="op">*</span><span class="st"> </span><span class="dv">96</span>) <span class="op">%&gt;%</span></span>
+<span id="cb96-2"><a href="exporting-static-images.html#cb96-2"></a><span class="st">  </span><span class="kw">config</span>(<span class="dt">toImageButtonOptions =</span> <span class="kw">list</span>(<span class="dt">format =</span> <span class="st">&quot;svg&quot;</span>))</span></code></pre></div>
 </div>
 </div>
 <script>

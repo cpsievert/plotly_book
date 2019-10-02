@@ -24,7 +24,7 @@
 <meta name="author" content="Carson Sievert" />
 
 
-<meta name="date" content="2019-10-01" />
+<meta name="date" content="2019-10-02" />
 
   <meta name="viewport" content="width=device-width, initial-scale=1" />
   <meta name="apple-mobile-web-app-capable" content="yes" />
@@ -350,35 +350,35 @@ code span.wa { color: #60a0b0; font-weight: bold; font-style: italic; } /* Warni
 <h2><span class="header-section-number">25.1</span> <code>plot_ly()</code> tooltips</h2>
 <p>There are two main approaches to controlling the tooltip: <code>hoverinfo</code> and <code>hovertemplate</code>. I suggest starting with the former approach since it’s simpler, more mature, and enjoys universal support across trace types. On the other hand, <code>hovertemplate</code> does offer a convenient approach for flexible control over tooltip text, so it can be useful as well.</p>
 <p>The <code>hoverinfo</code> attribute controls what other plot attributes are shown into the tooltip text. The default value of <code>hoverinfo</code> is <code>x+y+text+name</code> (you can verify this with <code>schema()</code>), meaning that plotly.js will use the relevant values of <code>x</code>, <code>y</code>, <code>text</code>, and <code>name</code> to populate the tooltip text. As in Figure <a href="controlling-tooltips.html#fig:custom-tooltip-plotly">25.1</a> shows, you can supply custom text (without the other ‘calculated values’) by supplying a character string <code>text</code> and setting <code>hoverinfo = "text"</code>. The character string can include Glyphs, unicode characters, a some (white-listed) HTML entities and tags.<a href="references.html#fn43" class="footnote-ref" id="fnref43"><sup>43</sup></a> At least currently, plotly.js doesn’t support rendering of <a href="https://github.com/plotly/plotly.js/issues/559">LaTeX</a> or images in the tooltip, but as demonstrated in Figure <a href="supplying-custom-data.html#fig:tooltip-image">21.3</a>, if you know some HTML/JavaScript, you can always build your own custom tooltip.</p>
-<div class="sourceCode" id="cb211"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb211-1"><a href="controlling-tooltips.html#cb211-1"></a><span class="kw">library</span>(tibble)</span>
-<span id="cb211-2"><a href="controlling-tooltips.html#cb211-2"></a><span class="kw">library</span>(forcats)</span>
-<span id="cb211-3"><a href="controlling-tooltips.html#cb211-3"></a></span>
-<span id="cb211-4"><a href="controlling-tooltips.html#cb211-4"></a>tooltip_data &lt;-<span class="st"> </span><span class="kw">tibble</span>(</span>
-<span id="cb211-5"><a href="controlling-tooltips.html#cb211-5"></a>  <span class="dt">x =</span> <span class="st">&quot; &quot;</span>,</span>
-<span id="cb211-6"><a href="controlling-tooltips.html#cb211-6"></a>  <span class="dt">y =</span> <span class="dv">1</span>,</span>
-<span id="cb211-7"><a href="controlling-tooltips.html#cb211-7"></a>  <span class="dt">categories =</span> <span class="kw">as_factor</span>(<span class="kw">c</span>(</span>
-<span id="cb211-8"><a href="controlling-tooltips.html#cb211-8"></a>    <span class="st">&quot;Glyphs&quot;</span>, <span class="st">&quot;HTML tags&quot;</span>, <span class="st">&quot;Unicode&quot;</span>, </span>
-<span id="cb211-9"><a href="controlling-tooltips.html#cb211-9"></a>    <span class="st">&quot;HTML entities&quot;</span>, <span class="st">&quot;A combination&quot;</span></span>
-<span id="cb211-10"><a href="controlling-tooltips.html#cb211-10"></a>  )),</span>
-<span id="cb211-11"><a href="controlling-tooltips.html#cb211-11"></a>  <span class="dt">text =</span> <span class="kw">c</span>(</span>
-<span id="cb211-12"><a href="controlling-tooltips.html#cb211-12"></a>    <span class="st">&quot;👋 glyphs ಠ_ಠ&quot;</span>,</span>
-<span id="cb211-13"><a href="controlling-tooltips.html#cb211-13"></a>    <span class="st">&quot;Hello &lt;span style=&#39;color:red&#39;&gt;&lt;sup&gt;1&lt;/sup&gt;⁄&lt;sub&gt;2&lt;/sub&gt;&lt;/span&gt; fraction&quot;</span>,</span>
-<span id="cb211-14"><a href="controlling-tooltips.html#cb211-14"></a>    <span class="st">&quot;\U0001f44b unicode \U00AE \U00B6 \U00BF&quot;</span>,</span>
-<span id="cb211-15"><a href="controlling-tooltips.html#cb211-15"></a>    <span class="st">&quot;&amp;mu; &amp;plusmn; &amp;amp; &amp;lt; &amp;gt; &amp;nbsp; &amp;times; &amp;plusmn; &amp;deg;&quot;</span>,</span>
-<span id="cb211-16"><a href="controlling-tooltips.html#cb211-16"></a>    <span class="kw">paste</span>(<span class="st">&quot;&lt;b&gt;Wow&lt;/b&gt; &lt;i&gt;much&lt;/i&gt; options&quot;</span>, emo<span class="op">::</span><span class="kw">ji</span>(<span class="st">&quot;dog2&quot;</span>))</span>
-<span id="cb211-17"><a href="controlling-tooltips.html#cb211-17"></a>)</span>
-<span id="cb211-18"><a href="controlling-tooltips.html#cb211-18"></a></span>
-<span id="cb211-19"><a href="controlling-tooltips.html#cb211-19"></a><span class="kw">plot_ly</span>(tooltip_data, <span class="dt">hoverinfo =</span> <span class="st">&quot;text&quot;</span>) <span class="op">%&gt;%</span></span>
-<span id="cb211-20"><a href="controlling-tooltips.html#cb211-20"></a><span class="st">  </span><span class="kw">add_bars</span>(</span>
-<span id="cb211-21"><a href="controlling-tooltips.html#cb211-21"></a>    <span class="dt">x =</span> <span class="op">~</span>x,</span>
-<span id="cb211-22"><a href="controlling-tooltips.html#cb211-22"></a>    <span class="dt">y =</span> <span class="op">~</span>y,</span>
-<span id="cb211-23"><a href="controlling-tooltips.html#cb211-23"></a>    <span class="dt">color =</span> <span class="op">~</span><span class="kw">fct_rev</span>(categories), </span>
-<span id="cb211-24"><a href="controlling-tooltips.html#cb211-24"></a>    <span class="dt">text =</span> <span class="op">~</span>text</span>
-<span id="cb211-25"><a href="controlling-tooltips.html#cb211-25"></a>  ) <span class="op">%&gt;%</span><span class="st"> </span></span>
-<span id="cb211-26"><a href="controlling-tooltips.html#cb211-26"></a><span class="st">  </span><span class="kw">layout</span>(</span>
-<span id="cb211-27"><a href="controlling-tooltips.html#cb211-27"></a>    <span class="dt">barmode =</span><span class="st">&quot;stack&quot;</span>, </span>
-<span id="cb211-28"><a href="controlling-tooltips.html#cb211-28"></a>    <span class="dt">hovermode =</span> <span class="st">&quot;x&quot;</span></span>
-<span id="cb211-29"><a href="controlling-tooltips.html#cb211-29"></a>  )</span></code></pre></div>
+<div class="sourceCode" id="cb212"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb212-1"><a href="controlling-tooltips.html#cb212-1"></a><span class="kw">library</span>(tibble)</span>
+<span id="cb212-2"><a href="controlling-tooltips.html#cb212-2"></a><span class="kw">library</span>(forcats)</span>
+<span id="cb212-3"><a href="controlling-tooltips.html#cb212-3"></a></span>
+<span id="cb212-4"><a href="controlling-tooltips.html#cb212-4"></a>tooltip_data &lt;-<span class="st"> </span><span class="kw">tibble</span>(</span>
+<span id="cb212-5"><a href="controlling-tooltips.html#cb212-5"></a>  <span class="dt">x =</span> <span class="st">&quot; &quot;</span>,</span>
+<span id="cb212-6"><a href="controlling-tooltips.html#cb212-6"></a>  <span class="dt">y =</span> <span class="dv">1</span>,</span>
+<span id="cb212-7"><a href="controlling-tooltips.html#cb212-7"></a>  <span class="dt">categories =</span> <span class="kw">as_factor</span>(<span class="kw">c</span>(</span>
+<span id="cb212-8"><a href="controlling-tooltips.html#cb212-8"></a>    <span class="st">&quot;Glyphs&quot;</span>, <span class="st">&quot;HTML tags&quot;</span>, <span class="st">&quot;Unicode&quot;</span>, </span>
+<span id="cb212-9"><a href="controlling-tooltips.html#cb212-9"></a>    <span class="st">&quot;HTML entities&quot;</span>, <span class="st">&quot;A combination&quot;</span></span>
+<span id="cb212-10"><a href="controlling-tooltips.html#cb212-10"></a>  )),</span>
+<span id="cb212-11"><a href="controlling-tooltips.html#cb212-11"></a>  <span class="dt">text =</span> <span class="kw">c</span>(</span>
+<span id="cb212-12"><a href="controlling-tooltips.html#cb212-12"></a>    <span class="st">&quot;👋 glyphs ಠ_ಠ&quot;</span>,</span>
+<span id="cb212-13"><a href="controlling-tooltips.html#cb212-13"></a>    <span class="st">&quot;Hello &lt;span style=&#39;color:red&#39;&gt;&lt;sup&gt;1&lt;/sup&gt;⁄&lt;sub&gt;2&lt;/sub&gt;&lt;/span&gt; fraction&quot;</span>,</span>
+<span id="cb212-14"><a href="controlling-tooltips.html#cb212-14"></a>    <span class="st">&quot;\U0001f44b unicode \U00AE \U00B6 \U00BF&quot;</span>,</span>
+<span id="cb212-15"><a href="controlling-tooltips.html#cb212-15"></a>    <span class="st">&quot;&amp;mu; &amp;plusmn; &amp;amp; &amp;lt; &amp;gt; &amp;nbsp; &amp;times; &amp;plusmn; &amp;deg;&quot;</span>,</span>
+<span id="cb212-16"><a href="controlling-tooltips.html#cb212-16"></a>    <span class="kw">paste</span>(<span class="st">&quot;&lt;b&gt;Wow&lt;/b&gt; &lt;i&gt;much&lt;/i&gt; options&quot;</span>, emo<span class="op">::</span><span class="kw">ji</span>(<span class="st">&quot;dog2&quot;</span>))</span>
+<span id="cb212-17"><a href="controlling-tooltips.html#cb212-17"></a>)</span>
+<span id="cb212-18"><a href="controlling-tooltips.html#cb212-18"></a></span>
+<span id="cb212-19"><a href="controlling-tooltips.html#cb212-19"></a><span class="kw">plot_ly</span>(tooltip_data, <span class="dt">hoverinfo =</span> <span class="st">&quot;text&quot;</span>) <span class="op">%&gt;%</span></span>
+<span id="cb212-20"><a href="controlling-tooltips.html#cb212-20"></a><span class="st">  </span><span class="kw">add_bars</span>(</span>
+<span id="cb212-21"><a href="controlling-tooltips.html#cb212-21"></a>    <span class="dt">x =</span> <span class="op">~</span>x,</span>
+<span id="cb212-22"><a href="controlling-tooltips.html#cb212-22"></a>    <span class="dt">y =</span> <span class="op">~</span>y,</span>
+<span id="cb212-23"><a href="controlling-tooltips.html#cb212-23"></a>    <span class="dt">color =</span> <span class="op">~</span><span class="kw">fct_rev</span>(categories), </span>
+<span id="cb212-24"><a href="controlling-tooltips.html#cb212-24"></a>    <span class="dt">text =</span> <span class="op">~</span>text</span>
+<span id="cb212-25"><a href="controlling-tooltips.html#cb212-25"></a>  ) <span class="op">%&gt;%</span><span class="st"> </span></span>
+<span id="cb212-26"><a href="controlling-tooltips.html#cb212-26"></a><span class="st">  </span><span class="kw">layout</span>(</span>
+<span id="cb212-27"><a href="controlling-tooltips.html#cb212-27"></a>    <span class="dt">barmode =</span><span class="st">&quot;stack&quot;</span>, </span>
+<span id="cb212-28"><a href="controlling-tooltips.html#cb212-28"></a>    <span class="dt">hovermode =</span> <span class="st">&quot;x&quot;</span></span>
+<span id="cb212-29"><a href="controlling-tooltips.html#cb212-29"></a>  )</span></code></pre></div>
 <div class="figure" style="text-align: center"><span id="fig:custom-tooltip-plotly"></span>
 <img src="images/custom-tooltip-plotly.png" alt="Customizing the tooltip by supplying glyphs, Unicode, HTML markup to the text attributes and restricting displayed attributes with hoverinfo='text'." width="100%" />
 <p class="caption">
@@ -386,18 +386,18 @@ FIGURE 25.1: Customizing the tooltip by supplying glyphs, Unicode, HTML markup t
 </p>
 </div>
 <p>Whenever a <code>fill</code> is relevant (e.g., <code>add_sf()</code>, <code>add_polygons()</code>, <code>add_ribbons()</code>, etc), you have the option of using the <code>hoveron</code> attribute to generate a tooltip for the supplied data points, the filled polygon that those points define, or both. As Figure <a href="controlling-tooltips.html#fig:hoveron-fill-points">25.2</a> demonstrates, if you want a tooltip attached to a fill, you probably want <code>text</code> to be of length 1 for a given trace. On the other hand, if you want to each point along a fill to have a tooltip, you probably want <code>text</code> to have numerous strings.</p>
-<div class="sourceCode" id="cb212"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb212-1"><a href="controlling-tooltips.html#cb212-1"></a>p &lt;-<span class="st"> </span><span class="kw">plot_ly</span>(</span>
-<span id="cb212-2"><a href="controlling-tooltips.html#cb212-2"></a>  <span class="dt">x =</span> <span class="kw">c</span>(<span class="dv">1</span>, <span class="dv">2</span>, <span class="dv">3</span>),</span>
-<span id="cb212-3"><a href="controlling-tooltips.html#cb212-3"></a>  <span class="dt">y =</span> <span class="kw">c</span>(<span class="dv">1</span>, <span class="dv">2</span>, <span class="dv">1</span>),</span>
-<span id="cb212-4"><a href="controlling-tooltips.html#cb212-4"></a>  <span class="dt">fill =</span> <span class="st">&quot;toself&quot;</span>,</span>
-<span id="cb212-5"><a href="controlling-tooltips.html#cb212-5"></a>  <span class="dt">mode =</span> <span class="st">&quot;markers+lines&quot;</span>,</span>
-<span id="cb212-6"><a href="controlling-tooltips.html#cb212-6"></a>  <span class="dt">hoverinfo =</span> <span class="st">&quot;text&quot;</span></span>
-<span id="cb212-7"><a href="controlling-tooltips.html#cb212-7"></a>)</span>
-<span id="cb212-8"><a href="controlling-tooltips.html#cb212-8"></a></span>
-<span id="cb212-9"><a href="controlling-tooltips.html#cb212-9"></a><span class="kw">subplot</span>(</span>
-<span id="cb212-10"><a href="controlling-tooltips.html#cb212-10"></a>  <span class="kw">add_trace</span>(p, <span class="dt">text =</span> <span class="st">&quot;triangle&quot;</span>, <span class="dt">hoveron =</span> <span class="st">&quot;fills&quot;</span>),</span>
-<span id="cb212-11"><a href="controlling-tooltips.html#cb212-11"></a>  <span class="kw">add_trace</span>(p, <span class="dt">text =</span> <span class="kw">paste0</span>(<span class="st">&quot;point&quot;</span>, <span class="dv">1</span><span class="op">:</span><span class="dv">3</span>), <span class="dt">hoveron =</span> <span class="st">&quot;points&quot;</span>)</span>
-<span id="cb212-12"><a href="controlling-tooltips.html#cb212-12"></a>)</span></code></pre></div>
+<div class="sourceCode" id="cb213"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb213-1"><a href="controlling-tooltips.html#cb213-1"></a>p &lt;-<span class="st"> </span><span class="kw">plot_ly</span>(</span>
+<span id="cb213-2"><a href="controlling-tooltips.html#cb213-2"></a>  <span class="dt">x =</span> <span class="kw">c</span>(<span class="dv">1</span>, <span class="dv">2</span>, <span class="dv">3</span>),</span>
+<span id="cb213-3"><a href="controlling-tooltips.html#cb213-3"></a>  <span class="dt">y =</span> <span class="kw">c</span>(<span class="dv">1</span>, <span class="dv">2</span>, <span class="dv">1</span>),</span>
+<span id="cb213-4"><a href="controlling-tooltips.html#cb213-4"></a>  <span class="dt">fill =</span> <span class="st">&quot;toself&quot;</span>,</span>
+<span id="cb213-5"><a href="controlling-tooltips.html#cb213-5"></a>  <span class="dt">mode =</span> <span class="st">&quot;markers+lines&quot;</span>,</span>
+<span id="cb213-6"><a href="controlling-tooltips.html#cb213-6"></a>  <span class="dt">hoverinfo =</span> <span class="st">&quot;text&quot;</span></span>
+<span id="cb213-7"><a href="controlling-tooltips.html#cb213-7"></a>)</span>
+<span id="cb213-8"><a href="controlling-tooltips.html#cb213-8"></a></span>
+<span id="cb213-9"><a href="controlling-tooltips.html#cb213-9"></a><span class="kw">subplot</span>(</span>
+<span id="cb213-10"><a href="controlling-tooltips.html#cb213-10"></a>  <span class="kw">add_trace</span>(p, <span class="dt">text =</span> <span class="st">&quot;triangle&quot;</span>, <span class="dt">hoveron =</span> <span class="st">&quot;fills&quot;</span>),</span>
+<span id="cb213-11"><a href="controlling-tooltips.html#cb213-11"></a>  <span class="kw">add_trace</span>(p, <span class="dt">text =</span> <span class="kw">paste0</span>(<span class="st">&quot;point&quot;</span>, <span class="dv">1</span><span class="op">:</span><span class="dv">3</span>), <span class="dt">hoveron =</span> <span class="st">&quot;points&quot;</span>)</span>
+<span id="cb213-12"><a href="controlling-tooltips.html#cb213-12"></a>)</span></code></pre></div>
 <div class="figure" style="text-align: center"><span id="fig:hoveron-fill-points"></span>
 <img src="images/hoveron-fill-points.png" alt="Using the hoveron attribute to control whether a tooltip is attached to fill or each point along that fill." width="100%" data-url="/interactives/hoveron-fill-points.html" />
 <p class="caption">
@@ -405,10 +405,10 @@ FIGURE 25.2: Using the <code>hoveron</code> attribute to control whether a toolt
 </p>
 </div>
 <p>You can’t supply custom text in this way to a statistical aggregation, but there are ways to control the formatting of values computed and displayed by plotly.js (e.g. <code>x</code>, <code>y</code>, and <code>z</code>). If the value that you’d like to format corresponds to an axis, you can use <code>*axis.hoverformat</code>. The syntax behind <code>hoverformat</code> follows d3js’ format conventions. For numbers, see: <a href="https://github.com/d3/d3-format/blob/master/README.md#locale_format" class="uri">https://github.com/d3/d3-format/blob/master/README.md#locale_format</a> and for dates see: <a href="https://github.com/d3/d3-time-format/blob/master/README.md#locale_format" class="uri">https://github.com/d3/d3-time-format/blob/master/README.md#locale_format</a></p>
-<div class="sourceCode" id="cb213"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb213-1"><a href="controlling-tooltips.html#cb213-1"></a><span class="kw">set.seed</span>(<span class="dv">1000</span>)</span>
-<span id="cb213-2"><a href="controlling-tooltips.html#cb213-2"></a><span class="kw">plot_ly</span>(<span class="dt">x =</span> <span class="kw">rnorm</span>(<span class="dv">100</span>), <span class="dt">name =</span> <span class="st">&quot; &quot;</span>) <span class="op">%&gt;%</span><span class="st"> </span></span>
-<span id="cb213-3"><a href="controlling-tooltips.html#cb213-3"></a><span class="st">  </span><span class="kw">add_boxplot</span>(<span class="dt">hoverinfo =</span> <span class="st">&quot;x&quot;</span>) <span class="op">%&gt;%</span></span>
-<span id="cb213-4"><a href="controlling-tooltips.html#cb213-4"></a><span class="st">  </span><span class="kw">layout</span>(<span class="dt">xaxis =</span> <span class="kw">list</span>(<span class="dt">hoverformat =</span> <span class="st">&quot;.2f&quot;</span>))</span></code></pre></div>
+<div class="sourceCode" id="cb214"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb214-1"><a href="controlling-tooltips.html#cb214-1"></a><span class="kw">set.seed</span>(<span class="dv">1000</span>)</span>
+<span id="cb214-2"><a href="controlling-tooltips.html#cb214-2"></a><span class="kw">plot_ly</span>(<span class="dt">x =</span> <span class="kw">rnorm</span>(<span class="dv">100</span>), <span class="dt">name =</span> <span class="st">&quot; &quot;</span>) <span class="op">%&gt;%</span><span class="st"> </span></span>
+<span id="cb214-3"><a href="controlling-tooltips.html#cb214-3"></a><span class="st">  </span><span class="kw">add_boxplot</span>(<span class="dt">hoverinfo =</span> <span class="st">&quot;x&quot;</span>) <span class="op">%&gt;%</span></span>
+<span id="cb214-4"><a href="controlling-tooltips.html#cb214-4"></a><span class="st">  </span><span class="kw">layout</span>(<span class="dt">xaxis =</span> <span class="kw">list</span>(<span class="dt">hoverformat =</span> <span class="st">&quot;.2f&quot;</span>))</span></code></pre></div>
 <div class="figure" style="text-align: center"><span id="fig:tooltip-format-boxplot"></span>
 <img src="images/tooltip-format-boxplot.png" alt="Using xaxis.hoverformat to round aggregated values displayed in the tooltip to two decimal places." width="100%" data-url="/interactives/tooltip-format-boxplot.html" />
 <p class="caption">
@@ -416,9 +416,9 @@ FIGURE 25.3: Using <code>xaxis.hoverformat</code> to round aggregated values dis
 </p>
 </div>
 <p>Computed values that don’t have a corresponding axis likely have a <code>*hoverformat</code> trace attribute. Probably the most common example is the <code>z</code> attribute in a <code>heatmap</code> or <code>histogram2d</code> chart. Figure <a href="controlling-tooltips.html#fig:tooltip-format-heatmap">25.4</a> shows how to format <code>z</code> values to have one decimal.</p>
-<div class="sourceCode" id="cb214"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb214-1"><a href="controlling-tooltips.html#cb214-1"></a><span class="kw">plot_ly</span>(<span class="dt">z =</span> <span class="op">~</span>volcano) <span class="op">%&gt;%</span></span>
-<span id="cb214-2"><a href="controlling-tooltips.html#cb214-2"></a><span class="st">  </span><span class="kw">add_heatmap</span>(<span class="dt">zhoverformat =</span> <span class="st">&quot;.1f&quot;</span>) <span class="op">%&gt;%</span></span>
-<span id="cb214-3"><a href="controlling-tooltips.html#cb214-3"></a><span class="st">  </span><span class="kw">layout</span>(<span class="dt">xaxis =</span> <span class="kw">list</span>(<span class="dt">hoverformat =</span> <span class="st">&quot;.2f&quot;</span>))</span></code></pre></div>
+<div class="sourceCode" id="cb215"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb215-1"><a href="controlling-tooltips.html#cb215-1"></a><span class="kw">plot_ly</span>(<span class="dt">z =</span> <span class="op">~</span>volcano) <span class="op">%&gt;%</span></span>
+<span id="cb215-2"><a href="controlling-tooltips.html#cb215-2"></a><span class="st">  </span><span class="kw">add_heatmap</span>(<span class="dt">zhoverformat =</span> <span class="st">&quot;.1f&quot;</span>) <span class="op">%&gt;%</span></span>
+<span id="cb215-3"><a href="controlling-tooltips.html#cb215-3"></a><span class="st">  </span><span class="kw">layout</span>(<span class="dt">xaxis =</span> <span class="kw">list</span>(<span class="dt">hoverformat =</span> <span class="st">&quot;.2f&quot;</span>))</span></code></pre></div>
 <div class="figure" style="text-align: center"><span id="fig:tooltip-format-heatmap"></span>
 <img src="images/tooltip-format-heatmap.png" alt="Formatting the displayed z values in a heatmap using zhoverformat." width="100%" data-url="/interactives/tooltip-format-heatmap.html" />
 <p class="caption">
@@ -426,13 +426,13 @@ FIGURE 25.4: Formatting the displayed <code>z</code> values in a heatmap using <
 </p>
 </div>
 <p>It’s admittedly difficult to remember where to specify these <code>hoverformat</code> attributes, so if you want a combination of custom text and formatting of computed values you can use <code>hovertemplate</code>, which overrides <code>hoverinfo</code> and allows you to fully specify the tooltip in a single attribute. It does this through special markup rules for inserting and formatting data values inside a string. Figure <a href="controlling-tooltips.html#fig:hovertemplate">25.5</a> provides an example of inserting <code>x</code> and <code>y</code> in the tooltip through the special <code>%{variable:format}</code> markup as well as customization of the secondary box through <code>&lt;extra&gt;</code> tag. For a full description of this attribute, including the formatting rules, see <a href="https://plot.ly/r/reference/#scatter-hovertemplate" class="uri">https://plot.ly/r/reference/#scatter-hovertemplate</a>.</p>
-<div class="sourceCode" id="cb215"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb215-1"><a href="controlling-tooltips.html#cb215-1"></a><span class="kw">set.seed</span>(<span class="dv">10</span>)</span>
-<span id="cb215-2"><a href="controlling-tooltips.html#cb215-2"></a><span class="kw">plot_ly</span>(<span class="dt">x =</span> <span class="kw">rnorm</span>(<span class="dv">100</span>, <span class="dv">0</span>, <span class="fl">1e5</span>)) <span class="op">%&gt;%</span></span>
-<span id="cb215-3"><a href="controlling-tooltips.html#cb215-3"></a><span class="st">  </span><span class="kw">add_histogram</span>(</span>
-<span id="cb215-4"><a href="controlling-tooltips.html#cb215-4"></a>    <span class="dt">histnorm =</span> <span class="st">&quot;density&quot;</span>,</span>
-<span id="cb215-5"><a href="controlling-tooltips.html#cb215-5"></a>    <span class="dt">hovertemplate =</span> <span class="st">&quot;The height between &lt;br&gt; (%{x}) &lt;br&gt; is %{y:.1e} </span></span>
-<span id="cb215-6"><a href="controlling-tooltips.html#cb215-6"></a><span class="st">    &lt;extra&gt;That&#39;s small!&lt;/extra&gt;&quot;</span></span>
-<span id="cb215-7"><a href="controlling-tooltips.html#cb215-7"></a>  )</span></code></pre></div>
+<div class="sourceCode" id="cb216"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb216-1"><a href="controlling-tooltips.html#cb216-1"></a><span class="kw">set.seed</span>(<span class="dv">10</span>)</span>
+<span id="cb216-2"><a href="controlling-tooltips.html#cb216-2"></a><span class="kw">plot_ly</span>(<span class="dt">x =</span> <span class="kw">rnorm</span>(<span class="dv">100</span>, <span class="dv">0</span>, <span class="fl">1e5</span>)) <span class="op">%&gt;%</span></span>
+<span id="cb216-3"><a href="controlling-tooltips.html#cb216-3"></a><span class="st">  </span><span class="kw">add_histogram</span>(</span>
+<span id="cb216-4"><a href="controlling-tooltips.html#cb216-4"></a>    <span class="dt">histnorm =</span> <span class="st">&quot;density&quot;</span>,</span>
+<span id="cb216-5"><a href="controlling-tooltips.html#cb216-5"></a>    <span class="dt">hovertemplate =</span> <span class="st">&quot;The height between &lt;br&gt; (%{x}) &lt;br&gt; is %{y:.1e} </span></span>
+<span id="cb216-6"><a href="controlling-tooltips.html#cb216-6"></a><span class="st">    &lt;extra&gt;That&#39;s small!&lt;/extra&gt;&quot;</span></span>
+<span id="cb216-7"><a href="controlling-tooltips.html#cb216-7"></a>  )</span></code></pre></div>
 <div class="figure" style="text-align: center"><span id="fig:hovertemplate"></span>
 <img src="images/hovertemplate.png" alt="Using the hovertemplate attribute to reference computed variables and their display format inside a custom string." width="100%" data-url="/interactives/hovertemplate.html" />
 <p class="caption">
@@ -444,9 +444,9 @@ FIGURE 25.5: Using the <code>hovertemplate</code> attribute to reference compute
 <div id="tooltip-text-ggplotly" class="section level2">
 <h2><span class="header-section-number">25.2</span> <code>ggplotly()</code> tooltips</h2>
 <p>Similar to how you can use the <code>text</code> attribute to supply a custom string in <code>plot_ly()</code> (see Section <a href="controlling-tooltips.html#tooltip-text">25.1</a>), you can supply a <code>text</code> aesthetic to your <strong>ggplot2</strong> graph, as shown in <a href="controlling-tooltips.html#fig:ggplotly-text">25.6</a>:</p>
-<div class="sourceCode" id="cb216"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb216-1"><a href="controlling-tooltips.html#cb216-1"></a>p &lt;-<span class="st"> </span><span class="kw">ggplot</span>(mtcars, <span class="kw">aes</span>(wt, mpg, <span class="dt">text =</span> <span class="kw">row.names</span>(mtcars))) <span class="op">+</span><span class="st"> </span></span>
-<span id="cb216-2"><a href="controlling-tooltips.html#cb216-2"></a><span class="st">  </span><span class="kw">geom_point</span>()</span>
-<span id="cb216-3"><a href="controlling-tooltips.html#cb216-3"></a><span class="kw">ggplotly</span>(p)</span></code></pre></div>
+<div class="sourceCode" id="cb217"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb217-1"><a href="controlling-tooltips.html#cb217-1"></a>p &lt;-<span class="st"> </span><span class="kw">ggplot</span>(mtcars, <span class="kw">aes</span>(wt, mpg, <span class="dt">text =</span> <span class="kw">row.names</span>(mtcars))) <span class="op">+</span><span class="st"> </span></span>
+<span id="cb217-2"><a href="controlling-tooltips.html#cb217-2"></a><span class="st">  </span><span class="kw">geom_point</span>()</span>
+<span id="cb217-3"><a href="controlling-tooltips.html#cb217-3"></a><span class="kw">ggplotly</span>(p)</span></code></pre></div>
 <div class="figure" style="text-align: center"><span id="fig:ggplotly-text"></span>
 <img src="images/ggplotly-text.png" alt="Using the text ggplot2 aesthetic to supply custom tooltip text to a scatterplot." width="100%" data-url="/interactives/ggplotly-text.html" />
 <p class="caption">
@@ -454,7 +454,7 @@ FIGURE 25.6: Using the <code>text</code> <strong>ggplot2</strong> aesthetic to s
 </p>
 </div>
 <p>By default, <code>ggplotly()</code> will display all relevant aesthetic mappings (or computed values), but you can restrict what aesthetics are used to populate the tooltip, as shown in Figure <a href="controlling-tooltips.html#fig:ggplotly-text-tooltip">25.7</a>:</p>
-<div class="sourceCode" id="cb217"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb217-1"><a href="controlling-tooltips.html#cb217-1"></a><span class="kw">ggplotly</span>(p, <span class="dt">tooltip =</span> <span class="st">&quot;text&quot;</span>)</span></code></pre></div>
+<div class="sourceCode" id="cb218"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb218-1"><a href="controlling-tooltips.html#cb218-1"></a><span class="kw">ggplotly</span>(p, <span class="dt">tooltip =</span> <span class="st">&quot;text&quot;</span>)</span></code></pre></div>
 <div class="figure" style="text-align: center"><span id="fig:ggplotly-text-tooltip"></span>
 <img src="images/ggplotly-text-tooltip.png" alt="Using the tooltip argument in ggplotly() to only display the text aesthetic." width="100%" data-url="/interactives/ggplotly-text-tooltip.html" />
 <p class="caption">
@@ -462,13 +462,13 @@ FIGURE 25.7: Using the <code>tooltip</code> argument in <code>ggplotly()</code> 
 </p>
 </div>
 <p>When constructing the text to display, <code>ggplotly()</code> runs <code>format()</code> on the computed values. Since some parameters of the <code>format()</code> function can be controlled through global <code>options()</code>, you can use these <code>options()</code> to control the displayed text. This includes the <code>digits</code> option for controlling the number of significant digits used for numerical values as well as <code>scipen</code> for setting a penalty for deciding whether scientific or fixed notation is used for displaying. Figure <a href="controlling-tooltips.html#fig:format-options">25.8</a> shows how you can temporarily set these options (i.e., avoid altering of your global environment) using the <strong>withr</strong> package <span class="citation">(Hester et al. <a href="#ref-withr" role="doc-biblioref">2018</a>)</span>.</p>
-<div class="sourceCode" id="cb218"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb218-1"><a href="controlling-tooltips.html#cb218-1"></a><span class="kw">library</span>(withr)</span>
-<span id="cb218-2"><a href="controlling-tooltips.html#cb218-2"></a>p &lt;-<span class="st"> </span><span class="kw">ggplot</span>(faithfuld, <span class="kw">aes</span>(waiting, eruptions)) <span class="op">+</span></span>
-<span id="cb218-3"><a href="controlling-tooltips.html#cb218-3"></a><span class="st">    </span><span class="kw">geom_raster</span>(<span class="kw">aes</span>(<span class="dt">fill =</span> density))</span>
-<span id="cb218-4"><a href="controlling-tooltips.html#cb218-4"></a><span class="kw">subplot</span>(</span>
-<span id="cb218-5"><a href="controlling-tooltips.html#cb218-5"></a>  <span class="kw">with_options</span>(<span class="kw">list</span>(<span class="dt">digits =</span> <span class="dv">1</span>), <span class="kw">ggplotly</span>(p)),</span>
-<span id="cb218-6"><a href="controlling-tooltips.html#cb218-6"></a>  <span class="kw">with_options</span>(<span class="kw">list</span>(<span class="dt">digits =</span> <span class="dv">6</span>, <span class="dt">scipen =</span> <span class="dv">20</span>), <span class="kw">ggplotly</span>(p))</span>
-<span id="cb218-7"><a href="controlling-tooltips.html#cb218-7"></a>)</span></code></pre></div>
+<div class="sourceCode" id="cb219"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb219-1"><a href="controlling-tooltips.html#cb219-1"></a><span class="kw">library</span>(withr)</span>
+<span id="cb219-2"><a href="controlling-tooltips.html#cb219-2"></a>p &lt;-<span class="st"> </span><span class="kw">ggplot</span>(faithfuld, <span class="kw">aes</span>(waiting, eruptions)) <span class="op">+</span></span>
+<span id="cb219-3"><a href="controlling-tooltips.html#cb219-3"></a><span class="st">    </span><span class="kw">geom_raster</span>(<span class="kw">aes</span>(<span class="dt">fill =</span> density))</span>
+<span id="cb219-4"><a href="controlling-tooltips.html#cb219-4"></a><span class="kw">subplot</span>(</span>
+<span id="cb219-5"><a href="controlling-tooltips.html#cb219-5"></a>  <span class="kw">with_options</span>(<span class="kw">list</span>(<span class="dt">digits =</span> <span class="dv">1</span>), <span class="kw">ggplotly</span>(p)),</span>
+<span id="cb219-6"><a href="controlling-tooltips.html#cb219-6"></a>  <span class="kw">with_options</span>(<span class="kw">list</span>(<span class="dt">digits =</span> <span class="dv">6</span>, <span class="dt">scipen =</span> <span class="dv">20</span>), <span class="kw">ggplotly</span>(p))</span>
+<span id="cb219-7"><a href="controlling-tooltips.html#cb219-7"></a>)</span></code></pre></div>
 <div class="figure" style="text-align: center"><span id="fig:format-options"></span>
 <img src="images/format-options.png" alt="Leveraging global R options for controlling the displayed values in a ggplotly() tooltip." width="100%" data-url="/interactives/format-options.html" />
 <p class="caption">
@@ -476,13 +476,13 @@ FIGURE 25.8: Leveraging global R options for controlling the displayed values in
 </p>
 </div>
 <p>These global options are nice for specifying significant/scientific notation, but what about more sophisticated formatting? Sometimes a clever use of the <code>text</code> aesthetic provides a sufficient workaround. Specifically, as Figure <a href="controlling-tooltips.html#fig:text-clever">25.9</a> shows, if one wanted to control a displayed aesthetic value (e.g., <code>y</code>), one could generate a custom string from that variable and supply it to <code>text</code>, then essentially replace <code>text</code> for <code>y</code> in the tooltip:</p>
-<div class="sourceCode" id="cb219"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb219-1"><a href="controlling-tooltips.html#cb219-1"></a><span class="kw">library</span>(scales)</span>
-<span id="cb219-2"><a href="controlling-tooltips.html#cb219-2"></a>p &lt;-<span class="st"> </span><span class="kw">ggplot</span>(txhousing, <span class="kw">aes</span>(date, median)) <span class="op">+</span><span class="st"> </span></span>
-<span id="cb219-3"><a href="controlling-tooltips.html#cb219-3"></a><span class="st">  </span><span class="kw">geom_line</span>(<span class="kw">aes</span>(</span>
-<span id="cb219-4"><a href="controlling-tooltips.html#cb219-4"></a>    <span class="dt">group =</span> city, </span>
-<span id="cb219-5"><a href="controlling-tooltips.html#cb219-5"></a>    <span class="dt">text =</span> <span class="kw">paste</span>(<span class="st">&quot;median:&quot;</span>, <span class="kw">number_si</span>(median))</span>
-<span id="cb219-6"><a href="controlling-tooltips.html#cb219-6"></a>  ))</span>
-<span id="cb219-7"><a href="controlling-tooltips.html#cb219-7"></a><span class="kw">ggplotly</span>(p, <span class="dt">tooltip =</span> <span class="kw">c</span>(<span class="st">&quot;text&quot;</span>, <span class="st">&quot;x&quot;</span>, <span class="st">&quot;city&quot;</span>))</span></code></pre></div>
+<div class="sourceCode" id="cb220"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb220-1"><a href="controlling-tooltips.html#cb220-1"></a><span class="kw">library</span>(scales)</span>
+<span id="cb220-2"><a href="controlling-tooltips.html#cb220-2"></a>p &lt;-<span class="st"> </span><span class="kw">ggplot</span>(txhousing, <span class="kw">aes</span>(date, median)) <span class="op">+</span><span class="st"> </span></span>
+<span id="cb220-3"><a href="controlling-tooltips.html#cb220-3"></a><span class="st">  </span><span class="kw">geom_line</span>(<span class="kw">aes</span>(</span>
+<span id="cb220-4"><a href="controlling-tooltips.html#cb220-4"></a>    <span class="dt">group =</span> city, </span>
+<span id="cb220-5"><a href="controlling-tooltips.html#cb220-5"></a>    <span class="dt">text =</span> <span class="kw">paste</span>(<span class="st">&quot;median:&quot;</span>, <span class="kw">number_si</span>(median))</span>
+<span id="cb220-6"><a href="controlling-tooltips.html#cb220-6"></a>  ))</span>
+<span id="cb220-7"><a href="controlling-tooltips.html#cb220-7"></a><span class="kw">ggplotly</span>(p, <span class="dt">tooltip =</span> <span class="kw">c</span>(<span class="st">&quot;text&quot;</span>, <span class="st">&quot;x&quot;</span>, <span class="st">&quot;city&quot;</span>))</span></code></pre></div>
 <div class="figure" style="text-align: center"><span id="fig:text-clever"></span>
 <img src="images/text-clever.png" alt="Using the text aesthetic to replace an auto-generated aesthetic (y)." width="100%" data-url="/interactives/text-clever.html" />
 <p class="caption">
@@ -490,27 +490,27 @@ FIGURE 25.9: Using the <code>text</code> aesthetic to replace an auto-generated 
 </p>
 </div>
 <p>The approach depicted in Figure <a href="controlling-tooltips.html#fig:text-clever">25.9</a> works for computed values that pertain to raw data values, but what about sophisticated formatting of a summary statistics generated by <strong>ggplot2</strong>? In this case, you’ll have to use the return value of <code>ggplotly()</code> which, remember, is a <strong>plotly</strong> object that conforms to the plotly.js spec. That means you can identify trace attribute(s) that contain relevant info (<strong>note:</strong> the <code>plotly_json()</code> function is incredibly for helping to find that information), then use that info to populate a <code>text</code> attribute. Figure <a href="controlling-tooltips.html#fig:custom-predict-text">25.10</a> applies this technique to customize the text that appears when hovering over a <code>geom_smooth()</code> line.</p>
-<div class="sourceCode" id="cb220"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb220-1"><a href="controlling-tooltips.html#cb220-1"></a><span class="co"># Add a smooth to the previous figure and convert to plotly</span></span>
-<span id="cb220-2"><a href="controlling-tooltips.html#cb220-2"></a>w &lt;-<span class="st"> </span><span class="kw">ggplotly</span>(p <span class="op">+</span><span class="st"> </span><span class="kw">geom_smooth</span>(<span class="dt">se =</span> <span class="ot">FALSE</span>))</span>
-<span id="cb220-3"><a href="controlling-tooltips.html#cb220-3"></a></span>
-<span id="cb220-4"><a href="controlling-tooltips.html#cb220-4"></a><span class="co"># This plotly object has two traces: one for</span></span>
-<span id="cb220-5"><a href="controlling-tooltips.html#cb220-5"></a><span class="co"># the raw time series and one for the smooth. </span></span>
-<span id="cb220-6"><a href="controlling-tooltips.html#cb220-6"></a><span class="co"># Try using `plotly_json(w)` to confirm the 2nd</span></span>
-<span id="cb220-7"><a href="controlling-tooltips.html#cb220-7"></a><span class="co"># trace is the smooth line.</span></span>
-<span id="cb220-8"><a href="controlling-tooltips.html#cb220-8"></a><span class="kw">length</span>(w<span class="op">$</span>x<span class="op">$</span>data)</span>
-<span id="cb220-9"><a href="controlling-tooltips.html#cb220-9"></a></span>
-<span id="cb220-10"><a href="controlling-tooltips.html#cb220-10"></a><span class="co"># use the `y` attribute of the smooth line </span></span>
-<span id="cb220-11"><a href="controlling-tooltips.html#cb220-11"></a><span class="co"># to generate a custom string (to appear in tooltip)</span></span>
-<span id="cb220-12"><a href="controlling-tooltips.html#cb220-12"></a>text_y &lt;-<span class="st"> </span><span class="kw">number_si</span>(</span>
-<span id="cb220-13"><a href="controlling-tooltips.html#cb220-13"></a>  w<span class="op">$</span>x<span class="op">$</span>data[[<span class="dv">2</span>]]<span class="op">$</span>y, </span>
-<span id="cb220-14"><a href="controlling-tooltips.html#cb220-14"></a>  <span class="dt">prefix =</span> <span class="st">&quot;Typical median house price: $&quot;</span></span>
-<span id="cb220-15"><a href="controlling-tooltips.html#cb220-15"></a>)</span>
-<span id="cb220-16"><a href="controlling-tooltips.html#cb220-16"></a></span>
-<span id="cb220-17"><a href="controlling-tooltips.html#cb220-17"></a><span class="co"># suppress the tooltip on the raw time series </span></span>
-<span id="cb220-18"><a href="controlling-tooltips.html#cb220-18"></a><span class="co"># and supply custom text to the smooth line</span></span>
-<span id="cb220-19"><a href="controlling-tooltips.html#cb220-19"></a>w <span class="op">%&gt;%</span></span>
-<span id="cb220-20"><a href="controlling-tooltips.html#cb220-20"></a><span class="st">  </span><span class="kw">style</span>(<span class="dt">hoverinfo =</span> <span class="st">&quot;skip&quot;</span>, <span class="dt">traces =</span> <span class="dv">1</span>) <span class="op">%&gt;%</span></span>
-<span id="cb220-21"><a href="controlling-tooltips.html#cb220-21"></a><span class="st">  </span><span class="kw">style</span>(<span class="dt">text =</span> text_y, <span class="dt">traces =</span> <span class="dv">2</span>)</span></code></pre></div>
+<div class="sourceCode" id="cb221"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb221-1"><a href="controlling-tooltips.html#cb221-1"></a><span class="co"># Add a smooth to the previous figure and convert to plotly</span></span>
+<span id="cb221-2"><a href="controlling-tooltips.html#cb221-2"></a>w &lt;-<span class="st"> </span><span class="kw">ggplotly</span>(p <span class="op">+</span><span class="st"> </span><span class="kw">geom_smooth</span>(<span class="dt">se =</span> <span class="ot">FALSE</span>))</span>
+<span id="cb221-3"><a href="controlling-tooltips.html#cb221-3"></a></span>
+<span id="cb221-4"><a href="controlling-tooltips.html#cb221-4"></a><span class="co"># This plotly object has two traces: one for</span></span>
+<span id="cb221-5"><a href="controlling-tooltips.html#cb221-5"></a><span class="co"># the raw time series and one for the smooth. </span></span>
+<span id="cb221-6"><a href="controlling-tooltips.html#cb221-6"></a><span class="co"># Try using `plotly_json(w)` to confirm the 2nd</span></span>
+<span id="cb221-7"><a href="controlling-tooltips.html#cb221-7"></a><span class="co"># trace is the smooth line.</span></span>
+<span id="cb221-8"><a href="controlling-tooltips.html#cb221-8"></a><span class="kw">length</span>(w<span class="op">$</span>x<span class="op">$</span>data)</span>
+<span id="cb221-9"><a href="controlling-tooltips.html#cb221-9"></a></span>
+<span id="cb221-10"><a href="controlling-tooltips.html#cb221-10"></a><span class="co"># use the `y` attribute of the smooth line </span></span>
+<span id="cb221-11"><a href="controlling-tooltips.html#cb221-11"></a><span class="co"># to generate a custom string (to appear in tooltip)</span></span>
+<span id="cb221-12"><a href="controlling-tooltips.html#cb221-12"></a>text_y &lt;-<span class="st"> </span><span class="kw">number_si</span>(</span>
+<span id="cb221-13"><a href="controlling-tooltips.html#cb221-13"></a>  w<span class="op">$</span>x<span class="op">$</span>data[[<span class="dv">2</span>]]<span class="op">$</span>y, </span>
+<span id="cb221-14"><a href="controlling-tooltips.html#cb221-14"></a>  <span class="dt">prefix =</span> <span class="st">&quot;Typical median house price: $&quot;</span></span>
+<span id="cb221-15"><a href="controlling-tooltips.html#cb221-15"></a>)</span>
+<span id="cb221-16"><a href="controlling-tooltips.html#cb221-16"></a></span>
+<span id="cb221-17"><a href="controlling-tooltips.html#cb221-17"></a><span class="co"># suppress the tooltip on the raw time series </span></span>
+<span id="cb221-18"><a href="controlling-tooltips.html#cb221-18"></a><span class="co"># and supply custom text to the smooth line</span></span>
+<span id="cb221-19"><a href="controlling-tooltips.html#cb221-19"></a>w <span class="op">%&gt;%</span></span>
+<span id="cb221-20"><a href="controlling-tooltips.html#cb221-20"></a><span class="st">  </span><span class="kw">style</span>(<span class="dt">hoverinfo =</span> <span class="st">&quot;skip&quot;</span>, <span class="dt">traces =</span> <span class="dv">1</span>) <span class="op">%&gt;%</span></span>
+<span id="cb221-21"><a href="controlling-tooltips.html#cb221-21"></a><span class="st">  </span><span class="kw">style</span>(<span class="dt">text =</span> text_y, <span class="dt">traces =</span> <span class="dv">2</span>)</span></code></pre></div>
 <div class="figure" style="text-align: center"><span id="fig:custom-predict-text"></span>
 <img src="images/custom-predict-text.png" alt="Using the return value of ggplotly() to populate a custom text attribute." width="100%" data-url="/interactives/custom-predict-text.html" />
 <p class="caption">
@@ -521,17 +521,17 @@ FIGURE 25.10: Using the return value of <code>ggplotly()</code> to populate a cu
 <div id="styling" class="section level2">
 <h2><span class="header-section-number">25.3</span> Styling</h2>
 <p>There is currently one main attribute for controlling the style of a tooltip: <code>hoverlabel</code>. With this attribute you can currently set the background color (<code>bgcolor</code>), border color (<code>bordercolor</code>), and font family/size/color. Figure <a href="controlling-tooltips.html#fig:tooltip-style">25.11</a> demonstrates how to use it with <code>plot_ly()</code> (basically any chart type you use should support it):</p>
-<div class="sourceCode" id="cb221"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb221-1"><a href="controlling-tooltips.html#cb221-1"></a>font &lt;-<span class="st"> </span><span class="kw">list</span>(</span>
-<span id="cb221-2"><a href="controlling-tooltips.html#cb221-2"></a>  <span class="dt">family =</span> <span class="st">&quot;Roboto Condensed&quot;</span>,</span>
-<span id="cb221-3"><a href="controlling-tooltips.html#cb221-3"></a>  <span class="dt">size =</span> <span class="dv">15</span>,</span>
-<span id="cb221-4"><a href="controlling-tooltips.html#cb221-4"></a>  <span class="dt">color =</span> <span class="st">&quot;white&quot;</span></span>
-<span id="cb221-5"><a href="controlling-tooltips.html#cb221-5"></a>)</span>
-<span id="cb221-6"><a href="controlling-tooltips.html#cb221-6"></a>label &lt;-<span class="st"> </span><span class="kw">list</span>(</span>
-<span id="cb221-7"><a href="controlling-tooltips.html#cb221-7"></a>  <span class="dt">bgcolor =</span> <span class="st">&quot;#232F34&quot;</span>,</span>
-<span id="cb221-8"><a href="controlling-tooltips.html#cb221-8"></a>  <span class="dt">bordercolor =</span> <span class="st">&quot;transparent&quot;</span>,</span>
-<span id="cb221-9"><a href="controlling-tooltips.html#cb221-9"></a>  <span class="dt">font =</span> font</span>
-<span id="cb221-10"><a href="controlling-tooltips.html#cb221-10"></a>)</span>
-<span id="cb221-11"><a href="controlling-tooltips.html#cb221-11"></a><span class="kw">plot_ly</span>(<span class="dt">x =</span> iris<span class="op">$</span>Petal.Length, <span class="dt">hoverlabel =</span> label)</span></code></pre></div>
+<div class="sourceCode" id="cb222"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb222-1"><a href="controlling-tooltips.html#cb222-1"></a>font &lt;-<span class="st"> </span><span class="kw">list</span>(</span>
+<span id="cb222-2"><a href="controlling-tooltips.html#cb222-2"></a>  <span class="dt">family =</span> <span class="st">&quot;Roboto Condensed&quot;</span>,</span>
+<span id="cb222-3"><a href="controlling-tooltips.html#cb222-3"></a>  <span class="dt">size =</span> <span class="dv">15</span>,</span>
+<span id="cb222-4"><a href="controlling-tooltips.html#cb222-4"></a>  <span class="dt">color =</span> <span class="st">&quot;white&quot;</span></span>
+<span id="cb222-5"><a href="controlling-tooltips.html#cb222-5"></a>)</span>
+<span id="cb222-6"><a href="controlling-tooltips.html#cb222-6"></a>label &lt;-<span class="st"> </span><span class="kw">list</span>(</span>
+<span id="cb222-7"><a href="controlling-tooltips.html#cb222-7"></a>  <span class="dt">bgcolor =</span> <span class="st">&quot;#232F34&quot;</span>,</span>
+<span id="cb222-8"><a href="controlling-tooltips.html#cb222-8"></a>  <span class="dt">bordercolor =</span> <span class="st">&quot;transparent&quot;</span>,</span>
+<span id="cb222-9"><a href="controlling-tooltips.html#cb222-9"></a>  <span class="dt">font =</span> font</span>
+<span id="cb222-10"><a href="controlling-tooltips.html#cb222-10"></a>)</span>
+<span id="cb222-11"><a href="controlling-tooltips.html#cb222-11"></a><span class="kw">plot_ly</span>(<span class="dt">x =</span> iris<span class="op">$</span>Petal.Length, <span class="dt">hoverlabel =</span> label)</span></code></pre></div>
 <div class="figure" style="text-align: center"><span id="fig:tooltip-style"></span>
 <img src="images/tooltip-style.png" alt="Using the hoverlabel attribute to customize the color and font of the tooltip." width="100%" data-url="/interactives/tooltip-style.html" />
 <p class="caption">
@@ -539,10 +539,10 @@ FIGURE 25.11: Using the <code>hoverlabel</code> attribute to customize the color
 </p>
 </div>
 <p>On the other hand, when using <code>ggplotly()</code>, you have to modify the <code>hoverlabel</code> attribute via <code>style()</code> as shown in Figure <a href="controlling-tooltips.html#fig:tooltip-style-ggplotly">25.12</a></p>
-<div class="sourceCode" id="cb222"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb222-1"><a href="controlling-tooltips.html#cb222-1"></a><span class="kw">qplot</span>(<span class="dt">x =</span> Petal.Length, <span class="dt">data =</span> iris) <span class="op">%&gt;%</span></span>
-<span id="cb222-2"><a href="controlling-tooltips.html#cb222-2"></a><span class="st">  </span><span class="kw">ggplotly</span>() <span class="op">%&gt;%</span></span>
-<span id="cb222-3"><a href="controlling-tooltips.html#cb222-3"></a><span class="st">  </span><span class="kw">style</span>(<span class="dt">hoverlabel =</span> label, <span class="dt">marker.color =</span> <span class="st">&quot;#232F34&quot;</span>) <span class="op">%&gt;%</span></span>
-<span id="cb222-4"><a href="controlling-tooltips.html#cb222-4"></a><span class="st">  </span><span class="kw">layout</span>(<span class="dt">font =</span> font)</span></code></pre></div>
+<div class="sourceCode" id="cb223"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb223-1"><a href="controlling-tooltips.html#cb223-1"></a><span class="kw">qplot</span>(<span class="dt">x =</span> Petal.Length, <span class="dt">data =</span> iris) <span class="op">%&gt;%</span></span>
+<span id="cb223-2"><a href="controlling-tooltips.html#cb223-2"></a><span class="st">  </span><span class="kw">ggplotly</span>() <span class="op">%&gt;%</span></span>
+<span id="cb223-3"><a href="controlling-tooltips.html#cb223-3"></a><span class="st">  </span><span class="kw">style</span>(<span class="dt">hoverlabel =</span> label, <span class="dt">marker.color =</span> <span class="st">&quot;#232F34&quot;</span>) <span class="op">%&gt;%</span></span>
+<span id="cb223-4"><a href="controlling-tooltips.html#cb223-4"></a><span class="st">  </span><span class="kw">layout</span>(<span class="dt">font =</span> font)</span></code></pre></div>
 <div class="figure" style="text-align: center"><span id="fig:tooltip-style-ggplotly"></span>
 <img src="images/tooltip-style-ggplotly.png" alt="Using the hoverlabel attribute with ggplotly()." width="100%" data-url="/interactives/tooltip-style-ggplotly.html" />
 <p class="caption">

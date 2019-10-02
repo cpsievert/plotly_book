@@ -24,7 +24,7 @@
 <meta name="author" content="Carson Sievert" />
 
 
-<meta name="date" content="2019-10-01" />
+<meta name="date" content="2019-10-02" />
 
   <meta name="viewport" content="width=device-width, initial-scale=1" />
   <meta name="apple-mobile-web-app-capable" content="yes" />
@@ -347,21 +347,21 @@ code span.wa { color: #60a0b0; font-weight: bold; font-style: italic; } /* Warni
 <div id="js-event-handlers" class="section level1">
 <h1><span class="header-section-number">20</span> Adding custom event handlers</h1>
 <p>When using <code>onRender()</code> to provide a JS function to be called upon static render of a <strong>plotly</strong> object, the relevant DOM element (<code>el</code>) has an <code>on()</code> method that accepts a function to be called whenever a plotly.js (or DOM) event occurs on that DOM element. Currently all plotly.js event handlers accept a function with a single argument, and that argument either contains nothing (e.g. <code>"plotly_afterplot"</code>, etc) or a single object with all the relevant information about the event (e.g. <code>"plotly_hover"</code>, <code>"plotly_selected"</code>, etc). Figure <a href="js-event-handlers.html#fig:console-log-event">20.1</a> logs and inspects data (<code>d</code>) emitted during the <code>"plotly_hover"</code>, <code>"plotly_click"</code>, and <code>"plotly_selected"</code> events. The object emitted for these events includes a key, named <code>points</code>, with information tying the selection back to the input data. The <code>points</code> key is always an array of object(s) where each object represents a different data point. This object contains any supplied <code>customdata</code>, the relevant <code>x</code>/<code>y</code> location, and a reference back to the input <code>data</code>.</p>
-<div class="sourceCode" id="cb193"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb193-1"><a href="js-event-handlers.html#cb193-1"></a><span class="kw">library</span>(htmlwidgets)</span>
-<span id="cb193-2"><a href="js-event-handlers.html#cb193-2"></a><span class="kw">plot_ly</span>(mtcars, <span class="dt">x =</span> <span class="op">~</span>wt, <span class="dt">y =</span> <span class="op">~</span>mpg) <span class="op">%&gt;%</span></span>
-<span id="cb193-3"><a href="js-event-handlers.html#cb193-3"></a><span class="st">  </span><span class="kw">onRender</span>(<span class="st">&quot;</span></span>
-<span id="cb193-4"><a href="js-event-handlers.html#cb193-4"></a><span class="st">    function(el) { </span></span>
-<span id="cb193-5"><a href="js-event-handlers.html#cb193-5"></a><span class="st">      el.on(&#39;plotly_hover&#39;, function(d) { </span></span>
-<span id="cb193-6"><a href="js-event-handlers.html#cb193-6"></a><span class="st">        console.log(&#39;Hover: &#39;, d); </span></span>
-<span id="cb193-7"><a href="js-event-handlers.html#cb193-7"></a><span class="st">      });</span></span>
-<span id="cb193-8"><a href="js-event-handlers.html#cb193-8"></a><span class="st">      el.on(&#39;plotly_click&#39;, function(d) { </span></span>
-<span id="cb193-9"><a href="js-event-handlers.html#cb193-9"></a><span class="st">        console.log(&#39;Click: &#39;, d);</span></span>
-<span id="cb193-10"><a href="js-event-handlers.html#cb193-10"></a><span class="st">      });</span></span>
-<span id="cb193-11"><a href="js-event-handlers.html#cb193-11"></a><span class="st">      el.on(&#39;plotly_selected&#39;, function(d) { </span></span>
-<span id="cb193-12"><a href="js-event-handlers.html#cb193-12"></a><span class="st">        console.log(&#39;Select: &#39;, d); </span></span>
-<span id="cb193-13"><a href="js-event-handlers.html#cb193-13"></a><span class="st">      });</span></span>
-<span id="cb193-14"><a href="js-event-handlers.html#cb193-14"></a><span class="st">    }</span></span>
-<span id="cb193-15"><a href="js-event-handlers.html#cb193-15"></a><span class="st">  &quot;</span>)</span></code></pre></div>
+<div class="sourceCode" id="cb194"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb194-1"><a href="js-event-handlers.html#cb194-1"></a><span class="kw">library</span>(htmlwidgets)</span>
+<span id="cb194-2"><a href="js-event-handlers.html#cb194-2"></a><span class="kw">plot_ly</span>(mtcars, <span class="dt">x =</span> <span class="op">~</span>wt, <span class="dt">y =</span> <span class="op">~</span>mpg) <span class="op">%&gt;%</span></span>
+<span id="cb194-3"><a href="js-event-handlers.html#cb194-3"></a><span class="st">  </span><span class="kw">onRender</span>(<span class="st">&quot;</span></span>
+<span id="cb194-4"><a href="js-event-handlers.html#cb194-4"></a><span class="st">    function(el) { </span></span>
+<span id="cb194-5"><a href="js-event-handlers.html#cb194-5"></a><span class="st">      el.on(&#39;plotly_hover&#39;, function(d) { </span></span>
+<span id="cb194-6"><a href="js-event-handlers.html#cb194-6"></a><span class="st">        console.log(&#39;Hover: &#39;, d); </span></span>
+<span id="cb194-7"><a href="js-event-handlers.html#cb194-7"></a><span class="st">      });</span></span>
+<span id="cb194-8"><a href="js-event-handlers.html#cb194-8"></a><span class="st">      el.on(&#39;plotly_click&#39;, function(d) { </span></span>
+<span id="cb194-9"><a href="js-event-handlers.html#cb194-9"></a><span class="st">        console.log(&#39;Click: &#39;, d);</span></span>
+<span id="cb194-10"><a href="js-event-handlers.html#cb194-10"></a><span class="st">      });</span></span>
+<span id="cb194-11"><a href="js-event-handlers.html#cb194-11"></a><span class="st">      el.on(&#39;plotly_selected&#39;, function(d) { </span></span>
+<span id="cb194-12"><a href="js-event-handlers.html#cb194-12"></a><span class="st">        console.log(&#39;Select: &#39;, d); </span></span>
+<span id="cb194-13"><a href="js-event-handlers.html#cb194-13"></a><span class="st">      });</span></span>
+<span id="cb194-14"><a href="js-event-handlers.html#cb194-14"></a><span class="st">    }</span></span>
+<span id="cb194-15"><a href="js-event-handlers.html#cb194-15"></a><span class="st">  &quot;</span>)</span></code></pre></div>
 <div class="figure" style="text-align: center"><span id="fig:console-log-event"></span>
 <iframe src="https://player.vimeo.com/video/307597974?title=0&amp;byline=0&amp;portrait=0" width="100%" height="700" frameborder="0" seamless="seamless" webkitAllowFullScreen mozallowfullscreen allowFullScreen></iframe>
 <p class="caption">

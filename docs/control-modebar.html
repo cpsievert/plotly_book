@@ -24,7 +24,7 @@
 <meta name="author" content="Carson Sievert" />
 
 
-<meta name="date" content="2019-10-01" />
+<meta name="date" content="2019-10-02" />
 
   <meta name="viewport" content="width=device-width, initial-scale=1" />
   <meta name="apple-mobile-web-app-capable" content="yes" />
@@ -350,14 +350,14 @@ code span.wa { color: #60a0b0; font-weight: bold; font-style: italic; } /* Warni
 <div id="remove-the-entire-modebar" class="section level2">
 <h2><span class="header-section-number">26.1</span> Remove the entire modebar</h2>
 <p>The <code>displayModeBar</code> option makes it quick and easy to remove the entire modebar.</p>
-<div class="sourceCode" id="cb223"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb223-1"><a href="control-modebar.html#cb223-1"></a><span class="kw">plot_ly</span>() <span class="op">%&gt;%</span></span>
-<span id="cb223-2"><a href="control-modebar.html#cb223-2"></a><span class="st">  </span><span class="kw">config</span>(<span class="dt">displayModeBar =</span> <span class="ot">FALSE</span>)</span></code></pre></div>
+<div class="sourceCode" id="cb224"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb224-1"><a href="control-modebar.html#cb224-1"></a><span class="kw">plot_ly</span>() <span class="op">%&gt;%</span></span>
+<span id="cb224-2"><a href="control-modebar.html#cb224-2"></a><span class="st">  </span><span class="kw">config</span>(<span class="dt">displayModeBar =</span> <span class="ot">FALSE</span>)</span></code></pre></div>
 </div>
 <div id="remove-the-plotly-logo" class="section level2">
 <h2><span class="header-section-number">26.2</span> Remove the plotly logo</h2>
 <p>The <code>displaylogo</code> option makes it quick and easy to remove the entire modebar.</p>
-<div class="sourceCode" id="cb224"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb224-1"><a href="control-modebar.html#cb224-1"></a><span class="kw">plot_ly</span>() <span class="op">%&gt;%</span></span>
-<span id="cb224-2"><a href="control-modebar.html#cb224-2"></a><span class="st">  </span><span class="kw">config</span>(<span class="dt">displaylogo =</span> <span class="ot">FALSE</span>)</span></code></pre></div>
+<div class="sourceCode" id="cb225"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb225-1"><a href="control-modebar.html#cb225-1"></a><span class="kw">plot_ly</span>() <span class="op">%&gt;%</span></span>
+<span id="cb225-2"><a href="control-modebar.html#cb225-2"></a><span class="st">  </span><span class="kw">config</span>(<span class="dt">displaylogo =</span> <span class="ot">FALSE</span>)</span></code></pre></div>
 <div class="figure" style="text-align: center"><span id="fig:displaylogo"></span>
 <img src="images/displaylogo.png" alt="Removing the plotly logo from the modebar." width="100%" />
 <p class="caption">
@@ -368,8 +368,8 @@ FIGURE 26.1: Removing the plotly logo from the modebar.
 <div id="remove-modebar-buttons-by-name" class="section level2">
 <h2><span class="header-section-number">26.3</span> Remove modebar buttons by name</h2>
 <p>Any modebar buttons can be removed by name via <code>modeBarButtonsToRemove</code>. The current list of modebar buttons can be found at <a href="https://github.com/plotly/plotly.js/blob/master/src/components/modebar/buttons.js" class="uri">https://github.com/plotly/plotly.js/blob/master/src/components/modebar/buttons.js</a></p>
-<div class="sourceCode" id="cb225"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb225-1"><a href="control-modebar.html#cb225-1"></a><span class="kw">plot_ly</span>() <span class="op">%&gt;%</span></span>
-<span id="cb225-2"><a href="control-modebar.html#cb225-2"></a><span class="st">  </span><span class="kw">config</span>(<span class="dt">modeBarButtonsToRemove =</span> <span class="kw">c</span>(<span class="st">&quot;zoomIn2d&quot;</span>, <span class="st">&quot;zoomOut2d&quot;</span>))</span></code></pre></div>
+<div class="sourceCode" id="cb226"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb226-1"><a href="control-modebar.html#cb226-1"></a><span class="kw">plot_ly</span>() <span class="op">%&gt;%</span></span>
+<span id="cb226-2"><a href="control-modebar.html#cb226-2"></a><span class="st">  </span><span class="kw">config</span>(<span class="dt">modeBarButtonsToRemove =</span> <span class="kw">c</span>(<span class="st">&quot;zoomIn2d&quot;</span>, <span class="st">&quot;zoomOut2d&quot;</span>))</span></code></pre></div>
 <div class="figure" style="text-align: center"><span id="fig:modeBarButtonsToRemove"></span>
 <img src="images/modeBarButtonsToRemove.png" alt="(frefmodeBarButtonsToRemove)" width="100%" />
 <p class="caption">
@@ -380,24 +380,24 @@ FIGURE 26.2: (frefmodeBarButtonsToRemove)
 <div id="add-custom-modebar-buttons" class="section level2">
 <h2><span class="header-section-number">26.4</span> Add custom modebar buttons</h2>
 <p>It is possible to supply your own modebar button icon that triggers a custom JavaScript function when clicked. You must provide a <code>name</code> for the icon and either a SVG <code>path</code> (with just the d attribute) or a full SVG element (to <code>svg</code>). Nowadays, there are a number of free websites that allow you to search icons and download their corresponding SVG information. When supplying <code>path</code>, as in Figure <a href="control-modebar.html#fig:modeBarButtonsToAdd">26.3</a>, you can also define an SVG <code>transform</code> to help size and position the icon. To define a JavaScript function to call upon clicking the icon, you can provide a string to <code>htmlwidgets::JS()</code>. The interactive version of Figure <a href="control-modebar.html#fig:modeBarButtonsToAdd">26.3</a> adds on-graph text everytime the octocat icon is clicked. To learn more about how to leverage JavaScript from R, see Section <a href="javascript.html#javascript">18</a>.</p>
-<div class="sourceCode" id="cb226"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb226-1"><a href="control-modebar.html#cb226-1"></a><span class="kw">data</span>(octocat_svg_path, <span class="dt">package =</span> <span class="st">&quot;plotlyBook&quot;</span>)</span>
-<span id="cb226-2"><a href="control-modebar.html#cb226-2"></a></span>
-<span id="cb226-3"><a href="control-modebar.html#cb226-3"></a>octocat &lt;-<span class="st"> </span><span class="kw">list</span>(</span>
-<span id="cb226-4"><a href="control-modebar.html#cb226-4"></a>  <span class="dt">name =</span> <span class="st">&quot;octocat&quot;</span>,</span>
-<span id="cb226-5"><a href="control-modebar.html#cb226-5"></a>  <span class="dt">icon =</span> <span class="kw">list</span>(</span>
-<span id="cb226-6"><a href="control-modebar.html#cb226-6"></a>    <span class="dt">path =</span> octocat_svg_path,</span>
-<span id="cb226-7"><a href="control-modebar.html#cb226-7"></a>    <span class="dt">transform =</span> <span class="st">&#39;matrix(1 0 0 1 -2 -2) scale(0.7)&#39;</span></span>
-<span id="cb226-8"><a href="control-modebar.html#cb226-8"></a>  ),</span>
-<span id="cb226-9"><a href="control-modebar.html#cb226-9"></a>  <span class="dt">click =</span> htmlwidgets<span class="op">::</span><span class="kw">JS</span>(</span>
-<span id="cb226-10"><a href="control-modebar.html#cb226-10"></a>    <span class="st">&quot;function(gd) {</span></span>
-<span id="cb226-11"><a href="control-modebar.html#cb226-11"></a><span class="st">       var txt = {x: [1], y: [1], text: &#39;Octocat!&#39;, mode: &#39;text&#39;};</span></span>
-<span id="cb226-12"><a href="control-modebar.html#cb226-12"></a><span class="st">       Plotly.addTraces(gd, txt);</span></span>
-<span id="cb226-13"><a href="control-modebar.html#cb226-13"></a><span class="st">    }&quot;</span></span>
-<span id="cb226-14"><a href="control-modebar.html#cb226-14"></a>  )</span>
-<span id="cb226-15"><a href="control-modebar.html#cb226-15"></a>)</span>
-<span id="cb226-16"><a href="control-modebar.html#cb226-16"></a></span>
-<span id="cb226-17"><a href="control-modebar.html#cb226-17"></a><span class="kw">plot_ly</span>() <span class="op">%&gt;%</span></span>
-<span id="cb226-18"><a href="control-modebar.html#cb226-18"></a><span class="st">  </span><span class="kw">config</span>(<span class="dt">modeBarButtonsToAdd =</span> <span class="kw">list</span>(octocat))</span></code></pre></div>
+<div class="sourceCode" id="cb227"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb227-1"><a href="control-modebar.html#cb227-1"></a><span class="kw">data</span>(octocat_svg_path, <span class="dt">package =</span> <span class="st">&quot;plotlyBook&quot;</span>)</span>
+<span id="cb227-2"><a href="control-modebar.html#cb227-2"></a></span>
+<span id="cb227-3"><a href="control-modebar.html#cb227-3"></a>octocat &lt;-<span class="st"> </span><span class="kw">list</span>(</span>
+<span id="cb227-4"><a href="control-modebar.html#cb227-4"></a>  <span class="dt">name =</span> <span class="st">&quot;octocat&quot;</span>,</span>
+<span id="cb227-5"><a href="control-modebar.html#cb227-5"></a>  <span class="dt">icon =</span> <span class="kw">list</span>(</span>
+<span id="cb227-6"><a href="control-modebar.html#cb227-6"></a>    <span class="dt">path =</span> octocat_svg_path,</span>
+<span id="cb227-7"><a href="control-modebar.html#cb227-7"></a>    <span class="dt">transform =</span> <span class="st">&#39;matrix(1 0 0 1 -2 -2) scale(0.7)&#39;</span></span>
+<span id="cb227-8"><a href="control-modebar.html#cb227-8"></a>  ),</span>
+<span id="cb227-9"><a href="control-modebar.html#cb227-9"></a>  <span class="dt">click =</span> htmlwidgets<span class="op">::</span><span class="kw">JS</span>(</span>
+<span id="cb227-10"><a href="control-modebar.html#cb227-10"></a>    <span class="st">&quot;function(gd) {</span></span>
+<span id="cb227-11"><a href="control-modebar.html#cb227-11"></a><span class="st">       var txt = {x: [1], y: [1], text: &#39;Octocat!&#39;, mode: &#39;text&#39;};</span></span>
+<span id="cb227-12"><a href="control-modebar.html#cb227-12"></a><span class="st">       Plotly.addTraces(gd, txt);</span></span>
+<span id="cb227-13"><a href="control-modebar.html#cb227-13"></a><span class="st">    }&quot;</span></span>
+<span id="cb227-14"><a href="control-modebar.html#cb227-14"></a>  )</span>
+<span id="cb227-15"><a href="control-modebar.html#cb227-15"></a>)</span>
+<span id="cb227-16"><a href="control-modebar.html#cb227-16"></a></span>
+<span id="cb227-17"><a href="control-modebar.html#cb227-17"></a><span class="kw">plot_ly</span>() <span class="op">%&gt;%</span></span>
+<span id="cb227-18"><a href="control-modebar.html#cb227-18"></a><span class="st">  </span><span class="kw">config</span>(<span class="dt">modeBarButtonsToAdd =</span> <span class="kw">list</span>(octocat))</span></code></pre></div>
 <div class="figure" style="text-align: center"><span id="fig:modeBarButtonsToAdd"></span>
 <img src="images/modeBarButtonsToAdd.png" alt="Supplying a custom modebar button with custom behavior." width="100%" />
 <p class="caption">
@@ -405,8 +405,8 @@ FIGURE 26.3: Supplying a custom modebar button with custom behavior.
 </p>
 </div>
 <p>Note that you can also use <code>modeBarButtons</code> to completely specify which buttons to include in the modebar. With this option, you can supply existing button names and/or your own custom buttons:</p>
-<div class="sourceCode" id="cb227"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb227-1"><a href="control-modebar.html#cb227-1"></a><span class="kw">plot_ly</span>() <span class="op">%&gt;%</span></span>
-<span id="cb227-2"><a href="control-modebar.html#cb227-2"></a><span class="st">  </span><span class="kw">config</span>(<span class="dt">modeBarButtons =</span> <span class="kw">list</span>(<span class="kw">list</span>(<span class="st">&quot;zoomIn2d&quot;</span>), <span class="kw">list</span>(octocat)))</span></code></pre></div>
+<div class="sourceCode" id="cb228"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb228-1"><a href="control-modebar.html#cb228-1"></a><span class="kw">plot_ly</span>() <span class="op">%&gt;%</span></span>
+<span id="cb228-2"><a href="control-modebar.html#cb228-2"></a><span class="st">  </span><span class="kw">config</span>(<span class="dt">modeBarButtons =</span> <span class="kw">list</span>(<span class="kw">list</span>(<span class="st">&quot;zoomIn2d&quot;</span>), <span class="kw">list</span>(octocat)))</span></code></pre></div>
 <div class="figure" style="text-align: center"><span id="fig:modeBarButtons"></span>
 <img src="images/modeBarButtons.png" alt="Specifying the full list of modebar buttons." width="100%" />
 <p class="caption">
@@ -417,14 +417,14 @@ FIGURE 26.4: Specifying the full list of modebar buttons.
 <div id="control-image-downloads" class="section level2">
 <h2><span class="header-section-number">26.5</span> Control image downloads</h2>
 <p>By default, the <code>toImage</code> modebar button downloads a png file using the current size and state of the graph. With <code>toImageButtonOptions</code>, one can specify different sizes and filetypes, which is particularly useful for obtaining a static pdf/webp/jpeg/etc image of the plot <em>after</em> components have been directly manipulated, as leveraged in Figure <a href="editing-views.html#fig:edit-county-labels">12.1</a>. Here’s a basic example of configuring the <code>'toImage'</code> button to download an svg file that’s 200 x 100 pixels:</p>
-<div class="sourceCode" id="cb228"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb228-1"><a href="control-modebar.html#cb228-1"></a><span class="kw">plot_ly</span>() <span class="op">%&gt;%</span></span>
-<span id="cb228-2"><a href="control-modebar.html#cb228-2"></a><span class="st">  </span><span class="kw">config</span>(</span>
-<span id="cb228-3"><a href="control-modebar.html#cb228-3"></a>    <span class="dt">toImageButtonOptions =</span> <span class="kw">list</span>(</span>
-<span id="cb228-4"><a href="control-modebar.html#cb228-4"></a>      <span class="dt">format =</span> <span class="st">&quot;svg&quot;</span>,</span>
-<span id="cb228-5"><a href="control-modebar.html#cb228-5"></a>      <span class="dt">width =</span> <span class="dv">200</span>,</span>
-<span id="cb228-6"><a href="control-modebar.html#cb228-6"></a>      <span class="dt">height =</span> <span class="dv">100</span></span>
-<span id="cb228-7"><a href="control-modebar.html#cb228-7"></a>    )</span>
-<span id="cb228-8"><a href="control-modebar.html#cb228-8"></a>  )</span></code></pre></div>
+<div class="sourceCode" id="cb229"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb229-1"><a href="control-modebar.html#cb229-1"></a><span class="kw">plot_ly</span>() <span class="op">%&gt;%</span></span>
+<span id="cb229-2"><a href="control-modebar.html#cb229-2"></a><span class="st">  </span><span class="kw">config</span>(</span>
+<span id="cb229-3"><a href="control-modebar.html#cb229-3"></a>    <span class="dt">toImageButtonOptions =</span> <span class="kw">list</span>(</span>
+<span id="cb229-4"><a href="control-modebar.html#cb229-4"></a>      <span class="dt">format =</span> <span class="st">&quot;svg&quot;</span>,</span>
+<span id="cb229-5"><a href="control-modebar.html#cb229-5"></a>      <span class="dt">width =</span> <span class="dv">200</span>,</span>
+<span id="cb229-6"><a href="control-modebar.html#cb229-6"></a>      <span class="dt">height =</span> <span class="dv">100</span></span>
+<span id="cb229-7"><a href="control-modebar.html#cb229-7"></a>    )</span>
+<span id="cb229-8"><a href="control-modebar.html#cb229-8"></a>  )</span></code></pre></div>
 <p>After downloading the svg file, you can convert it to pdf using the <code>rsvg_pdf()</code> function from the <strong>rsvg</strong> package <span class="citation">(Ooms <a href="#ref-rsvg" role="doc-biblioref">2018</a>)</span>.</p>
 </div>
 </div>

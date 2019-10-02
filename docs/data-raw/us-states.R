@@ -25,3 +25,4 @@ us$features <- Map(function(x, y) {
   x$id <- y; x
 }, us$features, as.character(usa$name))
 jsonlite::write_json(us, path = "data-raw/us-states.json", auto_unbox = TRUE)
+# gistr::gist_create("data-raw/us-states.json")

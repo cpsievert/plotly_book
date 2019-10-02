@@ -24,7 +24,7 @@
 <meta name="author" content="Carson Sievert" />
 
 
-<meta name="date" content="2019-10-01" />
+<meta name="date" content="2019-10-02" />
 
   <meta name="viewport" content="width=device-width, initial-scale=1" />
   <meta name="apple-mobile-web-app-capable" content="yes" />
@@ -349,8 +349,8 @@ code span.wa { color: #60a0b0; font-weight: bold; font-style: italic; } /* Warni
 <div id="markers-1" class="section level2">
 <h2><span class="header-section-number">8.1</span> Markers</h2>
 <p>As it turns out, by simply adding a <code>z</code> attribute <code>plot_ly()</code> will know how to render markers, lines, and paths in three dimensions. That means, all the techniques we learned in Sections <a href="scatter-traces.html#markers">3.1</a> and <a href="scatter-traces.html#lines">3.2</a> can re-used for 3D charts:</p>
-<div class="sourceCode" id="cb82"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb82-1"><a href="d-charts.html#cb82-1"></a><span class="kw">plot_ly</span>(mpg, <span class="dt">x =</span> <span class="op">~</span>cty, <span class="dt">y =</span> <span class="op">~</span>hwy, <span class="dt">z =</span> <span class="op">~</span>cyl) <span class="op">%&gt;%</span></span>
-<span id="cb82-2"><a href="d-charts.html#cb82-2"></a><span class="st">  </span><span class="kw">add_markers</span>(<span class="dt">color =</span> <span class="op">~</span>cyl)</span></code></pre></div>
+<div class="sourceCode" id="cb83"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb83-1"><a href="d-charts.html#cb83-1"></a><span class="kw">plot_ly</span>(mpg, <span class="dt">x =</span> <span class="op">~</span>cty, <span class="dt">y =</span> <span class="op">~</span>hwy, <span class="dt">z =</span> <span class="op">~</span>cyl) <span class="op">%&gt;%</span></span>
+<span id="cb83-2"><a href="d-charts.html#cb83-2"></a><span class="st">  </span><span class="kw">add_markers</span>(<span class="dt">color =</span> <span class="op">~</span>cyl)</span></code></pre></div>
 <div class="figure" style="text-align: center"><span id="fig:3D-scatterplot"></span>
 <img src="images/3D-scatterplot.svg" alt="A 3D scatterplot." width="100%" data-url="/interactives/3D-scatterplot.html" />
 <p class="caption">
@@ -361,8 +361,8 @@ FIGURE 8.1: A 3D scatterplot.
 <div id="paths" class="section level2">
 <h2><span class="header-section-number">8.2</span> Paths</h2>
 <p>To make a path in 3D, use <code>add_paths()</code> in the same way you would for a 2D path, but add a third variable <code>z</code>, as Figure <a href="d-charts.html#fig:3D-paths">8.2</a> does.</p>
-<div class="sourceCode" id="cb83"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb83-1"><a href="d-charts.html#cb83-1"></a><span class="kw">plot_ly</span>(mpg, <span class="dt">x =</span> <span class="op">~</span>cty, <span class="dt">y =</span> <span class="op">~</span>hwy, <span class="dt">z =</span> <span class="op">~</span>cyl) <span class="op">%&gt;%</span></span>
-<span id="cb83-2"><a href="d-charts.html#cb83-2"></a><span class="st">  </span><span class="kw">add_paths</span>(<span class="dt">color =</span> <span class="op">~</span>displ)</span></code></pre></div>
+<div class="sourceCode" id="cb84"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb84-1"><a href="d-charts.html#cb84-1"></a><span class="kw">plot_ly</span>(mpg, <span class="dt">x =</span> <span class="op">~</span>cty, <span class="dt">y =</span> <span class="op">~</span>hwy, <span class="dt">z =</span> <span class="op">~</span>cyl) <span class="op">%&gt;%</span></span>
+<span id="cb84-2"><a href="d-charts.html#cb84-2"></a><span class="st">  </span><span class="kw">add_paths</span>(<span class="dt">color =</span> <span class="op">~</span>displ)</span></code></pre></div>
 <div class="figure" style="text-align: center"><span id="fig:3D-paths"></span>
 <img src="images/3D-paths.png" alt="A path with color interpolation in 3D." width="100%" data-url="/interactives/3D-paths.html" />
 <p class="caption">
@@ -373,8 +373,8 @@ FIGURE 8.2: A path with color interpolation in 3D.
 <div id="lines-1" class="section level2">
 <h2><span class="header-section-number">8.3</span> Lines</h2>
 <p>Figure <a href="d-charts.html#fig:3D-lines">8.3</a> uses <code>add_lines()</code> instead of <code>add_paths()</code> to ensure the points are connected by the x axis instead of the row ordering.</p>
-<div class="sourceCode" id="cb84"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb84-1"><a href="d-charts.html#cb84-1"></a><span class="kw">plot_ly</span>(mpg, <span class="dt">x =</span> <span class="op">~</span>cty, <span class="dt">y =</span> <span class="op">~</span>hwy, <span class="dt">z =</span> <span class="op">~</span>cyl) <span class="op">%&gt;%</span></span>
-<span id="cb84-2"><a href="d-charts.html#cb84-2"></a><span class="st">  </span><span class="kw">add_lines</span>(<span class="dt">color =</span> <span class="op">~</span>displ)</span></code></pre></div>
+<div class="sourceCode" id="cb85"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb85-1"><a href="d-charts.html#cb85-1"></a><span class="kw">plot_ly</span>(mpg, <span class="dt">x =</span> <span class="op">~</span>cty, <span class="dt">y =</span> <span class="op">~</span>hwy, <span class="dt">z =</span> <span class="op">~</span>cyl) <span class="op">%&gt;%</span></span>
+<span id="cb85-2"><a href="d-charts.html#cb85-2"></a><span class="st">  </span><span class="kw">add_lines</span>(<span class="dt">color =</span> <span class="op">~</span>displ)</span></code></pre></div>
 <div class="figure" style="text-align: center"><span id="fig:3D-lines"></span>
 <img src="images/3D-lines.png" alt="A line with color interpolation in 3D." width="100%" data-url="/interactives/3D-lines.html" />
 <p class="caption">
@@ -382,9 +382,9 @@ FIGURE 8.3: A line with color interpolation in 3D.
 </p>
 </div>
 <p>As with non-3D lines, you can make multiple lines by specifying a grouping variable.</p>
-<div class="sourceCode" id="cb85"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb85-1"><a href="d-charts.html#cb85-1"></a><span class="kw">plot_ly</span>(mpg, <span class="dt">x =</span> <span class="op">~</span>cty, <span class="dt">y =</span> <span class="op">~</span>hwy, <span class="dt">z =</span> <span class="op">~</span>cyl) <span class="op">%&gt;%</span></span>
-<span id="cb85-2"><a href="d-charts.html#cb85-2"></a><span class="st">  </span><span class="kw">group_by</span>(cyl) <span class="op">%&gt;%</span></span>
-<span id="cb85-3"><a href="d-charts.html#cb85-3"></a><span class="st">  </span><span class="kw">add_lines</span>(<span class="dt">color =</span> <span class="op">~</span>displ)</span></code></pre></div>
+<div class="sourceCode" id="cb86"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb86-1"><a href="d-charts.html#cb86-1"></a><span class="kw">plot_ly</span>(mpg, <span class="dt">x =</span> <span class="op">~</span>cty, <span class="dt">y =</span> <span class="op">~</span>hwy, <span class="dt">z =</span> <span class="op">~</span>cyl) <span class="op">%&gt;%</span></span>
+<span id="cb86-2"><a href="d-charts.html#cb86-2"></a><span class="st">  </span><span class="kw">group_by</span>(cyl) <span class="op">%&gt;%</span></span>
+<span id="cb86-3"><a href="d-charts.html#cb86-3"></a><span class="st">  </span><span class="kw">add_lines</span>(<span class="dt">color =</span> <span class="op">~</span>displ)</span></code></pre></div>
 <div class="figure" style="text-align: center"><span id="fig:3D-lines-groups"></span>
 <img src="images/3D-lines-groups.png" alt="Using group_by() to create multiple 3D lines." width="100%" data-url="/interactives/3D-lines-groups.html" />
 <p class="caption">
@@ -395,15 +395,15 @@ FIGURE 8.4: Using <code>group_by()</code> to create multiple 3D lines.
 <div id="axes" class="section level2">
 <h2><span class="header-section-number">8.4</span> Axes</h2>
 <p>For 3D plots, be aware that the axis objects are a part of the <a href="https://plot.ly/r/reference/#layout-scene"><code>scene</code></a> definition, which is part of the <code>layout()</code>. That is, if you wanted to set axis titles (e.g., Figure <a href="d-charts.html#fig:3D-axes">8.5</a>), or something else specific to the axis definition, the relation between axes (i.e., <a href="https://plot.ly/r/reference/#layout-scene-aspectratio"><code>aspectratio</code></a>), or the default setting of the camera (i.e., <a href="https://plot.ly/r/reference/#layout-scene-camera"><code>camera</code></a>); you would do so via the <code>scence</code>.</p>
-<div class="sourceCode" id="cb86"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb86-1"><a href="d-charts.html#cb86-1"></a><span class="kw">plot_ly</span>(mpg, <span class="dt">x =</span> <span class="op">~</span>cty, <span class="dt">y =</span> <span class="op">~</span>hwy, <span class="dt">z =</span> <span class="op">~</span>cyl) <span class="op">%&gt;%</span></span>
-<span id="cb86-2"><a href="d-charts.html#cb86-2"></a><span class="st">  </span><span class="kw">add_lines</span>(<span class="dt">color =</span> <span class="op">~</span>displ) <span class="op">%&gt;%</span></span>
-<span id="cb86-3"><a href="d-charts.html#cb86-3"></a><span class="st">  </span><span class="kw">layout</span>(</span>
-<span id="cb86-4"><a href="d-charts.html#cb86-4"></a>    <span class="dt">scene =</span> <span class="kw">list</span>(</span>
-<span id="cb86-5"><a href="d-charts.html#cb86-5"></a>      <span class="dt">xaxis =</span> <span class="kw">list</span>(<span class="dt">title =</span> <span class="st">&quot;MPG city&quot;</span>),</span>
-<span id="cb86-6"><a href="d-charts.html#cb86-6"></a>      <span class="dt">yaxis =</span> <span class="kw">list</span>(<span class="dt">title =</span> <span class="st">&quot;MPG highway&quot;</span>),</span>
-<span id="cb86-7"><a href="d-charts.html#cb86-7"></a>      <span class="dt">zaxis =</span> <span class="kw">list</span>(<span class="dt">title =</span> <span class="st">&quot;Number of cylinders&quot;</span>)</span>
-<span id="cb86-8"><a href="d-charts.html#cb86-8"></a>    )</span>
-<span id="cb86-9"><a href="d-charts.html#cb86-9"></a>  )</span></code></pre></div>
+<div class="sourceCode" id="cb87"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb87-1"><a href="d-charts.html#cb87-1"></a><span class="kw">plot_ly</span>(mpg, <span class="dt">x =</span> <span class="op">~</span>cty, <span class="dt">y =</span> <span class="op">~</span>hwy, <span class="dt">z =</span> <span class="op">~</span>cyl) <span class="op">%&gt;%</span></span>
+<span id="cb87-2"><a href="d-charts.html#cb87-2"></a><span class="st">  </span><span class="kw">add_lines</span>(<span class="dt">color =</span> <span class="op">~</span>displ) <span class="op">%&gt;%</span></span>
+<span id="cb87-3"><a href="d-charts.html#cb87-3"></a><span class="st">  </span><span class="kw">layout</span>(</span>
+<span id="cb87-4"><a href="d-charts.html#cb87-4"></a>    <span class="dt">scene =</span> <span class="kw">list</span>(</span>
+<span id="cb87-5"><a href="d-charts.html#cb87-5"></a>      <span class="dt">xaxis =</span> <span class="kw">list</span>(<span class="dt">title =</span> <span class="st">&quot;MPG city&quot;</span>),</span>
+<span id="cb87-6"><a href="d-charts.html#cb87-6"></a>      <span class="dt">yaxis =</span> <span class="kw">list</span>(<span class="dt">title =</span> <span class="st">&quot;MPG highway&quot;</span>),</span>
+<span id="cb87-7"><a href="d-charts.html#cb87-7"></a>      <span class="dt">zaxis =</span> <span class="kw">list</span>(<span class="dt">title =</span> <span class="st">&quot;Number of cylinders&quot;</span>)</span>
+<span id="cb87-8"><a href="d-charts.html#cb87-8"></a>    )</span>
+<span id="cb87-9"><a href="d-charts.html#cb87-9"></a>  )</span></code></pre></div>
 <div class="figure" style="text-align: center"><span id="fig:3D-axes"></span>
 <img src="images/3D-axes.png" alt="Setting axis titles on a 3D plot." width="100%" data-url="/interactives/3D-axes.html" />
 <p class="caption">
@@ -414,9 +414,9 @@ FIGURE 8.5: Setting axis titles on a 3D plot.
 <div id="surfaces" class="section level2">
 <h2><span class="header-section-number">8.5</span> Surfaces</h2>
 <p>Creating 3D surfaces with <code>add_surface()</code> is a lot like creating heatmaps with <code>add_heatmap()</code>. In fact, you can even create 3D surfaces over categorical x/y (try changing <code>add_heatmap()</code> to <code>add_surface()</code> in Figure <a href="frequencies-2D.html#fig:correlation">7.3</a>)! That being said, there should be a sensible ordering to the x/y axes in a surface plot since plotly.js interpolates z values. Usually the 3D surface is over a continuous region, as is done in Figure <a href="d-charts.html#fig:surface">8.6</a> to display the height of a volcano. If a numeric matrix is provided to z as in Figure <a href="d-charts.html#fig:surface">8.6</a>, the x and y attributes do not have to be provided, but if they are, the length of x should match the number of columns in the matrix and y should match the number of rows.</p>
-<div class="sourceCode" id="cb87"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb87-1"><a href="d-charts.html#cb87-1"></a>x &lt;-<span class="st"> </span><span class="kw">seq_len</span>(<span class="kw">nrow</span>(volcano)) <span class="op">+</span><span class="st"> </span><span class="dv">100</span></span>
-<span id="cb87-2"><a href="d-charts.html#cb87-2"></a>y &lt;-<span class="st"> </span><span class="kw">seq_len</span>(<span class="kw">ncol</span>(volcano)) <span class="op">+</span><span class="st"> </span><span class="dv">500</span></span>
-<span id="cb87-3"><a href="d-charts.html#cb87-3"></a><span class="kw">plot_ly</span>() <span class="op">%&gt;%</span><span class="st"> </span><span class="kw">add_surface</span>(<span class="dt">x =</span> <span class="op">~</span>x, <span class="dt">y =</span> <span class="op">~</span>y, <span class="dt">z =</span> <span class="op">~</span>volcano)</span></code></pre></div>
+<div class="sourceCode" id="cb88"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb88-1"><a href="d-charts.html#cb88-1"></a>x &lt;-<span class="st"> </span><span class="kw">seq_len</span>(<span class="kw">nrow</span>(volcano)) <span class="op">+</span><span class="st"> </span><span class="dv">100</span></span>
+<span id="cb88-2"><a href="d-charts.html#cb88-2"></a>y &lt;-<span class="st"> </span><span class="kw">seq_len</span>(<span class="kw">ncol</span>(volcano)) <span class="op">+</span><span class="st"> </span><span class="dv">500</span></span>
+<span id="cb88-3"><a href="d-charts.html#cb88-3"></a><span class="kw">plot_ly</span>() <span class="op">%&gt;%</span><span class="st"> </span><span class="kw">add_surface</span>(<span class="dt">x =</span> <span class="op">~</span>x, <span class="dt">y =</span> <span class="op">~</span>y, <span class="dt">z =</span> <span class="op">~</span>volcano)</span></code></pre></div>
 <div class="figure" style="text-align: center"><span id="fig:surface"></span>
 <img src="images/surface.png" alt="A 3D surface of volcano height." width="100%" data-url="/interactives/surface.html" />
 <p class="caption">

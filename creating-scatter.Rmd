@@ -1,6 +1,16 @@
 # Scattered foundations {#scatter-traces}
+\index{Scatter trace type}
 
 As we learned in Section \@ref(intro-plotly-js), a plotly.js figure contains one (or more) trace(s), and every trace has a type. The trace type scatter is great for drawing low-level geometries (e.g., points, lines, text, and polygons) and provides the foundation for many `add_*()` functions (e.g., `add_markers()`, `add_lines()`, `add_paths()`, `add_segments()`, `add_ribbons()`, `add_area()`, and `add_polygons()`) as well as many `ggplotly()` charts. These scatter-based layers provide a more convenient interface to special cases of the scatter trace by doing a bit of data wrangling and transformation under-the-hood before mapping to scatter trace(s). For a simple example, `add_lines()` ensures lines are drawn according to the ordering of `x`, which is desirable for a time series plotting. This behavior is subtly different than `add_paths()` which uses row ordering instead.
+
+\index{
+  add\_trace()@\texttt{add\_trace()}!
+    add\_paths()@\texttt{add\_paths()}
+}
+\index{
+  add\_trace()@\texttt{add\_trace()}!
+    add\_lines()@\texttt{add\_lines()}
+}
 
 ```r
 library(plotly)
@@ -21,6 +31,11 @@ knitr::include_graphics("images/scatter-intro.svg")
 ```
 
 Section \@ref(intro-plotly) introduced 'aesthetic mapping' arguments (unique to the R package) which make it easier to map data to visual properties (e.g., `color`, `linetype`, etc). In addition to these arguments, **dplyr** groupings can be used to ensure there is at least one geometry per group. The top panel of Figure \@ref(fig:scatter-intro) demonstrates how `group_by()` could be used to effectively wrap the time series from Figure \@ref(fig:scatter-intro) by year, which can be useful for visualizing annual seasonality. Another approach to generating at least one geometry per 'group' is to provide categorical variable to a relevant aesthetic (e.g., `color`), as shown in the bottom panel of Figure \@ref(fig:scatter-intro).
+
+\index{
+  plot\_ly()@\texttt{plot\_ly()}!
+    group\_by()@\texttt{group\_by()} vs \texttt{split}
+}
 
 ```r
 library(lubridate)
@@ -50,6 +65,16 @@ include_vimeo("316679591")
 
 Not only do these plots differ in visual appearance, they also differ in interactive capabilities, computational performance, and underlying implementation. That's because, the grouping approach (top panel of Figure \@ref(fig:scatter-lines)) uses just one plotly.js trace (more performant, less interactive), whereas the `color` approach (bottom panel of Figure \@ref(fig:scatter-lines)) generates one trace per line/year. In this case, the benefit of having multiple traces is that we can perform interactive filtering via the legend and compare multiple y-values at a given x. The cost of having those capabilities is that plots starts to be become sluggish after a few hundred traces, whereas thousands of lines can be rendered fairly easily in one trace. See Chapter \@ref(performance) for more details on scaling and performance.
 
+\index{
+  add\_trace()@\texttt{add\_trace()}!
+    Introduction
+}
+\index{
+  plot\_ly()@\texttt{plot\_ly()}!
+    Special attributes!
+      Introduction
+}
+
 These features make it easier to get started using plotly.js, but it still pays off to learn how to use plotly.js directly. You won't find plotly.js attributes listed as explicit arguments in any **plotly** function (except for the special `type` attribute), but they are passed along verbatim to the plotly.js figure definition through the `...` operator. The scatter-based layers in this chapter fix the `type` plotly.js attribute to `"scatter"` as well as the [`mode`](https://plot.ly/r/reference/#scatter-mode) (e.g., `add_markers()` uses `mode='markers'` etc), but you could also use the lower-level `add_trace()` to work more directly with plotly.js. For example, Figure \@ref(fig:tooltip-praise) shows how to render markers, lines, and text in the same scatter trace. It also demonstrates how to leverage *nested* plotly.js attributes, like [`textfont`](https://plot.ly/r/reference/#scatter-textfont) and [`xaxis`](https://plot.ly/r/reference/#layout-xaxis) -- these attributes contain other attributes, so you need to supply a suitable named list to these arguments.
 
 ```r
@@ -72,7 +97,8 @@ plot_ly() %>%
 knitr::include_graphics("images/tooltip-praise.png")
 ```
 
-
+\index{Plotly figure!Reference}
+\index{schema()@\texttt{schema()}|seealso {Reference}}
 
 If you are new to plotly.js, I recommend taking a bit of time to look through the plotly.js attributes that are available to the scatter trace type and think how you might be able to use them. Most of these attributes work for other trace types as well, so learning an attribute once for a specific plot can pay off in other contexts as well. The online plotly.js figure reference, <https://plot.ly/r/reference/#scatter>, is a decent place to search and learn about the attributes, but I recommend using the `schema()` function instead for a few reasons:
 
@@ -92,9 +118,20 @@ The sections that follow in this chapter demonstrate various type of data views 
 
 ## Markers
 
+\index{
+  add\_trace()@\texttt{add\_trace()}!
+    add\_markers()@\texttt{add\_markers()}
+}
+
 This section details scatter traces with a `mode` of `"markers"` (i.e., `add_markers()`). For simplicity, many of the examples here use `add_markers()` with a numeric x and y axis, which results in scatterplot -- a common way to visualize the association between two quantitative variables.  The content that follows is still relevant markers displayed non-numeric x and y (aka dot pots) as shown in Section \@ref(dot-plots).
 
 ### Alpha blending {#marker-alpha}
+
+\index{
+  plot\_ly()@\texttt{plot\_ly()}!
+    Special attributes!
+      alpha@\texttt{alpha}
+}
 
 As @unwin-graphical-analysis notes, scatterplots can be useful for exposing other important features including: casual relationships, outliers, clusters, gaps, barriers, and conditional relationships. A common problem with scatterplots, however is overplotting, meaning that there are multiple observations occupying the same (or similar) x/y locations. Figure \@ref(fig:scatterplots) demonstrates one way to combat overplotting via alpha blending. When dealing with tens of thousands of points (or more), consider using `toWebGL()` to render plots using Canvas rather than SVG (more in Chapter \@ref(performance), or leveraging 2D density estimation (Section \@ref(rectangular-binning-in-r)).
 
@@ -111,6 +148,13 @@ knitr::include_graphics("images/scatterplots.svg")
 ```
 
 ### Colors {#marker-color}
+
+\index{
+  plot\_ly()@\texttt{plot\_ly()}!
+    Special attributes!
+      color@\texttt{color} / \texttt{colors}
+}
+\index{colorbar()@\texttt{colorbar()}}
 
 As discussed in Section \@ref(intro-plotly-js), mapping a discrete variable to `color` produces one trace per category, which is desirable for it's legend and hover properties. On the other hand, mapping a *numeric* variable to `color` produces one trace, as well as a [colorbar](https://plot.ly/r/reference/#scatter-marker-colorbar) guide for visually decoding colors back to data values. The `colorbar()` function can be used to customize the appearance of this automatically generated guide. The default colorscale is viridis, a perceptually-uniform colorscale (even when converted to black-and-white), and perceivable even to those with common forms of color blindness [@viridis]. Viridis is also the default colorscale for ordered factors.
 
@@ -176,6 +220,12 @@ The `color` argument is meant to control the 'fill-color' of a geometric object,
 
 ### Symbols {#marker-symbol}
 
+\index{
+  plot\_ly()@\texttt{plot\_ly()}!
+    Special attributes!
+      symbol@\texttt{symbol} / \texttt{symbols}
+}
+
 The `symbol` argument can be used to map data values to the `marker.symbol` plotly.js attribute. It uses the same semantics that we've already seen for `color`:
 
 * A numeric mapping generates trace.
@@ -229,6 +279,17 @@ If you'd like to see all the symbols available to **plotly**, as well as a metho
 
 ### Stroke and span {#marker-stroke}
 
+\index{
+  plot\_ly()@\texttt{plot\_ly()}!
+    Special attributes!
+      stroke@\texttt{stroke} / \texttt{strokes}
+}
+\index{
+  plot\_ly()@\texttt{plot\_ly()}!
+    Special attributes!
+      span@\texttt{span} / \texttt{spans}
+}
+
 The `stroke` argument follows the same semantics as `color` and `symbol` when it comes to variable mappings and specifying visual ranges. Typically you don't want to map data values to `stroke`, you just want to specify a fixed outline color. For example, Figure \@ref(fig:stroke-manual) modifies Figure \@ref(fig:symbol-factor-manual) to simply add a black outline. By default, the `span`, or width of the stroke, is zero, you'll likely want to set the width to be around one pixel.
 
 ```r
@@ -241,6 +302,12 @@ knitr::include_graphics("images/symbol-manual.svg")
 ```
 
 ### Size {#marker-size}
+
+\index{
+  plot\_ly()@\texttt{plot\_ly()}!
+    Special attributes!
+      size@\texttt{size} / \texttt{sizes}
+}
 
 For scatterplots, the `size` argument controls the area of markers (unless otherwise specified via [sizemode](https://plot.ly/r/reference/#scatter-marker-sizemode)), and _must_ be a numeric variable. The `sizes` argument controls the minimum and maximum size of circles, in pixels:
 
@@ -268,6 +335,12 @@ knitr::include_graphics("images/sizes-manual.svg")
 
 
 ### Dotplots & error bars {#dot-plots}
+
+\index{Chart types!Dotplot}
+\index{
+  add\_markers()@\texttt{add\_markers()}!
+    Error bars
+}
 
 A dotplot is similar to a scatterplot, except instead of two numeric axes, one is categorical. The usual goal of a dotplot is to compare value(s) on a numerical scale over numerous categories. In this context, dotplots are preferable to pie charts since comparing position along a common scale is much easier than comparing angle or area [@graphical-perception; @crowdsourcing-graphical-perception]. Furthermore, dotplots can be preferable to bar charts, especially when comparing values within a narrow range far away from 0 [@few-values]. Also, when presenting point estimates, and uncertainty associated with those estimates, bar charts tend to exaggerate the difference in point estimates, and lose focus on uncertainty [@messing].
 
@@ -300,9 +373,20 @@ knitr::include_graphics("images/coefplot.png")
 
 ## Lines
 
+\index{
+  add\_trace()@\texttt{add\_trace()}!
+    add\_lines()@\texttt{add\_lines()}
+}
+
 Many of the same principles we learned about aesthetic mappings with respect to markers (Section \@ref(markers)) also apply to lines.^[At the time of writing, the plotly.js attributes [`line.width` and `line.color`](https://github.com/plotly/plotly.js/issues/147) do not support multiple values, meaning a single line trace can only have one width/color in 2D line plot, and consequently numeric `color`/`size` mappings won't work. This isn't necessarily true for 3D paths/lines and there will likely be support these features for 2D paths/lines in WebGL in the near future.] Moreover, at the start of this chapter (namely Figure \@ref(fig:scatter-lines)) we also learned how to use **dplyr**'s `group_by()` to ensure there is at least one geometry (in this case, line) per group. We also learned the difference between `add_paths()` and `add_lines()` -- the former draws lines according to row ordering whereas the latter draw them according to `x`. In this chapter, we'll learn about `linetype`/`linetype`, an aesthetic that applies to lines and polygons. We'll also discuss some other important chart types that can be implemented with `add_paths()`, `add_lines()`, and `add_segments()`. 
 
 ### Linetypes
+
+\index{
+  plot\_ly()@\texttt{plot\_ly()}!
+    Special attributes!
+      linetype@\texttt{linetype} / \texttt{linetypes}
+}
 
 Generally speaking, it's hard to perceive more than 8 different colors/linetypes/symbols in a given plot, so sometimes we have to filter data to use these effectively. Here we use the **dplyr** package to find the top 5 cities in terms of average monthly sales (`top5`), then effectively filter the original data to contain just these cities via `semi_join()`. As Figure \@ref(fig:linetypes) demonstrates, once we have the data filtered, mapping city to `color` or `linetype` is trivial. The color palette can be altered via the `colors` argument, and follows the same rules as [scatterplots](#scatterplots). The linetype palette can be altered via the `linetypes` argument, and accepts R's [`lty` values](https://github.com/wch/r-source/blob/e5b21d0397c607883ff25cca379687b86933d730/src/library/graphics/man/par.Rd#L726-L743) or plotly.js [dash values](https://plot.ly/r/reference/#scatter-line-dash).
 
@@ -346,11 +430,24 @@ knitr::include_graphics("images/linetypes-manual.svg")
 
 ### Segments
 
+\index{
+  add\_trace()@\texttt{add\_trace()}!
+    add\_segments()@\texttt{add\_segments()}
+}
+
 The `add_segments()` function essentially provides a way to connect two points [(`x`, `y`) to (`xend`, `yend`)] with a line. Segments form the building blocks for numerous useful chart types, including slopegraphs, dumbell charts, candlestick charts, and more. Slopegraphs and dumbell charts are useful for comparing numeric values across numerous categories. Candlestick charts are typically used for visualizing change in a financial asset over time. 
 
 Segments can also provide a useful alternative to `add_bars()` (covered in Chapter \@ref(bars-histograms)), especially for animations. In particular, Figure \@ref(fig:profile-pyramid) of Section \@ref(animation-support) shows how implement an animated population pyramid using segments instead of bars.
 
 #### Slopegraph
+
+\index{Chart types!Slopegraph}
+\index{Editable charts!Annotations}
+\index{add\_annotations()@\texttt{add\_annotations()}}
+\index{
+  layout()@\texttt{layout()}!
+    Axis attributes
+}
 
 The slope graph, made popular by @tufte2001, is a great way to compare the change in a measurement across numerous groups. This change could be along either a discrete or a continuous axis. For a continuous axis, the slopegraph could be thought of as a decomposition of a line graph into multiple segments. The **slopegraph** R package provides a succinct interface for creating slopegraphs with base or **ggplot2** graphics and also some convenient data sets which we'll make use of here [@slopegraph]. Figure \@ref(fig:slopegraph) recreates an example from @tufte2001, using the `gdp` data set from **slopegraph**, and demonstrates a common issue with labelling in slopegraphs -- it's easy to have overlapping labels when anchoring labels on data values. For that reason, this implementation leverages **plotly** ability to interactively edit annotation positions. See Chapter \@ref(editing-views) for similar examples of 'editing views'.
 
@@ -400,6 +497,8 @@ include_vimeo("327585190")
 
 #### Dumbell
 
+\index{Chart types!Dumbell}
+
 So called dumbell charts are similar in concept to slope graphs, but not quite as general. They are typically used to compare two different classes of numeric values across numerous groups. Figure \@ref(fig:dumbell) uses the dumbell approach to show average miles per gallon city and highway for different car models. With a dumbell chart, it's always a good idea to order the categories by a sensible metric -- for Figure \@ref(fig:dumbell), the categories are ordered by the city miles per gallon.
 
 ```r
@@ -432,6 +531,8 @@ knitr::include_graphics("images/dumbell.svg")
 
 #### Candlestick
 
+\index{Chart types!Candlestick}
+
 Figure \@ref(fig:candlestick) uses the **quantmod** package [@quantmod] to obtain stock price data for Microsoft and plots two segments for each day: one to encode the opening/closing values, and one to encode the daily high/low.
 
 ```r
@@ -456,6 +557,8 @@ knitr::include_graphics("images/candlestick.svg")
 ```
 
 ### Density plots
+
+\index{Chart types!Kernel densities}
 
 In Chapter \@ref(bars-histograms), we leverage a number of algorithms in R for computing the "optimal" number of bins for a histogram, via `hist()`, and routing those results to `add_bars()`. We can leverage the `density()` function for computing kernel density estimates in a similar way, and route the results to `add_lines()`, as is done in Figure \@ref(fig:densities).
 
@@ -488,6 +591,8 @@ p
 
 ### Parallel Coordinates
 
+\index{Chart types!Parallel coordinates}
+
 One very useful, but often overlooked, visualization technique is the parallel coordinates plot. Parallel coordinates provide a way to compare values along a common (or non-aligned) positional scale(s) -- the most basic of all perceptual tasks -- in more than 3 dimensions [@graphical-perception]. Usually each line represents every measurement for a given row (or observation) in a data set. It's true that plotly.js provides a trace type, parcoords, specifically for parallel coordinates that offers desirable interactive capabilities (e.g., highlighting and reordering of axes).^[See <https://plot.ly/r/parallel-coordinates-plot/> for some interactive examples]. However, it can also be useful learn how to use `add_lines()` to implement parallel coordinates as it can offer more flexibility and control over the axis scales.
 
 When measurements are on very different scales, some care must be taken, and variables must transformed to be put on a common scale. As Figure \@ref(fig:pcp-common) shows, even when variables are measured on a similar scale, it can still be informative to transform variables in different ways.
@@ -518,6 +623,11 @@ It is also worth noting that the **GGally** offers a `ggparcoord()` function whi
 
 ## Polygons
 
+\index{
+  add\_trace()@\texttt{add\_trace()}!
+    add\_polygons()@\texttt{add\_polygons()}
+}
+
 The `add_polygons()` function is essentially equivalent to `add_paths()` with the [fill](https://plot.ly/r/reference/#scatter-fill) attribute set to "toself". Polygons form the basis for other, higher-level scatter-based layers (e.g., `add_ribbons()` and `add_sf()`) that don't have a dedicated plotly.js trace type. Polygons can be use to draw many things, but perhaps the most familiar application where you *might* want to use `add_polygons()` is to draw geo-spatial objects. If and when you use `add_polygons()` to draw a map, make sure you fix the aspect ratio (e.g., [`xaxis.scaleanchor`](https://plot.ly/r/reference/#layout-xaxis-scaleanchor)) and also consider using `plotly_empty()` over `plot_ly()` to hide axis labels, ticks, and the background grid. On the other hand, Section \@ref(maps-custom) shows you how to make a custom maps using the **sf** package and `add_sf()`, which is a bit of work to get started, but is absolutely worth the investment.
 
 ```r
@@ -547,6 +657,11 @@ knitr::include_graphics("images/map-canada-split.png")
 ```
 
 ### Ribbons
+
+\index{
+  add\_trace()@\texttt{add\_trace()}!
+    add\_ribbons()@\texttt{add\_ribbons()}
+}
 
 Ribbons are useful for showing uncertainty bounds as a function of x. The `add_ribbons()` function creates ribbons and requires the arguments: `x`, `ymin`, and `ymax`. The `augment()` function from the **broom** package appends observational-level model components (e.g., fitted values stored as a new column `.fitted`) which is useful for extracting those components in a convenient form for visualization. Figure \@ref(fig:broom-lm) shows the fitted values and uncertainty bounds from a linear model object.
 

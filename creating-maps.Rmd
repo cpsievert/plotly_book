@@ -8,6 +8,10 @@ It's worth noting that **plotly** aims to be a general purpose visualization lib
 
 ### Overview
 
+\index{
+  plot\_mapbox()@\texttt{plot\_mapbox()}
+}
+
 If you have fairly simple latitude/longitude data and want to make a quick map, you may want to try one of **plotly**'s integrated mapping options (i.e., `plot_mapbox()` and `plot_geo()`). Generally speaking, you can treat these constructor functions as a drop-in replacement for `plot_ly()` and get a dynamic basemap rendered behind your data. Furthermore, all the scatter-based layers we learned about in Section \@ref(scatter-traces) work as you'd expect it to with `plot_ly()`.^[Unfortunately, non-scatter traces currently don't work with `plot_mapbox()`/ `plot_geo()` meaning that, for one, raster (i.e., heatmap) maps are not natively supported.] For example, Figure \@ref(fig:mapbox-bubble) uses `plot_mapbox()` and `add_markers()` to create a bubble chart:
 
 ```r
@@ -69,6 +73,10 @@ layout(
 ```{r mapbox-style-dropdown, echo = FALSE, fig.cap="(ref:mapbox-style-dropdown)"}
 include_vimeo("326684625")
 ```
+
+\index{
+  plot\_geo()@\texttt{plot\_geo()}
+}
 
 The other integrated mapping solution in **plotly** is `plot_geo()`. Compared to `plot_mapbox()`, this approach has support for different mapping projections, but styling the basemap is limited and can be more cumbersome. Figure \@ref(fig:geo-flights) demonstrates using `plot_geo()` in conjunction with `add_markers()` and `add_segments()` to visualize flight paths within the United States. Whereas `plot_mapbox()` is fixed to a mercator projection, the `plot_geo()` constructor has a handful of different projection available to it, including the orthographic projection which gives the illusion of the 3D globe.
 
@@ -140,7 +148,9 @@ knitr::include_graphics("images/maps.png")
 
 ### Choropleths
 
-In addition to scatter-based layers, the `plot_geo()` constructor also supports a [choropleth](https://plot.ly/r/reference/#choropleth) layer. Figure \@ref(fig:us-density) shows the population density of the U.S. via a choropleth, and also layers on markers for the state center locations, using the U.S. state data from the **datasets** package [@RCore]. By simply providing a [`z`](https://plot.ly/r/reference/#choropleth-z) attribute, `plotly_geo()` objects will try to create a choropleth, but you'll also need to provide [`locations`](https://plot.ly/r/reference/#choropleth-locations) and a [`locationmode`](https://plot.ly/r/reference/#choropleth-locationmode). It's worth noting that the `locationmode` is currently limited to countries and US states, so if you need to a different geo-unit (e.g., counties, municipalities, etc), you can use the the custom mapping approach discussed in Section \@ref(maps-custom).
+In addition to scatter traces, both of the integrated mapping  solutions (i.e., `plot_mapbox()` and `plot_geo()`) have an optimized choropleth trace type (i.e.,  the [choroplethmapbox](https://plot.ly/r/reference/#choroplethmapbox) and [choropleth](https://plot.ly/r/reference/#choropleth) trace types). Comparatively speaking, choroplethmapbox is more powerful because you can fully specify the feature collection using GeoJSON, but the choropleth trace can be a bit easier to use if it fits your use case.
+
+Figure \@ref(fig:us-density) shows the population density of the U.S. via the choropleth trace using the U.S. state data from the **datasets** package [@RCore]. By simply providing a [`z`](https://plot.ly/r/reference/#choropleth-z) attribute, `plotly_geo()` objects will try to create a choropleth, but you'll also need to provide [`locations`](https://plot.ly/r/reference/#choropleth-locations) and a [`locationmode`](https://plot.ly/r/reference/#choropleth-locationmode). It's worth noting that the `locationmode` is currently limited to countries and US states, so if you need to a different geo-unit (e.g., counties, municipalities, etc), you should use the choroplethmapbox trace type and/or use a "custom" mapping approach as discussed in Section \@ref(maps-custom).
 
 ```r
 density <- state.x77[, "Population"] / state.x77[, "Area"]
@@ -163,7 +173,48 @@ plot_geo() %>%
 knitr::include_graphics("images/us-density.svg")
 ```
 
-Figure \@ref(fig:us-density) helps illuminate a problem with choropleths from a graphical perception point of view. We typically use the color in choropleths to encode a numeric variable (e.g., GDP, net exports, average SAT score, etc) and the eye naturally perceives the area that a particular color covers as proportional to its overall effect. This ends up being misleading since the area the color covers typically has no sensible relationship with the data encoded by the color. A classic example of this misleading effect in action is in US election maps -- the proportion of red to blue coloring is not representative of the overall popular vote [@election-maps]. 
+Choroplethmapbox is more flexible than choropleth because you supply your own GeoJSON definition of the choropleth via the `geojson` attribute. Currently this attribute must be a URL pointing to a geojson file. Moreover, the `location` should point to a top-level id attribute of each feature within the geojson file. Figure \@ref(fig:us-density-geojson) demonstrates how we could visualize the same information as Figure \@ref(fig:us-density), but this time using choroplethmapbox.
+
+```r
+plot_ly() %>%
+  add_trace(
+    type = "choroplethmapbox",
+    # See how this GeoJSON URL was generated at
+    # https://plotly-r.com/data-raw/us-states.R
+    geojson = paste(c(
+      "https://gist.githubusercontent.com/cpsievert/",
+      "7cdcb444fb2670bd2767d349379ae886/raw/",
+      "cf5631bfd2e385891bb0a9788a179d7f023bf6c8/", 
+      "us-states.json"
+    ), collapse = ""),
+    locations = row.names(state.x77),
+    z = state.x77[, "Population"] / state.x77[, "Area"],
+    span = I(0)
+  ) %>%
+  layout(
+    mapbox = list(
+      style = "light",
+      zoom = 4,
+      center = list(lon = -98.58, lat = 39.82)
+    )
+  ) %>%
+  config(
+    mapboxAccessToken = Sys.getenv("MAPBOX_TOKEN"),
+    # Workaround to make sure image download uses full container
+    # size https://github.com/plotly/plotly.js/pull/3746
+    toImageButtonOptions = list(
+      format = "svg", 
+      width = NULL, 
+      height = NULL
+    )
+  )
+```
+
+```{r us-density-geojson, echo = FALSE, fig.cap = "(ref:us-density-geojson)", out.extra = if (knitr::is_html_output()) 'data-url="/interactives/us-density-geojson.html"'}
+knitr::include_graphics("images/us-density-geojson.svg")
+```
+
+Figures \@ref(fig:us-density) and \@ref(fig:us-density-geojson) aren't an ideal way to visualize state population a graphical perception point of view. We typically use the color in choropleths to encode a numeric variable (e.g., GDP, net exports, average SAT score, etc) and the eye naturally perceives the area that a particular color covers as proportional to its overall effect. This ends up being misleading since the area the color covers typically has no sensible relationship with the data encoded by the color. A classic example of this misleading effect in action is in US election maps -- the proportion of red to blue coloring is not representative of the overall popular vote [@election-maps]. 
 
 Cartograms are an approach to reducing this misleading effect and grants another dimension to encode data through the size of geo-spatial features. Section \@ref(cartograms) covers how to render cartograms in **plotly** using **sf** and **cartogram**.
 

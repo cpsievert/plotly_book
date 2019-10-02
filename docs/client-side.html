@@ -24,7 +24,7 @@
 <meta name="author" content="Carson Sievert" />
 
 
-<meta name="date" content="2019-10-01" />
+<meta name="date" content="2019-10-02" />
 
   <meta name="viewport" content="width=device-width, initial-scale=1" />
   <meta name="apple-mobile-web-app-capable" content="yes" />
@@ -351,43 +351,43 @@ code span.wa { color: #60a0b0; font-weight: bold; font-style: italic; } /* Warni
 <p>Sometimes supplying <code>customdata</code> isn’t the best way to achieve a particular interactive feature. In those cases, you likely want to leverage other R lower-level interfaces to web technologies. Recall from Section <a href="arranging-views.html#arranging-htmlwidgets">13.2</a> that <strong>htmlwidgets</strong> objects are a special case of <strong>htmltools</strong> tags. That means, you can always complement your widget(s) with arbitrary HTML content by adding additional tags. Figure <a href="client-side.html#fig:correlation-client-side">22.1</a> leverages this idea to place an empty HTML <code>&lt;div&gt;</code> container below the correlation heatmap which is then populated with a <strong>plotly</strong> scatterplot upon clicking a cell. As it turns out, you <em>could</em> implement Figure <a href="client-side.html#fig:correlation-client-side">22.1</a> by binding x/y data to each heatmap cell via <code>customdata</code>, but that would require the browser to store twice the amount of data as what’s required here. Instead, this approach serializes the input data (<code>mtcars</code>) into a JSON file via <strong>jsonlite</strong> so the webpage can read and parse the full dataset once and select just the two required columns when required (on click). There are a lot of ways to read JSON in JavaScript, but here we use the d3.js library’s <code>d3.json()</code> since <strong>plotly</strong> already comes bundled with the library <span class="citation">(Heer <a href="#ref-d3js" role="doc-biblioref">2011</a>)</span>. Also, since the HTML file is reading the JSON from disk, most browsers won’t render the HTML file directly (at least, by default, for security reasons). To get around that, we can start up a simple web server from R using <strong>servr</strong> to serve both the HTML and JSON in way that your browser will deem safe to run <span class="citation">(Xie <a href="#ref-servr" role="doc-biblioref">2016</a>)</span>.</p>
 <details>
 <p><summary>Click to see code</summary></p>
-<div class="sourceCode" id="cb206"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb206-1"><a href="client-side.html#cb206-1"></a><span class="kw">library</span>(plotly)</span>
-<span id="cb206-2"><a href="client-side.html#cb206-2"></a><span class="kw">library</span>(htmltools)</span>
-<span id="cb206-3"><a href="client-side.html#cb206-3"></a></span>
-<span id="cb206-4"><a href="client-side.html#cb206-4"></a>nms &lt;-<span class="st"> </span><span class="kw">names</span>(mtcars)</span>
-<span id="cb206-5"><a href="client-side.html#cb206-5"></a></span>
-<span id="cb206-6"><a href="client-side.html#cb206-6"></a>p &lt;-<span class="st"> </span><span class="kw">plot_ly</span>(<span class="dt">colors =</span> <span class="st">&quot;RdBu&quot;</span>) <span class="op">%&gt;%</span></span>
-<span id="cb206-7"><a href="client-side.html#cb206-7"></a><span class="st">  </span><span class="kw">add_heatmap</span>(</span>
-<span id="cb206-8"><a href="client-side.html#cb206-8"></a>    <span class="dt">x =</span> nms, </span>
-<span id="cb206-9"><a href="client-side.html#cb206-9"></a>    <span class="dt">y =</span> nms, </span>
-<span id="cb206-10"><a href="client-side.html#cb206-10"></a>    <span class="dt">z =</span> <span class="op">~</span><span class="kw">round</span>(<span class="kw">cor</span>(mtcars), <span class="dv">3</span>)</span>
-<span id="cb206-11"><a href="client-side.html#cb206-11"></a>  ) <span class="op">%&gt;%</span></span>
-<span id="cb206-12"><a href="client-side.html#cb206-12"></a><span class="st">  </span><span class="kw">onRender</span>(<span class="st">&quot;</span></span>
-<span id="cb206-13"><a href="client-side.html#cb206-13"></a><span class="st">    function(el) {</span></span>
-<span id="cb206-14"><a href="client-side.html#cb206-14"></a><span class="st">      Plotly.d3.json(&#39;mtcars.json&#39;, function(mtcars) {</span></span>
-<span id="cb206-15"><a href="client-side.html#cb206-15"></a><span class="st">        el.on(&#39;plotly_click&#39;, function(d) {</span></span>
-<span id="cb206-16"><a href="client-side.html#cb206-16"></a><span class="st">          var x = d.points[0].x;</span></span>
-<span id="cb206-17"><a href="client-side.html#cb206-17"></a><span class="st">          var y = d.points[0].y;</span></span>
-<span id="cb206-18"><a href="client-side.html#cb206-18"></a><span class="st">          var trace = {</span></span>
-<span id="cb206-19"><a href="client-side.html#cb206-19"></a><span class="st">            x: mtcars[x],</span></span>
-<span id="cb206-20"><a href="client-side.html#cb206-20"></a><span class="st">            y: mtcars[y],</span></span>
-<span id="cb206-21"><a href="client-side.html#cb206-21"></a><span class="st">            mode: &#39;markers&#39;</span></span>
-<span id="cb206-22"><a href="client-side.html#cb206-22"></a><span class="st">          };</span></span>
-<span id="cb206-23"><a href="client-side.html#cb206-23"></a><span class="st">          Plotly.newPlot(&#39;filtered-plot&#39;, [trace]);</span></span>
-<span id="cb206-24"><a href="client-side.html#cb206-24"></a><span class="st">        });</span></span>
-<span id="cb206-25"><a href="client-side.html#cb206-25"></a><span class="st">      });</span></span>
-<span id="cb206-26"><a href="client-side.html#cb206-26"></a><span class="st">    }</span></span>
-<span id="cb206-27"><a href="client-side.html#cb206-27"></a><span class="st">&quot;</span>)</span>
-<span id="cb206-28"><a href="client-side.html#cb206-28"></a></span>
-<span id="cb206-29"><a href="client-side.html#cb206-29"></a></span>
-<span id="cb206-30"><a href="client-side.html#cb206-30"></a><span class="co"># In a temporary directory, save the mtcars dataset as json and</span></span>
-<span id="cb206-31"><a href="client-side.html#cb206-31"></a><span class="co"># the html to an index.html file, then open via a web server</span></span>
-<span id="cb206-32"><a href="client-side.html#cb206-32"></a>withr<span class="op">::</span><span class="kw">with_path</span>(<span class="kw">tempdir</span>(), {</span>
-<span id="cb206-33"><a href="client-side.html#cb206-33"></a>  jsonlite<span class="op">::</span><span class="kw">write_json</span>(<span class="kw">as.list</span>(mtcars), <span class="st">&quot;mtcars.json&quot;</span>)</span>
-<span id="cb206-34"><a href="client-side.html#cb206-34"></a>  html &lt;-<span class="st"> </span><span class="kw">tagList</span>(p, tags<span class="op">$</span><span class="kw">div</span>(<span class="dt">id =</span> <span class="st">&#39;filtered-plot&#39;</span>))</span>
-<span id="cb206-35"><a href="client-side.html#cb206-35"></a>  <span class="kw">save_html</span>(html, <span class="st">&quot;index.html&quot;</span>)</span>
-<span id="cb206-36"><a href="client-side.html#cb206-36"></a>  <span class="cf">if</span> (<span class="kw">interactive</span>()) servr<span class="op">::</span><span class="kw">httd</span>()</span>
-<span id="cb206-37"><a href="client-side.html#cb206-37"></a>})</span></code></pre></div>
+<div class="sourceCode" id="cb207"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb207-1"><a href="client-side.html#cb207-1"></a><span class="kw">library</span>(plotly)</span>
+<span id="cb207-2"><a href="client-side.html#cb207-2"></a><span class="kw">library</span>(htmltools)</span>
+<span id="cb207-3"><a href="client-side.html#cb207-3"></a></span>
+<span id="cb207-4"><a href="client-side.html#cb207-4"></a>nms &lt;-<span class="st"> </span><span class="kw">names</span>(mtcars)</span>
+<span id="cb207-5"><a href="client-side.html#cb207-5"></a></span>
+<span id="cb207-6"><a href="client-side.html#cb207-6"></a>p &lt;-<span class="st"> </span><span class="kw">plot_ly</span>(<span class="dt">colors =</span> <span class="st">&quot;RdBu&quot;</span>) <span class="op">%&gt;%</span></span>
+<span id="cb207-7"><a href="client-side.html#cb207-7"></a><span class="st">  </span><span class="kw">add_heatmap</span>(</span>
+<span id="cb207-8"><a href="client-side.html#cb207-8"></a>    <span class="dt">x =</span> nms, </span>
+<span id="cb207-9"><a href="client-side.html#cb207-9"></a>    <span class="dt">y =</span> nms, </span>
+<span id="cb207-10"><a href="client-side.html#cb207-10"></a>    <span class="dt">z =</span> <span class="op">~</span><span class="kw">round</span>(<span class="kw">cor</span>(mtcars), <span class="dv">3</span>)</span>
+<span id="cb207-11"><a href="client-side.html#cb207-11"></a>  ) <span class="op">%&gt;%</span></span>
+<span id="cb207-12"><a href="client-side.html#cb207-12"></a><span class="st">  </span><span class="kw">onRender</span>(<span class="st">&quot;</span></span>
+<span id="cb207-13"><a href="client-side.html#cb207-13"></a><span class="st">    function(el) {</span></span>
+<span id="cb207-14"><a href="client-side.html#cb207-14"></a><span class="st">      Plotly.d3.json(&#39;mtcars.json&#39;, function(mtcars) {</span></span>
+<span id="cb207-15"><a href="client-side.html#cb207-15"></a><span class="st">        el.on(&#39;plotly_click&#39;, function(d) {</span></span>
+<span id="cb207-16"><a href="client-side.html#cb207-16"></a><span class="st">          var x = d.points[0].x;</span></span>
+<span id="cb207-17"><a href="client-side.html#cb207-17"></a><span class="st">          var y = d.points[0].y;</span></span>
+<span id="cb207-18"><a href="client-side.html#cb207-18"></a><span class="st">          var trace = {</span></span>
+<span id="cb207-19"><a href="client-side.html#cb207-19"></a><span class="st">            x: mtcars[x],</span></span>
+<span id="cb207-20"><a href="client-side.html#cb207-20"></a><span class="st">            y: mtcars[y],</span></span>
+<span id="cb207-21"><a href="client-side.html#cb207-21"></a><span class="st">            mode: &#39;markers&#39;</span></span>
+<span id="cb207-22"><a href="client-side.html#cb207-22"></a><span class="st">          };</span></span>
+<span id="cb207-23"><a href="client-side.html#cb207-23"></a><span class="st">          Plotly.newPlot(&#39;filtered-plot&#39;, [trace]);</span></span>
+<span id="cb207-24"><a href="client-side.html#cb207-24"></a><span class="st">        });</span></span>
+<span id="cb207-25"><a href="client-side.html#cb207-25"></a><span class="st">      });</span></span>
+<span id="cb207-26"><a href="client-side.html#cb207-26"></a><span class="st">    }</span></span>
+<span id="cb207-27"><a href="client-side.html#cb207-27"></a><span class="st">&quot;</span>)</span>
+<span id="cb207-28"><a href="client-side.html#cb207-28"></a></span>
+<span id="cb207-29"><a href="client-side.html#cb207-29"></a></span>
+<span id="cb207-30"><a href="client-side.html#cb207-30"></a><span class="co"># In a temporary directory, save the mtcars dataset as json and</span></span>
+<span id="cb207-31"><a href="client-side.html#cb207-31"></a><span class="co"># the html to an index.html file, then open via a web server</span></span>
+<span id="cb207-32"><a href="client-side.html#cb207-32"></a>withr<span class="op">::</span><span class="kw">with_path</span>(<span class="kw">tempdir</span>(), {</span>
+<span id="cb207-33"><a href="client-side.html#cb207-33"></a>  jsonlite<span class="op">::</span><span class="kw">write_json</span>(<span class="kw">as.list</span>(mtcars), <span class="st">&quot;mtcars.json&quot;</span>)</span>
+<span id="cb207-34"><a href="client-side.html#cb207-34"></a>  html &lt;-<span class="st"> </span><span class="kw">tagList</span>(p, tags<span class="op">$</span><span class="kw">div</span>(<span class="dt">id =</span> <span class="st">&#39;filtered-plot&#39;</span>))</span>
+<span id="cb207-35"><a href="client-side.html#cb207-35"></a>  <span class="kw">save_html</span>(html, <span class="st">&quot;index.html&quot;</span>)</span>
+<span id="cb207-36"><a href="client-side.html#cb207-36"></a>  <span class="cf">if</span> (<span class="kw">interactive</span>()) servr<span class="op">::</span><span class="kw">httd</span>()</span>
+<span id="cb207-37"><a href="client-side.html#cb207-37"></a>})</span></code></pre></div>
 </details>
 <div class="figure" style="text-align: center"><span id="fig:correlation-client-side"></span>
 <iframe src="https://player.vimeo.com/video/307598118?title=0&amp;byline=0&amp;portrait=0" width="100%" height="700" frameborder="0" seamless="seamless" webkitAllowFullScreen mozallowfullscreen allowFullScreen></iframe>
@@ -400,39 +400,39 @@ FIGURE 22.1: Clicking on a correlation matrix to populate a scatterplot. For the
 <h2><span class="header-section-number">22.2</span> Modern JS &amp; React</h2>
 <p>All the JavaScript (JS) we’ve seen thus far is natively supported by modern web browsers, but for larger projects, you may want to leverage modern versions of JS (i.e., ES6, ES7, etc) and modern JS development tools (e.g., Babel, Webpack, etc) for compiling modern JS to a version that all browsers can support (i.e., ES2015). The current landscape of JS development tooling is large, complex, fragmented, difficult for non-experts to navigate, and mostly beyond the scope of this book. However, thanks to R packages like <strong>V8</strong>, <strong>reactR</strong>, and <strong>runpkg</strong>, it turns out we can effectively leverage React<a href="references.html#fn40" class="footnote-ref" id="fnref40"><sup>40</sup></a> components<a href="references.html#fn41" class="footnote-ref" id="fnref41"><sup>41</sup></a> from R without fussing with system commands or setting up a complicated JS build toolchain.</p>
 <p>The R package <strong>runpkg</strong> makes it easy to download any <a href="https://www.npmjs.com/">npm</a> (the main repository network for JS) package (via <a href="https://unpkg.com/" class="uri">https://unpkg.com/</a>) and include it in a web page generated through the <strong>htmltools</strong> package <span class="citation">(Sievert <a href="#ref-runpkg" role="doc-biblioref">2019</a><a href="#ref-runpkg" role="doc-biblioref">b</a>)</span>. It does so by returning a <code>htmltools::htmlDependency()</code> object which encapsulates the downloaded files and includes the JS scripts (or CSS stylesheets) into any page that depends on that object. Here we use it to download a standalone bundle of a React library for rendering all sort of different video formats, called <code>react-player</code>.</p>
-<div class="sourceCode" id="cb207"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb207-1"><a href="client-side.html#cb207-1"></a>react_player &lt;-<span class="st"> </span>runpkg<span class="op">::</span><span class="kw">download_files</span>(</span>
-<span id="cb207-2"><a href="client-side.html#cb207-2"></a>  <span class="st">&quot;react-player&quot;</span>, </span>
-<span id="cb207-3"><a href="client-side.html#cb207-3"></a>  <span class="st">&quot;dist/ReactPlayer.standalone.js&quot;</span></span>
-<span id="cb207-4"><a href="client-side.html#cb207-4"></a>)</span></code></pre></div>
+<div class="sourceCode" id="cb208"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb208-1"><a href="client-side.html#cb208-1"></a>react_player &lt;-<span class="st"> </span>runpkg<span class="op">::</span><span class="kw">download_files</span>(</span>
+<span id="cb208-2"><a href="client-side.html#cb208-2"></a>  <span class="st">&quot;react-player&quot;</span>, </span>
+<span id="cb208-3"><a href="client-side.html#cb208-3"></a>  <span class="st">&quot;dist/ReactPlayer.standalone.js&quot;</span></span>
+<span id="cb208-4"><a href="client-side.html#cb208-4"></a>)</span></code></pre></div>
 <p>This <code>react-player</code> library provides a function called <code>renderReactPlayer()</code> that requires a placeholder (i.e., a DOM element) for inserting the video as well as a url (or file path) to the video. Figure <a href="client-side.html#fig:react-player">22.2</a> demonstrates how we could use it to render a YouTube video in response to a <strong>plotly</strong> click event:</p>
 <details>
 <p><summary>Click to see code</summary></p>
-<div class="sourceCode" id="cb208"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb208-1"><a href="client-side.html#cb208-1"></a><span class="kw">library</span>(htmltools)</span>
-<span id="cb208-2"><a href="client-side.html#cb208-2"></a></span>
-<span id="cb208-3"><a href="client-side.html#cb208-3"></a><span class="co"># the video placeholder</span></span>
-<span id="cb208-4"><a href="client-side.html#cb208-4"></a>video &lt;-<span class="st"> </span>tags<span class="op">$</span><span class="kw">div</span>(<span class="dt">id =</span> <span class="st">&quot;video&quot;</span>)</span>
-<span id="cb208-5"><a href="client-side.html#cb208-5"></a></span>
-<span id="cb208-6"><a href="client-side.html#cb208-6"></a><span class="co"># upon clicking the marker, populate a video </span></span>
-<span id="cb208-7"><a href="client-side.html#cb208-7"></a><span class="co"># in the DOM element with an id of &#39;video&#39;</span></span>
-<span id="cb208-8"><a href="client-side.html#cb208-8"></a>p &lt;-<span class="st"> </span><span class="kw">plot_ly</span>(<span class="dt">x =</span> <span class="dv">1</span>, <span class="dt">y =</span> <span class="dv">1</span>, <span class="dt">size =</span> <span class="kw">I</span>(<span class="dv">50</span>)) <span class="op">%&gt;%</span><span class="st"> </span></span>
-<span id="cb208-9"><a href="client-side.html#cb208-9"></a><span class="st">  </span><span class="kw">add_text</span>(</span>
-<span id="cb208-10"><a href="client-side.html#cb208-10"></a>    <span class="dt">text =</span> emo<span class="op">::</span><span class="kw">ji</span>(<span class="st">&quot;rofl&quot;</span>),</span>
-<span id="cb208-11"><a href="client-side.html#cb208-11"></a>    <span class="dt">customdata =</span> <span class="st">&quot;https://www.youtube.com/watch?v=oHg5SJYRHA0&quot;</span>,</span>
-<span id="cb208-12"><a href="client-side.html#cb208-12"></a>    <span class="dt">hovertext =</span> <span class="st">&quot;Click me!&quot;</span>,</span>
-<span id="cb208-13"><a href="client-side.html#cb208-13"></a>    <span class="dt">hoverinfo =</span> <span class="st">&quot;text&quot;</span></span>
-<span id="cb208-14"><a href="client-side.html#cb208-14"></a>  ) <span class="op">%&gt;%</span></span>
-<span id="cb208-15"><a href="client-side.html#cb208-15"></a><span class="st">  </span><span class="kw">onRender</span>(</span>
-<span id="cb208-16"><a href="client-side.html#cb208-16"></a>    <span class="st">&quot;function(el) { </span></span>
-<span id="cb208-17"><a href="client-side.html#cb208-17"></a><span class="st">       var container = document.getElementById(&#39;video&#39;);</span></span>
-<span id="cb208-18"><a href="client-side.html#cb208-18"></a><span class="st">       el.on(&#39;plotly_click&#39;, function(d) {</span></span>
-<span id="cb208-19"><a href="client-side.html#cb208-19"></a><span class="st">         var url = d.points[0].customdata;</span></span>
-<span id="cb208-20"><a href="client-side.html#cb208-20"></a><span class="st">         renderReactPlayer(container, {url: url, playing: true});</span></span>
-<span id="cb208-21"><a href="client-side.html#cb208-21"></a><span class="st">       })</span></span>
-<span id="cb208-22"><a href="client-side.html#cb208-22"></a><span class="st">    }&quot;</span></span>
-<span id="cb208-23"><a href="client-side.html#cb208-23"></a>  )</span>
-<span id="cb208-24"><a href="client-side.html#cb208-24"></a></span>
-<span id="cb208-25"><a href="client-side.html#cb208-25"></a><span class="co"># create the HTML page</span></span>
-<span id="cb208-26"><a href="client-side.html#cb208-26"></a><span class="kw">browsable</span>(<span class="kw">tagList</span>(p, video, react_player))</span></code></pre></div>
+<div class="sourceCode" id="cb209"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb209-1"><a href="client-side.html#cb209-1"></a><span class="kw">library</span>(htmltools)</span>
+<span id="cb209-2"><a href="client-side.html#cb209-2"></a></span>
+<span id="cb209-3"><a href="client-side.html#cb209-3"></a><span class="co"># the video placeholder</span></span>
+<span id="cb209-4"><a href="client-side.html#cb209-4"></a>video &lt;-<span class="st"> </span>tags<span class="op">$</span><span class="kw">div</span>(<span class="dt">id =</span> <span class="st">&quot;video&quot;</span>)</span>
+<span id="cb209-5"><a href="client-side.html#cb209-5"></a></span>
+<span id="cb209-6"><a href="client-side.html#cb209-6"></a><span class="co"># upon clicking the marker, populate a video </span></span>
+<span id="cb209-7"><a href="client-side.html#cb209-7"></a><span class="co"># in the DOM element with an id of &#39;video&#39;</span></span>
+<span id="cb209-8"><a href="client-side.html#cb209-8"></a>p &lt;-<span class="st"> </span><span class="kw">plot_ly</span>(<span class="dt">x =</span> <span class="dv">1</span>, <span class="dt">y =</span> <span class="dv">1</span>, <span class="dt">size =</span> <span class="kw">I</span>(<span class="dv">50</span>)) <span class="op">%&gt;%</span><span class="st"> </span></span>
+<span id="cb209-9"><a href="client-side.html#cb209-9"></a><span class="st">  </span><span class="kw">add_text</span>(</span>
+<span id="cb209-10"><a href="client-side.html#cb209-10"></a>    <span class="dt">text =</span> emo<span class="op">::</span><span class="kw">ji</span>(<span class="st">&quot;rofl&quot;</span>),</span>
+<span id="cb209-11"><a href="client-side.html#cb209-11"></a>    <span class="dt">customdata =</span> <span class="st">&quot;https://www.youtube.com/watch?v=oHg5SJYRHA0&quot;</span>,</span>
+<span id="cb209-12"><a href="client-side.html#cb209-12"></a>    <span class="dt">hovertext =</span> <span class="st">&quot;Click me!&quot;</span>,</span>
+<span id="cb209-13"><a href="client-side.html#cb209-13"></a>    <span class="dt">hoverinfo =</span> <span class="st">&quot;text&quot;</span></span>
+<span id="cb209-14"><a href="client-side.html#cb209-14"></a>  ) <span class="op">%&gt;%</span></span>
+<span id="cb209-15"><a href="client-side.html#cb209-15"></a><span class="st">  </span><span class="kw">onRender</span>(</span>
+<span id="cb209-16"><a href="client-side.html#cb209-16"></a>    <span class="st">&quot;function(el) { </span></span>
+<span id="cb209-17"><a href="client-side.html#cb209-17"></a><span class="st">       var container = document.getElementById(&#39;video&#39;);</span></span>
+<span id="cb209-18"><a href="client-side.html#cb209-18"></a><span class="st">       el.on(&#39;plotly_click&#39;, function(d) {</span></span>
+<span id="cb209-19"><a href="client-side.html#cb209-19"></a><span class="st">         var url = d.points[0].customdata;</span></span>
+<span id="cb209-20"><a href="client-side.html#cb209-20"></a><span class="st">         renderReactPlayer(container, {url: url, playing: true});</span></span>
+<span id="cb209-21"><a href="client-side.html#cb209-21"></a><span class="st">       })</span></span>
+<span id="cb209-22"><a href="client-side.html#cb209-22"></a><span class="st">    }&quot;</span></span>
+<span id="cb209-23"><a href="client-side.html#cb209-23"></a>  )</span>
+<span id="cb209-24"><a href="client-side.html#cb209-24"></a></span>
+<span id="cb209-25"><a href="client-side.html#cb209-25"></a><span class="co"># create the HTML page</span></span>
+<span id="cb209-26"><a href="client-side.html#cb209-26"></a><span class="kw">browsable</span>(<span class="kw">tagList</span>(p, video, react_player))</span></code></pre></div>
 </details>
 <div class="figure" style="text-align: center"><span id="fig:react-player"></span>
 <iframe src="https://player.vimeo.com/video/315308561?title=0&amp;byline=0&amp;portrait=0" width="100%" height="700" frameborder="0" seamless="seamless" webkitAllowFullScreen mozallowfullscreen allowFullScreen></iframe>
@@ -443,27 +443,27 @@ FIGURE 22.2: Using the <code>react-player</code> React component to render a vid
 <p>This <code>react-player</code> React library is rather unique in that it provides a standalone function, <code>renderReactPlayer()</code>, that enables rendering of a React component without loading React itself or leveraging special React syntax like JSX. It’s more likely that the React component library will explicitly require you to import both React and ReactDOM. You could use <strong>runpkg</strong> to download these React/ReactDOM as well, but the <code>html_dependency_react()</code> function from <strong>reactR</strong> package makes this even easier <span class="citation">(Inc, Russell, and Dipert <a href="#ref-reactR" role="doc-biblioref">2019</a>)</span>. Furthermore, <strong>reactR</strong> provides a <code>babel_transform()</code> function which will compile modern JS (e.g., ES6, ES2017, etc) as well as special React markup (e.g., JSX) to a version of JS that all browsers support (e.g., ES5). For a toy example, Figure <a href="client-side.html#fig:babel">22.3</a> demonstrates how one could leverage ES6, React, and React’s JSX syntax to populate a <code>&lt;h1&gt;</code> title filled with a <code>customdata</code> message in response to a <strong>plotly</strong> click event.</p>
 <details>
 <p><summary>Click to see code</summary></p>
-<div class="sourceCode" id="cb209"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb209-1"><a href="client-side.html#cb209-1"></a><span class="kw">library</span>(reactR)</span>
-<span id="cb209-2"><a href="client-side.html#cb209-2"></a></span>
-<span id="cb209-3"><a href="client-side.html#cb209-3"></a><span class="co"># a placeholder for our react &#39;app&#39;</span></span>
-<span id="cb209-4"><a href="client-side.html#cb209-4"></a>app &lt;-<span class="st"> </span>tags<span class="op">$</span><span class="kw">div</span>(<span class="dt">id =</span> <span class="st">&quot;app&quot;</span>)</span>
-<span id="cb209-5"><a href="client-side.html#cb209-5"></a></span>
-<span id="cb209-6"><a href="client-side.html#cb209-6"></a>p &lt;-<span class="st"> </span><span class="kw">plot_ly</span>(<span class="dt">x =</span> <span class="dv">1</span>, <span class="dt">y =</span> <span class="dv">1</span>) <span class="op">%&gt;%</span><span class="st"> </span></span>
-<span id="cb209-7"><a href="client-side.html#cb209-7"></a><span class="st">  </span><span class="kw">add_markers</span>(<span class="dt">customdata =</span> <span class="st">&quot;Powered by React&quot;</span>) <span class="op">%&gt;%</span></span>
-<span id="cb209-8"><a href="client-side.html#cb209-8"></a><span class="st">  </span><span class="kw">onRender</span>(<span class="kw">babel_transform</span>(</span>
-<span id="cb209-9"><a href="client-side.html#cb209-9"></a>    <span class="st">&quot;el =&gt; { </span></span>
-<span id="cb209-10"><a href="client-side.html#cb209-10"></a><span class="st">      el.on(&#39;plotly_click&#39;, d =&gt; {</span></span>
-<span id="cb209-11"><a href="client-side.html#cb209-11"></a><span class="st">        let msg = d.points[0].customdata;</span></span>
-<span id="cb209-12"><a href="client-side.html#cb209-12"></a><span class="st">        ReactDOM.render(</span></span>
-<span id="cb209-13"><a href="client-side.html#cb209-13"></a><span class="st">          &lt;h1&gt;{msg}&lt;/h1&gt;, </span></span>
-<span id="cb209-14"><a href="client-side.html#cb209-14"></a><span class="st">          document.getElementById(&#39;app&#39;)</span></span>
-<span id="cb209-15"><a href="client-side.html#cb209-15"></a><span class="st">        )</span></span>
-<span id="cb209-16"><a href="client-side.html#cb209-16"></a><span class="st">      })</span></span>
-<span id="cb209-17"><a href="client-side.html#cb209-17"></a><span class="st">    }&quot;</span></span>
-<span id="cb209-18"><a href="client-side.html#cb209-18"></a>  ))</span>
-<span id="cb209-19"><a href="client-side.html#cb209-19"></a></span>
-<span id="cb209-20"><a href="client-side.html#cb209-20"></a><span class="co"># create the HTML page</span></span>
-<span id="cb209-21"><a href="client-side.html#cb209-21"></a><span class="kw">browsable</span>(<span class="kw">tagList</span>(p, app, <span class="kw">html_dependency_react</span>()))</span></code></pre></div>
+<div class="sourceCode" id="cb210"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb210-1"><a href="client-side.html#cb210-1"></a><span class="kw">library</span>(reactR)</span>
+<span id="cb210-2"><a href="client-side.html#cb210-2"></a></span>
+<span id="cb210-3"><a href="client-side.html#cb210-3"></a><span class="co"># a placeholder for our react &#39;app&#39;</span></span>
+<span id="cb210-4"><a href="client-side.html#cb210-4"></a>app &lt;-<span class="st"> </span>tags<span class="op">$</span><span class="kw">div</span>(<span class="dt">id =</span> <span class="st">&quot;app&quot;</span>)</span>
+<span id="cb210-5"><a href="client-side.html#cb210-5"></a></span>
+<span id="cb210-6"><a href="client-side.html#cb210-6"></a>p &lt;-<span class="st"> </span><span class="kw">plot_ly</span>(<span class="dt">x =</span> <span class="dv">1</span>, <span class="dt">y =</span> <span class="dv">1</span>) <span class="op">%&gt;%</span><span class="st"> </span></span>
+<span id="cb210-7"><a href="client-side.html#cb210-7"></a><span class="st">  </span><span class="kw">add_markers</span>(<span class="dt">customdata =</span> <span class="st">&quot;Powered by React&quot;</span>) <span class="op">%&gt;%</span></span>
+<span id="cb210-8"><a href="client-side.html#cb210-8"></a><span class="st">  </span><span class="kw">onRender</span>(<span class="kw">babel_transform</span>(</span>
+<span id="cb210-9"><a href="client-side.html#cb210-9"></a>    <span class="st">&quot;el =&gt; { </span></span>
+<span id="cb210-10"><a href="client-side.html#cb210-10"></a><span class="st">      el.on(&#39;plotly_click&#39;, d =&gt; {</span></span>
+<span id="cb210-11"><a href="client-side.html#cb210-11"></a><span class="st">        let msg = d.points[0].customdata;</span></span>
+<span id="cb210-12"><a href="client-side.html#cb210-12"></a><span class="st">        ReactDOM.render(</span></span>
+<span id="cb210-13"><a href="client-side.html#cb210-13"></a><span class="st">          &lt;h1&gt;{msg}&lt;/h1&gt;, </span></span>
+<span id="cb210-14"><a href="client-side.html#cb210-14"></a><span class="st">          document.getElementById(&#39;app&#39;)</span></span>
+<span id="cb210-15"><a href="client-side.html#cb210-15"></a><span class="st">        )</span></span>
+<span id="cb210-16"><a href="client-side.html#cb210-16"></a><span class="st">      })</span></span>
+<span id="cb210-17"><a href="client-side.html#cb210-17"></a><span class="st">    }&quot;</span></span>
+<span id="cb210-18"><a href="client-side.html#cb210-18"></a>  ))</span>
+<span id="cb210-19"><a href="client-side.html#cb210-19"></a></span>
+<span id="cb210-20"><a href="client-side.html#cb210-20"></a><span class="co"># create the HTML page</span></span>
+<span id="cb210-21"><a href="client-side.html#cb210-21"></a><span class="kw">browsable</span>(<span class="kw">tagList</span>(p, app, <span class="kw">html_dependency_react</span>()))</span></code></pre></div>
 </details>
 <div class="figure" style="text-align: center"><span id="fig:babel"></span>
 <iframe src="https://player.vimeo.com/video/315309034?title=0&amp;byline=0&amp;portrait=0" width="100%" height="400" frameborder="0" seamless="seamless" webkitAllowFullScreen mozallowfullscreen allowFullScreen></iframe>
@@ -474,45 +474,45 @@ FIGURE 22.3: Using <code>babel_transform()</code> to leverage ES6, React, and JS
 <p>For a more serious example, we could leverage another React component, named <code>react-data-grid</code>, to display the data within a <strong>plotly</strong> scatterplot brush, as done in Figure <a href="client-side.html#fig:react-data-grid">22.4</a>. Again, we can use <strong>runpkg</strong> to download a bundle of <code>react-data-grid</code>, but this library doesn’t come with <code>React</code>/<code>ReactDOM</code>, so we must explicitly include it this time around. In fact, this approach of explicitly importing and calling <code>ReactDOM.render()</code> on your component is a more common approach than the custom standalone interface approach (i.e., <code>renderReactPlayer()</code>) used in Figure <a href="client-side.html#fig:react-player">22.2</a>.</p>
 <details>
 <p><summary>Click to see code</summary></p>
-<div class="sourceCode" id="cb210"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb210-1"><a href="client-side.html#cb210-1"></a>data_grid_js &lt;-<span class="st"> </span>runpkg<span class="op">::</span><span class="kw">download_files</span>(</span>
-<span id="cb210-2"><a href="client-side.html#cb210-2"></a>  <span class="st">&quot;react-data-grid&quot;</span>, </span>
-<span id="cb210-3"><a href="client-side.html#cb210-3"></a>  <span class="st">&quot;dist/react-data-grid.min.js&quot;</span></span>
-<span id="cb210-4"><a href="client-side.html#cb210-4"></a>)</span>
-<span id="cb210-5"><a href="client-side.html#cb210-5"></a></span>
-<span id="cb210-6"><a href="client-side.html#cb210-6"></a><span class="co"># the data table placeholder</span></span>
-<span id="cb210-7"><a href="client-side.html#cb210-7"></a>data_grid &lt;-<span class="st"> </span>tags<span class="op">$</span><span class="kw">div</span>(<span class="dt">id =</span> <span class="st">&quot;data-grid&quot;</span>)</span>
-<span id="cb210-8"><a href="client-side.html#cb210-8"></a></span>
-<span id="cb210-9"><a href="client-side.html#cb210-9"></a><span class="co"># upon clicking the marker, populate a video </span></span>
-<span id="cb210-10"><a href="client-side.html#cb210-10"></a><span class="co"># in the DOM element with an id of &#39;video&#39;</span></span>
-<span id="cb210-11"><a href="client-side.html#cb210-11"></a>p &lt;-<span class="st"> </span><span class="kw">plot_ly</span>(mtcars, <span class="dt">x =</span> <span class="op">~</span>wt, <span class="dt">y =</span> <span class="op">~</span>mpg) <span class="op">%&gt;%</span></span>
-<span id="cb210-12"><a href="client-side.html#cb210-12"></a><span class="st">  </span><span class="kw">add_markers</span>(<span class="dt">customdata =</span> <span class="kw">row.names</span>(mtcars)) <span class="op">%&gt;%</span><span class="st"> </span></span>
-<span id="cb210-13"><a href="client-side.html#cb210-13"></a><span class="st">  </span><span class="kw">layout</span>(<span class="dt">dragmode =</span> <span class="st">&quot;select&quot;</span>) <span class="op">%&gt;%</span></span>
-<span id="cb210-14"><a href="client-side.html#cb210-14"></a><span class="st">  </span><span class="kw">onRender</span>(<span class="kw">babel_transform</span>(   </span>
-<span id="cb210-15"><a href="client-side.html#cb210-15"></a>    <span class="st">&quot;el =&gt; {</span></span>
-<span id="cb210-16"><a href="client-side.html#cb210-16"></a><span class="st">       var container = document.getElementById(&#39;data-grid&#39;);</span></span>
-<span id="cb210-17"><a href="client-side.html#cb210-17"></a><span class="st">       var columns = [</span></span>
-<span id="cb210-18"><a href="client-side.html#cb210-18"></a><span class="st">         {key: &#39;x&#39;, name: &#39;Weight&#39;}, </span></span>
-<span id="cb210-19"><a href="client-side.html#cb210-19"></a><span class="st">         {key: &#39;y&#39;, name: &#39;MPG&#39;}, </span></span>
-<span id="cb210-20"><a href="client-side.html#cb210-20"></a><span class="st">         {key: &#39;customdata&#39;, name: &#39;Model&#39;}</span></span>
-<span id="cb210-21"><a href="client-side.html#cb210-21"></a><span class="st">        ];</span></span>
-<span id="cb210-22"><a href="client-side.html#cb210-22"></a><span class="st">       el.on(&#39;plotly_selecting&#39;, d =&gt; {</span></span>
-<span id="cb210-23"><a href="client-side.html#cb210-23"></a><span class="st">          if (d.points) {</span></span>
-<span id="cb210-24"><a href="client-side.html#cb210-24"></a><span class="st">            var grid = &lt;ReactDataGrid </span></span>
-<span id="cb210-25"><a href="client-side.html#cb210-25"></a><span class="st">              columns={columns} </span></span>
-<span id="cb210-26"><a href="client-side.html#cb210-26"></a><span class="st">              rowGetter={i =&gt; d.points[i]} </span></span>
-<span id="cb210-27"><a href="client-side.html#cb210-27"></a><span class="st">              rowsCount={d.points.length} </span></span>
-<span id="cb210-28"><a href="client-side.html#cb210-28"></a><span class="st">            /&gt;;</span></span>
-<span id="cb210-29"><a href="client-side.html#cb210-29"></a><span class="st">            ReactDOM.render(grid, container);</span></span>
-<span id="cb210-30"><a href="client-side.html#cb210-30"></a><span class="st">          }</span></span>
-<span id="cb210-31"><a href="client-side.html#cb210-31"></a><span class="st">        });</span></span>
-<span id="cb210-32"><a href="client-side.html#cb210-32"></a><span class="st">        el.on(&#39;plotly_deselect&#39;, d =&gt; { </span></span>
-<span id="cb210-33"><a href="client-side.html#cb210-33"></a><span class="st">          ReactDOM.render(null, container); </span></span>
-<span id="cb210-34"><a href="client-side.html#cb210-34"></a><span class="st">        });</span></span>
-<span id="cb210-35"><a href="client-side.html#cb210-35"></a><span class="st">     }&quot;</span></span>
-<span id="cb210-36"><a href="client-side.html#cb210-36"></a>  ))</span>
-<span id="cb210-37"><a href="client-side.html#cb210-37"></a></span>
-<span id="cb210-38"><a href="client-side.html#cb210-38"></a><span class="co"># create the HTML page</span></span>
-<span id="cb210-39"><a href="client-side.html#cb210-39"></a><span class="kw">browsable</span>(<span class="kw">tagList</span>(p, data_grid, <span class="kw">html_dependency_react</span>(), data_grid_js))</span></code></pre></div>
+<div class="sourceCode" id="cb211"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb211-1"><a href="client-side.html#cb211-1"></a>data_grid_js &lt;-<span class="st"> </span>runpkg<span class="op">::</span><span class="kw">download_files</span>(</span>
+<span id="cb211-2"><a href="client-side.html#cb211-2"></a>  <span class="st">&quot;react-data-grid&quot;</span>, </span>
+<span id="cb211-3"><a href="client-side.html#cb211-3"></a>  <span class="st">&quot;dist/react-data-grid.min.js&quot;</span></span>
+<span id="cb211-4"><a href="client-side.html#cb211-4"></a>)</span>
+<span id="cb211-5"><a href="client-side.html#cb211-5"></a></span>
+<span id="cb211-6"><a href="client-side.html#cb211-6"></a><span class="co"># the data table placeholder</span></span>
+<span id="cb211-7"><a href="client-side.html#cb211-7"></a>data_grid &lt;-<span class="st"> </span>tags<span class="op">$</span><span class="kw">div</span>(<span class="dt">id =</span> <span class="st">&quot;data-grid&quot;</span>)</span>
+<span id="cb211-8"><a href="client-side.html#cb211-8"></a></span>
+<span id="cb211-9"><a href="client-side.html#cb211-9"></a><span class="co"># upon clicking the marker, populate a video </span></span>
+<span id="cb211-10"><a href="client-side.html#cb211-10"></a><span class="co"># in the DOM element with an id of &#39;video&#39;</span></span>
+<span id="cb211-11"><a href="client-side.html#cb211-11"></a>p &lt;-<span class="st"> </span><span class="kw">plot_ly</span>(mtcars, <span class="dt">x =</span> <span class="op">~</span>wt, <span class="dt">y =</span> <span class="op">~</span>mpg) <span class="op">%&gt;%</span></span>
+<span id="cb211-12"><a href="client-side.html#cb211-12"></a><span class="st">  </span><span class="kw">add_markers</span>(<span class="dt">customdata =</span> <span class="kw">row.names</span>(mtcars)) <span class="op">%&gt;%</span><span class="st"> </span></span>
+<span id="cb211-13"><a href="client-side.html#cb211-13"></a><span class="st">  </span><span class="kw">layout</span>(<span class="dt">dragmode =</span> <span class="st">&quot;select&quot;</span>) <span class="op">%&gt;%</span></span>
+<span id="cb211-14"><a href="client-side.html#cb211-14"></a><span class="st">  </span><span class="kw">onRender</span>(<span class="kw">babel_transform</span>(   </span>
+<span id="cb211-15"><a href="client-side.html#cb211-15"></a>    <span class="st">&quot;el =&gt; {</span></span>
+<span id="cb211-16"><a href="client-side.html#cb211-16"></a><span class="st">       var container = document.getElementById(&#39;data-grid&#39;);</span></span>
+<span id="cb211-17"><a href="client-side.html#cb211-17"></a><span class="st">       var columns = [</span></span>
+<span id="cb211-18"><a href="client-side.html#cb211-18"></a><span class="st">         {key: &#39;x&#39;, name: &#39;Weight&#39;}, </span></span>
+<span id="cb211-19"><a href="client-side.html#cb211-19"></a><span class="st">         {key: &#39;y&#39;, name: &#39;MPG&#39;}, </span></span>
+<span id="cb211-20"><a href="client-side.html#cb211-20"></a><span class="st">         {key: &#39;customdata&#39;, name: &#39;Model&#39;}</span></span>
+<span id="cb211-21"><a href="client-side.html#cb211-21"></a><span class="st">        ];</span></span>
+<span id="cb211-22"><a href="client-side.html#cb211-22"></a><span class="st">       el.on(&#39;plotly_selecting&#39;, d =&gt; {</span></span>
+<span id="cb211-23"><a href="client-side.html#cb211-23"></a><span class="st">          if (d.points) {</span></span>
+<span id="cb211-24"><a href="client-side.html#cb211-24"></a><span class="st">            var grid = &lt;ReactDataGrid </span></span>
+<span id="cb211-25"><a href="client-side.html#cb211-25"></a><span class="st">              columns={columns} </span></span>
+<span id="cb211-26"><a href="client-side.html#cb211-26"></a><span class="st">              rowGetter={i =&gt; d.points[i]} </span></span>
+<span id="cb211-27"><a href="client-side.html#cb211-27"></a><span class="st">              rowsCount={d.points.length} </span></span>
+<span id="cb211-28"><a href="client-side.html#cb211-28"></a><span class="st">            /&gt;;</span></span>
+<span id="cb211-29"><a href="client-side.html#cb211-29"></a><span class="st">            ReactDOM.render(grid, container);</span></span>
+<span id="cb211-30"><a href="client-side.html#cb211-30"></a><span class="st">          }</span></span>
+<span id="cb211-31"><a href="client-side.html#cb211-31"></a><span class="st">        });</span></span>
+<span id="cb211-32"><a href="client-side.html#cb211-32"></a><span class="st">        el.on(&#39;plotly_deselect&#39;, d =&gt; { </span></span>
+<span id="cb211-33"><a href="client-side.html#cb211-33"></a><span class="st">          ReactDOM.render(null, container); </span></span>
+<span id="cb211-34"><a href="client-side.html#cb211-34"></a><span class="st">        });</span></span>
+<span id="cb211-35"><a href="client-side.html#cb211-35"></a><span class="st">     }&quot;</span></span>
+<span id="cb211-36"><a href="client-side.html#cb211-36"></a>  ))</span>
+<span id="cb211-37"><a href="client-side.html#cb211-37"></a></span>
+<span id="cb211-38"><a href="client-side.html#cb211-38"></a><span class="co"># create the HTML page</span></span>
+<span id="cb211-39"><a href="client-side.html#cb211-39"></a><span class="kw">browsable</span>(<span class="kw">tagList</span>(p, data_grid, <span class="kw">html_dependency_react</span>(), data_grid_js))</span></code></pre></div>
 </details>
 <div class="figure" style="text-align: center"><span id="fig:react-data-grid"></span>
 <iframe src="https://player.vimeo.com/video/325933744?title=0&amp;byline=0&amp;portrait=0" width="100%" height="400" frameborder="0" seamless="seamless" webkitAllowFullScreen mozallowfullscreen allowFullScreen></iframe>
