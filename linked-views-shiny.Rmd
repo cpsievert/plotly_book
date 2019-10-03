@@ -14,6 +14,9 @@ Before linking views with **plotly** inside **shiny**, let's first talk about ho
 
 ### Your first shiny app
 
+\index{plotlyOutput()@\texttt{plotlyOutput()}|seealso {renderPlotly()}}
+\indexc{renderPlotly()}
+
 The most common **plotly**+**shiny** pattern uses a **shiny** input to control a **plotly** output. Figure \@ref(fig:shiny-intro) gives a simple example of using **shiny**'s `selectizeInput()` function to create a dropdown that controls a **plotly** graph. This example, as well as every other **shiny** app, has two main parts:
 
 1. The *user interface*, `ui`, defines how inputs and output widgets are displayed on the page. The `fluidPage()` function offers a nice and quick way get a grid-based responsive layout^[Read more about **shiny**'s responsive layout here https://shiny.rstudio.com/articles/layout-guide.html], but it's also worth noting the UI is completely customizable^[Read more about using custom HTML templates here https://shiny.rstudio.com/articles/html-ui.html], and packages such as **shinydashboard** make it easy to leverage more sophisticated layout frameworks [@shinydashboard]. 
@@ -71,6 +74,8 @@ Going forward our focus is to link multiple graphs in **shiny** through direct m
 
 ### Hiding and redrawing on resize
 
+\index{ggplotly()@\texttt{ggplotly()}!Shiny resize@Redraw on resize with \texttt{renderPlotly()}}
+
 The `renderPlotly()` function renders anything that the `plotly_build()` function understands, including `plot_ly()`, `ggplotly()`, and **ggplot2** objects.^[The `plotly_build()` function is an S3 generic, so you can list all relevant the methods with `methods(plotly_build)`, and write you're own method to translate a custom object to **plotly**.] It also renders `NULL` as an empty HTML div, which is handy for certain cases where it doesn't make sense to render a graph. Figure \@ref(fig:shiny-ggplotly) leverages these features to render an empty div while `selectizeInput()`'s placeholder is shown, but then render a **plotly** graph via `ggplotly()` once cities have been selected. Figure \@ref(fig:shiny-ggplotly) also shows how to make the **plotly** output depend on the size of the container that holds the **plotly** graph. By default, when a browser is resized, the graph size is changed purely client-side, but this reactive expression will re-execute when the browser window is resized. Due to technical reasons this can improve `ggplotly()` resizing behavior^[In order to convert **grid** grobs that are relatively sized, the `ggplotly()` function uses the size of the current graphics device at print-time, meaning that resizing the browser window without a hook back to R can create wonky sizes.], but should be used with caution when handling large data and long render times.
 
 ```{r eval = FALSE, summary = "Click to show/hide the code"}
@@ -120,11 +125,21 @@ Once a reactive expression generates a value, it needs to know where on the user
 
 Section \@ref(fig:shiny-intro) covered how to render **shiny** output widgets (e.g., `plotlyOutput()`) that depend on a input widget, but what about having an output act like an input to another output? For example, say we'd like to dynamically generate a bar chart (i.e., an output) based on a point clicked on a scatter-plot (i.e., an input event tied to an output widget). In addition to **shiny**'s static graph and image rendering functions (e.g., `plotOutput()`/`imageOutput()`), there are a handful of other R packages that expose user interaction with "output" widget(s) as input value(s). @leaflet-shiny and @DT-shiny describe the interface for the **leaflet** and **DT** packages. This section outlines the interface for `plotlyOutput()`. This sort of functionality plays a vital role in linking of views through direct manipulation, similar to what we've already seen in Section \@ref(graphical-queries), but having access to **plotly** events on a **shiny** server allows for much more flexibility than linking views purely client-side.
 
+\index{event\_data()@\texttt{event\_data()}
+\index{event\_data()@\texttt{event\_data()}!customdata@\texttt{customdata}}
+
 The `event_data()` function is the most straight-forward way to access a **plotly** input events in **shiny**. Although `event_data()` is function, it references and returns a **shiny** input value, so `event_data()` needs to be used inside a reactive context. Most of these available events are data-specific traces (e.g., `"plotly_hover"`, `"plotly_click"`, `"plotly_selected"`, etc), but there are also some that are layout-specific (e.g., `"plotly_relayout"`). Most plotly.js events^[These events are documented at https://plot.ly/javascript/plotlyjs-events/] are accessible through this interface -- for a complete list see the `help(event_data)` documentation page.
 
 Numerous Figures in the following sections show how to access common **plotly** events in **shiny** and do something with the result. When using these events to inform another view of the data, it's often necessary to know what portion of data was queried in the event (i.e., the `x`/`y` positions alone may not be enough to uniquely identify the information of interest). For this reason, it's often a good idea to supply a `key` (and/or `customdata`) attribute, so that you can map the event data back to the original data. The `key` attribute is only supported in **shiny**, but `customdata` is officially supported by plotly.js, and thus can also be used to attach meta-information to event -- see Section \@ref(javascript) for more details.
 
 ### Dragging events
+
+\index{event\_data()@\texttt{event\_data()}!plotly\_click}
+\index{event\_data()@\texttt{event\_data()}!plotly\_hover}
+\index{event\_data()@\texttt{event\_data()}!plotly\_selecting}
+\index{event\_data()@\texttt{event\_data()}!plotly\_selected}
+\index{event\_data()@\texttt{event\_data()}!plotly\_brushing}
+\index{event\_data()@\texttt{event\_data()}!plotly\_brushed}
 
 There are currently four different modes for mouse click+drag behavior (i.e., `dragmode`) in plotly.js: zoom, pan, rectangular selection, and lasso selection. This mode may be changed interactively via the modebar that appears above a **plotly** graph, but the default mode can also be set from the command-line. The default `dragmode` in Figure \@ref(fig:plotlyEvents) is set to `'select'`, so that dragging draws a rectangular box which highlights markers. When in this mode, or in the lasso selection mode, information about the drag event can be accessed in four different ways: `"plotly_selecting"`, `"plotly_selected"`, `"plotly_brushing"`, and `"plotly_brushed"`. Both the `"plotly_selecting"` and `"plotly_selected"` events emit information about trace(s) appearing within the interior of the brush -- the only difference is that `"plotly_selecting"` fires repeatedly *during* drag events, whereas `"plotly_selected"` fires *after* drag events (i.e., after the mouse has been released). The semantics behind `"plotly_brushing"` and `"plotly_brushed"` are similar, but these emit the x/y limits of the selection brush. As for the other two dragging modes (zoom and pan), since they modify the range of the x/y axes, information about these events can be accessed through `"plotly_relayout"`. Sections \@ref(proxies) and \@ref(advanced-applications) both have advanced applications of these dragging events.
 
@@ -138,6 +153,8 @@ include_vimeo("327625843", height = 500)
 
 ### 3D events
 
+\index{event\_data()@\texttt{event\_data()}!plotly\_relayout}
+
 Drag selection events (i.e., `"plotly_selecting"`) are currently only available for 2D charts, but other common events are generally supported for any type of graph, including 3D charts. Figure \@ref(fig:3Devents) accesses various events in 3D including: `"plotly_hover"`, `"plotly_click"`, `"plotly_legendclick"`, `"plotly_legenddoubleclick"`, and `"plotly_relayout"`. The data emitted via `"plotly_hover"` and `"plotly_click"` is structured similarly to data emitted from `"plotly_selecting"`/`"plotly_selected"`. Figure \@ref(fig:3Devents) also demonstrates how one can react to particular components of a conflated event like `"plotly_relayout"`. That is, `"plotly_relayout"` will fire whenever _any_ part of the layout has changed, so if we want to trigger behavior if and only if there are changes to the camera eye, one could first check if the information emitted contains information about the camera eye.
 
 ```r
@@ -150,8 +167,10 @@ include_vimeo("327600560", height = 500)
 
 ### Edit events
 
-A little known fact about **plotly** is that you can directly manipulate annotations, title, shapes (e.g., circle, lines, rectangles), legends, and more by simply adding `config(p, editable = TRUE)` to a plot `p`. Moreover, since these are all layout components, we can access and respond to these 'edit events' by listening to the `"plotly_relayout"` events. Figure \@ref(fig:shiny-edit-annotations) demonstrates how display access information about changes in annotation positioning and content.
+\index{Editable charts!Annotations}
+\index{event\_data()@\texttt{event\_data()}!plotly\_relayout}
 
+A little known fact about **plotly** is that you can directly manipulate annotations, title, shapes (e.g., circle, lines, rectangles), legends, and more by simply adding `config(p, editable = TRUE)` to a plot `p`. Moreover, since these are all layout components, we can access and respond to these 'edit events' by listening to the `"plotly_relayout"` events. Figure \@ref(fig:shiny-edit-annotations) demonstrates how display access information about changes in annotation positioning and content.
 
 ```{r eval = FALSE, summary = "Click to show/hide the code"}
 library(shiny)
@@ -200,6 +219,10 @@ include_vimeo("307597631")
 ```
 
 Figure \@ref(fig:shiny-drag-circle) demonstrates directly manipulating a circle shape and accessing the new positions of the circle. In contrast to Figure \@ref(fig:shiny-edit-annotations), which made everything (e.g. the plot and axis titles) editable via `config(p, editable = TRUE)`, note how Figure \@ref(fig:shiny-drag-circle) makes use of the `edits` argument to make only the shapes editable. 
+
+\index{Editable charts!Circles}
+\index{event\_data()@\texttt{event\_data()}!plotly\_relayout}
+\index{layout()@\texttt{layout()}!shapes@\texttt{shapes}!circle@\texttt{circle}}
 
 ```{r eval = FALSE, summary = "Click to show/hide the code"}
 library(shiny)
@@ -255,6 +278,9 @@ include_vimeo("318338029")
 
 Figure \@ref(fig:shiny-drag-line) uses an editable vertical line and the `plotly_relayout` event data to 'snap' the line to the closest point in a sequence of `x` values. It also places a marker on the intersection between the vertical line shape and the line chart of `y` values. Notice how, by accessing `event_data()` in this way (i.e., the source and target view of the event is the same), the chart is actually fully redrawn every time the line shape moves. If performance were an issue (i.e., we were dealing with lots of lines), this type of interaction likely won't be very responsive. In that case, you can use `event_data()` to trigger side-effects (i.e., partially modify the plot) which is covered in \@ref(proxies).
 
+\index{Editable charts!Lines}
+\index{event\_data()@\texttt{event\_data()}!plotly\_relayout}
+
 ```r
 plotly_example("shiny", "drag_lines")
 ```
@@ -264,6 +290,9 @@ include_vimeo("307597984")
 ```
 
 ### Relayout vs restyle events
+
+\index{Chart types!Parallel coordinates}
+\index{event\_data()@\texttt{event\_data()}!plotly\_restyle}
 
 Remember every **graph** has two critical components: data (i.e., traces) and layout. Similar to how `"plotly_relayout"` reports partial modifications to the layout, the `"plotly_restyle"` event reports partial modification to traces. Compared to `"plotly_relayout"`, there aren't very many native direct manipulation events that would trigger a `"plotly_restyle"` event. For example, zoom/pan events, camera changes, editing annotations/shapes/etc all trigger a `"plotly_relayout"` event, but not many traces allow you to directly manipulate their properties. One notable exception is the `"parcoords"` trace type which has native support for brushing lines along an axis dimension(s). As Figure \@ref(fig:shiny-parcoords) demonstrates, these brush events emit a `"plotly_restyle"` event with the range(s) of the highlighted dimension.
 
@@ -323,6 +352,8 @@ include_vimeo("307598128")
 
 ### Scoping events {#scoping-events}
 
+\index{event\_data()@\texttt{event\_data()}!Scoping events}
+
 This section leverages the interface for accessing **plotly** input events introduced in Section \@ref(shiny-plotly-inputs) to inform other data views about those events. When managing multiple views that communicate with one another, you'll need to be aware of which views are a *source* of interaction and which are a *target* (a view can be both, at once!). The `event_data()` function provides a `source` argument to help refine which view(s) serve as the source of an event. The `source` argument takes a string ID, and when that ID matches the `source` of a `plot_ly()`/`ggplotly()` graph, then the `event_data()` is "scoped" to that view. To get a better idea of how this works, consider Figure \@ref(fig:shiny-corrplot)
 
 Figure \@ref(fig:shiny-corrplot) allows one to click on a cell of correlation heatmap to generate a scatterplot of the two corresponding variables -- allowing for a closer look at their relationship. In the case of a heatmap, the event data tied to a `plotly_click` event contains the relevant `x` and `y` categories (e.g., the names of the data variables of interest) and the `z` value (e.g., the pearson correlation between those variables). In order to obtain click data from the heatmap, and only the heatmap, it's important that the `source` argument of the `event_data()` function matches the `source` argument of `plot_ly()`. Otherwise, if the `source` argument was not specified `event_data("plotly_click")` would also fire if and when the user clicked on the scatterplot, likely causing an error.
@@ -381,6 +412,8 @@ include_vimeo("307597728")
 
 ### Event priority
 
+\index{event\_data()@\texttt{event\_data()}!Event priority}
+
 By default, `event_data()` only invalidates a reactive expression when the value of it's corresponding **shiny** input changes. Sometimes, you might want a particular event, say `"plotly_click"`, to _always_ invalidate a reactive expression. Figure \@ref(fig:event-priority) shows the difference between this default behavior versus setting `priority = 'event'`. By default, repeatedly clicking the same marker won't update the clock, but when setting the `priority` argument to event, repeatedly clicking the same marker will update the clock (i.e., it will invalidate the reactive expression).
 
 ```{r eval = FALSE, summary = "Click to show/hide the code"}
@@ -422,6 +455,8 @@ There are numerous events accessible through `event_data()` that don't contain a
 
 ### Handling discrete axes
 
+\index{event\_data()@\texttt{event\_data()}!customdata@\texttt{customdata}}
+
 For events that are trace-specific (e.g. `"plotly_click"`, `"plotly_hover"`, `"plotly_selecting"`, etc), the positional data (e.g., `x`/`y`/`z`) is always numeric, so if you have a plot with discrete axes, you might want to know how to map that numeric value back to the relevant input data category. In some cases, you can avoid the problem by assigning the discrete variable of interest to the `key`/`customdata` attribute, but you might also want to reserve that attribute to encode other information, like a `fill` aesthetic. Figure \@ref(fig:discrete-event-data) shows how to map the numerical `x` value emitted in a click event back to the discrete variable that it corresponds to (`mpg$class`) and leverages `customdata` to encode the `fill` mapping allowing us to display the data records a clicked bar corresponds to. In both `ggplotly()` and `plot_ly()`, categories associated with a character vector are always alphabetized, so if you `sort()` the `unique()` character values, then the vector indices will match the `x` event data values. On the other hand, if `x` were a factor variable, the `x` event data would match the ordering of the `levels()` attribute.
 
 ```{r eval = FALSE, summary = "Click to show/hide the code"}
@@ -460,6 +495,8 @@ include_vimeo("307598771")
 ```
 
 ### Accumulating and managing event data {#reactive-vals}
+
+\index{event\_data()@\texttt{event\_data()}!Manage state@Manage state with \texttt{reactiveVal()}}
 
 Currently all the events accessible through `event_data()` are *transient*. This means that, given an event like `"plotly_click"`, the value of `event_data()` will only reflect the most recent click information. However, in order to implement complex linked graphics with *persistent* qualities, like Figure \@ref(fig:txmissing-modes) or \@ref(fig:shiny-crossfilter), you'll need someway to accumulate and manage event data. The general mechanism that **shiny** provides to achieve this kind of task is `reactiveVal()` (or, the plural version, `reactiveValues()`), which essentially provides a way to create and manage input values entirely server-side.
 
@@ -507,10 +544,14 @@ We won't directly cover these topics, but it's worth noting that all these tools
 
 ### Partial plotly updates {#proxies}
 
+\index{plotlyProxy()@\texttt{plotlyProxy()}|seealso {plotlyProxyInvoke()}}
+\index{plotlyProxyInvoke()@\texttt{plotlyProxyInvoke()}}
+
 By default, when `renderPlotly()` renders a new **plotly** graph it's essentially equivalent to executing a block of R code from your R prompt and generating a new **plotly** graph from scratch. That means, not only does the R code need to re-execute to generate a new R object, but it also has to re-serialize that object as JSON, and your browser has to re-render the graph from the new JSON object (more on this in Section \@ref(performance)). In cases where your **plotly** graph does not need to serialize a lot data and/or render lots of graphical elements, as in Figure \@ref(fig:shiny-intro), you can likely perform a full redraw without noticeable glitches, especially if you use canvas-based rendering rather than SVG (i.e., `toWebGL()`). Generally speaking, you should try very hard to make your app responsive before adopting partial **plotly** updates in **shiny**. It makes your app logic easy to reason about because you don't have to worry about maintaining the state of the graph, but sometimes you have no other choice.
 
 On initial page load, **plotly** graphs must be drawn from stratch, but when responding to certain user events, often times a partial update to an existing plot is sufficient and more responsive. Take, for instance, the difference between Figure \@ref(fig:shiny-scatterplot), which does a full redraw on every update, and Figure \@ref(fig:shiny-scatterplot-performant), which does a partial update after initial load. Both of these **shiny** apps display a scatterplot with 100,000 points and allow a user to overlay a fitted line through a checkbox. The key difference is that in Figure \@ref(fig:shiny-scatterplot), the **plotly** graph is regenerated from scratch everytime the value of `input$smooth` changes, whereas in Figure \@ref(fig:shiny-scatterplot-performant) only the fitted line is added/removed from the **plotly**. Since the main bottleneck lies in redrawing the points, Figure \@ref(fig:shiny-scatterplot-performant) can add/remove the fitted line is a much more responsive fashion.
 
+\index{toWebGL()@\texttt{toWebGL()}!plot\_ly()@\texttt{plot\_ly()}}
 
 ```{r eval = FALSE, summary = "Click to show/hide the code"}
 library(shiny)
@@ -564,6 +605,9 @@ include_vimeo("327620506")
 
 In terms of the implementation behind Figure \@ref(fig:shiny-scatterplot) and \@ref(fig:shiny-scatterplot-performant), the only difference resides in the `server` definition. In Figure \@ref(fig:shiny-scatterplot-performant), the `renderPlotly()` statement no longer has a dependency on input values, so that code is only executed once (on page load) to generate the initial view of the scatterplot. The logic behind adding and removing the fitted line is handled through an `observe()` block -- this reactive expression watches the `input$smooth` input value and modifies the `output$scatterplot` widget whenever it changes. To trigger a modification of a **plotly** output widget, you must create a proxy object with `plotlyProxy()` that references the relevant output ID. Once a proxy object is created, you can invoke any sequence of [plotly.js function(s)](https://plot.ly/javascript/plotlyjs-function-reference/#plotlymaketemplate) on it with `plotlyProxyInvoke()`. Invoking a method with the correct arguments can be tricky and requires knowledge of plotly.js because `plotlyProxyInvoke()` will send these arguments directly to the plotly.js method and therefore doesn't support the same 'high-level' semantics that `plot_ly()` does.
 
+\index{plotlyProxyInvoke()@\texttt{plotlyProxyInvoke()}!addTraces@\texttt{addTraces}}
+\index{plotlyProxyInvoke()@\texttt{plotlyProxyInvoke()}!deleteTraces@\texttt{deleteTraces}}
+
 
 ```{r eval = FALSE, summary = "Click to show/hide the code"}
 server <- function(input, output, session) {
@@ -612,6 +656,8 @@ The last section explains why you may want to leverage partial **plotly** update
 
 #### Modifying traces {#restyle}
 
+\index{plotlyProxyInvoke()@\texttt{plotlyProxyInvoke()}!restyle@\texttt{restyle}}
+
 All **plotly** figures have two main components: traces (i.e., mapping from data to visuals) and layout. The plotly.js function `Plotly.restyle()` is for modifying any existing traces. In addition to being a performant way to modify existing data and/or visual properties, it also has the added benefit of not affecting the current layout of the graph. Notice how, in Figure \@ref(fig:shiny-partial-restyle) for example, when the size of the marker/path changes, it doesn't change the camera's view of the 3D plot that the user altered after initial draw. If these input widgets triggered a full redraw of the plot, the camera would be reset to it's initial state.
 
 ```r
@@ -627,6 +673,8 @@ One un-intuitive thing about `Plotly.restyle()` is that it fully replaces object
 
 #### Updating the layout {#relayout}
 
+\index{plotlyProxyInvoke()@\texttt{plotlyProxyInvoke()}!relayout@\texttt{relayout}}
+
 All **plotly** figures have two main components: traces (i.e., mapping from data to visuals) and layout. The plotly.js function `Plotly.relayout()` modifies the layout component, so it can control a wide variety of things such titles, axis definitions, annotations, shapes, and many other things. It can even be used to change the basemap layer of a Mapbox-powered layout, as in Figure \@ref(fig:shiny-mapbox-relayout). Note how this example uses `schema()` to grab all the pre-packaged basemap layers and create a dropdown of those options, but you can also provide a URL to a [custom basemap style](https://www.mapbox.com/help/create-a-custom-style/).
 
 ```r
@@ -639,6 +687,8 @@ include_vimeo("327603568")
 
 Figure \@ref(fig:shiny-rangeslider-relayout) demonstrates a clever use of `Plotly.relayout()` to set the y-axis range in response to changes in the x-axis range.
 
+\indexc{rangeslider()}
+
 ```r
 plotly_example("shiny", "proxy_relayout")
 ```
@@ -649,6 +699,8 @@ include_vimeo("307598689")
 
 
 #### Streaming data {#streaming}
+
+\index{plotlyProxyInvoke()@\texttt{plotlyProxyInvoke()}!extendTraces@\texttt{extendTraces}}
 
 At this point, we've seen how to add/remove traces (e.g., add/remove a fitted line, as in Figure \@ref(fig:shiny-scatterplot-performant)), and how to edit specific trace properties (e.g., change marker size or path width, as in Figure \@ref(fig:shiny-partial-restyle)), but what about adding more data to existing trace(s)? This is a job for the plotly.js function `Plotly.extendTraces()` and/or `Plotly.prependTraces()` which can used to efficiently 'stream' data into an existing plot, as done in Figure \@ref(fig:shiny-stream).
 
@@ -674,6 +726,11 @@ This section combines concepts from prior sections in linking views with shiny a
 ### Drill-down
 
 Figure \@ref(fig:shiny-drill-down-pie) displays sales broken down by business category (e.g, Furniture, Office Supplies, Technology) in a pie chart. It allows the user to click on a slice of the pie to 'drill-down' into sub-categories of the chosen category. In terms of the implementation, the key aspect here is to maintain the state of the currently selected category via a `reactiveVal()` (see more in \@ref(reactive-vals)) and update that value when either a category is clicked or the "Back" button is pressed. This may seem like a lot of code to get a basic drill-down pie chart, but the core reactivity concepts in this implementation translate well to more complex drill-down applications.
+
+\index{add\_trace()@\texttt{add\_trace()}!add\_pie()@\texttt{add\_pie()}}
+\index{event\_data()@\texttt{event\_data()}!plotly\_click}
+\index{event\_data()@\texttt{event\_data()}!customdata@\texttt{customdata}}
+
 
 ```{r eval = FALSE, summary = "Click to show/hide the code"}
 library(shiny)
@@ -737,6 +794,8 @@ include_vimeo("328763167")
 ```
 
 A basic drill-down like Figure \@ref(fig:shiny-drill-down-pie) is somewhat useful on its own, but it becomes much more useful when linked to multiple views of the data. Figure \@ref(fig:shiny-drill-down-bar-time) improves on Figure \@ref(fig:shiny-drill-down-pie) to show sales over time by the category or sub-category (if a category is currently chosen). Note that the key aspect of implementation remains the same (i.e., maintaining state via `reactiveValue()`) -- the main difference is that the time series view now also responds to changes in the currently selected category. That is, both views show sales by category when no category is selected, and sales by sub-category when a category is selected.
+
+\index{event\_data()@\texttt{event\_data()}!plotly\_click}
 
 ```{r eval = FALSE, summary = "Click to show/hide the code"}
 library(shiny)
@@ -815,6 +874,8 @@ include_vimeo("328768848")
 ```
 
 Figures \@ref(fig:shiny-drill-down-pie) and \@ref(fig:shiny-drill-down-bar-time) demonstrate one level of drill-down...what about multiple levels? Introducing multiple levels adds complexity not only the implementation, but also the user experience. Especially in a drill-down approach where the _same view_ is being filtered, it can be difficult for the user to remember how they got to a particular view. Figure \@ref(fig:shiny-drill-down-bar-time-history) demonstrates how we could extend Figure \@ref(fig:shiny-drill-down-bar-time) to implement yet another level of drilling down (i.e., category -> sub-category -> product IDs) as well as populate a `selectInput()` dropdown for each active drill-down category. Not only does this help the user to remember how they got to the particular view, but it also provides the ability to easily modify the sequence of drill-down events. In terms of implementation, the main idea is the very similar to before -- we still store and update the state of each 'drill-down' in it's own reactive value, but now when a 'parent' category changes (e.g., `category`) it should invalidate (i.e., clear) any currently selected 'child' categories (e.g., `sub_category`).
+
+\index{event\_data()@\texttt{event\_data()}!plotly\_click}
 
 ```{r, eval = FALSE, summary = "Click to show/hide the code"}
 library(shiny)
@@ -985,6 +1046,8 @@ include_vimeo("328770954")
 Another way to make it easier for the user to recall their drill-down sequence is to generate a *new* view based on the selection. Figure \@ref(fig:shiny-drill-down) allows one to click on a category (e.g., Furniture) to generate another bar chart of sales broken down by that category's sub-categories (e.g., Bookcases, Chairs, etc). From there, a sub-category may be clicked to populate a time series of sales for that sub-category. Finally, by clicking on the time series, a table of sales from that date are displayed.
 
 Similar to Figure \@ref(fig:shiny-drill-down-bar-time-history), changes at a given category level causes invalidation of all child categories (in this case, all downstream views are cleared). For example, note how in Figure \@ref(fig:shiny-drill-down), a click of a category clears the sub-category and order-date. Moreover, a change in `sub_category` clears the `order_date`, but effect the current `category`.
+
+\index{event\_data()@\texttt{event\_data()}!plotly\_click}
 
 ```{r eval = FALSE, summary = "Click to show/hide the code"}
 library(shiny)
@@ -1249,6 +1312,8 @@ include_vimeo("327622610")
 ```
 
 ### A draggable brush {#drag-brush}
+
+\index{Editable charts!Rectangles}
 
 A *draggable* linked brush is great for conditioning via a moving window. For example, in a cross-filtering example like Figure \@ref(fig:shiny-crossfilter), it would be nice to condition on a certain hour of day, then drag that hour interval along the axis to explore how the hourly distribution changes throughout the day. At the time of writing, plotly.js does not support a draggable brush, but we could implement one with a clever use of a editable rectangle shape. Figure \@ref(fig:shiny-drag-brush) demonstrates this idea in a **shiny** application by drawing a rectangle shape that mimics the plotly.js brush, then uses the `"plotly_relayout"` event to determine the limits of the brush (instead of the `"plotly_brushed"` or `"plotly_brushing"`).
 

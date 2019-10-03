@@ -53,6 +53,9 @@ include_vimeo("307580944")
 
 When using a statistical trace type with graphical queries, it's often desirable to set the querying variable as the row index. That's because, with a statistical trace, numerous data values are attached to each graphical mark; and in that case, it's most intuitive if each value queries just one observation. Figure \@ref(fig:mpg-linked-bars) gives a simple example of linking a (dynamic) bar chart with a scatterplot in this way to allow us to query interesting regions of the data space defined by engine displacement (`disp`), miles per gallon highway (`hwy`), and the class of car (`class`). Notice how selections can derive from either view, and since we've specified `"plotly_selected"` as the `on` event, either rectangular or lasso selections can be used to trigger the query.
 
+\index{layout()@\texttt{layout()}!barmode@\texttt{barmode}!overlay}
+\index{layout()@\texttt{layout()}!dragmode@\texttt{dragmode}!lasso}
+
 ```{r, eval = FALSE}
 d <- highlight_key(mpg)
 base <- plot_ly(d, color = I("black"), showlegend = FALSE)
@@ -72,6 +75,8 @@ include_vimeo("307598219")
 ```
 
 Figure \@ref(fig:mpg-linked) adds two more statistical trace types to Figure \@ref(fig:mpg-linked-bars) to further explore how miles per gallon highway is related to fuel type (`fl`) and front/rear/4 wheel drive (`drv`). In particular, one can effectively condition on these discrete variables to see how the other distributions respond by brushing and dragging over markers. For example, in Figure \@ref(fig:mpg-linked), front-wheel drive cars are highlighted in red, then 4-wheel drive cars in blue, and as a result, we can see that the main effect of going from 4 to front wheel-drive is are also large interaction effect sizes with regular and diesel fuel types.
+
+\index{layout()@\texttt{layout()}!barmode@\texttt{barmode}!overlay}
 
 ```{r, eval = FALSE}
 d <- highlight_key(mpg)
@@ -146,6 +151,11 @@ include_vimeo("257149623")
 ```
 
 A more widely used approach to geo-spatial data visualization is to render lat/lon data on a basemap layer that updates in response to zoom events. The `plot_mapbox()` function from **plotly** does this via integration with [mapbox](https://www.mapbox.com/). Figure \@ref(fig:mapbox-quakes) uses `plot_mapbox()` highlighting earthquakes west of Fiji to compare the relative frequency of their magnitude and number of reporting stations (to the overall relative frequency).
+
+\index{layout()@\texttt{layout()}!barmode@\texttt{barmode}!overlay}
+\index{add\_trace()@\texttt{add\_trace()}!add\_histogram()@\texttt{add\_histogram()}!histnorm@\texttt{histnorm}}
+\index{plot\_mapbox()@\texttt{plot\_mapbox()}!zoom@\texttt{zoom}}
+\index{plot\_mapbox()@\texttt{plot\_mapbox()}!center@\texttt{center}}
 
 ```{r, eval = FALSE}
 eqs <- highlight_key(quakes)

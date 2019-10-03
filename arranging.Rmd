@@ -9,6 +9,8 @@ Ideally, when displaying multiple related data views, they are linked through an
 
 ## Arranging plotly objects
 
+\index{subplot()@\texttt{subplot()}}
+
 The `subplot()` function provides a flexible interface for merging multiple **plotly** objects into a single object. It is more flexible than most trellis display frameworks (e.g., **ggplot2**'s `facet_wrap()`) as you don't have to condition on a value of common variable in each display [@trellis]. Its capabilities and interface are similar to the `grid.arrange()` function from the **gridExtra** package, which allows you to arrange multiple **grid** grobs in a single view, effectively providing a way to arrange (possibly unrelated)  **ggplot2** and/or **lattice** plots in a single view [@RCore; @gridExtra; @lattice]. Figure \@ref(fig:subplot-simple) shows the most simple way to use `subplot()` which is to directly supply plotly objects.
 
 ```r
@@ -23,6 +25,8 @@ subplot(p1, p2)
 ```{r subplot-simple, echo=FALSE, fig.cap="(ref:subplot-simple)", out.extra = if (knitr::is_html_output()) 'data-url="/interactives/subplot-simple.html"'}
 knitr::include_graphics("images/subplot-simple.svg")
 ```
+
+\index{subplot()@\texttt{subplot()}!Shared axes}
 
 Although `subplot()` accepts an arbitrary number of plot objects, passing a _list_ of plots can save typing and redundant code when dealing with a large number of plots. Figure \@ref(fig:economics) shows one time series for each variable in the `economics` dataset and share the x-axis so that zoom/pan events are synchronized across each series:
 
@@ -46,6 +50,9 @@ knitr::include_graphics("images/proportions.svg")
 ```
 
 This flexibility is quite useful for a number of visualizations, for example, as shown in Figure \@ref(fig:joint), a joint density plot is really of subplot of joint and marginal densities. The **heatmaply** package is great example of leveraging `subplot()` in a similar way to create interactive dendrograms [@heatmaply].
+
+\indexc{plotly\_empty()}
+\index{add\_trace()@\texttt{add\_trace()}!add\_histogram2dcontour()@\texttt{add\_histogram2dcontour()}}
 
 ```{r, eval = FALSE, summary = "Click to show code"}
 # draw random values from correlated bi-variate normal distribution
@@ -71,6 +78,8 @@ knitr::include_graphics("images/joint.svg")
 
 ### Recursive subplots
 
+\index{subplot()@\texttt{subplot()}!Recursive grid layouts}
+
 The `subplot()` function returns a plotly object so it can be modified like any other plotly object. This effectively means that subplots work recursively (i.e., you can have subplots within subplots). This idea is useful when your desired layout doesn't conform to the table structure described in the previous section. In fact, you can think of a subplot of subplots like a spreadsheet with merged cells. Figure \@ref(fig:recursive) gives a basic example where each row of the outer-most subplot contains a different number of columns.
 
 ```{r, eval = FALSE, summary = "Click to show code"}
@@ -90,6 +99,8 @@ knitr::include_graphics("images/recursive.svg")
 ```
 
 The concept is particularly useful when you want plot(s) in a given row to have different widths from plot(s) in another row. Figure \@ref(fig:map-subplot) uses this recursive behavior to place many bar charts in the first row, and a single choropleth in the second row.
+
+\index{layout()@\texttt{layout()}!hovermode@\texttt{hovermode}}
 
 ```{r, eval = FALSE, summary = "Click to show code"}
 # specify some map projection/options
@@ -129,6 +140,8 @@ Using `subplot()` directly is not the _only_ way to create multiple views of a d
 
 #### Scatterplot matrices
 
+\index{Chart types!Scatterplot matrix}
+
 The plotly.js library provides a trace specifically designed and optimized for scatterplot matrices (splom). To use it, provide numeric variables to the `dimensions` attribute of the `splom` trace type. 
 
 ```r
@@ -148,6 +161,9 @@ See <https://plot.ly/r/splom/> for more options related to the splom trace type.
 
 #### Generalized pairs plot
 
+\index{Chart types!Generalized pairs plot}
+\index{ggplotly()@\texttt{ggplotly()}!GGally!ggpairs()@\texttt{ggpairs()}}
+
 The generalized pairs plot is an extension of the scatterplot matrix to support both discrete and numeric variables [@gpp]. The `ggpairs()` function from the **GGally** package provides an interface for creating these plots via **ggplot2** [@GGally]. To implement `ggpairs()`, **GGally** introduces the notion of a matrix of **ggplot2** plot objects that it calls `ggmatrix()`. As Figure \@ref(fig:ggpairs) shows, the `ggplotly()` function has a method for converting ggmatrix objects directly:
 
 ```r
@@ -165,7 +181,12 @@ As it turns out, **GGally** use `ggmatrix()` as a building block for other visua
 
 #### Trellis displays with `subplot()` {#trellis-displays-subplot}
 
+\index{subplot()@\texttt{subplot()}!Trellis display}
+
 It's true that **ggplot2**'s `facet_wrap()`/`facet_grid()` provides a simple way to create trellis displays, but for learning purposes, it can be helpful to learn how to implement a similar trellis display with `plot_ly()` and `subplot()`. Figure \@ref(fig:subplot-trellis) demonstrates one approach, which leverages `subplot()`'s ability to reposition annotations and shapes. Specifically, the `panel()` function below, which defines the visualization method to be applied to each `variable` in the `economics_long` dataset,  uses paper coordinates (i.e., graph coordinates on a normalized 0-1 scale) to place an annotation at the top-center of each panel as well as a rectangle shape behind the annotation. Note also the use of `ysizemode = 'pixel'` which gives the rectangle shape a fixed height (i.e., the rectangle height is always 16 pixels, regardless of the height of the trellis display).
+
+\index{Specifying fonts!Annotations}
+\index{layout()@\texttt{layout()}!shapes@\texttt{shapes}!Rectangles}
 
 ```{r, eval = FALSE, summary = "Click to show code"}
 library(dplyr)
@@ -214,6 +235,8 @@ knitr::include_graphics("images/subplot-trellis.svg")
 #### ggplot2 subplots
 
 It's possible to combine the convenience of **ggplot2**'s `facet_wrap()`/`facet_grid()` with the more flexible arrangement capabilities of `subplot()`. Figure \@ref(fig:ggplot2-subplots) does this to show two different views of the `economics_long` data: the left-hand column displays each variable along time while the right-hand column shows violin plots of each variable. For the implementation, each column is created through `ggplot2::facet_wrap()`, but then the trellis displays are combined with `subplot()`. In this case, **ggplot2** objects are passed directly to `subplot()`, but you can also use `ggplotly()` for finer control over the conversion of **ggplot2** to **plotly** (see also Chapter \@ref(improving-ggplotly)) before supplying that result to `subplot()`.
+
+\index{ggplotly()@\texttt{ggplotly()}!ggplot2!geom\_violin()@\texttt{geom\_violin()}}
 
 ```r
 gg1 <- ggplot(economics_long, aes(date, value)) + geom_line() +
@@ -305,6 +328,8 @@ knitr::include_graphics("images/flexbox.png")
 From the code example in Figure \@ref(fig:flexbox), you might notice that `display: flex; flex-wrap: wrap` is quite similar to Bootstrap grid layout system. The main difference is that, instead of specifying widths in terms of 12 columns, you have more flexibility with how to size things, as well as how you handle extra space. Here, in Figure \@ref(fig:flexbox) I've used widths that are relative to the page width, but you could also use fixed widths (using fixed widths, however, is generally frowned upon). For those that would like to learn about more details about CSS flexbox, see <https://css-tricks.com/snippets/css/a-guide-to-flexbox/>.
 
 ## Arranging many views {#navigating-many-views}
+
+\index{ggplotly()@\texttt{ggplotly()}!facet\_trelliscope()@\texttt{facet\_trelliscope()}}
 
 As we've already seen in Figures \@ref(fig:freqpoly-facet), \@ref(fig:trellis-txhousing), & \@ref(fig:subplot-trellis), the trellis (aka small multiple) display is an effective way to see how a conditional distribution behaves under different conditions. In other words, the trellis display helps us understand how patterns or structure in the data changes across groups. However, trellis displays do have a limitation: they don't scale very well to a large number of groups. 
 

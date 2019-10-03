@@ -2,6 +2,11 @@
 
 ## Rectangular binning in plotly.js
 
+\index{add\_trace()@\texttt{add\_trace()}!add\_heatmap()@\texttt{add\_heatmap()}}
+\index{add\_trace()@\texttt{add\_trace()}!add\_histogram2d()@\texttt{add\_histogram2d()}}
+\index{add\_trace()@\texttt{add\_trace()}!add\_histogram2dcontour()@\texttt{add\_histogram2dcontour()}}
+
+
 The **plotly** package provides two functions for displaying rectangular bins: `add_heatmap()` and `add_histogram2d()`. For numeric data, the `add_heatmap()` function is a 2D analog of `add_bars()` (bins must be pre-computed), and the `add_histogram2d()` function is a 2D analog of `add_histogram()` (bins can be computed in the browser). Thus, I recommend `add_histogram2d()` for exploratory purposes, since you don't have to think about how to perform binning. It also provides a useful [`zsmooth`](https://plot.ly/r/reference/#histogram2d-zsmooth) attribute for effectively increasing the number of bins (currently, "best" performs a [bi-linear interpolation](https://en.wikipedia.org/wiki/Bilinear_interpolation), a type of nearest neighbors algorithm), and [`nbinsx`](https://plot.ly/r/reference/#histogram2d-nbinsx)/[`nbinsy`](https://plot.ly/r/reference/#histogram2d-nbinsy) attributes to set the number of bins in the x and/or y directions. Figure \@ref(fig:histogram2d) compares three different uses of `add_histogram()`: (1) plotly.js' default binning algorithm, (2) the default plus smoothing, (3) setting the number of bins in the x and y directions. Its also worth noting that filled contours, instead of bins, can be used in any of these cases by using `add_histogram2dcontour()` instead of `add_histogram2d()`.
 
 ```r
@@ -28,6 +33,8 @@ knitr::include_graphics("images/histogram2d.svg")
 
 In [Bars & histograms](#bars-histograms), we leveraged a number of algorithms in R for computing the "optimal" number of bins for a histogram, via `hist()`, and routing those results to `add_bars()`. There is a surprising lack of research and computational tools for the 2D analog, and among the research that does exist, solutions usually depend on characteristics of the unknown underlying distribution, so the typical approach is to assume a Gaussian form [@mde]. Practically speaking, that assumption is not very useful, but 2D kernel density estimation provides a useful alternative that tends to be more robust to changes in distributional form. Although kernel density estimation requires choice of kernel and a bandwidth parameter, the `kde2d()` function from the **MASS** package provides a well-supported rule-of-thumb for estimating the bandwidth of a Gaussian kernel density [@MASS]. Figure \@ref(fig:heatmap-corr-diamonds) uses `kde2d()` to estimate a 2D density, scales the relative frequency to an absolute frequency, then uses the `add_heatmap()` function to display the results as a heatmap.
 
+\index{Kernel density estimation!MASS::kde2d()@\texttt{MASS::kde2d()}}
+
 ```r
 kde_count <- function(x, y, ...) {
   kde <- MASS::kde2d(x, y, ...)
@@ -51,6 +58,8 @@ knitr::include_graphics("images/heatmap-corr-diamonds.svg")
 ## Categorical axes
 
 The functions `add_histogram2d()`, `add_histogram2dcontour()`, and `add_heatmap()` all support categorical axes. Thus, `add_histogram2d()` _can_ be used to easily display 2-way contingency tables, but since its easier to compare values along a common scale rather than compare colors [@graphical-perception], I recommend creating [grouped bar charts](#multiple-discrete-distributions) instead. The `add_heatmap()` function can still be useful for categorical axes, however, as it allows us to display whatever quantity we want along the z axis (color).
+
+\index{colorbar()@\texttt{colorbar()}!Limits}
 
 Figure \@ref(fig:correlation) uses `add_heatmap()` to display a correlation matrix. Notice how the `limits` arguments in the `colorbar()` function can be used to expand the limits of the color scale to reflect the range of possible correlations (something that is not easily done in plotly.js).
 
@@ -120,6 +129,8 @@ knitr::include_graphics("images/3D-lines-groups.png")
 
 ## Axes
 
+\index{layout()@\texttt{layout()}!3D Axes}
+
 For 3D plots, be aware that the axis objects are a part of the [`scene`](https://plot.ly/r/reference/#layout-scene) definition, which is part of the `layout()`. That is, if you wanted to set axis titles (e.g., Figure \@ref(fig:3D-axes)), or something else specific to the axis definition, the relation between axes (i.e., [`aspectratio`](https://plot.ly/r/reference/#layout-scene-aspectratio)), or the default setting of the camera (i.e., [`camera`](https://plot.ly/r/reference/#layout-scene-camera)); you would do so via the `scence`.
 
 ```r
@@ -138,8 +149,9 @@ plot_ly(mpg, x = ~cty, y = ~hwy, z = ~cyl) %>%
 knitr::include_graphics("images/3D-axes.png")
 ```
 
-
 ## Surfaces
+
+\index{add\_trace()@\texttt{add\_trace()}!add\_surface()@\texttt{add\_surface()}}
 
 Creating 3D surfaces with `add_surface()` is a lot like creating heatmaps with `add_heatmap()`. In fact, you can even create 3D surfaces over categorical x/y (try changing `add_heatmap()` to `add_surface()` in Figure \@ref(fig:correlation))! That being said, there should be a sensible ordering to the x/y axes in a surface plot since plotly.js interpolates z values. Usually the 3D surface is over a continuous region, as is done in Figure \@ref(fig:surface) to display the height of a volcano. If a numeric matrix is provided to z as in Figure \@ref(fig:surface), the x and y attributes do not have to be provided, but if they are, the length of x should match the number of columns in the matrix and y should match the number of rows.
 

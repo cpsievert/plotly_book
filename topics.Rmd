@@ -2,6 +2,9 @@
 
 # Is plotly free & secure?
 
+\indexc{api\_create()}
+\index{config()@\texttt{config()}!cloud@\texttt{cloud}}
+
 Yes! Both the R package and the underlying JavaScript library (plotly.js) are MIT licensed. That means you are free to distribute and commercialize anything you create with **plotly**. Optionally, you can sign up for a <https://plot.ly> account and use the `api_create()` function to upload **plotly** graphs to your account, but _a <https://plot.ly> account is not required to use **plotly**_.
 
 Moreover, the data behind a **plotly** graph won't leave the computer you're viewing it on, unless:
@@ -12,6 +15,9 @@ Moreover, the data behind a **plotly** graph won't leave the computer you're vie
 In other words, unless you specifically request otherwise, your graph runs entirely offline (i.e. no requests to external services are made). That means you can be confident that your data is not being shared with anyone/anything without your knowledge.
 
 # Improving performance {#performance}
+
+\index{toWebGL()@\texttt{toWebGL()}}
+\indexc{partial\_bundle()}
 
 Recall, from Figure \@ref(fig:intro-printing), when you print a **plotly** object (or really any plot), there are two classes of performance to be aware of: print-time (i.e. build) and run-time (i.e. render). That is, build time can be classified as the time it takes for the object to be serialized as JSON/HTML, whereas run time is the time it takes for the browser to render the HTML into a webpage. In the case of **plotly**, there are two quick and easy things you can do to improve run time performance in *any context*:
 
@@ -25,12 +31,16 @@ Since latency in interactive graphics is known to make exploratory data analysis
 
 # Controlling tooltips
 
+\index{Tooltips@Tooltips (\texttt{text}, \texttt{hoverinfo}, \texttt{hoverformat}, \texttt{hovertemplate}, etc)}
+
 ## `plot_ly()` tooltips {#tooltip-text}
 
 There are two main approaches to controlling the tooltip: `hoverinfo` and `hovertemplate`. I suggest starting with the former approach since it's simpler, more mature, and enjoys universal support across trace types. On the other hand, `hovertemplate` does offer a convenient approach for flexible control over tooltip text, so it can be useful as well.
 
 The `hoverinfo` attribute controls what other plot attributes are shown into the tooltip text. The default value of `hoverinfo` is `x+y+text+name` (you can verify this with `schema()`), meaning that plotly.js will use the relevant values of `x`, `y`, `text`, and `name` to populate the tooltip text. As in Figure \@ref(fig:custom-tooltip-plotly) shows, you can supply custom text (without the other 'calculated values') by supplying a character string `text` and setting `hoverinfo = "text"`. The character string can include Glyphs, unicode characters, a some (white-listed) HTML entities and tags.^[If you find a tag or entity that you want isn't supported, please request it to be added in the plotly.js repository <https://github.com/plotly/plotly.js/issues/new>] At least currently, plotly.js doesn't support rendering of [LaTeX](https://github.com/plotly/plotly.js/issues/559) or images in the tooltip, but as demonstrated in Figure \@ref(fig:tooltip-image), if you know some HTML/JavaScript, you can always build your own custom tooltip. 
 
+\index{layout()@\texttt{layout()}!barmode@\texttt{barmode}!stack}
+\index{layout()@\texttt{layout()}!hovermode@\texttt{hovermode}}
 
 ```r
 library(tibble)
@@ -70,6 +80,8 @@ knitr::include_graphics("images/custom-tooltip-plotly.png")
 
 Whenever a `fill` is relevant (e.g., `add_sf()`, `add_polygons()`, `add_ribbons()`, etc), you have the option of using the `hoveron` attribute to generate a tooltip for the supplied data points, the filled polygon that those points define, or both. As Figure \@ref(fig:hoveron-fill-points) demonstrates, if you want a tooltip attached to a fill, you probably want `text` to be of length 1 for a given trace. On the other hand, if you want to each point along a fill to have a tooltip, you probably want `text` to have numerous strings.
 
+\index{add\_trace()@\texttt{add\_trace()}!add\_polygons()@\texttt{add\_polygons()}!hoveron@\texttt{hoveron}}
+
 ```r
 p <- plot_ly(
   x = c(1, 2, 3),
@@ -89,6 +101,8 @@ subplot(
 knitr::include_graphics("images/hoveron-fill-points.png")
 ```
 
+\index{layout()@\texttt{layout()}!2D Axes!hoverformat@\texttt{hoverformat}}
+
 You can't supply custom text in this way to a statistical aggregation, but there are ways to control the formatting of values computed and displayed by plotly.js (e.g. `x`, `y`, and `z`). If the value that you'd like to format corresponds to an axis, you can use `*axis.hoverformat`. The syntax behind `hoverformat` follows d3js' format conventions. For numbers, see: <https://github.com/d3/d3-format/blob/master/README.md#locale_format> and for dates see: <https://github.com/d3/d3-time-format/blob/master/README.md#locale_format>
 
 ```r
@@ -104,6 +118,9 @@ knitr::include_graphics("images/tooltip-format-boxplot.png")
 
 Computed values that don't have a corresponding axis likely have a `*hoverformat` trace attribute. Probably the most common example is the `z` attribute in a `heatmap` or `histogram2d` chart. Figure \@ref(fig:tooltip-format-heatmap) shows how to format `z` values to have one decimal.
 
+\index{layout()@\texttt{layout()}!2D Axes!hoverformat@\texttt{hoverformat}}
+\index{add\_trace()@\texttt{add\_trace()}!add\_heatmap()@\texttt{add\_heatmap()}!zhoverformat@\texttt{zhoverformat}}
+
 ```r
 plot_ly(z = ~volcano) %>%
   add_heatmap(zhoverformat = ".1f") %>%
@@ -115,6 +132,8 @@ knitr::include_graphics("images/tooltip-format-heatmap.png")
 ```
 
 It's admittedly difficult to remember where to specify these `hoverformat` attributes, so if you want a combination of custom text and formatting of computed values you can use `hovertemplate`, which overrides `hoverinfo` and allows you to fully specify the tooltip in a single attribute. It does this through special markup rules for inserting and formatting data values inside a string. Figure \@ref(fig:hovertemplate) provides an example of inserting `x` and `y` in the tooltip through the special `%{variable:format}` markup as well as customization of the secondary box through `<extra>` tag. For a full description of this attribute, including the formatting rules, see <https://plot.ly/r/reference/#scatter-hovertemplate>.
+
+\index{add\_trace()@\texttt{add\_trace()}!add\_histogram()@\texttt{add\_histogram()}!histnorm@\texttt{histnorm}}
 
 ```r
 set.seed(10)
@@ -134,6 +153,8 @@ If you need really specific control over the tooltip, you might consider hiding 
 
 
 ## `ggplotly()` tooltips {#tooltip-text-ggplotly}
+
+\index{ggplotly()@\texttt{ggplotly()}!Tooltip text}
 
 Similar to how you can use the `text` attribute to supply a custom string in `plot_ly()` (see Section \@ref(tooltip-text)), you can supply a `text` aesthetic to your **ggplot2** graph, as shown in \@ref(fig:ggplotly-text):
 
@@ -191,6 +212,8 @@ knitr::include_graphics("images/text-clever.png")
 
 The approach depicted in Figure \@ref(fig:text-clever) works for computed values that pertain to raw data values, but what about sophisticated formatting of a summary statistics generated by **ggplot2**? In this case, you'll have to use the return value of `ggplotly()` which, remember, is a **plotly** object that conforms to the plotly.js spec. That means you can identify trace attribute(s) that contain relevant info (**note:** the `plotly_json()` function is incredibly for helping to find that information), then use that info to populate a `text` attribute. Figure \@ref(fig:custom-predict-text) applies this technique to customize the text that appears when hovering over a `geom_smooth()` line.
 
+\indexc{style()}
+
 ```r
 # Add a smooth to the previous figure and convert to plotly
 w <- ggplotly(p + geom_smooth(se = FALSE))
@@ -221,7 +244,9 @@ knitr::include_graphics("images/custom-predict-text.png")
 
 ## Styling
 
-There is currently one main attribute for controlling the style of a tooltip: `hoverlabel`. With this attribute you can currently set the background color (`bgcolor`), border color (`bordercolor`), and font family/size/color. Figure \@ref(fig:tooltip-style) demonstrates how to use it with `plot_ly()` (basically any chart type you use should support it):  
+There is currently one main attribute for controlling the style of a tooltip: `hoverlabel`. With this attribute you can currently set the background color (`bgcolor`), border color (`bordercolor`), and font family/size/color. Figure \@ref(fig:tooltip-style) demonstrates how to use it with `plot_ly()` (basically any chart type you use should support it):
+
+\index{Specifying fonts!hoverlabel@\texttt{hoverlabel}}
 
 ```r
 font <- list(
@@ -240,6 +265,9 @@ plot_ly(x = iris$Petal.Length, hoverlabel = label)
 ```{r tooltip-style, echo = FALSE, fig.cap="(ref:tooltip-style)", out.extra = if (knitr::is_html_output()) 'data-url="/interactives/tooltip-style.html"'}
 knitr::include_graphics("images/tooltip-style.png")
 ```
+
+\indexc{style()}
+\index{Specifying fonts!On-graph text}
 
 On the other hand, when using `ggplotly()`, you have to modify the `hoverlabel` attribute via `style()` as shown in Figure \@ref(fig:tooltip-style-ggplotly)
 
@@ -264,6 +292,8 @@ By default, the modebar appears in the top right-hand side of a **plotly** graph
 
 The `displayModeBar` option makes it quick and easy to remove the entire modebar.
 
+\index{config()@\texttt{config()}!displayModeBar@\texttt{displayModeBar}}
+
 ```r
 plot_ly() %>%
   config(displayModeBar = FALSE)
@@ -272,6 +302,8 @@ plot_ly() %>%
 ## Remove the plotly logo
 
 The `displaylogo` option makes it quick and easy to remove the entire modebar.
+
+\index{config()@\texttt{config()}!displaylogo@\texttt{displaylogo}}
 
 ```r
 plot_ly() %>%
@@ -283,6 +315,8 @@ knitr::include_graphics("images/displaylogo.png")
 ```
 
 ## Remove modebar buttons by name
+
+\index{config()@\texttt{config()}!modeBarButtonsToRemove@\texttt{modeBarButtonsToRemove}}
 
 Any modebar buttons can be removed by name via `modeBarButtonsToRemove`. The current list of modebar buttons can be found at <https://github.com/plotly/plotly.js/blob/master/src/components/modebar/buttons.js>
 
@@ -298,6 +332,8 @@ knitr::include_graphics("images/modeBarButtonsToRemove.png")
 ## Add custom modebar buttons
 
 It is possible to supply your own modebar button icon that triggers a custom JavaScript function when clicked. You must provide a `name` for the icon and either a SVG `path` (with just the d attribute) or a full SVG element (to `svg`). Nowadays, there are a number of free websites that allow you to search icons and download their corresponding SVG information. When supplying `path`, as in Figure \@ref(fig:modeBarButtonsToAdd), you can also define an SVG `transform` to help size and position the icon. To define a JavaScript function to call upon clicking the icon, you can provide a string to `htmlwidgets::JS()`. The interactive version of Figure \@ref(fig:modeBarButtonsToAdd) adds on-graph text everytime the octocat icon is clicked. To learn more about how to leverage JavaScript from R, see Section \@ref(javascript).
+
+\index{config()@\texttt{config()}!modeBarButtonsToAdd@\texttt{modeBarButtonsToAdd}}
 
 ```r
 data(octocat_svg_path, package = "plotlyBook")
@@ -326,6 +362,8 @@ knitr::include_graphics("images/modeBarButtonsToAdd.png")
 
 Note that you can also use `modeBarButtons` to completely specify which buttons to include in the modebar. With this option, you can supply existing button names and/or your own custom buttons:
 
+\index{config()@\texttt{config()}!modeBarButtons@\texttt{modeBarButtons}}
+
 ```r
 plot_ly() %>%
   config(modeBarButtons = list(list("zoomIn2d"), list(octocat)))
@@ -336,6 +374,8 @@ knitr::include_graphics("images/modeBarButtons.png")
 ```
 
 ## Control image downloads
+
+\index{config()@\texttt{config()}!toImageButtonOptions@\texttt{toImageButtonOptions}}
 
 By default, the `toImage` modebar button downloads a png file using the current size and state of the graph. With `toImageButtonOptions`, one can specify different sizes and filetypes, which is particularly useful for obtaining a static pdf/webp/jpeg/etc image of the plot *after* components have been directly manipulated, as leveraged in Figure \@ref(fig:edit-county-labels). Here's a basic example of configuring the `'toImage'` button to download an svg file that's 200 x 100 pixels:
 
@@ -476,7 +516,11 @@ knitr::include_graphics("images/emojis.png")
  
 # Embedding images
 
+\index{layout()@\texttt{layout()}!images@\texttt{images}!URL}
+
 There are a few ways to embed images in a **plotly** graph. Perhaps the easiest is to point the image source to a hyperlink containing a bitmap file (e.g., png, jpeg, tiff, etc).
+
+\index{layout()@\texttt{layout()}!margin@\texttt{margin}}
 
 ```r
 plot_ly() %>%
@@ -500,6 +544,8 @@ knitr::include_graphics("images/image-hyperlink.svg")
 
 The approach in Figure \@ref(fig:image-hyperlink) has a downside though -- if that hyperlink breaks, then so does your plot. It'd be better to download the file to your machine and use the `dataURI()` function from the **base64enc** package (or similar) to embed the image as a data URI [@base64enc].
 
+\index{layout()@\texttt{layout()}!images@\texttt{images}!base64 encoded}
+
 ```r
 plot_ly() %>%
   layout(
@@ -519,6 +565,8 @@ knitr::include_graphics("images/image-uri.svg")
 ```
 
 Another approach is to convert a raster object into a data URI, which the `raster2uri()` function in **plotly** is designed to do. R actually ships with native support for raster objects and many image processing R packages either build on this data structure or provide a utility to convert to a raster object (perhaps via `as.raster()`). For example, the `readPNG()` function from the **png** package reads image data in an R array, which can be converted to a raster object [@png].
+
+\index{layout()@\texttt{layout()}!images@\texttt{images}!raster2uri()@\texttt{raster2uri()}}
 
 ```r
 pen <- png::readPNG("images/penguin.png")
@@ -545,6 +593,8 @@ Moreover, thanks to the R package **magick** it's possible to rasterize non-rast
 
    
 # Language support {#locales}
+
+\index{config()@\texttt{config()}!locale@\texttt{locale}}
 
 The `locale` argument of the `config()` function allows one to render on-graph text using another language. Figure \@ref(fig:localization) shows how setting `locale='ja'` will render text in Japanese.
 
@@ -590,6 +640,10 @@ if (knitr::is_html_output()) {
 
 # LaTeX rendering {#mathjax}
 
+\index{config()@\texttt{config()}!mathjax@\texttt{mathjax}}
+\index{layout()@\texttt{layout()}!title@\texttt{title}}
+\index{layout()@\texttt{layout()}!2D Axes!title@\texttt{title}}
+
 LaTeX rendering via MathJax is possible via the `TeX()` function which flags a character vector as LaTeX. To load MathJaX externally (meaning an internet connection is needed for TeX rendering), set the new `mathjax` argument in `config()` to `"cdn"`. Figure \@ref(fig:mathjax) demonstrates how to render LaTeX in the plot and axis titles.
 
 ```r
@@ -613,6 +667,9 @@ knitr::include_graphics("images/mathjax.psv")
 ```
 
 Figure \@ref(fig:mathjax2) demonstrates how to render LaTeX with on-graph text. There are two ways to draw on-graph text: `add_text()` which is a scatter trace with a mode of text and `add_annotations()` which is part of the graph's layout. The main difference is that `add_text()` is able to display tooltips and `add_annotations()` is able to display arrows.
+
+\index{add\_annotations()@\texttt{add\_annotations()}!TeX()@\texttt{TeX()}}
+\index{add\_trace()@\texttt{add\_trace()}!add\_text()@\texttt{add\_text()}}
 
 ```r
 plotly_empty(showlegend = FALSE, hoverinfo = "x+y") %>%
@@ -670,6 +727,8 @@ config(last_plot(), mathjax = "local")
 
 # The data-plot-pipeline
 
+\index{Data-plot-pipeline}
+
 As Chapter \@ref(intro-plotly) first introduced, we can express multi-layer **plotly** graphs as a sequence (or, more specifically, a directed acyclic graph) of **dplyr** data manipulations and mappings to visuals. For example, to create Figure \@ref(fig:houston2), we could group `txhousing` by `city` to ensure the first layer of `add_lines()` draws a different line for each city, then `filter()` down to Houston so that the second call to `add_lines()` draws only Houston. 
 
 ```r
@@ -688,6 +747,8 @@ knitr::include_graphics("images/houston2.svg")
 ```
 
 Sometimes the directed acyclic graph property of a **magrittr** pipeline can be too restrictive for certain types of plots. In this example, after filtering the data down to Houston, there is no way to recover the original data inside the pipeline. The `add_fun()` function helps to work-around this restriction^[Credit to Winston Chang and Hadley Wickham for this idea. The `add_fun()` is very much like `layer_f()` function in **ggvis**.] -- it works by applying a function to the plotly object, but does not affect the data associated with the plotly object. This effectively provides a way to isolate data transformations within the pipeline^[Also, effectively putting a [pipeline inside a pipeline](http://www.memecreator.org/meme/yo-dawg-i-heard-u-like-pipelines-so-we-put-a-pipeline-in-your-pipeline)]. Figure \@ref(fig:houston-vs-sa) uses this idea to highlight both Houston and San Antonio.
+
+\index{add\_fun()@\texttt{add\_fun()}}
 
 ```r
 allCities %>%
@@ -741,6 +802,10 @@ knitr::include_graphics("images/summary.svg")
 
 A layering function does not have to be a data-plot-pipeline itself. Its only requirement on a layering function is that the first argument is a plot object and it returns a plot object. This provides an opportunity to say, fit a model to the plot data, extract the model components you desire, and map those components to visuals. Furthermore, since **plotly**'s `add_*()` functions don't require a data.frame, you can supply those components directly to attributes (as long as they are well-defined), as done in Figure \@ref(fig:forecast) via the **forecast** package [@forecast].
 
+\indexc{plotly\_data()}
+\index{c{forecast()}
+\indexadd\_trace()@\texttt{add\_trace()}!add\_ribbons()@\texttt{add\_ribbons()}}
+
 ```r
 library(forecast)
 layer_forecast <- function(plot) {
@@ -777,9 +842,13 @@ In summary, the "data-plot-pipeline" is desirable for a number of reasons: (1) m
 
 # Improving `ggplotly()` {#improving-ggplotly}
 
+\index{ggplotly()@\texttt{ggplotly()}!Modification}
+
 Since the `ggplotly()` function returns a **plotly** object, we can use that object in the same way you can use any other **plotly** object. Modifying this object is _always_ going to be useful when you want more control over certain (interactive) behavior that **ggplot2** doesn't provide an API to describe^[It can also be helpful for correcting translations that `ggplotly()` doesn't get quite right.], for example:
 
-* `layout()` for modifying aspects of the layout, which can be used to:
+\indexc{style()}
+
+* `layout()` for modifying aspects of the layout, which can be used to do many things, for example:
     * Change default [`hovermode`](https://plot.ly/r/reference/#layout-hovermode) behavior (See Figure \@ref(fig:ggplotly-rangeslider)). 
     * Stylizing hover labels ([`hoverlabel`](https://plot.ly/r/reference/#layout-hoverlabel)).
     * Changing click+drag mode ([`dragmode`](https://plot.ly/r/reference/#layout-dragmode)) and/or constraining rectangular selections (`dragmode='select'`) vertically or horizontally ([`selectdirection`](https://plot.ly/r/reference/#layout-selectdirection)).
@@ -793,6 +862,9 @@ Since the `ggplotly()` function returns a **plotly** object, we can use that obj
     * Change the default language (see Chapter \@ref(locales)).
     * Enable LaTeX rendering (see Chapter \@ref(mathjax)).
     * Enable editable shapes (see Chapter \@ref(editing-views)).
+    
+\index{ggplotly()@\texttt{ggplotly()}!dynamicTicks@\texttt{dynamicTicks}}
+\index{ggplotly()@\texttt{ggplotly()}!layerData@\texttt{layerData}}
 
 In addition to using the functions above to modify `ggplotly()`'s return value, the `ggplotly()` function itself provides some arguments for controlling that return value. In this chapter, we'll see a couple of them:
 
@@ -802,6 +874,9 @@ In addition to using the functions above to modify `ggplotly()`'s return value, 
 ## Modifying layout
 
 Any aspect of a **plotly** objects layout can be modified^[Or, in the case of cumulative attributes, like `shapes`, `images`, `annotations`, etc, these items will be added to the existing items) via the `layout()` function. By default, since it doesn't always make sense to compare values, `ggplotly()` will usually set `layout.hovermode='closest'`. As shown in Figure \@ref(fig:ggplotly-rangeslider), when we have multiple y-values of interest at a specific x-value, it can be helpful to set `layout.hovermode='x'`. Moreover, for a long time series graph like this, zooming in on the x-axis can be useful -- `dynamicTicks` allows plotly.js to handle the generation of axis ticks and the `rangeslider()` allows us to zoom on the x-axis without losing the global context.
+
+\indexc{rangeslider()}
+\index{layout()@\texttt{layout()}!hovermode@\texttt{hovermode}}
 
 ```r
 library(babynames)
@@ -823,6 +898,9 @@ Since a single **plotly** object can only have one layout, modifying the layout 
 ## Modifying data
 
 As mentioned previously, `ggplotly()` translates each ggplot2 layer into one or more plotly.js traces. In this translation, it is forced to make a number of assumptions about trace attribute values that may or may not be appropriate for the use case. To demonstrate, consider Figure \@ref(fig:simple-scatterplot), which shows hover information for the points, the fitted line, and the confidence band. How could we make it so hover information is only displayed for the points and not for the fitted line and confidence band?
+
+\index{ggplotly()@\texttt{ggplotly()}!ggplot2!geom\_point()@\texttt{geom\_point()}}
+\index{ggplotly()@\texttt{ggplotly()}!ggplot2!geom\_smooth()@\texttt{geom\_smooth()}}
 
 ```r
 p <- ggplot(mtcars, aes(x = wt, y = mpg)) +
@@ -846,6 +924,8 @@ knitr::include_graphics("images/listviewer.png")
 
 This output indicates that the fitted line and confidence band are implemented in the 2nd and 3rd trace of the plotly object, so to turn off the hover of those traces:
 
+\indexc{style}
+
 ```r
 style(p, hoverinfo = "none", traces = 2:3)
 ```
@@ -868,6 +948,12 @@ p %>%
 
 The data shown above is the data ggplot2 uses to actually draw the fitted values (as a line) and standard error bounds (as a ribbon). Figure \@ref(fig:se-annotations) leverages this data to add additional information about the model fit; in particular, it adds a vertical lines and annotations at the x-values that are associated with the highest and lowest amount uncertainty in the fitted values. Producing a plot like this with **ggplot2** would be impossible using `geom_smooth()` alone.^[It could be recreated by fitting the model via `loess()`, obtaining the fitted values and standard error with `predict()`, and feeding those results into `geom_line()`/`geom_ribbon()`/`geom_text()`/`geom_segment()`, but that process is much more onerous.] Providing a simple visual clue like this can help combat visual misperceptions of uncertainty bands due to the sine illusion [@sine-illusion]. 
 
+\index{Data-plot-pipeline}
+\index{add\_fun()@\texttt{add\_fun()}}
+\index{add\_trace()@\texttt{add\_trace()}!add\_annotations()@\texttt{add\_annotations()}}
+\index{add\_trace()@\texttt{add\_trace()}!add\_segments()@\texttt{add\_segments()}}
+\index{ggplotly()@\texttt{ggplotly()}!layerData@\texttt{layerData}}
+
 ```r
 p %>%
   ggplotly(layerData = 2, originalData = FALSE) %>%
@@ -889,6 +975,9 @@ knitr::include_graphics("images/se-annotations.svg")
 
 In addition to leveraging output from `StatSmooth`, it is sometimes useful to leverage output of other statistics, especially for annotation purposes. Figure \@ref(fig:StatBin) leverages the output of `StatBin` to add annotations to a stacked bar chart. Annotation is primarily helpful for displaying the heights of bars in a stacked bar chart, since decoding the heights of bars is a fairly difficult perceptual task [@graphical-perception]. As result, it is much easier to compare bar heights representing the proportion of diamonds with a given clarity across various diamond cuts.
 
+\index{ggplotly()@\texttt{ggplotly()}!geom\_bar()@\texttt{geom\_bar()}}
+\index{add\_trace()@\texttt{add\_trace()}!add\_text()@\texttt{add\_text()}}
+
 ```r
 p <- ggplot(diamonds, aes(cut, fill = clarity)) +
   geom_bar(position = "fill")
@@ -908,6 +997,8 @@ knitr::include_graphics("images/StatBin.svg")
 ```
 
 Another useful application is labelling the levels of each piece/polygon output by `StatDensity2d` as shown in Figure \@ref(fig:StatDensity2d). Note that, in this example, the `add_text()` layer takes advantage of `ggplotly()`'s ability to inherit aesthetics from the global mapping. Furthermore, since `originalData` is `FALSE`, it attaches the "built" aesthetics (i.e.,  the `x`/`y` positions after `StatDensity2d` has been applied to the raw data).
+
+\index{ggplotly()@\texttt{ggplotly()}!geom\_density2d()@\texttt{geom\_density2d()}}
 
 ```r
 p <- ggplot(MASS::geyser, aes(x = waiting, y = duration)) +
@@ -963,6 +1054,8 @@ function(data, prestats_data, layout, params, p, ...) {
 
 As shown in Figure \@ref(fig:xspline), once the conversion has been provided. Users can call `ggplotly()` on the ggplot object containing the custom geom just like any other ggplot object.
 
+\index{ggplotly()@\texttt{ggplotly()}!ggalt!geom\_xspline()@\texttt{geom\_xspline()}}
+
 ```r
 # example from `help(geom_xspline)`
 set.seed(1492)
@@ -982,7 +1075,7 @@ p <- ggplot(dat, aes(x, y, group = group, color = factor(group))) +
 ggplotly(p) %>% hide_legend()
 ```
 
-```{r xspline, echo = FALSE, fig.cap = "(ref:xspline)", out.extra = if (knitr::is_html_output()) 'data-url="/interactives/xspline.html"'
+```{r xspline, echo = FALSE, fig.cap = "(ref:xspline)", out.extra = if (knitr::is_html_output()) 'data-url="/interactives/xspline.html"'}
 knitr::include_graphics("images/xspline.svg")
 ```
 

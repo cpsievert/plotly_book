@@ -8,9 +8,7 @@ It's worth noting that **plotly** aims to be a general purpose visualization lib
 
 ### Overview
 
-\index{
-  plot\_mapbox()@\texttt{plot\_mapbox()}
-}
+\index{plot\_mapbox()@\texttt{plot\_mapbox()}}
 
 If you have fairly simple latitude/longitude data and want to make a quick map, you may want to try one of **plotly**'s integrated mapping options (i.e., `plot_mapbox()` and `plot_geo()`). Generally speaking, you can treat these constructor functions as a drop-in replacement for `plot_ly()` and get a dynamic basemap rendered behind your data. Furthermore, all the scatter-based layers we learned about in Section \@ref(scatter-traces) work as you'd expect it to with `plot_ly()`.^[Unfortunately, non-scatter traces currently don't work with `plot_mapbox()`/ `plot_geo()` meaning that, for one, raster (i.e., heatmap) maps are not natively supported.] For example, Figure \@ref(fig:mapbox-bubble) uses `plot_mapbox()` and `add_markers()` to create a bubble chart:
 
@@ -30,6 +28,8 @@ plot_mapbox(maps::canada.cities) %>%
 ```{r mapbox-bubble, echo = FALSE, fig.cap = "(ref:mapbox-bubble)"}
 include_vimeo("317352934")
 ```
+
+\index{plot\_mapbox()@\texttt{plot\_mapbox()}!Basemap style}
 
 The Mapbox basemap styling is controlled through the [`layout.mapbox.style`](https://plot.ly/r/reference/#layout-mapbox-style) attribute. The **plotly** package comes with support for 7 different styles, but you can also supply a custom URL to a [custom mapbox style](https://docs.mapbox.com/help/tutorials/create-a-custom-style/). To obtain all the pre-packaged basemap style names, you can grab them from the official plotly.js `schema()`:
 
@@ -53,6 +53,8 @@ include_vimeo("326683897")
 
 Figure \@ref(fig:mapbox-style-dropdown) demonstrates how to create an integrated plotly.js dropdown menu to control the basemap style via the [`layout.updatemenus`](https://plot.ly/r/reference/#layout-updatemenus-items-updatemenu-buttons) attribute. The idea behind an integrated plotly.js dropdown is to supply a list of buttons (i.e., menu items) where each button invokes a plotly.js method with some arguments. In this case, each button uses the [relayout](https://plot.ly/javascript/plotlyjs-function-reference/) method to modify the `layout.mapbox.style` attribute.^[To see more examples of creating and using plotly.js' integrated dropdown functionality to modify graphs, see <https://plot.ly/r/dropdowns/>]
 
+\index{layout()@\texttt{layout()}!updatemenus@\texttt{updatemenus}}
+
 ```r
 style_buttons <- lapply(styles, function(s) {
   list(
@@ -74,11 +76,11 @@ layout(
 include_vimeo("326684625")
 ```
 
-\index{
-  plot\_geo()@\texttt{plot\_geo()}
-}
+\index{plot\_geo()@\texttt{plot\_geo()}}
 
 The other integrated mapping solution in **plotly** is `plot_geo()`. Compared to `plot_mapbox()`, this approach has support for different mapping projections, but styling the basemap is limited and can be more cumbersome. Figure \@ref(fig:geo-flights) demonstrates using `plot_geo()` in conjunction with `add_markers()` and `add_segments()` to visualize flight paths within the United States. Whereas `plot_mapbox()` is fixed to a mercator projection, the `plot_geo()` constructor has a handful of different projection available to it, including the orthographic projection which gives the illusion of the 3D globe.
+
+\index{plot\_geo()@\texttt{plot\_geo()}!layout.geo@\texttt{layout(geo = ...)}}
 
 ```{r, eval = FALSE, summary = "Click to show code"}
 library(plotly)
@@ -124,6 +126,9 @@ include_vimeo("317358033")
 
 One nice thing about `plot_geo()` is that it automatically projects geometries into the proper coordinate system defined by the map projection. For example, in Figure \@ref(fig:maps) the simple line segment is straight when using `plot_mapbox()` yet curved when using `plot_geo()`. It's possible to achieve the same effect using `plot_ly()` or `plot_mapbox()`, but the relevant marker/line/polygon data has to be put into an **sf** data structure before rendering (see Section \@ref(sf) for more details).
 
+\index{add\_trace()@\texttt{add\_trace()}!add\_segments()@\texttt{add\_segments()}}
+\indexc{htmltools::tagList()}
+
 ```r
 map1 <- plot_mapbox() %>% 
   add_segments(x = -100, xend = -50, y = 50, yend = 75) %>%
@@ -148,9 +153,13 @@ knitr::include_graphics("images/maps.png")
 
 ### Choropleths
 
+\index{Chart types!Choropleth}
+
 In addition to scatter traces, both of the integrated mapping  solutions (i.e., `plot_mapbox()` and `plot_geo()`) have an optimized choropleth trace type (i.e.,  the [choroplethmapbox](https://plot.ly/r/reference/#choroplethmapbox) and [choropleth](https://plot.ly/r/reference/#choropleth) trace types). Comparatively speaking, choroplethmapbox is more powerful because you can fully specify the feature collection using GeoJSON, but the choropleth trace can be a bit easier to use if it fits your use case.
 
 Figure \@ref(fig:us-density) shows the population density of the U.S. via the choropleth trace using the U.S. state data from the **datasets** package [@RCore]. By simply providing a [`z`](https://plot.ly/r/reference/#choropleth-z) attribute, `plotly_geo()` objects will try to create a choropleth, but you'll also need to provide [`locations`](https://plot.ly/r/reference/#choropleth-locations) and a [`locationmode`](https://plot.ly/r/reference/#choropleth-locationmode). It's worth noting that the `locationmode` is currently limited to countries and US states, so if you need to a different geo-unit (e.g., counties, municipalities, etc), you should use the choroplethmapbox trace type and/or use a "custom" mapping approach as discussed in Section \@ref(maps-custom).
+
+\index{plot\_geo()@\texttt{plot\_geo()}!Choropleth}
 
 ```r
 density <- state.x77[, "Population"] / state.x77[, "Area"]
@@ -174,6 +183,8 @@ knitr::include_graphics("images/us-density.svg")
 ```
 
 Choroplethmapbox is more flexible than choropleth because you supply your own GeoJSON definition of the choropleth via the `geojson` attribute. Currently this attribute must be a URL pointing to a geojson file. Moreover, the `location` should point to a top-level id attribute of each feature within the geojson file. Figure \@ref(fig:us-density-geojson) demonstrates how we could visualize the same information as Figure \@ref(fig:us-density), but this time using choroplethmapbox.
+
+\index{plot\_mapbox()@\texttt{plot\_mapbox()}!Choropleth}
 
 ```r
 plot_ly() %>%
@@ -341,6 +352,8 @@ For those interested in learning more about geocomputation in R with **sf** and 
 
 
 ### Cartograms {#cartograms}
+
+\index{Chart types!Cartogram}
 
 Cartograms distort the size of geo-spatial polygons to encode a numeric variable other than the land size. There are numerous types of cartograms and they are typically categorized by their ability to preserve shape and maintain contiguous regions. Cartograms has been shown to be an effective approach to both encode and teach about geo-spatial data, though the effects certainly vary by cartogram type [@cartogram-vis]. 
 The R package **cartogram** provides an interface to several popular cartogram algorithms [@cartogram]. A number of other R packages provide cartogram algorithms, but the great thing about **cartogram** is that all the functions can take an **sf** (or **sp**) object as input and return an **sf** object. This makes it incredibly easy to go from raw spatial objects, to transformed objects, to visual. Figure \@ref(fig:cartogram) demonstrates a continuous area cartogram of US population in 2014 using a rubber sheet distortion algorithm from @Dougenik.

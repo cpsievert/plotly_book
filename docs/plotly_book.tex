@@ -206,26 +206,12 @@
 \makeatother
 
 \frontmatter
-\usepackage{booktabs}
-\usepackage{longtable}
-\usepackage{array}
-\usepackage{multirow}
-\usepackage{wrapfig}
-\usepackage{float}
-\usepackage{colortbl}
-\usepackage{pdflscape}
-\usepackage{tabu}
-\usepackage{threeparttable}
-\usepackage{threeparttablex}
-\usepackage[normalem]{ulem}
-\usepackage{makecell}
-\usepackage{xcolor}
 \usepackage[]{natbib}
 \bibliographystyle{apalike}
 
 \title{Interactive web-based data visualization with R, plotly, and shiny}
 \author{Carson Sievert}
-\date{2019-10-02}
+\date{2019-10-03}
 
 \begin{document}
 \maketitle
@@ -743,7 +729,7 @@ The subsequent chapters within this `Creating views' part dive into specific exa
 \hypertarget{intro-plotly}{%
 \section{\texorpdfstring{Intro to \texttt{plot\_ly()}}{Intro to plot\_ly()}}\label{intro-plotly}}
 
-\index{plot\_ly()@\texttt{plot\_ly()}!Introduction}
+\index{plot\_ly()@\texttt{plot\_ly()}}
 
 Any graph made with the \textbf{plotly} R package is powered by the JavaScript library \href{https://github.com/plotly/plotly.js}{plotly.js}. The \texttt{plot\_ly()} function provides a `direct' interface to plotly.js with some additional abstractions to help reduce typing. These abstractions, inspired by the Grammar of Graphics and \textbf{ggplot2}, make it much faster to iterate from one graphic to another, making it easier to discover interesting features in the data \citep{Wilkinson:2005, ggplot2}. To demonstrate, we'll use \texttt{plot\_ly()} to explore the \texttt{diamonds} dataset from \textbf{ggplot2} and learn a bit how \textbf{plotly} and plotly.js work along the way.
 
@@ -873,7 +859,7 @@ As you'll learn more about in Chapter \ref{bars-histograms}, \textbf{plotly} has
 There are numerous other \texttt{add\_*()} functions that calculate statistics in the browser (e.g., \texttt{add\_histogram2d()}, \texttt{add\_contour()}, \texttt{add\_boxplot()}, etc), but most other functions aren't considered statistical. Making the distinction might not seem useful now, but they have their own respective trade-offs when it comes to speed and interactivity. Generally speaking, non-statistical layers will be faster and more responsive at run-time (since they require less computational work), whereas the statistical layers allow for more flexibility when it comes to client-side interactivity, as covered in Chapter \ref{client-side-linking}. Practically speaking, the difference in performance is often negligible -- the more common bottleneck occurs when attempting to render lots of graphical elements at a time (e.g., a scatterplot with a million points). In those scenarios, you likely want to render your plot in Canvas rather than SVG (the default) via \texttt{toWebGL()} -- for more information on improving performance, see Chapter \ref{performance}.
 
 \index{plot\_ly()@\texttt{plot\_ly()}!Layered mappings}
-\index{plot\_ly()@\texttt{plot\_ly()}!Dplyr integration}
+\index{plot\_ly()@\texttt{plot\_ly()}!dplyr integration}
 
 In many scenarios, it can be useful to combine multiple graphical layers into a single plot. In this case, it becomes useful to know a few things about \texttt{plot\_ly()}:
 
@@ -928,6 +914,8 @@ Using these two properties of \texttt{plot\_ly()}, Figure \ref{fig:intro-dplyr} 
 
 Before using multiple \texttt{add\_*()} in a single plot, make sure that you actually want to show those layers of information on the same set of axes. If it makes sense to display the information on the same axes, consider making multiple \textbf{plotly} objects and combining them into as grid-like layout using \texttt{subplot()}, as described in Chapter \ref{arranging-views}. Also, when using \textbf{dplyr} verbs to modify the \texttt{data} underlying the \textbf{plotly} object, you can use the \texttt{plotly\_data()} function to obtain the data at any point in time, which is primarily useful for debugging purposes (i.e., inspecting the data of a particular graphical layer).
 
+\indexc{plotly\_data()}
+
 \begin{Shaded}
 \begin{Highlighting}[]
 \NormalTok{diamonds }\OperatorTok{%>%}
@@ -951,6 +939,11 @@ This introduction to \texttt{plot\_ly()} has mainly focused on concepts unique t
 
 \hypertarget{intro-plotly-js}{%
 \section{Intro to plotly.js}\label{intro-plotly-js}}
+
+\indexc{plotly\_build()}
+
+\index{plotly\_json()@\texttt{plotly\_json()}}
+\index{plotly.js}
 
 To recreate the plots in Figure \ref{fig:intro-defaults} using plotly.js \emph{directly}, it would take significantly more code and knowledge of plotly.js. That being said, learning how \textbf{plotly} generates the underlying plotly.js figure is a useful introduction to plotly.js itself, and knowledge of plotly.js becomes useful when you need more flexible control over \textbf{plotly}. As Figure \ref{fig:intro-printing} illustrates, when you print any \textbf{plotly} object, the \texttt{plotly\_build()} function is applied to that object, and that generates an R list which adheres to a syntax that plotly.js understands. This syntax is a JavaScript Object Notation (JSON) specification that plotly.js uses to represent, serialize, and render web graphics. A lot of documentation you'll find online about plotly (e.g., the online \href{https://plot.ly/r/reference/}{figure reference}) implicitly refers to this JSON specification, so it can helpful to know how to ``work backwards'' from that documentation (i.e., translate JSON into to R code). If you'd like to learn details about mapping between R and JSON, Chapter \ref{json} provides an introduction aimed at R programmers, and \citet{jsonlite} provides a cohesive overview of the \textbf{jsonlite} package, which is what \textbf{plotly} uses to map between R and JSON.
 
@@ -983,7 +976,6 @@ For illustration purposes, Figure \ref{fig:intro-printing} shows how this workfl
 
 \index{Plotly figure!Definition}
 \index{Plotly trace!Definition}
-\index{plotly\_json()@\texttt{plotly\_json()}}
 
 In plotly.js terminology, a \emph{figure} has two key components: \texttt{data} (aka, traces) and a \texttt{layout}. A \emph{trace} defines a mapping from data and visuals.\footnote{A trace is similar in concept to a layer (as defined in Section \ref{intro-plotly}, but it's not quite the same. In many cases, like the bottom panel of Figure \ref{fig:intro-defaults}, it makes sense to implement a single layer as multiple traces. This is due to the design of plotly.js and how traces are tied to legends and hover behavior.} Every trace has a \emph{type} (e.g., histogram, pie, scatter, etc) and the trace type determines what other attributes (i.e., visual and/or interactive properties, like \texttt{x}, \texttt{hoverinfo}, \texttt{name}) are available to control the trace mapping. That is, not every trace attribute is available to every trace type, but many attributes (e.g., the \texttt{name} of the trace) are available in every trace type and serve a similar purpose. From Figure \ref{fig:intro-json}, we can see that it takes multiple traces to generate the dodged bar chart, but instead of clicking through JSON viewer, sometimes it's easier to use \texttt{plotly\_build()} and compute on the plotly.js figure definition to verify certain things exist. Since \textbf{plotly} uses the \textbf{htmlwidgets} standard\footnote{The \textbf{htmlwidgets} package provides a foundation for other packages to implement R bindings to JavaScript libraries so that those bindings work in various contexts (e.g.~the R console, RStudio, inside \textbf{rmarkdown} documents, \textbf{shiny} apps, etc). For more info and examples, see the website \url{http://www.htmlwidgets.org}.}, the actual plotly.js figure definition appears under a list element named \texttt{x} \citep{htmlwidgets}.
 
@@ -1024,11 +1016,13 @@ If we investigated further, we'd notice that \texttt{color} and \texttt{colors} 
 \hypertarget{intro-ggplotly}{%
 \section{\texorpdfstring{Intro to \texttt{ggplotly()}}{Intro to ggplotly()}}\label{intro-ggplotly}}
 
-\index{ggplotly()@\texttt{ggplotly()}!Introduction}
+\index{ggplotly()@\texttt{ggplotly()}}
 
 The \texttt{ggplotly()} function from the \textbf{plotly} package has the ability to translate \textbf{ggplot2} to \textbf{plotly}. This functionality can be really helpful for quickly adding interactivity to your existing \textbf{ggplot2} workflow.\footnote{This section is not meant to teach you \textbf{ggplot2}, but rather to help point out when and why it might be preferable to \texttt{plot\_ly()}. If you're new to \textbf{ggplot2} and would like to learn it, see \ref{ggplot2}.} Moreover, even if you know \texttt{plot\_ly()} and plotly.js well, \texttt{ggplotly()} can still be desirable for creating visualizations that aren't necessarily straight-forward to achieve without it. To demonstrate, let's explore the relationship between \texttt{price} and other variables from the well-known \texttt{diamonds} dataset.
 
 Hexagonal binning (i.e., \texttt{geom\_hex()}) is useful way to visualize a 2D density\footnote{See Section \ref{frequencies-2D} for approaches using \texttt{plot\_ly()}}, like the relationship between \texttt{price} and \texttt{carat} as shown in Figure \ref{fig:hexbin}. From Figure \ref{fig:hexbin}, we can see there is a strong positive linear relationship between the \emph{log} of carat and price. It also shows that for many, the carat is only rounded to a particular number (indicated by the light blue bands) and no diamonds are priced around \$1500. Making this plot interactive makes it easier to decode the hexagonal colors into the counts that they represent.
+
+\index{ggplotly()@\texttt{ggplotly()}!ggplot2!geom\_hex()@\texttt{geom\_hex()}}
 
 \begin{Shaded}
 \begin{Highlighting}[]
@@ -1049,6 +1043,8 @@ Hexagonal binning (i.e., \texttt{geom\_hex()}) is useful way to visualize a 2D d
 
 I often use \texttt{ggplotly()} over \texttt{plot\_ly()} to leverage \textbf{ggplot2}'s consistent and expressive interface for exploring statistical summaries across groups. For example, by including a discrete \texttt{color} variable (e.g., \texttt{cut}) with \texttt{geom\_freqpoly()}, you get a frequency polygon for each level of that variable. This ability to quickly generate visual encodings of statistical summaries across an arbitrary number of groups works for basically any geom (e.g.~\texttt{geom\_boxplot()}, \texttt{geom\_histogram()}, \texttt{geom\_density()}, etc) and is a key feature of \textbf{ggplot2}.
 
+\index{ggplotly()@\texttt{ggplotly()}!ggplot2!geom\_freqpoly()@\texttt{geom\_freqpoly()}}
+
 \begin{Shaded}
 \begin{Highlighting}[]
 \NormalTok{p <-}\StringTok{ }\KeywordTok{ggplot}\NormalTok{(diamonds, }\KeywordTok{aes}\NormalTok{(}\DataTypeTok{x =} \KeywordTok{log}\NormalTok{(price), }\DataTypeTok{color =}\NormalTok{ clarity)) }\OperatorTok{+}\StringTok{ }
@@ -1067,6 +1063,8 @@ I often use \texttt{ggplotly()} over \texttt{plot\_ly()} to leverage \textbf{ggp
 \end{figure}
 
 Now, to see how \texttt{price} varies with both \texttt{cut} and \texttt{clarity}, we could repeat this same visualization for each level of \texttt{cut}. This is where \textbf{ggplot2}'s \texttt{facet\_wrap()} comes in handy. Moreover, to facilitate comparisons, we can have \texttt{geom\_freqpoly()} display relative rather than absolute frequencies. By making this plot interactive, we can more easily compare particular levels of clarity (as shown in Figure \ref{fig:freqpoly-facet}) by leveraging the legend filtering capabilities.
+
+\index{ggplotly()@\texttt{ggplotly()}!ggplot2!facet\_wrap()@\texttt{facet\_wrap()}}
 
 \begin{Shaded}
 \begin{Highlighting}[]
@@ -1090,7 +1088,9 @@ In addition to supporting most of the `core' \textbf{ggplot2} API, \texttt{ggplo
 
 Figure \ref{fig:geom-sina} demonstrates another way of visualizing the same information found in Figure \ref{fig:freqpoly-facet} using \texttt{geom\_sina()} from the \textbf{ggforce} package (instead of \texttt{geom\_freqpoly()}). This visualization jitters the raw data within the density for each group -- allowing us not only to see where the majority observations fall within a group, but also across all across all groups. By making this layer interactive, we can query individual points for more information and zoom into interesting regions. The second layer of Figure \ref{fig:geom-sina} uses \textbf{ggplot2}'s \texttt{stat\_summary()} to overlay a 95\% confidence interval estimated via a bootstrap algorithm via the \textbf{Hmisc} package \citep{Hmisc}.
 
-\index{ggplotly()@\texttt{ggplotly()}!ggforce}
+\index{ggplotly()@\texttt{ggplotly()}!ggforce!geom\_sina()@\texttt{geom\_sina()}}
+\index{ggplotly()@\texttt{ggplotly()}!ggplot2!stat\_summary()@\texttt{stat\_summary()}}
+\index{toWebGL()@\texttt{toWebGL()}!ggplotly()@\texttt{ggplotly()}}
 
 \begin{Shaded}
 \begin{Highlighting}[]
@@ -1136,7 +1136,7 @@ As noted by \citet{r4ds}, it's surprising that the diamond price would decline w
 \caption{A sina plot of diamond price by clarity and cut, after accounting for carat.}\label{fig:geom-sina-resid}
 \end{figure}
 
-\index{ggplotly()@\texttt{ggplotly()}!GGally}
+\index{ggplotly()@\texttt{ggplotly()}!GGally!ggcoef()@\texttt{ggcoef()}}
 
 As discussed in Chapter \ref{ggally-ggnostic}, the \textbf{GGally} package provides a convenient interface for making similar types of model diagnostic visualizations via the \texttt{ggnostic()} function. It also provides a convenience function for visualizing the coefficient estimates and their standard errors via the \texttt{ggcoef()} function. Figure \ref{fig:ggally} shows how injecting interactivity into this plot allows us to query exact values and zoom in on the most interesting regions.
 
@@ -1161,7 +1161,7 @@ As discussed in Chapter \ref{ggally-ggnostic}, the \textbf{GGally} package provi
 
 Although the \texttt{diamonds} dataset does not contain any missing values, it's a very common problem in real data analysis problems. The \textbf{naniar} package provides a suite of computational and visual resources for working with and revealing structure in missing values. All the \textbf{ggplot2} based visualizations return an object that can be converted by \texttt{ggplotly()}. Moreover, \textbf{naniar} provides a custom geom, \texttt{geom\_miss\_point()}, that can be useful for visualizing missingness structure. Figure \ref{fig:naniar} demonstrates this by introducing fake missing values to the diamond price.
 
-\index{ggplotly()@\texttt{ggplotly()}!naniar}
+\index{ggplotly()@\texttt{ggplotly()}!naniar!geom\_miss\_point()@\texttt{geom\_miss\_point()}}
 
 \begin{Shaded}
 \begin{Highlighting}[]
@@ -1196,14 +1196,8 @@ It's also worth mentioning that \texttt{ggplotly()} conversions are not always p
 
 As we learned in Section \ref{intro-plotly-js}, a plotly.js figure contains one (or more) trace(s), and every trace has a type. The trace type scatter is great for drawing low-level geometries (e.g., points, lines, text, and polygons) and provides the foundation for many \texttt{add\_*()} functions (e.g., \texttt{add\_markers()}, \texttt{add\_lines()}, \texttt{add\_paths()}, \texttt{add\_segments()}, \texttt{add\_ribbons()}, \texttt{add\_area()}, and \texttt{add\_polygons()}) as well as many \texttt{ggplotly()} charts. These scatter-based layers provide a more convenient interface to special cases of the scatter trace by doing a bit of data wrangling and transformation under-the-hood before mapping to scatter trace(s). For a simple example, \texttt{add\_lines()} ensures lines are drawn according to the ordering of \texttt{x}, which is desirable for a time series plotting. This behavior is subtly different than \texttt{add\_paths()} which uses row ordering instead.
 
-\index{
-  add\_trace()@\texttt{add\_trace()}!
-    add\_paths()@\texttt{add\_paths()}
-}
-\index{
-  add\_trace()@\texttt{add\_trace()}!
-    add\_lines()@\texttt{add\_lines()}
-}
+\index{add\_trace()@\texttt{add\_trace()}!add\_paths()@\texttt{add\_paths()}}
+\index{add\_trace()@\texttt{add\_trace()}!add\_lines()@\texttt{add\_lines()}}
 
 \begin{Shaded}
 \begin{Highlighting}[]
@@ -1232,10 +1226,7 @@ As we learned in Section \ref{intro-plotly-js}, a plotly.js figure contains one 
 
 Section \ref{intro-plotly} introduced `aesthetic mapping' arguments (unique to the R package) which make it easier to map data to visual properties (e.g., \texttt{color}, \texttt{linetype}, etc). In addition to these arguments, \textbf{dplyr} groupings can be used to ensure there is at least one geometry per group. The top panel of Figure \ref{fig:scatter-intro} demonstrates how \texttt{group\_by()} could be used to effectively wrap the time series from Figure \ref{fig:scatter-intro} by year, which can be useful for visualizing annual seasonality. Another approach to generating at least one geometry per `group' is to provide categorical variable to a relevant aesthetic (e.g., \texttt{color}), as shown in the bottom panel of Figure \ref{fig:scatter-intro}.
 
-\index{
-  plot\_ly()@\texttt{plot\_ly()}!
-    group\_by()@\texttt{group\_by()} vs \texttt{split}
-}
+\index{plot\_ly()@\texttt{plot\_ly()}!group\_by()@\texttt{group\_by()} vs \texttt{split}}
 
 \begin{Shaded}
 \begin{Highlighting}[]
@@ -1272,15 +1263,9 @@ Section \ref{intro-plotly} introduced `aesthetic mapping' arguments (unique to t
 
 Not only do these plots differ in visual appearance, they also differ in interactive capabilities, computational performance, and underlying implementation. That's because, the grouping approach (top panel of Figure \ref{fig:scatter-lines}) uses just one plotly.js trace (more performant, less interactive), whereas the \texttt{color} approach (bottom panel of Figure \ref{fig:scatter-lines}) generates one trace per line/year. In this case, the benefit of having multiple traces is that we can perform interactive filtering via the legend and compare multiple y-values at a given x. The cost of having those capabilities is that plots starts to be become sluggish after a few hundred traces, whereas thousands of lines can be rendered fairly easily in one trace. See Chapter \ref{performance} for more details on scaling and performance.
 
-\index{
-  add\_trace()@\texttt{add\_trace()}!
-    Introduction
-}
-\index{
-  plot\_ly()@\texttt{plot\_ly()}!
-    Special attributes!
-      Introduction
-}
+\index{add\_trace()@\texttt{add\_trace()}}
+\index{plot\_ly()@\texttt{plot\_ly()}!Special attributes}
+\index{layout()@\texttt{layout()}!2D Axes!range@\texttt{range}}
 
 These features make it easier to get started using plotly.js, but it still pays off to learn how to use plotly.js directly. You won't find plotly.js attributes listed as explicit arguments in any \textbf{plotly} function (except for the special \texttt{type} attribute), but they are passed along verbatim to the plotly.js figure definition through the \texttt{...} operator. The scatter-based layers in this chapter fix the \texttt{type} plotly.js attribute to \texttt{"scatter"} as well as the \href{https://plot.ly/r/reference/\#scatter-mode}{\texttt{mode}} (e.g., \texttt{add\_markers()} uses \texttt{mode=\textquotesingle{}markers\textquotesingle{}} etc), but you could also use the lower-level \texttt{add\_trace()} to work more directly with plotly.js. For example, Figure \ref{fig:tooltip-praise} shows how to render markers, lines, and text in the same scatter trace. It also demonstrates how to leverage \emph{nested} plotly.js attributes, like \href{https://plot.ly/r/reference/\#scatter-textfont}{\texttt{textfont}} and \href{https://plot.ly/r/reference/\#layout-xaxis}{\texttt{xaxis}} -- these attributes contain other attributes, so you need to supply a suitable named list to these arguments.
 
@@ -1346,21 +1331,14 @@ The sections that follow in this chapter demonstrate various type of data views 
 \hypertarget{markers}{%
 \section{Markers}\label{markers}}
 
-\index{
-  add\_trace()@\texttt{add\_trace()}!
-    add\_markers()@\texttt{add\_markers()}
-}
+\index{add\_trace()@\texttt{add\_trace()}!add\_markers()@\texttt{add\_markers()}}
 
 This section details scatter traces with a \texttt{mode} of \texttt{"markers"} (i.e., \texttt{add\_markers()}). For simplicity, many of the examples here use \texttt{add\_markers()} with a numeric x and y axis, which results in scatterplot -- a common way to visualize the association between two quantitative variables. The content that follows is still relevant markers displayed non-numeric x and y (aka dot pots) as shown in Section \ref{dot-plots}.
 
 \hypertarget{marker-alpha}{%
 \subsection{Alpha blending}\label{marker-alpha}}
 
-\index{
-  plot\_ly()@\texttt{plot\_ly()}!
-    Special attributes!
-      alpha@\texttt{alpha}
-}
+\index{plot\_ly()@\texttt{plot\_ly()}!Special attributes!alpha@\texttt{alpha}}
 
 As \citet{unwin-graphical-analysis} notes, scatterplots can be useful for exposing other important features including: casual relationships, outliers, clusters, gaps, barriers, and conditional relationships. A common problem with scatterplots, however is overplotting, meaning that there are multiple observations occupying the same (or similar) x/y locations. Figure \ref{fig:scatterplots} demonstrates one way to combat overplotting via alpha blending. When dealing with tens of thousands of points (or more), consider using \texttt{toWebGL()} to render plots using Canvas rather than SVG (more in Chapter \ref{performance}, or leveraging 2D density estimation (Section \ref{rectangular-binning-in-r}).
 
@@ -1386,11 +1364,7 @@ As \citet{unwin-graphical-analysis} notes, scatterplots can be useful for exposi
 \hypertarget{marker-color}{%
 \subsection{Colors}\label{marker-color}}
 
-\index{
-  plot\_ly()@\texttt{plot\_ly()}!
-    Special attributes!
-      color@\texttt{color} / \texttt{colors}
-}
+\index{plot\_ly()@\texttt{plot\_ly()}!Special attributes!color@\texttt{color} / \texttt{colors}}
 \index{colorbar()@\texttt{colorbar()}}
 
 As discussed in Section \ref{intro-plotly-js}, mapping a discrete variable to \texttt{color} produces one trace per category, which is desirable for it's legend and hover properties. On the other hand, mapping a \emph{numeric} variable to \texttt{color} produces one trace, as well as a \href{https://plot.ly/r/reference/\#scatter-marker-colorbar}{colorbar} guide for visually decoding colors back to data values. The \texttt{colorbar()} function can be used to customize the appearance of this automatically generated guide. The default colorscale is viridis, a perceptually-uniform colorscale (even when converted to black-and-white), and perceivable even to those with common forms of color blindness \citep{viridis}. Viridis is also the default colorscale for ordered factors.
@@ -1486,11 +1460,7 @@ The \texttt{color} argument is meant to control the `fill-color' of a geometric 
 \hypertarget{marker-symbol}{%
 \subsection{Symbols}\label{marker-symbol}}
 
-\index{
-  plot\_ly()@\texttt{plot\_ly()}!
-    Special attributes!
-      symbol@\texttt{symbol} / \texttt{symbols}
-}
+\index{plot\_ly()@\texttt{plot\_ly()}!Special attributes!symbol@\texttt{symbol} / \texttt{symbols}}
 
 The \texttt{symbol} argument can be used to map data values to the \texttt{marker.symbol} plotly.js attribute. It uses the same semantics that we've already seen for \texttt{color}:
 
@@ -1574,16 +1544,8 @@ If you'd like to see all the symbols available to \textbf{plotly}, as well as a 
 \hypertarget{marker-stroke}{%
 \subsection{Stroke and span}\label{marker-stroke}}
 
-\index{
-  plot\_ly()@\texttt{plot\_ly()}!
-    Special attributes!
-      stroke@\texttt{stroke} / \texttt{strokes}
-}
-\index{
-  plot\_ly()@\texttt{plot\_ly()}!
-    Special attributes!
-      span@\texttt{span} / \texttt{spans}
-}
+\index{plot\_ly()@\texttt{plot\_ly()}!Special attributes!stroke@\texttt{stroke} / \texttt{strokes}}
+\index{plot\_ly()@\texttt{plot\_ly()}!Special attributes!span@\texttt{span} / \texttt{spans}}
 
 The \texttt{stroke} argument follows the same semantics as \texttt{color} and \texttt{symbol} when it comes to variable mappings and specifying visual ranges. Typically you don't want to map data values to \texttt{stroke}, you just want to specify a fixed outline color. For example, Figure \ref{fig:stroke-manual} modifies Figure \ref{fig:symbol-factor-manual} to simply add a black outline. By default, the \texttt{span}, or width of the stroke, is zero, you'll likely want to set the width to be around one pixel.
 
@@ -1606,11 +1568,7 @@ The \texttt{stroke} argument follows the same semantics as \texttt{color} and \t
 \hypertarget{marker-size}{%
 \subsection{Size}\label{marker-size}}
 
-\index{
-  plot\_ly()@\texttt{plot\_ly()}!
-    Special attributes!
-      size@\texttt{size} / \texttt{sizes}
-}
+\index{plot\_ly()@\texttt{plot\_ly()}!Special attributes!size@\texttt{size} / \texttt{sizes}}
 
 For scatterplots, the \texttt{size} argument controls the area of markers (unless otherwise specified via \href{https://plot.ly/r/reference/\#scatter-marker-sizemode}{sizemode}), and \emph{must} be a numeric variable. The \texttt{sizes} argument controls the minimum and maximum size of circles, in pixels:
 
@@ -1654,10 +1612,7 @@ Similar to other arguments, \texttt{I()} can be used to specify the size directl
 \subsection{Dotplots \& error bars}\label{dot-plots}}
 
 \index{Chart types!Dotplot}
-\index{
-  add\_markers()@\texttt{add\_markers()}!
-    Error bars
-}
+\index{add\_trace()@\texttt{add\_trace()}!add\_markers()@\texttt{add\_markers()}!Error bars}
 
 A dotplot is similar to a scatterplot, except instead of two numeric axes, one is categorical. The usual goal of a dotplot is to compare value(s) on a numerical scale over numerous categories. In this context, dotplots are preferable to pie charts since comparing position along a common scale is much easier than comparing angle or area \citep{graphical-perception, crowdsourcing-graphical-perception}. Furthermore, dotplots can be preferable to bar charts, especially when comparing values within a narrow range far away from 0 \citep{few-values}. Also, when presenting point estimates, and uncertainty associated with those estimates, bar charts tend to exaggerate the difference in point estimates, and lose focus on uncertainty \citep{messing}.
 
@@ -1698,21 +1653,14 @@ A popular application for dotplots (with error bars) is the so-called ``coeffici
 \hypertarget{lines}{%
 \section{Lines}\label{lines}}
 
-\index{
-  add\_trace()@\texttt{add\_trace()}!
-    add\_lines()@\texttt{add\_lines()}
-}
+\index{add\_trace()@\texttt{add\_trace()}!add\_lines()@\texttt{add\_lines()}}
 
 Many of the same principles we learned about aesthetic mappings with respect to markers (Section \ref{markers}) also apply to lines.\footnote{At the time of writing, the plotly.js attributes \href{https://github.com/plotly/plotly.js/issues/147}{\texttt{line.width} and \texttt{line.color}} do not support multiple values, meaning a single line trace can only have one width/color in 2D line plot, and consequently numeric \texttt{color}/\texttt{size} mappings won't work. This isn't necessarily true for 3D paths/lines and there will likely be support these features for 2D paths/lines in WebGL in the near future.} Moreover, at the start of this chapter (namely Figure \ref{fig:scatter-lines}) we also learned how to use \textbf{dplyr}'s \texttt{group\_by()} to ensure there is at least one geometry (in this case, line) per group. We also learned the difference between \texttt{add\_paths()} and \texttt{add\_lines()} -- the former draws lines according to row ordering whereas the latter draw them according to \texttt{x}. In this chapter, we'll learn about \texttt{linetype}/\texttt{linetype}, an aesthetic that applies to lines and polygons. We'll also discuss some other important chart types that can be implemented with \texttt{add\_paths()}, \texttt{add\_lines()}, and \texttt{add\_segments()}.
 
 \hypertarget{linetypes}{%
 \subsection{Linetypes}\label{linetypes}}
 
-\index{
-  plot\_ly()@\texttt{plot\_ly()}!
-    Special attributes!
-      linetype@\texttt{linetype} / \texttt{linetypes}
-}
+\index{plot\_ly()@\texttt{plot\_ly()}!Special attributes!linetype@\texttt{linetype} / \texttt{linetypes}}
 
 Generally speaking, it's hard to perceive more than 8 different colors/linetypes/symbols in a given plot, so sometimes we have to filter data to use these effectively. Here we use the \textbf{dplyr} package to find the top 5 cities in terms of average monthly sales (\texttt{top5}), then effectively filter the original data to contain just these cities via \texttt{semi\_join()}. As Figure \ref{fig:linetypes} demonstrates, once we have the data filtered, mapping city to \texttt{color} or \texttt{linetype} is trivial. The color palette can be altered via the \texttt{colors} argument, and follows the same rules as \protect\hyperlink{scatterplots}{scatterplots}. The linetype palette can be altered via the \texttt{linetypes} argument, and accepts R's \href{https://github.com/wch/r-source/blob/e5b21d0397c607883ff25cca379687b86933d730/src/library/graphics/man/par.Rd\#L726-L743}{\texttt{lty} values} or plotly.js \href{https://plot.ly/r/reference/\#scatter-line-dash}{dash values}.
 
@@ -1770,10 +1718,7 @@ If you'd like to control exactly which linetype is used to encode a particular d
 \hypertarget{segments}{%
 \subsection{Segments}\label{segments}}
 
-\index{
-  add\_trace()@\texttt{add\_trace()}!
-    add\_segments()@\texttt{add\_segments()}
-}
+\index{add\_trace()@\texttt{add\_trace()}!add\_segments()@\texttt{add\_segments()}}
 
 The \texttt{add\_segments()} function essentially provides a way to connect two points {[}(\texttt{x}, \texttt{y}) to (\texttt{xend}, \texttt{yend}){]} with a line. Segments form the building blocks for numerous useful chart types, including slopegraphs, dumbell charts, candlestick charts, and more. Slopegraphs and dumbell charts are useful for comparing numeric values across numerous categories. Candlestick charts are typically used for visualizing change in a financial asset over time.
 
@@ -1784,12 +1729,16 @@ Segments can also provide a useful alternative to \texttt{add\_bars()} (covered 
 
 \index{Chart types!Slopegraph}
 \index{Editable charts!Annotations}
-\index{add\_annotations()@\texttt{add\_annotations()}}
-\index{
-  layout()@\texttt{layout()}!
-    Axis attributes
-}
+\index{add\_annotations()@\texttt{add\_annotations()}!Data coordinates}
+\index{layout()@\texttt{layout()}!2D Axes}!range@\texttt{range}
 
+\index{layout()@\texttt{layout()}!2D Axes!tickvals@\texttt{tickvals}}
+\index{layout()@\texttt{layout()}!2D
+Axes!ticktext@\texttt{ticktext}}
+\index{layout()@\texttt{layout()}!2D Axes!zeroline@\texttt{zeroline}}
+\index{layout()@\texttt{layout()}!2D Axes!showgrid@\texttt{showgrid}}
+\index{layout()@\texttt{layout()}!2D Axes!showticks@\texttt{showticks}}
+\index{layout()@\texttt{layout()}!2D Axes!showticklabels@\texttt{showticklabels}}
 The slope graph, made popular by \citet{tufte2001}, is a great way to compare the change in a measurement across numerous groups. This change could be along either a discrete or a continuous axis. For a continuous axis, the slopegraph could be thought of as a decomposition of a line graph into multiple segments. The \textbf{slopegraph} R package provides a succinct interface for creating slopegraphs with base or \textbf{ggplot2} graphics and also some convenient data sets which we'll make use of here \citep{slopegraph}. Figure \ref{fig:slopegraph} recreates an example from \citet{tufte2001}, using the \texttt{gdp} data set from \textbf{slopegraph}, and demonstrates a common issue with labelling in slopegraphs -- it's easy to have overlapping labels when anchoring labels on data values. For that reason, this implementation leverages \textbf{plotly} ability to interactively edit annotation positions. See Chapter \ref{editing-views} for similar examples of `editing views'.
 
 \begin{Shaded}
@@ -1922,7 +1871,7 @@ Figure \ref{fig:candlestick} uses the \textbf{quantmod} package \citep{quantmod}
 \hypertarget{density-plots}{%
 \subsection{Density plots}\label{density-plots}}
 
-\index{Chart types!Kernel densities}
+\index{Kernel density estimation!density()@\texttt{density()}}
 
 In Chapter \ref{bars-histograms}, we leverage a number of algorithms in R for computing the ``optimal'' number of bins for a histogram, via \texttt{hist()}, and routing those results to \texttt{add\_bars()}. We can leverage the \texttt{density()} function for computing kernel density estimates in a similar way, and route the results to \texttt{add\_lines()}, as is done in Figure \ref{fig:densities}.
 
@@ -1990,11 +1939,9 @@ It is also worth noting that the \textbf{GGally} offers a \texttt{ggparcoord()} 
 \hypertarget{polygons}{%
 \section{Polygons}\label{polygons}}
 
-\index{
-  add\_trace()@\texttt{add\_trace()}!
-    add\_polygons()@\texttt{add\_polygons()}
-}
+\index{add\_trace()@\texttt{add\_trace()}!add\_polygons()@\texttt{add\_polygons()}}
 
+\index{layout()@\texttt{layout()}!2D Axes!scaleanchor@\texttt{scaleanchor}}
 The \texttt{add\_polygons()} function is essentially equivalent to \texttt{add\_paths()} with the \href{https://plot.ly/r/reference/\#scatter-fill}{fill} attribute set to ``toself''. Polygons form the basis for other, higher-level scatter-based layers (e.g., \texttt{add\_ribbons()} and \texttt{add\_sf()}) that don't have a dedicated plotly.js trace type. Polygons can be use to draw many things, but perhaps the most familiar application where you \emph{might} want to use \texttt{add\_polygons()} is to draw geo-spatial objects. If and when you use \texttt{add\_polygons()} to draw a map, make sure you fix the aspect ratio (e.g., \href{https://plot.ly/r/reference/\#layout-xaxis-scaleanchor}{\texttt{xaxis.scaleanchor}}) and also consider using \texttt{plotly\_empty()} over \texttt{plot\_ly()} to hide axis labels, ticks, and the background grid. On the other hand, Section \ref{maps-custom} shows you how to make a custom maps using the \textbf{sf} package and \texttt{add\_sf()}, which is a bit of work to get started, but is absolutely worth the investment.
 
 \begin{Shaded}
@@ -2040,10 +1987,7 @@ As discussion surrounding Figure \ref{fig:split-color} points out, scatter-based
 \hypertarget{ribbons}{%
 \subsection{Ribbons}\label{ribbons}}
 
-\index{
-  add\_trace()@\texttt{add\_trace()}!
-    add\_ribbons()@\texttt{add\_ribbons()}
-}
+\index{add\_trace()@\texttt{add\_trace()}!add\_ribbons()@\texttt{add\_ribbons()}}
 
 Ribbons are useful for showing uncertainty bounds as a function of x. The \texttt{add\_ribbons()} function creates ribbons and requires the arguments: \texttt{x}, \texttt{ymin}, and \texttt{ymax}. The \texttt{augment()} function from the \textbf{broom} package appends observational-level model components (e.g., fitted values stored as a new column \texttt{.fitted}) which is useful for extracting those components in a convenient form for visualization. Figure \ref{fig:broom-lm} shows the fitted values and uncertainty bounds from a linear model object.
 
@@ -2082,9 +2026,7 @@ It's worth noting that \textbf{plotly} aims to be a general purpose visualizatio
 \hypertarget{overview-1}{%
 \subsection{Overview}\label{overview-1}}
 
-\index{
-  plot\_mapbox()@\texttt{plot\_mapbox()}
-}
+\index{plot\_mapbox()@\texttt{plot\_mapbox()}}
 
 If you have fairly simple latitude/longitude data and want to make a quick map, you may want to try one of \textbf{plotly}'s integrated mapping options (i.e., \texttt{plot\_mapbox()} and \texttt{plot\_geo()}). Generally speaking, you can treat these constructor functions as a drop-in replacement for \texttt{plot\_ly()} and get a dynamic basemap rendered behind your data. Furthermore, all the scatter-based layers we learned about in Section \ref{scatter-traces} work as you'd expect it to with \texttt{plot\_ly()}.\footnote{Unfortunately, non-scatter traces currently don't work with \texttt{plot\_mapbox()}/ \texttt{plot\_geo()} meaning that, for one, raster (i.e., heatmap) maps are not natively supported.} For example, Figure \ref{fig:mapbox-bubble} uses \texttt{plot\_mapbox()} and \texttt{add\_markers()} to create a bubble chart:
 
@@ -2111,6 +2053,8 @@ If you have fairly simple latitude/longitude data and want to make a quick map, 
 
 \caption{A mapbox powered bubble chart showing the population of various cities in Canada. For a video demonstration of the interactive, see \url{https://bit.ly/mapbox-bubble}. For the interactive, see \url{https://plotly-r.com/interactives/mapbox-bubble.html}}\label{fig:mapbox-bubble}
 \end{figure}
+
+\index{plot\_mapbox()@\texttt{plot\_mapbox()}!Basemap style}
 
 The Mapbox basemap styling is controlled through the \href{https://plot.ly/r/reference/\#layout-mapbox-style}{\texttt{layout.mapbox.style}} attribute. The \textbf{plotly} package comes with support for 7 different styles, but you can also supply a custom URL to a \href{https://docs.mapbox.com/help/tutorials/create-a-custom-style/}{custom mapbox style}. To obtain all the pre-packaged basemap style names, you can grab them from the official plotly.js \texttt{schema()}:
 
@@ -2147,6 +2091,8 @@ Any one of these values can be used for a mapbox style. Figure \ref{fig:satellit
 
 Figure \ref{fig:mapbox-style-dropdown} demonstrates how to create an integrated plotly.js dropdown menu to control the basemap style via the \href{https://plot.ly/r/reference/\#layout-updatemenus-items-updatemenu-buttons}{\texttt{layout.updatemenus}} attribute. The idea behind an integrated plotly.js dropdown is to supply a list of buttons (i.e., menu items) where each button invokes a plotly.js method with some arguments. In this case, each button uses the \href{https://plot.ly/javascript/plotlyjs-function-reference/}{relayout} method to modify the \texttt{layout.mapbox.style} attribute.\footnote{To see more examples of creating and using plotly.js' integrated dropdown functionality to modify graphs, see \url{https://plot.ly/r/dropdowns/}}
 
+\index{layout()@\texttt{layout()}!updatemenus@\texttt{updatemenus}}
+
 \begin{Shaded}
 \begin{Highlighting}[]
 \NormalTok{style_buttons <-}\StringTok{ }\KeywordTok{lapply}\NormalTok{(styles, }\ControlFlowTok{function}\NormalTok{(s) \{}
@@ -2175,11 +2121,11 @@ Figure \ref{fig:mapbox-style-dropdown} demonstrates how to create an integrated 
 \caption{Providing a dropdown menu to control the styling of the mapbox baselayer. For a video demonstration of the interactive, see \url{https://bit.ly/mapbox-style-dropdown}. For the interactive, see \url{https://plotly-r.com/interactives/mapbox-style-dropdown.html}}\label{fig:mapbox-style-dropdown}
 \end{figure}
 
-\index{
-  plot\_geo()@\texttt{plot\_geo()}
-}
+\index{plot\_geo()@\texttt{plot\_geo()}}
 
 The other integrated mapping solution in \textbf{plotly} is \texttt{plot\_geo()}. Compared to \texttt{plot\_mapbox()}, this approach has support for different mapping projections, but styling the basemap is limited and can be more cumbersome. Figure \ref{fig:geo-flights} demonstrates using \texttt{plot\_geo()} in conjunction with \texttt{add\_markers()} and \texttt{add\_segments()} to visualize flight paths within the United States. Whereas \texttt{plot\_mapbox()} is fixed to a mercator projection, the \texttt{plot\_geo()} constructor has a handful of different projection available to it, including the orthographic projection which gives the illusion of the 3D globe.
+
+\index{plot\_geo()@\texttt{plot\_geo()}!layout.geo@\texttt{layout(geo = ...)}}
 
 \begin{Shaded}
 \begin{Highlighting}[]
@@ -2232,6 +2178,9 @@ The other integrated mapping solution in \textbf{plotly} is \texttt{plot\_geo()}
 
 One nice thing about \texttt{plot\_geo()} is that it automatically projects geometries into the proper coordinate system defined by the map projection. For example, in Figure \ref{fig:maps} the simple line segment is straight when using \texttt{plot\_mapbox()} yet curved when using \texttt{plot\_geo()}. It's possible to achieve the same effect using \texttt{plot\_ly()} or \texttt{plot\_mapbox()}, but the relevant marker/line/polygon data has to be put into an \textbf{sf} data structure before rendering (see Section \ref{sf} for more details).
 
+\index{add\_trace()@\texttt{add\_trace()}!add\_segments()@\texttt{add\_segments()}}
+\indexc{htmltools::tagList()}
+
 \begin{Shaded}
 \begin{Highlighting}[]
 \NormalTok{map1 <-}\StringTok{ }\KeywordTok{plot_mapbox}\NormalTok{() }\OperatorTok{%>%}\StringTok{ }
@@ -2264,9 +2213,13 @@ One nice thing about \texttt{plot\_geo()} is that it automatically projects geom
 \hypertarget{choropleths}{%
 \subsection{Choropleths}\label{choropleths}}
 
-In addition to scatter traces, both of the integrated mapping solutions (i.e., \texttt{plot\_mapbox()} and \texttt{plot\_geo()}) have an optimized choropleth trace type (i.e., the \href{https://plot.ly/r/reference/\#choroplethmapbox}{choroplethmapbox} and \href{https://plot.ly/r/reference/\#choropleth}{choropleth} trace types). The choropleth trace currently accepts three different \texttt{locationmode}s: either \texttt{"ISO-3"}, \texttt{"USA-states}, or \texttt{"country-names"}.
+\index{Chart types!Choropleth}
 
-Figure \ref{fig:us-density} shows the population density of the U.S. via a choropleth, and also layers on markers for the state center locations, using the U.S. state data from the \textbf{datasets} package \citep{RCore}. By simply providing a \href{https://plot.ly/r/reference/\#choropleth-z}{\texttt{z}} attribute, \texttt{plotly\_geo()} objects will try to create a choropleth, but you'll also need to provide \href{https://plot.ly/r/reference/\#choropleth-locations}{\texttt{locations}} and a \href{https://plot.ly/r/reference/\#choropleth-locationmode}{\texttt{locationmode}}. It's worth noting that the \texttt{locationmode} is currently limited to countries and US states, so if you need to a different geo-unit (e.g., counties, municipalities, etc), you should use the choroplethmapbox trace type and/or use a ``custom'' mapping approach as discussed in Section \ref{maps-custom}.
+In addition to scatter traces, both of the integrated mapping solutions (i.e., \texttt{plot\_mapbox()} and \texttt{plot\_geo()}) have an optimized choropleth trace type (i.e., the \href{https://plot.ly/r/reference/\#choroplethmapbox}{choroplethmapbox} and \href{https://plot.ly/r/reference/\#choropleth}{choropleth} trace types). Comparatively speaking, choroplethmapbox is more powerful because you can fully specify the feature collection using GeoJSON, but the choropleth trace can be a bit easier to use if it fits your use case.
+
+Figure \ref{fig:us-density} shows the population density of the U.S. via the choropleth trace using the U.S. state data from the \textbf{datasets} package \citep{RCore}. By simply providing a \href{https://plot.ly/r/reference/\#choropleth-z}{\texttt{z}} attribute, \texttt{plotly\_geo()} objects will try to create a choropleth, but you'll also need to provide \href{https://plot.ly/r/reference/\#choropleth-locations}{\texttt{locations}} and a \href{https://plot.ly/r/reference/\#choropleth-locationmode}{\texttt{locationmode}}. It's worth noting that the \texttt{locationmode} is currently limited to countries and US states, so if you need to a different geo-unit (e.g., counties, municipalities, etc), you should use the choroplethmapbox trace type and/or use a ``custom'' mapping approach as discussed in Section \ref{maps-custom}.
+
+\index{plot\_geo()@\texttt{plot\_geo()}!Choropleth}
 
 \begin{Shaded}
 \begin{Highlighting}[]
@@ -2298,12 +2251,14 @@ Figure \ref{fig:us-density} shows the population density of the U.S. via a choro
 
 Choroplethmapbox is more flexible than choropleth because you supply your own GeoJSON definition of the choropleth via the \texttt{geojson} attribute. Currently this attribute must be a URL pointing to a geojson file. Moreover, the \texttt{location} should point to a top-level id attribute of each feature within the geojson file. Figure \ref{fig:us-density-geojson} demonstrates how we could visualize the same information as Figure \ref{fig:us-density}, but this time using choroplethmapbox.
 
+\index{plot\_mapbox()@\texttt{plot\_mapbox()}!Choropleth}
+
 \begin{Shaded}
 \begin{Highlighting}[]
 \KeywordTok{plot_ly}\NormalTok{() }\OperatorTok{%>%}
 \StringTok{  }\KeywordTok{add_trace}\NormalTok{(}
     \DataTypeTok{type =} \StringTok{"choroplethmapbox"}\NormalTok{,}
-    \CommentTok{# See how this GeoJSON URL was generated, go to}
+    \CommentTok{# See how this GeoJSON URL was generated at}
     \CommentTok{# https://plotly-r.com/data-raw/us-states.R}
     \DataTypeTok{geojson =} \KeywordTok{paste}\NormalTok{(}\KeywordTok{c}\NormalTok{(}
       \StringTok{"https://gist.githubusercontent.com/cpsievert/"}\NormalTok{,}
@@ -2511,6 +2466,8 @@ For those interested in learning more about geocomputation in R with \textbf{sf}
 \hypertarget{cartograms}{%
 \subsection{Cartograms}\label{cartograms}}
 
+\index{Chart types!Cartogram}
+
 Cartograms distort the size of geo-spatial polygons to encode a numeric variable other than the land size. There are numerous types of cartograms and they are typically categorized by their ability to preserve shape and maintain contiguous regions. Cartograms has been shown to be an effective approach to both encode and teach about geo-spatial data, though the effects certainly vary by cartogram type \citep{cartogram-vis}.
 The R package \textbf{cartogram} provides an interface to several popular cartogram algorithms \citep{cartogram}. A number of other R packages provide cartogram algorithms, but the great thing about \textbf{cartogram} is that all the functions can take an \textbf{sf} (or \textbf{sp}) object as input and return an \textbf{sf} object. This makes it incredibly easy to go from raw spatial objects, to transformed objects, to visual. Figure \ref{fig:cartogram} demonstrates a continuous area cartogram of US population in 2014 using a rubber sheet distortion algorithm from \citet{Dougenik}.
 
@@ -2616,6 +2573,10 @@ The \texttt{add\_bars()} and \texttt{add\_histogram()} functions wrap the \href{
 
 Figure \ref{fig:bars-numeric} compares the default binning algorithm in plotly.js to a few different algorithms available in R via the \texttt{hist()} function. Although plotly.js has the ability to customize histogram bins via \href{https://plot.ly/r/reference/\#histogram-xbins}{\texttt{xbins}}/\href{https://plot.ly/r/reference/\#histogram-ybins}{\texttt{ybins}}, R has diverse facilities for estimating the optimal number of bins in a histogram that we can easily leverage.\footnote{Optimal in this context is the number of bins which minimizes the distance between the empirical histogram and the underlying density.} The \texttt{hist()} function alone allows us to reference 3 famous algorithms by name \citep{Sturges, FD, hist-scott}, but there are also packages (e.g.~the \textbf{histogram} package) which extend this interface to incorporate more methodology \citep{histogram}. The \texttt{price\_hist()} function below wraps the \texttt{hist()} function to obtain the binning results, and map those bins to a plotly version of the histogram using \texttt{add\_bars()}.
 
+\index{add\_trace()@\texttt{add\_trace()}!add\_bars()@\texttt{add\_bars()}}
+\index{add\_trace()@\texttt{add\_trace()}!add\_histogram()@\texttt{add\_histogram()}}
+\indexc{hist()}
+
 \begin{Shaded}
 \begin{Highlighting}[]
 \NormalTok{p1 <-}\StringTok{ }\KeywordTok{plot_ly}\NormalTok{(diamonds, }\DataTypeTok{x =} \OperatorTok{~}\NormalTok{price) }\OperatorTok{%>%}
@@ -2647,7 +2608,8 @@ Figure \ref{fig:bars-discrete} demonstrates two ways of creating a basic bar cha
 \begin{Shaded}
 \begin{Highlighting}[]
 \KeywordTok{library}\NormalTok{(dplyr)}
-\NormalTok{p1 <-}\StringTok{ }\KeywordTok{plot_ly}\NormalTok{(diamonds, }\DataTypeTok{x =} \OperatorTok{~}\NormalTok{cut) }\OperatorTok{%>%}\StringTok{ }\KeywordTok{add_histogram}\NormalTok{()}
+\NormalTok{p1 <-}\StringTok{ }\KeywordTok{plot_ly}\NormalTok{(diamonds, }\DataTypeTok{x =} \OperatorTok{~}\NormalTok{cut) }\OperatorTok{%>%}
+\StringTok{  }\KeywordTok{add_histogram}\NormalTok{()}
 
 \NormalTok{p2 <-}\StringTok{ }\NormalTok{diamonds }\OperatorTok{%>%}
 \StringTok{  }\KeywordTok{count}\NormalTok{(cut) }\OperatorTok{%>%}
@@ -2671,6 +2633,9 @@ Figure \ref{fig:bars-discrete} demonstrates two ways of creating a basic bar cha
 \section{Multiple numeric distributions}\label{multiple-numeric-distributions}}
 
 It is often useful to see how the numeric distribution changes with respect to a discrete variable. When using bars to visualize multiple numeric distributions, I recommend plotting each distribution on its own axis using a small multiples display, rather than trying to overlay them on a single axis.\footnote{It's much easier to visualize multiple numeric distributions on a single axis using \protect\hyperlink{lines}{lines}}. Chapter \ref{arranging-views}, and specifically Section \ref{trellis-displays-subplot}, discuss small multiples in more detail, but Figure \ref{fig:subplot-trellis} demonstrates how it be done with \texttt{plot\_ly()} and \texttt{subplot()}. Note how the \texttt{one\_plot()} function defines what to display on each panel, then a split-apply-recombine (i.e., \texttt{split()}, \texttt{lapply()}, \texttt{subplot()}) strategy is employed to generate the trellis display.
+
+\index{subplot()@\texttt{subplot()}!Trellis display}
+\index{add\_annotations()@\texttt{add\_annotations()}!Paper coordinates}
 
 \begin{Shaded}
 \begin{Highlighting}[]
@@ -2722,6 +2687,9 @@ Visualizing multiple discrete distributions is difficult. The subtle complexity 
 
 Figure \ref{fig:cut-by-clarity} is useful for comparing the number of diamonds by clarity, given a type of cut. For instance, within ``Ideal'' diamonds, a cut of ``VS1'' is most popular, ``VS2'' is second most popular, and ``I1'' the least popular. The distribution of clarity within ``Ideal'' diamonds seems to be fairly similar to other diamonds, but it's hard to make this comparison using raw counts. Figure \ref{fig:cut-by-clarity-prop} makes this comparison easier by showing the relative frequency of diamonds by clarity, given a cut.
 
+\index{Chart types!Spine plot}
+\index{layout()@\texttt{layout()}!barmode@\texttt{barmode}!stack}
+
 \begin{Shaded}
 \begin{Highlighting}[]
 \CommentTok{# number of diamonds by cut and clarity (n)}
@@ -2747,6 +2715,8 @@ Figure \ref{fig:cut-by-clarity} is useful for comparing the number of diamonds b
 
 This type of plot, also known as a spine plot, is a special case of a mosaic plot. In a mosaic plot, you can scale both bar widths and heights according to discrete distributions. For mosaic plots, I recommend using the \textbf{ggmosaic} package \citep{ggmosaic}, which implements a custom \textbf{ggplot2} geom designed for mosaic plots, which we can convert to plotly via \texttt{ggplotly()}. Figure \ref{fig:ggmosaic} shows a mosaic plot of cut by clarity. Notice how the bar widths are scaled proportional to the cut frequency.
 
+\index{Chart types!Mosaic plot}
+
 \begin{Shaded}
 \begin{Highlighting}[]
 \KeywordTok{library}\NormalTok{(ggmosaic)}
@@ -2767,6 +2737,8 @@ This type of plot, also known as a spine plot, is a special case of a mosaic plo
 
 \hypertarget{boxplots}{%
 \chapter{Boxplots}\label{boxplots}}
+
+\index{add\_trace()@\texttt{add\_trace()}!add\_boxplot()@\texttt{add\_boxplot()}}
 
 Boxplots encode the five number summary of a numeric variable, and provide a decent way to compare many numeric distributions. The visual task of comparing multiple boxplots is relatively easy (i.e., compare position along a common scale) compared to some common alternatives (e.g., a trellis display of histograms, like \ref{fig:bars-numeric}), but the boxplot is sometimes inadequate for capturing complex (e.g., multi-modal) distributions (in this case, a frequency polygon, like Figure \ref{fig:freqpoly} provides a nice alternative). The \texttt{add\_boxplot()} function requires one numeric variable, and guarantees boxplots are \href{https://plot.ly/r/reference/\#box-orientation}{oriented} correctly, regardless of whether the numeric variable is placed on the x or y scale. As Figure \ref{fig:cut-boxes} shows, on the axis orthogonal to the numeric axis, you can provide a discrete variable (for conditioning) or supply a single value (to name the axis category).
 
@@ -2848,6 +2820,10 @@ Similar to \texttt{add\_histogram()}, \texttt{add\_boxplot()} sends the raw data
 \hypertarget{rectangular-binning-in-plotly.js}{%
 \section{Rectangular binning in plotly.js}\label{rectangular-binning-in-plotly.js}}
 
+\index{add\_trace()@\texttt{add\_trace()}!add\_heatmap()@\texttt{add\_heatmap()}}
+\index{add\_trace()@\texttt{add\_trace()}!add\_histogram2d()@\texttt{add\_histogram2d()}}
+\index{add\_trace()@\texttt{add\_trace()}!add\_histogram2dcontour()@\texttt{add\_histogram2dcontour()}}
+
 The \textbf{plotly} package provides two functions for displaying rectangular bins: \texttt{add\_heatmap()} and \texttt{add\_histogram2d()}. For numeric data, the \texttt{add\_heatmap()} function is a 2D analog of \texttt{add\_bars()} (bins must be pre-computed), and the \texttt{add\_histogram2d()} function is a 2D analog of \texttt{add\_histogram()} (bins can be computed in the browser). Thus, I recommend \texttt{add\_histogram2d()} for exploratory purposes, since you don't have to think about how to perform binning. It also provides a useful \href{https://plot.ly/r/reference/\#histogram2d-zsmooth}{\texttt{zsmooth}} attribute for effectively increasing the number of bins (currently, ``best'' performs a \href{https://en.wikipedia.org/wiki/Bilinear_interpolation}{bi-linear interpolation}, a type of nearest neighbors algorithm), and \href{https://plot.ly/r/reference/\#histogram2d-nbinsx}{\texttt{nbinsx}}/\href{https://plot.ly/r/reference/\#histogram2d-nbinsy}{\texttt{nbinsy}} attributes to set the number of bins in the x and/or y directions. Figure \ref{fig:histogram2d} compares three different uses of \texttt{add\_histogram()}: (1) plotly.js' default binning algorithm, (2) the default plus smoothing, (3) setting the number of bins in the x and y directions. Its also worth noting that filled contours, instead of bins, can be used in any of these cases by using \texttt{add\_histogram2dcontour()} instead of \texttt{add\_histogram2d()}.
 
 \begin{Shaded}
@@ -2882,6 +2858,8 @@ The \textbf{plotly} package provides two functions for displaying rectangular bi
 
 In \protect\hyperlink{bars-histograms}{Bars \& histograms}, we leveraged a number of algorithms in R for computing the ``optimal'' number of bins for a histogram, via \texttt{hist()}, and routing those results to \texttt{add\_bars()}. There is a surprising lack of research and computational tools for the 2D analog, and among the research that does exist, solutions usually depend on characteristics of the unknown underlying distribution, so the typical approach is to assume a Gaussian form \citep{mde}. Practically speaking, that assumption is not very useful, but 2D kernel density estimation provides a useful alternative that tends to be more robust to changes in distributional form. Although kernel density estimation requires choice of kernel and a bandwidth parameter, the \texttt{kde2d()} function from the \textbf{MASS} package provides a well-supported rule-of-thumb for estimating the bandwidth of a Gaussian kernel density \citep{MASS}. Figure \ref{fig:heatmap-corr-diamonds} uses \texttt{kde2d()} to estimate a 2D density, scales the relative frequency to an absolute frequency, then uses the \texttt{add\_heatmap()} function to display the results as a heatmap.
 
+\index{Kernel density estimation!MASS::kde2d()@\texttt{MASS::kde2d()}}
+
 \begin{Shaded}
 \begin{Highlighting}[]
 \NormalTok{kde_count <-}\StringTok{ }\ControlFlowTok{function}\NormalTok{(x, y, ...) \{}
@@ -2913,6 +2891,8 @@ In \protect\hyperlink{bars-histograms}{Bars \& histograms}, we leveraged a numbe
 \section{Categorical axes}\label{categorical-axes}}
 
 The functions \texttt{add\_histogram2d()}, \texttt{add\_histogram2dcontour()}, and \texttt{add\_heatmap()} all support categorical axes. Thus, \texttt{add\_histogram2d()} \emph{can} be used to easily display 2-way contingency tables, but since its easier to compare values along a common scale rather than compare colors \citep{graphical-perception}, I recommend creating \protect\hyperlink{multiple-discrete-distributions}{grouped bar charts} instead. The \texttt{add\_heatmap()} function can still be useful for categorical axes, however, as it allows us to display whatever quantity we want along the z axis (color).
+
+\index{colorbar()@\texttt{colorbar()}!Limits}
 
 Figure \ref{fig:correlation} uses \texttt{add\_heatmap()} to display a correlation matrix. Notice how the \texttt{limits} arguments in the \texttt{colorbar()} function can be used to expand the limits of the color scale to reflect the range of possible correlations (something that is not easily done in plotly.js).
 
@@ -3022,6 +3002,8 @@ As with non-3D lines, you can make multiple lines by specifying a grouping varia
 \hypertarget{axes}{%
 \section{Axes}\label{axes}}
 
+\index{layout()@\texttt{layout()}!3D Axes}
+
 For 3D plots, be aware that the axis objects are a part of the \href{https://plot.ly/r/reference/\#layout-scene}{\texttt{scene}} definition, which is part of the \texttt{layout()}. That is, if you wanted to set axis titles (e.g., Figure \ref{fig:3D-axes}), or something else specific to the axis definition, the relation between axes (i.e., \href{https://plot.ly/r/reference/\#layout-scene-aspectratio}{\texttt{aspectratio}}), or the default setting of the camera (i.e., \href{https://plot.ly/r/reference/\#layout-scene-camera}{\texttt{camera}}); you would do so via the \texttt{scence}.
 
 \begin{Shaded}
@@ -3049,6 +3031,8 @@ For 3D plots, be aware that the axis objects are a part of the \href{https://plo
 
 \hypertarget{surfaces}{%
 \section{Surfaces}\label{surfaces}}
+
+\index{add\_trace()@\texttt{add\_trace()}!add\_surface()@\texttt{add\_surface()}}
 
 Creating 3D surfaces with \texttt{add\_surface()} is a lot like creating heatmaps with \texttt{add\_heatmap()}. In fact, you can even create 3D surfaces over categorical x/y (try changing \texttt{add\_heatmap()} to \texttt{add\_surface()} in Figure \ref{fig:correlation})! That being said, there should be a sensible ordering to the x/y axes in a surface plot since plotly.js interpolates z values. Usually the 3D surface is over a continuous region, as is done in Figure \ref{fig:surface} to display the height of a volcano. If a numeric matrix is provided to z as in Figure \ref{fig:surface}, the x and y attributes do not have to be provided, but if they are, the length of x should match the number of columns in the matrix and y should match the number of rows.
 
@@ -3081,6 +3065,10 @@ This portion of the book, Publishing views, covers how to save \textbf{plotly} g
 
 \hypertarget{saving}{%
 \chapter{Saving and embedding HTML}\label{saving}}
+
+\indexc{htmlwidgets::saveWidget()}
+\indexc{htmltools::save\_html()}
+\indexc{partial\_bundle()}
 
 Any widget made from any \textbf{htmlwidgets} package (e.g., \textbf{plotly}, \textbf{leaflet}, \textbf{DT}, etc) can be saved as a standalone HTML file via the \texttt{htmlwidgets::saveWidget()} function. By default, it produces a completely self-contained HTML file, meaning that all the necessary JavaScript and CSS dependency files are bundled inside the HTML file. This makes it very easy to share a widget as a single HTML file. In this case, consider using the \texttt{partial\_bundle()} function to reduce the size of the bundled files. By default, it automatically determines a reduced version of plotly.js that is sufficient for rendering your graphic. This can lead to a substantial reduction in the overall file size, especially if you're using basic chart types:
 
@@ -3148,6 +3136,8 @@ A great tool that helps automate this sort of workflow with responsive iframes i
 \hypertarget{with-code}{%
 \section{With code}\label{with-code}}
 
+\indexc{orca()}
+
 Any \textbf{plotly} object can be saved as a static image via the \texttt{orca()} function. To use it, you'll need the \texttt{orca} command-line utility (CLI). This CLI can be installed via node.js, conda, or a standalone binary from \url{https://github.com/plotly/orca/releases}. Figure \ref{fig:orca} demonstrates how \texttt{orca()} can generate a svg (or pdf) that can then be imported into Adobe Illustrator for post-processing. Although it's a nice option to have, importing into Adobe Illustrator might not enable as nice of a workflow as using \textbf{plotly}'s native support for editable layout components in the browser, then exporting to svg/pdf (as shown in Figure \ref{fig:edit-county-labels}).
 
 \begin{figure}
@@ -3161,6 +3151,8 @@ Any \textbf{plotly} object can be saved as a static image via the \texttt{orca()
 
 \hypertarget{from-a-browser}{%
 \section{From a browser}\label{from-a-browser}}
+
+\index{config()@\texttt{config()}!toImageButtonOptions@\texttt{toImageButtonOptions}}
 
 Exporting an image from a browser is a nice option if you need to perform edits before exporting or if you'd like others to share your work. By default, the `download plot' icon in the modebar will download to png and use the \texttt{height} and \texttt{width} of the plot, but these defaults can be altered via the plot's configuration:
 
@@ -3209,6 +3201,8 @@ On the other hand, if you're performing interactive editing and exporting, you m
 
 \hypertarget{editing-views}{%
 \chapter{Editing views for publishing}\label{editing-views}}
+
+\index{Editable charts!Annotations}
 
 Numerous layout components of a \textbf{plotly} graph can be directly manipulated, including annotation text and placement (more on this in Section \ref{edit-events}). In addition, the download (aka, toImage) button can be customized to export a static version to different file types including: svg, png, jpeg, and webp. Since svg can be easily converted to pdf, this effectively means we can edit a graph in a browser to perform touch-ups, then export to a high-quality pdf. At least currently, this workflow is recommended over first exporting to pdf (via \texttt{orca()}) then using Adobe Illustrator to manipulate the vectors, especially for adjusting the placement of annotations.
 
@@ -3331,6 +3325,8 @@ Ideally, when displaying multiple related data views, they are linked through an
 \hypertarget{arranging-plotly-objects}{%
 \section{Arranging plotly objects}\label{arranging-plotly-objects}}
 
+\index{subplot()@\texttt{subplot()}}
+
 The \texttt{subplot()} function provides a flexible interface for merging multiple \textbf{plotly} objects into a single object. It is more flexible than most trellis display frameworks (e.g., \textbf{ggplot2}'s \texttt{facet\_wrap()}) as you don't have to condition on a value of common variable in each display \citep{trellis}. Its capabilities and interface are similar to the \texttt{grid.arrange()} function from the \textbf{gridExtra} package, which allows you to arrange multiple \textbf{grid} grobs in a single view, effectively providing a way to arrange (possibly unrelated) \textbf{ggplot2} and/or \textbf{lattice} plots in a single view \citep{RCore, gridExtra, lattice}. Figure \ref{fig:subplot-simple} shows the most simple way to use \texttt{subplot()} which is to directly supply plotly objects.
 
 \begin{Shaded}
@@ -3352,6 +3348,8 @@ The \texttt{subplot()} function provides a flexible interface for merging multip
 
 \caption{The most basic use of \texttt{subplot()} to merge multiple plotly objects into a single plotly object.}\label{fig:subplot-simple}
 \end{figure}
+
+\index{subplot()@\texttt{subplot()}!Shared axes}
 
 Although \texttt{subplot()} accepts an arbitrary number of plot objects, passing a \emph{list} of plots can save typing and redundant code when dealing with a large number of plots. Figure \ref{fig:economics} shows one time series for each variable in the \texttt{economics} dataset and share the x-axis so that zoom/pan events are synchronized across each series:
 
@@ -3388,6 +3386,10 @@ Conceptually, \texttt{subplot()} provides a way to place a collection of plots i
 
 This flexibility is quite useful for a number of visualizations, for example, as shown in Figure \ref{fig:joint}, a joint density plot is really of subplot of joint and marginal densities. The \textbf{heatmaply} package is great example of leveraging \texttt{subplot()} in a similar way to create interactive dendrograms \citep{heatmaply}.
 
+\indexc{plotly\_empty()}
+
+\index{add\_trace()@\texttt{add\_trace()}!add\_histogram2dcontour()@\texttt{add\_histogram2dcontour()}}
+
 \begin{Shaded}
 \begin{Highlighting}[]
 \CommentTok{# draw random values from correlated bi-variate normal distribution}
@@ -3420,6 +3422,8 @@ This flexibility is quite useful for a number of visualizations, for example, as
 \hypertarget{recursive-subplots}{%
 \subsection{Recursive subplots}\label{recursive-subplots}}
 
+\index{subplot()@\texttt{subplot()}!Recursive grid layouts}
+
 The \texttt{subplot()} function returns a plotly object so it can be modified like any other plotly object. This effectively means that subplots work recursively (i.e., you can have subplots within subplots). This idea is useful when your desired layout doesn't conform to the table structure described in the previous section. In fact, you can think of a subplot of subplots like a spreadsheet with merged cells. Figure \ref{fig:recursive} gives a basic example where each row of the outer-most subplot contains a different number of columns.
 
 \begin{Shaded}
@@ -3446,6 +3450,8 @@ The \texttt{subplot()} function returns a plotly object so it can be modified li
 \end{figure}
 
 The concept is particularly useful when you want plot(s) in a given row to have different widths from plot(s) in another row. Figure \ref{fig:map-subplot} uses this recursive behavior to place many bar charts in the first row, and a single choropleth in the second row.
+
+\index{layout()@\texttt{layout()}!hovermode@\texttt{hovermode}}
 
 \begin{Shaded}
 \begin{Highlighting}[]
@@ -3494,6 +3500,8 @@ Using \texttt{subplot()} directly is not the \emph{only} way to create multiple 
 \hypertarget{scatterplot-matrices}{%
 \subsubsection{Scatterplot matrices}\label{scatterplot-matrices}}
 
+\index{Chart types!Scatterplot matrix}
+
 The plotly.js library provides a trace specifically designed and optimized for scatterplot matrices (splom). To use it, provide numeric variables to the \texttt{dimensions} attribute of the \texttt{splom} trace type.
 
 \begin{Shaded}
@@ -3521,6 +3529,9 @@ See \url{https://plot.ly/r/splom/} for more options related to the splom trace t
 \hypertarget{generalized-pairs-plot}{%
 \subsubsection{Generalized pairs plot}\label{generalized-pairs-plot}}
 
+\index{Chart types!Generalized pairs plot}
+\index{ggplotly()@\texttt{ggplotly()}!GGally!ggpairs()@\texttt{ggpairs()}}
+
 The generalized pairs plot is an extension of the scatterplot matrix to support both discrete and numeric variables \citep{gpp}. The \texttt{ggpairs()} function from the \textbf{GGally} package provides an interface for creating these plots via \textbf{ggplot2} \citep{GGally}. To implement \texttt{ggpairs()}, \textbf{GGally} introduces the notion of a matrix of \textbf{ggplot2} plot objects that it calls \texttt{ggmatrix()}. As Figure \ref{fig:ggpairs} shows, the \texttt{ggplotly()} function has a method for converting ggmatrix objects directly:
 
 \begin{Shaded}
@@ -3546,7 +3557,12 @@ As it turns out, \textbf{GGally} use \texttt{ggmatrix()} as a building block for
 \hypertarget{trellis-displays-subplot}{%
 \subsubsection{\texorpdfstring{Trellis displays with \texttt{subplot()}}{Trellis displays with subplot()}}\label{trellis-displays-subplot}}
 
+\index{subplot()@\texttt{subplot()}!Trellis display}
+
 It's true that \textbf{ggplot2}'s \texttt{facet\_wrap()}/\texttt{facet\_grid()} provides a simple way to create trellis displays, but for learning purposes, it can be helpful to learn how to implement a similar trellis display with \texttt{plot\_ly()} and \texttt{subplot()}. Figure \ref{fig:subplot-trellis} demonstrates one approach, which leverages \texttt{subplot()}'s ability to reposition annotations and shapes. Specifically, the \texttt{panel()} function below, which defines the visualization method to be applied to each \texttt{variable} in the \texttt{economics\_long} dataset, uses paper coordinates (i.e., graph coordinates on a normalized 0-1 scale) to place an annotation at the top-center of each panel as well as a rectangle shape behind the annotation. Note also the use of \texttt{ysizemode\ =\ \textquotesingle{}pixel\textquotesingle{}} which gives the rectangle shape a fixed height (i.e., the rectangle height is always 16 pixels, regardless of the height of the trellis display).
+
+\index{Specifying fonts!Annotations}
+\index{layout()@\texttt{layout()}!shapes@\texttt{shapes}!Rectangles}
 
 \begin{Shaded}
 \begin{Highlighting}[]
@@ -3602,6 +3618,8 @@ It's true that \textbf{ggplot2}'s \texttt{facet\_wrap()}/\texttt{facet\_grid()} 
 \subsubsection{ggplot2 subplots}\label{ggplot2-subplots}}
 
 It's possible to combine the convenience of \textbf{ggplot2}'s \texttt{facet\_wrap()}/\texttt{facet\_grid()} with the more flexible arrangement capabilities of \texttt{subplot()}. Figure \ref{fig:ggplot2-subplots} does this to show two different views of the \texttt{economics\_long} data: the left-hand column displays each variable along time while the right-hand column shows violin plots of each variable. For the implementation, each column is created through \texttt{ggplot2::facet\_wrap()}, but then the trellis displays are combined with \texttt{subplot()}. In this case, \textbf{ggplot2} objects are passed directly to \texttt{subplot()}, but you can also use \texttt{ggplotly()} for finer control over the conversion of \textbf{ggplot2} to \textbf{plotly} (see also Chapter \ref{improving-ggplotly}) before supplying that result to \texttt{subplot()}.
+
+\index{ggplotly()@\texttt{ggplotly()}!ggplot2!geom\_violin()@\texttt{geom\_violin()}}
 
 \begin{Shaded}
 \begin{Highlighting}[]
@@ -3729,6 +3747,8 @@ From the code example in Figure \ref{fig:flexbox}, you might notice that \texttt
 \hypertarget{navigating-many-views}{%
 \section{Arranging many views}\label{navigating-many-views}}
 
+\index{ggplotly()@\texttt{ggplotly()}!facet\_trelliscope()@\texttt{facet\_trelliscope()}}
+
 As we've already seen in Figures \ref{fig:freqpoly-facet}, \ref{fig:trellis-txhousing}, \& \ref{fig:subplot-trellis}, the trellis (aka small multiple) display is an effective way to see how a conditional distribution behaves under different conditions. In other words, the trellis display helps us understand how patterns or structure in the data changes across groups. However, trellis displays do have a limitation: they don't scale very well to a large number of groups.
 
 Before trellis displays were formally introduced, \citet{scagnostics-tukey} proposed a solution to the problem of scatterplots not being able to scale to a large number of variables (i.e., it's time consuming to visualize 1000 scatterplots!). The proposed solution involved using quantitative measurements of various scatterplot characteristics (e.g.~correlation, clumpiness, etc) to help summarise and guide attention towards `interesting' scatterplots. This idea, coined scagnostics (short for scatterplot diagnostics), has since been made explicit, and many other similar applications have been explored, even techniques for time-series \citep{Wilkinson:2005b, Wilkinson:2008, Wilkinson:2012}. The idea of associating quantitative measures with a graphical display of data can be generalized to include more that just scatterplots, and in this more general case, these measures are sometimes referred to as cognostics.
@@ -3790,6 +3810,11 @@ Both \texttt{plot\_ly()} and \texttt{ggplotly()} support \href{https://en.wikipe
 \end{figure}
 
 As long as a \texttt{frame} variable is provided, an animation is produced with play/pause button(s) and a slider component for controlling the animation. These components can be removed or customized via the \texttt{animation\_button()} and \texttt{animation\_slider()} functions. Moreover, various animation options, like the amount of time between frames, the smooth transition duration, and the type of transition easing may be altered via the \texttt{animation\_opts()} function. Figure \ref{fig:animation-opts} shows the same data as Figure \ref{fig:animation-ggplotly}, but doubles the amount of time between frames, uses linear transition easing, places the animation buttons closer to the slider, and modifies the default \texttt{currentvalue.prefix} settings for the slider.
+
+\index{animation\_opts()@\texttt{animation\_opts()}}
+\index{animation\_button()@\texttt{animation\_button()}}
+\index{animation\_slider()@\texttt{animation\_slider()}}
+\index{Specifying fonts!Animation slider}
 
 \begin{Shaded}
 \begin{Highlighting}[]
@@ -3872,6 +3897,9 @@ Both the \texttt{frame} and \texttt{ids} attributes operate on the trace level -
 
 At the time of writing, the scatter plotly.js trace type is really the only trace type with full support for animation. That means, we need to get a little imaginative to animate certain things, like a population pyramid chart (essentially a bar chart) using \texttt{add\_segments()} (a scatter-based layer) instead of \texttt{add\_bars()} (a non-scatter layer). Figure \ref{fig:profile-pyramid} shows projections for male \& female population by age from 2018 to 2050 using data obtained via the \textbf{idbr} package \citep{idbr}.
 
+\index{Chart types!Population pyramid}
+\index{add\_trace()@\texttt{add\_trace()}!add\_segments()@\texttt{add\_segments()}}
+
 \begin{Shaded}
 \begin{Highlighting}[]
 \KeywordTok{library}\NormalTok{(idbr)}
@@ -3916,6 +3944,8 @@ At the time of writing, the scatter plotly.js trace type is really the only trac
 
 \caption{US population projections by age and gender from 2018 to 2050. This population pyramid is implemented with thick line segments to give the appearance of bars. The still image shows four frames of the animation. For a video of the animation, see \url{https://bit.ly/profile-pyramid}. For the interactive, see \url{https://plotly-r.com/interactives/profile-pyramid.html}}\label{fig:profile-pyramid}
 \end{figure}
+
+\index{add\_trace()@\texttt{add\_trace()}!Line simplification}
 
 Although population pyramids are quite popular, they aren't necessarily the best way to visualize this information, especially if the goal is to compare the population profiles over time. It's much easier to compare them along a common scale, as done in Figure \ref{fig:profile-lines}. Note that, when animating lines in this fashion, it can help to set \href{https://plot.ly/r/reference/\#scatter-line-simplify}{\texttt{line.simplify}} to \texttt{FALSE} so that the number of points along the path are left unaffected.
 
@@ -3971,6 +4001,9 @@ The graphical querying framework implemented by \textbf{plotly} is inspired by \
 
 \hypertarget{graphical-queries}{%
 \section{Graphical queries}\label{graphical-queries}}
+
+\indexc{highlight\_key()}
+\indexc{highlight()}
 
 This section focuses on a particular approach to linking views known as graphical (database) queries using the R package \textbf{plotly}. With \textbf{plotly}, one can write R code to pose graphical queries that operate entirely client-side in a web browser (i.e., no special web server or callback to R is required). In addition to teaching you how to pose queries with the \texttt{highlight\_key()} function, this section shows you how to control how queries are triggered and visually rendered via the \texttt{highlight()} function.
 
@@ -4038,6 +4071,8 @@ One subtlety to be aware of in terms of what makes Figure \ref{fig:txmissing} po
 \caption{Graphical query of housing prices in various Texas cities. The query in this particular example must be triggered through clicking directly on a time series. For a video demonstration of the interactive, see \url{https://bit.ly/txmissing}. For the interactive, see \url{https://plotly-r.com/interactives/txmissing.html}}\label{fig:txmissing}
 \end{figure}
 
+\index{Persistent selection}
+
 Querying a city via direct manipulation is somewhat helpful for focusing on a particular time series, but it's not so helpful for querying a city by name and/or comparing multiple cities at once. As it turns out, \textbf{plotly} makes it easy to add a selectize.js powered dropdown widget for querying by name (aka indirect manipulation) by setting \texttt{selectize\ =\ TRUE}.\footnote{The title that appears in the dropdown can be controlled via the \texttt{group} argument in the \texttt{highlight\_key()} function. The primary purpose of the \texttt{group} argument is to isolate one group of linked plots from others.} When it comes to comparing multiple cities, we want to be able to both retain previous selections (\texttt{persistent\ =\ TRUE}) as well as control the highlighting color (\texttt{dynamic\ =\ TRUE}). This videos explains how to use these features in Figure \ref{fig:txmissing-modes} to compare pricing across different cities.
 
 \begin{Shaded}
@@ -4062,6 +4097,8 @@ Querying a city via direct manipulation is somewhat helpful for focusing on a pa
 \end{figure}
 
 By querying a few different cities in Figure \ref{fig:txmissing-modes}, one obvious thing we can learn is that not every city has complete pricing information (e.g., South Padre Island, San Marcos, etc). To learn more about what cities are missing information as well as how that missingness is structured, Figure \ref{fig:txmissing-linked} links a view of the raw time series to a dot-plot of the corresponding number of missing values per city. In addition to making it easy to see how cities rank in terms of missing house prices, it also provides a way to query the corresponding time series (i.e., reveal the structure of those missing values) by brushing cities in the dot-plot. This general pattern of linking aggregated views of the data to more detailed views fits the famous and practical information visualization advice from \citet{details-on-demand}: ``Overview first, zoom and filter, then details on demand''.
+
+\index{Data-plot-pipeline}
 
 \begin{Shaded}
 \begin{Highlighting}[]
@@ -4109,6 +4146,8 @@ How does \textbf{plotly} know to highlight the time series when markers in the d
 
 The biggest advantage of drawing an entirely new graphical layer with the filtered data is that it becomes easy to leverage \href{https://plot.ly/r/statistical-charts/}{statistical trace types} for producing summaries that are conditional on the query. Figure \ref{fig:txhousing-aggregates} leverages this functionality to dynamically produce probability densities of house price in response to a query events. Section \ref{statistical-queries} has more examples of leveraging statistical trace types with graphical queries.
 
+\index{layout()@\texttt{layout()}!barmode@\texttt{barmode}!overlay}
+
 \begin{Shaded}
 \begin{Highlighting}[]
 \NormalTok{hist <-}\StringTok{ }\KeywordTok{add_histogram}\NormalTok{(}
@@ -4126,6 +4165,10 @@ The biggest advantage of drawing an entirely new graphical layer with the filter
 \end{Highlighting}
 \end{Shaded}
 
+\index{add\_trace()@\texttt{add\_trace()}!add\_histogram()@\texttt{add\_histogram()}!histnorm@\texttt{histnorm}}
+\index{layout()@\texttt{layout()}!barmode@\texttt{barmode}}
+\indexc{attrs\_selected()}
+
 \begin{figure}
 
 {\centering \includegraphics[width=\textwidth]{images/txhousing-aggregates} 
@@ -4141,6 +4184,8 @@ This section is designed to help give you a foundation for leveraging graphical 
 
 \hypertarget{filter}{%
 \section{Highlight versus filter events}\label{filter}}
+
+\index{Crosstalk filters}
 
 Section \ref{graphical-queries} provides an overview of \textbf{plotly}'s framework for \emph{highlight} events, but it also supports \emph{filter} events. These events trigger slightly different logic:
 
@@ -4162,6 +4207,8 @@ Figure \ref{fig:filter-highlight} provides a quick visual depiction in the diffe
 \end{Shaded}
 
 Figure \ref{fig:filter-highlight} demonstrates the main difference in logic between filter and highlight events. Notice how, in the code implementation, the `querying variable' definition for filter events is part of the filter widget. That is, \texttt{city} is defined as the variable of interest in \texttt{filter\_select()}, not in the creation of \texttt{tx}. That is (intentionally) different from the approach for highlight events, where the `querying variable' is a property of the dataset behind the graphical elements.
+
+\index{Crosstalk filters!filter\_select()@\texttt{filter\_select()}}
 
 \begin{Shaded}
 \begin{Highlighting}[]
@@ -4199,6 +4246,9 @@ Figure \ref{fig:filter-highlight} demonstrates the main difference in logic betw
 
 When using multiple filter widgets to filter the same dataset, as done in Figure \ref{fig:multiple-filter-widgets}, you should avoid referencing a non-unique querying variable (i.e., key-column) in the \texttt{SharedData} object used to populate the filter widgets. Remember that the default behavior of \texttt{highlight\_key()} and \texttt{SharedData\$new()} is to use the row-index (which is unique). This ensures the intersection of multiple filtering widgets queries the correct subset of data.
 
+\index{Crosstalk filters!filter\_slider()@\texttt{filter\_slider()}}
+\index{Crosstalk filters!filter\_checkbox()@\texttt{filter\_checkbox()}}
+
 \begin{Shaded}
 \begin{Highlighting}[]
 \KeywordTok{library}\NormalTok{(crosstalk)}
@@ -4225,6 +4275,8 @@ When using multiple filter widgets to filter the same dataset, as done in Figure
 
 \caption{Filtering on multiple variables. For a video demonstration of the interactive, see \url{https://bit.ly/multiple-filter-widgets}. For the interactive, see \url{https://plotly-r.com/interactives/multiple-filter-widgets.html}}\label{fig:multiple-filter-widgets}
 \end{figure}
+
+\index{Graphical queries with leaflet}
 
 As Figure \ref{fig:plotly-leaflet-filter} demonstrates, filter and highlight events can work in conjunction with various \textbf{htmlwidgets}. In fact, since the semantics of filter are more well-defined than highlight, linking filter events across \textbf{htmlwidgets} via \textbf{crosstalk} should generally be more well-supported.\footnote{All R packages with \textbf{crosstalk} support are currently listed here -- \url{https://rstudio.github.io/crosstalk/widgets.html}}
 
@@ -4323,6 +4375,8 @@ In addition to highlighting objects within an animation, objects may also be lin
 For example, in Figure \ref{fig:animation-gapminder}, countries below the 50th percentile in terms of population density are highlighted in blue, then the animation is played again to reveal a fairly interesting difference in these groups. From 1952 to 1977, countries with a low population density seem to enjoy large increases in GDP per capita and moderate increases in life expectancy, then in the early 80s, their GPD seems to decrease while the life expectancy greatly increases. In comparison, the high density countries seems to enjoy a more consistent and steady increase in both GDP and life expectancy. Of course, there are a handful of exceptions to the overall trend, such as the noticeable drop in life expectancy for a handful of countries during the nineties, which are mostly African countries feeling the affects of war.
 
 The \texttt{gapminder} data does not include a measure of population density, but the \texttt{gap} dataset (included with the \textbf{plotlyBook} R package) adds a column containing the population per square kilometer (\texttt{popDen}), which helps implement Figure \ref{fig:animation-gapminder}. In order to link the animated layers (i.e., red points), we need another version of \texttt{gap} that marks the country variable as the link between the plots (\texttt{gapKey}).
+
+\index{layout()@\texttt{layout()}!2D Axes!type@\texttt{type}}
 
 \begin{Shaded}
 \begin{Highlighting}[]
@@ -4492,6 +4546,9 @@ Figure \ref{fig:2-way-anova} demonstrates routing of a scatterplot brushing even
 
 When using a statistical trace type with graphical queries, it's often desirable to set the querying variable as the row index. That's because, with a statistical trace, numerous data values are attached to each graphical mark; and in that case, it's most intuitive if each value queries just one observation. Figure \ref{fig:mpg-linked-bars} gives a simple example of linking a (dynamic) bar chart with a scatterplot in this way to allow us to query interesting regions of the data space defined by engine displacement (\texttt{disp}), miles per gallon highway (\texttt{hwy}), and the class of car (\texttt{class}). Notice how selections can derive from either view, and since we've specified \texttt{"plotly\_selected"} as the \texttt{on} event, either rectangular or lasso selections can be used to trigger the query.
 
+\index{layout()@\texttt{layout()}!barmode@\texttt{barmode}!overlay}
+\index{layout()@\texttt{layout()}!dragmode@\texttt{dragmode}!lasso}
+
 \begin{Shaded}
 \begin{Highlighting}[]
 \NormalTok{d <-}\StringTok{ }\KeywordTok{highlight_key}\NormalTok{(mpg)}
@@ -4518,6 +4575,8 @@ When using a statistical trace type with graphical queries, it's often desirable
 \end{figure}
 
 Figure \ref{fig:mpg-linked} adds two more statistical trace types to Figure \ref{fig:mpg-linked-bars} to further explore how miles per gallon highway is related to fuel type (\texttt{fl}) and front/rear/4 wheel drive (\texttt{drv}). In particular, one can effectively condition on these discrete variables to see how the other distributions respond by brushing and dragging over markers. For example, in Figure \ref{fig:mpg-linked}, front-wheel drive cars are highlighted in red, then 4-wheel drive cars in blue, and as a result, we can see that the main effect of going from 4 to front wheel-drive is are also large interaction effect sizes with regular and diesel fuel types.
+
+\index{layout()@\texttt{layout()}!barmode@\texttt{barmode}!overlay}
 
 \begin{Shaded}
 \begin{Highlighting}[]
@@ -4628,6 +4687,11 @@ Section \ref{maps} covers several different approaches\footnote{\citet{sf-blog-p
 \end{figure}
 
 A more widely used approach to geo-spatial data visualization is to render lat/lon data on a basemap layer that updates in response to zoom events. The \texttt{plot\_mapbox()} function from \textbf{plotly} does this via integration with \href{https://www.mapbox.com/}{mapbox}. Figure \ref{fig:mapbox-quakes} uses \texttt{plot\_mapbox()} highlighting earthquakes west of Fiji to compare the relative frequency of their magnitude and number of reporting stations (to the overall relative frequency).
+
+\index{layout()@\texttt{layout()}!barmode@\texttt{barmode}!overlay}
+\index{add\_trace()@\texttt{add\_trace()}!add\_histogram()@\texttt{add\_histogram()}!histnorm@\texttt{histnorm}}
+\index{plot\_mapbox()@\texttt{plot\_mapbox()}!zoom@\texttt{zoom}}
+\index{plot\_mapbox()@\texttt{plot\_mapbox()}!center@\texttt{center}}
 
 \begin{Shaded}
 \begin{Highlighting}[]
@@ -4954,6 +5018,9 @@ Before linking views with \textbf{plotly} inside \textbf{shiny}, let's first tal
 \hypertarget{your-first-shiny-app}{%
 \subsection{Your first shiny app}\label{your-first-shiny-app}}
 
+\index{plotlyOutput()@\texttt{plotlyOutput()}|seealso {renderPlotly()}}
+\indexc{renderPlotly()}
+
 The most common \textbf{plotly}+\textbf{shiny} pattern uses a \textbf{shiny} input to control a \textbf{plotly} output. Figure \ref{fig:shiny-intro} gives a simple example of using \textbf{shiny}'s \texttt{selectizeInput()} function to create a dropdown that controls a \textbf{plotly} graph. This example, as well as every other \textbf{shiny} app, has two main parts:
 
 \begin{enumerate}
@@ -5036,6 +5103,8 @@ Going forward our focus is to link multiple graphs in \textbf{shiny} through dir
 \hypertarget{hiding-and-redrawing-on-resize}{%
 \subsection{Hiding and redrawing on resize}\label{hiding-and-redrawing-on-resize}}
 
+\index{ggplotly()@\texttt{ggplotly()}!Shiny resize@Redraw on resize with \texttt{renderPlotly()}}
+
 The \texttt{renderPlotly()} function renders anything that the \texttt{plotly\_build()} function understands, including \texttt{plot\_ly()}, \texttt{ggplotly()}, and \textbf{ggplot2} objects.\footnote{The \texttt{plotly\_build()} function is an S3 generic, so you can list all relevant the methods with \texttt{methods(plotly\_build)}, and write you're own method to translate a custom object to \textbf{plotly}.} It also renders \texttt{NULL} as an empty HTML div, which is handy for certain cases where it doesn't make sense to render a graph. Figure \ref{fig:shiny-ggplotly} leverages these features to render an empty div while \texttt{selectizeInput()}'s placeholder is shown, but then render a \textbf{plotly} graph via \texttt{ggplotly()} once cities have been selected. Figure \ref{fig:shiny-ggplotly} also shows how to make the \textbf{plotly} output depend on the size of the container that holds the \textbf{plotly} graph. By default, when a browser is resized, the graph size is changed purely client-side, but this reactive expression will re-execute when the browser window is resized. Due to technical reasons this can improve \texttt{ggplotly()} resizing behavior\footnote{In order to convert \textbf{grid} grobs that are relatively sized, the \texttt{ggplotly()} function uses the size of the current graphics device at print-time, meaning that resizing the browser window without a hook back to R can create wonky sizes.}, but should be used with caution when handling large data and long render times.
 
 \begin{Shaded}
@@ -5087,12 +5156,22 @@ When a reactive expression inside \texttt{renderPlotly()} is re-executes, it tri
 
 Section \ref{fig:shiny-intro} covered how to render \textbf{shiny} output widgets (e.g., \texttt{plotlyOutput()}) that depend on a input widget, but what about having an output act like an input to another output? For example, say we'd like to dynamically generate a bar chart (i.e., an output) based on a point clicked on a scatter-plot (i.e., an input event tied to an output widget). In addition to \textbf{shiny}'s static graph and image rendering functions (e.g., \texttt{plotOutput()}/\texttt{imageOutput()}), there are a handful of other R packages that expose user interaction with ``output'' widget(s) as input value(s). \citet{leaflet-shiny} and \citet{DT-shiny} describe the interface for the \textbf{leaflet} and \textbf{DT} packages. This section outlines the interface for \texttt{plotlyOutput()}. This sort of functionality plays a vital role in linking of views through direct manipulation, similar to what we've already seen in Section \ref{graphical-queries}, but having access to \textbf{plotly} events on a \textbf{shiny} server allows for much more flexibility than linking views purely client-side.
 
+\textbackslash index\{event\_data()@\texttt{event\_data()}
+\index{event\_data()@\texttt{event\_data()}!customdata@\texttt{customdata}}
+
 The \texttt{event\_data()} function is the most straight-forward way to access a \textbf{plotly} input events in \textbf{shiny}. Although \texttt{event\_data()} is function, it references and returns a \textbf{shiny} input value, so \texttt{event\_data()} needs to be used inside a reactive context. Most of these available events are data-specific traces (e.g., \texttt{"plotly\_hover"}, \texttt{"plotly\_click"}, \texttt{"plotly\_selected"}, etc), but there are also some that are layout-specific (e.g., \texttt{"plotly\_relayout"}). Most plotly.js events\footnote{These events are documented at \url{https://plot.ly/javascript/plotlyjs-events/}} are accessible through this interface -- for a complete list see the \texttt{help(event\_data)} documentation page.
 
 Numerous Figures in the following sections show how to access common \textbf{plotly} events in \textbf{shiny} and do something with the result. When using these events to inform another view of the data, it's often necessary to know what portion of data was queried in the event (i.e., the \texttt{x}/\texttt{y} positions alone may not be enough to uniquely identify the information of interest). For this reason, it's often a good idea to supply a \texttt{key} (and/or \texttt{customdata}) attribute, so that you can map the event data back to the original data. The \texttt{key} attribute is only supported in \textbf{shiny}, but \texttt{customdata} is officially supported by plotly.js, and thus can also be used to attach meta-information to event -- see Section \ref{javascript} for more details.
 
 \hypertarget{dragging-events}{%
 \subsection{Dragging events}\label{dragging-events}}
+
+\index{event\_data()@\texttt{event\_data()}!plotly\_click}
+\index{event\_data()@\texttt{event\_data()}!plotly\_hover}
+\index{event\_data()@\texttt{event\_data()}!plotly\_selecting}
+\index{event\_data()@\texttt{event\_data()}!plotly\_selected}
+\index{event\_data()@\texttt{event\_data()}!plotly\_brushing}
+\index{event\_data()@\texttt{event\_data()}!plotly\_brushed}
 
 There are currently four different modes for mouse click+drag behavior (i.e., \texttt{dragmode}) in plotly.js: zoom, pan, rectangular selection, and lasso selection. This mode may be changed interactively via the modebar that appears above a \textbf{plotly} graph, but the default mode can also be set from the command-line. The default \texttt{dragmode} in Figure \ref{fig:plotlyEvents} is set to \texttt{\textquotesingle{}select\textquotesingle{}}, so that dragging draws a rectangular box which highlights markers. When in this mode, or in the lasso selection mode, information about the drag event can be accessed in four different ways: \texttt{"plotly\_selecting"}, \texttt{"plotly\_selected"}, \texttt{"plotly\_brushing"}, and \texttt{"plotly\_brushed"}. Both the \texttt{"plotly\_selecting"} and \texttt{"plotly\_selected"} events emit information about trace(s) appearing within the interior of the brush -- the only difference is that \texttt{"plotly\_selecting"} fires repeatedly \emph{during} drag events, whereas \texttt{"plotly\_selected"} fires \emph{after} drag events (i.e., after the mouse has been released). The semantics behind \texttt{"plotly\_brushing"} and \texttt{"plotly\_brushed"} are similar, but these emit the x/y limits of the selection brush. As for the other two dragging modes (zoom and pan), since they modify the range of the x/y axes, information about these events can be accessed through \texttt{"plotly\_relayout"}. Sections \ref{proxies} and \ref{advanced-applications} both have advanced applications of these dragging events.
 
@@ -5114,6 +5193,8 @@ There are currently four different modes for mouse click+drag behavior (i.e., \t
 \hypertarget{d-events}{%
 \subsection{3D events}\label{d-events}}
 
+\index{event\_data()@\texttt{event\_data()}!plotly\_relayout}
+
 Drag selection events (i.e., \texttt{"plotly\_selecting"}) are currently only available for 2D charts, but other common events are generally supported for any type of graph, including 3D charts. Figure \ref{fig:3Devents} accesses various events in 3D including: \texttt{"plotly\_hover"}, \texttt{"plotly\_click"}, \texttt{"plotly\_legendclick"}, \texttt{"plotly\_legenddoubleclick"}, and \texttt{"plotly\_relayout"}. The data emitted via \texttt{"plotly\_hover"} and \texttt{"plotly\_click"} is structured similarly to data emitted from \texttt{"plotly\_selecting"}/\texttt{"plotly\_selected"}. Figure \ref{fig:3Devents} also demonstrates how one can react to particular components of a conflated event like \texttt{"plotly\_relayout"}. That is, \texttt{"plotly\_relayout"} will fire whenever \emph{any} part of the layout has changed, so if we want to trigger behavior if and only if there are changes to the camera eye, one could first check if the information emitted contains information about the camera eye.
 
 \begin{Shaded}
@@ -5133,6 +5214,9 @@ Drag selection events (i.e., \texttt{"plotly\_selecting"}) are currently only av
 
 \hypertarget{edit-events}{%
 \subsection{Edit events}\label{edit-events}}
+
+\index{Editable charts!Annotations}
+\index{event\_data()@\texttt{event\_data()}!plotly\_relayout}
 
 A little known fact about \textbf{plotly} is that you can directly manipulate annotations, title, shapes (e.g., circle, lines, rectangles), legends, and more by simply adding \texttt{config(p,\ editable\ =\ TRUE)} to a plot \texttt{p}. Moreover, since these are all layout components, we can access and respond to these `edit events' by listening to the \texttt{"plotly\_relayout"} events. Figure \ref{fig:shiny-edit-annotations} demonstrates how display access information about changes in annotation positioning and content.
 
@@ -5190,6 +5274,10 @@ A little known fact about \textbf{plotly} is that you can directly manipulate an
 \end{figure}
 
 Figure \ref{fig:shiny-drag-circle} demonstrates directly manipulating a circle shape and accessing the new positions of the circle. In contrast to Figure \ref{fig:shiny-edit-annotations}, which made everything (e.g.~the plot and axis titles) editable via \texttt{config(p,\ editable\ =\ TRUE)}, note how Figure \ref{fig:shiny-drag-circle} makes use of the \texttt{edits} argument to make only the shapes editable.
+
+\index{Editable charts!Circles}
+\index{event\_data()@\texttt{event\_data()}!plotly\_relayout}
+\index{layout()@\texttt{layout()}!shapes@\texttt{shapes}!circle@\texttt{circle}}
 
 \begin{Shaded}
 \begin{Highlighting}[]
@@ -5259,6 +5347,9 @@ Figure \ref{fig:interactive-lm} demonstrates a linear model that reacts to edite
 
 Figure \ref{fig:shiny-drag-line} uses an editable vertical line and the \texttt{plotly\_relayout} event data to `snap' the line to the closest point in a sequence of \texttt{x} values. It also places a marker on the intersection between the vertical line shape and the line chart of \texttt{y} values. Notice how, by accessing \texttt{event\_data()} in this way (i.e., the source and target view of the event is the same), the chart is actually fully redrawn every time the line shape moves. If performance were an issue (i.e., we were dealing with lots of lines), this type of interaction likely won't be very responsive. In that case, you can use \texttt{event\_data()} to trigger side-effects (i.e., partially modify the plot) which is covered in \ref{proxies}.
 
+\index{Editable charts!Lines}
+\index{event\_data()@\texttt{event\_data()}!plotly\_relayout}
+
 \begin{Shaded}
 \begin{Highlighting}[]
 \KeywordTok{plotly_example}\NormalTok{(}\StringTok{"shiny"}\NormalTok{, }\StringTok{"drag_lines"}\NormalTok{)}
@@ -5276,6 +5367,9 @@ Figure \ref{fig:shiny-drag-line} uses an editable vertical line and the \texttt{
 
 \hypertarget{relayout-vs-restyle-events}{%
 \subsection{Relayout vs restyle events}\label{relayout-vs-restyle-events}}
+
+\index{Chart types!Parallel coordinates}
+\index{event\_data()@\texttt{event\_data()}!plotly\_restyle}
 
 Remember every \textbf{graph} has two critical components: data (i.e., traces) and layout. Similar to how \texttt{"plotly\_relayout"} reports partial modifications to the layout, the \texttt{"plotly\_restyle"} event reports partial modification to traces. Compared to \texttt{"plotly\_relayout"}, there aren't very many native direct manipulation events that would trigger a \texttt{"plotly\_restyle"} event. For example, zoom/pan events, camera changes, editing annotations/shapes/etc all trigger a \texttt{"plotly\_relayout"} event, but not many traces allow you to directly manipulate their properties. One notable exception is the \texttt{"parcoords"} trace type which has native support for brushing lines along an axis dimension(s). As Figure \ref{fig:shiny-parcoords} demonstrates, these brush events emit a \texttt{"plotly\_restyle"} event with the range(s) of the highlighted dimension.
 
@@ -5350,6 +5444,8 @@ As Figure \ref{fig:shiny-parcoords-data} shows, it's possible to use this inform
 \hypertarget{scoping-events}{%
 \subsection{Scoping events}\label{scoping-events}}
 
+\index{event\_data()@\texttt{event\_data()}!Scoping events}
+
 This section leverages the interface for accessing \textbf{plotly} input events introduced in Section \ref{shiny-plotly-inputs} to inform other data views about those events. When managing multiple views that communicate with one another, you'll need to be aware of which views are a \emph{source} of interaction and which are a \emph{target} (a view can be both, at once!). The \texttt{event\_data()} function provides a \texttt{source} argument to help refine which view(s) serve as the source of an event. The \texttt{source} argument takes a string ID, and when that ID matches the \texttt{source} of a \texttt{plot\_ly()}/\texttt{ggplotly()} graph, then the \texttt{event\_data()} is ``scoped'' to that view. To get a better idea of how this works, consider Figure \ref{fig:shiny-corrplot}
 
 Figure \ref{fig:shiny-corrplot} allows one to click on a cell of correlation heatmap to generate a scatterplot of the two corresponding variables -- allowing for a closer look at their relationship. In the case of a heatmap, the event data tied to a \texttt{plotly\_click} event contains the relevant \texttt{x} and \texttt{y} categories (e.g., the names of the data variables of interest) and the \texttt{z} value (e.g., the pearson correlation between those variables). In order to obtain click data from the heatmap, and only the heatmap, it's important that the \texttt{source} argument of the \texttt{event\_data()} function matches the \texttt{source} argument of \texttt{plot\_ly()}. Otherwise, if the \texttt{source} argument was not specified \texttt{event\_data("plotly\_click")} would also fire if and when the user clicked on the scatterplot, likely causing an error.
@@ -5416,6 +5512,8 @@ Figure \ref{fig:shiny-corrplot} allows one to click on a cell of correlation hea
 \hypertarget{event-priority}{%
 \subsection{Event priority}\label{event-priority}}
 
+\index{event\_data()@\texttt{event\_data()}!Event priority}
+
 By default, \texttt{event\_data()} only invalidates a reactive expression when the value of it's corresponding \textbf{shiny} input changes. Sometimes, you might want a particular event, say \texttt{"plotly\_click"}, to \emph{always} invalidate a reactive expression. Figure \ref{fig:event-priority} shows the difference between this default behavior versus setting \texttt{priority\ =\ \textquotesingle{}event\textquotesingle{}}. By default, repeatedly clicking the same marker won't update the clock, but when setting the \texttt{priority} argument to event, repeatedly clicking the same marker will update the clock (i.e., it will invalidate the reactive expression).
 
 \begin{Shaded}
@@ -5465,6 +5563,8 @@ There are numerous events accessible through \texttt{event\_data()} that don't c
 \hypertarget{handling-discrete-axes}{%
 \subsection{Handling discrete axes}\label{handling-discrete-axes}}
 
+\index{event\_data()@\texttt{event\_data()}!customdata@\texttt{customdata}}
+
 For events that are trace-specific (e.g.~\texttt{"plotly\_click"}, \texttt{"plotly\_hover"}, \texttt{"plotly\_selecting"}, etc), the positional data (e.g., \texttt{x}/\texttt{y}/\texttt{z}) is always numeric, so if you have a plot with discrete axes, you might want to know how to map that numeric value back to the relevant input data category. In some cases, you can avoid the problem by assigning the discrete variable of interest to the \texttt{key}/\texttt{customdata} attribute, but you might also want to reserve that attribute to encode other information, like a \texttt{fill} aesthetic. Figure \ref{fig:discrete-event-data} shows how to map the numerical \texttt{x} value emitted in a click event back to the discrete variable that it corresponds to (\texttt{mpg\$class}) and leverages \texttt{customdata} to encode the \texttt{fill} mapping allowing us to display the data records a clicked bar corresponds to. In both \texttt{ggplotly()} and \texttt{plot\_ly()}, categories associated with a character vector are always alphabetized, so if you \texttt{sort()} the \texttt{unique()} character values, then the vector indices will match the \texttt{x} event data values. On the other hand, if \texttt{x} were a factor variable, the \texttt{x} event data would match the ordering of the \texttt{levels()} attribute.
 
 \begin{Shaded}
@@ -5511,6 +5611,8 @@ For events that are trace-specific (e.g.~\texttt{"plotly\_click"}, \texttt{"plot
 
 \hypertarget{reactive-vals}{%
 \subsection{Accumulating and managing event data}\label{reactive-vals}}
+
+\index{event\_data()@\texttt{event\_data()}!Manage state@Manage state with \texttt{reactiveVal()}}
 
 Currently all the events accessible through \texttt{event\_data()} are \emph{transient}. This means that, given an event like \texttt{"plotly\_click"}, the value of \texttt{event\_data()} will only reflect the most recent click information. However, in order to implement complex linked graphics with \emph{persistent} qualities, like Figure \ref{fig:txmissing-modes} or \ref{fig:shiny-crossfilter}, you'll need someway to accumulate and manage event data. The general mechanism that \textbf{shiny} provides to achieve this kind of task is \texttt{reactiveVal()} (or, the plural version, \texttt{reactiveValues()}), which essentially provides a way to create and manage input values entirely server-side.
 
@@ -5583,9 +5685,14 @@ We won't directly cover these topics, but it's worth noting that all these tools
 \hypertarget{proxies}{%
 \subsection{Partial plotly updates}\label{proxies}}
 
+\index{plotlyProxy()@\texttt{plotlyProxy()}|seealso {plotlyProxyInvoke()}}
+\index{plotlyProxyInvoke()@\texttt{plotlyProxyInvoke()}}
+
 By default, when \texttt{renderPlotly()} renders a new \textbf{plotly} graph it's essentially equivalent to executing a block of R code from your R prompt and generating a new \textbf{plotly} graph from scratch. That means, not only does the R code need to re-execute to generate a new R object, but it also has to re-serialize that object as JSON, and your browser has to re-render the graph from the new JSON object (more on this in Section \ref{performance}). In cases where your \textbf{plotly} graph does not need to serialize a lot data and/or render lots of graphical elements, as in Figure \ref{fig:shiny-intro}, you can likely perform a full redraw without noticeable glitches, especially if you use canvas-based rendering rather than SVG (i.e., \texttt{toWebGL()}). Generally speaking, you should try very hard to make your app responsive before adopting partial \textbf{plotly} updates in \textbf{shiny}. It makes your app logic easy to reason about because you don't have to worry about maintaining the state of the graph, but sometimes you have no other choice.
 
 On initial page load, \textbf{plotly} graphs must be drawn from stratch, but when responding to certain user events, often times a partial update to an existing plot is sufficient and more responsive. Take, for instance, the difference between Figure \ref{fig:shiny-scatterplot}, which does a full redraw on every update, and Figure \ref{fig:shiny-scatterplot-performant}, which does a partial update after initial load. Both of these \textbf{shiny} apps display a scatterplot with 100,000 points and allow a user to overlay a fitted line through a checkbox. The key difference is that in Figure \ref{fig:shiny-scatterplot}, the \textbf{plotly} graph is regenerated from scratch everytime the value of \texttt{input\$smooth} changes, whereas in Figure \ref{fig:shiny-scatterplot-performant} only the fitted line is added/removed from the \textbf{plotly}. Since the main bottleneck lies in redrawing the points, Figure \ref{fig:shiny-scatterplot-performant} can add/remove the fitted line is a much more responsive fashion.
+
+\index{toWebGL()@\texttt{toWebGL()}!plot\_ly()@\texttt{plot\_ly()}}
 
 \begin{Shaded}
 \begin{Highlighting}[]
@@ -5646,6 +5753,9 @@ On initial page load, \textbf{plotly} graphs must be drawn from stratch, but whe
 
 In terms of the implementation behind Figure \ref{fig:shiny-scatterplot} and \ref{fig:shiny-scatterplot-performant}, the only difference resides in the \texttt{server} definition. In Figure \ref{fig:shiny-scatterplot-performant}, the \texttt{renderPlotly()} statement no longer has a dependency on input values, so that code is only executed once (on page load) to generate the initial view of the scatterplot. The logic behind adding and removing the fitted line is handled through an \texttt{observe()} block -- this reactive expression watches the \texttt{input\$smooth} input value and modifies the \texttt{output\$scatterplot} widget whenever it changes. To trigger a modification of a \textbf{plotly} output widget, you must create a proxy object with \texttt{plotlyProxy()} that references the relevant output ID. Once a proxy object is created, you can invoke any sequence of \href{https://plot.ly/javascript/plotlyjs-function-reference/\#plotlymaketemplate}{plotly.js function(s)} on it with \texttt{plotlyProxyInvoke()}. Invoking a method with the correct arguments can be tricky and requires knowledge of plotly.js because \texttt{plotlyProxyInvoke()} will send these arguments directly to the plotly.js method and therefore doesn't support the same `high-level' semantics that \texttt{plot\_ly()} does.
 
+\index{plotlyProxyInvoke()@\texttt{plotlyProxyInvoke()}!addTraces@\texttt{addTraces}}
+\index{plotlyProxyInvoke()@\texttt{plotlyProxyInvoke()}!deleteTraces@\texttt{deleteTraces}}
+
 \begin{Shaded}
 \begin{Highlighting}[]
 \NormalTok{server <-}\StringTok{ }\ControlFlowTok{function}\NormalTok{(input, output, session) \{}
@@ -5702,6 +5812,8 @@ The last section explains why you may want to leverage partial \textbf{plotly} u
 \hypertarget{restyle}{%
 \subsubsection{Modifying traces}\label{restyle}}
 
+\index{plotlyProxyInvoke()@\texttt{plotlyProxyInvoke()}!restyle@\texttt{restyle}}
+
 All \textbf{plotly} figures have two main components: traces (i.e., mapping from data to visuals) and layout. The plotly.js function \texttt{Plotly.restyle()} is for modifying any existing traces. In addition to being a performant way to modify existing data and/or visual properties, it also has the added benefit of not affecting the current layout of the graph. Notice how, in Figure \ref{fig:shiny-partial-restyle} for example, when the size of the marker/path changes, it doesn't change the camera's view of the 3D plot that the user altered after initial draw. If these input widgets triggered a full redraw of the plot, the camera would be reset to it's initial state.
 
 \begin{Shaded}
@@ -5724,6 +5836,8 @@ One un-intuitive thing about \texttt{Plotly.restyle()} is that it fully replaces
 \hypertarget{relayout}{%
 \subsubsection{Updating the layout}\label{relayout}}
 
+\index{plotlyProxyInvoke()@\texttt{plotlyProxyInvoke()}!relayout@\texttt{relayout}}
+
 All \textbf{plotly} figures have two main components: traces (i.e., mapping from data to visuals) and layout. The plotly.js function \texttt{Plotly.relayout()} modifies the layout component, so it can control a wide variety of things such titles, axis definitions, annotations, shapes, and many other things. It can even be used to change the basemap layer of a Mapbox-powered layout, as in Figure \ref{fig:shiny-mapbox-relayout}. Note how this example uses \texttt{schema()} to grab all the pre-packaged basemap layers and create a dropdown of those options, but you can also provide a URL to a \href{https://www.mapbox.com/help/create-a-custom-style/}{custom basemap style}.
 
 \begin{Shaded}
@@ -5743,6 +5857,8 @@ All \textbf{plotly} figures have two main components: traces (i.e., mapping from
 
 Figure \ref{fig:shiny-rangeslider-relayout} demonstrates a clever use of \texttt{Plotly.relayout()} to set the y-axis range in response to changes in the x-axis range.
 
+\indexc{rangeslider()}
+
 \begin{Shaded}
 \begin{Highlighting}[]
 \KeywordTok{plotly_example}\NormalTok{(}\StringTok{"shiny"}\NormalTok{, }\StringTok{"proxy_relayout"}\NormalTok{)}
@@ -5760,6 +5876,8 @@ Figure \ref{fig:shiny-rangeslider-relayout} demonstrates a clever use of \texttt
 
 \hypertarget{streaming}{%
 \subsubsection{Streaming data}\label{streaming}}
+
+\index{plotlyProxyInvoke()@\texttt{plotlyProxyInvoke()}!extendTraces@\texttt{extendTraces}}
 
 At this point, we've seen how to add/remove traces (e.g., add/remove a fitted line, as in Figure \ref{fig:shiny-scatterplot-performant}), and how to edit specific trace properties (e.g., change marker size or path width, as in Figure \ref{fig:shiny-partial-restyle}), but what about adding more data to existing trace(s)? This is a job for the plotly.js function \texttt{Plotly.extendTraces()} and/or \texttt{Plotly.prependTraces()} which can used to efficiently `stream' data into an existing plot, as done in Figure \ref{fig:shiny-stream}.
 
@@ -5793,6 +5911,10 @@ This section combines concepts from prior sections in linking views with shiny a
 \subsection{Drill-down}\label{drill-down}}
 
 Figure \ref{fig:shiny-drill-down-pie} displays sales broken down by business category (e.g, Furniture, Office Supplies, Technology) in a pie chart. It allows the user to click on a slice of the pie to `drill-down' into sub-categories of the chosen category. In terms of the implementation, the key aspect here is to maintain the state of the currently selected category via a \texttt{reactiveVal()} (see more in \ref{reactive-vals}) and update that value when either a category is clicked or the ``Back'' button is pressed. This may seem like a lot of code to get a basic drill-down pie chart, but the core reactivity concepts in this implementation translate well to more complex drill-down applications.
+
+\index{add\_trace()@\texttt{add\_trace()}!add\_pie()@\texttt{add\_pie()}}
+\index{event\_data()@\texttt{event\_data()}!plotly\_click}
+\index{event\_data()@\texttt{event\_data()}!customdata@\texttt{customdata}}
 
 \begin{Shaded}
 \begin{Highlighting}[]
@@ -5863,6 +5985,8 @@ Figure \ref{fig:shiny-drill-down-pie} displays sales broken down by business cat
 \end{figure}
 
 A basic drill-down like Figure \ref{fig:shiny-drill-down-pie} is somewhat useful on its own, but it becomes much more useful when linked to multiple views of the data. Figure \ref{fig:shiny-drill-down-bar-time} improves on Figure \ref{fig:shiny-drill-down-pie} to show sales over time by the category or sub-category (if a category is currently chosen). Note that the key aspect of implementation remains the same (i.e., maintaining state via \texttt{reactiveValue()}) -- the main difference is that the time series view now also responds to changes in the currently selected category. That is, both views show sales by category when no category is selected, and sales by sub-category when a category is selected.
+
+\index{event\_data()@\texttt{event\_data()}!plotly\_click}
 
 \begin{Shaded}
 \begin{Highlighting}[]
@@ -5948,6 +6072,8 @@ A basic drill-down like Figure \ref{fig:shiny-drill-down-pie} is somewhat useful
 \end{figure}
 
 Figures \ref{fig:shiny-drill-down-pie} and \ref{fig:shiny-drill-down-bar-time} demonstrate one level of drill-down\ldots what about multiple levels? Introducing multiple levels adds complexity not only the implementation, but also the user experience. Especially in a drill-down approach where the \emph{same view} is being filtered, it can be difficult for the user to remember how they got to a particular view. Figure \ref{fig:shiny-drill-down-bar-time-history} demonstrates how we could extend Figure \ref{fig:shiny-drill-down-bar-time} to implement yet another level of drilling down (i.e., category -\textgreater{} sub-category -\textgreater{} product IDs) as well as populate a \texttt{selectInput()} dropdown for each active drill-down category. Not only does this help the user to remember how they got to the particular view, but it also provides the ability to easily modify the sequence of drill-down events. In terms of implementation, the main idea is the very similar to before -- we still store and update the state of each `drill-down' in it's own reactive value, but now when a `parent' category changes (e.g., \texttt{category}) it should invalidate (i.e., clear) any currently selected `child' categories (e.g., \texttt{sub\_category}).
+
+\index{event\_data()@\texttt{event\_data()}!plotly\_click}
 
 \begin{Shaded}
 \begin{Highlighting}[]
@@ -6125,6 +6251,8 @@ Figures \ref{fig:shiny-drill-down-pie} and \ref{fig:shiny-drill-down-bar-time} d
 Another way to make it easier for the user to recall their drill-down sequence is to generate a \emph{new} view based on the selection. Figure \ref{fig:shiny-drill-down} allows one to click on a category (e.g., Furniture) to generate another bar chart of sales broken down by that category's sub-categories (e.g., Bookcases, Chairs, etc). From there, a sub-category may be clicked to populate a time series of sales for that sub-category. Finally, by clicking on the time series, a table of sales from that date are displayed.
 
 Similar to Figure \ref{fig:shiny-drill-down-bar-time-history}, changes at a given category level causes invalidation of all child categories (in this case, all downstream views are cleared). For example, note how in Figure \ref{fig:shiny-drill-down}, a click of a category clears the sub-category and order-date. Moreover, a change in \texttt{sub\_category} clears the \texttt{order\_date}, but effect the current \texttt{category}.
+
+\index{event\_data()@\texttt{event\_data()}!plotly\_click}
 
 \begin{Shaded}
 \begin{Highlighting}[]
@@ -6441,6 +6569,8 @@ Since brushing within color is transient, in contrast to Figure \ref{fig:shiny-c
 \hypertarget{drag-brush}{%
 \subsection{A draggable brush}\label{drag-brush}}
 
+\index{Editable charts!Rectangles}
+
 A \emph{draggable} linked brush is great for conditioning via a moving window. For example, in a cross-filtering example like Figure \ref{fig:shiny-crossfilter}, it would be nice to condition on a certain hour of day, then drag that hour interval along the axis to explore how the hourly distribution changes throughout the day. At the time of writing, plotly.js does not support a draggable brush, but we could implement one with a clever use of a editable rectangle shape. Figure \ref{fig:shiny-drag-brush} demonstrates this idea in a \textbf{shiny} application by drawing a rectangle shape that mimics the plotly.js brush, then uses the \texttt{"plotly\_relayout"} event to determine the limits of the brush (instead of the \texttt{"plotly\_brushed"} or \texttt{"plotly\_brushing"}).
 
 \begin{Shaded}
@@ -6501,6 +6631,8 @@ For those new to JS, you may find it helpful to compare code examples from this 
 However, when handling these events in JS instead of R, you'll want to be familiar with JavaScript Object Notation (JSON), which is introduced in Chapter \ref{json}. That chapter also offers a minimal JS programming foundation for manipulating JSON, then Chapter \ref{js-event-handlers} quickly covers how to attach JS event handlers to various plotly.js events, which is really all that's required to loosely understand the bulk of the examples in Chapters \ref{supplying-custom-data} and \ref{client-side}.
 
 An important thing to know about when doing any sort of web development is how to open and navigate web browsers developer tools. Through the developer tools, you can access a JS console to run and test out JS code, inspect and debug the JS/CSS/HTML code behind a website, query components of the Document Object Model (DOM), inspect network traffic, and much more. In our use case of writing plotly.js event handlers, the JS console will come in handy especially to see what information a plotly.js event is firing (think of it as the analog of printing output to the R console in a shiny app), before writing the actual event handler. To open the console of a web browser (including RStudio), you can likely do: right-click -\textgreater{} ``Inspect Element'' -\textgreater{} ``Console'' tab (or similar).
+
+\index{htmlwidgets::onRender()@\texttt{htmlwidgets::onRender()}}
 
 One way to write a custom event handler for a \textbf{plotly} graph is to leverage the \texttt{onRender()} function from the \textbf{htmlwidgets} package. This R function accepts a JS function as a string and calls that function when the widget is done rendering in the browser. The JS function needs (at least) one argument, \texttt{el}, which is the Document Object Model (DOM) element containing the \textbf{plotly} graph. It's worth noting that \texttt{htmlwidgets::onRender()} serves a more general purpose than registering plotly.js event handlers, so you could use it to a bunch other things, such as adding conditional logic based on information stored in \texttt{el}. Figure \ref{fig:console-log} shows how you could use \texttt{onRender()} to log (and inspect) the DOM element to your browser's JS console. To demonstrate some useful DOM element's properties, Figure \ref{fig:console-log} uses Firefox to inspect the element as a global variable, but as Figure \ref{fig:console-log-event} shows, Chrome currently offers better tools for code debugging the JS function provided to \texttt{onRender()} (e.g., setting breakpoints in virtual memory).
 
@@ -6632,6 +6764,8 @@ There are a handful of other useful \href{https://developer.mozilla.org/en-US/do
 \hypertarget{mapping-r-to-json}{%
 \section{Mapping R to JSON}\label{mapping-r-to-json}}
 
+\indexc{jsonlite::toJSON()}
+
 In R, unlike JSON, there is no distinction between scalars and vectors of length 1. That means there is ambiguity as to what a vector of length 1 in R should map to in JSON. The \textbf{jsonlite} package defaults to an array of length 1, but this can be avoided by setting \texttt{auto\_unbox\ =\ TRUE}.
 
 \begin{Shaded}
@@ -6644,6 +6778,8 @@ In R, unlike JSON, there is no distinction between scalars and vectors of length
 \end{Shaded}
 
 It's worth noting that plotly.js, which consumes JSON objects, has specific expectations and rules about scalars versus arrays of length 1. If you're calling the plotly.js library directly in JS, as we'll see later in Section \ref{js-event-handlers}, you'll need to be mindful of the difference between scalars and arrays of length 1. Some attributes, like \texttt{text} and \texttt{marker.size}, accept both scalars and arrays and apply different rules based on the difference. Some other attributes, like \texttt{x}, \texttt{y}, and \texttt{z} only accept arrays and will error out if given a scalar. To learn about these rules and expectations, you can use the \texttt{schema()} function from R to inspect plotly.js' specification as shown in Figure \ref{fig:json-schema}. Note that attributes with a \texttt{val\_type} of \texttt{\textquotesingle{}data\_array\textquotesingle{}} require an array while attributes with an \texttt{arrayOk:\ true} field accept either scalars or arrays.
+
+\indexc{schema()}
 
 \begin{Shaded}
 \begin{Highlighting}[]
@@ -6683,6 +6819,11 @@ But this actually creates an array of strings instead of the array with a number
 
 When using \texttt{onRender()} to provide a JS function to be called upon static render of a \textbf{plotly} object, the relevant DOM element (\texttt{el}) has an \texttt{on()} method that accepts a function to be called whenever a plotly.js (or DOM) event occurs on that DOM element. Currently all plotly.js event handlers accept a function with a single argument, and that argument either contains nothing (e.g.~\texttt{"plotly\_afterplot"}, etc) or a single object with all the relevant information about the event (e.g.~\texttt{"plotly\_hover"}, \texttt{"plotly\_selected"}, etc). Figure \ref{fig:console-log-event} logs and inspects data (\texttt{d}) emitted during the \texttt{"plotly\_hover"}, \texttt{"plotly\_click"}, and \texttt{"plotly\_selected"} events. The object emitted for these events includes a key, named \texttt{points}, with information tying the selection back to the input data. The \texttt{points} key is always an array of object(s) where each object represents a different data point. This object contains any supplied \texttt{customdata}, the relevant \texttt{x}/\texttt{y} location, and a reference back to the input \texttt{data}.
 
+\index{htmlwidgets::onRender()@\texttt{htmlwidgets::onRender()}!Logging event data}
+\index{htmlwidgets::onRender()@\texttt{htmlwidgets::onRender()}!plotly\_hover}
+\index{htmlwidgets::onRender()@\texttt{htmlwidgets::onRender()}!plotly\_click}
+\index{htmlwidgets::onRender()@\texttt{htmlwidgets::onRender()}!plotly\_selected}
+
 \begin{Shaded}
 \begin{Highlighting}[]
 \KeywordTok{library}\NormalTok{(htmlwidgets)}
@@ -6717,6 +6858,10 @@ When using \texttt{onRender()} to provide a JS function to be called upon static
 
 As covered in Section \ref{shiny-plotly-inputs}, it's often useful to supply meta-information (i.e.~custom data) to graphical marker(s) and use that information when responding to a event. For example, suppose we'd like each point in a scatterplot to act like a hyperlink to a different webpage. In order to do so, we can supply a url to each point (as metadata) and instruct the browser to open the relevant hyperlink on a click event. Figure \ref{fig:click-open} does exactly this by supplying urls to each point in R through the \texttt{customdata} attribute and defining a custom JS event to \texttt{window.open()} the relevant \texttt{url} upon a click event. In this case, since each point represents one row of data, the \texttt{d.point} is an array of length 1, so we may obtain the \texttt{url} of the clicked point with \texttt{d.points{[}0{]}.customdata}.
 
+\index{htmlwidgets::onRender()@\texttt{htmlwidgets::onRender()}!Open hyperlink on click}
+\index{htmlwidgets::onRender()@\texttt{htmlwidgets::onRender()}!customdata@\texttt{customdata}}
+\index{htmlwidgets::onRender()@\texttt{htmlwidgets::onRender()}!plotly\_click}
+
 \begin{Shaded}
 \begin{Highlighting}[]
 \KeywordTok{library}\NormalTok{(htmlwidgets)}
@@ -6749,6 +6894,9 @@ As covered in Section \ref{shiny-plotly-inputs}, it's often useful to supply met
 \end{figure}
 
 In addition to using \texttt{window.open()} to open the \texttt{url}, we could also add it to the plot as an annotation using the plotly.js function \texttt{Plotly.relayout()}, as done in Figure \ref{fig:hover-annotate}. Moreover, since plotly annotations support HTML markup, we can also treat that url as a true HTML hyperlink by wrapping it in an HTML \texttt{\textless{}a\textgreater{}} tag. In cases where your JS function starts to get complex, it can help to put that JS function in its own file, then use the R function \texttt{readLines()} to read it in as a string and pass along \texttt{onRender()} as done below:
+
+\index{htmlwidgets::onRender()@\texttt{htmlwidgets::onRender()}!customdata@\texttt{customdata}}
+\index{htmlwidgets::onRender()@\texttt{htmlwidgets::onRender()}!plotly\_hover}
 
 \begin{Shaded}
 \begin{Highlighting}[]
@@ -6800,6 +6948,8 @@ doing \texttt{widget\$elementId\ \textless{}-\ "myID"}.
 \end{rmdtip}
 
 The \texttt{customdata} attribute can hold any R object that can be serialized as JSON, so you could, for example, attach complex data to markers/lines/text/etc using base64 strings. This could be useful for a number of things such as displaying an image on hover or click. For security reasons, plotly.js doesn't allow inserting images in the tooltip, but you can always define your own tooltip by hiding the tooltip (\texttt{hoverinfo=\textquotesingle{}none\textquotesingle{}}), then populating your own tooltip with suitable manipulation of the DOM in response to \texttt{"plotly\_hover"}/\texttt{"plotly\_unhover"} events. Figure \ref{fig:tooltip-image} demonstrates how to leverage this infrastructure to display a png image in the top-left corner of a graph whenever a text label is hovered upon.\footnote{As long as your not allowing down-stream users to input paths to the input files (e.g., in a \textbf{shiny} app), you shouldn't need to worry about the security of this example}
+
+\index{htmlwidgets::onRender()@\texttt{htmlwidgets::onRender()}!Display image on hover}
 
 \begin{Shaded}
 \begin{Highlighting}[]
@@ -6891,6 +7041,8 @@ It's worth noting that the JavaScript that powers Figure \ref{fig:tooltip-image}
 
 On the JS side, the \texttt{customdata} attribute is designed to support \emph{any} JS array of appropriate length, so if you need to supply numerous custom values to particular marker(s), list-columns in R provides a nice way to do so. Figure \ref{fig:tx-annotate} leverages this idea to bind both the \texttt{city} and \texttt{sales} values to each point along a time series and display those values on hover. It also demonstrates how one can use the graphical querying framework from Section \ref{graphical-queries} in tandem with a custom JS event. That is, \texttt{highlight\_key()} and \texttt{highlight()} control the highlighting of the time series, while the custom JS event adds the plot annotation (all based on the same \texttt{"plotly\_hover"} event). In this case, the highlighting, annotations, and circle shapes are triggered by a \texttt{"plotly\_hover"} event and they all work in tandem because event handlers are cumulative. That means, if you wanted, you could register multiple custom handlers for a particular event.
 
+\index{htmlwidgets::onRender()@\texttt{htmlwidgets::onRender()}!Annotate plot on hover}
+
 \begin{Shaded}
 \begin{Highlighting}[]
 \KeywordTok{library}\NormalTok{(purrr)}
@@ -6951,6 +7103,8 @@ On the JS side, the \texttt{customdata} attribute is designed to support \emph{a
 
 Sometimes supplying and accessing \texttt{customdata} alone is not quite enough for the task at hand. For instance, what if we wish to add the average monthly sales to the annotation for the city of interest in Figure \ref{fig:tx-annotate}? In cases like this, we may need to use \texttt{customdata} to query a portion of the plot's input data, like Figure \ref{fig:tx-annotate} does to compute and display average sales for a given city. This implementation leverages the fact that each selected point (\texttt{pt}) contains a reference to the entire trace it derives from (\texttt{pt.data}). As discussion behind Figure \ref{fig:scatter-lines} noted, this particular plot has a \emph{single trace} and uses missing values to create separate lines for each city. As a result, \texttt{pt.data.customdata} contains all the \texttt{customdata} we supplied from the R side, so to get all the \texttt{sales} for a given city, we first need to filter that array down to only the elements that are belong to that city (while being careful of missing values!).
 
+\index{htmlwidgets::onRender()@\texttt{htmlwidgets::onRender()}!Display summary on click}
+
 \begin{Shaded}
 \begin{Highlighting}[]
 \KeywordTok{onRender}\NormalTok{(sales_hover, }\KeywordTok{readLines}\NormalTok{(}\StringTok{"js/tx-mean-sales.js"}\NormalTok{))}
@@ -7000,6 +7154,8 @@ Sometimes supplying and accessing \texttt{customdata} alone is not quite enough 
 \end{figure}
 
 Figure \ref{fig:tx-inset-plot} uses the same \texttt{customdata} supplied to Figure \ref{fig:tx-mean-sales} in order to display a histogram of monthly sales for the relevant city on hover. In addition, it displays a vertical line on the histogram to reflect the monthly sales for the point closest to the mouse cursor. To do all this efficiently, it's best to add the histogram trace on the first hover event using \texttt{Plotly.addTraces()}, then supply different \texttt{sales} data via \texttt{Plotly.restyle()} (generally speaking, \texttt{restyle()} is way less expensive than \texttt{addTraces()}). That's why the implementation leverages the fact that the DOM element (\texttt{el}) contains a reference to the current graph data (\texttt{el.data}). If the current graph has a trace with type of histogram, then it adds a histogram trace; otherwise, it supplies new \texttt{x} values to the histogram.
+
+\index{htmlwidgets::onRender()@\texttt{htmlwidgets::onRender()}!Display embedded plot on click}
 
 \begin{Shaded}
 \begin{Highlighting}[]
@@ -7100,6 +7256,9 @@ Figure \ref{fig:tx-inset-plot} uses the same \texttt{customdata} supplied to Fig
 \hypertarget{web-infrastructure}{%
 \section{Web infrastructure}\label{web-infrastructure}}
 
+\index{htmlwidgets::onRender()@\texttt{htmlwidgets::onRender()}!Serve external files}
+\index{HTML in R}
+
 Sometimes supplying \texttt{customdata} isn't the best way to achieve a particular interactive feature. In those cases, you likely want to leverage other R lower-level interfaces to web technologies. Recall from Section \ref{arranging-htmlwidgets} that \textbf{htmlwidgets} objects are a special case of \textbf{htmltools} tags. That means, you can always complement your widget(s) with arbitrary HTML content by adding additional tags. Figure \ref{fig:correlation-client-side} leverages this idea to place an empty HTML \texttt{\textless{}div\textgreater{}} container below the correlation heatmap which is then populated with a \textbf{plotly} scatterplot upon clicking a cell. As it turns out, you \emph{could} implement Figure \ref{fig:correlation-client-side} by binding x/y data to each heatmap cell via \texttt{customdata}, but that would require the browser to store twice the amount of data as what's required here. Instead, this approach serializes the input data (\texttt{mtcars}) into a JSON file via \textbf{jsonlite} so the webpage can read and parse the full dataset once and select just the two required columns when required (on click). There are a lot of ways to read JSON in JavaScript, but here we use the d3.js library's \texttt{d3.json()} since \textbf{plotly} already comes bundled with the library \citep{d3js}. Also, since the HTML file is reading the JSON from disk, most browsers won't render the HTML file directly (at least, by default, for security reasons). To get around that, we can start up a simple web server from R using \textbf{servr} to serve both the HTML and JSON in way that your browser will deem safe to run \citep{servr}.
 
 \begin{Shaded}
@@ -7155,6 +7314,8 @@ Sometimes supplying \texttt{customdata} isn't the best way to achieve a particul
 
 \hypertarget{react}{%
 \section{Modern JS \& React}\label{react}}
+
+\index{htmlwidgets::onRender()@\texttt{htmlwidgets::onRender()}!Modern JavaScript}
 
 All the JavaScript (JS) we've seen thus far is natively supported by modern web browsers, but for larger projects, you may want to leverage modern versions of JS (i.e., ES6, ES7, etc) and modern JS development tools (e.g., Babel, Webpack, etc) for compiling modern JS to a version that all browsers can support (i.e., ES2015). The current landscape of JS development tooling is large, complex, fragmented, difficult for non-experts to navigate, and mostly beyond the scope of this book. However, thanks to R packages like \textbf{V8}, \textbf{reactR}, and \textbf{runpkg}, it turns out we can effectively leverage React\footnote{React is a modern JavaScript library, backed by Facebook, for building and distributing components of a website -- \url{https://reactjs.org/}} components\footnote{There are thousands of React components available. To get a sense what's available, see this list \url{https://github.com/brillout/awesome-react-components}. } from R without fussing with system commands or setting up a complicated JS build toolchain.
 
@@ -7309,6 +7470,10 @@ For a more serious example, we could leverage another React component, named \te
 \hypertarget{is-plotly-free-secure}{%
 \chapter{Is plotly free \& secure?}\label{is-plotly-free-secure}}
 
+\indexc{api\_create()}
+
+\index{config()@\texttt{config()}!cloud@\texttt{cloud}}
+
 Yes! Both the R package and the underlying JavaScript library (plotly.js) are MIT licensed. That means you are free to distribute and commercialize anything you create with \textbf{plotly}. Optionally, you can sign up for a \url{https://plot.ly} account and use the \texttt{api\_create()} function to upload \textbf{plotly} graphs to your account, but \emph{a \url{https://plot.ly} account is not required to use \textbf{plotly}}.
 
 Moreover, the data behind a \textbf{plotly} graph won't leave the computer you're viewing it on, unless:
@@ -7326,6 +7491,9 @@ In other words, unless you specifically request otherwise, your graph runs entir
 \hypertarget{performance}{%
 \chapter{Improving performance}\label{performance}}
 
+\index{toWebGL()@\texttt{toWebGL()}}
+\indexc{partial\_bundle()}
+
 Recall, from Figure \ref{fig:intro-printing}, when you print a \textbf{plotly} object (or really any plot), there are two classes of performance to be aware of: print-time (i.e.~build) and run-time (i.e.~render). That is, build time can be classified as the time it takes for the object to be serialized as JSON/HTML, whereas run time is the time it takes for the browser to render the HTML into a webpage. In the case of \textbf{plotly}, there are two quick and easy things you can do to improve run time performance in \emph{any context}:
 
 \begin{itemize}
@@ -7342,12 +7510,17 @@ Since latency in interactive graphics is known to make exploratory data analysis
 \hypertarget{controlling-tooltips}{%
 \chapter{Controlling tooltips}\label{controlling-tooltips}}
 
+\index{Tooltips@Tooltips (\texttt{text}, \texttt{hoverinfo}, \texttt{hoverformat}, \texttt{hovertemplate}, etc)}
+
 \hypertarget{tooltip-text}{%
 \section{\texorpdfstring{\texttt{plot\_ly()} tooltips}{plot\_ly() tooltips}}\label{tooltip-text}}
 
 There are two main approaches to controlling the tooltip: \texttt{hoverinfo} and \texttt{hovertemplate}. I suggest starting with the former approach since it's simpler, more mature, and enjoys universal support across trace types. On the other hand, \texttt{hovertemplate} does offer a convenient approach for flexible control over tooltip text, so it can be useful as well.
 
 The \texttt{hoverinfo} attribute controls what other plot attributes are shown into the tooltip text. The default value of \texttt{hoverinfo} is \texttt{x+y+text+name} (you can verify this with \texttt{schema()}), meaning that plotly.js will use the relevant values of \texttt{x}, \texttt{y}, \texttt{text}, and \texttt{name} to populate the tooltip text. As in Figure \ref{fig:custom-tooltip-plotly} shows, you can supply custom text (without the other `calculated values') by supplying a character string \texttt{text} and setting \texttt{hoverinfo\ =\ "text"}. The character string can include Glyphs, unicode characters, a some (white-listed) HTML entities and tags.\footnote{If you find a tag or entity that you want isn't supported, please request it to be added in the plotly.js repository \url{https://github.com/plotly/plotly.js/issues/new}} At least currently, plotly.js doesn't support rendering of \href{https://github.com/plotly/plotly.js/issues/559}{LaTeX} or images in the tooltip, but as demonstrated in Figure \ref{fig:tooltip-image}, if you know some HTML/JavaScript, you can always build your own custom tooltip.
+
+\index{layout()@\texttt{layout()}!barmode@\texttt{barmode}!stack}
+\index{layout()@\texttt{layout()}!hovermode@\texttt{hovermode}}
 
 \begin{Shaded}
 \begin{Highlighting}[]
@@ -7394,6 +7567,8 @@ The \texttt{hoverinfo} attribute controls what other plot attributes are shown i
 
 Whenever a \texttt{fill} is relevant (e.g., \texttt{add\_sf()}, \texttt{add\_polygons()}, \texttt{add\_ribbons()}, etc), you have the option of using the \texttt{hoveron} attribute to generate a tooltip for the supplied data points, the filled polygon that those points define, or both. As Figure \ref{fig:hoveron-fill-points} demonstrates, if you want a tooltip attached to a fill, you probably want \texttt{text} to be of length 1 for a given trace. On the other hand, if you want to each point along a fill to have a tooltip, you probably want \texttt{text} to have numerous strings.
 
+\index{add\_trace()@\texttt{add\_trace()}!add\_polygons()@\texttt{add\_polygons()}!hoveron@\texttt{hoveron}}
+
 \begin{Shaded}
 \begin{Highlighting}[]
 \NormalTok{p <-}\StringTok{ }\KeywordTok{plot_ly}\NormalTok{(}
@@ -7420,6 +7595,8 @@ Whenever a \texttt{fill} is relevant (e.g., \texttt{add\_sf()}, \texttt{add\_pol
 \caption{Using the \texttt{hoveron} attribute to control whether a tooltip is attached to fill or each point along that fill.}\label{fig:hoveron-fill-points}
 \end{figure}
 
+\index{layout()@\texttt{layout()}!2D Axes!hoverformat@\texttt{hoverformat}}
+
 You can't supply custom text in this way to a statistical aggregation, but there are ways to control the formatting of values computed and displayed by plotly.js (e.g.~\texttt{x}, \texttt{y}, and \texttt{z}). If the value that you'd like to format corresponds to an axis, you can use \texttt{*axis.hoverformat}. The syntax behind \texttt{hoverformat} follows d3js' format conventions. For numbers, see: \url{https://github.com/d3/d3-format/blob/master/README.md\#locale_format} and for dates see: \url{https://github.com/d3/d3-time-format/blob/master/README.md\#locale_format}
 
 \begin{Shaded}
@@ -7442,6 +7619,9 @@ You can't supply custom text in this way to a statistical aggregation, but there
 
 Computed values that don't have a corresponding axis likely have a \texttt{*hoverformat} trace attribute. Probably the most common example is the \texttt{z} attribute in a \texttt{heatmap} or \texttt{histogram2d} chart. Figure \ref{fig:tooltip-format-heatmap} shows how to format \texttt{z} values to have one decimal.
 
+\index{layout()@\texttt{layout()}!2D Axes!hoverformat@\texttt{hoverformat}}
+\index{add\_trace()@\texttt{add\_trace()}!add\_heatmap()@\texttt{add\_heatmap()}!zhoverformat@\texttt{zhoverformat}}
+
 \begin{Shaded}
 \begin{Highlighting}[]
 \KeywordTok{plot_ly}\NormalTok{(}\DataTypeTok{z =} \OperatorTok{~}\NormalTok{volcano) }\OperatorTok{%>%}
@@ -7460,6 +7640,8 @@ Computed values that don't have a corresponding axis likely have a \texttt{*hove
 \end{figure}
 
 It's admittedly difficult to remember where to specify these \texttt{hoverformat} attributes, so if you want a combination of custom text and formatting of computed values you can use \texttt{hovertemplate}, which overrides \texttt{hoverinfo} and allows you to fully specify the tooltip in a single attribute. It does this through special markup rules for inserting and formatting data values inside a string. Figure \ref{fig:hovertemplate} provides an example of inserting \texttt{x} and \texttt{y} in the tooltip through the special \texttt{\%\{variable:format\}} markup as well as customization of the secondary box through \texttt{\textless{}extra\textgreater{}} tag. For a full description of this attribute, including the formatting rules, see \url{https://plot.ly/r/reference/\#scatter-hovertemplate}.
+
+\index{add\_trace()@\texttt{add\_trace()}!add\_histogram()@\texttt{add\_histogram()}!histnorm@\texttt{histnorm}}
 
 \begin{Shaded}
 \begin{Highlighting}[]
@@ -7486,6 +7668,8 @@ If you need really specific control over the tooltip, you might consider hiding 
 
 \hypertarget{tooltip-text-ggplotly}{%
 \section{\texorpdfstring{\texttt{ggplotly()} tooltips}{ggplotly() tooltips}}\label{tooltip-text-ggplotly}}
+
+\index{ggplotly()@\texttt{ggplotly()}!Tooltip text}
 
 Similar to how you can use the \texttt{text} attribute to supply a custom string in \texttt{plot\_ly()} (see Section \ref{tooltip-text}), you can supply a \texttt{text} aesthetic to your \textbf{ggplot2} graph, as shown in \ref{fig:ggplotly-text}:
 
@@ -7571,6 +7755,8 @@ These global options are nice for specifying significant/scientific notation, bu
 
 The approach depicted in Figure \ref{fig:text-clever} works for computed values that pertain to raw data values, but what about sophisticated formatting of a summary statistics generated by \textbf{ggplot2}? In this case, you'll have to use the return value of \texttt{ggplotly()} which, remember, is a \textbf{plotly} object that conforms to the plotly.js spec. That means you can identify trace attribute(s) that contain relevant info (\textbf{note:} the \texttt{plotly\_json()} function is incredibly for helping to find that information), then use that info to populate a \texttt{text} attribute. Figure \ref{fig:custom-predict-text} applies this technique to customize the text that appears when hovering over a \texttt{geom\_smooth()} line.
 
+\indexc{style()}
+
 \begin{Shaded}
 \begin{Highlighting}[]
 \CommentTok{# Add a smooth to the previous figure and convert to plotly}
@@ -7611,6 +7797,8 @@ The approach depicted in Figure \ref{fig:text-clever} works for computed values 
 
 There is currently one main attribute for controlling the style of a tooltip: \texttt{hoverlabel}. With this attribute you can currently set the background color (\texttt{bgcolor}), border color (\texttt{bordercolor}), and font family/size/color. Figure \ref{fig:tooltip-style} demonstrates how to use it with \texttt{plot\_ly()} (basically any chart type you use should support it):
 
+\index{Specifying fonts!hoverlabel@\texttt{hoverlabel}}
+
 \begin{Shaded}
 \begin{Highlighting}[]
 \NormalTok{font <-}\StringTok{ }\KeywordTok{list}\NormalTok{(}
@@ -7635,6 +7823,10 @@ There is currently one main attribute for controlling the style of a tooltip: \t
 
 \caption{Using the \texttt{hoverlabel} attribute to customize the color and font of the tooltip.}\label{fig:tooltip-style}
 \end{figure}
+
+\indexc{style()}
+
+\index{Specifying fonts!On-graph text}
 
 On the other hand, when using \texttt{ggplotly()}, you have to modify the \texttt{hoverlabel} attribute via \texttt{style()} as shown in Figure \ref{fig:tooltip-style-ggplotly}
 
@@ -7668,6 +7860,8 @@ By default, the modebar appears in the top right-hand side of a \textbf{plotly} 
 
 The \texttt{displayModeBar} option makes it quick and easy to remove the entire modebar.
 
+\index{config()@\texttt{config()}!displayModeBar@\texttt{displayModeBar}}
+
 \begin{Shaded}
 \begin{Highlighting}[]
 \KeywordTok{plot_ly}\NormalTok{() }\OperatorTok{%>%}
@@ -7679,6 +7873,8 @@ The \texttt{displayModeBar} option makes it quick and easy to remove the entire 
 \section{Remove the plotly logo}\label{remove-the-plotly-logo}}
 
 The \texttt{displaylogo} option makes it quick and easy to remove the entire modebar.
+
+\index{config()@\texttt{config()}!displaylogo@\texttt{displaylogo}}
 
 \begin{Shaded}
 \begin{Highlighting}[]
@@ -7698,6 +7894,8 @@ The \texttt{displaylogo} option makes it quick and easy to remove the entire mod
 
 \hypertarget{remove-modebar-buttons-by-name}{%
 \section{Remove modebar buttons by name}\label{remove-modebar-buttons-by-name}}
+
+\index{config()@\texttt{config()}!modeBarButtonsToRemove@\texttt{modeBarButtonsToRemove}}
 
 Any modebar buttons can be removed by name via \texttt{modeBarButtonsToRemove}. The current list of modebar buttons can be found at \url{https://github.com/plotly/plotly.js/blob/master/src/components/modebar/buttons.js}
 
@@ -7721,6 +7919,8 @@ Any modebar buttons can be removed by name via \texttt{modeBarButtonsToRemove}. 
 \section{Add custom modebar buttons}\label{add-custom-modebar-buttons}}
 
 It is possible to supply your own modebar button icon that triggers a custom JavaScript function when clicked. You must provide a \texttt{name} for the icon and either a SVG \texttt{path} (with just the d attribute) or a full SVG element (to \texttt{svg}). Nowadays, there are a number of free websites that allow you to search icons and download their corresponding SVG information. When supplying \texttt{path}, as in Figure \ref{fig:modeBarButtonsToAdd}, you can also define an SVG \texttt{transform} to help size and position the icon. To define a JavaScript function to call upon clicking the icon, you can provide a string to \texttt{htmlwidgets::JS()}. The interactive version of Figure \ref{fig:modeBarButtonsToAdd} adds on-graph text everytime the octocat icon is clicked. To learn more about how to leverage JavaScript from R, see Section \ref{javascript}.
+
+\index{config()@\texttt{config()}!modeBarButtonsToAdd@\texttt{modeBarButtonsToAdd}}
 
 \begin{Shaded}
 \begin{Highlighting}[]
@@ -7756,6 +7956,8 @@ It is possible to supply your own modebar button icon that triggers a custom Jav
 
 Note that you can also use \texttt{modeBarButtons} to completely specify which buttons to include in the modebar. With this option, you can supply existing button names and/or your own custom buttons:
 
+\index{config()@\texttt{config()}!modeBarButtons@\texttt{modeBarButtons}}
+
 \begin{Shaded}
 \begin{Highlighting}[]
 \KeywordTok{plot_ly}\NormalTok{() }\OperatorTok{%>%}
@@ -7774,6 +7976,8 @@ Note that you can also use \texttt{modeBarButtons} to completely specify which b
 
 \hypertarget{control-image-downloads}{%
 \section{Control image downloads}\label{control-image-downloads}}
+
+\index{config()@\texttt{config()}!toImageButtonOptions@\texttt{toImageButtonOptions}}
 
 By default, the \texttt{toImage} modebar button downloads a png file using the current size and state of the graph. With \texttt{toImageButtonOptions}, one can specify different sizes and filetypes, which is particularly useful for obtaining a static pdf/webp/jpeg/etc image of the plot \emph{after} components have been directly manipulated, as leveraged in Figure \ref{fig:edit-county-labels}. Here's a basic example of configuring the \texttt{\textquotesingle{}toImage\textquotesingle{}} button to download an svg file that's 200 x 100 pixels:
 
@@ -7970,7 +8174,11 @@ Having the ability to encode data with unicode means that we have a virtually en
 \hypertarget{embedding-images}{%
 \chapter{Embedding images}\label{embedding-images}}
 
+\index{layout()@\texttt{layout()}!images@\texttt{images}!URL}
+
 There are a few ways to embed images in a \textbf{plotly} graph. Perhaps the easiest is to point the image source to a hyperlink containing a bitmap file (e.g., png, jpeg, tiff, etc).
+
+\index{layout()@\texttt{layout()}!margin@\texttt{margin}}
 
 \begin{Shaded}
 \begin{Highlighting}[]
@@ -8000,6 +8208,8 @@ There are a few ways to embed images in a \textbf{plotly} graph. Perhaps the eas
 
 The approach in Figure \ref{fig:image-hyperlink} has a downside though -- if that hyperlink breaks, then so does your plot. It'd be better to download the file to your machine and use the \texttt{dataURI()} function from the \textbf{base64enc} package (or similar) to embed the image as a data URI \citep{base64enc}.
 
+\index{layout()@\texttt{layout()}!images@\texttt{images}!base64 encoded}
+
 \begin{Shaded}
 \begin{Highlighting}[]
 \KeywordTok{plot_ly}\NormalTok{() }\OperatorTok{%>%}
@@ -8026,6 +8236,8 @@ The approach in Figure \ref{fig:image-hyperlink} has a downside though -- if tha
 \end{figure}
 
 Another approach is to convert a raster object into a data URI, which the \texttt{raster2uri()} function in \textbf{plotly} is designed to do. R actually ships with native support for raster objects and many image processing R packages either build on this data structure or provide a utility to convert to a raster object (perhaps via \texttt{as.raster()}). For example, the \texttt{readPNG()} function from the \textbf{png} package reads image data in an R array, which can be converted to a raster object \citep{png}.
+
+\index{layout()@\texttt{layout()}!images@\texttt{images}!raster2uri()@\texttt{raster2uri()}}
 
 \begin{Shaded}
 \begin{Highlighting}[]
@@ -8058,6 +8270,8 @@ Moreover, thanks to the R package \textbf{magick} it's possible to rasterize non
 
 \hypertarget{locales}{%
 \chapter{Language support}\label{locales}}
+
+\index{config()@\texttt{config()}!locale@\texttt{locale}}
 
 The \texttt{locale} argument of the \texttt{config()} function allows one to render on-graph text using another language. Figure \ref{fig:localization} shows how setting \texttt{locale=\textquotesingle{}ja\textquotesingle{}} will render text in Japanese.
 
@@ -8238,6 +8452,10 @@ Welsh & cy\\*
 \hypertarget{mathjax}{%
 \chapter{LaTeX rendering}\label{mathjax}}
 
+\index{config()@\texttt{config()}!mathjax@\texttt{mathjax}}
+\index{layout()@\texttt{layout()}!title@\texttt{title}}
+\index{layout()@\texttt{layout()}!2D Axes!title@\texttt{title}}
+
 LaTeX rendering via MathJax is possible via the \texttt{TeX()} function which flags a character vector as LaTeX. To load MathJaX externally (meaning an internet connection is needed for TeX rendering), set the new \texttt{mathjax} argument in \texttt{config()} to \texttt{"cdn"}. Figure \ref{fig:mathjax} demonstrates how to render LaTeX in the plot and axis titles.
 
 \begin{Shaded}
@@ -8268,6 +8486,9 @@ LaTeX rendering via MathJax is possible via the \texttt{TeX()} function which fl
 \end{figure}
 
 Figure \ref{fig:mathjax2} demonstrates how to render LaTeX with on-graph text. There are two ways to draw on-graph text: \texttt{add\_text()} which is a scatter trace with a mode of text and \texttt{add\_annotations()} which is part of the graph's layout. The main difference is that \texttt{add\_text()} is able to display tooltips and \texttt{add\_annotations()} is able to display arrows.
+
+\index{add\_annotations()@\texttt{add\_annotations()}!TeX()@\texttt{TeX()}}
+\index{add\_trace()@\texttt{add\_trace()}!add\_text()@\texttt{add\_text()}}
 
 \begin{Shaded}
 \begin{Highlighting}[]
@@ -8339,6 +8560,8 @@ Finally, once \texttt{PLOTLY\_MATHJAX\_PATH} is set, specify \texttt{mathjax="lo
 \hypertarget{the-data-plot-pipeline}{%
 \chapter{The data-plot-pipeline}\label{the-data-plot-pipeline}}
 
+\index{Data-plot-pipeline}
+
 As Chapter \ref{intro-plotly} first introduced, we can express multi-layer \textbf{plotly} graphs as a sequence (or, more specifically, a directed acyclic graph) of \textbf{dplyr} data manipulations and mappings to visuals. For example, to create Figure \ref{fig:houston2}, we could group \texttt{txhousing} by \texttt{city} to ensure the first layer of \texttt{add\_lines()} draws a different line for each city, then \texttt{filter()} down to Houston so that the second call to \texttt{add\_lines()} draws only Houston.
 
 \begin{Shaded}
@@ -8364,6 +8587,8 @@ As Chapter \ref{intro-plotly} first introduced, we can express multi-layer \text
 \end{figure}
 
 Sometimes the directed acyclic graph property of a \textbf{magrittr} pipeline can be too restrictive for certain types of plots. In this example, after filtering the data down to Houston, there is no way to recover the original data inside the pipeline. The \texttt{add\_fun()} function helps to work-around this restriction\footnote{Credit to Winston Chang and Hadley Wickham for this idea. The \texttt{add\_fun()} is very much like \texttt{layer\_f()} function in \textbf{ggvis}.} -- it works by applying a function to the plotly object, but does not affect the data associated with the plotly object. This effectively provides a way to isolate data transformations within the pipeline\footnote{Also, effectively putting a \href{http://www.memecreator.org/meme/yo-dawg-i-heard-u-like-pipelines-so-we-put-a-pipeline-in-your-pipeline}{pipeline inside a pipeline}}. Figure \ref{fig:houston-vs-sa} uses this idea to highlight both Houston and San Antonio.
+
+\index{add\_fun()@\texttt{add\_fun()}}
 
 \begin{Shaded}
 \begin{Highlighting}[]
@@ -8431,6 +8656,11 @@ It is useful to think of the function supplied to \texttt{add\_fun()} as a ``lay
 
 A layering function does not have to be a data-plot-pipeline itself. Its only requirement on a layering function is that the first argument is a plot object and it returns a plot object. This provides an opportunity to say, fit a model to the plot data, extract the model components you desire, and map those components to visuals. Furthermore, since \textbf{plotly}'s \texttt{add\_*()} functions don't require a data.frame, you can supply those components directly to attributes (as long as they are well-defined), as done in Figure \ref{fig:forecast} via the \textbf{forecast} package \citep{forecast}.
 
+\indexc{plotly\_data()}
+
+\index{c{forecast()}
+\indexadd\_trace()@\texttt{add\_trace()}!add\_ribbons()@\texttt{add\_ribbons()}}
+
 \begin{Shaded}
 \begin{Highlighting}[]
 \KeywordTok{library}\NormalTok{(forecast)}
@@ -8474,12 +8704,16 @@ In summary, the ``data-plot-pipeline'' is desirable for a number of reasons: (1)
 \hypertarget{improving-ggplotly}{%
 \chapter{\texorpdfstring{Improving \texttt{ggplotly()}}{Improving ggplotly()}}\label{improving-ggplotly}}
 
+\index{ggplotly()@\texttt{ggplotly()}!Modification}
+
 Since the \texttt{ggplotly()} function returns a \textbf{plotly} object, we can use that object in the same way you can use any other \textbf{plotly} object. Modifying this object is \emph{always} going to be useful when you want more control over certain (interactive) behavior that \textbf{ggplot2} doesn't provide an API to describe\footnote{It can also be helpful for correcting translations that \texttt{ggplotly()} doesn't get quite right.}, for example:
+
+\indexc{style()}
 
 \begin{itemize}
 \tightlist
 \item
-  \texttt{layout()} for modifying aspects of the layout, which can be used to:
+  \texttt{layout()} for modifying aspects of the layout, which can be used to do many things, for example:
 
   \begin{itemize}
   \tightlist
@@ -8520,6 +8754,9 @@ Since the \texttt{ggplotly()} function returns a \textbf{plotly} object, we can 
   \end{itemize}
 \end{itemize}
 
+\index{ggplotly()@\texttt{ggplotly()}!dynamicTicks@\texttt{dynamicTicks}}
+\index{ggplotly()@\texttt{ggplotly()}!layerData@\texttt{layerData}}
+
 In addition to using the functions above to modify \texttt{ggplotly()}'s return value, the \texttt{ggplotly()} function itself provides some arguments for controlling that return value. In this chapter, we'll see a couple of them:
 
 \begin{itemize}
@@ -8534,6 +8771,10 @@ In addition to using the functions above to modify \texttt{ggplotly()}'s return 
 \section{Modifying layout}\label{modifying-layout}}
 
 Any aspect of a \textbf{plotly} objects layout can be modified\^{}{[}Or, in the case of cumulative attributes, like \texttt{shapes}, \texttt{images}, \texttt{annotations}, etc, these items will be added to the existing items) via the \texttt{layout()} function. By default, since it doesn't always make sense to compare values, \texttt{ggplotly()} will usually set \texttt{layout.hovermode=\textquotesingle{}closest\textquotesingle{}}. As shown in Figure \ref{fig:ggplotly-rangeslider}, when we have multiple y-values of interest at a specific x-value, it can be helpful to set \texttt{layout.hovermode=\textquotesingle{}x\textquotesingle{}}. Moreover, for a long time series graph like this, zooming in on the x-axis can be useful -- \texttt{dynamicTicks} allows plotly.js to handle the generation of axis ticks and the \texttt{rangeslider()} allows us to zoom on the x-axis without losing the global context.
+
+\indexc{rangeslider()}
+
+\index{layout()@\texttt{layout()}!hovermode@\texttt{hovermode}}
 
 \begin{Shaded}
 \begin{Highlighting}[]
@@ -8563,6 +8804,9 @@ Since a single \textbf{plotly} object can only have one layout, modifying the la
 \section{Modifying data}\label{modifying-data}}
 
 As mentioned previously, \texttt{ggplotly()} translates each ggplot2 layer into one or more plotly.js traces. In this translation, it is forced to make a number of assumptions about trace attribute values that may or may not be appropriate for the use case. To demonstrate, consider Figure \ref{fig:simple-scatterplot}, which shows hover information for the points, the fitted line, and the confidence band. How could we make it so hover information is only displayed for the points and not for the fitted line and confidence band?
+
+\index{ggplotly()@\texttt{ggplotly()}!ggplot2!geom\_point()@\texttt{geom\_point()}}
+\index{ggplotly()@\texttt{ggplotly()}!ggplot2!geom\_smooth()@\texttt{geom\_smooth()}}
 
 \begin{Shaded}
 \begin{Highlighting}[]
@@ -8599,6 +8843,8 @@ The \textbf{ggplot2} package doesn't provide an API for interactive features, bu
 \end{figure}
 
 This output indicates that the fitted line and confidence band are implemented in the 2nd and 3rd trace of the plotly object, so to turn off the hover of those traces:
+
+\indexc{style}
 
 \begin{Shaded}
 \begin{Highlighting}[]
@@ -8644,6 +8890,12 @@ Since \texttt{ggplotly()} returns a plotly object, and \textbf{plotly} objects c
 
 The data shown above is the data ggplot2 uses to actually draw the fitted values (as a line) and standard error bounds (as a ribbon). Figure \ref{fig:se-annotations} leverages this data to add additional information about the model fit; in particular, it adds a vertical lines and annotations at the x-values that are associated with the highest and lowest amount uncertainty in the fitted values. Producing a plot like this with \textbf{ggplot2} would be impossible using \texttt{geom\_smooth()} alone.\footnote{It could be recreated by fitting the model via \texttt{loess()}, obtaining the fitted values and standard error with \texttt{predict()}, and feeding those results into \texttt{geom\_line()}/\texttt{geom\_ribbon()}/\texttt{geom\_text()}/\texttt{geom\_segment()}, but that process is much more onerous.} Providing a simple visual clue like this can help combat visual misperceptions of uncertainty bands due to the sine illusion \citep{sine-illusion}.
 
+\index{Data-plot-pipeline}
+\index{add\_fun()@\texttt{add\_fun()}}
+\index{add\_trace()@\texttt{add\_trace()}!add\_annotations()@\texttt{add\_annotations()}}
+\index{add\_trace()@\texttt{add\_trace()}!add\_segments()@\texttt{add\_segments()}}
+\index{ggplotly()@\texttt{ggplotly()}!layerData@\texttt{layerData}}
+
 \begin{Shaded}
 \begin{Highlighting}[]
 \NormalTok{p }\OperatorTok{%>%}
@@ -8672,6 +8924,9 @@ The data shown above is the data ggplot2 uses to actually draw the fitted values
 
 In addition to leveraging output from \texttt{StatSmooth}, it is sometimes useful to leverage output of other statistics, especially for annotation purposes. Figure \ref{fig:StatBin} leverages the output of \texttt{StatBin} to add annotations to a stacked bar chart. Annotation is primarily helpful for displaying the heights of bars in a stacked bar chart, since decoding the heights of bars is a fairly difficult perceptual task \citep{graphical-perception}. As result, it is much easier to compare bar heights representing the proportion of diamonds with a given clarity across various diamond cuts.
 
+\index{ggplotly()@\texttt{ggplotly()}!geom\_bar()@\texttt{geom\_bar()}}
+\index{add\_trace()@\texttt{add\_trace()}!add\_text()@\texttt{add\_text()}}
+
 \begin{Shaded}
 \begin{Highlighting}[]
 \NormalTok{p <-}\StringTok{ }\KeywordTok{ggplot}\NormalTok{(diamonds, }\KeywordTok{aes}\NormalTok{(cut, }\DataTypeTok{fill =}\NormalTok{ clarity)) }\OperatorTok{+}
@@ -8698,6 +8953,8 @@ In addition to leveraging output from \texttt{StatSmooth}, it is sometimes usefu
 \end{figure}
 
 Another useful application is labelling the levels of each piece/polygon output by \texttt{StatDensity2d} as shown in Figure \ref{fig:StatDensity2d}. Note that, in this example, the \texttt{add\_text()} layer takes advantage of \texttt{ggplotly()}'s ability to inherit aesthetics from the global mapping. Furthermore, since \texttt{originalData} is \texttt{FALSE}, it attaches the ``built'' aesthetics (i.e., the \texttt{x}/\texttt{y} positions after \texttt{StatDensity2d} has been applied to the raw data).
+
+\index{ggplotly()@\texttt{ggplotly()}!geom\_density2d()@\texttt{geom\_density2d()}}
 
 \begin{Shaded}
 \begin{Highlighting}[]
@@ -8762,6 +9019,8 @@ If you have implemented a custom geom, say \texttt{GeomCustom}, rest assured tha
 
 As shown in Figure \ref{fig:xspline}, once the conversion has been provided. Users can call \texttt{ggplotly()} on the ggplot object containing the custom geom just like any other ggplot object.
 
+\index{ggplotly()@\texttt{ggplotly()}!ggalt!geom\_xspline()@\texttt{geom\_xspline()}}
+
 \begin{Shaded}
 \begin{Highlighting}[]
 \CommentTok{# example from `help(geom_xspline)`}
@@ -8783,7 +9042,14 @@ As shown in Figure \ref{fig:xspline}, once the conversion has been provided. Use
 \end{Highlighting}
 \end{Shaded}
 
-\texttt{\{r\ xspline,\ echo\ =\ FALSE,\ fig.cap\ =\ "Converting GeomXspline from the \textbf{ggalt} package to plotly.js via \texttt{ggplotly()}.",\ out.extra\ =\ if\ (knitr::is\_html\_output())\ \textquotesingle{}data-url="/interactives/xspline.html"\textquotesingle{}\ knitr::include\_graphics("images/xspline.svg")}
+\begin{figure}
+
+{\centering \includegraphics[width=\textwidth]{images/xspline} 
+
+}
+
+\caption{Converting GeomXspline from the \textbf{ggalt} package to plotly.js via \texttt{ggplotly()}.}\label{fig:xspline}
+\end{figure}
 
 In more complicated cases, where your custom geom can not be converted to a lower level geom, a custom method for the \texttt{geom2trace()} generic is required (\texttt{methods(geom2trace)} lists all the basic geoms that we natively support). This method should involve a conversion from a data frame to a list-like object conforming to the \href{https://plot.ly/r/reference}{plotly.js figure reference}.
 

@@ -4,6 +4,10 @@ The `add_bars()` and `add_histogram()` functions wrap the [bar](https://plot.ly/
 
 Figure \@ref(fig:bars-numeric) compares the default binning algorithm in plotly.js to a few different algorithms available in R via the `hist()` function. Although plotly.js has the ability to customize histogram bins via [`xbins`](https://plot.ly/r/reference/#histogram-xbins)/[`ybins`](https://plot.ly/r/reference/#histogram-ybins), R has diverse facilities for estimating the optimal number of bins in a histogram that we can easily leverage.^[Optimal in this context is the number of bins which minimizes the distance between the empirical histogram and the underlying density.] The `hist()` function alone allows us to reference 3 famous algorithms by name [@Sturges; @FD; @hist-scott], but there are also packages (e.g. the **histogram** package) which extend this interface to incorporate more methodology [@histogram]. The `price_hist()` function below wraps the `hist()` function to obtain the binning results, and map those bins to a plotly version of the histogram using `add_bars()`.
 
+\index{add\_trace()@\texttt{add\_trace()}!add\_bars()@\texttt{add\_bars()}}
+\index{add\_trace()@\texttt{add\_trace()}!add\_histogram()@\texttt{add\_histogram()}}
+\indexc{hist()}
+
 ```r
 p1 <- plot_ly(diamonds, x = ~price) %>%
   add_histogram(name = "plotly.js")
@@ -27,7 +31,8 @@ Figure \@ref(fig:bars-discrete) demonstrates two ways of creating a basic bar ch
 
 ```r
 library(dplyr)
-p1 <- plot_ly(diamonds, x = ~cut) %>% add_histogram()
+p1 <- plot_ly(diamonds, x = ~cut) %>%
+  add_histogram()
 
 p2 <- diamonds %>%
   count(cut) %>%
@@ -44,6 +49,9 @@ knitr::include_graphics("images/bars-discrete.svg")
 ## Multiple numeric distributions
 
 It is often useful to see how the numeric distribution changes with respect to a discrete variable. When using bars to visualize multiple numeric distributions, I recommend plotting each distribution on its own axis using a small multiples display, rather than trying to overlay them on a single axis.^[It's much easier to visualize multiple numeric distributions on a single axis using [lines](#lines)]. Chapter \@ref(arranging-views), and specifically Section \@ref(trellis-displays-subplot), discuss small multiples in more detail, but Figure \@ref(fig:subplot-trellis) demonstrates how it be done with `plot_ly()` and `subplot()`. Note how the `one_plot()` function defines what to display on each panel, then a split-apply-recombine (i.e., `split()`, `lapply()`, `subplot()`) strategy is employed to generate the trellis display. 
+
+\index{subplot()@\texttt{subplot()}!Trellis display}
+\index{add\_annotations()@\texttt{add\_annotations()}!Paper coordinates}
 
 ```r
 one_plot <- function(d) {
@@ -81,6 +89,9 @@ knitr::include_graphics("images/cut-by-clarity.svg")
 
 Figure \@ref(fig:cut-by-clarity) is useful for comparing the number of diamonds by clarity, given a type of cut. For instance, within "Ideal" diamonds, a cut of "VS1" is most popular, "VS2" is second most popular, and "I1" the least popular. The distribution of clarity within "Ideal" diamonds seems to be fairly similar to other diamonds, but it's hard to make this comparison using raw counts. Figure \@ref(fig:cut-by-clarity-prop) makes this comparison easier by showing the relative frequency of diamonds by clarity, given a cut. 
 
+\index{Chart types!Spine plot}
+\index{layout()@\texttt{layout()}!barmode@\texttt{barmode}!stack}
+
 ```r
 # number of diamonds by cut and clarity (n)
 cc <- count(diamonds, cut, clarity)
@@ -99,6 +110,8 @@ knitr::include_graphics("images/cut-by-clarity-prop.svg")
 
 This type of plot, also known as a spine plot, is a special case of a mosaic plot. In a mosaic plot, you can scale both bar widths and heights according to discrete distributions. For mosaic plots, I recommend using the **ggmosaic** package [@ggmosaic], which implements a custom **ggplot2** geom designed for mosaic plots, which we can convert to plotly via `ggplotly()`. Figure \@ref(fig:ggmosaic) shows a mosaic plot of cut by clarity. Notice how the bar widths are scaled proportional to the cut frequency.
 
+\index{Chart types!Mosaic plot}
+
 ```r
 library(ggmosaic)
 p <- ggplot(data = cc) +
@@ -111,6 +124,8 @@ knitr::include_graphics("images/ggmosaic.svg")
 ```
 
 # Boxplots
+
+\index{add\_trace()@\texttt{add\_trace()}!add\_boxplot()@\texttt{add\_boxplot()}}
 
 Boxplots encode the five number summary of a numeric variable, and provide a decent way to compare many numeric distributions. The visual task of comparing multiple boxplots is relatively easy (i.e., compare position along a common scale) compared to some common alternatives (e.g., a trellis display of histograms, like \@ref(fig:bars-numeric)), but the boxplot is sometimes inadequate for capturing complex (e.g., multi-modal) distributions (in this case, a frequency polygon, like Figure \@ref(fig:freqpoly) provides a nice alternative). The `add_boxplot()` function requires one numeric variable, and guarantees boxplots are [oriented](https://plot.ly/r/reference/#box-orientation) correctly, regardless of whether the numeric variable is placed on the x or y scale. As Figure \@ref(fig:cut-boxes) shows, on the axis orthogonal to the numeric axis, you can provide a discrete variable (for conditioning) or supply a single value (to name the axis category).
 

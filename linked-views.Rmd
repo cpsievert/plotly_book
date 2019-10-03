@@ -20,6 +20,9 @@ The graphical querying framework implemented by **plotly** is inspired by @Buja:
 
 ## Graphical queries
 
+\indexc{highlight\_key()}
+\indexc{highlight()}
+
 This section focuses on a particular approach to linking views known as graphical (database) queries using the R package **plotly**. With **plotly**, one can write R code to pose graphical queries that operate entirely client-side in a web browser (i.e., no special web server or callback to R is required). In addition to teaching you how to pose queries with the `highlight_key()` function, this section shows you how to control how queries are triggered and visually rendered via the `highlight()` function.
 
 Figure \@ref(fig:link-intro) shows a scatterplot of the relationship between weight and miles per gallon of 32 cars. It also uses `highlight_key()` to assign the number of cylinders to each point so that when a particular point is 'queried' all points with the same number of cylinders are highlighted (the number of cylinders is displayed with text just for demonstration purposes). By default, a mouse click triggers a query, and a double-click clears the query, but both of these events can be customized through the `highlight()` function. By typing `help(highlight)` in your R console, you can learn more about what events are supported for turning graphical queries `on` and `off`.
@@ -70,6 +73,8 @@ base %>%
 include_vimeo("317137926")
 ```
 
+\index{Persistent selection}
+
 Querying a city via direct manipulation is somewhat helpful for focusing on a particular time series, but it's not so helpful for querying a city by name and/or comparing multiple cities at once. As it turns out, **plotly** makes it easy to add a selectize.js powered dropdown widget for querying by name (aka indirect manipulation) by setting `selectize = TRUE`.^[The title that appears in the dropdown can be controlled via the `group` argument in the `highlight_key()` function. The primary purpose of the `group` argument is to isolate one group of linked plots from others.] When it comes to comparing multiple cities, we want to be able to both retain previous selections (`persistent = TRUE`) as well as control the highlighting color (`dynamic = TRUE`). This videos explains how to use these features in Figure \@ref(fig:txmissing-modes) to compare pricing across different cities.
 
 ```{r, echo = FALSE}
@@ -101,6 +106,8 @@ if (knitr::is_html_output()) {
 ```
 
 By querying a few different cities in Figure \@ref(fig:txmissing-modes), one obvious thing we can learn is that not every city has complete pricing information (e.g., South Padre Island, San Marcos, etc). To learn more about what cities are missing information as well as how that missingness is structured, Figure \@ref(fig:txmissing-linked) links a view of the raw time series to a dot-plot of the corresponding number of missing values per city. In addition to making it easy to see how cities rank in terms of missing house prices, it also provides a way to query the corresponding time series (i.e., reveal the structure of those missing values) by brushing cities in the dot-plot. This general pattern of linking aggregated views of the data to more detailed views fits the famous and practical information visualization advice from @details-on-demand: "Overview first, zoom and filter, then details on demand".
+
+\index{Data-plot-pipeline}
 
 ```{r, echo = FALSE}
 tx <- highlight_key(txhousing, ~city, "  ")
@@ -160,6 +167,8 @@ knitr::include_graphics("images/pipeline.svg")
 
 The biggest advantage of drawing an entirely new graphical layer with the filtered data is that it becomes easy to leverage [statistical trace types](https://plot.ly/r/statistical-charts/) for producing summaries that are conditional on the query. Figure \@ref(fig:txhousing-aggregates) leverages this functionality to dynamically produce probability densities of house price in response to a query events. Section \@ref(statistical-queries) has more examples of leveraging statistical trace types with graphical queries.
 
+\index{layout()@\texttt{layout()}!barmode@\texttt{barmode}!overlay}
+
 ```{r, echo = FALSE}
 tx <- highlight_key(txhousing, ~city, "   ")
 base <- plot_ly(tx, color = I("black")) %>% 
@@ -184,6 +193,10 @@ subplot(time_series, hist, nrows = 2) %>%
   )
 ```
 
+\index{add\_trace()@\texttt{add\_trace()}!add\_histogram()@\texttt{add\_histogram()}!histnorm@\texttt{histnorm}}
+\index{layout()@\texttt{layout()}!barmode@\texttt{barmode}}
+\indexc{attrs\_selected()}
+
 ```{r txhousing-aggregates, echo = FALSE, fig.cap = "(ref:txhousing-aggregates)"}
 if (knitr::is_html_output()) {
   hist <- base %>% add_histogram(x = ~median, histnorm = "probability density")
@@ -206,6 +219,8 @@ This section is designed to help give you a foundation for leveraging graphical 
 
 ## Highlight versus filter events {#filter}
 
+\index{Crosstalk filters}
+
 Section \@ref(graphical-queries) provides an overview of **plotly**'s framework for *highlight* events, but it also supports *filter* events. These events trigger slightly different logic:
 
 * A highlight event dims the opacity of existing marks, then adds an additional graphical layer representing the selection.
@@ -218,6 +233,8 @@ class(highlight_key(mtcars))
 ```
 
 Figure \@ref(fig:filter-highlight) demonstrates the main difference in logic between filter and highlight events. Notice how, in the code implementation, the 'querying variable' definition for filter events is part of the filter widget. That is, `city` is defined as the variable of interest in `filter_select()`, not in the creation of `tx`. That is (intentionally) different from the approach for highlight events, where the 'querying variable' is a property of the dataset behind the graphical elements. 
+
+\index{Crosstalk filters!filter\_select()@\texttt{filter\_select()}}
 
 ```r
 library(crosstalk)
@@ -248,6 +265,9 @@ include_vimeo("307598256")
 
 When using multiple filter widgets to filter the same dataset, as done in Figure \@ref(fig:multiple-filter-widgets), you should avoid referencing a non-unique querying variable (i.e., key-column) in the `SharedData` object used to populate the filter widgets. Remember that the default behavior of `highlight_key()` and `SharedData$new()` is to use the row-index (which is unique). This ensures the intersection of multiple filtering widgets queries the correct subset of data.
 
+\index{Crosstalk filters!filter\_slider()@\texttt{filter\_slider()}}
+\index{Crosstalk filters!filter\_checkbox()@\texttt{filter\_checkbox()}}
+
 ```r
 library(crosstalk)
 tx <- highlight_key(txhousing)
@@ -267,6 +287,8 @@ bscols(
 ```{r multiple-filter-widgets, echo=FALSE, fig.cap="(ref:multiple-filter-widgets)"}
 include_vimeo("307598347")
 ```
+
+\index{Graphical queries with leaflet}
 
 As Figure \@ref(fig:plotly-leaflet-filter) demonstrates, filter and highlight events can work in conjunction with various **htmlwidgets**. In fact, since the semantics of filter are more well-defined than highlight, linking filter events across **htmlwidgets** via **crosstalk** should generally be more well-supported.^[All R packages with **crosstalk** support are currently listed here -- https://rstudio.github.io/crosstalk/widgets.html]
 
@@ -367,6 +389,8 @@ In addition to highlighting objects within an animation, objects may also be lin
 For example, in Figure \@ref(fig:animation-gapminder), countries below the 50th percentile in terms of population density are highlighted in blue, then the animation is played again to reveal a fairly interesting difference in these groups. From 1952 to 1977, countries with a low population density seem to enjoy large increases in GDP per capita and moderate increases in life expectancy, then in the early 80s, their GPD seems to decrease while the life expectancy greatly increases. In comparison, the high density countries seems to enjoy a more consistent and steady increase in both GDP and life expectancy. Of course, there are a handful of exceptions to the overall trend, such as the noticeable drop in life expectancy for a handful of countries during the nineties, which are mostly African countries feeling the affects of war.
 
 The `gapminder` data does not include a measure of population density, but the `gap` dataset (included with the **plotlyBook** R package) adds a column containing the population per square kilometer (`popDen`), which helps implement Figure \@ref(fig:animation-gapminder). In order to link the animated layers (i.e., red points), we need another version of `gap` that marks the country variable as the link between the plots (`gapKey`).
+
+\index{layout()@\texttt{layout()}!2D Axes!type@\texttt{type}}
 
 ```r
 data(gap, package = "plotlyBook")
