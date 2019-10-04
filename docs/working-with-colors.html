@@ -24,7 +24,7 @@
 <meta name="author" content="Carson Sievert" />
 
 
-<meta name="date" content="2019-10-02" />
+<meta name="date" content="2019-10-04" />
 
   <meta name="viewport" content="width=device-width, initial-scale=1" />
   <meta name="apple-mobile-web-app-capable" content="yes" />
@@ -326,7 +326,6 @@ code span.wa { color: #60a0b0; font-weight: bold; font-style: italic; } /* Warni
 <li class="chapter" data-level="33.3" data-path="improving-ggplotly.html"><a href="improving-ggplotly.html#leveraging-statistical-output"><i class="fa fa-check"></i><b>33.3</b> Leveraging statistical output</a></li>
 </ul></li>
 <li class="chapter" data-level="34" data-path="custom-geoms.html"><a href="custom-geoms.html"><i class="fa fa-check"></i><b>34</b> Translating custom ggplot2 geoms</a></li>
-<li class="chapter" data-level="" data-path="references.html"><a href="references.html"><i class="fa fa-check"></i>References</a></li>
 </ul>
 
       </nav>
@@ -356,10 +355,10 @@ code span.wa { color: #60a0b0; font-weight: bold; font-style: italic; } /* Warni
 <li>Named CSS3 colors <a href="http://www.w3.org/TR/css3-color/#svg-color" class="uri">http://www.w3.org/TR/css3-color/#svg-color</a></li>
 </ul>
 <p>If you use <code>plot_ly()</code> and directly specify a plotly.js color attribute (e.g. <code>marker.color</code>), you can use any of these formats. Figure <a href="working-with-colors.html#fig:color-plotly-js">27.1</a> uses the the hsl format:</p>
-<div class="sourceCode" id="cb230"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb230-1"><a href="working-with-colors.html#cb230-1"></a><span class="kw">plot_ly</span>(</span>
-<span id="cb230-2"><a href="working-with-colors.html#cb230-2"></a>  <span class="dt">x =</span> iris<span class="op">$</span>Petal.Length, </span>
-<span id="cb230-3"><a href="working-with-colors.html#cb230-3"></a>  <span class="dt">marker =</span> <span class="kw">list</span>(<span class="dt">color =</span> <span class="st">&quot;hsl(0, 100%, 50%)&quot;</span>)</span>
-<span id="cb230-4"><a href="working-with-colors.html#cb230-4"></a>)</span></code></pre></div>
+<div class="sourceCode" id="cb229"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb229-1"><a href="working-with-colors.html#cb229-1"></a><span class="kw">plot_ly</span>(</span>
+<span id="cb229-2"><a href="working-with-colors.html#cb229-2"></a>  <span class="dt">x =</span> iris<span class="op">$</span>Petal.Length, </span>
+<span id="cb229-3"><a href="working-with-colors.html#cb229-3"></a>  <span class="dt">marker =</span> <span class="kw">list</span>(<span class="dt">color =</span> <span class="st">&quot;hsl(0, 100%, 50%)&quot;</span>)</span>
+<span id="cb229-4"><a href="working-with-colors.html#cb229-4"></a>)</span></code></pre></div>
 <div class="figure" style="text-align: center"><span id="fig:color-plotly-js"></span>
 <img src="images/color-plotly-js.png" alt="Specifying a color in plotly.js’ supported format." width="100%" data-url="/interactives/color-plotly-js.html" />
 <p class="caption">
@@ -367,9 +366,9 @@ FIGURE 27.1: Specifying a color in plotly.js’ supported format.
 </p>
 </div>
 <p>If you’re doing something specific to R, like using <code>ggplotly()</code> and/or the top-level <code>color</code>/<code>colors</code>/<code>stroke</code>/<code>strokes</code> argument in <code>plot_ly()</code>, you’ll need to be careful to about specifying colors in way that R and <strong>plotly</strong> can understand. For example, at least currently, you can’t specify an hsl string in this way:</p>
-<div class="sourceCode" id="cb231"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb231-1"><a href="working-with-colors.html#cb231-1"></a><span class="kw">plot_ly</span>(<span class="dt">x =</span> <span class="dv">1</span>, <span class="dt">y =</span> <span class="dv">1</span>, <span class="dt">color =</span> <span class="kw">I</span>(<span class="st">&quot;hsl(0, 100%, 50%)&quot;</span>))</span></code></pre></div>
-<div class="sourceCode" id="cb232"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb232-1"><a href="working-with-colors.html#cb232-1"></a><span class="co">#&gt; Error in grDevices::col2rgb(x, alpha = TRUE): </span></span>
-<span id="cb232-2"><a href="working-with-colors.html#cb232-2"></a><span class="co">#&gt;   invalid color name &#39;hsl(0, 100%, 50%)&#39;</span></span></code></pre></div>
+<div class="sourceCode" id="cb230"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb230-1"><a href="working-with-colors.html#cb230-1"></a><span class="kw">plot_ly</span>(<span class="dt">x =</span> <span class="dv">1</span>, <span class="dt">y =</span> <span class="dv">1</span>, <span class="dt">color =</span> <span class="kw">I</span>(<span class="st">&quot;hsl(0, 100%, 50%)&quot;</span>))</span></code></pre></div>
+<div class="sourceCode" id="cb231"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb231-1"><a href="working-with-colors.html#cb231-1"></a><span class="co">#&gt; Error in grDevices::col2rgb(x, alpha = TRUE): </span></span>
+<span id="cb231-2"><a href="working-with-colors.html#cb231-2"></a><span class="co">#&gt;   invalid color name &#39;hsl(0, 100%, 50%)&#39;</span></span></code></pre></div>
 <p>Just like in <strong>ggplot2</strong>, you’ll have to specify a color in one of the following ways:</p>
 <ul>
 <li>A hexadecimal string of the form “#rrggbb” or “#rrggbbaa”.</li>
@@ -377,9 +376,9 @@ FIGURE 27.1: Specifying a color in plotly.js’ supported format.
 <li>An <code>NA</code> for transparent.</li>
 </ul>
 <p>This doesn’t imply that you can’t work in other colorspaces though (e.g. rgb, rgba, hsl, or hsl). The <strong>colorspace</strong> package provides a nice way to create colors in any of these colorspaces and provides a <code>hex()</code> function that you can use to convert any color to a hexidecimal format <span class="citation">(Ihaka et al. <a href="#ref-colorspace" role="doc-biblioref">2019</a>)</span>.</p>
-<div class="sourceCode" id="cb233"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb233-1"><a href="working-with-colors.html#cb233-1"></a><span class="kw">library</span>(colorspace)</span>
-<span id="cb233-2"><a href="working-with-colors.html#cb233-2"></a>red &lt;-<span class="st"> </span><span class="kw">hex</span>(<span class="kw">HLS</span>(<span class="dv">0</span>, <span class="fl">0.5</span>, <span class="dv">1</span>))</span>
-<span id="cb233-3"><a href="working-with-colors.html#cb233-3"></a><span class="kw">plot_ly</span>(<span class="dt">x =</span> iris<span class="op">$</span>Petal.Length, <span class="dt">color =</span> <span class="kw">I</span>(red))</span></code></pre></div>
+<div class="sourceCode" id="cb232"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb232-1"><a href="working-with-colors.html#cb232-1"></a><span class="kw">library</span>(colorspace)</span>
+<span id="cb232-2"><a href="working-with-colors.html#cb232-2"></a>red &lt;-<span class="st"> </span><span class="kw">hex</span>(<span class="kw">HLS</span>(<span class="dv">0</span>, <span class="fl">0.5</span>, <span class="dv">1</span>))</span>
+<span id="cb232-3"><a href="working-with-colors.html#cb232-3"></a><span class="kw">plot_ly</span>(<span class="dt">x =</span> iris<span class="op">$</span>Petal.Length, <span class="dt">color =</span> <span class="kw">I</span>(red))</span></code></pre></div>
 <p>If you’d like to see more examples of specifying colors, see Section <a href="scatter-traces.html#scatter-traces">3</a>.</p>
 </div>
 <h3>References</h3>

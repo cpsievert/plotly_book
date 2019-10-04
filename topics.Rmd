@@ -55,7 +55,8 @@ tooltip_data <- tibble(
   )),
   text = c(
     "👋 glyphs ಠ_ಠ",
-    "Hello <span style='color:red'><sup>1</sup>⁄<sub>2</sub></span> fraction",
+    "Hello <span style='color:red'><sup>1</sup>⁄<sub>2</sub></span> 
+    fraction",
     "\U0001f44b unicode \U00AE \U00B6 \U00BF",
     "&mu; &plusmn; &amp; &lt; &gt; &nbsp; &times; &plusmn; &deg;",
     paste("<b>Wow</b> <i>much</i> options", emo::ji("dog2"))
@@ -748,7 +749,7 @@ knitr::include_graphics("images/houston2.svg")
 
 Sometimes the directed acyclic graph property of a **magrittr** pipeline can be too restrictive for certain types of plots. In this example, after filtering the data down to Houston, there is no way to recover the original data inside the pipeline. The `add_fun()` function helps to work-around this restriction^[Credit to Winston Chang and Hadley Wickham for this idea. The `add_fun()` is very much like `layer_f()` function in **ggvis**.] -- it works by applying a function to the plotly object, but does not affect the data associated with the plotly object. This effectively provides a way to isolate data transformations within the pipeline^[Also, effectively putting a [pipeline inside a pipeline](http://www.memecreator.org/meme/yo-dawg-i-heard-u-like-pipelines-so-we-put-a-pipeline-in-your-pipeline)]. Figure \@ref(fig:houston-vs-sa) uses this idea to highlight both Houston and San Antonio.
 
-\index{add\_fun()@\texttt{add\_fun()}}
+\index{Data-plot-pipeline!add\_fun()@\texttt{add\_fun()}}
 
 ```r
 allCities %>%
@@ -803,8 +804,8 @@ knitr::include_graphics("images/summary.svg")
 A layering function does not have to be a data-plot-pipeline itself. Its only requirement on a layering function is that the first argument is a plot object and it returns a plot object. This provides an opportunity to say, fit a model to the plot data, extract the model components you desire, and map those components to visuals. Furthermore, since **plotly**'s `add_*()` functions don't require a data.frame, you can supply those components directly to attributes (as long as they are well-defined), as done in Figure \@ref(fig:forecast) via the **forecast** package [@forecast].
 
 \indexc{plotly\_data()}
-\index{c{forecast()}
-\indexadd\_trace()@\texttt{add\_trace()}!add\_ribbons()@\texttt{add\_ribbons()}}
+\indexc{forecast()}
+\index{add\_trace()@\texttt{add\_trace()}!add\_ribbons()@\texttt{add\_ribbons()}}
 
 ```r
 library(forecast)
@@ -873,7 +874,7 @@ In addition to using the functions above to modify `ggplotly()`'s return value, 
 
 ## Modifying layout
 
-Any aspect of a **plotly** objects layout can be modified^[Or, in the case of cumulative attributes, like `shapes`, `images`, `annotations`, etc, these items will be added to the existing items) via the `layout()` function. By default, since it doesn't always make sense to compare values, `ggplotly()` will usually set `layout.hovermode='closest'`. As shown in Figure \@ref(fig:ggplotly-rangeslider), when we have multiple y-values of interest at a specific x-value, it can be helpful to set `layout.hovermode='x'`. Moreover, for a long time series graph like this, zooming in on the x-axis can be useful -- `dynamicTicks` allows plotly.js to handle the generation of axis ticks and the `rangeslider()` allows us to zoom on the x-axis without losing the global context.
+Any aspect of a **plotly** objects layout can be modified^[Or, in the case of cumulative attributes, like `shapes`, `images`, `annotations`, etc, these items will be added to the existing items] via the `layout()` function. By default, since it doesn't always make sense to compare values, `ggplotly()` will usually set `layout.hovermode='closest'`. As shown in Figure \@ref(fig:ggplotly-rangeslider), when we have multiple y-values of interest at a specific x-value, it can be helpful to set `layout.hovermode='x'`. Moreover, for a long time series graph like this, zooming in on the x-axis can be useful -- `dynamicTicks` allows plotly.js to handle the generation of axis ticks and the `rangeslider()` allows us to zoom on the x-axis without losing the global context.
 
 \indexc{rangeslider()}
 \index{layout()@\texttt{layout()}!hovermode@\texttt{hovermode}}
@@ -924,7 +925,7 @@ knitr::include_graphics("images/listviewer.png")
 
 This output indicates that the fitted line and confidence band are implemented in the 2nd and 3rd trace of the plotly object, so to turn off the hover of those traces:
 
-\indexc{style}
+\indexc{style()}
 
 ```r
 style(p, hoverinfo = "none", traces = 2:3)
@@ -949,8 +950,8 @@ p %>%
 The data shown above is the data ggplot2 uses to actually draw the fitted values (as a line) and standard error bounds (as a ribbon). Figure \@ref(fig:se-annotations) leverages this data to add additional information about the model fit; in particular, it adds a vertical lines and annotations at the x-values that are associated with the highest and lowest amount uncertainty in the fitted values. Producing a plot like this with **ggplot2** would be impossible using `geom_smooth()` alone.^[It could be recreated by fitting the model via `loess()`, obtaining the fitted values and standard error with `predict()`, and feeding those results into `geom_line()`/`geom_ribbon()`/`geom_text()`/`geom_segment()`, but that process is much more onerous.] Providing a simple visual clue like this can help combat visual misperceptions of uncertainty bands due to the sine illusion [@sine-illusion]. 
 
 \index{Data-plot-pipeline}
-\index{add\_fun()@\texttt{add\_fun()}}
-\index{add\_trace()@\texttt{add\_trace()}!add\_annotations()@\texttt{add\_annotations()}}
+\index{Data-plot-pipeline!add\_fun()@\texttt{add\_fun()}}
+\index{add\_annotations()@\texttt{add\_annotations()}!Data coordinates}
 \index{add\_trace()@\texttt{add\_trace()}!add\_segments()@\texttt{add\_segments()}}
 \index{ggplotly()@\texttt{ggplotly()}!layerData@\texttt{layerData}}
 
@@ -975,7 +976,7 @@ knitr::include_graphics("images/se-annotations.svg")
 
 In addition to leveraging output from `StatSmooth`, it is sometimes useful to leverage output of other statistics, especially for annotation purposes. Figure \@ref(fig:StatBin) leverages the output of `StatBin` to add annotations to a stacked bar chart. Annotation is primarily helpful for displaying the heights of bars in a stacked bar chart, since decoding the heights of bars is a fairly difficult perceptual task [@graphical-perception]. As result, it is much easier to compare bar heights representing the proportion of diamonds with a given clarity across various diamond cuts.
 
-\index{ggplotly()@\texttt{ggplotly()}!geom\_bar()@\texttt{geom\_bar()}}
+\index{ggplotly()@\texttt{ggplotly()}!ggplot2!geom\_bar()@\texttt{geom\_bar()}}
 \index{add\_trace()@\texttt{add\_trace()}!add\_text()@\texttt{add\_text()}}
 
 ```r
@@ -988,7 +989,7 @@ ggplotly(p, originalData = FALSE) %>%
     x = ~x, y = ~(ymin + ymax) / 2,
     text = ~ifelse(ydiff > 0.02, round(ydiff, 2), ""),
     showlegend = FALSE, hoverinfo = "none",
-    color = I("black"), size = I(9)
+    color = I("white"), size = I(9)
   )
 ```
 
@@ -998,7 +999,7 @@ knitr::include_graphics("images/StatBin.svg")
 
 Another useful application is labelling the levels of each piece/polygon output by `StatDensity2d` as shown in Figure \@ref(fig:StatDensity2d). Note that, in this example, the `add_text()` layer takes advantage of `ggplotly()`'s ability to inherit aesthetics from the global mapping. Furthermore, since `originalData` is `FALSE`, it attaches the "built" aesthetics (i.e.,  the `x`/`y` positions after `StatDensity2d` has been applied to the raw data).
 
-\index{ggplotly()@\texttt{ggplotly()}!geom\_density2d()@\texttt{geom\_density2d()}}
+\index{ggplotly()@\texttt{ggplotly()}!ggplot2!geom\_density2d()@\texttt{geom\_density2d()}}
 
 ```r
 p <- ggplot(MASS::geyser, aes(x = waiting, y = duration)) +
@@ -1008,7 +1009,7 @@ ggplotly(p, originalData = FALSE) %>%
   group_by(piece) %>%
   slice(which.min(y)) %>% 
   add_text(
-    text = ~level, size = I(9), color = I("black"), hoverinfo="none"
+    text = ~level, size = I(16), color = I("black"), hoverinfo="none"
   )
 ```
 

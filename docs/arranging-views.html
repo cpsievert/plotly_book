@@ -24,7 +24,7 @@
 <meta name="author" content="Carson Sievert" />
 
 
-<meta name="date" content="2019-10-02" />
+<meta name="date" content="2019-10-04" />
 
   <meta name="viewport" content="width=device-width, initial-scale=1" />
   <meta name="apple-mobile-web-app-capable" content="yes" />
@@ -326,7 +326,6 @@ code span.wa { color: #60a0b0; font-weight: bold; font-style: italic; } /* Warni
 <li class="chapter" data-level="33.3" data-path="improving-ggplotly.html"><a href="improving-ggplotly.html#leveraging-statistical-output"><i class="fa fa-check"></i><b>33.3</b> Leveraging statistical output</a></li>
 </ul></li>
 <li class="chapter" data-level="34" data-path="custom-geoms.html"><a href="custom-geoms.html"><i class="fa fa-check"></i><b>34</b> Translating custom ggplot2 geoms</a></li>
-<li class="chapter" data-level="" data-path="references.html"><a href="references.html"><i class="fa fa-check"></i>References</a></li>
 </ul>
 
       </nav>
@@ -351,26 +350,28 @@ local summaries and patterns into a global context. When arranging multiple <str
 <p>Ideally, when displaying multiple related data views, they are linked through an underlying data source to foster comparisons and enable posing of data queries <span class="citation">(D. Cook, Buja, and Swayne <a href="#ref-Cook:2007uk" role="doc-biblioref">2007</a>)</span>. Chapter <a href="client-side-linking.html#graphical-queries">16.1</a> shows how to build upon these methods for arranging views to link them (client-side) as well.</p>
 <div id="arranging-plotly-objects" class="section level2">
 <h2><span class="header-section-number">13.1</span> Arranging plotly objects</h2>
+<p></p>
 <p>The <code>subplot()</code> function provides a flexible interface for merging multiple <strong>plotly</strong> objects into a single object. It is more flexible than most trellis display frameworks (e.g., <strong>ggplot2</strong>’s <code>facet_wrap()</code>) as you don’t have to condition on a value of common variable in each display <span class="citation">(Richard A. Becker <a href="#ref-trellis" role="doc-biblioref">1996</a>)</span>. Its capabilities and interface are similar to the <code>grid.arrange()</code> function from the <strong>gridExtra</strong> package, which allows you to arrange multiple <strong>grid</strong> grobs in a single view, effectively providing a way to arrange (possibly unrelated) <strong>ggplot2</strong> and/or <strong>lattice</strong> plots in a single view <span class="citation">(R Core Team <a href="#ref-RCore" role="doc-biblioref">2016</a>; Auguie <a href="#ref-gridExtra" role="doc-biblioref">2016</a>; Sarkar <a href="#ref-lattice" role="doc-biblioref">2008</a>)</span>. Figure <a href="arranging-views.html#fig:subplot-simple">13.1</a> shows the most simple way to use <code>subplot()</code> which is to directly supply plotly objects.</p>
-<div class="sourceCode" id="cb99"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb99-1"><a href="arranging-views.html#cb99-1"></a><span class="kw">library</span>(plotly)</span>
-<span id="cb99-2"><a href="arranging-views.html#cb99-2"></a>p1 &lt;-<span class="st"> </span><span class="kw">plot_ly</span>(economics, <span class="dt">x =</span> <span class="op">~</span>date, <span class="dt">y =</span> <span class="op">~</span>unemploy) <span class="op">%&gt;%</span><span class="st"> </span></span>
-<span id="cb99-3"><a href="arranging-views.html#cb99-3"></a><span class="st">  </span><span class="kw">add_lines</span>(<span class="dt">name =</span> <span class="st">&quot;unemploy&quot;</span>)</span>
-<span id="cb99-4"><a href="arranging-views.html#cb99-4"></a>p2 &lt;-<span class="st"> </span><span class="kw">plot_ly</span>(economics, <span class="dt">x =</span> <span class="op">~</span>date, <span class="dt">y =</span> <span class="op">~</span>uempmed) <span class="op">%&gt;%</span><span class="st"> </span></span>
-<span id="cb99-5"><a href="arranging-views.html#cb99-5"></a><span class="st">  </span><span class="kw">add_lines</span>(<span class="dt">name =</span> <span class="st">&quot;uempmed&quot;</span>)</span>
-<span id="cb99-6"><a href="arranging-views.html#cb99-6"></a><span class="kw">subplot</span>(p1, p2)</span></code></pre></div>
+<div class="sourceCode" id="cb98"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb98-1"><a href="arranging-views.html#cb98-1"></a><span class="kw">library</span>(plotly)</span>
+<span id="cb98-2"><a href="arranging-views.html#cb98-2"></a>p1 &lt;-<span class="st"> </span><span class="kw">plot_ly</span>(economics, <span class="dt">x =</span> <span class="op">~</span>date, <span class="dt">y =</span> <span class="op">~</span>unemploy) <span class="op">%&gt;%</span><span class="st"> </span></span>
+<span id="cb98-3"><a href="arranging-views.html#cb98-3"></a><span class="st">  </span><span class="kw">add_lines</span>(<span class="dt">name =</span> <span class="st">&quot;unemploy&quot;</span>)</span>
+<span id="cb98-4"><a href="arranging-views.html#cb98-4"></a>p2 &lt;-<span class="st"> </span><span class="kw">plot_ly</span>(economics, <span class="dt">x =</span> <span class="op">~</span>date, <span class="dt">y =</span> <span class="op">~</span>uempmed) <span class="op">%&gt;%</span><span class="st"> </span></span>
+<span id="cb98-5"><a href="arranging-views.html#cb98-5"></a><span class="st">  </span><span class="kw">add_lines</span>(<span class="dt">name =</span> <span class="st">&quot;uempmed&quot;</span>)</span>
+<span id="cb98-6"><a href="arranging-views.html#cb98-6"></a><span class="kw">subplot</span>(p1, p2)</span></code></pre></div>
 <div class="figure" style="text-align: center"><span id="fig:subplot-simple"></span>
 <img src="images/subplot-simple.svg" alt="The most basic use of subplot() to merge multiple plotly objects into a single plotly object." width="100%" data-url="/interactives/subplot-simple.html" />
 <p class="caption">
 FIGURE 13.1: The most basic use of <code>subplot()</code> to merge multiple plotly objects into a single plotly object.
 </p>
 </div>
+<p></p>
 <p>Although <code>subplot()</code> accepts an arbitrary number of plot objects, passing a <em>list</em> of plots can save typing and redundant code when dealing with a large number of plots. Figure <a href="arranging-views.html#fig:economics">13.2</a> shows one time series for each variable in the <code>economics</code> dataset and share the x-axis so that zoom/pan events are synchronized across each series:</p>
-<div class="sourceCode" id="cb100"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb100-1"><a href="arranging-views.html#cb100-1"></a>vars &lt;-<span class="st"> </span><span class="kw">setdiff</span>(<span class="kw">names</span>(economics), <span class="st">&quot;date&quot;</span>)</span>
-<span id="cb100-2"><a href="arranging-views.html#cb100-2"></a>plots &lt;-<span class="st"> </span><span class="kw">lapply</span>(vars, <span class="cf">function</span>(var) {</span>
-<span id="cb100-3"><a href="arranging-views.html#cb100-3"></a>  <span class="kw">plot_ly</span>(economics, <span class="dt">x =</span> <span class="op">~</span>date, <span class="dt">y =</span> <span class="kw">as.formula</span>(<span class="kw">paste0</span>(<span class="st">&quot;~&quot;</span>, var))) <span class="op">%&gt;%</span></span>
-<span id="cb100-4"><a href="arranging-views.html#cb100-4"></a><span class="st">    </span><span class="kw">add_lines</span>(<span class="dt">name =</span> var)</span>
-<span id="cb100-5"><a href="arranging-views.html#cb100-5"></a>})</span>
-<span id="cb100-6"><a href="arranging-views.html#cb100-6"></a><span class="kw">subplot</span>(plots, <span class="dt">nrows =</span> <span class="kw">length</span>(plots), <span class="dt">shareX =</span> <span class="ot">TRUE</span>, <span class="dt">titleX =</span> <span class="ot">FALSE</span>)</span></code></pre></div>
+<div class="sourceCode" id="cb99"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb99-1"><a href="arranging-views.html#cb99-1"></a>vars &lt;-<span class="st"> </span><span class="kw">setdiff</span>(<span class="kw">names</span>(economics), <span class="st">&quot;date&quot;</span>)</span>
+<span id="cb99-2"><a href="arranging-views.html#cb99-2"></a>plots &lt;-<span class="st"> </span><span class="kw">lapply</span>(vars, <span class="cf">function</span>(var) {</span>
+<span id="cb99-3"><a href="arranging-views.html#cb99-3"></a>  <span class="kw">plot_ly</span>(economics, <span class="dt">x =</span> <span class="op">~</span>date, <span class="dt">y =</span> <span class="kw">as.formula</span>(<span class="kw">paste0</span>(<span class="st">&quot;~&quot;</span>, var))) <span class="op">%&gt;%</span></span>
+<span id="cb99-4"><a href="arranging-views.html#cb99-4"></a><span class="st">    </span><span class="kw">add_lines</span>(<span class="dt">name =</span> var)</span>
+<span id="cb99-5"><a href="arranging-views.html#cb99-5"></a>})</span>
+<span id="cb99-6"><a href="arranging-views.html#cb99-6"></a><span class="kw">subplot</span>(plots, <span class="dt">nrows =</span> <span class="kw">length</span>(plots), <span class="dt">shareX =</span> <span class="ot">TRUE</span>, <span class="dt">titleX =</span> <span class="ot">FALSE</span>)</span></code></pre></div>
 <div class="figure" style="text-align: center"><span id="fig:economics"></span>
 <img src="images/economics.svg" alt="Five different economic variables on different y scales and a common x scale. Zoom and pan events in the x-direction are synchronized across plots." width="100%" data-url="/interactives/economics.html" />
 <p class="caption">
@@ -385,23 +386,25 @@ FIGURE 13.3: A visual diagram of controlling the <code>heights</code> of rows an
 </p>
 </div>
 <p>This flexibility is quite useful for a number of visualizations, for example, as shown in Figure <a href="arranging-views.html#fig:joint">13.4</a>, a joint density plot is really of subplot of joint and marginal densities. The <strong>heatmaply</strong> package is great example of leveraging <code>subplot()</code> in a similar way to create interactive dendrograms <span class="citation">(Galili <a href="#ref-heatmaply" role="doc-biblioref">2016</a>)</span>.</p>
+
+<p></p>
 <details>
 <p><summary>Click to show code</summary></p>
-<div class="sourceCode" id="cb101"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb101-1"><a href="arranging-views.html#cb101-1"></a><span class="co"># draw random values from correlated bi-variate normal distribution</span></span>
-<span id="cb101-2"><a href="arranging-views.html#cb101-2"></a>s &lt;-<span class="st"> </span><span class="kw">matrix</span>(<span class="kw">c</span>(<span class="dv">1</span>, <span class="fl">0.3</span>, <span class="fl">0.3</span>, <span class="dv">1</span>), <span class="dt">nrow =</span> <span class="dv">2</span>)</span>
-<span id="cb101-3"><a href="arranging-views.html#cb101-3"></a>m &lt;-<span class="st"> </span>mvtnorm<span class="op">::</span><span class="kw">rmvnorm</span>(<span class="fl">1e5</span>, <span class="dt">sigma =</span> s)</span>
-<span id="cb101-4"><a href="arranging-views.html#cb101-4"></a>x &lt;-<span class="st"> </span>m[, <span class="dv">1</span>]</span>
-<span id="cb101-5"><a href="arranging-views.html#cb101-5"></a>y &lt;-<span class="st"> </span>m[, <span class="dv">2</span>]</span>
-<span id="cb101-6"><a href="arranging-views.html#cb101-6"></a>s &lt;-<span class="st"> </span><span class="kw">subplot</span>(</span>
-<span id="cb101-7"><a href="arranging-views.html#cb101-7"></a>  <span class="kw">plot_ly</span>(<span class="dt">x =</span> x, <span class="dt">color =</span> <span class="kw">I</span>(<span class="st">&quot;black&quot;</span>)), </span>
-<span id="cb101-8"><a href="arranging-views.html#cb101-8"></a>  <span class="kw">plotly_empty</span>(), </span>
-<span id="cb101-9"><a href="arranging-views.html#cb101-9"></a>  <span class="kw">plot_ly</span>(<span class="dt">x =</span> x, <span class="dt">y =</span> y, <span class="dt">color =</span> <span class="kw">I</span>(<span class="st">&quot;black&quot;</span>)) <span class="op">%&gt;%</span></span>
-<span id="cb101-10"><a href="arranging-views.html#cb101-10"></a><span class="st">    </span><span class="kw">add_histogram2dcontour</span>(<span class="dt">colorscale =</span> <span class="st">&quot;Viridis&quot;</span>), </span>
-<span id="cb101-11"><a href="arranging-views.html#cb101-11"></a>  <span class="kw">plot_ly</span>(<span class="dt">y =</span> y, <span class="dt">color =</span> <span class="kw">I</span>(<span class="st">&quot;black&quot;</span>)),</span>
-<span id="cb101-12"><a href="arranging-views.html#cb101-12"></a>  <span class="dt">nrows =</span> <span class="dv">2</span>, <span class="dt">heights =</span> <span class="kw">c</span>(<span class="fl">0.2</span>, <span class="fl">0.8</span>), <span class="dt">widths =</span> <span class="kw">c</span>(<span class="fl">0.8</span>, <span class="fl">0.2</span>), <span class="dt">margin =</span> <span class="dv">0</span>,</span>
-<span id="cb101-13"><a href="arranging-views.html#cb101-13"></a>  <span class="dt">shareX =</span> <span class="ot">TRUE</span>, <span class="dt">shareY =</span> <span class="ot">TRUE</span>, <span class="dt">titleX =</span> <span class="ot">FALSE</span>, <span class="dt">titleY =</span> <span class="ot">FALSE</span></span>
-<span id="cb101-14"><a href="arranging-views.html#cb101-14"></a>)</span>
-<span id="cb101-15"><a href="arranging-views.html#cb101-15"></a><span class="kw">layout</span>(s, <span class="dt">showlegend =</span> <span class="ot">FALSE</span>)</span></code></pre></div>
+<div class="sourceCode" id="cb100"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb100-1"><a href="arranging-views.html#cb100-1"></a><span class="co"># draw random values from correlated bi-variate normal distribution</span></span>
+<span id="cb100-2"><a href="arranging-views.html#cb100-2"></a>s &lt;-<span class="st"> </span><span class="kw">matrix</span>(<span class="kw">c</span>(<span class="dv">1</span>, <span class="fl">0.3</span>, <span class="fl">0.3</span>, <span class="dv">1</span>), <span class="dt">nrow =</span> <span class="dv">2</span>)</span>
+<span id="cb100-3"><a href="arranging-views.html#cb100-3"></a>m &lt;-<span class="st"> </span>mvtnorm<span class="op">::</span><span class="kw">rmvnorm</span>(<span class="fl">1e5</span>, <span class="dt">sigma =</span> s)</span>
+<span id="cb100-4"><a href="arranging-views.html#cb100-4"></a>x &lt;-<span class="st"> </span>m[, <span class="dv">1</span>]</span>
+<span id="cb100-5"><a href="arranging-views.html#cb100-5"></a>y &lt;-<span class="st"> </span>m[, <span class="dv">2</span>]</span>
+<span id="cb100-6"><a href="arranging-views.html#cb100-6"></a>s &lt;-<span class="st"> </span><span class="kw">subplot</span>(</span>
+<span id="cb100-7"><a href="arranging-views.html#cb100-7"></a>  <span class="kw">plot_ly</span>(<span class="dt">x =</span> x, <span class="dt">color =</span> <span class="kw">I</span>(<span class="st">&quot;black&quot;</span>)), </span>
+<span id="cb100-8"><a href="arranging-views.html#cb100-8"></a>  <span class="kw">plotly_empty</span>(), </span>
+<span id="cb100-9"><a href="arranging-views.html#cb100-9"></a>  <span class="kw">plot_ly</span>(<span class="dt">x =</span> x, <span class="dt">y =</span> y, <span class="dt">color =</span> <span class="kw">I</span>(<span class="st">&quot;black&quot;</span>)) <span class="op">%&gt;%</span></span>
+<span id="cb100-10"><a href="arranging-views.html#cb100-10"></a><span class="st">    </span><span class="kw">add_histogram2dcontour</span>(<span class="dt">colorscale =</span> <span class="st">&quot;Viridis&quot;</span>), </span>
+<span id="cb100-11"><a href="arranging-views.html#cb100-11"></a>  <span class="kw">plot_ly</span>(<span class="dt">y =</span> y, <span class="dt">color =</span> <span class="kw">I</span>(<span class="st">&quot;black&quot;</span>)),</span>
+<span id="cb100-12"><a href="arranging-views.html#cb100-12"></a>  <span class="dt">nrows =</span> <span class="dv">2</span>, <span class="dt">heights =</span> <span class="kw">c</span>(<span class="fl">0.2</span>, <span class="fl">0.8</span>), <span class="dt">widths =</span> <span class="kw">c</span>(<span class="fl">0.8</span>, <span class="fl">0.2</span>), <span class="dt">margin =</span> <span class="dv">0</span>,</span>
+<span id="cb100-13"><a href="arranging-views.html#cb100-13"></a>  <span class="dt">shareX =</span> <span class="ot">TRUE</span>, <span class="dt">shareY =</span> <span class="ot">TRUE</span>, <span class="dt">titleX =</span> <span class="ot">FALSE</span>, <span class="dt">titleY =</span> <span class="ot">FALSE</span></span>
+<span id="cb100-14"><a href="arranging-views.html#cb100-14"></a>)</span>
+<span id="cb100-15"><a href="arranging-views.html#cb100-15"></a><span class="kw">layout</span>(s, <span class="dt">showlegend =</span> <span class="ot">FALSE</span>)</span></code></pre></div>
 </details>
 <div class="figure" style="text-align: center"><span id="fig:joint"></span>
 <img src="images/joint.svg" alt="A joint density plot with synchronized axes." width="100%" data-url="/interactives/joint.html" />
@@ -411,18 +414,19 @@ FIGURE 13.4: A joint density plot with synchronized axes.
 </div>
 <div id="recursive-subplots" class="section level3">
 <h3><span class="header-section-number">13.1.1</span> Recursive subplots</h3>
+<p></p>
 <p>The <code>subplot()</code> function returns a plotly object so it can be modified like any other plotly object. This effectively means that subplots work recursively (i.e., you can have subplots within subplots). This idea is useful when your desired layout doesn’t conform to the table structure described in the previous section. In fact, you can think of a subplot of subplots like a spreadsheet with merged cells. Figure <a href="arranging-views.html#fig:recursive">13.5</a> gives a basic example where each row of the outer-most subplot contains a different number of columns.</p>
 <details>
 <p><summary>Click to show code</summary></p>
-<div class="sourceCode" id="cb102"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb102-1"><a href="arranging-views.html#cb102-1"></a>plotList &lt;-<span class="st"> </span><span class="cf">function</span>(nplots) {</span>
-<span id="cb102-2"><a href="arranging-views.html#cb102-2"></a>  <span class="kw">lapply</span>(<span class="kw">seq_len</span>(nplots), <span class="cf">function</span>(x) <span class="kw">plot_ly</span>())</span>
-<span id="cb102-3"><a href="arranging-views.html#cb102-3"></a>}</span>
-<span id="cb102-4"><a href="arranging-views.html#cb102-4"></a>s1 &lt;-<span class="st"> </span><span class="kw">subplot</span>(<span class="kw">plotList</span>(<span class="dv">6</span>), <span class="dt">nrows =</span> <span class="dv">2</span>, <span class="dt">shareX =</span> <span class="ot">TRUE</span>, <span class="dt">shareY =</span> <span class="ot">TRUE</span>)</span>
-<span id="cb102-5"><a href="arranging-views.html#cb102-5"></a>s2 &lt;-<span class="st"> </span><span class="kw">subplot</span>(<span class="kw">plotList</span>(<span class="dv">2</span>), <span class="dt">shareY =</span> <span class="ot">TRUE</span>)</span>
-<span id="cb102-6"><a href="arranging-views.html#cb102-6"></a><span class="kw">subplot</span>(</span>
-<span id="cb102-7"><a href="arranging-views.html#cb102-7"></a>  s1, s2, <span class="kw">plot_ly</span>(), <span class="dt">nrows =</span> <span class="dv">3</span>, </span>
-<span id="cb102-8"><a href="arranging-views.html#cb102-8"></a>  <span class="dt">margin =</span> <span class="fl">0.04</span>, <span class="dt">heights =</span> <span class="kw">c</span>(<span class="fl">0.6</span>, <span class="fl">0.3</span>, <span class="fl">0.1</span>)</span>
-<span id="cb102-9"><a href="arranging-views.html#cb102-9"></a>)</span></code></pre></div>
+<div class="sourceCode" id="cb101"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb101-1"><a href="arranging-views.html#cb101-1"></a>plotList &lt;-<span class="st"> </span><span class="cf">function</span>(nplots) {</span>
+<span id="cb101-2"><a href="arranging-views.html#cb101-2"></a>  <span class="kw">lapply</span>(<span class="kw">seq_len</span>(nplots), <span class="cf">function</span>(x) <span class="kw">plot_ly</span>())</span>
+<span id="cb101-3"><a href="arranging-views.html#cb101-3"></a>}</span>
+<span id="cb101-4"><a href="arranging-views.html#cb101-4"></a>s1 &lt;-<span class="st"> </span><span class="kw">subplot</span>(<span class="kw">plotList</span>(<span class="dv">6</span>), <span class="dt">nrows =</span> <span class="dv">2</span>, <span class="dt">shareX =</span> <span class="ot">TRUE</span>, <span class="dt">shareY =</span> <span class="ot">TRUE</span>)</span>
+<span id="cb101-5"><a href="arranging-views.html#cb101-5"></a>s2 &lt;-<span class="st"> </span><span class="kw">subplot</span>(<span class="kw">plotList</span>(<span class="dv">2</span>), <span class="dt">shareY =</span> <span class="ot">TRUE</span>)</span>
+<span id="cb101-6"><a href="arranging-views.html#cb101-6"></a><span class="kw">subplot</span>(</span>
+<span id="cb101-7"><a href="arranging-views.html#cb101-7"></a>  s1, s2, <span class="kw">plot_ly</span>(), <span class="dt">nrows =</span> <span class="dv">3</span>, </span>
+<span id="cb101-8"><a href="arranging-views.html#cb101-8"></a>  <span class="dt">margin =</span> <span class="fl">0.04</span>, <span class="dt">heights =</span> <span class="kw">c</span>(<span class="fl">0.6</span>, <span class="fl">0.3</span>, <span class="fl">0.1</span>)</span>
+<span id="cb101-9"><a href="arranging-views.html#cb101-9"></a>)</span></code></pre></div>
 </details>
 <div class="figure" style="text-align: center"><span id="fig:recursive"></span>
 <img src="images/recursive.svg" alt="Recursive subplots." width="100%" data-url="/interactives/recursive.html" />
@@ -431,33 +435,34 @@ FIGURE 13.5: Recursive subplots.
 </p>
 </div>
 <p>The concept is particularly useful when you want plot(s) in a given row to have different widths from plot(s) in another row. Figure <a href="arranging-views.html#fig:map-subplot">13.6</a> uses this recursive behavior to place many bar charts in the first row, and a single choropleth in the second row.</p>
+<p></p>
 <details>
 <p><summary>Click to show code</summary></p>
-<div class="sourceCode" id="cb103"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb103-1"><a href="arranging-views.html#cb103-1"></a><span class="co"># specify some map projection/options</span></span>
-<span id="cb103-2"><a href="arranging-views.html#cb103-2"></a>g &lt;-<span class="st"> </span><span class="kw">list</span>(</span>
-<span id="cb103-3"><a href="arranging-views.html#cb103-3"></a>  <span class="dt">scope =</span> <span class="st">&#39;usa&#39;</span>,</span>
-<span id="cb103-4"><a href="arranging-views.html#cb103-4"></a>  <span class="dt">projection =</span> <span class="kw">list</span>(<span class="dt">type =</span> <span class="st">&#39;albers usa&#39;</span>),</span>
-<span id="cb103-5"><a href="arranging-views.html#cb103-5"></a>  <span class="dt">lakecolor =</span> <span class="kw">toRGB</span>(<span class="st">&#39;white&#39;</span>)</span>
-<span id="cb103-6"><a href="arranging-views.html#cb103-6"></a>)</span>
-<span id="cb103-7"><a href="arranging-views.html#cb103-7"></a><span class="co"># create a map of population density</span></span>
-<span id="cb103-8"><a href="arranging-views.html#cb103-8"></a>density &lt;-<span class="st"> </span>state.x77[, <span class="st">&quot;Population&quot;</span>] <span class="op">/</span><span class="st"> </span>state.x77[, <span class="st">&quot;Area&quot;</span>]</span>
-<span id="cb103-9"><a href="arranging-views.html#cb103-9"></a>map &lt;-<span class="st"> </span><span class="kw">plot_geo</span>(</span>
-<span id="cb103-10"><a href="arranging-views.html#cb103-10"></a>  <span class="dt">z =</span> <span class="op">~</span>density, <span class="dt">text =</span> state.name, </span>
-<span id="cb103-11"><a href="arranging-views.html#cb103-11"></a>  <span class="dt">locations =</span> state.abb, <span class="dt">locationmode =</span> <span class="st">&#39;USA-states&#39;</span></span>
-<span id="cb103-12"><a href="arranging-views.html#cb103-12"></a>) <span class="op">%&gt;%</span></span>
-<span id="cb103-13"><a href="arranging-views.html#cb103-13"></a><span class="st">  </span><span class="kw">layout</span>(<span class="dt">geo =</span> g)</span>
-<span id="cb103-14"><a href="arranging-views.html#cb103-14"></a><span class="co"># create a bunch of horizontal bar charts </span></span>
-<span id="cb103-15"><a href="arranging-views.html#cb103-15"></a>vars &lt;-<span class="st"> </span><span class="kw">colnames</span>(state.x77)</span>
-<span id="cb103-16"><a href="arranging-views.html#cb103-16"></a>barcharts &lt;-<span class="st"> </span><span class="kw">lapply</span>(vars, <span class="cf">function</span>(var) {</span>
-<span id="cb103-17"><a href="arranging-views.html#cb103-17"></a>  <span class="kw">plot_ly</span>(<span class="dt">x =</span> state.x77[, var], <span class="dt">y =</span> state.name) <span class="op">%&gt;%</span></span>
-<span id="cb103-18"><a href="arranging-views.html#cb103-18"></a><span class="st">    </span><span class="kw">add_bars</span>(<span class="dt">orientation =</span> <span class="st">&quot;h&quot;</span>, <span class="dt">name =</span> var) <span class="op">%&gt;%</span></span>
-<span id="cb103-19"><a href="arranging-views.html#cb103-19"></a><span class="st">    </span><span class="kw">layout</span>(<span class="dt">showlegend =</span> <span class="ot">FALSE</span>, <span class="dt">hovermode =</span> <span class="st">&quot;y&quot;</span>,</span>
-<span id="cb103-20"><a href="arranging-views.html#cb103-20"></a>           <span class="dt">yaxis =</span> <span class="kw">list</span>(<span class="dt">showticklabels =</span> <span class="ot">FALSE</span>))</span>
-<span id="cb103-21"><a href="arranging-views.html#cb103-21"></a>})</span>
-<span id="cb103-22"><a href="arranging-views.html#cb103-22"></a><span class="kw">subplot</span>(barcharts, <span class="dt">margin =</span> <span class="fl">0.01</span>) <span class="op">%&gt;%</span></span>
-<span id="cb103-23"><a href="arranging-views.html#cb103-23"></a><span class="st">  </span><span class="kw">subplot</span>(map, <span class="dt">nrows =</span> <span class="dv">2</span>, <span class="dt">heights =</span> <span class="kw">c</span>(<span class="fl">0.3</span>, <span class="fl">0.7</span>), <span class="dt">margin =</span> <span class="fl">0.1</span>) <span class="op">%&gt;%</span></span>
-<span id="cb103-24"><a href="arranging-views.html#cb103-24"></a><span class="st">  </span><span class="kw">layout</span>(<span class="dt">legend =</span> <span class="kw">list</span>(<span class="dt">y =</span> <span class="dv">1</span>)) <span class="op">%&gt;%</span></span>
-<span id="cb103-25"><a href="arranging-views.html#cb103-25"></a><span class="st">  </span><span class="kw">colorbar</span>(<span class="dt">y =</span> <span class="fl">0.5</span>)</span></code></pre></div>
+<div class="sourceCode" id="cb102"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb102-1"><a href="arranging-views.html#cb102-1"></a><span class="co"># specify some map projection/options</span></span>
+<span id="cb102-2"><a href="arranging-views.html#cb102-2"></a>g &lt;-<span class="st"> </span><span class="kw">list</span>(</span>
+<span id="cb102-3"><a href="arranging-views.html#cb102-3"></a>  <span class="dt">scope =</span> <span class="st">&#39;usa&#39;</span>,</span>
+<span id="cb102-4"><a href="arranging-views.html#cb102-4"></a>  <span class="dt">projection =</span> <span class="kw">list</span>(<span class="dt">type =</span> <span class="st">&#39;albers usa&#39;</span>),</span>
+<span id="cb102-5"><a href="arranging-views.html#cb102-5"></a>  <span class="dt">lakecolor =</span> <span class="kw">toRGB</span>(<span class="st">&#39;white&#39;</span>)</span>
+<span id="cb102-6"><a href="arranging-views.html#cb102-6"></a>)</span>
+<span id="cb102-7"><a href="arranging-views.html#cb102-7"></a><span class="co"># create a map of population density</span></span>
+<span id="cb102-8"><a href="arranging-views.html#cb102-8"></a>density &lt;-<span class="st"> </span>state.x77[, <span class="st">&quot;Population&quot;</span>] <span class="op">/</span><span class="st"> </span>state.x77[, <span class="st">&quot;Area&quot;</span>]</span>
+<span id="cb102-9"><a href="arranging-views.html#cb102-9"></a>map &lt;-<span class="st"> </span><span class="kw">plot_geo</span>(</span>
+<span id="cb102-10"><a href="arranging-views.html#cb102-10"></a>  <span class="dt">z =</span> <span class="op">~</span>density, <span class="dt">text =</span> state.name, </span>
+<span id="cb102-11"><a href="arranging-views.html#cb102-11"></a>  <span class="dt">locations =</span> state.abb, <span class="dt">locationmode =</span> <span class="st">&#39;USA-states&#39;</span></span>
+<span id="cb102-12"><a href="arranging-views.html#cb102-12"></a>) <span class="op">%&gt;%</span></span>
+<span id="cb102-13"><a href="arranging-views.html#cb102-13"></a><span class="st">  </span><span class="kw">layout</span>(<span class="dt">geo =</span> g)</span>
+<span id="cb102-14"><a href="arranging-views.html#cb102-14"></a><span class="co"># create a bunch of horizontal bar charts </span></span>
+<span id="cb102-15"><a href="arranging-views.html#cb102-15"></a>vars &lt;-<span class="st"> </span><span class="kw">colnames</span>(state.x77)</span>
+<span id="cb102-16"><a href="arranging-views.html#cb102-16"></a>barcharts &lt;-<span class="st"> </span><span class="kw">lapply</span>(vars, <span class="cf">function</span>(var) {</span>
+<span id="cb102-17"><a href="arranging-views.html#cb102-17"></a>  <span class="kw">plot_ly</span>(<span class="dt">x =</span> state.x77[, var], <span class="dt">y =</span> state.name) <span class="op">%&gt;%</span></span>
+<span id="cb102-18"><a href="arranging-views.html#cb102-18"></a><span class="st">    </span><span class="kw">add_bars</span>(<span class="dt">orientation =</span> <span class="st">&quot;h&quot;</span>, <span class="dt">name =</span> var) <span class="op">%&gt;%</span></span>
+<span id="cb102-19"><a href="arranging-views.html#cb102-19"></a><span class="st">    </span><span class="kw">layout</span>(<span class="dt">showlegend =</span> <span class="ot">FALSE</span>, <span class="dt">hovermode =</span> <span class="st">&quot;y&quot;</span>,</span>
+<span id="cb102-20"><a href="arranging-views.html#cb102-20"></a>           <span class="dt">yaxis =</span> <span class="kw">list</span>(<span class="dt">showticklabels =</span> <span class="ot">FALSE</span>))</span>
+<span id="cb102-21"><a href="arranging-views.html#cb102-21"></a>})</span>
+<span id="cb102-22"><a href="arranging-views.html#cb102-22"></a><span class="kw">subplot</span>(barcharts, <span class="dt">margin =</span> <span class="fl">0.01</span>) <span class="op">%&gt;%</span></span>
+<span id="cb102-23"><a href="arranging-views.html#cb102-23"></a><span class="st">  </span><span class="kw">subplot</span>(map, <span class="dt">nrows =</span> <span class="dv">2</span>, <span class="dt">heights =</span> <span class="kw">c</span>(<span class="fl">0.3</span>, <span class="fl">0.7</span>), <span class="dt">margin =</span> <span class="fl">0.1</span>) <span class="op">%&gt;%</span></span>
+<span id="cb102-24"><a href="arranging-views.html#cb102-24"></a><span class="st">  </span><span class="kw">layout</span>(<span class="dt">legend =</span> <span class="kw">list</span>(<span class="dt">y =</span> <span class="dv">1</span>)) <span class="op">%&gt;%</span></span>
+<span id="cb102-25"><a href="arranging-views.html#cb102-25"></a><span class="st">  </span><span class="kw">colorbar</span>(<span class="dt">y =</span> <span class="fl">0.5</span>)</span></code></pre></div>
 </details>
 <div class="figure" style="text-align: center"><span id="fig:map-subplot"></span>
 <img src="images/map-subplot.svg" alt="Multiple bar charts of US statistics by state in a subplot with a choropleth of population density." width="100%" data-url="/interactives/map-subplot.html" />
@@ -471,13 +476,14 @@ FIGURE 13.6: Multiple bar charts of US statistics by state in a subplot with a c
 <p>Using <code>subplot()</code> directly is not the <em>only</em> way to create multiple views of a dataset with <strong>plotly</strong>. In some special cases, like scatterplot matrices and generalized pair plots, we can take advantage of some special methods designed specifically for these use cases.</p>
 <div id="scatterplot-matrices" class="section level4">
 <h4><span class="header-section-number">13.1.2.1</span> Scatterplot matrices</h4>
+<p></p>
 <p>The plotly.js library provides a trace specifically designed and optimized for scatterplot matrices (splom). To use it, provide numeric variables to the <code>dimensions</code> attribute of the <code>splom</code> trace type.</p>
-<div class="sourceCode" id="cb104"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb104-1"><a href="arranging-views.html#cb104-1"></a>dims &lt;-<span class="st"> </span>dplyr<span class="op">::</span><span class="kw">select_if</span>(iris, is.numeric)</span>
-<span id="cb104-2"><a href="arranging-views.html#cb104-2"></a>dims &lt;-<span class="st"> </span>purrr<span class="op">::</span><span class="kw">map2</span>(dims, <span class="kw">names</span>(dims), <span class="op">~</span><span class="kw">list</span>(<span class="dt">values=</span>.x, <span class="dt">label=</span>.y))</span>
-<span id="cb104-3"><a href="arranging-views.html#cb104-3"></a><span class="kw">plot_ly</span>(</span>
-<span id="cb104-4"><a href="arranging-views.html#cb104-4"></a>  <span class="dt">type =</span> <span class="st">&quot;splom&quot;</span>, <span class="dt">dimensions =</span> <span class="kw">setNames</span>(dims, <span class="ot">NULL</span>), </span>
-<span id="cb104-5"><a href="arranging-views.html#cb104-5"></a>  <span class="dt">showupperhalf =</span> <span class="ot">FALSE</span>, <span class="dt">diagonal =</span> <span class="kw">list</span>(<span class="dt">visible =</span> <span class="ot">FALSE</span>)</span>
-<span id="cb104-6"><a href="arranging-views.html#cb104-6"></a>)</span></code></pre></div>
+<div class="sourceCode" id="cb103"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb103-1"><a href="arranging-views.html#cb103-1"></a>dims &lt;-<span class="st"> </span>dplyr<span class="op">::</span><span class="kw">select_if</span>(iris, is.numeric)</span>
+<span id="cb103-2"><a href="arranging-views.html#cb103-2"></a>dims &lt;-<span class="st"> </span>purrr<span class="op">::</span><span class="kw">map2</span>(dims, <span class="kw">names</span>(dims), <span class="op">~</span><span class="kw">list</span>(<span class="dt">values=</span>.x, <span class="dt">label=</span>.y))</span>
+<span id="cb103-3"><a href="arranging-views.html#cb103-3"></a><span class="kw">plot_ly</span>(</span>
+<span id="cb103-4"><a href="arranging-views.html#cb103-4"></a>  <span class="dt">type =</span> <span class="st">&quot;splom&quot;</span>, <span class="dt">dimensions =</span> <span class="kw">setNames</span>(dims, <span class="ot">NULL</span>), </span>
+<span id="cb103-5"><a href="arranging-views.html#cb103-5"></a>  <span class="dt">showupperhalf =</span> <span class="ot">FALSE</span>, <span class="dt">diagonal =</span> <span class="kw">list</span>(<span class="dt">visible =</span> <span class="ot">FALSE</span>)</span>
+<span id="cb103-6"><a href="arranging-views.html#cb103-6"></a>)</span></code></pre></div>
 <div class="figure" style="text-align: center"><span id="fig:splom"></span>
 <iframe src="https://player.vimeo.com/video/325081084?title=0&amp;byline=0&amp;portrait=0" width="100%" height="400" frameborder="0" seamless="seamless" webkitAllowFullScreen mozallowfullscreen allowFullScreen></iframe>
 <p class="caption">
@@ -488,11 +494,13 @@ FIGURE 13.7: Linked brushing in a scatterplot matrix of the iris dataset. For th
 </div>
 <div id="generalized-pairs-plot" class="section level4">
 <h4><span class="header-section-number">13.1.2.2</span> Generalized pairs plot</h4>
+<p>
+</p>
 <p>The generalized pairs plot is an extension of the scatterplot matrix to support both discrete and numeric variables <span class="citation">(Emerson et al. <a href="#ref-gpp" role="doc-biblioref">2013</a>)</span>. The <code>ggpairs()</code> function from the <strong>GGally</strong> package provides an interface for creating these plots via <strong>ggplot2</strong> <span class="citation">(Schloerke et al. <a href="#ref-GGally" role="doc-biblioref">2016</a>)</span>. To implement <code>ggpairs()</code>, <strong>GGally</strong> introduces the notion of a matrix of <strong>ggplot2</strong> plot objects that it calls <code>ggmatrix()</code>. As Figure <a href="arranging-views.html#fig:ggpairs">13.8</a> shows, the <code>ggplotly()</code> function has a method for converting ggmatrix objects directly:</p>
-<div class="sourceCode" id="cb105"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb105-1"><a href="arranging-views.html#cb105-1"></a>pm &lt;-<span class="st"> </span>GGally<span class="op">::</span><span class="kw">ggpairs</span>(iris, <span class="kw">aes</span>(<span class="dt">color =</span> Species))</span>
-<span id="cb105-2"><a href="arranging-views.html#cb105-2"></a><span class="kw">class</span>(pm)</span>
-<span id="cb105-3"><a href="arranging-views.html#cb105-3"></a><span class="co">#&gt; [1] &quot;gg&quot;  &quot;ggmatrix&quot;</span></span>
-<span id="cb105-4"><a href="arranging-views.html#cb105-4"></a><span class="kw">ggplotly</span>(pm)</span></code></pre></div>
+<div class="sourceCode" id="cb104"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb104-1"><a href="arranging-views.html#cb104-1"></a>pm &lt;-<span class="st"> </span>GGally<span class="op">::</span><span class="kw">ggpairs</span>(iris, <span class="kw">aes</span>(<span class="dt">color =</span> Species))</span>
+<span id="cb104-2"><a href="arranging-views.html#cb104-2"></a><span class="kw">class</span>(pm)</span>
+<span id="cb104-3"><a href="arranging-views.html#cb104-3"></a><span class="co">#&gt; [1] &quot;gg&quot;  &quot;ggmatrix&quot;</span></span>
+<span id="cb104-4"><a href="arranging-views.html#cb104-4"></a><span class="kw">ggplotly</span>(pm)</span></code></pre></div>
 <div class="figure" style="text-align: center"><span id="fig:ggpairs"></span>
 <img src="images/ggpairs.svg" alt="A generalized pairs plot made via the ggpairs() function from the GGally package." width="100%" data-url="/interactives/ggpairs.html" />
 <p class="caption">
@@ -503,45 +511,48 @@ FIGURE 13.8: A generalized pairs plot made via the <code>ggpairs()</code> functi
 </div>
 <div id="trellis-displays-subplot" class="section level4">
 <h4><span class="header-section-number">13.1.2.3</span> Trellis displays with <code>subplot()</code></h4>
+<p></p>
 <p>It’s true that <strong>ggplot2</strong>’s <code>facet_wrap()</code>/<code>facet_grid()</code> provides a simple way to create trellis displays, but for learning purposes, it can be helpful to learn how to implement a similar trellis display with <code>plot_ly()</code> and <code>subplot()</code>. Figure <a href="arranging-views.html#fig:subplot-trellis">13.9</a> demonstrates one approach, which leverages <code>subplot()</code>’s ability to reposition annotations and shapes. Specifically, the <code>panel()</code> function below, which defines the visualization method to be applied to each <code>variable</code> in the <code>economics_long</code> dataset, uses paper coordinates (i.e., graph coordinates on a normalized 0-1 scale) to place an annotation at the top-center of each panel as well as a rectangle shape behind the annotation. Note also the use of <code>ysizemode = 'pixel'</code> which gives the rectangle shape a fixed height (i.e., the rectangle height is always 16 pixels, regardless of the height of the trellis display).</p>
+<p>
+</p>
 <details>
 <p><summary>Click to show code</summary></p>
-<div class="sourceCode" id="cb106"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb106-1"><a href="arranging-views.html#cb106-1"></a><span class="kw">library</span>(dplyr)</span>
-<span id="cb106-2"><a href="arranging-views.html#cb106-2"></a></span>
-<span id="cb106-3"><a href="arranging-views.html#cb106-3"></a>panel &lt;-<span class="st"> </span>. <span class="op">%&gt;%</span><span class="st"> </span></span>
-<span id="cb106-4"><a href="arranging-views.html#cb106-4"></a><span class="st">  </span><span class="kw">plot_ly</span>(<span class="dt">x =</span> <span class="op">~</span>date, <span class="dt">y =</span> <span class="op">~</span>value) <span class="op">%&gt;%</span></span>
-<span id="cb106-5"><a href="arranging-views.html#cb106-5"></a><span class="st">  </span><span class="kw">add_lines</span>() <span class="op">%&gt;%</span></span>
-<span id="cb106-6"><a href="arranging-views.html#cb106-6"></a><span class="st">  </span><span class="kw">add_annotations</span>(</span>
-<span id="cb106-7"><a href="arranging-views.html#cb106-7"></a>    <span class="dt">text =</span> <span class="op">~</span><span class="kw">unique</span>(variable),</span>
-<span id="cb106-8"><a href="arranging-views.html#cb106-8"></a>    <span class="dt">x =</span> <span class="fl">0.5</span>,</span>
-<span id="cb106-9"><a href="arranging-views.html#cb106-9"></a>    <span class="dt">y =</span> <span class="dv">1</span>,</span>
-<span id="cb106-10"><a href="arranging-views.html#cb106-10"></a>    <span class="dt">yref =</span> <span class="st">&quot;paper&quot;</span>,</span>
-<span id="cb106-11"><a href="arranging-views.html#cb106-11"></a>    <span class="dt">xref =</span> <span class="st">&quot;paper&quot;</span>,</span>
-<span id="cb106-12"><a href="arranging-views.html#cb106-12"></a>    <span class="dt">yanchor =</span> <span class="st">&quot;bottom&quot;</span>,</span>
-<span id="cb106-13"><a href="arranging-views.html#cb106-13"></a>    <span class="dt">showarrow =</span> <span class="ot">FALSE</span>,</span>
-<span id="cb106-14"><a href="arranging-views.html#cb106-14"></a>    <span class="dt">font =</span> <span class="kw">list</span>(<span class="dt">size =</span> <span class="dv">15</span>)</span>
-<span id="cb106-15"><a href="arranging-views.html#cb106-15"></a>  ) <span class="op">%&gt;%</span></span>
-<span id="cb106-16"><a href="arranging-views.html#cb106-16"></a><span class="st">  </span><span class="kw">layout</span>(</span>
-<span id="cb106-17"><a href="arranging-views.html#cb106-17"></a>    <span class="dt">showlegend =</span> <span class="ot">FALSE</span>,</span>
-<span id="cb106-18"><a href="arranging-views.html#cb106-18"></a>    <span class="dt">shapes =</span> <span class="kw">list</span>(</span>
-<span id="cb106-19"><a href="arranging-views.html#cb106-19"></a>      <span class="dt">type =</span> <span class="st">&quot;rect&quot;</span>,</span>
-<span id="cb106-20"><a href="arranging-views.html#cb106-20"></a>      <span class="dt">x0 =</span> <span class="dv">0</span>,</span>
-<span id="cb106-21"><a href="arranging-views.html#cb106-21"></a>      <span class="dt">x1 =</span> <span class="dv">1</span>,</span>
-<span id="cb106-22"><a href="arranging-views.html#cb106-22"></a>      <span class="dt">xref =</span> <span class="st">&quot;paper&quot;</span>,</span>
-<span id="cb106-23"><a href="arranging-views.html#cb106-23"></a>      <span class="dt">y0 =</span> <span class="dv">0</span>, </span>
-<span id="cb106-24"><a href="arranging-views.html#cb106-24"></a>      <span class="dt">y1 =</span> <span class="dv">16</span>,</span>
-<span id="cb106-25"><a href="arranging-views.html#cb106-25"></a>      <span class="dt">yanchor =</span> <span class="dv">1</span>,</span>
-<span id="cb106-26"><a href="arranging-views.html#cb106-26"></a>      <span class="dt">yref =</span> <span class="st">&quot;paper&quot;</span>,</span>
-<span id="cb106-27"><a href="arranging-views.html#cb106-27"></a>      <span class="dt">ysizemode =</span> <span class="st">&quot;pixel&quot;</span>,</span>
-<span id="cb106-28"><a href="arranging-views.html#cb106-28"></a>      <span class="dt">fillcolor =</span> <span class="kw">toRGB</span>(<span class="st">&quot;gray80&quot;</span>),</span>
-<span id="cb106-29"><a href="arranging-views.html#cb106-29"></a>      <span class="dt">line =</span> <span class="kw">list</span>(<span class="dt">color =</span> <span class="st">&quot;transparent&quot;</span>)</span>
-<span id="cb106-30"><a href="arranging-views.html#cb106-30"></a>    )</span>
-<span id="cb106-31"><a href="arranging-views.html#cb106-31"></a>  )</span>
-<span id="cb106-32"><a href="arranging-views.html#cb106-32"></a></span>
-<span id="cb106-33"><a href="arranging-views.html#cb106-33"></a>economics_long <span class="op">%&gt;%</span></span>
-<span id="cb106-34"><a href="arranging-views.html#cb106-34"></a><span class="st">  </span><span class="kw">group_by</span>(variable) <span class="op">%&gt;%</span></span>
-<span id="cb106-35"><a href="arranging-views.html#cb106-35"></a><span class="st">  </span><span class="kw">do</span>(<span class="dt">p =</span> <span class="kw">panel</span>(.)) <span class="op">%&gt;%</span></span>
-<span id="cb106-36"><a href="arranging-views.html#cb106-36"></a><span class="st">  </span><span class="kw">subplot</span>(<span class="dt">nrows =</span> <span class="kw">NROW</span>(.), <span class="dt">shareX =</span> <span class="ot">TRUE</span>)</span></code></pre></div>
+<div class="sourceCode" id="cb105"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb105-1"><a href="arranging-views.html#cb105-1"></a><span class="kw">library</span>(dplyr)</span>
+<span id="cb105-2"><a href="arranging-views.html#cb105-2"></a></span>
+<span id="cb105-3"><a href="arranging-views.html#cb105-3"></a>panel &lt;-<span class="st"> </span>. <span class="op">%&gt;%</span><span class="st"> </span></span>
+<span id="cb105-4"><a href="arranging-views.html#cb105-4"></a><span class="st">  </span><span class="kw">plot_ly</span>(<span class="dt">x =</span> <span class="op">~</span>date, <span class="dt">y =</span> <span class="op">~</span>value) <span class="op">%&gt;%</span></span>
+<span id="cb105-5"><a href="arranging-views.html#cb105-5"></a><span class="st">  </span><span class="kw">add_lines</span>() <span class="op">%&gt;%</span></span>
+<span id="cb105-6"><a href="arranging-views.html#cb105-6"></a><span class="st">  </span><span class="kw">add_annotations</span>(</span>
+<span id="cb105-7"><a href="arranging-views.html#cb105-7"></a>    <span class="dt">text =</span> <span class="op">~</span><span class="kw">unique</span>(variable),</span>
+<span id="cb105-8"><a href="arranging-views.html#cb105-8"></a>    <span class="dt">x =</span> <span class="fl">0.5</span>,</span>
+<span id="cb105-9"><a href="arranging-views.html#cb105-9"></a>    <span class="dt">y =</span> <span class="dv">1</span>,</span>
+<span id="cb105-10"><a href="arranging-views.html#cb105-10"></a>    <span class="dt">yref =</span> <span class="st">&quot;paper&quot;</span>,</span>
+<span id="cb105-11"><a href="arranging-views.html#cb105-11"></a>    <span class="dt">xref =</span> <span class="st">&quot;paper&quot;</span>,</span>
+<span id="cb105-12"><a href="arranging-views.html#cb105-12"></a>    <span class="dt">yanchor =</span> <span class="st">&quot;bottom&quot;</span>,</span>
+<span id="cb105-13"><a href="arranging-views.html#cb105-13"></a>    <span class="dt">showarrow =</span> <span class="ot">FALSE</span>,</span>
+<span id="cb105-14"><a href="arranging-views.html#cb105-14"></a>    <span class="dt">font =</span> <span class="kw">list</span>(<span class="dt">size =</span> <span class="dv">15</span>)</span>
+<span id="cb105-15"><a href="arranging-views.html#cb105-15"></a>  ) <span class="op">%&gt;%</span></span>
+<span id="cb105-16"><a href="arranging-views.html#cb105-16"></a><span class="st">  </span><span class="kw">layout</span>(</span>
+<span id="cb105-17"><a href="arranging-views.html#cb105-17"></a>    <span class="dt">showlegend =</span> <span class="ot">FALSE</span>,</span>
+<span id="cb105-18"><a href="arranging-views.html#cb105-18"></a>    <span class="dt">shapes =</span> <span class="kw">list</span>(</span>
+<span id="cb105-19"><a href="arranging-views.html#cb105-19"></a>      <span class="dt">type =</span> <span class="st">&quot;rect&quot;</span>,</span>
+<span id="cb105-20"><a href="arranging-views.html#cb105-20"></a>      <span class="dt">x0 =</span> <span class="dv">0</span>,</span>
+<span id="cb105-21"><a href="arranging-views.html#cb105-21"></a>      <span class="dt">x1 =</span> <span class="dv">1</span>,</span>
+<span id="cb105-22"><a href="arranging-views.html#cb105-22"></a>      <span class="dt">xref =</span> <span class="st">&quot;paper&quot;</span>,</span>
+<span id="cb105-23"><a href="arranging-views.html#cb105-23"></a>      <span class="dt">y0 =</span> <span class="dv">0</span>, </span>
+<span id="cb105-24"><a href="arranging-views.html#cb105-24"></a>      <span class="dt">y1 =</span> <span class="dv">16</span>,</span>
+<span id="cb105-25"><a href="arranging-views.html#cb105-25"></a>      <span class="dt">yanchor =</span> <span class="dv">1</span>,</span>
+<span id="cb105-26"><a href="arranging-views.html#cb105-26"></a>      <span class="dt">yref =</span> <span class="st">&quot;paper&quot;</span>,</span>
+<span id="cb105-27"><a href="arranging-views.html#cb105-27"></a>      <span class="dt">ysizemode =</span> <span class="st">&quot;pixel&quot;</span>,</span>
+<span id="cb105-28"><a href="arranging-views.html#cb105-28"></a>      <span class="dt">fillcolor =</span> <span class="kw">toRGB</span>(<span class="st">&quot;gray80&quot;</span>),</span>
+<span id="cb105-29"><a href="arranging-views.html#cb105-29"></a>      <span class="dt">line =</span> <span class="kw">list</span>(<span class="dt">color =</span> <span class="st">&quot;transparent&quot;</span>)</span>
+<span id="cb105-30"><a href="arranging-views.html#cb105-30"></a>    )</span>
+<span id="cb105-31"><a href="arranging-views.html#cb105-31"></a>  )</span>
+<span id="cb105-32"><a href="arranging-views.html#cb105-32"></a></span>
+<span id="cb105-33"><a href="arranging-views.html#cb105-33"></a>economics_long <span class="op">%&gt;%</span></span>
+<span id="cb105-34"><a href="arranging-views.html#cb105-34"></a><span class="st">  </span><span class="kw">group_by</span>(variable) <span class="op">%&gt;%</span></span>
+<span id="cb105-35"><a href="arranging-views.html#cb105-35"></a><span class="st">  </span><span class="kw">do</span>(<span class="dt">p =</span> <span class="kw">panel</span>(.)) <span class="op">%&gt;%</span></span>
+<span id="cb105-36"><a href="arranging-views.html#cb105-36"></a><span class="st">  </span><span class="kw">subplot</span>(<span class="dt">nrows =</span> <span class="kw">NROW</span>(.), <span class="dt">shareX =</span> <span class="ot">TRUE</span>)</span></code></pre></div>
 </details>
 <div class="figure" style="text-align: center"><span id="fig:subplot-trellis"></span>
 <img src="images/subplot-trellis.svg" alt="Creating a trellis display with subplot()." width="100%" data-url="/interactives/subplot-trellis.html" />
@@ -553,13 +564,14 @@ FIGURE 13.9: Creating a trellis display with <code>subplot()</code>.
 <div id="ggplot2-subplots" class="section level4">
 <h4><span class="header-section-number">13.1.2.4</span> ggplot2 subplots</h4>
 <p>It’s possible to combine the convenience of <strong>ggplot2</strong>’s <code>facet_wrap()</code>/<code>facet_grid()</code> with the more flexible arrangement capabilities of <code>subplot()</code>. Figure <a href="arranging-views.html#fig:ggplot2-subplots">13.10</a> does this to show two different views of the <code>economics_long</code> data: the left-hand column displays each variable along time while the right-hand column shows violin plots of each variable. For the implementation, each column is created through <code>ggplot2::facet_wrap()</code>, but then the trellis displays are combined with <code>subplot()</code>. In this case, <strong>ggplot2</strong> objects are passed directly to <code>subplot()</code>, but you can also use <code>ggplotly()</code> for finer control over the conversion of <strong>ggplot2</strong> to <strong>plotly</strong> (see also Chapter <a href="improving-ggplotly.html#improving-ggplotly">33</a>) before supplying that result to <code>subplot()</code>.</p>
-<div class="sourceCode" id="cb107"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb107-1"><a href="arranging-views.html#cb107-1"></a>gg1 &lt;-<span class="st"> </span><span class="kw">ggplot</span>(economics_long, <span class="kw">aes</span>(date, value)) <span class="op">+</span><span class="st"> </span><span class="kw">geom_line</span>() <span class="op">+</span></span>
-<span id="cb107-2"><a href="arranging-views.html#cb107-2"></a><span class="st">  </span><span class="kw">facet_wrap</span>(<span class="op">~</span>variable, <span class="dt">scales =</span> <span class="st">&quot;free_y&quot;</span>, <span class="dt">ncol =</span> <span class="dv">1</span>)</span>
-<span id="cb107-3"><a href="arranging-views.html#cb107-3"></a>gg2 &lt;-<span class="st"> </span><span class="kw">ggplot</span>(economics_long, <span class="kw">aes</span>(<span class="kw">factor</span>(<span class="dv">1</span>), value)) <span class="op">+</span></span>
-<span id="cb107-4"><a href="arranging-views.html#cb107-4"></a><span class="st">  </span><span class="kw">geom_violin</span>() <span class="op">+</span></span>
-<span id="cb107-5"><a href="arranging-views.html#cb107-5"></a><span class="st">  </span><span class="kw">facet_wrap</span>(<span class="op">~</span>variable, <span class="dt">scales =</span> <span class="st">&quot;free_y&quot;</span>, <span class="dt">ncol =</span> <span class="dv">1</span>) <span class="op">+</span><span class="st"> </span></span>
-<span id="cb107-6"><a href="arranging-views.html#cb107-6"></a><span class="st">  </span><span class="kw">theme</span>(<span class="dt">axis.text =</span> <span class="kw">element_blank</span>(), <span class="dt">axis.ticks =</span> <span class="kw">element_blank</span>())</span>
-<span id="cb107-7"><a href="arranging-views.html#cb107-7"></a><span class="kw">subplot</span>(gg1, gg2)</span></code></pre></div>
+<p></p>
+<div class="sourceCode" id="cb106"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb106-1"><a href="arranging-views.html#cb106-1"></a>gg1 &lt;-<span class="st"> </span><span class="kw">ggplot</span>(economics_long, <span class="kw">aes</span>(date, value)) <span class="op">+</span><span class="st"> </span><span class="kw">geom_line</span>() <span class="op">+</span></span>
+<span id="cb106-2"><a href="arranging-views.html#cb106-2"></a><span class="st">  </span><span class="kw">facet_wrap</span>(<span class="op">~</span>variable, <span class="dt">scales =</span> <span class="st">&quot;free_y&quot;</span>, <span class="dt">ncol =</span> <span class="dv">1</span>)</span>
+<span id="cb106-3"><a href="arranging-views.html#cb106-3"></a>gg2 &lt;-<span class="st"> </span><span class="kw">ggplot</span>(economics_long, <span class="kw">aes</span>(<span class="kw">factor</span>(<span class="dv">1</span>), value)) <span class="op">+</span></span>
+<span id="cb106-4"><a href="arranging-views.html#cb106-4"></a><span class="st">  </span><span class="kw">geom_violin</span>() <span class="op">+</span></span>
+<span id="cb106-5"><a href="arranging-views.html#cb106-5"></a><span class="st">  </span><span class="kw">facet_wrap</span>(<span class="op">~</span>variable, <span class="dt">scales =</span> <span class="st">&quot;free_y&quot;</span>, <span class="dt">ncol =</span> <span class="dv">1</span>) <span class="op">+</span><span class="st"> </span></span>
+<span id="cb106-6"><a href="arranging-views.html#cb106-6"></a><span class="st">  </span><span class="kw">theme</span>(<span class="dt">axis.text =</span> <span class="kw">element_blank</span>(), <span class="dt">axis.ticks =</span> <span class="kw">element_blank</span>())</span>
+<span id="cb106-7"><a href="arranging-views.html#cb106-7"></a><span class="kw">subplot</span>(gg1, gg2)</span></code></pre></div>
 <div class="figure" style="text-align: center"><span id="fig:ggplot2-subplots"></span>
 <img src="images/ggplot2-subplots.svg" alt="Arranging multiple faceted ggplot2 plots into a plotly subplot." width="100%" />
 <p class="caption">
@@ -577,7 +589,7 @@ FIGURE 13.10: Arranging multiple faceted ggplot2 plots into a plotly subplot.
 <li>Bootstrap’s grid layout: Both the <strong>crosstalk</strong> and <strong>shiny</strong> packages provide ways to arrange numerous components via Bootstrap’s (a popular HTML/CSS framework) <a href="https://getbootstrap.com/docs/4.1/layout/grid/">grid layout system</a>.</li>
 <li>CSS flexbox: If you know some HTML and CSS, you can leverage <a href="https://css-tricks.com/snippets/css/a-guide-to-flexbox/">CSS flexbox</a> to arrange components via the <strong>htmltools</strong> package.</li>
 </ol>
-<p>Although <strong>flexdashboard</strong> is a really excellent way to arrange web-based content generated from R, it can pay-off to know the other two approaches as their arrangement techniques are agnostic to an <strong>rmarkdown</strong> output format. In other words, approaches 2-3 can be used with any <strong>rmarkdown</strong> template<a href="references.html#fn21" class="footnote-ref" id="fnref21"><sup>21</sup></a> or really <em>any</em> framework for website generation. Although Bootstrap grid layout system (2) is expressive and intuitive, using it in a larger website that also uses a different HTML/CSS framework (e.g. Bulma, Skeleton, etc) can cause issues. In that case, CSS flexbox (3) is a light-weight (i.e., no external CSS/JS dependencies) alternative that is less likely to introduce undesirable side-effects.</p>
+<p>Although <strong>flexdashboard</strong> is a really excellent way to arrange web-based content generated from R, it can pay-off to know the other two approaches as their arrangement techniques are agnostic to an <strong>rmarkdown</strong> output format. In other words, approaches 2-3 can be used with any <strong>rmarkdown</strong> template<a href="custom-geoms.html#fn21" class="footnote-ref" id="fnref21"><sup>21</sup></a> or really <em>any</em> framework for website generation. Although Bootstrap grid layout system (2) is expressive and intuitive, using it in a larger website that also uses a different HTML/CSS framework (e.g. Bulma, Skeleton, etc) can cause issues. In that case, CSS flexbox (3) is a light-weight (i.e., no external CSS/JS dependencies) alternative that is less likely to introduce undesirable side-effects.</p>
 <div id="flexdashboard" class="section level3">
 <h3><span class="header-section-number">13.2.1</span> Flexdashboard</h3>
 <p>Figure <a href="arranging-views.html#fig:flexdashboard-ggplotly">13.11</a> provides an example of embedding <code>ggplotly()</code> inside <strong>flexdashboard</strong> <span class="citation">(Allaire <a href="#ref-flexdashboard" role="doc-biblioref">2016</a>)</span>. Since <strong>flexdashboard</strong> is an <strong>rmarkdown</strong> template, it automatically comes with many of things that make <strong>rmarkdown</strong> great: ability to produce standalone HTML, integration with other languages, and thoughtful integration with RStudio products like Connect. There are many other things to like about <strong>flexdashboard</strong>, including lots of easy-to-use theming options, multiple pages, storyboards, and even <strong>shiny</strong> integration. Explaining how the <strong>flexdashboard</strong> package actually works is beyond the scope of this book, but you can visit the website for documentation and more examples <a href="https://rmarkdown.rstudio.com/flexdashboard/" class="uri">https://rmarkdown.rstudio.com/flexdashboard/</a>.</p>
@@ -591,14 +603,14 @@ FIGURE 13.11: An example of embedding <code>ggplotly()</code> graphs inside <str
 <div id="bootstrap-grid-layout" class="section level3">
 <h3><span class="header-section-number">13.2.2</span> Bootstrap grid layout</h3>
 <p>If you’re already familiar with <strong>shiny</strong>, you may already be familiar with functions like <code>fluidPage()</code>, <code>fluidRow()</code>, and <code>column()</code>. These R functions provide an interface from R to bootstrap’s grid layout system. That layout system is based on the notion of rows and columns where each row spans a width of 12 columns. Figure <a href="arranging-views.html#fig:fluid">13.12</a> demonstrates how one can use these functions to produce a standalone HTML page with three <strong>plotly</strong> graphs – with the first plot in the first row spanning the full width and the other 2 plots in the second row of equal width. To learn more about this <code>fluidPage()</code> approach to layouts, see <a href="https://shiny.rstudio.com/articles/layout-guide.html" class="uri">https://shiny.rstudio.com/articles/layout-guide.html</a>.</p>
-<div class="sourceCode" id="cb108"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb108-1"><a href="arranging-views.html#cb108-1"></a><span class="kw">library</span>(shiny)</span>
-<span id="cb108-2"><a href="arranging-views.html#cb108-2"></a>p &lt;-<span class="st"> </span><span class="kw">plot_ly</span>(<span class="dt">x =</span> <span class="kw">rnorm</span>(<span class="dv">100</span>))</span>
-<span id="cb108-3"><a href="arranging-views.html#cb108-3"></a><span class="kw">fluidPage</span>(</span>
-<span id="cb108-4"><a href="arranging-views.html#cb108-4"></a>  <span class="kw">fluidRow</span>(p),</span>
-<span id="cb108-5"><a href="arranging-views.html#cb108-5"></a>  <span class="kw">fluidRow</span>(</span>
-<span id="cb108-6"><a href="arranging-views.html#cb108-6"></a>    <span class="kw">column</span>(<span class="dv">6</span>, p), <span class="kw">column</span>(<span class="dv">6</span>, p) </span>
-<span id="cb108-7"><a href="arranging-views.html#cb108-7"></a>  )</span>
-<span id="cb108-8"><a href="arranging-views.html#cb108-8"></a>)</span></code></pre></div>
+<div class="sourceCode" id="cb107"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb107-1"><a href="arranging-views.html#cb107-1"></a><span class="kw">library</span>(shiny)</span>
+<span id="cb107-2"><a href="arranging-views.html#cb107-2"></a>p &lt;-<span class="st"> </span><span class="kw">plot_ly</span>(<span class="dt">x =</span> <span class="kw">rnorm</span>(<span class="dv">100</span>))</span>
+<span id="cb107-3"><a href="arranging-views.html#cb107-3"></a><span class="kw">fluidPage</span>(</span>
+<span id="cb107-4"><a href="arranging-views.html#cb107-4"></a>  <span class="kw">fluidRow</span>(p),</span>
+<span id="cb107-5"><a href="arranging-views.html#cb107-5"></a>  <span class="kw">fluidRow</span>(</span>
+<span id="cb107-6"><a href="arranging-views.html#cb107-6"></a>    <span class="kw">column</span>(<span class="dv">6</span>, p), <span class="kw">column</span>(<span class="dv">6</span>, p) </span>
+<span id="cb107-7"><a href="arranging-views.html#cb107-7"></a>  )</span>
+<span id="cb107-8"><a href="arranging-views.html#cb107-8"></a>)</span></code></pre></div>
 <div class="figure" style="text-align: center"><span id="fig:fluid"></span>
 <img src="images/fluid.png" alt="Arranging multiple htmlwidgets with fluidPage() from the shiny package." width="100%" data-url="/interactives/fluid.html" />
 <p class="caption">
@@ -606,23 +618,24 @@ FIGURE 13.12: Arranging multiple htmlwidgets with <code>fluidPage()</code> from 
 </p>
 </div>
 <p>It’s also worth noting another, somewhat similar, yet more succinct, interface to grid’s layout system provided by the <code>bscols()</code> function from the <strong>crosstalk</strong> package. You can think of it in a similar way to <code>fluidRow()</code>, but instead of defining <code>column()</code> width for each component individually, you can specify the width of several components at once through the <code>widths</code> argument. Also, importantly, this functions works recursively – it returns a collection of <strong>htmltools</strong> tags and accepts them as input as well. The code below produces the same result as above, but is a much more succinct way of doing so.</p>
-<div class="sourceCode" id="cb109"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb109-1"><a href="arranging-views.html#cb109-1"></a><span class="kw">bscols</span>(p, <span class="kw">bscols</span>(p, p), <span class="dt">widths =</span> <span class="dv">12</span>)</span></code></pre></div>
+<div class="sourceCode" id="cb108"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb108-1"><a href="arranging-views.html#cb108-1"></a><span class="kw">bscols</span>(p, <span class="kw">bscols</span>(p, p), <span class="dt">widths =</span> <span class="dv">12</span>)</span></code></pre></div>
 <p>Bootstrap is much more than just its grid layout system, so beware – using either of these approaches will impose Bootstrap’s styling rules on other content in your webpage. If you are using another CSS framework for styling or just want to reduce the size of dependencies in your webpage, consider working with CSS flexbox instead of Bootstrap.</p>
 </div>
 <div id="css-flexbox" class="section level3">
 <h3><span class="header-section-number">13.2.3</span> CSS flexbox</h3>
-<p>Cascading Style Sheet (CSS) flexbox is a relatively new CSS feature that most modern web browsers natively support.<a href="references.html#fn22" class="footnote-ref" id="fnref22"><sup>22</sup></a> It aims to provide a general system for distributing space among multiple components in a container. Instead of covering this entire system, we’ll cover it’s basic functionality, which is fairly similar to Bootstrap’s grid layout system.</p>
+<p></p>
+<p>Cascading Style Sheet (CSS) flexbox is a relatively new CSS feature that most modern web browsers natively support.<a href="custom-geoms.html#fn22" class="footnote-ref" id="fnref22"><sup>22</sup></a> It aims to provide a general system for distributing space among multiple components in a container. Instead of covering this entire system, we’ll cover it’s basic functionality, which is fairly similar to Bootstrap’s grid layout system.</p>
 <p>Creating a flexbox requires a flexbox container – in HTML speak, that means a <code>&lt;div&gt;</code> tag with a CSS style property of <code>display: flex</code>. By default, in this display setting, all the components inside that container will try fit in a single row. To allow ‘overflowing’ components the freedom to ‘wrap’ into new row(s), set the CSS property of <code>flex-wrap: wrap</code> in the parent container. Another useful CSS property to know about for the ‘parent’ container is <code>justify-content</code>: in the case of Figure <a href="arranging-views.html#fig:flexbox">13.13</a>, I’m using it to horizontally <code>center</code> the components. Moreover, since I’ve imposed a width of 40% for the first two plots, the net effect is that we have 2 plots in the first two (spanning 80% of the page width), then the third plot wraps onto a new line.</p>
-<div class="sourceCode" id="cb110"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb110-1"><a href="arranging-views.html#cb110-1"></a><span class="kw">library</span>(htmltools)</span>
-<span id="cb110-2"><a href="arranging-views.html#cb110-2"></a>p &lt;-<span class="st"> </span><span class="kw">plot_ly</span>(<span class="dt">x =</span> <span class="kw">rnorm</span>(<span class="dv">100</span>))</span>
-<span id="cb110-3"><a href="arranging-views.html#cb110-3"></a><span class="co"># </span><span class="al">NOTE</span><span class="co">: you don&#39;t need browsable() in rmarkdown, </span></span>
-<span id="cb110-4"><a href="arranging-views.html#cb110-4"></a><span class="co"># but you do at the R prompt </span></span>
-<span id="cb110-5"><a href="arranging-views.html#cb110-5"></a><span class="kw">browsable</span>(<span class="kw">div</span>(</span>
-<span id="cb110-6"><a href="arranging-views.html#cb110-6"></a>  <span class="dt">style =</span> <span class="st">&quot;display: flex; flex-wrap: wrap; justify-content: center&quot;</span>,</span>
-<span id="cb110-7"><a href="arranging-views.html#cb110-7"></a>  <span class="kw">div</span>(p, <span class="dt">style =</span> <span class="st">&quot;width: 40%; border: solid;&quot;</span>),</span>
-<span id="cb110-8"><a href="arranging-views.html#cb110-8"></a>  <span class="kw">div</span>(p, <span class="dt">style =</span> <span class="st">&quot;width: 40%; border: solid;&quot;</span>),</span>
-<span id="cb110-9"><a href="arranging-views.html#cb110-9"></a>  <span class="kw">div</span>(p, <span class="dt">style =</span> <span class="st">&quot;width: 100%; border: solid;&quot;</span>)</span>
-<span id="cb110-10"><a href="arranging-views.html#cb110-10"></a>))</span></code></pre></div>
+<div class="sourceCode" id="cb109"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb109-1"><a href="arranging-views.html#cb109-1"></a><span class="kw">library</span>(htmltools)</span>
+<span id="cb109-2"><a href="arranging-views.html#cb109-2"></a>p &lt;-<span class="st"> </span><span class="kw">plot_ly</span>(<span class="dt">x =</span> <span class="kw">rnorm</span>(<span class="dv">100</span>))</span>
+<span id="cb109-3"><a href="arranging-views.html#cb109-3"></a><span class="co"># </span><span class="al">NOTE</span><span class="co">: you don&#39;t need browsable() in rmarkdown, </span></span>
+<span id="cb109-4"><a href="arranging-views.html#cb109-4"></a><span class="co"># but you do at the R prompt </span></span>
+<span id="cb109-5"><a href="arranging-views.html#cb109-5"></a><span class="kw">browsable</span>(<span class="kw">div</span>(</span>
+<span id="cb109-6"><a href="arranging-views.html#cb109-6"></a>  <span class="dt">style =</span> <span class="st">&quot;display: flex; flex-wrap: wrap; justify-content: center&quot;</span>,</span>
+<span id="cb109-7"><a href="arranging-views.html#cb109-7"></a>  <span class="kw">div</span>(p, <span class="dt">style =</span> <span class="st">&quot;width: 40%; border: solid;&quot;</span>),</span>
+<span id="cb109-8"><a href="arranging-views.html#cb109-8"></a>  <span class="kw">div</span>(p, <span class="dt">style =</span> <span class="st">&quot;width: 40%; border: solid;&quot;</span>),</span>
+<span id="cb109-9"><a href="arranging-views.html#cb109-9"></a>  <span class="kw">div</span>(p, <span class="dt">style =</span> <span class="st">&quot;width: 100%; border: solid;&quot;</span>)</span>
+<span id="cb109-10"><a href="arranging-views.html#cb109-10"></a>))</span></code></pre></div>
 <div class="figure" style="text-align: center"><span id="fig:flexbox"></span>
 <img src="images/flexbox.png" alt="Arranging multiple htmlwidgets with CSS flexbox." width="100%" data-url="/interactives/flexbox.html" />
 <p class="caption">
@@ -634,21 +647,22 @@ FIGURE 13.13: Arranging multiple htmlwidgets with CSS flexbox.
 </div>
 <div id="navigating-many-views" class="section level2">
 <h2><span class="header-section-number">13.3</span> Arranging many views</h2>
+<p></p>
 <p>As we’ve already seen in Figures <a href="overview.html#fig:freqpoly-facet">2.10</a>, <a href="client-side-linking.html#fig:trellis-txhousing">16.14</a>, &amp; <a href="arranging-views.html#fig:subplot-trellis">13.9</a>, the trellis (aka small multiple) display is an effective way to see how a conditional distribution behaves under different conditions. In other words, the trellis display helps us understand how patterns or structure in the data changes across groups. However, trellis displays do have a limitation: they don’t scale very well to a large number of groups.</p>
 <p>Before trellis displays were formally introduced, <span class="citation">Tukey and Tukey (<a href="#ref-scagnostics-tukey" role="doc-biblioref">1985</a>)</span> proposed a solution to the problem of scatterplots not being able to scale to a large number of variables (i.e., it’s time consuming to visualize 1000 scatterplots!). The proposed solution involved using quantitative measurements of various scatterplot characteristics (e.g. correlation, clumpiness, etc) to help summarise and guide attention towards ‘interesting’ scatterplots. This idea, coined scagnostics (short for scatterplot diagnostics), has since been made explicit, and many other similar applications have been explored, even techniques for time-series <span class="citation">(Wilkinson, Anand, and Grossman <a href="#ref-Wilkinson:2005b" role="doc-biblioref">2005</a>; Wilkinson and Wills <a href="#ref-Wilkinson:2008" role="doc-biblioref">2008</a>; Dang and Wilkinson <a href="#ref-Wilkinson:2012" role="doc-biblioref">2012</a>)</span>. The idea of associating quantitative measures with a graphical display of data can be generalized to include more that just scatterplots, and in this more general case, these measures are sometimes referred to as cognostics.</p>
 <p>In addition to being useful for navigating exploration of many variables, cognostics can also be useful for exploring many subsets of data. This idea has inspired work on more general divide &amp; recombine technique(s) for working with navigating through many statistical artifacts <span class="citation">(Cleveland and Hafen <a href="#ref-divide-recombine" role="doc-biblioref">2014</a>; Guha et al. <a href="#ref-RHIPE" role="doc-biblioref">2012</a>)</span>, including visualizations <span class="citation">(Hafen et al. <a href="#ref-trelliscope" role="doc-biblioref">2013</a>)</span>. The <strong>trelliscope</strong> package provides a system for computing arbitrary cognostics on each panel of a trellis display as well as an interactive graphical user interface for defining (and navigating through) interesting panels based on those cognostics <span class="citation">(Hafen <a href="#ref-trelliscope-pkg" role="doc-biblioref">2016</a>)</span>. This system also allows users to define the graphical method for displaying each panel, so <strong>plotly</strong> graphs can easily be embedded. The <strong>trelliscope</strong> package is currently built upon <strong>shiny</strong>, but as Figure <a href="arranging-views.html#fig:trelliscope">13.14</a> demonstrates, the <strong>trelliscopejs</strong> package provides lower-level tools that allow one to create trelliscope displays without <strong>shiny</strong> <span class="citation">(Hafen and Schloerke <a href="#ref-trelliscopejs" role="doc-biblioref">2018</a>)</span>.</p>
 <p>As the video behind Figure <a href="arranging-views.html#fig:trelliscope">13.14</a> demonstrates, <strong>trelliscopejs</strong> provides two very powerful interactive techniques for surfacing ‘interesting’ panels: sorting and filtering. In this toy example, each panel represents a different country, and the life expectancy is plotted as a function of time. By default, <strong>trelliscopejs</strong> sorts panels by group alphabetically, which is why, on page load we see the first 12 countries (Afghanistan, Albania, Algeria, etc). By opening the sort menu, we can pick and sort by any cognostic for any variable in the dataset. If no cognostics are supplied (as it the case here), some sensible ones are computed and supplied for us (e.g., mean, median, var, max, min). In this case, since we are primarily interested in life expectancy, we sort by life expectancy. This simple task allows us to quickly see the countries with the best and worst average life expectancy, as well as how it has evolved over time. By combining sort with filter, we can surface countries that perform well/poorly under certain conditions. For example, Cuba, Uruguay, Taiwan have great life expectancy considering their GDP per capita. Also, within the Americas, Haiti, Bolivia, and Guatemala have the poorest life expectancy.</p>
-<div class="sourceCode" id="cb111"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb111-1"><a href="arranging-views.html#cb111-1"></a><span class="kw">library</span>(trelliscopejs)</span>
-<span id="cb111-2"><a href="arranging-views.html#cb111-2"></a><span class="kw">data</span>(gapminder, <span class="dt">package =</span> <span class="st">&quot;gapminder&quot;</span>)</span>
-<span id="cb111-3"><a href="arranging-views.html#cb111-3"></a></span>
-<span id="cb111-4"><a href="arranging-views.html#cb111-4"></a><span class="kw">qplot</span>(year, lifeExp, <span class="dt">data =</span> gapminder) <span class="op">+</span></span>
-<span id="cb111-5"><a href="arranging-views.html#cb111-5"></a><span class="st">  </span><span class="kw">xlim</span>(<span class="dv">1948</span>, <span class="dv">2011</span>) <span class="op">+</span><span class="st"> </span><span class="kw">ylim</span>(<span class="dv">10</span>, <span class="dv">95</span>) <span class="op">+</span><span class="st"> </span><span class="kw">theme_bw</span>() <span class="op">+</span></span>
-<span id="cb111-6"><a href="arranging-views.html#cb111-6"></a><span class="st">  </span><span class="kw">facet_trelliscope</span>(<span class="op">~</span><span class="st"> </span>country <span class="op">+</span><span class="st"> </span>continent,</span>
-<span id="cb111-7"><a href="arranging-views.html#cb111-7"></a>    <span class="dt">nrow =</span> <span class="dv">2</span>, <span class="dt">ncol =</span> <span class="dv">6</span>, <span class="dt">width =</span> <span class="dv">300</span>, </span>
-<span id="cb111-8"><a href="arranging-views.html#cb111-8"></a>    <span class="dt">as_plotly =</span> <span class="ot">TRUE</span>, </span>
-<span id="cb111-9"><a href="arranging-views.html#cb111-9"></a>    <span class="dt">plotly_args =</span> <span class="kw">list</span>(<span class="dt">dynamicTicks =</span> T),</span>
-<span id="cb111-10"><a href="arranging-views.html#cb111-10"></a>    <span class="dt">plotly_cfg =</span> <span class="kw">list</span>(<span class="dt">displayModeBar =</span> F)</span>
-<span id="cb111-11"><a href="arranging-views.html#cb111-11"></a>  )</span></code></pre></div>
+<div class="sourceCode" id="cb110"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb110-1"><a href="arranging-views.html#cb110-1"></a><span class="kw">library</span>(trelliscopejs)</span>
+<span id="cb110-2"><a href="arranging-views.html#cb110-2"></a><span class="kw">data</span>(gapminder, <span class="dt">package =</span> <span class="st">&quot;gapminder&quot;</span>)</span>
+<span id="cb110-3"><a href="arranging-views.html#cb110-3"></a></span>
+<span id="cb110-4"><a href="arranging-views.html#cb110-4"></a><span class="kw">qplot</span>(year, lifeExp, <span class="dt">data =</span> gapminder) <span class="op">+</span></span>
+<span id="cb110-5"><a href="arranging-views.html#cb110-5"></a><span class="st">  </span><span class="kw">xlim</span>(<span class="dv">1948</span>, <span class="dv">2011</span>) <span class="op">+</span><span class="st"> </span><span class="kw">ylim</span>(<span class="dv">10</span>, <span class="dv">95</span>) <span class="op">+</span><span class="st"> </span><span class="kw">theme_bw</span>() <span class="op">+</span></span>
+<span id="cb110-6"><a href="arranging-views.html#cb110-6"></a><span class="st">  </span><span class="kw">facet_trelliscope</span>(<span class="op">~</span><span class="st"> </span>country <span class="op">+</span><span class="st"> </span>continent,</span>
+<span id="cb110-7"><a href="arranging-views.html#cb110-7"></a>    <span class="dt">nrow =</span> <span class="dv">2</span>, <span class="dt">ncol =</span> <span class="dv">6</span>, <span class="dt">width =</span> <span class="dv">300</span>, </span>
+<span id="cb110-8"><a href="arranging-views.html#cb110-8"></a>    <span class="dt">as_plotly =</span> <span class="ot">TRUE</span>, </span>
+<span id="cb110-9"><a href="arranging-views.html#cb110-9"></a>    <span class="dt">plotly_args =</span> <span class="kw">list</span>(<span class="dt">dynamicTicks =</span> T),</span>
+<span id="cb110-10"><a href="arranging-views.html#cb110-10"></a>    <span class="dt">plotly_cfg =</span> <span class="kw">list</span>(<span class="dt">displayModeBar =</span> F)</span>
+<span id="cb110-11"><a href="arranging-views.html#cb110-11"></a>  )</span></code></pre></div>
 <div class="figure" style="text-align: center"><span id="fig:trelliscope"></span>
 <iframe src="https://player.vimeo.com/video/325778067?title=0&amp;byline=0&amp;portrait=0" width="100%" height="400" frameborder="0" seamless="seamless" webkitAllowFullScreen mozallowfullscreen allowFullScreen></iframe>
 <p class="caption">

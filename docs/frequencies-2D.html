@@ -24,7 +24,7 @@
 <meta name="author" content="Carson Sievert" />
 
 
-<meta name="date" content="2019-10-02" />
+<meta name="date" content="2019-10-04" />
 
   <meta name="viewport" content="width=device-width, initial-scale=1" />
   <meta name="apple-mobile-web-app-capable" content="yes" />
@@ -326,7 +326,6 @@ code span.wa { color: #60a0b0; font-weight: bold; font-style: italic; } /* Warni
 <li class="chapter" data-level="33.3" data-path="improving-ggplotly.html"><a href="improving-ggplotly.html#leveraging-statistical-output"><i class="fa fa-check"></i><b>33.3</b> Leveraging statistical output</a></li>
 </ul></li>
 <li class="chapter" data-level="34" data-path="custom-geoms.html"><a href="custom-geoms.html"><i class="fa fa-check"></i><b>34</b> Translating custom ggplot2 geoms</a></li>
-<li class="chapter" data-level="" data-path="references.html"><a href="references.html"><i class="fa fa-check"></i>References</a></li>
 </ul>
 
       </nav>
@@ -348,20 +347,24 @@ code span.wa { color: #60a0b0; font-weight: bold; font-style: italic; } /* Warni
 <h1><span class="header-section-number">7</span> 2D frequencies</h1>
 <div id="rectangular-binning-in-plotly.js" class="section level2">
 <h2><span class="header-section-number">7.1</span> Rectangular binning in plotly.js</h2>
+<p>
+
+
+</p>
 <p>The <strong>plotly</strong> package provides two functions for displaying rectangular bins: <code>add_heatmap()</code> and <code>add_histogram2d()</code>. For numeric data, the <code>add_heatmap()</code> function is a 2D analog of <code>add_bars()</code> (bins must be pre-computed), and the <code>add_histogram2d()</code> function is a 2D analog of <code>add_histogram()</code> (bins can be computed in the browser). Thus, I recommend <code>add_histogram2d()</code> for exploratory purposes, since you don’t have to think about how to perform binning. It also provides a useful <a href="https://plot.ly/r/reference/#histogram2d-zsmooth"><code>zsmooth</code></a> attribute for effectively increasing the number of bins (currently, “best” performs a <a href="https://en.wikipedia.org/wiki/Bilinear_interpolation">bi-linear interpolation</a>, a type of nearest neighbors algorithm), and <a href="https://plot.ly/r/reference/#histogram2d-nbinsx"><code>nbinsx</code></a>/<a href="https://plot.ly/r/reference/#histogram2d-nbinsy"><code>nbinsy</code></a> attributes to set the number of bins in the x and/or y directions. Figure <a href="frequencies-2D.html#fig:histogram2d">7.1</a> compares three different uses of <code>add_histogram()</code>: (1) plotly.js’ default binning algorithm, (2) the default plus smoothing, (3) setting the number of bins in the x and y directions. Its also worth noting that filled contours, instead of bins, can be used in any of these cases by using <code>add_histogram2dcontour()</code> instead of <code>add_histogram2d()</code>.</p>
-<div class="sourceCode" id="cb80"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb80-1"><a href="frequencies-2D.html#cb80-1"></a>p &lt;-<span class="st"> </span><span class="kw">plot_ly</span>(diamonds, <span class="dt">x =</span> <span class="op">~</span><span class="kw">log</span>(carat), <span class="dt">y =</span> <span class="op">~</span><span class="kw">log</span>(price))</span>
-<span id="cb80-2"><a href="frequencies-2D.html#cb80-2"></a><span class="kw">subplot</span>(</span>
-<span id="cb80-3"><a href="frequencies-2D.html#cb80-3"></a>  <span class="kw">add_histogram2d</span>(p) <span class="op">%&gt;%</span></span>
-<span id="cb80-4"><a href="frequencies-2D.html#cb80-4"></a><span class="st">    </span><span class="kw">colorbar</span>(<span class="dt">title =</span> <span class="st">&quot;default&quot;</span>) <span class="op">%&gt;%</span></span>
-<span id="cb80-5"><a href="frequencies-2D.html#cb80-5"></a><span class="st">    </span><span class="kw">layout</span>(<span class="dt">xaxis =</span> <span class="kw">list</span>(<span class="dt">title =</span> <span class="st">&quot;default&quot;</span>)),</span>
-<span id="cb80-6"><a href="frequencies-2D.html#cb80-6"></a>  <span class="kw">add_histogram2d</span>(p, <span class="dt">zsmooth =</span> <span class="st">&quot;best&quot;</span>) <span class="op">%&gt;%</span></span>
-<span id="cb80-7"><a href="frequencies-2D.html#cb80-7"></a><span class="st">    </span><span class="kw">colorbar</span>(<span class="dt">title =</span> <span class="st">&quot;zsmooth&quot;</span>) <span class="op">%&gt;%</span></span>
-<span id="cb80-8"><a href="frequencies-2D.html#cb80-8"></a><span class="st">    </span><span class="kw">layout</span>(<span class="dt">xaxis =</span> <span class="kw">list</span>(<span class="dt">title =</span> <span class="st">&quot;zsmooth&quot;</span>)),</span>
-<span id="cb80-9"><a href="frequencies-2D.html#cb80-9"></a>  <span class="kw">add_histogram2d</span>(p, <span class="dt">nbinsx =</span> <span class="dv">60</span>, <span class="dt">nbinsy =</span> <span class="dv">60</span>) <span class="op">%&gt;%</span></span>
-<span id="cb80-10"><a href="frequencies-2D.html#cb80-10"></a><span class="st">    </span><span class="kw">colorbar</span>(<span class="dt">title =</span> <span class="st">&quot;nbins&quot;</span>) <span class="op">%&gt;%</span></span>
-<span id="cb80-11"><a href="frequencies-2D.html#cb80-11"></a><span class="st">    </span><span class="kw">layout</span>(<span class="dt">xaxis =</span> <span class="kw">list</span>(<span class="dt">title =</span> <span class="st">&quot;nbins&quot;</span>)),</span>
-<span id="cb80-12"><a href="frequencies-2D.html#cb80-12"></a>  <span class="dt">shareY =</span> <span class="ot">TRUE</span>, <span class="dt">titleX =</span> <span class="ot">TRUE</span></span>
-<span id="cb80-13"><a href="frequencies-2D.html#cb80-13"></a>)</span></code></pre></div>
+<div class="sourceCode" id="cb79"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb79-1"><a href="frequencies-2D.html#cb79-1"></a>p &lt;-<span class="st"> </span><span class="kw">plot_ly</span>(diamonds, <span class="dt">x =</span> <span class="op">~</span><span class="kw">log</span>(carat), <span class="dt">y =</span> <span class="op">~</span><span class="kw">log</span>(price))</span>
+<span id="cb79-2"><a href="frequencies-2D.html#cb79-2"></a><span class="kw">subplot</span>(</span>
+<span id="cb79-3"><a href="frequencies-2D.html#cb79-3"></a>  <span class="kw">add_histogram2d</span>(p) <span class="op">%&gt;%</span></span>
+<span id="cb79-4"><a href="frequencies-2D.html#cb79-4"></a><span class="st">    </span><span class="kw">colorbar</span>(<span class="dt">title =</span> <span class="st">&quot;default&quot;</span>) <span class="op">%&gt;%</span></span>
+<span id="cb79-5"><a href="frequencies-2D.html#cb79-5"></a><span class="st">    </span><span class="kw">layout</span>(<span class="dt">xaxis =</span> <span class="kw">list</span>(<span class="dt">title =</span> <span class="st">&quot;default&quot;</span>)),</span>
+<span id="cb79-6"><a href="frequencies-2D.html#cb79-6"></a>  <span class="kw">add_histogram2d</span>(p, <span class="dt">zsmooth =</span> <span class="st">&quot;best&quot;</span>) <span class="op">%&gt;%</span></span>
+<span id="cb79-7"><a href="frequencies-2D.html#cb79-7"></a><span class="st">    </span><span class="kw">colorbar</span>(<span class="dt">title =</span> <span class="st">&quot;zsmooth&quot;</span>) <span class="op">%&gt;%</span></span>
+<span id="cb79-8"><a href="frequencies-2D.html#cb79-8"></a><span class="st">    </span><span class="kw">layout</span>(<span class="dt">xaxis =</span> <span class="kw">list</span>(<span class="dt">title =</span> <span class="st">&quot;zsmooth&quot;</span>)),</span>
+<span id="cb79-9"><a href="frequencies-2D.html#cb79-9"></a>  <span class="kw">add_histogram2d</span>(p, <span class="dt">nbinsx =</span> <span class="dv">60</span>, <span class="dt">nbinsy =</span> <span class="dv">60</span>) <span class="op">%&gt;%</span></span>
+<span id="cb79-10"><a href="frequencies-2D.html#cb79-10"></a><span class="st">    </span><span class="kw">colorbar</span>(<span class="dt">title =</span> <span class="st">&quot;nbins&quot;</span>) <span class="op">%&gt;%</span></span>
+<span id="cb79-11"><a href="frequencies-2D.html#cb79-11"></a><span class="st">    </span><span class="kw">layout</span>(<span class="dt">xaxis =</span> <span class="kw">list</span>(<span class="dt">title =</span> <span class="st">&quot;nbins&quot;</span>)),</span>
+<span id="cb79-12"><a href="frequencies-2D.html#cb79-12"></a>  <span class="dt">shareY =</span> <span class="ot">TRUE</span>, <span class="dt">titleX =</span> <span class="ot">TRUE</span></span>
+<span id="cb79-13"><a href="frequencies-2D.html#cb79-13"></a>)</span></code></pre></div>
 <div class="figure" style="text-align: center"><span id="fig:histogram2d"></span>
 <img src="images/histogram2d.svg" alt="Three different uses of histogram2d()." width="100%" data-url="/interactives/histogram2d.html" />
 <p class="caption">
@@ -372,19 +375,20 @@ FIGURE 7.1: Three different uses of <code>histogram2d()</code>.
 <div id="rectangular-binning-in-r" class="section level2">
 <h2><span class="header-section-number">7.2</span> Rectangular binning in R</h2>
 <p>In <a href="bars-histograms.html#bars-histograms">Bars &amp; histograms</a>, we leveraged a number of algorithms in R for computing the “optimal” number of bins for a histogram, via <code>hist()</code>, and routing those results to <code>add_bars()</code>. There is a surprising lack of research and computational tools for the 2D analog, and among the research that does exist, solutions usually depend on characteristics of the unknown underlying distribution, so the typical approach is to assume a Gaussian form <span class="citation">(Scott <a href="#ref-mde" role="doc-biblioref">1992</a>)</span>. Practically speaking, that assumption is not very useful, but 2D kernel density estimation provides a useful alternative that tends to be more robust to changes in distributional form. Although kernel density estimation requires choice of kernel and a bandwidth parameter, the <code>kde2d()</code> function from the <strong>MASS</strong> package provides a well-supported rule-of-thumb for estimating the bandwidth of a Gaussian kernel density <span class="citation">(Venables and Ripley <a href="#ref-MASS" role="doc-biblioref">2002</a>)</span>. Figure <a href="frequencies-2D.html#fig:heatmap-corr-diamonds">7.2</a> uses <code>kde2d()</code> to estimate a 2D density, scales the relative frequency to an absolute frequency, then uses the <code>add_heatmap()</code> function to display the results as a heatmap.</p>
-<div class="sourceCode" id="cb81"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb81-1"><a href="frequencies-2D.html#cb81-1"></a>kde_count &lt;-<span class="st"> </span><span class="cf">function</span>(x, y, ...) {</span>
-<span id="cb81-2"><a href="frequencies-2D.html#cb81-2"></a>  kde &lt;-<span class="st"> </span>MASS<span class="op">::</span><span class="kw">kde2d</span>(x, y, ...)</span>
-<span id="cb81-3"><a href="frequencies-2D.html#cb81-3"></a>  df &lt;-<span class="st"> </span><span class="kw">with</span>(kde, <span class="kw">setNames</span>(<span class="kw">expand.grid</span>(x, y), <span class="kw">c</span>(<span class="st">&quot;x&quot;</span>, <span class="st">&quot;y&quot;</span>)))</span>
-<span id="cb81-4"><a href="frequencies-2D.html#cb81-4"></a>  <span class="co"># The &#39;z&#39; returned by kde2d() is a proportion, </span></span>
-<span id="cb81-5"><a href="frequencies-2D.html#cb81-5"></a>  <span class="co"># but we can scale it to a count</span></span>
-<span id="cb81-6"><a href="frequencies-2D.html#cb81-6"></a>  df<span class="op">$</span>count &lt;-<span class="st"> </span><span class="kw">with</span>(kde, <span class="kw">c</span>(z) <span class="op">*</span><span class="st"> </span><span class="kw">length</span>(x) <span class="op">*</span><span class="st"> </span><span class="kw">diff</span>(x)[<span class="dv">1</span>] <span class="op">*</span><span class="st"> </span><span class="kw">diff</span>(y)[<span class="dv">1</span>])</span>
-<span id="cb81-7"><a href="frequencies-2D.html#cb81-7"></a>  <span class="kw">data.frame</span>(df)</span>
-<span id="cb81-8"><a href="frequencies-2D.html#cb81-8"></a>}</span>
-<span id="cb81-9"><a href="frequencies-2D.html#cb81-9"></a></span>
-<span id="cb81-10"><a href="frequencies-2D.html#cb81-10"></a>kd &lt;-<span class="st"> </span><span class="kw">with</span>(diamonds, <span class="kw">kde_count</span>(<span class="kw">log</span>(carat), <span class="kw">log</span>(price), <span class="dt">n =</span> <span class="dv">30</span>))</span>
-<span id="cb81-11"><a href="frequencies-2D.html#cb81-11"></a><span class="kw">plot_ly</span>(kd, <span class="dt">x =</span> <span class="op">~</span>x, <span class="dt">y =</span> <span class="op">~</span>y, <span class="dt">z =</span> <span class="op">~</span>count) <span class="op">%&gt;%</span><span class="st"> </span></span>
-<span id="cb81-12"><a href="frequencies-2D.html#cb81-12"></a><span class="st">  </span><span class="kw">add_heatmap</span>() <span class="op">%&gt;%</span></span>
-<span id="cb81-13"><a href="frequencies-2D.html#cb81-13"></a><span class="st">  </span><span class="kw">colorbar</span>(<span class="dt">title =</span> <span class="st">&quot;Number of diamonds&quot;</span>)</span></code></pre></div>
+<p></p>
+<div class="sourceCode" id="cb80"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb80-1"><a href="frequencies-2D.html#cb80-1"></a>kde_count &lt;-<span class="st"> </span><span class="cf">function</span>(x, y, ...) {</span>
+<span id="cb80-2"><a href="frequencies-2D.html#cb80-2"></a>  kde &lt;-<span class="st"> </span>MASS<span class="op">::</span><span class="kw">kde2d</span>(x, y, ...)</span>
+<span id="cb80-3"><a href="frequencies-2D.html#cb80-3"></a>  df &lt;-<span class="st"> </span><span class="kw">with</span>(kde, <span class="kw">setNames</span>(<span class="kw">expand.grid</span>(x, y), <span class="kw">c</span>(<span class="st">&quot;x&quot;</span>, <span class="st">&quot;y&quot;</span>)))</span>
+<span id="cb80-4"><a href="frequencies-2D.html#cb80-4"></a>  <span class="co"># The &#39;z&#39; returned by kde2d() is a proportion, </span></span>
+<span id="cb80-5"><a href="frequencies-2D.html#cb80-5"></a>  <span class="co"># but we can scale it to a count</span></span>
+<span id="cb80-6"><a href="frequencies-2D.html#cb80-6"></a>  df<span class="op">$</span>count &lt;-<span class="st"> </span><span class="kw">with</span>(kde, <span class="kw">c</span>(z) <span class="op">*</span><span class="st"> </span><span class="kw">length</span>(x) <span class="op">*</span><span class="st"> </span><span class="kw">diff</span>(x)[<span class="dv">1</span>] <span class="op">*</span><span class="st"> </span><span class="kw">diff</span>(y)[<span class="dv">1</span>])</span>
+<span id="cb80-7"><a href="frequencies-2D.html#cb80-7"></a>  <span class="kw">data.frame</span>(df)</span>
+<span id="cb80-8"><a href="frequencies-2D.html#cb80-8"></a>}</span>
+<span id="cb80-9"><a href="frequencies-2D.html#cb80-9"></a></span>
+<span id="cb80-10"><a href="frequencies-2D.html#cb80-10"></a>kd &lt;-<span class="st"> </span><span class="kw">with</span>(diamonds, <span class="kw">kde_count</span>(<span class="kw">log</span>(carat), <span class="kw">log</span>(price), <span class="dt">n =</span> <span class="dv">30</span>))</span>
+<span id="cb80-11"><a href="frequencies-2D.html#cb80-11"></a><span class="kw">plot_ly</span>(kd, <span class="dt">x =</span> <span class="op">~</span>x, <span class="dt">y =</span> <span class="op">~</span>y, <span class="dt">z =</span> <span class="op">~</span>count) <span class="op">%&gt;%</span><span class="st"> </span></span>
+<span id="cb80-12"><a href="frequencies-2D.html#cb80-12"></a><span class="st">  </span><span class="kw">add_heatmap</span>() <span class="op">%&gt;%</span></span>
+<span id="cb80-13"><a href="frequencies-2D.html#cb80-13"></a><span class="st">  </span><span class="kw">colorbar</span>(<span class="dt">title =</span> <span class="st">&quot;Number of diamonds&quot;</span>)</span></code></pre></div>
 <div class="figure" style="text-align: center"><span id="fig:heatmap-corr-diamonds"></span>
 <img src="images/heatmap-corr-diamonds.svg" alt="2D Density estimation via the kde2d() function." width="100%" data-url="/interactives/heatmap-corr-diamonds.html" />
 <p class="caption">
@@ -395,11 +399,12 @@ FIGURE 7.2: 2D Density estimation via the <code>kde2d()</code> function.
 <div id="categorical-axes" class="section level2">
 <h2><span class="header-section-number">7.3</span> Categorical axes</h2>
 <p>The functions <code>add_histogram2d()</code>, <code>add_histogram2dcontour()</code>, and <code>add_heatmap()</code> all support categorical axes. Thus, <code>add_histogram2d()</code> <em>can</em> be used to easily display 2-way contingency tables, but since its easier to compare values along a common scale rather than compare colors <span class="citation">(Cleveland and McGill <a href="#ref-graphical-perception" role="doc-biblioref">1984</a>)</span>, I recommend creating <a href="bars-histograms.html#multiple-discrete-distributions">grouped bar charts</a> instead. The <code>add_heatmap()</code> function can still be useful for categorical axes, however, as it allows us to display whatever quantity we want along the z axis (color).</p>
+<p></p>
 <p>Figure <a href="frequencies-2D.html#fig:correlation">7.3</a> uses <code>add_heatmap()</code> to display a correlation matrix. Notice how the <code>limits</code> arguments in the <code>colorbar()</code> function can be used to expand the limits of the color scale to reflect the range of possible correlations (something that is not easily done in plotly.js).</p>
-<div class="sourceCode" id="cb82"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb82-1"><a href="frequencies-2D.html#cb82-1"></a>corr &lt;-<span class="st"> </span><span class="kw">cor</span>(dplyr<span class="op">::</span><span class="kw">select_if</span>(diamonds, is.numeric))</span>
-<span id="cb82-2"><a href="frequencies-2D.html#cb82-2"></a><span class="kw">plot_ly</span>(<span class="dt">colors =</span> <span class="st">&quot;RdBu&quot;</span>) <span class="op">%&gt;%</span></span>
-<span id="cb82-3"><a href="frequencies-2D.html#cb82-3"></a><span class="st">  </span><span class="kw">add_heatmap</span>(<span class="dt">x =</span> <span class="kw">rownames</span>(corr), <span class="dt">y =</span> <span class="kw">colnames</span>(corr), <span class="dt">z =</span> corr) <span class="op">%&gt;%</span></span>
-<span id="cb82-4"><a href="frequencies-2D.html#cb82-4"></a><span class="st">  </span><span class="kw">colorbar</span>(<span class="dt">limits =</span> <span class="kw">c</span>(<span class="op">-</span><span class="dv">1</span>, <span class="dv">1</span>))</span></code></pre></div>
+<div class="sourceCode" id="cb81"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb81-1"><a href="frequencies-2D.html#cb81-1"></a>corr &lt;-<span class="st"> </span><span class="kw">cor</span>(dplyr<span class="op">::</span><span class="kw">select_if</span>(diamonds, is.numeric))</span>
+<span id="cb81-2"><a href="frequencies-2D.html#cb81-2"></a><span class="kw">plot_ly</span>(<span class="dt">colors =</span> <span class="st">&quot;RdBu&quot;</span>) <span class="op">%&gt;%</span></span>
+<span id="cb81-3"><a href="frequencies-2D.html#cb81-3"></a><span class="st">  </span><span class="kw">add_heatmap</span>(<span class="dt">x =</span> <span class="kw">rownames</span>(corr), <span class="dt">y =</span> <span class="kw">colnames</span>(corr), <span class="dt">z =</span> corr) <span class="op">%&gt;%</span></span>
+<span id="cb81-4"><a href="frequencies-2D.html#cb81-4"></a><span class="st">  </span><span class="kw">colorbar</span>(<span class="dt">limits =</span> <span class="kw">c</span>(<span class="op">-</span><span class="dv">1</span>, <span class="dv">1</span>))</span></code></pre></div>
 <div class="figure" style="text-align: center"><span id="fig:correlation"></span>
 <img src="images/correlation.svg" alt="Displaying a correlation matrix with add_heatmap() and controlling the scale limits with colorbar()." width="100%" data-url="/interactives/correlation.html" />
 <p class="caption">

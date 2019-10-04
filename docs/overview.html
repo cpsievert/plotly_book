@@ -24,7 +24,7 @@
 <meta name="author" content="Carson Sievert" />
 
 
-<meta name="date" content="2019-10-02" />
+<meta name="date" content="2019-10-04" />
 
   <meta name="viewport" content="width=device-width, initial-scale=1" />
   <meta name="apple-mobile-web-app-capable" content="yes" />
@@ -326,7 +326,6 @@ code span.wa { color: #60a0b0; font-weight: bold; font-style: italic; } /* Warni
 <li class="chapter" data-level="33.3" data-path="improving-ggplotly.html"><a href="improving-ggplotly.html#leveraging-statistical-output"><i class="fa fa-check"></i><b>33.3</b> Leveraging statistical output</a></li>
 </ul></li>
 <li class="chapter" data-level="34" data-path="custom-geoms.html"><a href="custom-geoms.html"><i class="fa fa-check"></i><b>34</b> Translating custom ggplot2 geoms</a></li>
-<li class="chapter" data-level="" data-path="references.html"><a href="references.html"><i class="fa fa-check"></i>References</a></li>
 </ul>
 
       </nav>
@@ -352,28 +351,28 @@ code span.wa { color: #60a0b0; font-weight: bold; font-style: italic; } /* Warni
 <h2><span class="header-section-number">2.1</span> Intro to <code>plot_ly()</code></h2>
 <p></p>
 <p>Any graph made with the <strong>plotly</strong> R package is powered by the JavaScript library <a href="https://github.com/plotly/plotly.js">plotly.js</a>. The <code>plot_ly()</code> function provides a ‘direct’ interface to plotly.js with some additional abstractions to help reduce typing. These abstractions, inspired by the Grammar of Graphics and <strong>ggplot2</strong>, make it much faster to iterate from one graphic to another, making it easier to discover interesting features in the data <span class="citation">(Wilkinson <a href="#ref-Wilkinson:2005" role="doc-biblioref">2005</a>; Wickham <a href="#ref-ggplot2" role="doc-biblioref">2009</a>)</span>. To demonstrate, we’ll use <code>plot_ly()</code> to explore the <code>diamonds</code> dataset from <strong>ggplot2</strong> and learn a bit how <strong>plotly</strong> and plotly.js work along the way.</p>
-<div class="sourceCode" id="cb9"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb9-1"><a href="overview.html#cb9-1"></a><span class="co"># load the plotly R package</span></span>
-<span id="cb9-2"><a href="overview.html#cb9-2"></a><span class="kw">library</span>(plotly)</span>
-<span id="cb9-3"><a href="overview.html#cb9-3"></a></span>
-<span id="cb9-4"><a href="overview.html#cb9-4"></a><span class="co"># load the diamonds dataset from the ggplot2 package</span></span>
-<span id="cb9-5"><a href="overview.html#cb9-5"></a><span class="kw">data</span>(diamonds, <span class="dt">package =</span> <span class="st">&quot;ggplot2&quot;</span>)</span>
-<span id="cb9-6"><a href="overview.html#cb9-6"></a>diamonds</span>
-<span id="cb9-7"><a href="overview.html#cb9-7"></a><span class="co">#&gt; # A tibble: 53,940 x 10</span></span>
-<span id="cb9-8"><a href="overview.html#cb9-8"></a><span class="co">#&gt;   carat cut   color clarity depth table price     x</span></span>
-<span id="cb9-9"><a href="overview.html#cb9-9"></a><span class="co">#&gt;   &lt;dbl&gt; &lt;ord&gt; &lt;ord&gt; &lt;ord&gt;   &lt;dbl&gt; &lt;dbl&gt; &lt;int&gt; &lt;dbl&gt;</span></span>
-<span id="cb9-10"><a href="overview.html#cb9-10"></a><span class="co">#&gt; 1 0.23  Ideal E     SI2      61.5    55   326  3.95</span></span>
-<span id="cb9-11"><a href="overview.html#cb9-11"></a><span class="co">#&gt; 2 0.21  Prem… E     SI1      59.8    61   326  3.89</span></span>
-<span id="cb9-12"><a href="overview.html#cb9-12"></a><span class="co">#&gt; 3 0.23  Good  E     VS1      56.9    65   327  4.05</span></span>
-<span id="cb9-13"><a href="overview.html#cb9-13"></a><span class="co">#&gt; 4 0.290 Prem… I     VS2      62.4    58   334  4.2 </span></span>
-<span id="cb9-14"><a href="overview.html#cb9-14"></a><span class="co">#&gt; 5 0.31  Good  J     SI2      63.3    58   335  4.34</span></span>
-<span id="cb9-15"><a href="overview.html#cb9-15"></a><span class="co">#&gt; 6 0.24  Very… J     VVS2     62.8    57   336  3.94</span></span>
-<span id="cb9-16"><a href="overview.html#cb9-16"></a><span class="co">#&gt; # … with 5.393e+04 more rows, and 2 more variables:</span></span>
-<span id="cb9-17"><a href="overview.html#cb9-17"></a><span class="co">#&gt; #   y &lt;dbl&gt;, z &lt;dbl&gt;</span></span></code></pre></div>
+<div class="sourceCode" id="cb8"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb8-1"><a href="overview.html#cb8-1"></a><span class="co"># load the plotly R package</span></span>
+<span id="cb8-2"><a href="overview.html#cb8-2"></a><span class="kw">library</span>(plotly)</span>
+<span id="cb8-3"><a href="overview.html#cb8-3"></a></span>
+<span id="cb8-4"><a href="overview.html#cb8-4"></a><span class="co"># load the diamonds dataset from the ggplot2 package</span></span>
+<span id="cb8-5"><a href="overview.html#cb8-5"></a><span class="kw">data</span>(diamonds, <span class="dt">package =</span> <span class="st">&quot;ggplot2&quot;</span>)</span>
+<span id="cb8-6"><a href="overview.html#cb8-6"></a>diamonds</span>
+<span id="cb8-7"><a href="overview.html#cb8-7"></a><span class="co">#&gt; # A tibble: 53,940 x 10</span></span>
+<span id="cb8-8"><a href="overview.html#cb8-8"></a><span class="co">#&gt;   carat cut   color clarity depth table price     x</span></span>
+<span id="cb8-9"><a href="overview.html#cb8-9"></a><span class="co">#&gt;   &lt;dbl&gt; &lt;ord&gt; &lt;ord&gt; &lt;ord&gt;   &lt;dbl&gt; &lt;dbl&gt; &lt;int&gt; &lt;dbl&gt;</span></span>
+<span id="cb8-10"><a href="overview.html#cb8-10"></a><span class="co">#&gt; 1 0.23  Ideal E     SI2      61.5    55   326  3.95</span></span>
+<span id="cb8-11"><a href="overview.html#cb8-11"></a><span class="co">#&gt; 2 0.21  Prem… E     SI1      59.8    61   326  3.89</span></span>
+<span id="cb8-12"><a href="overview.html#cb8-12"></a><span class="co">#&gt; 3 0.23  Good  E     VS1      56.9    65   327  4.05</span></span>
+<span id="cb8-13"><a href="overview.html#cb8-13"></a><span class="co">#&gt; 4 0.290 Prem… I     VS2      62.4    58   334  4.2 </span></span>
+<span id="cb8-14"><a href="overview.html#cb8-14"></a><span class="co">#&gt; 5 0.31  Good  J     SI2      63.3    58   335  4.34</span></span>
+<span id="cb8-15"><a href="overview.html#cb8-15"></a><span class="co">#&gt; 6 0.24  Very… J     VVS2     62.8    57   336  3.94</span></span>
+<span id="cb8-16"><a href="overview.html#cb8-16"></a><span class="co">#&gt; # … with 5.393e+04 more rows, and 2 more variables:</span></span>
+<span id="cb8-17"><a href="overview.html#cb8-17"></a><span class="co">#&gt; #   y &lt;dbl&gt;, z &lt;dbl&gt;</span></span></code></pre></div>
 <p>If we assign variable names (e.g., <code>cut</code>, <code>clarity</code>, etc) to visual properties (e.g., <code>x</code>, <code>y</code>, <code>color</code>, etc) within <code>plot_ly()</code>, as done in Figure <a href="overview.html#fig:intro-defaults">2.1</a>, it tries to find a sensible geometric representation of that information for us. Shortly we’ll cover how to specify these geometric representations (as well as other visual encodings) to create different kinds of charts.</p>
-<div class="sourceCode" id="cb10"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb10-1"><a href="overview.html#cb10-1"></a><span class="co"># create three visualizations of the diamonds dataset</span></span>
-<span id="cb10-2"><a href="overview.html#cb10-2"></a><span class="kw">plot_ly</span>(diamonds, <span class="dt">x =</span> <span class="op">~</span>cut)</span>
-<span id="cb10-3"><a href="overview.html#cb10-3"></a><span class="kw">plot_ly</span>(diamonds, <span class="dt">x =</span> <span class="op">~</span>cut, <span class="dt">y =</span> <span class="op">~</span>clarity)</span>
-<span id="cb10-4"><a href="overview.html#cb10-4"></a><span class="kw">plot_ly</span>(diamonds, <span class="dt">x =</span> <span class="op">~</span>cut, <span class="dt">color =</span> <span class="op">~</span>clarity, <span class="dt">colors =</span> <span class="st">&quot;Accent&quot;</span>)</span></code></pre></div>
+<div class="sourceCode" id="cb9"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb9-1"><a href="overview.html#cb9-1"></a><span class="co"># create three visualizations of the diamonds dataset</span></span>
+<span id="cb9-2"><a href="overview.html#cb9-2"></a><span class="kw">plot_ly</span>(diamonds, <span class="dt">x =</span> <span class="op">~</span>cut)</span>
+<span id="cb9-3"><a href="overview.html#cb9-3"></a><span class="kw">plot_ly</span>(diamonds, <span class="dt">x =</span> <span class="op">~</span>cut, <span class="dt">y =</span> <span class="op">~</span>clarity)</span>
+<span id="cb9-4"><a href="overview.html#cb9-4"></a><span class="kw">plot_ly</span>(diamonds, <span class="dt">x =</span> <span class="op">~</span>cut, <span class="dt">color =</span> <span class="op">~</span>clarity, <span class="dt">colors =</span> <span class="st">&quot;Accent&quot;</span>)</span></code></pre></div>
 <div class="figure" style="text-align: center"><span id="fig:intro-defaults"></span>
 <img src="images/intro-defaults.svg" alt="Three examples of visualizing categorical data with plot_ly(): (top) mapping cut to x yields a bar chart, (middle) mapping cut &amp; clarity to x &amp; y yields a heatmap, and (c) mapping cut &amp; clarity to x &amp; color yields a dodged bar chart." width="100%" data-url="interactives/intro-defaults.html" />
 <p class="caption">
@@ -389,47 +388,47 @@ FIGURE 2.2: Mapping data values to a visual color range.
 </div>
 <p>Since these arguments map data values to a visual range by default, you will obtain unexpected results if you try to specify the visual range directly, as in the top portion of Figure <a href="overview.html#fig:intro-range">2.3</a>. If you want to specify the visual range directly, use the <code>I()</code> function to declare this value to be taken ‘AsIs’, as in the bottom portion of Figure <a href="overview.html#fig:intro-range">2.3</a>. Throughout this book, you’ll see lots of examples that leverage these arguments, especially in Chapter <a href="scatter-traces.html#scatter-traces">3</a>. Another good resource to learn more about these arguments (especially their defaults) is the R documentation page available by entering <code>help(plot_ly)</code> in your R console.</p>
 <p></p>
-<div class="sourceCode" id="cb11"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb11-1"><a href="overview.html#cb11-1"></a><span class="co"># doesn&#39;t produce black bars</span></span>
-<span id="cb11-2"><a href="overview.html#cb11-2"></a><span class="kw">plot_ly</span>(diamonds, <span class="dt">x =</span> <span class="op">~</span>cut, <span class="dt">color =</span> <span class="st">&quot;black&quot;</span>)</span>
-<span id="cb11-3"><a href="overview.html#cb11-3"></a><span class="co"># produces red bars with black outline</span></span>
-<span id="cb11-4"><a href="overview.html#cb11-4"></a><span class="kw">plot_ly</span>(</span>
-<span id="cb11-5"><a href="overview.html#cb11-5"></a>  diamonds, </span>
-<span id="cb11-6"><a href="overview.html#cb11-6"></a>  <span class="dt">x =</span> <span class="op">~</span>cut, </span>
-<span id="cb11-7"><a href="overview.html#cb11-7"></a>  <span class="dt">color =</span> <span class="kw">I</span>(<span class="st">&quot;red&quot;</span>), </span>
-<span id="cb11-8"><a href="overview.html#cb11-8"></a>  <span class="dt">stroke =</span> <span class="kw">I</span>(<span class="st">&quot;black&quot;</span>), </span>
-<span id="cb11-9"><a href="overview.html#cb11-9"></a>  <span class="dt">span =</span> <span class="kw">I</span>(<span class="dv">2</span>)</span>
-<span id="cb11-10"><a href="overview.html#cb11-10"></a>)</span></code></pre></div>
+<div class="sourceCode" id="cb10"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb10-1"><a href="overview.html#cb10-1"></a><span class="co"># doesn&#39;t produce black bars</span></span>
+<span id="cb10-2"><a href="overview.html#cb10-2"></a><span class="kw">plot_ly</span>(diamonds, <span class="dt">x =</span> <span class="op">~</span>cut, <span class="dt">color =</span> <span class="st">&quot;black&quot;</span>)</span>
+<span id="cb10-3"><a href="overview.html#cb10-3"></a><span class="co"># produces red bars with black outline</span></span>
+<span id="cb10-4"><a href="overview.html#cb10-4"></a><span class="kw">plot_ly</span>(</span>
+<span id="cb10-5"><a href="overview.html#cb10-5"></a>  diamonds, </span>
+<span id="cb10-6"><a href="overview.html#cb10-6"></a>  <span class="dt">x =</span> <span class="op">~</span>cut, </span>
+<span id="cb10-7"><a href="overview.html#cb10-7"></a>  <span class="dt">color =</span> <span class="kw">I</span>(<span class="st">&quot;red&quot;</span>), </span>
+<span id="cb10-8"><a href="overview.html#cb10-8"></a>  <span class="dt">stroke =</span> <span class="kw">I</span>(<span class="st">&quot;black&quot;</span>), </span>
+<span id="cb10-9"><a href="overview.html#cb10-9"></a>  <span class="dt">span =</span> <span class="kw">I</span>(<span class="dv">2</span>)</span>
+<span id="cb10-10"><a href="overview.html#cb10-10"></a>)</span></code></pre></div>
 <div class="figure" style="text-align: center"><span id="fig:intro-range"></span>
 <img src="images/intro-range.svg" alt="Using I() to supply visual properties directly instead of mapping values to a visual range. In the top portion of this figure, the value 'black' is being mapped to a visual range spanned by colors (which, for discrete data, defaults to 'Set2')." width="100%" data-url="/interactives/intro-range.html" />
 <p class="caption">
 FIGURE 2.3: Using <code>I()</code> to supply visual properties directly instead of mapping values to a visual range. In the top portion of this figure, the value <code>'black'</code> is being mapped to a visual range spanned by <code>colors</code> (which, for discrete data, defaults to <code>'Set2'</code>).
 </p>
 </div>
-<p>The <strong>plotly</strong> package takes a purely functional approach to a layered grammar of graphics <span class="citation">(Wickham <a href="#ref-ggplot2-paper" role="doc-biblioref">2010</a>)</span>.<a href="references.html#fn2" class="footnote-ref" id="fnref2"><sup>2</sup></a> The purely functional part means, (almost) every function anticipates a <strong>plotly</strong> object as input to it’s first argument and returns a modified version of that <strong>plotly</strong> object. Furthermore, that modification is completely determined by the input values to the function (i.e., it doesn’t rely on any side-effects, unlike, for example, base R graphics). For a quick example, the <code>layout()</code> function anticipates a <strong>plotly</strong> object in it’s first argument and it’s other arguments add and/or modify various layout components of that object (e.g., the title):</p>
-<div class="sourceCode" id="cb12"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb12-1"><a href="overview.html#cb12-1"></a><span class="kw">layout</span>(</span>
-<span id="cb12-2"><a href="overview.html#cb12-2"></a>  <span class="kw">plot_ly</span>(diamonds, <span class="dt">x =</span> <span class="op">~</span>cut),</span>
-<span id="cb12-3"><a href="overview.html#cb12-3"></a>  <span class="dt">title =</span> <span class="st">&quot;My beatiful histogram&quot;</span></span>
-<span id="cb12-4"><a href="overview.html#cb12-4"></a>)</span></code></pre></div>
+<p>The <strong>plotly</strong> package takes a purely functional approach to a layered grammar of graphics <span class="citation">(Wickham <a href="#ref-ggplot2-paper" role="doc-biblioref">2010</a>)</span>.<a href="custom-geoms.html#fn2" class="footnote-ref" id="fnref2"><sup>2</sup></a> The purely functional part means, (almost) every function anticipates a <strong>plotly</strong> object as input to it’s first argument and returns a modified version of that <strong>plotly</strong> object. Furthermore, that modification is completely determined by the input values to the function (i.e., it doesn’t rely on any side-effects, unlike, for example, base R graphics). For a quick example, the <code>layout()</code> function anticipates a <strong>plotly</strong> object in it’s first argument and it’s other arguments add and/or modify various layout components of that object (e.g., the title):</p>
+<div class="sourceCode" id="cb11"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb11-1"><a href="overview.html#cb11-1"></a><span class="kw">layout</span>(</span>
+<span id="cb11-2"><a href="overview.html#cb11-2"></a>  <span class="kw">plot_ly</span>(diamonds, <span class="dt">x =</span> <span class="op">~</span>cut),</span>
+<span id="cb11-3"><a href="overview.html#cb11-3"></a>  <span class="dt">title =</span> <span class="st">&quot;My beatiful histogram&quot;</span></span>
+<span id="cb11-4"><a href="overview.html#cb11-4"></a>)</span></code></pre></div>
 <p>For more complex plots that modify a <strong>plotly</strong> graph many times over, code written in this way can become cumbersome to read. In particular, we have to search for the inner-most part of the R expression, then work outwards towards the end result. The <code>%&gt;%</code> operator from the <strong>magrittr</strong> package allows us to re-arrange this code so that we can read the sequence of modifications from left-to-right rather than inside-out <span class="citation">(Bache and Wickham <a href="#ref-magrittr" role="doc-biblioref">2014</a>)</span>. The <code>%&gt;%</code> operator enable this by placing the object on the left-hand side of the <code>%&gt;%</code> into the first argument of the function of the right-hand side.</p>
-<div class="sourceCode" id="cb13"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb13-1"><a href="overview.html#cb13-1"></a>diamonds <span class="op">%&gt;%</span></span>
-<span id="cb13-2"><a href="overview.html#cb13-2"></a><span class="st">  </span><span class="kw">plot_ly</span>(<span class="dt">x =</span> <span class="op">~</span>cut) <span class="op">%&gt;%</span></span>
-<span id="cb13-3"><a href="overview.html#cb13-3"></a><span class="st">  </span><span class="kw">layout</span>(<span class="dt">title =</span> <span class="st">&quot;My beatiful histogram&quot;</span>)</span></code></pre></div>
+<div class="sourceCode" id="cb12"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb12-1"><a href="overview.html#cb12-1"></a>diamonds <span class="op">%&gt;%</span></span>
+<span id="cb12-2"><a href="overview.html#cb12-2"></a><span class="st">  </span><span class="kw">plot_ly</span>(<span class="dt">x =</span> <span class="op">~</span>cut) <span class="op">%&gt;%</span></span>
+<span id="cb12-3"><a href="overview.html#cb12-3"></a><span class="st">  </span><span class="kw">layout</span>(<span class="dt">title =</span> <span class="st">&quot;My beatiful histogram&quot;</span>)</span></code></pre></div>
 <p>In addition to <code>layout()</code> for adding/modifying part(s) of the graph’s layout, there are also a family of <code>add_*()</code> functions (e.g., <code>add_histogram()</code>, <code>add_lines()</code>, etc) that define how to render data into geometric objects. Borrowing terminology from the layered grammar of graphics, these functions add a graphical layer to a plot. A <em>layer</em> can be thought of as a group of graphical elements that can be sufficiently described using only 5 components: data, aesthetic mappings (e.g., assigning <code>clarity</code> to <code>color</code>), a geometric representation (e.g. rectangles, circles, etc), statistical transformations (e.g., sum, mean, etc), and positional adjustments (e.g., dodge, stack, etc). If you’re paying attention, you’ll notice that in the examples thus far, we have not specified a layer! The layer has been added for us automatically by <code>plot_ly()</code>. To be explicit about what <code>plot_ly(diamonds, x = ~cut)</code> generates, we should add a <code>add_histogram()</code> layer:</p>
-<div class="sourceCode" id="cb14"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb14-1"><a href="overview.html#cb14-1"></a>diamonds <span class="op">%&gt;%</span></span>
-<span id="cb14-2"><a href="overview.html#cb14-2"></a><span class="st">  </span><span class="kw">plot_ly</span>() <span class="op">%&gt;%</span><span class="st"> </span></span>
-<span id="cb14-3"><a href="overview.html#cb14-3"></a><span class="st">  </span><span class="kw">add_histogram</span>(<span class="dt">x =</span> <span class="op">~</span>cut)</span></code></pre></div>
+<div class="sourceCode" id="cb13"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb13-1"><a href="overview.html#cb13-1"></a>diamonds <span class="op">%&gt;%</span></span>
+<span id="cb13-2"><a href="overview.html#cb13-2"></a><span class="st">  </span><span class="kw">plot_ly</span>() <span class="op">%&gt;%</span><span class="st"> </span></span>
+<span id="cb13-3"><a href="overview.html#cb13-3"></a><span class="st">  </span><span class="kw">add_histogram</span>(<span class="dt">x =</span> <span class="op">~</span>cut)</span></code></pre></div>
 <p>As you’ll learn more about in Chapter <a href="bars-histograms.html#bars-histograms">5</a>, <strong>plotly</strong> has both <code>add_histogram()</code> and <code>add_bars()</code>. The difference is that <code>add_histogram()</code> performs <em>statistics</em> (i.e., a binning algorithm) dynamically in the web browser, whereas <code>add_bars()</code> requires the bar heights to be pre-specified. That means, to replicate the last example with <code>add_bars()</code>, the number of observations must be computed ahead-of-time.</p>
-<div class="sourceCode" id="cb15"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb15-1"><a href="overview.html#cb15-1"></a>diamonds <span class="op">%&gt;%</span></span>
-<span id="cb15-2"><a href="overview.html#cb15-2"></a><span class="st">  </span>dplyr<span class="op">::</span><span class="kw">count</span>(cut) <span class="op">%&gt;%</span></span>
-<span id="cb15-3"><a href="overview.html#cb15-3"></a><span class="st">  </span><span class="kw">plot_ly</span>() <span class="op">%&gt;%</span><span class="st"> </span></span>
-<span id="cb15-4"><a href="overview.html#cb15-4"></a><span class="st">  </span><span class="kw">add_bars</span>(<span class="dt">x =</span> <span class="op">~</span>cut, <span class="dt">y =</span> <span class="op">~</span>n)</span></code></pre></div>
+<div class="sourceCode" id="cb14"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb14-1"><a href="overview.html#cb14-1"></a>diamonds <span class="op">%&gt;%</span></span>
+<span id="cb14-2"><a href="overview.html#cb14-2"></a><span class="st">  </span>dplyr<span class="op">::</span><span class="kw">count</span>(cut) <span class="op">%&gt;%</span></span>
+<span id="cb14-3"><a href="overview.html#cb14-3"></a><span class="st">  </span><span class="kw">plot_ly</span>() <span class="op">%&gt;%</span><span class="st"> </span></span>
+<span id="cb14-4"><a href="overview.html#cb14-4"></a><span class="st">  </span><span class="kw">add_bars</span>(<span class="dt">x =</span> <span class="op">~</span>cut, <span class="dt">y =</span> <span class="op">~</span>n)</span></code></pre></div>
 <p>There are numerous other <code>add_*()</code> functions that calculate statistics in the browser (e.g., <code>add_histogram2d()</code>, <code>add_contour()</code>, <code>add_boxplot()</code>, etc), but most other functions aren’t considered statistical. Making the distinction might not seem useful now, but they have their own respective trade-offs when it comes to speed and interactivity. Generally speaking, non-statistical layers will be faster and more responsive at run-time (since they require less computational work), whereas the statistical layers allow for more flexibility when it comes to client-side interactivity, as covered in Chapter <a href="client-side-linking.html#client-side-linking">16</a>. Practically speaking, the difference in performance is often negligible – the more common bottleneck occurs when attempting to render lots of graphical elements at a time (e.g., a scatterplot with a million points). In those scenarios, you likely want to render your plot in Canvas rather than SVG (the default) via <code>toWebGL()</code> – for more information on improving performance, see Chapter <a href="performance.html#performance">24</a>.</p>
 <p>
 </p>
 <p>In many scenarios, it can be useful to combine multiple graphical layers into a single plot. In this case, it becomes useful to know a few things about <code>plot_ly()</code>:</p>
 <ul>
 <li>Arguments specified in <code>plot_ly()</code> are <em>global</em>, meaning that any downstream <code>add_*()</code> functions inherit these arguments (unless <code>inherit = FALSE</code>).</li>
-<li>Data manipulation verbs from the <strong>dplyr</strong> package may be used to transform the <code>data</code> underlying a <strong>plotly</strong> object.<a href="references.html#fn3" class="footnote-ref" id="fnref3"><sup>3</sup></a></li>
+<li>Data manipulation verbs from the <strong>dplyr</strong> package may be used to transform the <code>data</code> underlying a <strong>plotly</strong> object.<a href="custom-geoms.html#fn3" class="footnote-ref" id="fnref3"><sup>3</sup></a></li>
 </ul>
 <p>Using these two properties of <code>plot_ly()</code>, Figure <a href="overview.html#fig:intro-dplyr">2.4</a> demonstrates how we could leverage these properties of <code>plot_ly()</code> to do the following:</p>
 <ol style="list-style-type: decimal">
@@ -438,18 +437,18 @@ FIGURE 2.3: Using <code>I()</code> to supply visual properties directly instead 
 <li>Use <strong>dplyr</strong> verbs to modify the <code>data</code> underlying the <strong>plotly</strong> object. Here we just count the number of diamonds in each <code>cut</code> category.</li>
 <li>Add a layer of text using the summarized counts. Note that the global <code>x</code> mapping, as well as the other mappings local to this text layer (<code>text</code> and <code>y</code>), reflect data values from step 3.</li>
 </ol>
-<div class="sourceCode" id="cb16"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb16-1"><a href="overview.html#cb16-1"></a><span class="kw">library</span>(dplyr)</span>
-<span id="cb16-2"><a href="overview.html#cb16-2"></a></span>
-<span id="cb16-3"><a href="overview.html#cb16-3"></a>diamonds <span class="op">%&gt;%</span></span>
-<span id="cb16-4"><a href="overview.html#cb16-4"></a><span class="st">  </span><span class="kw">plot_ly</span>(<span class="dt">x =</span> <span class="op">~</span>cut) <span class="op">%&gt;%</span><span class="st"> </span></span>
-<span id="cb16-5"><a href="overview.html#cb16-5"></a><span class="st">  </span><span class="kw">add_histogram</span>() <span class="op">%&gt;%</span></span>
-<span id="cb16-6"><a href="overview.html#cb16-6"></a><span class="st">  </span><span class="kw">group_by</span>(cut) <span class="op">%&gt;%</span></span>
-<span id="cb16-7"><a href="overview.html#cb16-7"></a><span class="st">  </span><span class="kw">summarise</span>(<span class="dt">n =</span> <span class="kw">n</span>()) <span class="op">%&gt;%</span></span>
-<span id="cb16-8"><a href="overview.html#cb16-8"></a><span class="st">  </span><span class="kw">add_text</span>(</span>
-<span id="cb16-9"><a href="overview.html#cb16-9"></a>    <span class="dt">text =</span> <span class="op">~</span>scales<span class="op">::</span><span class="kw">comma</span>(n), <span class="dt">y =</span> <span class="op">~</span>n, </span>
-<span id="cb16-10"><a href="overview.html#cb16-10"></a>    <span class="dt">textposition =</span> <span class="st">&quot;top middle&quot;</span>, </span>
-<span id="cb16-11"><a href="overview.html#cb16-11"></a>    <span class="dt">cliponaxis =</span> <span class="ot">FALSE</span></span>
-<span id="cb16-12"><a href="overview.html#cb16-12"></a>  )</span></code></pre></div>
+<div class="sourceCode" id="cb15"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb15-1"><a href="overview.html#cb15-1"></a><span class="kw">library</span>(dplyr)</span>
+<span id="cb15-2"><a href="overview.html#cb15-2"></a></span>
+<span id="cb15-3"><a href="overview.html#cb15-3"></a>diamonds <span class="op">%&gt;%</span></span>
+<span id="cb15-4"><a href="overview.html#cb15-4"></a><span class="st">  </span><span class="kw">plot_ly</span>(<span class="dt">x =</span> <span class="op">~</span>cut) <span class="op">%&gt;%</span><span class="st"> </span></span>
+<span id="cb15-5"><a href="overview.html#cb15-5"></a><span class="st">  </span><span class="kw">add_histogram</span>() <span class="op">%&gt;%</span></span>
+<span id="cb15-6"><a href="overview.html#cb15-6"></a><span class="st">  </span><span class="kw">group_by</span>(cut) <span class="op">%&gt;%</span></span>
+<span id="cb15-7"><a href="overview.html#cb15-7"></a><span class="st">  </span><span class="kw">summarise</span>(<span class="dt">n =</span> <span class="kw">n</span>()) <span class="op">%&gt;%</span></span>
+<span id="cb15-8"><a href="overview.html#cb15-8"></a><span class="st">  </span><span class="kw">add_text</span>(</span>
+<span id="cb15-9"><a href="overview.html#cb15-9"></a>    <span class="dt">text =</span> <span class="op">~</span>scales<span class="op">::</span><span class="kw">comma</span>(n), <span class="dt">y =</span> <span class="op">~</span>n, </span>
+<span id="cb15-10"><a href="overview.html#cb15-10"></a>    <span class="dt">textposition =</span> <span class="st">&quot;top middle&quot;</span>, </span>
+<span id="cb15-11"><a href="overview.html#cb15-11"></a>    <span class="dt">cliponaxis =</span> <span class="ot">FALSE</span></span>
+<span id="cb15-12"><a href="overview.html#cb15-12"></a>  )</span></code></pre></div>
 <div class="figure" style="text-align: center"><span id="fig:intro-dplyr"></span>
 <img src="images/intro-dplyr.png" alt="Using add_histogram(), add_text(), and dplyr verbs to compose a plot that leverages a raw form of the data (e.g., histogram) as well as a summarized version (e.g., text labels)." width="100%" data-url="/interactives/intro-dplyr.html" />
 <p class="caption">
@@ -457,24 +456,28 @@ FIGURE 2.4: Using <code>add_histogram()</code>, <code>add_text()</code>, and <st
 </p>
 </div>
 <p>Before using multiple <code>add_*()</code> in a single plot, make sure that you actually want to show those layers of information on the same set of axes. If it makes sense to display the information on the same axes, consider making multiple <strong>plotly</strong> objects and combining them into as grid-like layout using <code>subplot()</code>, as described in Chapter <a href="arranging-views.html#arranging-views">13</a>. Also, when using <strong>dplyr</strong> verbs to modify the <code>data</code> underlying the <strong>plotly</strong> object, you can use the <code>plotly_data()</code> function to obtain the data at any point in time, which is primarily useful for debugging purposes (i.e., inspecting the data of a particular graphical layer).</p>
-<div class="sourceCode" id="cb17"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb17-1"><a href="overview.html#cb17-1"></a>diamonds <span class="op">%&gt;%</span></span>
-<span id="cb17-2"><a href="overview.html#cb17-2"></a><span class="st">  </span><span class="kw">plot_ly</span>(<span class="dt">x =</span> <span class="op">~</span>cut) <span class="op">%&gt;%</span><span class="st"> </span></span>
-<span id="cb17-3"><a href="overview.html#cb17-3"></a><span class="st">  </span><span class="kw">add_histogram</span>() <span class="op">%&gt;%</span></span>
-<span id="cb17-4"><a href="overview.html#cb17-4"></a><span class="st">  </span><span class="kw">group_by</span>(cut) <span class="op">%&gt;%</span></span>
-<span id="cb17-5"><a href="overview.html#cb17-5"></a><span class="st">  </span><span class="kw">summarise</span>(<span class="dt">n =</span> <span class="kw">n</span>()) <span class="op">%&gt;%</span><span class="st"> </span></span>
-<span id="cb17-6"><a href="overview.html#cb17-6"></a><span class="st">  </span><span class="kw">plotly_data</span>()</span>
-<span id="cb17-7"><a href="overview.html#cb17-7"></a><span class="co">#&gt; # A tibble: 5 x 2</span></span>
-<span id="cb17-8"><a href="overview.html#cb17-8"></a><span class="co">#&gt;   cut           n</span></span>
-<span id="cb17-9"><a href="overview.html#cb17-9"></a><span class="co">#&gt;   &lt;ord&gt;     &lt;int&gt;</span></span>
-<span id="cb17-10"><a href="overview.html#cb17-10"></a><span class="co">#&gt; 1 Fair       1610</span></span>
-<span id="cb17-11"><a href="overview.html#cb17-11"></a><span class="co">#&gt; 2 Good       4906</span></span>
-<span id="cb17-12"><a href="overview.html#cb17-12"></a><span class="co">#&gt; 3 Very Good 12082</span></span>
-<span id="cb17-13"><a href="overview.html#cb17-13"></a><span class="co">#&gt; 4 Premium   13791</span></span>
-<span id="cb17-14"><a href="overview.html#cb17-14"></a><span class="co">#&gt; 5 Ideal     21551</span></span></code></pre></div>
+
+<div class="sourceCode" id="cb16"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb16-1"><a href="overview.html#cb16-1"></a>diamonds <span class="op">%&gt;%</span></span>
+<span id="cb16-2"><a href="overview.html#cb16-2"></a><span class="st">  </span><span class="kw">plot_ly</span>(<span class="dt">x =</span> <span class="op">~</span>cut) <span class="op">%&gt;%</span><span class="st"> </span></span>
+<span id="cb16-3"><a href="overview.html#cb16-3"></a><span class="st">  </span><span class="kw">add_histogram</span>() <span class="op">%&gt;%</span></span>
+<span id="cb16-4"><a href="overview.html#cb16-4"></a><span class="st">  </span><span class="kw">group_by</span>(cut) <span class="op">%&gt;%</span></span>
+<span id="cb16-5"><a href="overview.html#cb16-5"></a><span class="st">  </span><span class="kw">summarise</span>(<span class="dt">n =</span> <span class="kw">n</span>()) <span class="op">%&gt;%</span><span class="st"> </span></span>
+<span id="cb16-6"><a href="overview.html#cb16-6"></a><span class="st">  </span><span class="kw">plotly_data</span>()</span>
+<span id="cb16-7"><a href="overview.html#cb16-7"></a><span class="co">#&gt; # A tibble: 5 x 2</span></span>
+<span id="cb16-8"><a href="overview.html#cb16-8"></a><span class="co">#&gt;   cut           n</span></span>
+<span id="cb16-9"><a href="overview.html#cb16-9"></a><span class="co">#&gt;   &lt;ord&gt;     &lt;int&gt;</span></span>
+<span id="cb16-10"><a href="overview.html#cb16-10"></a><span class="co">#&gt; 1 Fair       1610</span></span>
+<span id="cb16-11"><a href="overview.html#cb16-11"></a><span class="co">#&gt; 2 Good       4906</span></span>
+<span id="cb16-12"><a href="overview.html#cb16-12"></a><span class="co">#&gt; 3 Very Good 12082</span></span>
+<span id="cb16-13"><a href="overview.html#cb16-13"></a><span class="co">#&gt; 4 Premium   13791</span></span>
+<span id="cb16-14"><a href="overview.html#cb16-14"></a><span class="co">#&gt; 5 Ideal     21551</span></span></code></pre></div>
 <p>This introduction to <code>plot_ly()</code> has mainly focused on concepts unique to the R package <strong>plotly</strong> that are generally useful for creating most kinds of data views. The next section outlines how <strong>plotly</strong> generates plotly.js figures and how to inspect the underlying data structure that plotly.js uses to render the graph. Not only is this information useful for debugging, but it’s also a nice way to learn how to work with plotly.js directly, which you may need to improve performance in <strong>shiny</strong> apps (Chapter <a href="linking-views-with-shiny.html#proxies">17.3.1</a>) and/or for adding custom behavior with JavaScript (Chapter <a href="javascript.html#javascript">18</a>).</p>
 </div>
 <div id="intro-plotly-js" class="section level2">
 <h2><span class="header-section-number">2.2</span> Intro to plotly.js</h2>
+
+<p>
+</p>
 <p>To recreate the plots in Figure <a href="overview.html#fig:intro-defaults">2.1</a> using plotly.js <em>directly</em>, it would take significantly more code and knowledge of plotly.js. That being said, learning how <strong>plotly</strong> generates the underlying plotly.js figure is a useful introduction to plotly.js itself, and knowledge of plotly.js becomes useful when you need more flexible control over <strong>plotly</strong>. As Figure <a href="overview.html#fig:intro-printing">2.5</a> illustrates, when you print any <strong>plotly</strong> object, the <code>plotly_build()</code> function is applied to that object, and that generates an R list which adheres to a syntax that plotly.js understands. This syntax is a JavaScript Object Notation (JSON) specification that plotly.js uses to represent, serialize, and render web graphics. A lot of documentation you’ll find online about plotly (e.g., the online <a href="https://plot.ly/r/reference/">figure reference</a>) implicitly refers to this JSON specification, so it can helpful to know how to “work backwards” from that documentation (i.e., translate JSON into to R code). If you’d like to learn details about mapping between R and JSON, Chapter <a href="json.html#json">19</a> provides an introduction aimed at R programmers, and <span class="citation">Ooms (<a href="#ref-jsonlite" role="doc-biblioref">2014</a>)</span> provides a cohesive overview of the <strong>jsonlite</strong> package, which is what <strong>plotly</strong> uses to map between R and JSON.</p>
 <div class="figure" style="text-align: center"><span id="fig:intro-printing"></span>
 <img src="images/printing.svg" alt="A diagram of what happens when you print a plotly graph." width="100%" />
@@ -483,8 +486,8 @@ FIGURE 2.5: A diagram of what happens when you print a <strong>plotly</strong> g
 </p>
 </div>
 <p>For illustration purposes, Figure <a href="overview.html#fig:intro-printing">2.5</a> shows how this workflow applies to a simple bar graph (with values directly supplied instead of a data column name reference like Figure <a href="overview.html#fig:intro-defaults">2.1</a>), but the same concept applies for any graph created via <strong>plotly</strong>. As the diagram suggests, both the <code>plotly_build()</code> and <code>plotly_json()</code> functions can be used to inspect the underlying data structure on both the R and JSON side of things. For example, Figure <a href="overview.html#fig:intro-json">2.6</a> shows the <code>data</code> portion of the JSON created for the last graph in Figure <a href="overview.html#fig:intro-json">2.6</a>.</p>
-<div class="sourceCode" id="cb18"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb18-1"><a href="overview.html#cb18-1"></a>p &lt;-<span class="st"> </span><span class="kw">plot_ly</span>(diamonds, <span class="dt">x =</span> <span class="op">~</span>cut, <span class="dt">color =</span> <span class="op">~</span>clarity, <span class="dt">colors =</span> <span class="st">&quot;Accent&quot;</span>)</span>
-<span id="cb18-2"><a href="overview.html#cb18-2"></a><span class="kw">plotly_json</span>(p)</span></code></pre></div>
+<div class="sourceCode" id="cb17"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb17-1"><a href="overview.html#cb17-1"></a>p &lt;-<span class="st"> </span><span class="kw">plot_ly</span>(diamonds, <span class="dt">x =</span> <span class="op">~</span>cut, <span class="dt">color =</span> <span class="op">~</span>clarity, <span class="dt">colors =</span> <span class="st">&quot;Accent&quot;</span>)</span>
+<span id="cb17-2"><a href="overview.html#cb17-2"></a><span class="kw">plotly_json</span>(p)</span></code></pre></div>
 <div class="figure" style="text-align: center"><span id="fig:intro-json"></span>
 <img src="images/intro-json.png" alt="A portion of the JSON data behind the bottom plot of Figure 2.1. This dodged bar chart has 8 layers of data (i.e., 8 traces) – one for each level of clarity." width="70%" data-url="/interactives/intro-json.html" />
 <p class="caption">
@@ -492,26 +495,25 @@ FIGURE 2.6: A portion of the JSON data behind the bottom plot of Figure <a href=
 </p>
 </div>
 <p>
-
 </p>
-<p>In plotly.js terminology, a <em>figure</em> has two key components: <code>data</code> (aka, traces) and a <code>layout</code>. A <em>trace</em> defines a mapping from data and visuals.<a href="references.html#fn4" class="footnote-ref" id="fnref4"><sup>4</sup></a> Every trace has a <em>type</em> (e.g., histogram, pie, scatter, etc) and the trace type determines what other attributes (i.e., visual and/or interactive properties, like <code>x</code>, <code>hoverinfo</code>, <code>name</code>) are available to control the trace mapping. That is, not every trace attribute is available to every trace type, but many attributes (e.g., the <code>name</code> of the trace) are available in every trace type and serve a similar purpose. From Figure <a href="overview.html#fig:intro-json">2.6</a>, we can see that it takes multiple traces to generate the dodged bar chart, but instead of clicking through JSON viewer, sometimes it’s easier to use <code>plotly_build()</code> and compute on the plotly.js figure definition to verify certain things exist. Since <strong>plotly</strong> uses the <strong>htmlwidgets</strong> standard<a href="references.html#fn5" class="footnote-ref" id="fnref5"><sup>5</sup></a>, the actual plotly.js figure definition appears under a list element named <code>x</code> <span class="citation">(Vaidyanathan et al. <a href="#ref-htmlwidgets" role="doc-biblioref">2016</a>)</span>.</p>
-<div class="sourceCode" id="cb19"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb19-1"><a href="overview.html#cb19-1"></a><span class="co"># use plotly_build() to get at the plotly.js definition</span></span>
-<span id="cb19-2"><a href="overview.html#cb19-2"></a><span class="co"># behind *any* plotly object</span></span>
-<span id="cb19-3"><a href="overview.html#cb19-3"></a>b &lt;-<span class="st"> </span><span class="kw">plotly_build</span>(p)</span>
-<span id="cb19-4"><a href="overview.html#cb19-4"></a></span>
-<span id="cb19-5"><a href="overview.html#cb19-5"></a><span class="co"># Confirm there 8 traces</span></span>
-<span id="cb19-6"><a href="overview.html#cb19-6"></a><span class="kw">length</span>(b<span class="op">$</span>x<span class="op">$</span>data)</span>
-<span id="cb19-7"><a href="overview.html#cb19-7"></a><span class="co">#&gt; [1] 8</span></span>
-<span id="cb19-8"><a href="overview.html#cb19-8"></a></span>
-<span id="cb19-9"><a href="overview.html#cb19-9"></a><span class="co"># Extract the `name` of each trace. plotly.js uses `name` to </span></span>
-<span id="cb19-10"><a href="overview.html#cb19-10"></a><span class="co"># populate legend entries and tooltips</span></span>
-<span id="cb19-11"><a href="overview.html#cb19-11"></a>purrr<span class="op">::</span><span class="kw">map_chr</span>(b<span class="op">$</span>x<span class="op">$</span>data, <span class="st">&quot;name&quot;</span>)</span>
-<span id="cb19-12"><a href="overview.html#cb19-12"></a><span class="co">#&gt; [1] &quot;IF&quot; &quot;VVS1&quot; &quot;VVS2&quot; &quot;VS1&quot; &quot;VS2&quot; &quot;SI1&quot; &quot;SI2&quot; &quot;I1&quot; </span></span>
-<span id="cb19-13"><a href="overview.html#cb19-13"></a></span>
-<span id="cb19-14"><a href="overview.html#cb19-14"></a><span class="co"># Every trace has a type of histogram</span></span>
-<span id="cb19-15"><a href="overview.html#cb19-15"></a><span class="kw">unique</span>(purrr<span class="op">::</span><span class="kw">map_chr</span>(b<span class="op">$</span>x<span class="op">$</span>data, <span class="st">&quot;type&quot;</span>))</span>
-<span id="cb19-16"><a href="overview.html#cb19-16"></a><span class="co">#&gt; [1] &quot;histogram&quot;</span></span></code></pre></div>
-<p>Here we’ve learned that <strong>plotly</strong> creates 8 histogram traces to generate the dodged bar chart: one trace for each level of <code>clarity</code>.<a href="references.html#fn6" class="footnote-ref" id="fnref6"><sup>6</sup></a> Why one trace per category? As illustrated in Figure <a href="overview.html#fig:intro-show-hide">2.7</a>, there are two main reasons: to populate a tooltip and legend entry for each level of <code>clarity</code> level.</p>
+<p>In plotly.js terminology, a <em>figure</em> has two key components: <code>data</code> (aka, traces) and a <code>layout</code>. A <em>trace</em> defines a mapping from data and visuals.<a href="custom-geoms.html#fn4" class="footnote-ref" id="fnref4"><sup>4</sup></a> Every trace has a <em>type</em> (e.g., histogram, pie, scatter, etc) and the trace type determines what other attributes (i.e., visual and/or interactive properties, like <code>x</code>, <code>hoverinfo</code>, <code>name</code>) are available to control the trace mapping. That is, not every trace attribute is available to every trace type, but many attributes (e.g., the <code>name</code> of the trace) are available in every trace type and serve a similar purpose. From Figure <a href="overview.html#fig:intro-json">2.6</a>, we can see that it takes multiple traces to generate the dodged bar chart, but instead of clicking through JSON viewer, sometimes it’s easier to use <code>plotly_build()</code> and compute on the plotly.js figure definition to verify certain things exist. Since <strong>plotly</strong> uses the <strong>htmlwidgets</strong> standard<a href="custom-geoms.html#fn5" class="footnote-ref" id="fnref5"><sup>5</sup></a>, the actual plotly.js figure definition appears under a list element named <code>x</code> <span class="citation">(Vaidyanathan et al. <a href="#ref-htmlwidgets" role="doc-biblioref">2016</a>)</span>.</p>
+<div class="sourceCode" id="cb18"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb18-1"><a href="overview.html#cb18-1"></a><span class="co"># use plotly_build() to get at the plotly.js definition</span></span>
+<span id="cb18-2"><a href="overview.html#cb18-2"></a><span class="co"># behind *any* plotly object</span></span>
+<span id="cb18-3"><a href="overview.html#cb18-3"></a>b &lt;-<span class="st"> </span><span class="kw">plotly_build</span>(p)</span>
+<span id="cb18-4"><a href="overview.html#cb18-4"></a></span>
+<span id="cb18-5"><a href="overview.html#cb18-5"></a><span class="co"># Confirm there 8 traces</span></span>
+<span id="cb18-6"><a href="overview.html#cb18-6"></a><span class="kw">length</span>(b<span class="op">$</span>x<span class="op">$</span>data)</span>
+<span id="cb18-7"><a href="overview.html#cb18-7"></a><span class="co">#&gt; [1] 8</span></span>
+<span id="cb18-8"><a href="overview.html#cb18-8"></a></span>
+<span id="cb18-9"><a href="overview.html#cb18-9"></a><span class="co"># Extract the `name` of each trace. plotly.js uses `name` to </span></span>
+<span id="cb18-10"><a href="overview.html#cb18-10"></a><span class="co"># populate legend entries and tooltips</span></span>
+<span id="cb18-11"><a href="overview.html#cb18-11"></a>purrr<span class="op">::</span><span class="kw">map_chr</span>(b<span class="op">$</span>x<span class="op">$</span>data, <span class="st">&quot;name&quot;</span>)</span>
+<span id="cb18-12"><a href="overview.html#cb18-12"></a><span class="co">#&gt; [1] &quot;IF&quot; &quot;VVS1&quot; &quot;VVS2&quot; &quot;VS1&quot; &quot;VS2&quot; &quot;SI1&quot; &quot;SI2&quot; &quot;I1&quot; </span></span>
+<span id="cb18-13"><a href="overview.html#cb18-13"></a></span>
+<span id="cb18-14"><a href="overview.html#cb18-14"></a><span class="co"># Every trace has a type of histogram</span></span>
+<span id="cb18-15"><a href="overview.html#cb18-15"></a><span class="kw">unique</span>(purrr<span class="op">::</span><span class="kw">map_chr</span>(b<span class="op">$</span>x<span class="op">$</span>data, <span class="st">&quot;type&quot;</span>))</span>
+<span id="cb18-16"><a href="overview.html#cb18-16"></a><span class="co">#&gt; [1] &quot;histogram&quot;</span></span></code></pre></div>
+<p>Here we’ve learned that <strong>plotly</strong> creates 8 histogram traces to generate the dodged bar chart: one trace for each level of <code>clarity</code>.<a href="custom-geoms.html#fn6" class="footnote-ref" id="fnref6"><sup>6</sup></a> Why one trace per category? As illustrated in Figure <a href="overview.html#fig:intro-show-hide">2.7</a>, there are two main reasons: to populate a tooltip and legend entry for each level of <code>clarity</code> level.</p>
 <div class="figure" style="text-align: center"><span id="fig:intro-show-hide"></span>
 <iframe src="https://player.vimeo.com/video/315707813?title=0&amp;byline=0&amp;portrait=0" width="100%" height="400" frameborder="0" seamless="seamless" webkitAllowFullScreen mozallowfullscreen allowFullScreen></iframe>
 <p class="caption">
@@ -523,11 +525,12 @@ FIGURE 2.7: Leveraging two interactive features that require one trace per level
 <div id="intro-ggplotly" class="section level2">
 <h2><span class="header-section-number">2.3</span> Intro to <code>ggplotly()</code></h2>
 <p></p>
-<p>The <code>ggplotly()</code> function from the <strong>plotly</strong> package has the ability to translate <strong>ggplot2</strong> to <strong>plotly</strong>. This functionality can be really helpful for quickly adding interactivity to your existing <strong>ggplot2</strong> workflow.<a href="references.html#fn7" class="footnote-ref" id="fnref7"><sup>7</sup></a> Moreover, even if you know <code>plot_ly()</code> and plotly.js well, <code>ggplotly()</code> can still be desirable for creating visualizations that aren’t necessarily straight-forward to achieve without it. To demonstrate, let’s explore the relationship between <code>price</code> and other variables from the well-known <code>diamonds</code> dataset.</p>
-<p>Hexagonal binning (i.e., <code>geom_hex()</code>) is useful way to visualize a 2D density<a href="references.html#fn8" class="footnote-ref" id="fnref8"><sup>8</sup></a>, like the relationship between <code>price</code> and <code>carat</code> as shown in Figure <a href="overview.html#fig:hexbin">2.8</a>. From Figure <a href="overview.html#fig:hexbin">2.8</a>, we can see there is a strong positive linear relationship between the <em>log</em> of carat and price. It also shows that for many, the carat is only rounded to a particular number (indicated by the light blue bands) and no diamonds are priced around $1500. Making this plot interactive makes it easier to decode the hexagonal colors into the counts that they represent.</p>
-<div class="sourceCode" id="cb20"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb20-1"><a href="overview.html#cb20-1"></a>p &lt;-<span class="st"> </span><span class="kw">ggplot</span>(diamonds, <span class="kw">aes</span>(<span class="dt">x =</span> <span class="kw">log</span>(carat), <span class="dt">y =</span> <span class="kw">log</span>(price))) <span class="op">+</span><span class="st"> </span></span>
-<span id="cb20-2"><a href="overview.html#cb20-2"></a><span class="st">  </span><span class="kw">geom_hex</span>(<span class="dt">bins =</span> <span class="dv">100</span>)</span>
-<span id="cb20-3"><a href="overview.html#cb20-3"></a><span class="kw">ggplotly</span>(p)</span></code></pre></div>
+<p>The <code>ggplotly()</code> function from the <strong>plotly</strong> package has the ability to translate <strong>ggplot2</strong> to <strong>plotly</strong>. This functionality can be really helpful for quickly adding interactivity to your existing <strong>ggplot2</strong> workflow.<a href="custom-geoms.html#fn7" class="footnote-ref" id="fnref7"><sup>7</sup></a> Moreover, even if you know <code>plot_ly()</code> and plotly.js well, <code>ggplotly()</code> can still be desirable for creating visualizations that aren’t necessarily straight-forward to achieve without it. To demonstrate, let’s explore the relationship between <code>price</code> and other variables from the well-known <code>diamonds</code> dataset.</p>
+<p>Hexagonal binning (i.e., <code>geom_hex()</code>) is useful way to visualize a 2D density<a href="custom-geoms.html#fn8" class="footnote-ref" id="fnref8"><sup>8</sup></a>, like the relationship between <code>price</code> and <code>carat</code> as shown in Figure <a href="overview.html#fig:hexbin">2.8</a>. From Figure <a href="overview.html#fig:hexbin">2.8</a>, we can see there is a strong positive linear relationship between the <em>log</em> of carat and price. It also shows that for many, the carat is only rounded to a particular number (indicated by the light blue bands) and no diamonds are priced around $1500. Making this plot interactive makes it easier to decode the hexagonal colors into the counts that they represent.</p>
+<p></p>
+<div class="sourceCode" id="cb19"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb19-1"><a href="overview.html#cb19-1"></a>p &lt;-<span class="st"> </span><span class="kw">ggplot</span>(diamonds, <span class="kw">aes</span>(<span class="dt">x =</span> <span class="kw">log</span>(carat), <span class="dt">y =</span> <span class="kw">log</span>(price))) <span class="op">+</span><span class="st"> </span></span>
+<span id="cb19-2"><a href="overview.html#cb19-2"></a><span class="st">  </span><span class="kw">geom_hex</span>(<span class="dt">bins =</span> <span class="dv">100</span>)</span>
+<span id="cb19-3"><a href="overview.html#cb19-3"></a><span class="kw">ggplotly</span>(p)</span></code></pre></div>
 <div class="figure" style="text-align: center"><span id="fig:hexbin"></span>
 <img src="images/hexbin.png" alt="A hexbin plot of diamond carat versus price." width="100%" data-url="/interactives/hexbin.html" />
 <p class="caption">
@@ -535,9 +538,10 @@ FIGURE 2.8: A hexbin plot of diamond carat versus price.
 </p>
 </div>
 <p>I often use <code>ggplotly()</code> over <code>plot_ly()</code> to leverage <strong>ggplot2</strong>’s consistent and expressive interface for exploring statistical summaries across groups. For example, by including a discrete <code>color</code> variable (e.g., <code>cut</code>) with <code>geom_freqpoly()</code>, you get a frequency polygon for each level of that variable. This ability to quickly generate visual encodings of statistical summaries across an arbitrary number of groups works for basically any geom (e.g. <code>geom_boxplot()</code>, <code>geom_histogram()</code>, <code>geom_density()</code>, etc) and is a key feature of <strong>ggplot2</strong>.</p>
-<div class="sourceCode" id="cb21"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb21-1"><a href="overview.html#cb21-1"></a>p &lt;-<span class="st"> </span><span class="kw">ggplot</span>(diamonds, <span class="kw">aes</span>(<span class="dt">x =</span> <span class="kw">log</span>(price), <span class="dt">color =</span> clarity)) <span class="op">+</span><span class="st"> </span></span>
-<span id="cb21-2"><a href="overview.html#cb21-2"></a><span class="st">    </span><span class="kw">geom_freqpoly</span>()</span>
-<span id="cb21-3"><a href="overview.html#cb21-3"></a><span class="kw">ggplotly</span>(p)</span></code></pre></div>
+<p></p>
+<div class="sourceCode" id="cb20"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb20-1"><a href="overview.html#cb20-1"></a>p &lt;-<span class="st"> </span><span class="kw">ggplot</span>(diamonds, <span class="kw">aes</span>(<span class="dt">x =</span> <span class="kw">log</span>(price), <span class="dt">color =</span> clarity)) <span class="op">+</span><span class="st"> </span></span>
+<span id="cb20-2"><a href="overview.html#cb20-2"></a><span class="st">    </span><span class="kw">geom_freqpoly</span>()</span>
+<span id="cb20-3"><a href="overview.html#cb20-3"></a><span class="kw">ggplotly</span>(p)</span></code></pre></div>
 <div class="figure" style="text-align: center"><span id="fig:freqpoly"></span>
 <img src="images/freqpoly.svg" alt="Frequency polygons of diamond price by diamond clarity. This visualization indicates there may be significant main effects." width="100%" />
 <p class="caption">
@@ -545,26 +549,29 @@ FIGURE 2.9: Frequency polygons of diamond price by diamond clarity. This visuali
 </p>
 </div>
 <p>Now, to see how <code>price</code> varies with both <code>cut</code> and <code>clarity</code>, we could repeat this same visualization for each level of <code>cut</code>. This is where <strong>ggplot2</strong>’s <code>facet_wrap()</code> comes in handy. Moreover, to facilitate comparisons, we can have <code>geom_freqpoly()</code> display relative rather than absolute frequencies. By making this plot interactive, we can more easily compare particular levels of clarity (as shown in Figure <a href="overview.html#fig:freqpoly-facet">2.10</a>) by leveraging the legend filtering capabilities.</p>
-<div class="sourceCode" id="cb22"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb22-1"><a href="overview.html#cb22-1"></a>p &lt;-<span class="st"> </span><span class="kw">ggplot</span>(diamonds, <span class="kw">aes</span>(<span class="dt">x =</span> <span class="kw">log</span>(price), <span class="dt">color =</span> clarity)) <span class="op">+</span><span class="st"> </span></span>
-<span id="cb22-2"><a href="overview.html#cb22-2"></a><span class="st">    </span><span class="kw">geom_freqpoly</span>(<span class="dt">stat =</span> <span class="st">&quot;density&quot;</span>) <span class="op">+</span><span class="st"> </span></span>
-<span id="cb22-3"><a href="overview.html#cb22-3"></a><span class="st">    </span><span class="kw">facet_wrap</span>(<span class="op">~</span>cut)</span>
-<span id="cb22-4"><a href="overview.html#cb22-4"></a><span class="kw">ggplotly</span>(p)</span></code></pre></div>
+<p></p>
+<div class="sourceCode" id="cb21"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb21-1"><a href="overview.html#cb21-1"></a>p &lt;-<span class="st"> </span><span class="kw">ggplot</span>(diamonds, <span class="kw">aes</span>(<span class="dt">x =</span> <span class="kw">log</span>(price), <span class="dt">color =</span> clarity)) <span class="op">+</span><span class="st"> </span></span>
+<span id="cb21-2"><a href="overview.html#cb21-2"></a><span class="st">    </span><span class="kw">geom_freqpoly</span>(<span class="dt">stat =</span> <span class="st">&quot;density&quot;</span>) <span class="op">+</span><span class="st"> </span></span>
+<span id="cb21-3"><a href="overview.html#cb21-3"></a><span class="st">    </span><span class="kw">facet_wrap</span>(<span class="op">~</span>cut)</span>
+<span id="cb21-4"><a href="overview.html#cb21-4"></a><span class="kw">ggplotly</span>(p)</span></code></pre></div>
 <div class="figure" style="text-align: center"><span id="fig:freqpoly-facet"></span>
 <iframe src="https://player.vimeo.com/video/322318131?title=0&amp;byline=0&amp;portrait=0" width="100%" height="400" frameborder="0" seamless="seamless" webkitAllowFullScreen mozallowfullscreen allowFullScreen></iframe>
 <p class="caption">
 FIGURE 2.10: Diamond price by clarity and cut. For the interactive, see <a href="https://plotly-r.com/interactives/freqpoly-facet.html" class="uri">https://plotly-r.com/interactives/freqpoly-facet.html</a>
 </p>
 </div>
-<p>In addition to supporting most of the ‘core’ <strong>ggplot2</strong> API, <code>ggplotly()</code> can automatically convert any <strong>ggplot2</strong> extension packages that return a ‘standard’ <strong>ggplot2</strong> object. By standard, I mean that the object is comprised of ‘core’ <strong>ggplot2</strong> data structures and not the result of custom geoms.<a href="references.html#fn9" class="footnote-ref" id="fnref9"><sup>9</sup></a> Some great examples of R packages that extend <strong>ggplot2</strong> using core data structures are <strong>ggforce</strong>, <strong>naniar</strong>, and <strong>GGally</strong> <span class="citation">(Pedersen <a href="#ref-ggforce" role="doc-biblioref">2019</a>; Tierney et al. <a href="#ref-naniar" role="doc-biblioref">2018</a>; Schloerke et al. <a href="#ref-GGally" role="doc-biblioref">2016</a>)</span>.</p>
+<p>In addition to supporting most of the ‘core’ <strong>ggplot2</strong> API, <code>ggplotly()</code> can automatically convert any <strong>ggplot2</strong> extension packages that return a ‘standard’ <strong>ggplot2</strong> object. By standard, I mean that the object is comprised of ‘core’ <strong>ggplot2</strong> data structures and not the result of custom geoms.<a href="custom-geoms.html#fn9" class="footnote-ref" id="fnref9"><sup>9</sup></a> Some great examples of R packages that extend <strong>ggplot2</strong> using core data structures are <strong>ggforce</strong>, <strong>naniar</strong>, and <strong>GGally</strong> <span class="citation">(Pedersen <a href="#ref-ggforce" role="doc-biblioref">2019</a>; Tierney et al. <a href="#ref-naniar" role="doc-biblioref">2018</a>; Schloerke et al. <a href="#ref-GGally" role="doc-biblioref">2016</a>)</span>.</p>
 <p>Figure <a href="overview.html#fig:geom-sina">2.11</a> demonstrates another way of visualizing the same information found in Figure <a href="overview.html#fig:freqpoly-facet">2.10</a> using <code>geom_sina()</code> from the <strong>ggforce</strong> package (instead of <code>geom_freqpoly()</code>). This visualization jitters the raw data within the density for each group – allowing us not only to see where the majority observations fall within a group, but also across all across all groups. By making this layer interactive, we can query individual points for more information and zoom into interesting regions. The second layer of Figure <a href="overview.html#fig:geom-sina">2.11</a> uses <strong>ggplot2</strong>’s <code>stat_summary()</code> to overlay a 95% confidence interval estimated via a bootstrap algorithm via the <strong>Hmisc</strong> package <span class="citation">(Harrell Jr, Charles Dupont, and others. <a href="#ref-Hmisc" role="doc-biblioref">2019</a>)</span>.</p>
-<p></p>
-<div class="sourceCode" id="cb23"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb23-1"><a href="overview.html#cb23-1"></a>p &lt;-<span class="st"> </span><span class="kw">ggplot</span>(diamonds, <span class="kw">aes</span>(<span class="dt">x=</span>clarity, <span class="dt">y=</span><span class="kw">log</span>(price), <span class="dt">color=</span>clarity)) <span class="op">+</span></span>
-<span id="cb23-2"><a href="overview.html#cb23-2"></a><span class="st">    </span>ggforce<span class="op">::</span><span class="kw">geom_sina</span>(<span class="dt">alpha =</span> <span class="fl">0.1</span>) <span class="op">+</span><span class="st"> </span></span>
-<span id="cb23-3"><a href="overview.html#cb23-3"></a><span class="st">    </span><span class="kw">stat_summary</span>(<span class="dt">fun.data =</span> <span class="st">&quot;mean_cl_boot&quot;</span>, <span class="dt">color =</span> <span class="st">&quot;black&quot;</span>) <span class="op">+</span></span>
-<span id="cb23-4"><a href="overview.html#cb23-4"></a><span class="st">    </span><span class="kw">facet_wrap</span>(<span class="op">~</span>cut)</span>
-<span id="cb23-5"><a href="overview.html#cb23-5"></a></span>
-<span id="cb23-6"><a href="overview.html#cb23-6"></a><span class="co"># WebGL is a lot more efficient at rendering lots of points</span></span>
-<span id="cb23-7"><a href="overview.html#cb23-7"></a><span class="kw">toWebGL</span>(<span class="kw">ggplotly</span>(p))</span></code></pre></div>
+<p>
+
+</p>
+<div class="sourceCode" id="cb22"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb22-1"><a href="overview.html#cb22-1"></a>p &lt;-<span class="st"> </span><span class="kw">ggplot</span>(diamonds, <span class="kw">aes</span>(<span class="dt">x=</span>clarity, <span class="dt">y=</span><span class="kw">log</span>(price), <span class="dt">color=</span>clarity)) <span class="op">+</span></span>
+<span id="cb22-2"><a href="overview.html#cb22-2"></a><span class="st">    </span>ggforce<span class="op">::</span><span class="kw">geom_sina</span>(<span class="dt">alpha =</span> <span class="fl">0.1</span>) <span class="op">+</span><span class="st"> </span></span>
+<span id="cb22-3"><a href="overview.html#cb22-3"></a><span class="st">    </span><span class="kw">stat_summary</span>(<span class="dt">fun.data =</span> <span class="st">&quot;mean_cl_boot&quot;</span>, <span class="dt">color =</span> <span class="st">&quot;black&quot;</span>) <span class="op">+</span></span>
+<span id="cb22-4"><a href="overview.html#cb22-4"></a><span class="st">    </span><span class="kw">facet_wrap</span>(<span class="op">~</span>cut)</span>
+<span id="cb22-5"><a href="overview.html#cb22-5"></a></span>
+<span id="cb22-6"><a href="overview.html#cb22-6"></a><span class="co"># WebGL is a lot more efficient at rendering lots of points</span></span>
+<span id="cb22-7"><a href="overview.html#cb22-7"></a><span class="kw">toWebGL</span>(<span class="kw">ggplotly</span>(p))</span></code></pre></div>
 <div class="figure" style="text-align: center"><span id="fig:geom-sina"></span>
 <img src="images/geom-sina.svg" alt="A sina plot of diamond price by clarity and cut." width="100%" />
 <p class="caption">
@@ -572,13 +579,13 @@ FIGURE 2.11: A sina plot of diamond price by clarity and cut.
 </p>
 </div>
 <p>As noted by <span class="citation">Wickham and Grolemund (<a href="#ref-r4ds" role="doc-biblioref">2018</a>)</span>, it’s surprising that the diamond price would decline with an increase of diamond clarity. As it turns out, if we account for the carat of the diamond, then see that better diamond clarity does indeed lead to a higher diamond price, as shown in Figure <a href="overview.html#fig:geom-sina-resid">2.12</a>. Seeing such a strong pattern in the residuals of simple linear model of carat vs price indicates that our model could be greatly improved by adding <code>clarity</code> as a predictor of <code>price</code>.</p>
-<div class="sourceCode" id="cb24"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb24-1"><a href="overview.html#cb24-1"></a>m &lt;-<span class="st"> </span><span class="kw">lm</span>(<span class="kw">log</span>(price) <span class="op">~</span><span class="st"> </span><span class="kw">log</span>(carat), <span class="dt">data =</span> diamonds)</span>
-<span id="cb24-2"><a href="overview.html#cb24-2"></a>diamonds &lt;-<span class="st"> </span>modelr<span class="op">::</span><span class="kw">add_residuals</span>(diamonds, m)</span>
-<span id="cb24-3"><a href="overview.html#cb24-3"></a>p &lt;-<span class="st"> </span><span class="kw">ggplot</span>(diamonds, <span class="kw">aes</span>(<span class="dt">x =</span> clarity, <span class="dt">y =</span> resid, <span class="dt">color =</span> clarity)) <span class="op">+</span></span>
-<span id="cb24-4"><a href="overview.html#cb24-4"></a><span class="st">    </span>ggforce<span class="op">::</span><span class="kw">geom_sina</span>(<span class="dt">alpha =</span> <span class="fl">0.1</span>) <span class="op">+</span><span class="st"> </span></span>
-<span id="cb24-5"><a href="overview.html#cb24-5"></a><span class="st">    </span><span class="kw">stat_summary</span>(<span class="dt">fun.data =</span> <span class="st">&quot;mean_cl_boot&quot;</span>, <span class="dt">color =</span> <span class="st">&quot;black&quot;</span>) <span class="op">+</span></span>
-<span id="cb24-6"><a href="overview.html#cb24-6"></a><span class="st">    </span><span class="kw">facet_wrap</span>(<span class="op">~</span>cut)</span>
-<span id="cb24-7"><a href="overview.html#cb24-7"></a><span class="kw">toWebGL</span>(<span class="kw">ggplotly</span>(p))</span></code></pre></div>
+<div class="sourceCode" id="cb23"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb23-1"><a href="overview.html#cb23-1"></a>m &lt;-<span class="st"> </span><span class="kw">lm</span>(<span class="kw">log</span>(price) <span class="op">~</span><span class="st"> </span><span class="kw">log</span>(carat), <span class="dt">data =</span> diamonds)</span>
+<span id="cb23-2"><a href="overview.html#cb23-2"></a>diamonds &lt;-<span class="st"> </span>modelr<span class="op">::</span><span class="kw">add_residuals</span>(diamonds, m)</span>
+<span id="cb23-3"><a href="overview.html#cb23-3"></a>p &lt;-<span class="st"> </span><span class="kw">ggplot</span>(diamonds, <span class="kw">aes</span>(<span class="dt">x =</span> clarity, <span class="dt">y =</span> resid, <span class="dt">color =</span> clarity)) <span class="op">+</span></span>
+<span id="cb23-4"><a href="overview.html#cb23-4"></a><span class="st">    </span>ggforce<span class="op">::</span><span class="kw">geom_sina</span>(<span class="dt">alpha =</span> <span class="fl">0.1</span>) <span class="op">+</span><span class="st"> </span></span>
+<span id="cb23-5"><a href="overview.html#cb23-5"></a><span class="st">    </span><span class="kw">stat_summary</span>(<span class="dt">fun.data =</span> <span class="st">&quot;mean_cl_boot&quot;</span>, <span class="dt">color =</span> <span class="st">&quot;black&quot;</span>) <span class="op">+</span></span>
+<span id="cb23-6"><a href="overview.html#cb23-6"></a><span class="st">    </span><span class="kw">facet_wrap</span>(<span class="op">~</span>cut)</span>
+<span id="cb23-7"><a href="overview.html#cb23-7"></a><span class="kw">toWebGL</span>(<span class="kw">ggplotly</span>(p))</span></code></pre></div>
 <div class="figure" style="text-align: center"><span id="fig:geom-sina-resid"></span>
 <img src="images/geom-sina-resid.svg" alt="A sina plot of diamond price by clarity and cut, after accounting for carat." width="100%" />
 <p class="caption">
@@ -587,11 +594,11 @@ FIGURE 2.12: A sina plot of diamond price by clarity and cut, after accounting f
 </div>
 <p></p>
 <p>As discussed in Chapter <a href="client-side-linking.html#ggally-ggnostic">16.4.7</a>, the <strong>GGally</strong> package provides a convenient interface for making similar types of model diagnostic visualizations via the <code>ggnostic()</code> function. It also provides a convenience function for visualizing the coefficient estimates and their standard errors via the <code>ggcoef()</code> function. Figure <a href="overview.html#fig:ggally">2.13</a> shows how injecting interactivity into this plot allows us to query exact values and zoom in on the most interesting regions.</p>
-<div class="sourceCode" id="cb25"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb25-1"><a href="overview.html#cb25-1"></a><span class="kw">library</span>(GGally)</span>
-<span id="cb25-2"><a href="overview.html#cb25-2"></a>m &lt;-<span class="st"> </span><span class="kw">lm</span>(<span class="kw">log</span>(price) <span class="op">~</span><span class="st"> </span><span class="kw">log</span>(carat) <span class="op">+</span><span class="st"> </span>cut, <span class="dt">data =</span> diamonds)</span>
-<span id="cb25-3"><a href="overview.html#cb25-3"></a>gg &lt;-<span class="st"> </span><span class="kw">ggcoef</span>(m)</span>
-<span id="cb25-4"><a href="overview.html#cb25-4"></a><span class="co"># dynamicTicks means generate new axis ticks on zoom</span></span>
-<span id="cb25-5"><a href="overview.html#cb25-5"></a><span class="kw">ggplotly</span>(gg, <span class="dt">dynamicTicks =</span> <span class="ot">TRUE</span>)</span></code></pre></div>
+<div class="sourceCode" id="cb24"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb24-1"><a href="overview.html#cb24-1"></a><span class="kw">library</span>(GGally)</span>
+<span id="cb24-2"><a href="overview.html#cb24-2"></a>m &lt;-<span class="st"> </span><span class="kw">lm</span>(<span class="kw">log</span>(price) <span class="op">~</span><span class="st"> </span><span class="kw">log</span>(carat) <span class="op">+</span><span class="st"> </span>cut, <span class="dt">data =</span> diamonds)</span>
+<span id="cb24-3"><a href="overview.html#cb24-3"></a>gg &lt;-<span class="st"> </span><span class="kw">ggcoef</span>(m)</span>
+<span id="cb24-4"><a href="overview.html#cb24-4"></a><span class="co"># dynamicTicks means generate new axis ticks on zoom</span></span>
+<span id="cb24-5"><a href="overview.html#cb24-5"></a><span class="kw">ggplotly</span>(gg, <span class="dt">dynamicTicks =</span> <span class="ot">TRUE</span>)</span></code></pre></div>
 <div class="figure" style="text-align: center"><span id="fig:ggally"></span>
 <iframe src="https://player.vimeo.com/video/322362701?title=0&amp;byline=0&amp;portrait=0" width="100%" height="400" frameborder="0" seamless="seamless" webkitAllowFullScreen mozallowfullscreen allowFullScreen></iframe>
 <p class="caption">
@@ -600,14 +607,14 @@ FIGURE 2.13: Zooming in on a coefficient plot generated from the <code>ggcoef()<
 </div>
 <p>Although the <code>diamonds</code> dataset does not contain any missing values, it’s a very common problem in real data analysis problems. The <strong>naniar</strong> package provides a suite of computational and visual resources for working with and revealing structure in missing values. All the <strong>ggplot2</strong> based visualizations return an object that can be converted by <code>ggplotly()</code>. Moreover, <strong>naniar</strong> provides a custom geom, <code>geom_miss_point()</code>, that can be useful for visualizing missingness structure. Figure <a href="overview.html#fig:naniar">2.14</a> demonstrates this by introducing fake missing values to the diamond price.</p>
 <p></p>
-<div class="sourceCode" id="cb26"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb26-1"><a href="overview.html#cb26-1"></a><span class="kw">library</span>(naniar)</span>
-<span id="cb26-2"><a href="overview.html#cb26-2"></a><span class="co"># fake some missing data</span></span>
-<span id="cb26-3"><a href="overview.html#cb26-3"></a>diamonds<span class="op">$</span>price_miss &lt;-<span class="st"> </span><span class="kw">ifelse</span>(diamonds<span class="op">$</span>depth<span class="op">&gt;</span><span class="dv">60</span>, diamonds<span class="op">$</span>price, <span class="ot">NA</span>)</span>
-<span id="cb26-4"><a href="overview.html#cb26-4"></a>p &lt;-<span class="st"> </span><span class="kw">ggplot</span>(diamonds, <span class="kw">aes</span>(<span class="dt">x =</span> clarity, <span class="dt">y =</span> <span class="kw">log</span>(price_miss))) <span class="op">+</span></span>
-<span id="cb26-5"><a href="overview.html#cb26-5"></a><span class="st">    </span><span class="kw">geom_miss_point</span>(<span class="dt">alpha =</span> <span class="fl">0.1</span>) <span class="op">+</span><span class="st"> </span></span>
-<span id="cb26-6"><a href="overview.html#cb26-6"></a><span class="st">    </span><span class="kw">stat_summary</span>(<span class="dt">fun.data =</span> <span class="st">&quot;mean_cl_boot&quot;</span>, <span class="dt">colour =</span> <span class="st">&quot;black&quot;</span>) <span class="op">+</span></span>
-<span id="cb26-7"><a href="overview.html#cb26-7"></a><span class="st">    </span><span class="kw">facet_wrap</span>(<span class="op">~</span>cut)</span>
-<span id="cb26-8"><a href="overview.html#cb26-8"></a><span class="kw">toWebGL</span>(<span class="kw">ggplotly</span>(p))</span></code></pre></div>
+<div class="sourceCode" id="cb25"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb25-1"><a href="overview.html#cb25-1"></a><span class="kw">library</span>(naniar)</span>
+<span id="cb25-2"><a href="overview.html#cb25-2"></a><span class="co"># fake some missing data</span></span>
+<span id="cb25-3"><a href="overview.html#cb25-3"></a>diamonds<span class="op">$</span>price_miss &lt;-<span class="st"> </span><span class="kw">ifelse</span>(diamonds<span class="op">$</span>depth<span class="op">&gt;</span><span class="dv">60</span>, diamonds<span class="op">$</span>price, <span class="ot">NA</span>)</span>
+<span id="cb25-4"><a href="overview.html#cb25-4"></a>p &lt;-<span class="st"> </span><span class="kw">ggplot</span>(diamonds, <span class="kw">aes</span>(<span class="dt">x =</span> clarity, <span class="dt">y =</span> <span class="kw">log</span>(price_miss))) <span class="op">+</span></span>
+<span id="cb25-5"><a href="overview.html#cb25-5"></a><span class="st">    </span><span class="kw">geom_miss_point</span>(<span class="dt">alpha =</span> <span class="fl">0.1</span>) <span class="op">+</span><span class="st"> </span></span>
+<span id="cb25-6"><a href="overview.html#cb25-6"></a><span class="st">    </span><span class="kw">stat_summary</span>(<span class="dt">fun.data =</span> <span class="st">&quot;mean_cl_boot&quot;</span>, <span class="dt">colour =</span> <span class="st">&quot;black&quot;</span>) <span class="op">+</span></span>
+<span id="cb25-7"><a href="overview.html#cb25-7"></a><span class="st">    </span><span class="kw">facet_wrap</span>(<span class="op">~</span>cut)</span>
+<span id="cb25-8"><a href="overview.html#cb25-8"></a><span class="kw">toWebGL</span>(<span class="kw">ggplotly</span>(p))</span></code></pre></div>
 <div class="figure" style="text-align: center"><span id="fig:naniar"></span>
 <img src="images/naniar.svg" alt="Using the geom_miss_point() function from the naniar package to visualize missing values in relation to non-missing values. Missing values are shown in red." width="100%" />
 <p class="caption">

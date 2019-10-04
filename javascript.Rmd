@@ -477,6 +477,8 @@ include_vimeo("315309034")
 
 For a more serious example, we could leverage another React component, named `react-data-grid`, to display the data within a **plotly** scatterplot brush, as done in Figure \@ref(fig:react-data-grid). Again, we can use **runpkg** to download a bundle of `react-data-grid`, but this library doesn't come with `React`/`ReactDOM`, so we must explicitly include it this time around. In fact, this approach of explicitly importing and calling `ReactDOM.render()` on your component is a more common approach than the custom standalone interface approach (i.e., `renderReactPlayer()`) used in Figure \@ref(fig:react-player).
 
+\index{layout()@\texttt{layout()}!dragmode@\texttt{dragmode}!Rectangular selection}
+
 ```{r, eval = FALSE, summary = "Click to see code"}
 data_grid_js <- runpkg::download_files(
   "react-data-grid", 
@@ -516,7 +518,9 @@ p <- plot_ly(mtcars, x = ~wt, y = ~mpg) %>%
   ))
 
 # create the HTML page
-browsable(tagList(p, data_grid, html_dependency_react(), data_grid_js))
+browsable(
+  tagList(p, data_grid, html_dependency_react(), data_grid_js)
+)
 ```
 
 ```{r react-data-grid, echo = FALSE, fig.cap = "(ref:react-data-grid)"}

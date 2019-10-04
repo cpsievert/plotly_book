@@ -205,13 +205,15 @@
 }
 \makeatother
 
+\usepackage{float}
+
 \frontmatter
 \usepackage[]{natbib}
 \bibliographystyle{apalike}
 
 \title{Interactive web-based data visualization with R, plotly, and shiny}
 \author{Carson Sievert}
-\date{2019-10-03}
+\date{2019-10-07}
 
 \begin{document}
 \maketitle
@@ -243,7 +245,7 @@ For the R community: your kindness and generosity is truly inspiring.
 
 As \citet{r4ds} argue, the exploratory phase of a data science workflow (Figure \ref{fig:workflow}) requires lots of iteration between data manipulation, visualization, and modeling. Achieving these tasks through a programming language like \texttt{R} offers the opportunity to scale and automate tasks, document and track them, and reliably reproduce their output. That power, however, typically comes at the cost of increasing the amount of cognitive load involved relative to a GUI-based system.\footnote{For more on the benefits of using code over a GUI to perform data analysis, see \citet{data-science-gui}.} \texttt{R} packages like the \textbf{tidyverse} have been incredibly successful due to their ability to limit cognitive load without removing the benefits of performing analysis via code. Moreover, the \textbf{tidyverse}'s unifying principles of designing for humans, consistency, and composability makes iteration within and between these stages seamless -- an important but often overlooked challenge in exploratory data analysis (EDA) \citep{tidy-principles}.
 
-\begin{figure}
+\begin{figure}[H]
 
 {\centering \includegraphics[width=\textwidth]{images/workflow} 
 
@@ -277,7 +279,7 @@ Programming interactive graphics allows you to leverage all the benefits of a co
 \end{Highlighting}
 \end{Shaded}
 
-\begin{figure}
+\begin{figure}[H]
 
 {\centering \includegraphics[width=\textwidth]{plotly_book_files/figure-latex/mpg-static-1} 
 
@@ -298,7 +300,7 @@ Figure \ref{fig:mpg-lasso} demonstrates how we can transform Figure \ref{fig:mpg
 \end{Highlighting}
 \end{Shaded}
 
-\begin{figure}
+\begin{figure}[H]
 
 {\centering \includegraphics[width=\textwidth]{vimeo-images/324366759/final} 
 
@@ -326,7 +328,7 @@ In the final stages of an analysis, when it comes time to publish your work to a
 \end{Highlighting}
 \end{Shaded}
 
-\begin{figure}
+\begin{figure}[H]
 
 {\centering \includegraphics[width=\textwidth]{plotly_book_files/figure-latex/mpg-mark-hull-1} 
 
@@ -350,7 +352,7 @@ This book also focuses primarily on features that are unique to the \textbf{plot
 \end{Highlighting}
 \end{Shaded}
 
-\begin{figure}
+\begin{figure}[H]
 
 {\centering \includegraphics[width=\textwidth]{vimeo-images/315707813/final} 
 
@@ -361,7 +363,7 @@ This book also focuses primarily on features that are unique to the \textbf{plot
 
 To its ability to link multiple data views purely client-side (see Section \ref{graphical-queries}):
 
-\begin{figure}
+\begin{figure}[H]
 
 {\centering \includegraphics[width=\textwidth]{vimeo-images/257149623/final} 
 
@@ -372,7 +374,7 @@ To its ability to link multiple data views purely client-side (see Section \ref{
 
 To advanced server-side linking with \textbf{shiny} to implement responsive and scalable crossfilters (see Section \ref{crossfilter}):
 
-\begin{figure}
+\begin{figure}[H]
 
 {\centering \includegraphics[width=\textwidth]{vimeo-images/318129502/final} 
 
@@ -493,7 +495,7 @@ For those new to \texttt{R} and/or data visualization, \href{https://r4ds.had.co
 \hypertarget{run-code-examples}{%
 \section{Run code examples}\label{run-code-examples}}
 
-This book contains many code examples in an effort to teach the art and science behind creating interactive web-based graphics using \textbf{plotly}. To see the actual interactive result of the code (rather than a video or static version), you may want to run the code examples in a suitable computational environment. Visit \url{http://bit.ly/plotly-book-cloud} for a cloud-based instance of RStudio with all the required software to run the code examples in this book. Most, if not all of these code examples assume you have the \textbf{plotly} package loaded:
+This book contains many code examples in an effort to teach the art and science behind creating interactive web-based graphics using \textbf{plotly}. To interact with the code results, you may either: (1) click on the static graphs hosted online at \url{https://plotly-r.com} and/or execute the code in a suitable computational environment. Most code examples assume you already have the \textbf{plotly} package loaded:
 
 \begin{Shaded}
 \begin{Highlighting}[]
@@ -501,13 +503,7 @@ This book contains many code examples in an effort to teach the art and science 
 \end{Highlighting}
 \end{Shaded}
 
-Within some chapters, there may be examples that assume packages we loaded during a previous example. If you'd like to avoid this situation, please load the
-
-\begin{Shaded}
-\begin{Highlighting}[]
-\KeywordTok{library}\NormalTok{(plotlyBook)}
-\end{Highlighting}
-\end{Shaded}
+If a particular code chunk doesn't work, you may need to load packages from previous examples in the chapter (some examples assume you're following the chapter in a linear fashion).
 
 If you'd like to run examples on your local machine (instead of RStudio Cloud), you can install all the necessary R packages with:
 
@@ -517,6 +513,8 @@ If you'd like to run examples on your local machine (instead of RStudio Cloud), 
 \NormalTok{remotes}\OperatorTok{::}\KeywordTok{install_github}\NormalTok{(}\StringTok{"cpsievert/plotly_book"}\NormalTok{)}
 \end{Highlighting}
 \end{Shaded}
+
+Visit \url{http://bit.ly/plotly-book-cloud} for a cloud-based instance of RStudio with all the required software to run the code examples in this book.
 
 \hypertarget{getting-help-and-learning-more}{%
 \section{Getting help and learning more}\label{getting-help-and-learning-more}}
@@ -547,7 +545,7 @@ This book wouldn't be possible without the generous assistance and mentorship of
 \item
   Hadley Wickham and Garret Grolemund for writing \emph{R for Data Science} and allowing me to model this introduction after their introduction.
 \item
-  Kent Russell for contributions to \textbf{plotly} and writing \textbf{reactR}.
+  Kent Russell for contributions to \textbf{plotly}, \textbf{htmlwidgets}, and \textbf{reactR}.
 \item
   Adam Loy for inspiring Figure \ref{fig:profile-pyramid}.
 \item
@@ -574,13 +572,13 @@ This book was built with the following computing environment:
 \CommentTok{#>  collate  en_US.UTF-8                 }
 \CommentTok{#>  ctype    en_US.UTF-8                 }
 \CommentTok{#>  tz       America/Chicago             }
-\CommentTok{#>  date     2019-10-02                  }
+\CommentTok{#>  date     2019-10-04                  }
 \CommentTok{#> }
 \CommentTok{#> - Packages ------------------------------------------}
 \CommentTok{#>  package      * version    date       lib}
 \CommentTok{#>  askpass        1.1        2019-01-13 [1]}
 \CommentTok{#>  assertthat     0.2.1      2019-03-21 [1]}
-\CommentTok{#>  backports      1.1.4      2019-04-10 [1]}
+\CommentTok{#>  backports      1.1.5      2019-10-02 [1]}
 \CommentTok{#>  base64enc      0.1-3      2015-07-28 [1]}
 \CommentTok{#>  BH             1.69.0-1   2019-01-07 [1]}
 \CommentTok{#>  cli            1.1.0      2019-03-19 [1]}
@@ -588,7 +586,7 @@ This book was built with the following computing environment:
 \CommentTok{#>  crayon         1.3.4      2017-09-16 [1]}
 \CommentTok{#>  crosstalk      1.0.0      2016-12-21 [1]}
 \CommentTok{#>  curl           4.2        2019-09-24 [1]}
-\CommentTok{#>  data.table     1.12.2     2019-04-07 [1]}
+\CommentTok{#>  data.table     1.12.4     2019-10-03 [1]}
 \CommentTok{#>  digest         0.6.21     2019-09-20 [1]}
 \CommentTok{#>  dplyr          0.8.3      2019-07-04 [1]}
 \CommentTok{#>  ellipsis       0.3.0      2019-09-20 [1]}
@@ -655,7 +653,7 @@ This book was built with the following computing environment:
 \CommentTok{#>  CRAN (R 3.6.0)                       }
 \CommentTok{#>  CRAN (R 3.6.0)                       }
 \CommentTok{#>  CRAN (R 3.6.1)                       }
-\CommentTok{#>  CRAN (R 3.6.0)                       }
+\CommentTok{#>  CRAN (R 3.6.1)                       }
 \CommentTok{#>  CRAN (R 3.6.1)                       }
 \CommentTok{#>  CRAN (R 3.6.0)                       }
 \CommentTok{#>  CRAN (R 3.6.1)                       }
@@ -766,7 +764,7 @@ If we assign variable names (e.g., \texttt{cut}, \texttt{clarity}, etc) to visua
 \end{Highlighting}
 \end{Shaded}
 
-\begin{figure}
+\begin{figure}[H]
 
 {\centering \includegraphics[width=\textwidth]{images/intro-defaults} 
 
@@ -777,7 +775,7 @@ If we assign variable names (e.g., \texttt{cut}, \texttt{clarity}, etc) to visua
 
 The \texttt{plot\_ly()} function has numerous arguments that are unique to the R package (e.g., \texttt{color}, \texttt{stroke}, \texttt{span}, \texttt{symbol}, \texttt{linetype}, etc) and make it easier to encode data variables (e.g., diamond clarity) as visual properties (e.g., color). By default, these arguments map values of a data variable to a visual range defined by the plural form of the argument. For example, in the bottom panel of \ref{fig:intro-defaults}, \texttt{color} is used to map each level of diamond clarity to a different color, then \texttt{colors} is used to specify the range of colors (which, in this case, the \texttt{"Accent"} color palette from the \textbf{RColorBrewer} package, but one can also supply custom color codes or a color palette function like \texttt{colorRamp()}). Figure \ref{fig:color-mapping} provides a visual diagram of how this particular mapping works, but the same sort of idea can be applied to other visual properties like size, shape, linetype, etc.
 
-\begin{figure}
+\begin{figure}[H]
 
 {\centering \includegraphics[width=0.45\linewidth]{images/color-mapping} 
 
@@ -788,7 +786,7 @@ The \texttt{plot\_ly()} function has numerous arguments that are unique to the R
 
 Since these arguments map data values to a visual range by default, you will obtain unexpected results if you try to specify the visual range directly, as in the top portion of Figure \ref{fig:intro-range}. If you want to specify the visual range directly, use the \texttt{I()} function to declare this value to be taken `AsIs', as in the bottom portion of Figure \ref{fig:intro-range}. Throughout this book, you'll see lots of examples that leverage these arguments, especially in Chapter \ref{scatter-traces}. Another good resource to learn more about these arguments (especially their defaults) is the R documentation page available by entering \texttt{help(plot\_ly)} in your R console.
 
-\index{plot\_ly()@\texttt{plot\_ly()}!I()@\texttt{I()}}
+\index{plot\_ly()@\texttt{plot\_ly()}!I()@Interpret values 'AsIs' with \texttt{I()}}
 
 \begin{Shaded}
 \begin{Highlighting}[]
@@ -805,7 +803,7 @@ Since these arguments map data values to a visual range by default, you will obt
 \end{Highlighting}
 \end{Shaded}
 
-\begin{figure}
+\begin{figure}[H]
 
 {\centering \includegraphics[width=\textwidth]{images/intro-range} 
 
@@ -858,7 +856,7 @@ As you'll learn more about in Chapter \ref{bars-histograms}, \textbf{plotly} has
 
 There are numerous other \texttt{add\_*()} functions that calculate statistics in the browser (e.g., \texttt{add\_histogram2d()}, \texttt{add\_contour()}, \texttt{add\_boxplot()}, etc), but most other functions aren't considered statistical. Making the distinction might not seem useful now, but they have their own respective trade-offs when it comes to speed and interactivity. Generally speaking, non-statistical layers will be faster and more responsive at run-time (since they require less computational work), whereas the statistical layers allow for more flexibility when it comes to client-side interactivity, as covered in Chapter \ref{client-side-linking}. Practically speaking, the difference in performance is often negligible -- the more common bottleneck occurs when attempting to render lots of graphical elements at a time (e.g., a scatterplot with a million points). In those scenarios, you likely want to render your plot in Canvas rather than SVG (the default) via \texttt{toWebGL()} -- for more information on improving performance, see Chapter \ref{performance}.
 
-\index{plot\_ly()@\texttt{plot\_ly()}!Layered mappings}
+\index{plot\_ly()@\texttt{plot\_ly()}!Inherited attributes}
 \index{plot\_ly()@\texttt{plot\_ly()}!dplyr integration}
 
 In many scenarios, it can be useful to combine multiple graphical layers into a single plot. In this case, it becomes useful to know a few things about \texttt{plot\_ly()}:
@@ -903,7 +901,7 @@ Using these two properties of \texttt{plot\_ly()}, Figure \ref{fig:intro-dplyr} 
 \end{Highlighting}
 \end{Shaded}
 
-\begin{figure}
+\begin{figure}[H]
 
 {\centering \includegraphics[width=\textwidth]{images/intro-dplyr} 
 
@@ -947,7 +945,7 @@ This introduction to \texttt{plot\_ly()} has mainly focused on concepts unique t
 
 To recreate the plots in Figure \ref{fig:intro-defaults} using plotly.js \emph{directly}, it would take significantly more code and knowledge of plotly.js. That being said, learning how \textbf{plotly} generates the underlying plotly.js figure is a useful introduction to plotly.js itself, and knowledge of plotly.js becomes useful when you need more flexible control over \textbf{plotly}. As Figure \ref{fig:intro-printing} illustrates, when you print any \textbf{plotly} object, the \texttt{plotly\_build()} function is applied to that object, and that generates an R list which adheres to a syntax that plotly.js understands. This syntax is a JavaScript Object Notation (JSON) specification that plotly.js uses to represent, serialize, and render web graphics. A lot of documentation you'll find online about plotly (e.g., the online \href{https://plot.ly/r/reference/}{figure reference}) implicitly refers to this JSON specification, so it can helpful to know how to ``work backwards'' from that documentation (i.e., translate JSON into to R code). If you'd like to learn details about mapping between R and JSON, Chapter \ref{json} provides an introduction aimed at R programmers, and \citet{jsonlite} provides a cohesive overview of the \textbf{jsonlite} package, which is what \textbf{plotly} uses to map between R and JSON.
 
-\begin{figure}
+\begin{figure}[H]
 
 {\centering \includegraphics[width=\textwidth]{images/printing} 
 
@@ -965,7 +963,7 @@ For illustration purposes, Figure \ref{fig:intro-printing} shows how this workfl
 \end{Highlighting}
 \end{Shaded}
 
-\begin{figure}
+\begin{figure}[H]
 
 {\centering \includegraphics[width=0.7\linewidth]{images/intro-json} 
 
@@ -1002,7 +1000,7 @@ In plotly.js terminology, a \emph{figure} has two key components: \texttt{data} 
 
 Here we've learned that \textbf{plotly} creates 8 histogram traces to generate the dodged bar chart: one trace for each level of \texttt{clarity}.\footnote{Although the x-axis is discrete, plotly.js still considers this a histogram because it generates counts in the browser. Learn more about the difference between histograms and bar charts in Chapter \ref{bars-histograms}.} Why one trace per category? As illustrated in Figure \ref{fig:intro-show-hide}, there are two main reasons: to populate a tooltip and legend entry for each level of \texttt{clarity} level.
 
-\begin{figure}
+\begin{figure}[H]
 
 {\centering \includegraphics[width=\textwidth]{vimeo-images/315707813/final} 
 
@@ -1032,7 +1030,7 @@ Hexagonal binning (i.e., \texttt{geom\_hex()}) is useful way to visualize a 2D d
 \end{Highlighting}
 \end{Shaded}
 
-\begin{figure}
+\begin{figure}[H]
 
 {\centering \includegraphics[width=\textwidth]{images/hexbin} 
 
@@ -1053,7 +1051,7 @@ I often use \texttt{ggplotly()} over \texttt{plot\_ly()} to leverage \textbf{ggp
 \end{Highlighting}
 \end{Shaded}
 
-\begin{figure}
+\begin{figure}[H]
 
 {\centering \includegraphics[width=\textwidth]{images/freqpoly} 
 
@@ -1075,7 +1073,7 @@ Now, to see how \texttt{price} varies with both \texttt{cut} and \texttt{clarity
 \end{Highlighting}
 \end{Shaded}
 
-\begin{figure}
+\begin{figure}[H]
 
 {\centering \includegraphics[width=\textwidth]{vimeo-images/322318131/final} 
 
@@ -1104,7 +1102,7 @@ Figure \ref{fig:geom-sina} demonstrates another way of visualizing the same info
 \end{Highlighting}
 \end{Shaded}
 
-\begin{figure}
+\begin{figure}[H]
 
 {\centering \includegraphics[width=\textwidth]{images/geom-sina} 
 
@@ -1127,7 +1125,7 @@ As noted by \citet{r4ds}, it's surprising that the diamond price would decline w
 \end{Highlighting}
 \end{Shaded}
 
-\begin{figure}
+\begin{figure}[H]
 
 {\centering \includegraphics[width=\textwidth]{images/geom-sina-resid} 
 
@@ -1150,7 +1148,7 @@ As discussed in Chapter \ref{ggally-ggnostic}, the \textbf{GGally} package provi
 \end{Highlighting}
 \end{Shaded}
 
-\begin{figure}
+\begin{figure}[H]
 
 {\centering \includegraphics[width=\textwidth]{vimeo-images/322362701/final} 
 
@@ -1176,7 +1174,7 @@ Although the \texttt{diamonds} dataset does not contain any missing values, it's
 \end{Highlighting}
 \end{Shaded}
 
-\begin{figure}
+\begin{figure}[H]
 
 {\centering \includegraphics[width=\textwidth]{images/naniar} 
 
@@ -1215,7 +1213,7 @@ As we learned in Section \ref{intro-plotly-js}, a plotly.js figure contains one 
 \end{Highlighting}
 \end{Shaded}
 
-\begin{figure}
+\begin{figure}[H]
 
 {\centering \includegraphics[width=\textwidth]{images/scatter-intro} 
 
@@ -1245,14 +1243,14 @@ Section \ref{intro-plotly} introduced `aesthetic mapping' arguments (unique to t
 \StringTok{  }\KeywordTok{add_lines}\NormalTok{(}\DataTypeTok{color =} \OperatorTok{~}\KeywordTok{ordered}\NormalTok{(yr))}
   
 \CommentTok{# The split argument guarantees one trace per group level (regardless }
-\CommentTok{# of the variable type). This is useful if you want a consistent visual}
-\CommentTok{# property over multiple traces }
+\CommentTok{# of the variable type). This is useful if you want a consistent}
+\CommentTok{# visual property over multiple traces }
 \CommentTok{# plot_ly(econ, x = ~mnth, y = ~uempmed) %>%}
 \CommentTok{#   add_lines(split = ~yr, color = I("black"))}
 \end{Highlighting}
 \end{Shaded}
 
-\begin{figure}
+\begin{figure}[H]
 
 {\centering \includegraphics[width=\textwidth]{vimeo-images/316679591/final} 
 
@@ -1287,7 +1285,7 @@ These features make it easier to get started using plotly.js, but it still pays 
 \end{Highlighting}
 \end{Shaded}
 
-\begin{figure}
+\begin{figure}[H]
 
 {\centering \includegraphics[width=\textwidth]{images/tooltip-praise} 
 
@@ -1296,8 +1294,8 @@ These features make it easier to get started using plotly.js, but it still pays 
 \caption{Using the generic \texttt{add\_trace()} function to render markers, lines, and text in a single scatter trace. This \texttt{add\_trace()} function, as well as any \texttt{add\_*()} function allows you to directly specify plotly.js attributes.}\label{fig:tooltip-praise}
 \end{figure}
 
-\index{Plotly figure!Reference}
-\index{schema()@\texttt{schema()}|seealso {Reference}}
+\index{Plotly figure!Reference|seealso {schema()}}
+\indexc{schema()}
 
 If you are new to plotly.js, I recommend taking a bit of time to look through the plotly.js attributes that are available to the scatter trace type and think how you might be able to use them. Most of these attributes work for other trace types as well, so learning an attribute once for a specific plot can pay off in other contexts as well. The online plotly.js figure reference, \url{https://plot.ly/r/reference/\#scatter}, is a decent place to search and learn about the attributes, but I recommend using the \texttt{schema()} function instead for a few reasons:
 
@@ -1317,7 +1315,7 @@ If you are new to plotly.js, I recommend taking a bit of time to look through th
 \end{Highlighting}
 \end{Shaded}
 
-\begin{figure}
+\begin{figure}[H]
 
 {\centering \includegraphics[width=0.4\linewidth]{images/schema} 
 
@@ -1352,7 +1350,7 @@ As \citet{unwin-graphical-analysis} notes, scatterplots can be useful for exposi
 \end{Highlighting}
 \end{Shaded}
 
-\begin{figure}
+\begin{figure}[H]
 
 {\centering \includegraphics[width=\textwidth]{images/scatterplots} 
 
@@ -1380,7 +1378,7 @@ As discussed in Section \ref{intro-plotly-js}, mapping a discrete variable to \t
 \end{Highlighting}
 \end{Shaded}
 
-\begin{figure}
+\begin{figure}[H]
 
 {\centering \includegraphics[width=\textwidth]{images/color-types} 
 
@@ -1407,7 +1405,7 @@ There are numerous ways to alter the default color scale via the \texttt{colors}
 \end{Highlighting}
 \end{Shaded}
 
-\begin{figure}
+\begin{figure}[H]
 
 {\centering \includegraphics[width=\textwidth]{images/color-numeric} 
 
@@ -1429,7 +1427,7 @@ There are numerous ways to alter the default color scale via the \texttt{colors}
 \end{Highlighting}
 \end{Shaded}
 
-\begin{figure}
+\begin{figure}[H]
 
 {\centering \includegraphics[width=\textwidth]{images/color-discrete} 
 
@@ -1446,7 +1444,7 @@ As introduced in Figure \ref{fig:intro-range}, color codes can be specified manu
 \end{Highlighting}
 \end{Shaded}
 
-\begin{figure}
+\begin{figure}[H]
 
 {\centering \includegraphics[width=\textwidth]{images/color-manual} 
 
@@ -1488,7 +1486,7 @@ For example, the left panel of Figure \ref{fig:symbol-factor} uses a numeric map
 \end{Highlighting}
 \end{Shaded}
 
-\begin{figure}
+\begin{figure}[H]
 
 {\centering \includegraphics[width=\textwidth]{images/symbol-factor} 
 
@@ -1512,7 +1510,7 @@ There are two ways to specify the visual range of \texttt{symbols}: (1) numeric 
 \end{Highlighting}
 \end{Shaded}
 
-\begin{figure}
+\begin{figure}[H]
 
 {\centering \includegraphics[width=\textwidth]{images/symbol-factor-range} 
 
@@ -1530,7 +1528,7 @@ These \texttt{symbols} (i.e., the visual range) can also be supplied directly to
 \end{Highlighting}
 \end{Shaded}
 
-\begin{figure}
+\begin{figure}[H]
 
 {\centering \includegraphics[width=\textwidth]{images/symbol-factor-manual} 
 
@@ -1556,7 +1554,7 @@ The \texttt{stroke} argument follows the same semantics as \texttt{color} and \t
 \end{Highlighting}
 \end{Shaded}
 
-\begin{figure}
+\begin{figure}[H]
 
 {\centering \includegraphics[width=\textwidth]{images/symbol-manual} 
 
@@ -1582,7 +1580,7 @@ For scatterplots, the \texttt{size} argument controls the area of markers (unles
 \end{Highlighting}
 \end{Shaded}
 
-\begin{figure}
+\begin{figure}[H]
 
 {\centering \includegraphics[width=\textwidth]{images/sizes} 
 
@@ -1599,7 +1597,7 @@ Similar to other arguments, \texttt{I()} can be used to specify the size directl
 \end{Highlighting}
 \end{Shaded}
 
-\begin{figure}
+\begin{figure}[H]
 
 {\centering \includegraphics[width=\textwidth]{images/sizes-manual} 
 
@@ -1641,7 +1639,7 @@ A popular application for dotplots (with error bars) is the so-called ``coeffici
 \end{Highlighting}
 \end{Shaded}
 
-\begin{figure}
+\begin{figure}[H]
 
 {\centering \includegraphics[width=\textwidth]{images/coefplot} 
 
@@ -1662,7 +1660,7 @@ Many of the same principles we learned about aesthetic mappings with respect to 
 
 \index{plot\_ly()@\texttt{plot\_ly()}!Special attributes!linetype@\texttt{linetype} / \texttt{linetypes}}
 
-Generally speaking, it's hard to perceive more than 8 different colors/linetypes/symbols in a given plot, so sometimes we have to filter data to use these effectively. Here we use the \textbf{dplyr} package to find the top 5 cities in terms of average monthly sales (\texttt{top5}), then effectively filter the original data to contain just these cities via \texttt{semi\_join()}. As Figure \ref{fig:linetypes} demonstrates, once we have the data filtered, mapping city to \texttt{color} or \texttt{linetype} is trivial. The color palette can be altered via the \texttt{colors} argument, and follows the same rules as \protect\hyperlink{scatterplots}{scatterplots}. The linetype palette can be altered via the \texttt{linetypes} argument, and accepts R's \href{https://github.com/wch/r-source/blob/e5b21d0397c607883ff25cca379687b86933d730/src/library/graphics/man/par.Rd\#L726-L743}{\texttt{lty} values} or plotly.js \href{https://plot.ly/r/reference/\#scatter-line-dash}{dash values}.
+Generally speaking, it's hard to perceive more than 8 different colors/linetypes/symbols in a given plot, so sometimes we have to filter data to use these effectively. Here we use the \textbf{dplyr} package to find the top 5 cities in terms of average monthly sales (\texttt{top5}), then effectively filter the original data to contain just these cities via \texttt{semi\_join()}. As Figure \ref{fig:linetypes} demonstrates, once we have the data filtered, mapping city to \texttt{color} or \texttt{linetype} is trivial. The color palette can be altered via the \texttt{colors} argument, and follows the same rules as \protect\hyperlink{scatterplots}{scatterplots}. The linetype palette can be altered via the \texttt{linetypes} argument, and accepts R's \href{https://github.com/wch/r-source/blob/e5b21d/src/library/graphics/man/par.Rd\#L726-L743}{\texttt{lty} values} or plotly.js \href{https://plot.ly/r/reference/\#scatter-line-dash}{dash values}.
 
 \begin{Shaded}
 \begin{Highlighting}[]
@@ -1680,7 +1678,7 @@ Generally speaking, it's hard to perceive more than 8 different colors/linetypes
 \end{Highlighting}
 \end{Shaded}
 
-\begin{figure}
+\begin{figure}[H]
 
 {\centering \includegraphics[width=\textwidth]{images/linetypes} 
 
@@ -1706,7 +1704,7 @@ If you'd like to control exactly which linetype is used to encode a particular d
 \end{Highlighting}
 \end{Shaded}
 
-\begin{figure}
+\begin{figure}[H]
 
 {\centering \includegraphics[width=\textwidth]{images/linetypes-manual} 
 
@@ -1730,7 +1728,7 @@ Segments can also provide a useful alternative to \texttt{add\_bars()} (covered 
 \index{Chart types!Slopegraph}
 \index{Editable charts!Annotations}
 \index{add\_annotations()@\texttt{add\_annotations()}!Data coordinates}
-\index{layout()@\texttt{layout()}!2D Axes}!range@\texttt{range}
+\index{layout()@\texttt{layout()}!2D Axes}!range@\texttt{range}\}
 
 \index{layout()@\texttt{layout()}!2D Axes!tickvals@\texttt{tickvals}}
 \index{layout()@\texttt{layout()}!2D
@@ -1739,6 +1737,7 @@ Axes!ticktext@\texttt{ticktext}}
 \index{layout()@\texttt{layout()}!2D Axes!showgrid@\texttt{showgrid}}
 \index{layout()@\texttt{layout()}!2D Axes!showticks@\texttt{showticks}}
 \index{layout()@\texttt{layout()}!2D Axes!showticklabels@\texttt{showticklabels}}
+
 The slope graph, made popular by \citet{tufte2001}, is a great way to compare the change in a measurement across numerous groups. This change could be along either a discrete or a continuous axis. For a continuous axis, the slopegraph could be thought of as a decomposition of a line graph into multiple segments. The \textbf{slopegraph} R package provides a succinct interface for creating slopegraphs with base or \textbf{ggplot2} graphics and also some convenient data sets which we'll make use of here \citep{slopegraph}. Figure \ref{fig:slopegraph} recreates an example from \citet{tufte2001}, using the \texttt{gdp} data set from \textbf{slopegraph}, and demonstrates a common issue with labelling in slopegraphs -- it's easy to have overlapping labels when anchoring labels on data values. For that reason, this implementation leverages \textbf{plotly} ability to interactively edit annotation positions. See Chapter \ref{editing-views} for similar examples of `editing views'.
 
 \begin{Shaded}
@@ -1782,7 +1781,7 @@ The slope graph, made popular by \citet{tufte2001}, is a great way to compare th
 \end{Highlighting}
 \end{Shaded}
 
-\begin{figure}
+\begin{figure}[H]
 
 {\centering \includegraphics[width=\textwidth]{vimeo-images/327585190/final} 
 
@@ -1824,7 +1823,7 @@ So called dumbell charts are similar in concept to slope graphs, but not quite a
 \end{Highlighting}
 \end{Shaded}
 
-\begin{figure}
+\begin{figure}[H]
 
 {\centering \includegraphics[width=\textwidth]{images/dumbell} 
 
@@ -1838,7 +1837,7 @@ So called dumbell charts are similar in concept to slope graphs, but not quite a
 
 \index{Chart types!Candlestick}
 
-Figure \ref{fig:candlestick} uses the \textbf{quantmod} package \citep{quantmod} to obtain stock price data for Microsoft and plots two segments for each day: one to encode the opening/closing values, and one to encode the daily high/low.
+Figure \ref{fig:candlestick} uses the \textbf{quantmod} package \citep{quantmod} to obtain stock price data for Microsoft and plots two segments for each day: one to encode the opening/closing values, and one to encode the daily high/low. This implementation uses \texttt{add\_segments()} to implement the candlestick chart, but more recent versions of plotly.js contain a \href{https://plot.ly/r/reference/\#candlestick}{candlestick} and \href{https://plot.ly/r/reference/\#ohlc}{ohlc} trace types, both of which are useful for visualizing financial data.
 
 \begin{Shaded}
 \begin{Highlighting}[]
@@ -1859,13 +1858,13 @@ Figure \ref{fig:candlestick} uses the \textbf{quantmod} package \citep{quantmod}
 \end{Highlighting}
 \end{Shaded}
 
-\begin{figure}
+\begin{figure}[H]
 
 {\centering \includegraphics[width=\textwidth]{images/candlestick} 
 
 }
 
-\caption{A candlestick chart built out of segments}\label{fig:candlestick}
+\caption{A candlestick chart built with \texttt{add\_segments()}. Note how the \texttt{color} mapping, which is a logical vector (\texttt{TRUE} if the closing value was higher then opening), creates two traces: a red trace indicating a drop in price and a forestgreen trace indicating a rise in price.}\label{fig:candlestick}
 \end{figure}
 
 \hypertarget{density-plots}{%
@@ -1888,7 +1887,7 @@ In Chapter \ref{bars-histograms}, we leverage a number of algorithms in R for co
 \end{Highlighting}
 \end{Shaded}
 
-\begin{figure}
+\begin{figure}[H]
 
 {\centering \includegraphics[width=\textwidth]{images/densities} 
 
@@ -1925,7 +1924,7 @@ When measurements are on very different scales, some care must be taken, and var
 \end{Highlighting}
 \end{Shaded}
 
-\begin{figure}
+\begin{figure}[H]
 
 {\centering \includegraphics[width=\textwidth]{images/pcp-common} 
 
@@ -1958,7 +1957,7 @@ The \texttt{add\_polygons()} function is essentially equivalent to \texttt{add\_
 \end{Highlighting}
 \end{Shaded}
 
-\begin{figure}
+\begin{figure}[H]
 
 {\centering \includegraphics[width=\textwidth]{images/map-canada} 
 
@@ -1975,7 +1974,7 @@ As discussion surrounding Figure \ref{fig:split-color} points out, scatter-based
 \end{Highlighting}
 \end{Shaded}
 
-\begin{figure}
+\begin{figure}[H]
 
 {\centering \includegraphics[width=\textwidth]{images/map-canada-split} 
 
@@ -2004,7 +2003,7 @@ Ribbons are useful for showing uncertainty bounds as a function of x. The \textt
 \end{Highlighting}
 \end{Shaded}
 
-\begin{figure}
+\begin{figure}[H]
 
 {\centering \includegraphics[width=\textwidth]{images/broom-lm} 
 
@@ -2045,7 +2044,7 @@ If you have fairly simple latitude/longitude data and want to make a quick map, 
 \end{Highlighting}
 \end{Shaded}
 
-\begin{figure}
+\begin{figure}[H]
 
 {\centering \includegraphics[width=\textwidth]{vimeo-images/317352934/final} 
 
@@ -2080,7 +2079,7 @@ Any one of these values can be used for a mapbox style. Figure \ref{fig:satellit
 \end{Highlighting}
 \end{Shaded}
 
-\begin{figure}
+\begin{figure}[H]
 
 {\centering \includegraphics[width=\textwidth]{vimeo-images/326683897/final} 
 
@@ -2112,7 +2111,7 @@ Figure \ref{fig:mapbox-style-dropdown} demonstrates how to create an integrated 
 \end{Highlighting}
 \end{Shaded}
 
-\begin{figure}
+\begin{figure}[H]
 
 {\centering \includegraphics[width=\textwidth]{vimeo-images/326684625/final} 
 
@@ -2167,7 +2166,7 @@ The other integrated mapping solution in \textbf{plotly} is \texttt{plot\_geo()}
 \end{Highlighting}
 \end{Shaded}
 
-\begin{figure}
+\begin{figure}[H]
 
 {\centering \includegraphics[width=\textwidth]{vimeo-images/317358033/final} 
 
@@ -2201,7 +2200,7 @@ One nice thing about \texttt{plot\_geo()} is that it automatically projects geom
 \end{Highlighting}
 \end{Shaded}
 
-\begin{figure}
+\begin{figure}[H]
 
 {\centering \includegraphics[width=\textwidth]{images/maps} 
 
@@ -2240,7 +2239,7 @@ Figure \ref{fig:us-density} shows the population density of the U.S. via the cho
 \end{Highlighting}
 \end{Shaded}
 
-\begin{figure}
+\begin{figure}[H]
 
 {\centering \includegraphics[width=\textwidth]{images/us-density} 
 
@@ -2290,7 +2289,7 @@ Choroplethmapbox is more flexible than choropleth because you supply your own Ge
 \end{Highlighting}
 \end{Shaded}
 
-\begin{figure}
+\begin{figure}[H]
 
 {\centering \includegraphics[width=\textwidth]{images/us-density-geojson} 
 
@@ -2323,7 +2322,7 @@ There are numerous packages for accessing geo-spatial data as simple features da
 \end{Highlighting}
 \end{Shaded}
 
-\begin{figure}
+\begin{figure}[H]
 
 {\centering \includegraphics[width=\textwidth]{images/world} 
 
@@ -2343,7 +2342,7 @@ How does \texttt{plot\_ly()} know how to render the countries? It's because the 
 \end{Highlighting}
 \end{Shaded}
 
-\begin{figure}
+\begin{figure}[H]
 
 {\centering \includegraphics[width=\textwidth]{images/view-sf} 
 
@@ -2361,7 +2360,7 @@ There are actually 4 different ways to render \textbf{sf} objects with \textbf{p
 \end{Highlighting}
 \end{Shaded}
 
-\begin{figure}
+\begin{figure}[H]
 
 {\centering \includegraphics[width=\textwidth]{images/split-color} 
 
@@ -2386,7 +2385,7 @@ Another important feature for maps that may require you to \texttt{split} multip
 \end{Highlighting}
 \end{Shaded}
 
-\begin{figure}
+\begin{figure}[H]
 
 {\centering \includegraphics[width=\textwidth]{images/split-text} 
 
@@ -2426,7 +2425,7 @@ Although the integrated mapping approaches (\texttt{plot\_mapbox()} and \texttt{
 \end{Highlighting}
 \end{Shaded}
 
-\begin{figure}
+\begin{figure}[H]
 
 {\centering \includegraphics[width=\textwidth]{images/canada-ggplotly} 
 
@@ -2471,6 +2470,8 @@ For those interested in learning more about geocomputation in R with \textbf{sf}
 Cartograms distort the size of geo-spatial polygons to encode a numeric variable other than the land size. There are numerous types of cartograms and they are typically categorized by their ability to preserve shape and maintain contiguous regions. Cartograms has been shown to be an effective approach to both encode and teach about geo-spatial data, though the effects certainly vary by cartogram type \citep{cartogram-vis}.
 The R package \textbf{cartogram} provides an interface to several popular cartogram algorithms \citep{cartogram}. A number of other R packages provide cartogram algorithms, but the great thing about \textbf{cartogram} is that all the functions can take an \textbf{sf} (or \textbf{sp}) object as input and return an \textbf{sf} object. This makes it incredibly easy to go from raw spatial objects, to transformed objects, to visual. Figure \ref{fig:cartogram} demonstrates a continuous area cartogram of US population in 2014 using a rubber sheet distortion algorithm from \citet{Dougenik}.
 
+\index{add\_trace()@\texttt{add\_trace()}!add\_sf()@\texttt{add\_sf()}}
+
 \begin{Shaded}
 \begin{Highlighting}[]
 \KeywordTok{library}\NormalTok{(cartogram)}
@@ -2492,7 +2493,7 @@ The R package \textbf{cartogram} provides an interface to several popular cartog
 \end{Highlighting}
 \end{Shaded}
 
-\begin{figure}
+\begin{figure}[H]
 
 {\centering \includegraphics[width=\textwidth]{images/cartogram} 
 
@@ -2526,7 +2527,7 @@ Figure \ref{fig:cartogram-dorling} demonstrates a non-continuous Dorling cartogr
 \end{Highlighting}
 \end{Shaded}
 
-\begin{figure}
+\begin{figure}[H]
 
 {\centering \includegraphics[width=\textwidth]{images/cartogram-dorling} 
 
@@ -2537,7 +2538,7 @@ Figure \ref{fig:cartogram-dorling} demonstrates a non-continuous Dorling cartogr
 
 Figure \ref{fig:cartogram-ncont} demonstrates a non-continuous cartogram of US population in 2014 from \citet{Olson}. In contrast to the Dorling cartogram, this approach does preserve the shape of polygons. The implementation behind Figure \ref{fig:cartogram-ncont} is to simply take the implementation of Figure \ref{fig:cartogram-dorling} and change \texttt{cartogram\_dorling()} to \texttt{cartogram\_ncont()}.
 
-\begin{figure}
+\begin{figure}[H]
 
 {\centering \includegraphics[width=\textwidth]{images/cartogram-ncont} 
 
@@ -2557,7 +2558,7 @@ A popular class of contiguous cartograms that do not preserve shape are sometime
 \end{Highlighting}
 \end{Shaded}
 
-\begin{figure}
+\begin{figure}[H]
 
 {\centering \includegraphics[width=\textwidth]{images/cartogram-tiles} 
 
@@ -2594,7 +2595,7 @@ Figure \ref{fig:bars-numeric} compares the default binning algorithm in plotly.j
 \end{Highlighting}
 \end{Shaded}
 
-\begin{figure}
+\begin{figure}[H]
 
 {\centering \includegraphics[width=\textwidth]{images/bars-numeric} 
 
@@ -2620,7 +2621,7 @@ Figure \ref{fig:bars-discrete} demonstrates two ways of creating a basic bar cha
 \end{Highlighting}
 \end{Shaded}
 
-\begin{figure}
+\begin{figure}[H]
 
 {\centering \includegraphics[width=\textwidth]{images/bars-discrete} 
 
@@ -2655,7 +2656,7 @@ It is often useful to see how the numeric distribution changes with respect to a
 \end{Highlighting}
 \end{Shaded}
 
-\begin{figure}
+\begin{figure}[H]
 
 {\centering \includegraphics[width=\textwidth]{images/many-prices} 
 
@@ -2676,13 +2677,13 @@ Visualizing multiple discrete distributions is difficult. The subtle complexity 
 \end{Highlighting}
 \end{Shaded}
 
-\begin{figure}
+\begin{figure}[H]
 
 {\centering \includegraphics[width=\textwidth]{images/cut-by-clarity} 
 
 }
 
-\caption{A grouped bar chart.}\label{fig:cut-by-clarity}
+\caption{A grouped bar chart of diamond counts by cut and clarity.}\label{fig:cut-by-clarity}
 \end{figure}
 
 Figure \ref{fig:cut-by-clarity} is useful for comparing the number of diamonds by clarity, given a type of cut. For instance, within ``Ideal'' diamonds, a cut of ``VS1'' is most popular, ``VS2'' is second most popular, and ``I1'' the least popular. The distribution of clarity within ``Ideal'' diamonds seems to be fairly similar to other diamonds, but it's hard to make this comparison using raw counts. Figure \ref{fig:cut-by-clarity-prop} makes this comparison easier by showing the relative frequency of diamonds by clarity, given a cut.
@@ -2704,7 +2705,7 @@ Figure \ref{fig:cut-by-clarity} is useful for comparing the number of diamonds b
 \end{Highlighting}
 \end{Shaded}
 
-\begin{figure}
+\begin{figure}[H]
 
 {\centering \includegraphics[width=\textwidth]{images/cut-by-clarity-prop} 
 
@@ -2726,7 +2727,7 @@ This type of plot, also known as a spine plot, is a special case of a mosaic plo
 \end{Highlighting}
 \end{Shaded}
 
-\begin{figure}
+\begin{figure}[H]
 
 {\centering \includegraphics[width=\textwidth]{images/ggmosaic} 
 
@@ -2755,7 +2756,7 @@ Boxplots encode the five number summary of a numeric variable, and provide a dec
 \end{Highlighting}
 \end{Shaded}
 
-\begin{figure}
+\begin{figure}[H]
 
 {\centering \includegraphics[width=\textwidth]{images/cut-boxes} 
 
@@ -2774,7 +2775,7 @@ If you want to partition by more than one discrete variable, you could use the i
 \end{Highlighting}
 \end{Shaded}
 
-\begin{figure}
+\begin{figure}[H]
 
 {\centering \includegraphics[width=\textwidth]{images/cut-by-clarity-boxes} 
 
@@ -2803,7 +2804,7 @@ It is also helpful to sort the boxplots according to something meaningful, such 
 \end{Highlighting}
 \end{Shaded}
 
-\begin{figure}
+\begin{figure}[H]
 
 {\centering \includegraphics[width=\textwidth]{images/cut-by-clarity-boxes-sorted} 
 
@@ -2823,6 +2824,7 @@ Similar to \texttt{add\_histogram()}, \texttt{add\_boxplot()} sends the raw data
 \index{add\_trace()@\texttt{add\_trace()}!add\_heatmap()@\texttt{add\_heatmap()}}
 \index{add\_trace()@\texttt{add\_trace()}!add\_histogram2d()@\texttt{add\_histogram2d()}}
 \index{add\_trace()@\texttt{add\_trace()}!add\_histogram2dcontour()@\texttt{add\_histogram2dcontour()}}
+\index{colorbar()@\texttt{colorbar()}!title@\texttt{title}}
 
 The \textbf{plotly} package provides two functions for displaying rectangular bins: \texttt{add\_heatmap()} and \texttt{add\_histogram2d()}. For numeric data, the \texttt{add\_heatmap()} function is a 2D analog of \texttt{add\_bars()} (bins must be pre-computed), and the \texttt{add\_histogram2d()} function is a 2D analog of \texttt{add\_histogram()} (bins can be computed in the browser). Thus, I recommend \texttt{add\_histogram2d()} for exploratory purposes, since you don't have to think about how to perform binning. It also provides a useful \href{https://plot.ly/r/reference/\#histogram2d-zsmooth}{\texttt{zsmooth}} attribute for effectively increasing the number of bins (currently, ``best'' performs a \href{https://en.wikipedia.org/wiki/Bilinear_interpolation}{bi-linear interpolation}, a type of nearest neighbors algorithm), and \href{https://plot.ly/r/reference/\#histogram2d-nbinsx}{\texttt{nbinsx}}/\href{https://plot.ly/r/reference/\#histogram2d-nbinsy}{\texttt{nbinsy}} attributes to set the number of bins in the x and/or y directions. Figure \ref{fig:histogram2d} compares three different uses of \texttt{add\_histogram()}: (1) plotly.js' default binning algorithm, (2) the default plus smoothing, (3) setting the number of bins in the x and y directions. Its also worth noting that filled contours, instead of bins, can be used in any of these cases by using \texttt{add\_histogram2dcontour()} instead of \texttt{add\_histogram2d()}.
 
@@ -2844,7 +2846,7 @@ The \textbf{plotly} package provides two functions for displaying rectangular bi
 \end{Highlighting}
 \end{Shaded}
 
-\begin{figure}
+\begin{figure}[H]
 
 {\centering \includegraphics[width=\textwidth]{images/histogram2d} 
 
@@ -2878,7 +2880,7 @@ In \protect\hyperlink{bars-histograms}{Bars \& histograms}, we leveraged a numbe
 \end{Highlighting}
 \end{Shaded}
 
-\begin{figure}
+\begin{figure}[H]
 
 {\centering \includegraphics[width=\textwidth]{images/heatmap-corr-diamonds} 
 
@@ -2892,7 +2894,7 @@ In \protect\hyperlink{bars-histograms}{Bars \& histograms}, we leveraged a numbe
 
 The functions \texttt{add\_histogram2d()}, \texttt{add\_histogram2dcontour()}, and \texttt{add\_heatmap()} all support categorical axes. Thus, \texttt{add\_histogram2d()} \emph{can} be used to easily display 2-way contingency tables, but since its easier to compare values along a common scale rather than compare colors \citep{graphical-perception}, I recommend creating \protect\hyperlink{multiple-discrete-distributions}{grouped bar charts} instead. The \texttt{add\_heatmap()} function can still be useful for categorical axes, however, as it allows us to display whatever quantity we want along the z axis (color).
 
-\index{colorbar()@\texttt{colorbar()}!Limits}
+\index{colorbar()@\texttt{colorbar()}!limits@\texttt{limits}}
 
 Figure \ref{fig:correlation} uses \texttt{add\_heatmap()} to display a correlation matrix. Notice how the \texttt{limits} arguments in the \texttt{colorbar()} function can be used to expand the limits of the color scale to reflect the range of possible correlations (something that is not easily done in plotly.js).
 
@@ -2905,7 +2907,7 @@ Figure \ref{fig:correlation} uses \texttt{add\_heatmap()} to display a correlati
 \end{Highlighting}
 \end{Shaded}
 
-\begin{figure}
+\begin{figure}[H]
 
 {\centering \includegraphics[width=\textwidth]{images/correlation} 
 
@@ -2929,7 +2931,7 @@ As it turns out, by simply adding a \texttt{z} attribute \texttt{plot\_ly()} wil
 \end{Highlighting}
 \end{Shaded}
 
-\begin{figure}
+\begin{figure}[H]
 
 {\centering \includegraphics[width=\textwidth]{images/3D-scatterplot} 
 
@@ -2950,7 +2952,7 @@ To make a path in 3D, use \texttt{add\_paths()} in the same way you would for a 
 \end{Highlighting}
 \end{Shaded}
 
-\begin{figure}
+\begin{figure}[H]
 
 {\centering \includegraphics[width=\textwidth]{images/3D-paths} 
 
@@ -2971,7 +2973,7 @@ Figure \ref{fig:3D-lines} uses \texttt{add\_lines()} instead of \texttt{add\_pat
 \end{Highlighting}
 \end{Shaded}
 
-\begin{figure}
+\begin{figure}[H]
 
 {\centering \includegraphics[width=\textwidth]{images/3D-lines} 
 
@@ -2990,7 +2992,7 @@ As with non-3D lines, you can make multiple lines by specifying a grouping varia
 \end{Highlighting}
 \end{Shaded}
 
-\begin{figure}
+\begin{figure}[H]
 
 {\centering \includegraphics[width=\textwidth]{images/3D-lines-groups} 
 
@@ -3020,7 +3022,7 @@ For 3D plots, be aware that the axis objects are a part of the \href{https://plo
 \end{Highlighting}
 \end{Shaded}
 
-\begin{figure}
+\begin{figure}[H]
 
 {\centering \includegraphics[width=\textwidth]{images/3D-axes} 
 
@@ -3044,7 +3046,7 @@ Creating 3D surfaces with \texttt{add\_surface()} is a lot like creating heatmap
 \end{Highlighting}
 \end{Shaded}
 
-\begin{figure}
+\begin{figure}[H]
 
 {\centering \includegraphics[width=\textwidth]{images/surface} 
 
@@ -3140,7 +3142,7 @@ A great tool that helps automate this sort of workflow with responsive iframes i
 
 Any \textbf{plotly} object can be saved as a static image via the \texttt{orca()} function. To use it, you'll need the \texttt{orca} command-line utility (CLI). This CLI can be installed via node.js, conda, or a standalone binary from \url{https://github.com/plotly/orca/releases}. Figure \ref{fig:orca} demonstrates how \texttt{orca()} can generate a svg (or pdf) that can then be imported into Adobe Illustrator for post-processing. Although it's a nice option to have, importing into Adobe Illustrator might not enable as nice of a workflow as using \textbf{plotly}'s native support for editable layout components in the browser, then exporting to svg/pdf (as shown in Figure \ref{fig:edit-county-labels}).
 
-\begin{figure}
+\begin{figure}[H]
 
 {\centering \includegraphics[width=\textwidth]{vimeo-images/307598492/final} 
 
@@ -3170,7 +3172,7 @@ Exporting an image from a browser is a nice option if you need to perform edits 
 \end{Highlighting}
 \end{Shaded}
 
-\begin{figure}
+\begin{figure}[H]
 
 {\centering \includegraphics[width=\textwidth]{images/toImageSVG} 
 
@@ -3221,9 +3223,7 @@ Figure \ref{fig:edit-county-labels} demonstrates this workflow on a choropleth m
 
 \CommentTok{# get income information for each county in MN}
 \NormalTok{mn_income <-}\StringTok{ }\KeywordTok{get_acs}\NormalTok{(}
-  \DataTypeTok{geography =} \StringTok{"county"}\NormalTok{, }
-  \DataTypeTok{variables =} \StringTok{"B19013_001"}\NormalTok{, }
-  \DataTypeTok{state =} \StringTok{"MN"}
+    \DataTypeTok{geography =} \StringTok{"county"}\NormalTok{, }\DataTypeTok{variables =} \StringTok{"B19013_001"}\NormalTok{, }\DataTypeTok{state =} \StringTok{"MN"}
 \NormalTok{  ) }\OperatorTok{%>%}
 \StringTok{  }\KeywordTok{mutate}\NormalTok{(}
     \DataTypeTok{NAME =} \KeywordTok{sub}\NormalTok{(}\StringTok{"County, Minnesota"}\NormalTok{, }\StringTok{""}\NormalTok{, NAME),}
@@ -3248,17 +3248,12 @@ Figure \ref{fig:edit-county-labels} demonstrates this workflow on a choropleth m
 \NormalTok{map <-}\StringTok{ }\KeywordTok{plot_ly}\NormalTok{() }\OperatorTok{%>%}
 \StringTok{  }\KeywordTok{add_sf}\NormalTok{(}
     \DataTypeTok{data =} \KeywordTok{left_join}\NormalTok{(mn_sf, mn_income, }\DataTypeTok{by =} \KeywordTok{c}\NormalTok{(}\StringTok{"geoid"}\NormalTok{ =}\StringTok{ "GEOID"}\NormalTok{)),}
-    \DataTypeTok{color =} \OperatorTok{~}\KeywordTok{I}\NormalTok{(color),}
-    \DataTypeTok{split =} \OperatorTok{~}\NormalTok{NAME,}
-    \DataTypeTok{stroke =} \KeywordTok{I}\NormalTok{(}\StringTok{"black"}\NormalTok{),}
-    \DataTypeTok{span =} \KeywordTok{I}\NormalTok{(}\DecValTok{1}\NormalTok{),}
-    \DataTypeTok{hoverinfo =} \StringTok{"none"}
+    \DataTypeTok{color =} \OperatorTok{~}\KeywordTok{I}\NormalTok{(color), }\DataTypeTok{split =} \OperatorTok{~}\NormalTok{NAME,}
+    \DataTypeTok{stroke =} \KeywordTok{I}\NormalTok{(}\StringTok{"black"}\NormalTok{), }\DataTypeTok{span =} \KeywordTok{I}\NormalTok{(}\DecValTok{1}\NormalTok{), }\DataTypeTok{hoverinfo =} \StringTok{"none"}
 \NormalTok{  ) }\OperatorTok{%>%}
 \StringTok{  }\KeywordTok{add_annotations}\NormalTok{(}
     \DataTypeTok{data =} \KeywordTok{select}\NormalTok{(top10labels, NAME, x, y),}
-    \DataTypeTok{text =} \OperatorTok{~}\NormalTok{NAME,}
-    \DataTypeTok{x =} \OperatorTok{~}\NormalTok{x,}
-    \DataTypeTok{y =} \OperatorTok{~}\NormalTok{y}
+    \DataTypeTok{text =} \OperatorTok{~}\NormalTok{NAME, }\DataTypeTok{x =} \OperatorTok{~}\NormalTok{x, }\DataTypeTok{y =} \OperatorTok{~}\NormalTok{y}
 \NormalTok{  ) }
 
 \CommentTok{# the dot-plot}
@@ -3270,11 +3265,8 @@ Figure \ref{fig:edit-county-labels} demonstrates this workflow on a choropleth m
 \CommentTok{# make manual edits in the browser, then click the }
 \CommentTok{# 'toImage' button to export an svg file}
 \KeywordTok{ggplotly}\NormalTok{(}
-\NormalTok{  bars, }
-  \DataTypeTok{dynamicTicks =} \OtherTok{TRUE}\NormalTok{, }
-  \DataTypeTok{tooltip =} \StringTok{"y"}\NormalTok{, }
-  \DataTypeTok{height =} \DecValTok{8} \OperatorTok{*}\StringTok{ }\DecValTok{96}\NormalTok{, }
-  \DataTypeTok{width =} \DecValTok{11} \OperatorTok{*}\StringTok{ }\DecValTok{96}
+\NormalTok{  bars, }\DataTypeTok{dynamicTicks =} \OtherTok{TRUE}\NormalTok{, }\DataTypeTok{tooltip =} \StringTok{"y"}\NormalTok{, }
+  \DataTypeTok{height =} \DecValTok{8} \OperatorTok{*}\StringTok{ }\DecValTok{96}\NormalTok{, }\DataTypeTok{width =} \DecValTok{11} \OperatorTok{*}\StringTok{ }\DecValTok{96}
 \NormalTok{) }\OperatorTok{%>%}
 \StringTok{  }\KeywordTok{subplot}\NormalTok{(map, }\DataTypeTok{nrows =} \DecValTok{1}\NormalTok{, }\DataTypeTok{widths =} \KeywordTok{c}\NormalTok{(}\FloatTok{0.3}\NormalTok{, }\FloatTok{0.7}\NormalTok{)) }\OperatorTok{%>%}
 \StringTok{  }\KeywordTok{layout}\NormalTok{(}\DataTypeTok{showlegend =} \OtherTok{FALSE}\NormalTok{) }\OperatorTok{%>%}
@@ -3289,7 +3281,7 @@ Figure \ref{fig:edit-county-labels} demonstrates this workflow on a choropleth m
 \end{Highlighting}
 \end{Shaded}
 
-\begin{figure}
+\begin{figure}[H]
 
 {\centering \includegraphics[width=\textwidth]{vimeo-images/309371928/final} 
 
@@ -3340,7 +3332,7 @@ The \texttt{subplot()} function provides a flexible interface for merging multip
 \end{Highlighting}
 \end{Shaded}
 
-\begin{figure}
+\begin{figure}[H]
 
 {\centering \includegraphics[width=\textwidth]{images/subplot-simple} 
 
@@ -3364,7 +3356,7 @@ Although \texttt{subplot()} accepts an arbitrary number of plot objects, passing
 \end{Highlighting}
 \end{Shaded}
 
-\begin{figure}
+\begin{figure}[H]
 
 {\centering \includegraphics[width=\textwidth]{images/economics} 
 
@@ -3375,7 +3367,7 @@ Although \texttt{subplot()} accepts an arbitrary number of plot objects, passing
 
 Conceptually, \texttt{subplot()} provides a way to place a collection of plots into a table with a given number of rows and columns. The number of rows (and, by consequence, the number of columns) is specified via the \texttt{nrows} argument. By default each row/column shares an equal proportion of the overall height/width, but as shown in Figure \ref{fig:proportions} the default can be changed via the \texttt{heights} and \texttt{widths} arguments.
 
-\begin{figure}
+\begin{figure}[H]
 
 {\centering \includegraphics[width=0.5\linewidth]{images/proportions} 
 
@@ -3410,7 +3402,7 @@ This flexibility is quite useful for a number of visualizations, for example, as
 \end{Highlighting}
 \end{Shaded}
 
-\begin{figure}
+\begin{figure}[H]
 
 {\centering \includegraphics[width=\textwidth]{images/joint} 
 
@@ -3440,7 +3432,7 @@ The \texttt{subplot()} function returns a plotly object so it can be modified li
 \end{Highlighting}
 \end{Shaded}
 
-\begin{figure}
+\begin{figure}[H]
 
 {\centering \includegraphics[width=\textwidth]{images/recursive} 
 
@@ -3483,7 +3475,7 @@ The concept is particularly useful when you want plot(s) in a given row to have 
 \end{Highlighting}
 \end{Shaded}
 
-\begin{figure}
+\begin{figure}[H]
 
 {\centering \includegraphics[width=\textwidth]{images/map-subplot} 
 
@@ -3515,7 +3507,7 @@ The plotly.js library provides a trace specifically designed and optimized for s
 \end{Highlighting}
 \end{Shaded}
 
-\begin{figure}
+\begin{figure}[H]
 
 {\centering \includegraphics[width=\textwidth]{vimeo-images/325081084/final} 
 
@@ -3543,7 +3535,7 @@ The generalized pairs plot is an extension of the scatterplot matrix to support 
 \end{Highlighting}
 \end{Shaded}
 
-\begin{figure}
+\begin{figure}[H]
 
 {\centering \includegraphics[width=\textwidth]{images/ggpairs} 
 
@@ -3605,7 +3597,7 @@ It's true that \textbf{ggplot2}'s \texttt{facet\_wrap()}/\texttt{facet\_grid()} 
 \end{Highlighting}
 \end{Shaded}
 
-\begin{figure}
+\begin{figure}[H]
 
 {\centering \includegraphics[width=\textwidth]{images/subplot-trellis} 
 
@@ -3633,7 +3625,7 @@ It's possible to combine the convenience of \textbf{ggplot2}'s \texttt{facet\_wr
 \end{Highlighting}
 \end{Shaded}
 
-\begin{figure}
+\begin{figure}[H]
 
 {\centering \includegraphics[width=\textwidth]{images/ggplot2-subplots} 
 
@@ -3665,7 +3657,7 @@ Although \textbf{flexdashboard} is a really excellent way to arrange web-based c
 
 Figure \ref{fig:flexdashboard-ggplotly} provides an example of embedding \texttt{ggplotly()} inside \textbf{flexdashboard} \citep{flexdashboard}. Since \textbf{flexdashboard} is an \textbf{rmarkdown} template, it automatically comes with many of things that make \textbf{rmarkdown} great: ability to produce standalone HTML, integration with other languages, and thoughtful integration with RStudio products like Connect. There are many other things to like about \textbf{flexdashboard}, including lots of easy-to-use theming options, multiple pages, storyboards, and even \textbf{shiny} integration. Explaining how the \textbf{flexdashboard} package actually works is beyond the scope of this book, but you can visit the website for documentation and more examples \url{https://rmarkdown.rstudio.com/flexdashboard/}.
 
-\begin{figure}
+\begin{figure}[H]
 
 {\centering \href{https://plotly-r.com/flexdashboard.html}{\includegraphics[width=\textwidth]{images/flexdashboard} }
 
@@ -3692,7 +3684,7 @@ If you're already familiar with \textbf{shiny}, you may already be familiar with
 \end{Highlighting}
 \end{Shaded}
 
-\begin{figure}
+\begin{figure}[H]
 
 {\centering \includegraphics[width=\textwidth]{images/fluid} 
 
@@ -3714,6 +3706,8 @@ Bootstrap is much more than just its grid layout system, so beware -- using eith
 \hypertarget{css-flexbox}{%
 \subsection{CSS flexbox}\label{css-flexbox}}
 
+\index{HTML in R}
+
 Cascading Style Sheet (CSS) flexbox is a relatively new CSS feature that most modern web browsers natively support.\footnote{For a full reference of which browsers/versions support flexbox, see \url{https://caniuse.com/\#feat=flexbox}.} It aims to provide a general system for distributing space among multiple components in a container. Instead of covering this entire system, we'll cover it's basic functionality, which is fairly similar to Bootstrap's grid layout system.
 
 Creating a flexbox requires a flexbox container -- in HTML speak, that means a \texttt{\textless{}div\textgreater{}} tag with a CSS style property of \texttt{display:\ flex}. By default, in this display setting, all the components inside that container will try fit in a single row. To allow `overflowing' components the freedom to `wrap' into new row(s), set the CSS property of \texttt{flex-wrap:\ wrap} in the parent container. Another useful CSS property to know about for the `parent' container is \texttt{justify-content}: in the case of Figure \ref{fig:flexbox}, I'm using it to horizontally \texttt{center} the components. Moreover, since I've imposed a width of 40\% for the first two plots, the net effect is that we have 2 plots in the first two (spanning 80\% of the page width), then the third plot wraps onto a new line.
@@ -3733,7 +3727,7 @@ Creating a flexbox requires a flexbox container -- in HTML speak, that means a \
 \end{Highlighting}
 \end{Shaded}
 
-\begin{figure}
+\begin{figure}[H]
 
 {\centering \includegraphics[width=\textwidth]{images/flexbox} 
 
@@ -3773,7 +3767,7 @@ As the video behind Figure \ref{fig:trelliscope} demonstrates, \textbf{trellisco
 \end{Highlighting}
 \end{Shaded}
 
-\begin{figure}
+\begin{figure}[H]
 
 {\centering \includegraphics[width=\textwidth]{vimeo-images/325778067/final} 
 
@@ -3800,7 +3794,7 @@ Both \texttt{plot\_ly()} and \texttt{ggplotly()} support \href{https://en.wikipe
 \end{Highlighting}
 \end{Shaded}
 
-\begin{figure}
+\begin{figure}[H]
 
 {\centering \includegraphics[width=\textwidth]{images/animation-ggplotly} 
 
@@ -3835,7 +3829,7 @@ As long as a \texttt{frame} variable is provided, an animation is produced with 
 \end{Highlighting}
 \end{Shaded}
 
-\begin{figure}
+\begin{figure}[H]
 
 {\centering \includegraphics[width=\textwidth]{images/animation-opts} 
 
@@ -3860,7 +3854,7 @@ If \texttt{frame} is a numeric variable (or a character string), frames are alwa
 \end{Highlighting}
 \end{Shaded}
 
-\begin{figure}
+\begin{figure}[H]
 
 {\centering \includegraphics[width=\textwidth]{images/animation-factors} 
 
@@ -3883,7 +3877,7 @@ Both the \texttt{frame} and \texttt{ids} attributes operate on the trace level -
 \end{Highlighting}
 \end{Shaded}
 
-\begin{figure}
+\begin{figure}[H]
 
 {\centering \includegraphics[width=\textwidth]{images/animation-targets} 
 
@@ -3936,7 +3930,7 @@ At the time of writing, the scatter plotly.js trace type is really the only trac
 \end{Highlighting}
 \end{Shaded}
 
-\begin{figure}
+\begin{figure}[H]
 
 {\centering \includegraphics[width=\textwidth]{vimeo-images/317101075/final} 
 
@@ -3962,7 +3956,7 @@ Although population pyramids are quite popular, they aren't necessarily the best
 \end{Highlighting}
 \end{Shaded}
 
-\begin{figure}
+\begin{figure}[H]
 
 {\centering \includegraphics[width=\textwidth]{vimeo-images/317101952/final} 
 
@@ -3985,7 +3979,7 @@ A web application relies on a client-server relationship where the client's (i.e
 
 Figure \ref{fig:server-client} is a basic illustration of the difference between a web application and a purely client-side web page. Thanks to \texttt{JavaScript} and \texttt{HTML5}, purely client-side web pages can still be dynamic without any software dependencies besides a modern web browser. In fact, Section \ref{graphical-queries} outlines \textbf{plotly}'s graphical querying framework for linking multiple plots entirely client-side, which makes the result very easy to distribute (see Section \ref{saving}). There are, of course, many useful examples of linked and dynamic views that can not be easily expressed as a database query, but a surprising amount actually can, and the remainder can likely be quickly implemented as a \textbf{shiny} web application.
 
-\begin{figure}
+\begin{figure}[H]
 
 {\centering \includegraphics[width=\textwidth]{images/server-client} 
 
@@ -4022,7 +4016,7 @@ Figure \ref{fig:link-intro} shows a scatterplot of the relationship between weig
 \end{Highlighting}
 \end{Shaded}
 
-\begin{figure}
+\begin{figure}[H]
 
 {\centering \includegraphics[width=\textwidth]{vimeo-images/317134071/final} 
 
@@ -4062,7 +4056,7 @@ One subtlety to be aware of in terms of what makes Figure \ref{fig:txmissing} po
 \end{Highlighting}
 \end{Shaded}
 
-\begin{figure}
+\begin{figure}[H]
 
 {\centering \includegraphics[width=\textwidth]{vimeo-images/317137926/final} 
 
@@ -4087,7 +4081,7 @@ Querying a city via direct manipulation is somewhat helpful for focusing on a pa
 \end{Highlighting}
 \end{Shaded}
 
-\begin{figure}
+\begin{figure}[H]
 
 {\centering \includegraphics[width=\textwidth]{images/txmissing-modes} 
 
@@ -4124,7 +4118,7 @@ By querying a few different cities in Figure \ref{fig:txmissing-modes}, one obvi
 \end{Highlighting}
 \end{Shaded}
 
-\begin{figure}
+\begin{figure}[H]
 
 {\centering \includegraphics[width=\textwidth]{images/txmissing-linked} 
 
@@ -4135,7 +4129,7 @@ By querying a few different cities in Figure \ref{fig:txmissing-modes}, one obvi
 
 How does \textbf{plotly} know to highlight the time series when markers in the dot-plot are selected? The answer lies in what data values are embedded in the graphical markers via \texttt{highlight\_key()}. When `South Padre Island' is selected, like in Figure \ref{fig:pipeline-diagram}, it seems as though the logic says to simply change the color of any graphical elements that match that value, but the logic behind \textbf{plotly}'s graphical queries is a bit more subtle and powerful. Another, more accurate, framing of the logic is to first imagine a linked database query being performed behind the scenes (as in Figure \ref{fig:pipeline-diagram}). When `South Padre Island' is selected, it first filters the aggregated dot-plot data down to just that one row, then it filters down the raw time-series data down to every row with `South Padre Island' as a city. The drawing logic will then call \href{https://plot.ly/javascript/plotlyjs-function-reference/\#plotlyaddtraces}{\texttt{Plotly.addTrace()}} with the newly filtered data which adds a new graphical layer representing the selection, allowing us to have finely-tuned control over the visual encoding of the data query.
 
-\begin{figure}
+\begin{figure}[H]
 
 {\centering \includegraphics[width=\textwidth]{images/pipeline} 
 
@@ -4169,7 +4163,7 @@ The biggest advantage of drawing an entirely new graphical layer with the filter
 \index{layout()@\texttt{layout()}!barmode@\texttt{barmode}}
 \indexc{attrs\_selected()}
 
-\begin{figure}
+\begin{figure}[H]
 
 {\centering \includegraphics[width=\textwidth]{images/txhousing-aggregates} 
 
@@ -4235,7 +4229,7 @@ Figure \ref{fig:filter-highlight} demonstrates the main difference in logic betw
 \end{Highlighting}
 \end{Shaded}
 
-\begin{figure}
+\begin{figure}[H]
 
 {\centering \includegraphics[width=\textwidth]{vimeo-images/307598256/final} 
 
@@ -4267,7 +4261,7 @@ When using multiple filter widgets to filter the same dataset, as done in Figure
 \end{Highlighting}
 \end{Shaded}
 
-\begin{figure}
+\begin{figure}[H]
 
 {\centering \includegraphics[width=\textwidth]{vimeo-images/307598347/final} 
 
@@ -4305,7 +4299,7 @@ As Figure \ref{fig:plotly-leaflet-filter} demonstrates, filter and highlight eve
 \end{Highlighting}
 \end{Shaded}
 
-\begin{figure}
+\begin{figure}[H]
 
 {\centering \includegraphics[width=\textwidth]{vimeo-images/307597495/final} 
 
@@ -4335,7 +4329,7 @@ When combining filter and highlight events, one (current) limitation to be aware
 \end{Highlighting}
 \end{Shaded}
 
-\begin{figure}
+\begin{figure}[H]
 
 {\centering \includegraphics[width=\textwidth]{vimeo-images/307598672/final} 
 
@@ -4361,7 +4355,7 @@ The graphical querying framework (Section \ref{graphical-queries}) works in tand
 \end{Highlighting}
 \end{Shaded}
 
-\begin{figure}
+\begin{figure}[H]
 
 {\centering \includegraphics[width=\textwidth]{vimeo-images/307789187/final} 
 
@@ -4418,7 +4412,7 @@ The \texttt{gapminder} data does not include a measure of population density, bu
 \end{Highlighting}
 \end{Shaded}
 
-\begin{figure}
+\begin{figure}[H]
 
 {\centering \includegraphics[width=\textwidth]{vimeo-images/307789070/final} 
 
@@ -4447,7 +4441,7 @@ Figure \ref{fig:epl} is an example of making comparisons both within and across 
 \end{Highlighting}
 \end{Shaded}
 
-\begin{figure}
+\begin{figure}[H]
 
 {\centering \includegraphics[width=\textwidth]{vimeo-images/307598973/final} 
 
@@ -4475,7 +4469,7 @@ The demo above requires some fairly advanced data pre-processing, so to learn ho
 \end{Highlighting}
 \end{Shaded}
 
-\begin{figure}
+\begin{figure}[H]
 
 {\centering \includegraphics[width=\textwidth]{images/trellis-txhousing} 
 
@@ -4491,26 +4485,29 @@ Figure \ref{fig:trellis-txhousing-plotly} displays the same information as \ref{
 \NormalTok{txsmall }\OperatorTok{%>%}
 \StringTok{  }\KeywordTok{group_by}\NormalTok{(city) }\OperatorTok{%>%}
 \StringTok{  }\KeywordTok{do}\NormalTok{(}
-    \DataTypeTok{p =} \KeywordTok{highlight_key}\NormalTok{(., }\OperatorTok{~}\NormalTok{year, }\DataTypeTok{group =} \StringTok{"txhousing-trellis"}\NormalTok{) }\OperatorTok{%>%}\StringTok{ }
-\StringTok{      }\KeywordTok{plot_ly}\NormalTok{(}\DataTypeTok{showlegend =} \OtherTok{FALSE}\NormalTok{) }\OperatorTok{%>%}\StringTok{ }
+    \DataTypeTok{p =} \KeywordTok{highlight_key}\NormalTok{(., }\OperatorTok{~}\NormalTok{year, }\DataTypeTok{group =} \StringTok{"txhousing-trellis"}\NormalTok{) }\OperatorTok{%>%}
+\StringTok{      }\KeywordTok{plot_ly}\NormalTok{(}\DataTypeTok{showlegend =} \OtherTok{FALSE}\NormalTok{) }\OperatorTok{%>%}
 \StringTok{      }\KeywordTok{group_by}\NormalTok{(year) }\OperatorTok{%>%}
 \StringTok{      }\KeywordTok{add_lines}\NormalTok{(}
-        \DataTypeTok{x =} \OperatorTok{~}\NormalTok{month, }\DataTypeTok{y =} \OperatorTok{~}\NormalTok{median, }\DataTypeTok{text =} \OperatorTok{~}\NormalTok{year, }
+        \DataTypeTok{x =} \OperatorTok{~}\NormalTok{month, }\DataTypeTok{y =} \OperatorTok{~}\NormalTok{median, }\DataTypeTok{text =} \OperatorTok{~}\NormalTok{year,}
         \DataTypeTok{hoverinfo =} \StringTok{"text"}
 \NormalTok{      ) }\OperatorTok{%>%}
 \StringTok{      }\KeywordTok{add_annotations}\NormalTok{(}
-        \DataTypeTok{text =} \OperatorTok{~}\KeywordTok{unique}\NormalTok{(city), }
-        \DataTypeTok{x =} \FloatTok{0.5}\NormalTok{, }\DataTypeTok{y =} \DecValTok{1}\NormalTok{, }
-        \DataTypeTok{xref =} \StringTok{"paper"}\NormalTok{, }\DataTypeTok{yref =} \StringTok{"paper"}\NormalTok{, }
-        \DataTypeTok{xanchor =} \StringTok{"center"}\NormalTok{, }\DataTypeTok{yanchor =} \StringTok{"bottom"}\NormalTok{, }
+        \DataTypeTok{text =} \OperatorTok{~}\KeywordTok{unique}\NormalTok{(city),}
+        \DataTypeTok{x =} \FloatTok{0.5}\NormalTok{, }\DataTypeTok{y =} \DecValTok{1}\NormalTok{,}
+        \DataTypeTok{xref =} \StringTok{"paper"}\NormalTok{, }\DataTypeTok{yref =} \StringTok{"paper"}\NormalTok{,}
+        \DataTypeTok{xanchor =} \StringTok{"center"}\NormalTok{, }\DataTypeTok{yanchor =} \StringTok{"bottom"}\NormalTok{,}
         \DataTypeTok{showarrow =} \OtherTok{FALSE}
 \NormalTok{      )}
 \NormalTok{  ) }\OperatorTok{%>%}
-\StringTok{  }\KeywordTok{subplot}\NormalTok{(}\DataTypeTok{nrows =} \DecValTok{2}\NormalTok{, }\DataTypeTok{margin =} \FloatTok{0.05}\NormalTok{, }\DataTypeTok{shareY =} \OtherTok{TRUE}\NormalTok{, }\DataTypeTok{shareX =} \OtherTok{TRUE}\NormalTok{, }\DataTypeTok{titleY =} \OtherTok{FALSE}\NormalTok{)}
+\StringTok{  }\KeywordTok{subplot}\NormalTok{(}
+    \DataTypeTok{nrows =} \DecValTok{2}\NormalTok{, }\DataTypeTok{margin =} \FloatTok{0.05}\NormalTok{,}
+    \DataTypeTok{shareY =} \OtherTok{TRUE}\NormalTok{, }\DataTypeTok{shareX =} \OtherTok{TRUE}\NormalTok{, }\DataTypeTok{titleY =} \OtherTok{FALSE}
+\NormalTok{  )}
 \end{Highlighting}
 \end{Shaded}
 
-\begin{figure}
+\begin{figure}[H]
 
 {\centering \includegraphics[width=\textwidth]{images/trellis-txhousing-plotly} 
 
@@ -4535,7 +4532,7 @@ Figure \ref{fig:2-way-anova} demonstrates routing of a scatterplot brushing even
 \end{Highlighting}
 \end{Shaded}
 
-\begin{figure}
+\begin{figure}[H]
 
 {\centering \includegraphics[width=\textwidth]{vimeo-images/307580944/final} 
 
@@ -4547,7 +4544,7 @@ Figure \ref{fig:2-way-anova} demonstrates routing of a scatterplot brushing even
 When using a statistical trace type with graphical queries, it's often desirable to set the querying variable as the row index. That's because, with a statistical trace, numerous data values are attached to each graphical mark; and in that case, it's most intuitive if each value queries just one observation. Figure \ref{fig:mpg-linked-bars} gives a simple example of linking a (dynamic) bar chart with a scatterplot in this way to allow us to query interesting regions of the data space defined by engine displacement (\texttt{disp}), miles per gallon highway (\texttt{hwy}), and the class of car (\texttt{class}). Notice how selections can derive from either view, and since we've specified \texttt{"plotly\_selected"} as the \texttt{on} event, either rectangular or lasso selections can be used to trigger the query.
 
 \index{layout()@\texttt{layout()}!barmode@\texttt{barmode}!overlay}
-\index{layout()@\texttt{layout()}!dragmode@\texttt{dragmode}!lasso}
+\index{layout()@\texttt{layout()}!dragmode@\texttt{dragmode}!Lasso selection}
 
 \begin{Shaded}
 \begin{Highlighting}[]
@@ -4565,7 +4562,7 @@ When using a statistical trace type with graphical queries, it's often desirable
 \end{Highlighting}
 \end{Shaded}
 
-\begin{figure}
+\begin{figure}[H]
 
 {\centering \includegraphics[width=\textwidth]{vimeo-images/307598219/final} 
 
@@ -4599,7 +4596,7 @@ Figure \ref{fig:mpg-linked} adds two more statistical trace types to Figure \ref
 \end{Highlighting}
 \end{Shaded}
 
-\begin{figure}
+\begin{figure}[H]
 
 {\centering \includegraphics[width=\textwidth]{vimeo-images/307597640/final} 
 
@@ -4625,7 +4622,7 @@ As Figure \ref{fig:smooth-highlight} demonstrates, you can still have a \textbf{
 \end{Highlighting}
 \end{Shaded}
 
-\begin{figure}
+\begin{figure}[H]
 
 {\centering \includegraphics[width=\textwidth]{vimeo-images/307788164/final} 
 
@@ -4645,7 +4642,7 @@ Figure \ref{fig:smooth-highlight} demonstrates highlighting in a single view whe
 \end{Highlighting}
 \end{Shaded}
 
-\begin{figure}
+\begin{figure}[H]
 
 {\centering \includegraphics[width=\textwidth]{vimeo-images/307597927/final} 
 
@@ -4677,7 +4674,7 @@ Section \ref{maps} covers several different approaches\footnote{\citet{sf-blog-p
 \end{Highlighting}
 \end{Shaded}
 
-\begin{figure}
+\begin{figure}[H]
 
 {\centering \includegraphics[width=\textwidth]{vimeo-images/257149623/final} 
 
@@ -4727,7 +4724,7 @@ A more widely used approach to geo-spatial data visualization is to render lat/l
 \end{Highlighting}
 \end{Shaded}
 
-\begin{figure}
+\begin{figure}[H]
 
 {\centering \includegraphics[width=\textwidth]{vimeo-images/307597784/final} 
 
@@ -4763,7 +4760,7 @@ Every 2D mapping approach in \textbf{plotly} (e.g., \texttt{plot\_mapbox()}, \te
 \end{Highlighting}
 \end{Shaded}
 
-\begin{figure}
+\begin{figure}[H]
 
 {\centering \includegraphics[width=\textwidth]{vimeo-images/307598178/final} 
 
@@ -4783,7 +4780,7 @@ The \textbf{plotly} package is able to share graphical queries with a limited se
 \end{Highlighting}
 \end{Shaded}
 
-\begin{figure}
+\begin{figure}[H]
 
 {\centering \includegraphics[width=\textwidth]{vimeo-images/307597509/final} 
 
@@ -4818,7 +4815,7 @@ As already shown in Section \ref{filter}, \textbf{plotly} can share graphical qu
 \end{Highlighting}
 \end{Shaded}
 
-\begin{figure}
+\begin{figure}[H]
 
 {\centering \includegraphics[width=\textwidth]{vimeo-images/307787997/final} 
 
@@ -4861,7 +4858,7 @@ Figure \ref{fig:leaflet-polygons} uses another experimental feature of querying 
 \end{Highlighting}
 \end{Shaded}
 
-\begin{figure}
+\begin{figure}[H]
 
 {\centering \includegraphics[width=\textwidth]{vimeo-images/307598814/final} 
 
@@ -4884,7 +4881,7 @@ Section \ref{scatterplot-matrices} introduced the generalized pairs plot made vi
 \end{Highlighting}
 \end{Shaded}
 
-\begin{figure}
+\begin{figure}[H]
 
 {\centering \includegraphics[width=\textwidth]{vimeo-images/307788027/final} 
 
@@ -4895,6 +4892,8 @@ Section \ref{scatterplot-matrices} introduced the generalized pairs plot made vi
 
 \hypertarget{ggally-ggnostic}{%
 \subsection{Querying diagnostic plots}\label{ggally-ggnostic}}
+
+\index{ggplotly()@\texttt{ggplotly()}!GGally!ggnostic()@\texttt{ggnostic()}}
 
 In addition to the \texttt{ggpairs()} function for generalized pairs plots, the \textbf{GGally} packages also has a \texttt{ggnostic()} function which generates a matrix of diagnostic plots from a model object using \textbf{ggplot2}. Each column of this matrix represents a different explanatory variable and each row represents a different diagnostic measure. Figure \ref{fig:ggnostic} shows the default display for a linear model, which includes residuals (resid), estimates of residual standard deviation when a particular observation is excluded (sigma), diagonals from the projection matrix (hat), and cooks distance (cooksd).
 
@@ -4912,7 +4911,7 @@ In addition to the \texttt{ggpairs()} function for generalized pairs plots, the 
 \end{Highlighting}
 \end{Shaded}
 
-\begin{figure}
+\begin{figure}[H]
 
 {\centering \includegraphics[width=\textwidth]{vimeo-images/307788157/final} 
 
@@ -4927,6 +4926,8 @@ In Figure \ref{fig:ggnostic}, there is one observation with a noticeably high va
 
 \hypertarget{subset-queries-via-list-columns}{%
 \subsubsection{Subset queries via list-columns}\label{subset-queries-via-list-columns}}
+
+\index{Hierarchical selection}
 
 All the graphical querying examples thus far use \texttt{highlight\_key()} to attach values from atomic vector of a data frame to graphical marker(s), but what non-atomic vectors (i.e., list-columns)? When it comes to \emph{emitting} events, there is no real difference -- \textbf{plotly} will ``inform the world'' of a set of selection values, which is the union of all data values in the graphical query. However, as Figure \ref{fig:list-column-simple} demonstrates, when \textbf{plotly} receives a list-column query, it will highlight graphical markers with data value(s) that are a subset of the selected values. For example, when the point {[}3, 3{]} is queried, \textbf{plotly} will highlight all markers that represent a subset of \texttt{\{A,\ B,\ C\}}, which is why both {[}1, 1{]} (representing the set \texttt{\{A\}}) and (2, 2) (representing the set \texttt{\{A,\ B\}}) are highlighted.
 
@@ -4947,7 +4948,7 @@ All the graphical querying examples thus far use \texttt{highlight\_key()} to at
 \end{Highlighting}
 \end{Shaded}
 
-\begin{figure}
+\begin{figure}[H]
 
 {\centering \includegraphics[width=\textwidth]{vimeo-images/307788086/final} 
 
@@ -4957,6 +4958,10 @@ All the graphical querying examples thus far use \texttt{highlight\_key()} to at
 \end{figure}
 
 One compelling use case for subset queries is dendrograms. In fact, \textbf{plotly} provides a \texttt{plot\_dendro()} function for making dendrograms with support for subset queries. Figure \ref{fig:dendro} gives an example of brushing a branch of a dendrogram to query leafs that are similar in some sense. Any dendrogram object can be provided to \texttt{plot\_dendro()}, but this particular example visualizes the similarity of US states in terms of their arrest statistics via a hierarchical clustering model on the \texttt{USArrests} dataset.
+
+\index{Hierarchical clustering}
+\index{Grand tour}
+\indexc{plot\_dendro()}
 
 \begin{Shaded}
 \begin{Highlighting}[]
@@ -4968,7 +4973,7 @@ One compelling use case for subset queries is dendrograms. In fact, \textbf{plot
 \end{Highlighting}
 \end{Shaded}
 
-\begin{figure}
+\begin{figure}[H]
 
 {\centering \includegraphics[width=\textwidth]{vimeo-images/307788070/final} 
 
@@ -4985,7 +4990,7 @@ Figure \ref{fig:tour-USArrests} links the dendrogram from Figure \ref{fig:dendro
 \end{Highlighting}
 \end{Shaded}
 
-\begin{figure}
+\begin{figure}[H]
 
 {\centering \includegraphics[width=\textwidth]{vimeo-images/307788058/final} 
 
@@ -5065,7 +5070,7 @@ Figure \ref{fig:shiny-intro} uses the \texttt{renderPlotly()} function to render
 \end{Highlighting}
 \end{Shaded}
 
-\begin{figure}
+\begin{figure}[H]
 
 {\centering \includegraphics[width=\textwidth]{vimeo-images/307597444/final} 
 
@@ -5140,7 +5145,7 @@ The \texttt{renderPlotly()} function renders anything that the \texttt{plotly\_b
 \end{Highlighting}
 \end{Shaded}
 
-\begin{figure}
+\begin{figure}[H]
 
 {\centering \includegraphics[width=\textwidth]{vimeo-images/307598318/final} 
 
@@ -5156,7 +5161,7 @@ When a reactive expression inside \texttt{renderPlotly()} is re-executes, it tri
 
 Section \ref{fig:shiny-intro} covered how to render \textbf{shiny} output widgets (e.g., \texttt{plotlyOutput()}) that depend on a input widget, but what about having an output act like an input to another output? For example, say we'd like to dynamically generate a bar chart (i.e., an output) based on a point clicked on a scatter-plot (i.e., an input event tied to an output widget). In addition to \textbf{shiny}'s static graph and image rendering functions (e.g., \texttt{plotOutput()}/\texttt{imageOutput()}), there are a handful of other R packages that expose user interaction with ``output'' widget(s) as input value(s). \citet{leaflet-shiny} and \citet{DT-shiny} describe the interface for the \textbf{leaflet} and \textbf{DT} packages. This section outlines the interface for \texttt{plotlyOutput()}. This sort of functionality plays a vital role in linking of views through direct manipulation, similar to what we've already seen in Section \ref{graphical-queries}, but having access to \textbf{plotly} events on a \textbf{shiny} server allows for much more flexibility than linking views purely client-side.
 
-\textbackslash index\{event\_data()@\texttt{event\_data()}
+\index{event\_data()@\texttt{event\_data()}}
 \index{event\_data()@\texttt{event\_data()}!customdata@\texttt{customdata}}
 
 The \texttt{event\_data()} function is the most straight-forward way to access a \textbf{plotly} input events in \textbf{shiny}. Although \texttt{event\_data()} is function, it references and returns a \textbf{shiny} input value, so \texttt{event\_data()} needs to be used inside a reactive context. Most of these available events are data-specific traces (e.g., \texttt{"plotly\_hover"}, \texttt{"plotly\_click"}, \texttt{"plotly\_selected"}, etc), but there are also some that are layout-specific (e.g., \texttt{"plotly\_relayout"}). Most plotly.js events\footnote{These events are documented at \url{https://plot.ly/javascript/plotlyjs-events/}} are accessible through this interface -- for a complete list see the \texttt{help(event\_data)} documentation page.
@@ -5181,7 +5186,7 @@ There are currently four different modes for mouse click+drag behavior (i.e., \t
 \end{Highlighting}
 \end{Shaded}
 
-\begin{figure}
+\begin{figure}[H]
 
 {\centering \includegraphics[width=\textwidth]{vimeo-images/327625843/final} 
 
@@ -5194,6 +5199,9 @@ There are currently four different modes for mouse click+drag behavior (i.e., \t
 \subsection{3D events}\label{d-events}}
 
 \index{event\_data()@\texttt{event\_data()}!plotly\_relayout}
+\index{event\_data()@\texttt{event\_data()}!plotly\_legendclick}
+\index{event\_data()@\texttt{event\_data()}!plotly\_legenddoubleclick}
+\index{event\_data()@\texttt{event\_data()}!event\_register()@\texttt{event\_register()}}
 
 Drag selection events (i.e., \texttt{"plotly\_selecting"}) are currently only available for 2D charts, but other common events are generally supported for any type of graph, including 3D charts. Figure \ref{fig:3Devents} accesses various events in 3D including: \texttt{"plotly\_hover"}, \texttt{"plotly\_click"}, \texttt{"plotly\_legendclick"}, \texttt{"plotly\_legenddoubleclick"}, and \texttt{"plotly\_relayout"}. The data emitted via \texttt{"plotly\_hover"} and \texttt{"plotly\_click"} is structured similarly to data emitted from \texttt{"plotly\_selecting"}/\texttt{"plotly\_selected"}. Figure \ref{fig:3Devents} also demonstrates how one can react to particular components of a conflated event like \texttt{"plotly\_relayout"}. That is, \texttt{"plotly\_relayout"} will fire whenever \emph{any} part of the layout has changed, so if we want to trigger behavior if and only if there are changes to the camera eye, one could first check if the information emitted contains information about the camera eye.
 
@@ -5203,7 +5211,7 @@ Drag selection events (i.e., \texttt{"plotly\_selecting"}) are currently only av
 \end{Highlighting}
 \end{Shaded}
 
-\begin{figure}
+\begin{figure}[H]
 
 {\centering \includegraphics[width=\textwidth]{vimeo-images/327600560/final} 
 
@@ -5264,7 +5272,7 @@ A little known fact about \textbf{plotly} is that you can directly manipulate an
 \end{Highlighting}
 \end{Shaded}
 
-\begin{figure}
+\begin{figure}[H]
 
 {\centering \includegraphics[width=\textwidth]{vimeo-images/307597631/final} 
 
@@ -5277,7 +5285,7 @@ Figure \ref{fig:shiny-drag-circle} demonstrates directly manipulating a circle s
 
 \index{Editable charts!Circles}
 \index{event\_data()@\texttt{event\_data()}!plotly\_relayout}
-\index{layout()@\texttt{layout()}!shapes@\texttt{shapes}!circle@\texttt{circle}}
+\index{layout()@\texttt{layout()}!shapes@\texttt{shapes}!Circles}
 
 \begin{Shaded}
 \begin{Highlighting}[]
@@ -5319,7 +5327,7 @@ Figure \ref{fig:shiny-drag-circle} demonstrates directly manipulating a circle s
 \end{Highlighting}
 \end{Shaded}
 
-\begin{figure}
+\begin{figure}[H]
 
 {\centering \includegraphics[width=\textwidth]{vimeo-images/327619858/final} 
 
@@ -5336,7 +5344,7 @@ Figure \ref{fig:interactive-lm} demonstrates a linear model that reacts to edite
 \end{Highlighting}
 \end{Shaded}
 
-\begin{figure}
+\begin{figure}[H]
 
 {\centering \includegraphics[width=\textwidth]{vimeo-images/318338029/final} 
 
@@ -5349,6 +5357,7 @@ Figure \ref{fig:shiny-drag-line} uses an editable vertical line and the \texttt{
 
 \index{Editable charts!Lines}
 \index{event\_data()@\texttt{event\_data()}!plotly\_relayout}
+\index{layout()@\texttt{layout()}!shapes@\texttt{shapes}!Lines}
 
 \begin{Shaded}
 \begin{Highlighting}[]
@@ -5356,7 +5365,7 @@ Figure \ref{fig:shiny-drag-line} uses an editable vertical line and the \texttt{
 \end{Highlighting}
 \end{Shaded}
 
-\begin{figure}
+\begin{figure}[H]
 
 {\centering \includegraphics[width=\textwidth]{vimeo-images/307597984/final} 
 
@@ -5415,7 +5424,7 @@ Remember every \textbf{graph} has two critical components: data (i.e., traces) a
 \end{Highlighting}
 \end{Shaded}
 
-\begin{figure}
+\begin{figure}[H]
 
 {\centering \includegraphics[width=\textwidth]{vimeo-images/327623322/final} 
 
@@ -5432,7 +5441,7 @@ As Figure \ref{fig:shiny-parcoords-data} shows, it's possible to use this inform
 \end{Highlighting}
 \end{Shaded}
 
-\begin{figure}
+\begin{figure}[H]
 
 {\centering \includegraphics[width=\textwidth]{vimeo-images/307598128/final} 
 
@@ -5500,7 +5509,7 @@ Figure \ref{fig:shiny-corrplot} allows one to click on a cell of correlation hea
 \end{Highlighting}
 \end{Shaded}
 
-\begin{figure}
+\begin{figure}[H]
 
 {\centering \includegraphics[width=\textwidth]{vimeo-images/307597728/final} 
 
@@ -5549,7 +5558,7 @@ By default, \texttt{event\_data()} only invalidates a reactive expression when t
 \end{Highlighting}
 \end{Shaded}
 
-\begin{figure}
+\begin{figure}[H]
 
 {\centering \includegraphics[width=\textwidth]{vimeo-images/307598534/final} 
 
@@ -5600,7 +5609,7 @@ For events that are trace-specific (e.g.~\texttt{"plotly\_click"}, \texttt{"plot
 \end{Highlighting}
 \end{Shaded}
 
-\begin{figure}
+\begin{figure}[H]
 
 {\centering \includegraphics[width=\textwidth]{vimeo-images/307598771/final} 
 
@@ -5624,7 +5633,7 @@ Figure \ref{fig:shiny-hover-persist} demonstrates a shiny app that accumulates h
 \end{Highlighting}
 \end{Shaded}
 
-\begin{figure}
+\begin{figure}[H]
 
 {\centering \includegraphics[width=\textwidth]{vimeo-images/307597677/final} 
 
@@ -5641,7 +5650,7 @@ Figure \ref{fig:shiny-lmGadget} demonstrates a \textbf{shiny} gadget for interac
 \end{Highlighting}
 \end{Shaded}
 
-\begin{figure}
+\begin{figure}[H]
 
 {\centering \includegraphics[width=\textwidth]{vimeo-images/307598908/final} 
 
@@ -5742,7 +5751,7 @@ On initial page load, \textbf{plotly} graphs must be drawn from stratch, but whe
 \end{Highlighting}
 \end{Shaded}
 
-\begin{figure}
+\begin{figure}[H]
 
 {\centering \includegraphics[width=\textwidth]{vimeo-images/327620506/final} 
 
@@ -5793,7 +5802,7 @@ In terms of the implementation behind Figure \ref{fig:shiny-scatterplot} and \re
 \end{Highlighting}
 \end{Shaded}
 
-\begin{figure}
+\begin{figure}[H]
 
 {\centering \includegraphics[width=\textwidth]{vimeo-images/327621124/final} 
 
@@ -5822,7 +5831,7 @@ All \textbf{plotly} figures have two main components: traces (i.e., mapping from
 \end{Highlighting}
 \end{Shaded}
 
-\begin{figure}
+\begin{figure}[H]
 
 {\centering \includegraphics[width=\textwidth]{vimeo-images/327621625/final} 
 
@@ -5846,7 +5855,7 @@ All \textbf{plotly} figures have two main components: traces (i.e., mapping from
 \end{Highlighting}
 \end{Shaded}
 
-\begin{figure}
+\begin{figure}[H]
 
 {\centering \includegraphics[width=\textwidth]{vimeo-images/327603568/final} 
 
@@ -5865,7 +5874,7 @@ Figure \ref{fig:shiny-rangeslider-relayout} demonstrates a clever use of \texttt
 \end{Highlighting}
 \end{Shaded}
 
-\begin{figure}
+\begin{figure}[H]
 
 {\centering \includegraphics[width=\textwidth]{vimeo-images/307598689/final} 
 
@@ -5891,7 +5900,7 @@ Even if the app is not streaming, there is still constant client/server communic
 \end{Highlighting}
 \end{Shaded}
 
-\begin{figure}
+\begin{figure}[H]
 
 {\centering \includegraphics[width=\textwidth]{vimeo-images/307598387/final} 
 
@@ -5975,7 +5984,7 @@ Figure \ref{fig:shiny-drill-down-pie} displays sales broken down by business cat
 \end{Highlighting}
 \end{Shaded}
 
-\begin{figure}
+\begin{figure}[H]
 
 {\centering \includegraphics[width=\textwidth]{vimeo-images/328763167/final} 
 
@@ -6062,7 +6071,7 @@ A basic drill-down like Figure \ref{fig:shiny-drill-down-pie} is somewhat useful
 \end{Highlighting}
 \end{Shaded}
 
-\begin{figure}
+\begin{figure}[H]
 
 {\centering \includegraphics[width=\textwidth]{vimeo-images/328768848/final} 
 
@@ -6074,6 +6083,7 @@ A basic drill-down like Figure \ref{fig:shiny-drill-down-pie} is somewhat useful
 Figures \ref{fig:shiny-drill-down-pie} and \ref{fig:shiny-drill-down-bar-time} demonstrate one level of drill-down\ldots what about multiple levels? Introducing multiple levels adds complexity not only the implementation, but also the user experience. Especially in a drill-down approach where the \emph{same view} is being filtered, it can be difficult for the user to remember how they got to a particular view. Figure \ref{fig:shiny-drill-down-bar-time-history} demonstrates how we could extend Figure \ref{fig:shiny-drill-down-bar-time} to implement yet another level of drilling down (i.e., category -\textgreater{} sub-category -\textgreater{} product IDs) as well as populate a \texttt{selectInput()} dropdown for each active drill-down category. Not only does this help the user to remember how they got to the particular view, but it also provides the ability to easily modify the sequence of drill-down events. In terms of implementation, the main idea is the very similar to before -- we still store and update the state of each `drill-down' in it's own reactive value, but now when a `parent' category changes (e.g., \texttt{category}) it should invalidate (i.e., clear) any currently selected `child' categories (e.g., \texttt{sub\_category}).
 
 \index{event\_data()@\texttt{event\_data()}!plotly\_click}
+\index{add\_trace()@\texttt{add\_trace()}!add\_table()@\texttt{add\_table()}}
 
 \begin{Shaded}
 \begin{Highlighting}[]
@@ -6239,7 +6249,7 @@ Figures \ref{fig:shiny-drill-down-pie} and \ref{fig:shiny-drill-down-bar-time} d
 \end{Highlighting}
 \end{Shaded}
 
-\begin{figure}
+\begin{figure}[H]
 
 {\centering \includegraphics[width=\textwidth]{vimeo-images/328770954/final} 
 
@@ -6349,7 +6359,7 @@ Similar to Figure \ref{fig:shiny-drill-down-bar-time-history}, changes at a give
 \end{Highlighting}
 \end{Shaded}
 
-\begin{figure}
+\begin{figure}[H]
 
 {\centering \includegraphics[width=\textwidth]{vimeo-images/307597838/final} 
 
@@ -6406,7 +6416,7 @@ Figure \ref{fig:shiny-crossfilter-naive} demonstrates the simplest way to implem
 \end{Highlighting}
 \end{Shaded}
 
-\begin{figure}
+\begin{figure}[H]
 
 {\centering \includegraphics[width=\textwidth]{vimeo-images/318277110/final} 
 
@@ -6521,7 +6531,7 @@ Before we address the additional complexity that comes with linking 3 or more vi
 \end{Highlighting}
 \end{Shaded}
 
-\begin{figure}
+\begin{figure}[H]
 
 {\centering \includegraphics[width=\textwidth]{vimeo-images/318122403/final} 
 
@@ -6538,7 +6548,7 @@ When linking 3 or more views in a crossfilter, it's important to have a mechanis
 \end{Highlighting}
 \end{Shaded}
 
-\begin{figure}
+\begin{figure}[H]
 
 {\centering \includegraphics[width=\textwidth]{vimeo-images/318129502/final} 
 
@@ -6557,7 +6567,7 @@ Since brushing within color is transient, in contrast to Figure \ref{fig:shiny-c
 \end{Highlighting}
 \end{Shaded}
 
-\begin{figure}
+\begin{figure}[H]
 
 {\centering \includegraphics[width=\textwidth]{vimeo-images/327622610/final} 
 
@@ -6579,7 +6589,7 @@ A \emph{draggable} linked brush is great for conditioning via a moving window. F
 \end{Highlighting}
 \end{Shaded}
 
-\begin{figure}
+\begin{figure}[H]
 
 {\centering \includegraphics[width=\textwidth]{vimeo-images/318330112/final} 
 
@@ -6593,7 +6603,7 @@ A \emph{draggable} linked brush is great for conditioning via a moving window. F
 
 Compared to the linking framework covered in Section \ref{graphical-queries}, the ability to link views server-side with \textbf{shiny} opens the door to many new possibilities. This chapter focuses mostly on using just \textbf{plotly} within \textbf{shiny}, but the \textbf{shiny} ecosystem is vast and these techniques can of course be used to inform other views, such as static plots, other \textbf{htmlwidgets} packages (e.g., \textbf{leaflet}, \textbf{DT}, \textbf{network3D}, etc), and other custom \textbf{shiny} bindings. In fact, I have a numerous \textbf{shiny} apps publicly available via an R package that use numerous tools to provide exploratory interfaces to a variety of domain-specific problems, including \texttt{zikar::explore()} for exploring Zika virus reports, \texttt{eechidna::launch()} for exploring Australian election and census data, and \texttt{bcviz::launch()} for exploring housing and census information in British Colombia \citep{zikar, eechidna, bcviz}. These complex applications also serve as a reference as to how can use the client-side linking framework (i.e., \textbf{crosstalk}) inside a larger \textbf{shiny} application. See this video for an example:
 
-\begin{figure}
+\begin{figure}[H]
 
 {\centering \includegraphics[width=\textwidth]{vimeo-images/207379729/final} 
 
@@ -6644,7 +6654,7 @@ One way to write a custom event handler for a \textbf{plotly} graph is to levera
 \end{Highlighting}
 \end{Shaded}
 
-\begin{figure}
+\begin{figure}[H]
 
 {\centering \includegraphics[width=\textwidth]{vimeo-images/307598574/final} 
 
@@ -6787,7 +6797,7 @@ It's worth noting that plotly.js, which consumes JSON objects, has specific expe
 \end{Highlighting}
 \end{Shaded}
 
-\begin{figure}
+\begin{figure}[H]
 
 {\centering \includegraphics[width=\textwidth]{vimeo-images/307597826/final} 
 
@@ -6844,7 +6854,7 @@ When using \texttt{onRender()} to provide a JS function to be called upon static
 \end{Highlighting}
 \end{Shaded}
 
-\begin{figure}
+\begin{figure}[H]
 
 {\centering \includegraphics[width=\textwidth]{vimeo-images/307597974/final} 
 
@@ -6884,7 +6894,7 @@ As covered in Section \ref{shiny-plotly-inputs}, it's often useful to supply met
 \end{Highlighting}
 \end{Shaded}
 
-\begin{figure}
+\begin{figure}[H]
 
 {\centering \includegraphics[width=\textwidth]{vimeo-images/307598425/final} 
 
@@ -6925,7 +6935,7 @@ In addition to using \texttt{window.open()} to open the \texttt{url}, we could a
 \end{Highlighting}
 \end{Shaded}
 
-\begin{figure}
+\begin{figure}[H]
 
 {\centering \includegraphics[width=\textwidth]{vimeo-images/327588345/final} 
 
@@ -7008,7 +7018,7 @@ The \texttt{customdata} attribute can hold any R object that can be serialized a
 \end{Highlighting}
 \end{Shaded}
 
-\begin{figure}
+\begin{figure}[H]
 
 {\centering \includegraphics[width=\textwidth]{vimeo-images/310463565/final} 
 
@@ -7030,7 +7040,7 @@ It's worth noting that the JavaScript that powers Figure \ref{fig:tooltip-image}
 \end{Highlighting}
 \end{Shaded}
 
-\begin{figure}
+\begin{figure}[H]
 
 {\centering \includegraphics[width=\textwidth]{vimeo-images/310466116/final} 
 
@@ -7092,7 +7102,7 @@ On the JS side, the \texttt{customdata} attribute is designed to support \emph{a
 \end{Highlighting}
 \end{Shaded}
 
-\begin{figure}
+\begin{figure}[H]
 
 {\centering \includegraphics[width=\textwidth]{vimeo-images/307597956/final} 
 
@@ -7144,7 +7154,7 @@ Sometimes supplying and accessing \texttt{customdata} alone is not quite enough 
 \end{Highlighting}
 \end{Shaded}
 
-\begin{figure}
+\begin{figure}[H]
 
 {\centering \includegraphics[width=\textwidth]{vimeo-images/307598016/final} 
 
@@ -7241,7 +7251,7 @@ Figure \ref{fig:tx-inset-plot} uses the same \texttt{customdata} supplied to Fig
 \end{Highlighting}
 \end{Shaded}
 
-\begin{figure}
+\begin{figure}[H]
 
 {\centering \includegraphics[width=\textwidth]{vimeo-images/307598624/final} 
 
@@ -7303,7 +7313,7 @@ Sometimes supplying \texttt{customdata} isn't the best way to achieve a particul
 \end{Highlighting}
 \end{Shaded}
 
-\begin{figure}
+\begin{figure}[H]
 
 {\centering \includegraphics[width=\textwidth]{vimeo-images/307598118/final} 
 
@@ -7363,7 +7373,7 @@ This \texttt{react-player} library provides a function called \texttt{renderReac
 \end{Highlighting}
 \end{Shaded}
 
-\begin{figure}
+\begin{figure}[H]
 
 {\centering \includegraphics[width=\textwidth]{vimeo-images/315308561/final} 
 
@@ -7400,7 +7410,7 @@ This \texttt{react-player} React library is rather unique in that it provides a 
 \end{Highlighting}
 \end{Shaded}
 
-\begin{figure}
+\begin{figure}[H]
 
 {\centering \includegraphics[width=\textwidth]{vimeo-images/315309034/final} 
 
@@ -7410,6 +7420,8 @@ This \texttt{react-player} React library is rather unique in that it provides a 
 \end{figure}
 
 For a more serious example, we could leverage another React component, named \texttt{react-data-grid}, to display the data within a \textbf{plotly} scatterplot brush, as done in Figure \ref{fig:react-data-grid}. Again, we can use \textbf{runpkg} to download a bundle of \texttt{react-data-grid}, but this library doesn't come with \texttt{React}/\texttt{ReactDOM}, so we must explicitly include it this time around. In fact, this approach of explicitly importing and calling \texttt{ReactDOM.render()} on your component is a more common approach than the custom standalone interface approach (i.e., \texttt{renderReactPlayer()}) used in Figure \ref{fig:react-player}.
+
+\index{layout()@\texttt{layout()}!dragmode@\texttt{dragmode}!Rectangular selection}
 
 \begin{Shaded}
 \begin{Highlighting}[]
@@ -7451,11 +7463,13 @@ For a more serious example, we could leverage another React component, named \te
 \NormalTok{  ))}
 
 \CommentTok{# create the HTML page}
-\KeywordTok{browsable}\NormalTok{(}\KeywordTok{tagList}\NormalTok{(p, data_grid, }\KeywordTok{html_dependency_react}\NormalTok{(), data_grid_js))}
+\KeywordTok{browsable}\NormalTok{(}
+  \KeywordTok{tagList}\NormalTok{(p, data_grid, }\KeywordTok{html_dependency_react}\NormalTok{(), data_grid_js)}
+\NormalTok{)}
 \end{Highlighting}
 \end{Shaded}
 
-\begin{figure}
+\begin{figure}[H]
 
 {\centering \includegraphics[width=\textwidth]{vimeo-images/325933744/final} 
 
@@ -7536,7 +7550,8 @@ The \texttt{hoverinfo} attribute controls what other plot attributes are shown i
 \NormalTok{  )),}
   \DataTypeTok{text =} \KeywordTok{c}\NormalTok{(}
     \StringTok{"👋 glyphs ಠ_ಠ"}\NormalTok{,}
-    \StringTok{"Hello <span style='color:red'><sup>1</sup>⁄<sub>2</sub></span> fraction"}\NormalTok{,}
+    \StringTok{"Hello <span style='color:red'><sup>1</sup>⁄<sub>2</sub></span> }
+\StringTok{    fraction"}\NormalTok{,}
     \StringTok{"\textbackslash{}U0001f44b unicode \textbackslash{}U00AE \textbackslash{}U00B6 \textbackslash{}U00BF"}\NormalTok{,}
     \StringTok{"&mu; &plusmn; &amp; &lt; &gt; &nbsp; &times; &plusmn; &deg;"}\NormalTok{,}
     \KeywordTok{paste}\NormalTok{(}\StringTok{"<b>Wow</b> <i>much</i> options"}\NormalTok{, emo}\OperatorTok{::}\KeywordTok{ji}\NormalTok{(}\StringTok{"dog2"}\NormalTok{))}
@@ -7556,7 +7571,7 @@ The \texttt{hoverinfo} attribute controls what other plot attributes are shown i
 \end{Highlighting}
 \end{Shaded}
 
-\begin{figure}
+\begin{figure}[H]
 
 {\centering \includegraphics[width=\textwidth]{images/custom-tooltip-plotly} 
 
@@ -7586,7 +7601,7 @@ Whenever a \texttt{fill} is relevant (e.g., \texttt{add\_sf()}, \texttt{add\_pol
 \end{Highlighting}
 \end{Shaded}
 
-\begin{figure}
+\begin{figure}[H]
 
 {\centering \includegraphics[width=\textwidth]{images/hoveron-fill-points} 
 
@@ -7608,7 +7623,7 @@ You can't supply custom text in this way to a statistical aggregation, but there
 \end{Highlighting}
 \end{Shaded}
 
-\begin{figure}
+\begin{figure}[H]
 
 {\centering \includegraphics[width=\textwidth]{images/tooltip-format-boxplot} 
 
@@ -7630,7 +7645,7 @@ Computed values that don't have a corresponding axis likely have a \texttt{*hove
 \end{Highlighting}
 \end{Shaded}
 
-\begin{figure}
+\begin{figure}[H]
 
 {\centering \includegraphics[width=\textwidth]{images/tooltip-format-heatmap} 
 
@@ -7655,7 +7670,7 @@ It's admittedly difficult to remember where to specify these \texttt{hoverformat
 \end{Highlighting}
 \end{Shaded}
 
-\begin{figure}
+\begin{figure}[H]
 
 {\centering \includegraphics[width=\textwidth]{images/hovertemplate} 
 
@@ -7681,7 +7696,7 @@ Similar to how you can use the \texttt{text} attribute to supply a custom string
 \end{Highlighting}
 \end{Shaded}
 
-\begin{figure}
+\begin{figure}[H]
 
 {\centering \includegraphics[width=\textwidth]{images/ggplotly-text} 
 
@@ -7698,7 +7713,7 @@ By default, \texttt{ggplotly()} will display all relevant aesthetic mappings (or
 \end{Highlighting}
 \end{Shaded}
 
-\begin{figure}
+\begin{figure}[H]
 
 {\centering \includegraphics[width=\textwidth]{images/ggplotly-text-tooltip} 
 
@@ -7721,7 +7736,7 @@ When constructing the text to display, \texttt{ggplotly()} runs \texttt{format()
 \end{Highlighting}
 \end{Shaded}
 
-\begin{figure}
+\begin{figure}[H]
 
 {\centering \includegraphics[width=\textwidth]{images/format-options} 
 
@@ -7744,7 +7759,7 @@ These global options are nice for specifying significant/scientific notation, bu
 \end{Highlighting}
 \end{Shaded}
 
-\begin{figure}
+\begin{figure}[H]
 
 {\centering \includegraphics[width=\textwidth]{images/text-clever} 
 
@@ -7783,7 +7798,7 @@ The approach depicted in Figure \ref{fig:text-clever} works for computed values 
 \end{Highlighting}
 \end{Shaded}
 
-\begin{figure}
+\begin{figure}[H]
 
 {\centering \includegraphics[width=\textwidth]{images/custom-predict-text} 
 
@@ -7815,7 +7830,7 @@ There is currently one main attribute for controlling the style of a tooltip: \t
 \end{Highlighting}
 \end{Shaded}
 
-\begin{figure}
+\begin{figure}[H]
 
 {\centering \includegraphics[width=\textwidth]{images/tooltip-style} 
 
@@ -7839,7 +7854,7 @@ On the other hand, when using \texttt{ggplotly()}, you have to modify the \textt
 \end{Highlighting}
 \end{Shaded}
 
-\begin{figure}
+\begin{figure}[H]
 
 {\centering \includegraphics[width=\textwidth]{images/tooltip-style-ggplotly} 
 
@@ -7883,7 +7898,7 @@ The \texttt{displaylogo} option makes it quick and easy to remove the entire mod
 \end{Highlighting}
 \end{Shaded}
 
-\begin{figure}
+\begin{figure}[H]
 
 {\centering \includegraphics[width=\textwidth]{images/displaylogo} 
 
@@ -7906,7 +7921,7 @@ Any modebar buttons can be removed by name via \texttt{modeBarButtonsToRemove}. 
 \end{Highlighting}
 \end{Shaded}
 
-\begin{figure}
+\begin{figure}[H]
 
 {\centering \includegraphics[width=\textwidth]{images/modeBarButtonsToRemove} 
 
@@ -7945,7 +7960,7 @@ It is possible to supply your own modebar button icon that triggers a custom Jav
 \end{Highlighting}
 \end{Shaded}
 
-\begin{figure}
+\begin{figure}[H]
 
 {\centering \includegraphics[width=\textwidth]{images/modeBarButtonsToAdd} 
 
@@ -7965,7 +7980,7 @@ Note that you can also use \texttt{modeBarButtons} to completely specify which b
 \end{Highlighting}
 \end{Shaded}
 
-\begin{figure}
+\begin{figure}[H]
 
 {\centering \includegraphics[width=\textwidth]{images/modeBarButtons} 
 
@@ -8028,7 +8043,7 @@ If you use \texttt{plot\_ly()} and directly specify a plotly.js color attribute 
 \end{Highlighting}
 \end{Shaded}
 
-\begin{figure}
+\begin{figure}[H]
 
 {\centering \includegraphics[width=\textwidth]{images/color-plotly-js} 
 
@@ -8103,7 +8118,7 @@ The JavaScript library underlying \textbf{plotly} (plotly.js) has it's own speci
 \end{Highlighting}
 \end{Shaded}
 
-\begin{figure}
+\begin{figure}[H]
 
 {\centering \includegraphics[width=\textwidth]{images/symbols-all} 
 
@@ -8135,7 +8150,7 @@ In addition to these marker symbols, you can also use \texttt{add\_text()} to en
 \end{Highlighting}
 \end{Shaded}
 
-\begin{figure}
+\begin{figure}[H]
 
 {\centering \includegraphics[width=\textwidth]{images/glyphs} 
 
@@ -8162,7 +8177,7 @@ Having the ability to encode data with unicode means that we have a virtually en
 \end{Highlighting}
 \end{Shaded}
 
-\begin{figure}
+\begin{figure}[H]
 
 {\centering \includegraphics[width=\textwidth]{images/emojis} 
 
@@ -8197,7 +8212,7 @@ There are a few ways to embed images in a \textbf{plotly} graph. Perhaps the eas
 \end{Highlighting}
 \end{Shaded}
 
-\begin{figure}
+\begin{figure}[H]
 
 {\centering \includegraphics[width=\textwidth]{images/image-hyperlink} 
 
@@ -8226,7 +8241,7 @@ The approach in Figure \ref{fig:image-hyperlink} has a downside though -- if tha
 \end{Highlighting}
 \end{Shaded}
 
-\begin{figure}
+\begin{figure}[H]
 
 {\centering \includegraphics[width=\textwidth]{images/image-uri} 
 
@@ -8257,7 +8272,7 @@ Another approach is to convert a raster object into a data URI, which the \textt
 \end{Highlighting}
 \end{Shaded}
 
-\begin{figure}
+\begin{figure}[H]
 
 {\centering \includegraphics[width=\textwidth]{images/raster} 
 
@@ -8285,7 +8300,7 @@ The \texttt{locale} argument of the \texttt{config()} function allows one to ren
 \end{Highlighting}
 \end{Shaded}
 
-\begin{figure}
+\begin{figure}[H]
 
 {\centering \includegraphics[width=\textwidth]{images/localization} 
 
@@ -8476,7 +8491,7 @@ LaTeX rendering via MathJax is possible via the \texttt{TeX()} function which fl
 \end{Highlighting}
 \end{Shaded}
 
-\begin{figure}
+\begin{figure}[H]
 
 {\centering \includegraphics[width=\textwidth]{images/mathjax} 
 
@@ -8512,7 +8527,7 @@ Figure \ref{fig:mathjax2} demonstrates how to render LaTeX with on-graph text. T
 \end{Highlighting}
 \end{Shaded}
 
-\begin{figure}
+\begin{figure}[H]
 
 {\centering \includegraphics[width=\textwidth]{images/mathjax2} 
 
@@ -8577,7 +8592,7 @@ As Chapter \ref{intro-plotly} first introduced, we can express multi-layer \text
 \end{Highlighting}
 \end{Shaded}
 
-\begin{figure}
+\begin{figure}[H]
 
 {\centering \includegraphics[width=\textwidth]{images/houston2} 
 
@@ -8588,7 +8603,7 @@ As Chapter \ref{intro-plotly} first introduced, we can express multi-layer \text
 
 Sometimes the directed acyclic graph property of a \textbf{magrittr} pipeline can be too restrictive for certain types of plots. In this example, after filtering the data down to Houston, there is no way to recover the original data inside the pipeline. The \texttt{add\_fun()} function helps to work-around this restriction\footnote{Credit to Winston Chang and Hadley Wickham for this idea. The \texttt{add\_fun()} is very much like \texttt{layer\_f()} function in \textbf{ggvis}.} -- it works by applying a function to the plotly object, but does not affect the data associated with the plotly object. This effectively provides a way to isolate data transformations within the pipeline\footnote{Also, effectively putting a \href{http://www.memecreator.org/meme/yo-dawg-i-heard-u-like-pipelines-so-we-put-a-pipeline-in-your-pipeline}{pipeline inside a pipeline}}. Figure \ref{fig:houston-vs-sa} uses this idea to highlight both Houston and San Antonio.
 
-\index{add\_fun()@\texttt{add\_fun()}}
+\index{Data-plot-pipeline!add\_fun()@\texttt{add\_fun()}}
 
 \begin{Shaded}
 \begin{Highlighting}[]
@@ -8604,7 +8619,7 @@ Sometimes the directed acyclic graph property of a \textbf{magrittr} pipeline ca
 \end{Highlighting}
 \end{Shaded}
 
-\begin{figure}
+\begin{figure}[H]
 
 {\centering \includegraphics[width=\textwidth]{images/houston-vs-sa} 
 
@@ -8645,7 +8660,7 @@ It is useful to think of the function supplied to \texttt{add\_fun()} as a ``lay
 \end{Highlighting}
 \end{Shaded}
 
-\begin{figure}
+\begin{figure}[H]
 
 {\centering \includegraphics[width=\textwidth]{images/summary} 
 
@@ -8657,9 +8672,9 @@ It is useful to think of the function supplied to \texttt{add\_fun()} as a ``lay
 A layering function does not have to be a data-plot-pipeline itself. Its only requirement on a layering function is that the first argument is a plot object and it returns a plot object. This provides an opportunity to say, fit a model to the plot data, extract the model components you desire, and map those components to visuals. Furthermore, since \textbf{plotly}'s \texttt{add\_*()} functions don't require a data.frame, you can supply those components directly to attributes (as long as they are well-defined), as done in Figure \ref{fig:forecast} via the \textbf{forecast} package \citep{forecast}.
 
 \indexc{plotly\_data()}
+\indexc{forecast()}
 
-\index{c{forecast()}
-\indexadd\_trace()@\texttt{add\_trace()}!add\_ribbons()@\texttt{add\_ribbons()}}
+\index{add\_trace()@\texttt{add\_trace()}!add\_ribbons()@\texttt{add\_ribbons()}}
 
 \begin{Shaded}
 \begin{Highlighting}[]
@@ -8690,7 +8705,7 @@ A layering function does not have to be a data-plot-pipeline itself. Its only re
 \end{Highlighting}
 \end{Shaded}
 
-\begin{figure}
+\begin{figure}[H]
 
 {\centering \includegraphics[width=\textwidth]{images/forecast} 
 
@@ -8770,7 +8785,7 @@ In addition to using the functions above to modify \texttt{ggplotly()}'s return 
 \hypertarget{modifying-layout}{%
 \section{Modifying layout}\label{modifying-layout}}
 
-Any aspect of a \textbf{plotly} objects layout can be modified\^{}{[}Or, in the case of cumulative attributes, like \texttt{shapes}, \texttt{images}, \texttt{annotations}, etc, these items will be added to the existing items) via the \texttt{layout()} function. By default, since it doesn't always make sense to compare values, \texttt{ggplotly()} will usually set \texttt{layout.hovermode=\textquotesingle{}closest\textquotesingle{}}. As shown in Figure \ref{fig:ggplotly-rangeslider}, when we have multiple y-values of interest at a specific x-value, it can be helpful to set \texttt{layout.hovermode=\textquotesingle{}x\textquotesingle{}}. Moreover, for a long time series graph like this, zooming in on the x-axis can be useful -- \texttt{dynamicTicks} allows plotly.js to handle the generation of axis ticks and the \texttt{rangeslider()} allows us to zoom on the x-axis without losing the global context.
+Any aspect of a \textbf{plotly} objects layout can be modified\footnote{Or, in the case of cumulative attributes, like \texttt{shapes}, \texttt{images}, \texttt{annotations}, etc, these items will be added to the existing items} via the \texttt{layout()} function. By default, since it doesn't always make sense to compare values, \texttt{ggplotly()} will usually set \texttt{layout.hovermode=\textquotesingle{}closest\textquotesingle{}}. As shown in Figure \ref{fig:ggplotly-rangeslider}, when we have multiple y-values of interest at a specific x-value, it can be helpful to set \texttt{layout.hovermode=\textquotesingle{}x\textquotesingle{}}. Moreover, for a long time series graph like this, zooming in on the x-axis can be useful -- \texttt{dynamicTicks} allows plotly.js to handle the generation of axis ticks and the \texttt{rangeslider()} allows us to zoom on the x-axis without losing the global context.
 
 \indexc{rangeslider()}
 
@@ -8789,7 +8804,7 @@ Any aspect of a \textbf{plotly} objects layout can be modified\^{}{[}Or, in the 
 \end{Highlighting}
 \end{Shaded}
 
-\begin{figure}
+\begin{figure}[H]
 
 {\centering \includegraphics[width=\textwidth]{vimeo-images/325298724/final} 
 
@@ -8816,7 +8831,7 @@ As mentioned previously, \texttt{ggplotly()} translates each ggplot2 layer into 
 \end{Highlighting}
 \end{Shaded}
 
-\begin{figure}
+\begin{figure}[H]
 
 {\centering \includegraphics[width=\textwidth]{images/simple-scatterplot} 
 
@@ -8833,7 +8848,7 @@ The \textbf{ggplot2} package doesn't provide an API for interactive features, bu
 \end{Highlighting}
 \end{Shaded}
 
-\begin{figure}
+\begin{figure}[H]
 
 {\centering \includegraphics[width=\textwidth]{images/listviewer} 
 
@@ -8844,7 +8859,7 @@ The \textbf{ggplot2} package doesn't provide an API for interactive features, bu
 
 This output indicates that the fitted line and confidence band are implemented in the 2nd and 3rd trace of the plotly object, so to turn off the hover of those traces:
 
-\indexc{style}
+\indexc{style()}
 
 \begin{Shaded}
 \begin{Highlighting}[]
@@ -8852,7 +8867,7 @@ This output indicates that the fitted line and confidence band are implemented i
 \end{Highlighting}
 \end{Shaded}
 
-\begin{figure}
+\begin{figure}[H]
 
 {\centering \includegraphics[width=\textwidth]{images/style-hoverinfo} 
 
@@ -8891,8 +8906,8 @@ Since \texttt{ggplotly()} returns a plotly object, and \textbf{plotly} objects c
 The data shown above is the data ggplot2 uses to actually draw the fitted values (as a line) and standard error bounds (as a ribbon). Figure \ref{fig:se-annotations} leverages this data to add additional information about the model fit; in particular, it adds a vertical lines and annotations at the x-values that are associated with the highest and lowest amount uncertainty in the fitted values. Producing a plot like this with \textbf{ggplot2} would be impossible using \texttt{geom\_smooth()} alone.\footnote{It could be recreated by fitting the model via \texttt{loess()}, obtaining the fitted values and standard error with \texttt{predict()}, and feeding those results into \texttt{geom\_line()}/\texttt{geom\_ribbon()}/\texttt{geom\_text()}/\texttt{geom\_segment()}, but that process is much more onerous.} Providing a simple visual clue like this can help combat visual misperceptions of uncertainty bands due to the sine illusion \citep{sine-illusion}.
 
 \index{Data-plot-pipeline}
-\index{add\_fun()@\texttt{add\_fun()}}
-\index{add\_trace()@\texttt{add\_trace()}!add\_annotations()@\texttt{add\_annotations()}}
+\index{Data-plot-pipeline!add\_fun()@\texttt{add\_fun()}}
+\index{add\_annotations()@\texttt{add\_annotations()}!Data coordinates}
 \index{add\_trace()@\texttt{add\_trace()}!add\_segments()@\texttt{add\_segments()}}
 \index{ggplotly()@\texttt{ggplotly()}!layerData@\texttt{layerData}}
 
@@ -8913,7 +8928,7 @@ The data shown above is the data ggplot2 uses to actually draw the fitted values
 \end{Highlighting}
 \end{Shaded}
 
-\begin{figure}
+\begin{figure}[H]
 
 {\centering \includegraphics[width=\textwidth]{images/se-annotations} 
 
@@ -8924,7 +8939,7 @@ The data shown above is the data ggplot2 uses to actually draw the fitted values
 
 In addition to leveraging output from \texttt{StatSmooth}, it is sometimes useful to leverage output of other statistics, especially for annotation purposes. Figure \ref{fig:StatBin} leverages the output of \texttt{StatBin} to add annotations to a stacked bar chart. Annotation is primarily helpful for displaying the heights of bars in a stacked bar chart, since decoding the heights of bars is a fairly difficult perceptual task \citep{graphical-perception}. As result, it is much easier to compare bar heights representing the proportion of diamonds with a given clarity across various diamond cuts.
 
-\index{ggplotly()@\texttt{ggplotly()}!geom\_bar()@\texttt{geom\_bar()}}
+\index{ggplotly()@\texttt{ggplotly()}!ggplot2!geom\_bar()@\texttt{geom\_bar()}}
 \index{add\_trace()@\texttt{add\_trace()}!add\_text()@\texttt{add\_text()}}
 
 \begin{Shaded}
@@ -8938,12 +8953,12 @@ In addition to leveraging output from \texttt{StatSmooth}, it is sometimes usefu
     \DataTypeTok{x =} \OperatorTok{~}\NormalTok{x, }\DataTypeTok{y =} \OperatorTok{~}\NormalTok{(ymin }\OperatorTok{+}\StringTok{ }\NormalTok{ymax) }\OperatorTok{/}\StringTok{ }\DecValTok{2}\NormalTok{,}
     \DataTypeTok{text =} \OperatorTok{~}\KeywordTok{ifelse}\NormalTok{(ydiff }\OperatorTok{>}\StringTok{ }\FloatTok{0.02}\NormalTok{, }\KeywordTok{round}\NormalTok{(ydiff, }\DecValTok{2}\NormalTok{), }\StringTok{""}\NormalTok{),}
     \DataTypeTok{showlegend =} \OtherTok{FALSE}\NormalTok{, }\DataTypeTok{hoverinfo =} \StringTok{"none"}\NormalTok{,}
-    \DataTypeTok{color =} \KeywordTok{I}\NormalTok{(}\StringTok{"black"}\NormalTok{), }\DataTypeTok{size =} \KeywordTok{I}\NormalTok{(}\DecValTok{9}\NormalTok{)}
+    \DataTypeTok{color =} \KeywordTok{I}\NormalTok{(}\StringTok{"white"}\NormalTok{), }\DataTypeTok{size =} \KeywordTok{I}\NormalTok{(}\DecValTok{9}\NormalTok{)}
 \NormalTok{  )}
 \end{Highlighting}
 \end{Shaded}
 
-\begin{figure}
+\begin{figure}[H]
 
 {\centering \includegraphics[width=\textwidth]{images/StatBin} 
 
@@ -8954,7 +8969,7 @@ In addition to leveraging output from \texttt{StatSmooth}, it is sometimes usefu
 
 Another useful application is labelling the levels of each piece/polygon output by \texttt{StatDensity2d} as shown in Figure \ref{fig:StatDensity2d}. Note that, in this example, the \texttt{add\_text()} layer takes advantage of \texttt{ggplotly()}'s ability to inherit aesthetics from the global mapping. Furthermore, since \texttt{originalData} is \texttt{FALSE}, it attaches the ``built'' aesthetics (i.e., the \texttt{x}/\texttt{y} positions after \texttt{StatDensity2d} has been applied to the raw data).
 
-\index{ggplotly()@\texttt{ggplotly()}!geom\_density2d()@\texttt{geom\_density2d()}}
+\index{ggplotly()@\texttt{ggplotly()}!ggplot2!geom\_density2d()@\texttt{geom\_density2d()}}
 
 \begin{Shaded}
 \begin{Highlighting}[]
@@ -8965,12 +8980,12 @@ Another useful application is labelling the levels of each piece/polygon output 
 \StringTok{  }\KeywordTok{group_by}\NormalTok{(piece) }\OperatorTok{%>%}
 \StringTok{  }\KeywordTok{slice}\NormalTok{(}\KeywordTok{which.min}\NormalTok{(y)) }\OperatorTok{%>%}\StringTok{ }
 \StringTok{  }\KeywordTok{add_text}\NormalTok{(}
-    \DataTypeTok{text =} \OperatorTok{~}\NormalTok{level, }\DataTypeTok{size =} \KeywordTok{I}\NormalTok{(}\DecValTok{9}\NormalTok{), }\DataTypeTok{color =} \KeywordTok{I}\NormalTok{(}\StringTok{"black"}\NormalTok{), }\DataTypeTok{hoverinfo=}\StringTok{"none"}
+    \DataTypeTok{text =} \OperatorTok{~}\NormalTok{level, }\DataTypeTok{size =} \KeywordTok{I}\NormalTok{(}\DecValTok{16}\NormalTok{), }\DataTypeTok{color =} \KeywordTok{I}\NormalTok{(}\StringTok{"black"}\NormalTok{), }\DataTypeTok{hoverinfo=}\StringTok{"none"}
 \NormalTok{  )}
 \end{Highlighting}
 \end{Shaded}
 
-\begin{figure}
+\begin{figure}[H]
 
 {\centering \includegraphics[width=\textwidth]{images/StatDensity2d} 
 
@@ -8994,7 +9009,7 @@ In \textbf{ggplot2}, many geoms are special cases of other geoms. For example, \
 \CommentTok{#>     data <- data[order(data[["x"]]), ]}
 \CommentTok{#>     prefix_class(data, "GeomPath")}
 \CommentTok{#> \}}
-\CommentTok{#> <bytecode: 0x7fbaf64ff408>}
+\CommentTok{#> <bytecode: 0x7f92875ad528>}
 \CommentTok{#> <environment: namespace:plotly>}
 \end{Highlighting}
 \end{Shaded}
@@ -9042,7 +9057,7 @@ As shown in Figure \ref{fig:xspline}, once the conversion has been provided. Use
 \end{Highlighting}
 \end{Shaded}
 
-\begin{figure}
+\begin{figure}[H]
 
 {\centering \includegraphics[width=\textwidth]{images/xspline} 
 
@@ -9052,10 +9067,6 @@ As shown in Figure \ref{fig:xspline}, once the conversion has been provided. Use
 \end{figure}
 
 In more complicated cases, where your custom geom can not be converted to a lower level geom, a custom method for the \texttt{geom2trace()} generic is required (\texttt{methods(geom2trace)} lists all the basic geoms that we natively support). This method should involve a conversion from a data frame to a list-like object conforming to the \href{https://plot.ly/r/reference}{plotly.js figure reference}.
-
-\hypertarget{references}{%
-\chapter*{References}\label{references}}
-
 
 
 

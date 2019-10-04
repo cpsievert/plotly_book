@@ -131,9 +131,7 @@ mn_sf <- us_counties(states = "MN")
 
 # get income information for each county in MN
 mn_income <- get_acs(
-  geography = "county", 
-  variables = "B19013_001", 
-  state = "MN"
+    geography = "county", variables = "B19013_001", state = "MN"
   ) %>%
   mutate(
     NAME = sub("County, Minnesota", "", NAME),
@@ -158,17 +156,12 @@ top10labels <- mn_income %>%
 map <- plot_ly() %>%
   add_sf(
     data = left_join(mn_sf, mn_income, by = c("geoid" = "GEOID")),
-    color = ~I(color),
-    split = ~NAME,
-    stroke = I("black"),
-    span = I(1),
-    hoverinfo = "none"
+    color = ~I(color), split = ~NAME,
+    stroke = I("black"), span = I(1), hoverinfo = "none"
   ) %>%
   add_annotations(
     data = select(top10labels, NAME, x, y),
-    text = ~NAME,
-    x = ~x,
-    y = ~y
+    text = ~NAME, x = ~x, y = ~y
   ) 
 
 # the dot-plot
@@ -180,11 +173,8 @@ bars <- ggplot(mn_income, aes(x = estimate, y = county)) +
 # make manual edits in the browser, then click the 
 # 'toImage' button to export an svg file
 ggplotly(
-  bars, 
-  dynamicTicks = TRUE, 
-  tooltip = "y", 
-  height = 8 * 96, 
-  width = 11 * 96
+  bars, dynamicTicks = TRUE, tooltip = "y", 
+  height = 8 * 96, width = 11 * 96
 ) %>%
   subplot(map, nrows = 1, widths = c(0.3, 0.7)) %>%
   layout(showlegend = FALSE) %>%

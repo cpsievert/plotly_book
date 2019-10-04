@@ -125,7 +125,7 @@ Once a reactive expression generates a value, it needs to know where on the user
 
 Section \@ref(fig:shiny-intro) covered how to render **shiny** output widgets (e.g., `plotlyOutput()`) that depend on a input widget, but what about having an output act like an input to another output? For example, say we'd like to dynamically generate a bar chart (i.e., an output) based on a point clicked on a scatter-plot (i.e., an input event tied to an output widget). In addition to **shiny**'s static graph and image rendering functions (e.g., `plotOutput()`/`imageOutput()`), there are a handful of other R packages that expose user interaction with "output" widget(s) as input value(s). @leaflet-shiny and @DT-shiny describe the interface for the **leaflet** and **DT** packages. This section outlines the interface for `plotlyOutput()`. This sort of functionality plays a vital role in linking of views through direct manipulation, similar to what we've already seen in Section \@ref(graphical-queries), but having access to **plotly** events on a **shiny** server allows for much more flexibility than linking views purely client-side.
 
-\index{event\_data()@\texttt{event\_data()}
+\index{event\_data()@\texttt{event\_data()}}
 \index{event\_data()@\texttt{event\_data()}!customdata@\texttt{customdata}}
 
 The `event_data()` function is the most straight-forward way to access a **plotly** input events in **shiny**. Although `event_data()` is function, it references and returns a **shiny** input value, so `event_data()` needs to be used inside a reactive context. Most of these available events are data-specific traces (e.g., `"plotly_hover"`, `"plotly_click"`, `"plotly_selected"`, etc), but there are also some that are layout-specific (e.g., `"plotly_relayout"`). Most plotly.js events^[These events are documented at https://plot.ly/javascript/plotlyjs-events/] are accessible through this interface -- for a complete list see the `help(event_data)` documentation page.
@@ -154,6 +154,9 @@ include_vimeo("327625843", height = 500)
 ### 3D events
 
 \index{event\_data()@\texttt{event\_data()}!plotly\_relayout}
+\index{event\_data()@\texttt{event\_data()}!plotly\_legendclick}
+\index{event\_data()@\texttt{event\_data()}!plotly\_legenddoubleclick}
+\index{event\_data()@\texttt{event\_data()}!event\_register()@\texttt{event\_register()}}
 
 Drag selection events (i.e., `"plotly_selecting"`) are currently only available for 2D charts, but other common events are generally supported for any type of graph, including 3D charts. Figure \@ref(fig:3Devents) accesses various events in 3D including: `"plotly_hover"`, `"plotly_click"`, `"plotly_legendclick"`, `"plotly_legenddoubleclick"`, and `"plotly_relayout"`. The data emitted via `"plotly_hover"` and `"plotly_click"` is structured similarly to data emitted from `"plotly_selecting"`/`"plotly_selected"`. Figure \@ref(fig:3Devents) also demonstrates how one can react to particular components of a conflated event like `"plotly_relayout"`. That is, `"plotly_relayout"` will fire whenever _any_ part of the layout has changed, so if we want to trigger behavior if and only if there are changes to the camera eye, one could first check if the information emitted contains information about the camera eye.
 
@@ -222,7 +225,7 @@ Figure \@ref(fig:shiny-drag-circle) demonstrates directly manipulating a circle 
 
 \index{Editable charts!Circles}
 \index{event\_data()@\texttt{event\_data()}!plotly\_relayout}
-\index{layout()@\texttt{layout()}!shapes@\texttt{shapes}!circle@\texttt{circle}}
+\index{layout()@\texttt{layout()}!shapes@\texttt{shapes}!Circles}
 
 ```{r eval = FALSE, summary = "Click to show/hide the code"}
 library(shiny)
@@ -280,6 +283,7 @@ Figure \@ref(fig:shiny-drag-line) uses an editable vertical line and the `plotly
 
 \index{Editable charts!Lines}
 \index{event\_data()@\texttt{event\_data()}!plotly\_relayout}
+\index{layout()@\texttt{layout()}!shapes@\texttt{shapes}!Lines}
 
 ```r
 plotly_example("shiny", "drag_lines")
@@ -876,6 +880,7 @@ include_vimeo("328768848")
 Figures \@ref(fig:shiny-drill-down-pie) and \@ref(fig:shiny-drill-down-bar-time) demonstrate one level of drill-down...what about multiple levels? Introducing multiple levels adds complexity not only the implementation, but also the user experience. Especially in a drill-down approach where the _same view_ is being filtered, it can be difficult for the user to remember how they got to a particular view. Figure \@ref(fig:shiny-drill-down-bar-time-history) demonstrates how we could extend Figure \@ref(fig:shiny-drill-down-bar-time) to implement yet another level of drilling down (i.e., category -> sub-category -> product IDs) as well as populate a `selectInput()` dropdown for each active drill-down category. Not only does this help the user to remember how they got to the particular view, but it also provides the ability to easily modify the sequence of drill-down events. In terms of implementation, the main idea is the very similar to before -- we still store and update the state of each 'drill-down' in it's own reactive value, but now when a 'parent' category changes (e.g., `category`) it should invalidate (i.e., clear) any currently selected 'child' categories (e.g., `sub_category`).
 
 \index{event\_data()@\texttt{event\_data()}!plotly\_click}
+\index{add\_trace()@\texttt{add\_trace()}!add\_table()@\texttt{add\_table()}}
 
 ```{r, eval = FALSE, summary = "Click to show/hide the code"}
 library(shiny)

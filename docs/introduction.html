@@ -24,7 +24,7 @@
 <meta name="author" content="Carson Sievert" />
 
 
-<meta name="date" content="2019-10-02" />
+<meta name="date" content="2019-10-04" />
 
   <meta name="viewport" content="width=device-width, initial-scale=1" />
   <meta name="apple-mobile-web-app-capable" content="yes" />
@@ -326,7 +326,6 @@ code span.wa { color: #60a0b0; font-weight: bold; font-style: italic; } /* Warni
 <li class="chapter" data-level="33.3" data-path="improving-ggplotly.html"><a href="improving-ggplotly.html#leveraging-statistical-output"><i class="fa fa-check"></i><b>33.3</b> Leveraging statistical output</a></li>
 </ul></li>
 <li class="chapter" data-level="34" data-path="custom-geoms.html"><a href="custom-geoms.html"><i class="fa fa-check"></i><b>34</b> Translating custom ggplot2 geoms</a></li>
-<li class="chapter" data-level="" data-path="references.html"><a href="references.html"><i class="fa fa-check"></i>References</a></li>
 </ul>
 
       </nav>
@@ -347,13 +346,13 @@ code span.wa { color: #60a0b0; font-weight: bold; font-style: italic; } /* Warni
 <div id="header">
 <h1 class="title">Interactive web-based data visualization with R, plotly, and shiny</h1>
 <p class="author"><em>Carson Sievert</em></p>
-<p class="date"><em>2019-10-02</em></p>
+<p class="date"><em>2019-10-04</em></p>
 </div>
 <div id="introduction" class="section level1">
 <h1><span class="header-section-number">1</span> Introduction</h1>
 <div id="why-interactive-web-graphics-from-r" class="section level2">
 <h2><span class="header-section-number">1.1</span> Why interactive web graphics <em>from R</em>?</h2>
-<p>As <span class="citation">Wickham and Grolemund (<a href="#ref-r4ds" role="doc-biblioref">2018</a>)</span> argue, the exploratory phase of a data science workflow (Figure <a href="introduction.html#fig:workflow">1.1</a>) requires lots of iteration between data manipulation, visualization, and modeling. Achieving these tasks through a programming language like <code>R</code> offers the opportunity to scale and automate tasks, document and track them, and reliably reproduce their output. That power, however, typically comes at the cost of increasing the amount of cognitive load involved relative to a GUI-based system.<a href="references.html#fn1" class="footnote-ref" id="fnref1"><sup>1</sup></a> <code>R</code> packages like the <strong>tidyverse</strong> have been incredibly successful due to their ability to limit cognitive load without removing the benefits of performing analysis via code. Moreover, the <strong>tidyverse</strong>’s unifying principles of designing for humans, consistency, and composability makes iteration within and between these stages seamless – an important but often overlooked challenge in exploratory data analysis (EDA) <span class="citation">(Tidyverse team <a href="#ref-tidy-principles" role="doc-biblioref">2018</a>)</span>.</p>
+<p>As <span class="citation">Wickham and Grolemund (<a href="#ref-r4ds" role="doc-biblioref">2018</a>)</span> argue, the exploratory phase of a data science workflow (Figure <a href="introduction.html#fig:workflow">1.1</a>) requires lots of iteration between data manipulation, visualization, and modeling. Achieving these tasks through a programming language like <code>R</code> offers the opportunity to scale and automate tasks, document and track them, and reliably reproduce their output. That power, however, typically comes at the cost of increasing the amount of cognitive load involved relative to a GUI-based system.<a href="custom-geoms.html#fn1" class="footnote-ref" id="fnref1"><sup>1</sup></a> <code>R</code> packages like the <strong>tidyverse</strong> have been incredibly successful due to their ability to limit cognitive load without removing the benefits of performing analysis via code. Moreover, the <strong>tidyverse</strong>’s unifying principles of designing for humans, consistency, and composability makes iteration within and between these stages seamless – an important but often overlooked challenge in exploratory data analysis (EDA) <span class="citation">(Tidyverse team <a href="#ref-tidy-principles" role="doc-biblioref">2018</a>)</span>.</p>
 <div class="figure" style="text-align: center"><span id="fig:workflow"></span>
 <img src="images/workflow.svg" alt="The stages of a data science workflow from Wickham and Grolemund (2018)." width="100%" />
 <p class="caption">
@@ -502,13 +501,13 @@ FIGURE 1.7: An example of what you’ll learn: Figure <a href="linking-views-wit
 </div>
 <div id="run-code-examples" class="section level2">
 <h2><span class="header-section-number">1.5</span> Run code examples</h2>
-<p>This book contains many code examples in an effort to teach the art and science behind creating interactive web-based graphics using <strong>plotly</strong>. To see the actual interactive result of the code (rather than a video or static version), you may want to run the code examples in a suitable computational environment. Visit <a href="http://bit.ly/plotly-book-cloud" class="uri">http://bit.ly/plotly-book-cloud</a> for a cloud-based instance of RStudio with all the required software to run the code examples in this book. Most, if not all of these code examples assume you have the <strong>plotly</strong> package loaded:</p>
+<p>This book contains many code examples in an effort to teach the art and science behind creating interactive web-based graphics using <strong>plotly</strong>. To interact with the code results, you may either: (1) click on the static graphs hosted online at <a href="https://plotly-r.com" class="uri">https://plotly-r.com</a> and/or execute the code in a suitable computational environment. Most code examples assume you already have the <strong>plotly</strong> package loaded:</p>
 <div class="sourceCode" id="cb5"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb5-1"><a href="introduction.html#cb5-1"></a><span class="kw">library</span>(plotly)</span></code></pre></div>
-<p>Within some chapters, there may be examples that assume packages we loaded during a previous example. If you’d like to avoid this situation, please load the</p>
-<div class="sourceCode" id="cb6"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb6-1"><a href="introduction.html#cb6-1"></a><span class="kw">library</span>(plotlyBook)</span></code></pre></div>
+<p>If a particular code chunk doesn’t work, you may need to load packages from previous examples in the chapter (some examples assume you’re following the chapter in a linear fashion).</p>
 <p>If you’d like to run examples on your local machine (instead of RStudio Cloud), you can install all the necessary R packages with:</p>
-<div class="sourceCode" id="cb7"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb7-1"><a href="introduction.html#cb7-1"></a><span class="cf">if</span> (<span class="op">!</span><span class="kw">require</span>(remotes)) <span class="kw">install.packages</span>(<span class="st">&quot;remotes&quot;</span>)</span>
-<span id="cb7-2"><a href="introduction.html#cb7-2"></a>remotes<span class="op">::</span><span class="kw">install_github</span>(<span class="st">&quot;cpsievert/plotly_book&quot;</span>)</span></code></pre></div>
+<div class="sourceCode" id="cb6"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb6-1"><a href="introduction.html#cb6-1"></a><span class="cf">if</span> (<span class="op">!</span><span class="kw">require</span>(remotes)) <span class="kw">install.packages</span>(<span class="st">&quot;remotes&quot;</span>)</span>
+<span id="cb6-2"><a href="introduction.html#cb6-2"></a>remotes<span class="op">::</span><span class="kw">install_github</span>(<span class="st">&quot;cpsievert/plotly_book&quot;</span>)</span></code></pre></div>
+<p>Visit <a href="http://bit.ly/plotly-book-cloud" class="uri">http://bit.ly/plotly-book-cloud</a> for a cloud-based instance of RStudio with all the required software to run the code examples in this book.</p>
 </div>
 <div id="getting-help-and-learning-more" class="section level2">
 <h2><span class="header-section-number">1.6</span> Getting help and learning more</h2>
@@ -526,7 +525,7 @@ FIGURE 1.7: An example of what you’ll learn: Figure <a href="linking-views-wit
 <li>Anthony Unwin for helpful feedback, suggestions, and for inspiring Figure <a href="client-side-linking.html#fig:epl">16.13</a>.</li>
 <li>Hadley Wickham and the <strong>ggplot2</strong> team for maintaining <strong>ggplot2</strong>.</li>
 <li>Hadley Wickham and Garret Grolemund for writing <em>R for Data Science</em> and allowing me to model this introduction after their introduction.</li>
-<li>Kent Russell for contributions to <strong>plotly</strong> and writing <strong>reactR</strong>.</li>
+<li>Kent Russell for contributions to <strong>plotly</strong>, <strong>htmlwidgets</strong>, and <strong>reactR</strong>.</li>
 <li>Adam Loy for inspiring Figure <a href="animating-views.html#fig:profile-pyramid">14.5</a>.</li>
 <li>Many other R community members who contributed to the <strong>plotly</strong> package and provided feedback and corrections for this book.</li>
 </ul>
@@ -535,156 +534,156 @@ FIGURE 1.7: An example of what you’ll learn: Figure <a href="linking-views-wit
 <h2><span class="header-section-number">1.8</span> Colophon</h2>
 <p>An online version of this book is available at <a href="https://plotly-r.com" class="uri">https://plotly-r.com</a>. It will continue to evolve in between reprints of the physical book. The source of the book is available at <a href="https://github.com/cpsievert/plotly_book" class="uri">https://github.com/cpsievert/plotly_book</a>. The book is powered by <a href="https://bookdown.org" class="uri">https://bookdown.org</a> which makes it easy to turn <code>R</code> markdown files into HTML, PDF, and EPUB.</p>
 <p>This book was built with the following computing environment:</p>
-<div class="sourceCode" id="cb8"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb8-1"><a href="introduction.html#cb8-1"></a>devtools<span class="op">::</span><span class="kw">session_info</span>(<span class="st">&quot;plotly&quot;</span>)</span>
-<span id="cb8-2"><a href="introduction.html#cb8-2"></a><span class="co">#&gt; ─ Session info ──────────────────────────────────────</span></span>
-<span id="cb8-3"><a href="introduction.html#cb8-3"></a><span class="co">#&gt;  setting  value                       </span></span>
-<span id="cb8-4"><a href="introduction.html#cb8-4"></a><span class="co">#&gt;  version  R version 3.6.1 (2019-07-05)</span></span>
-<span id="cb8-5"><a href="introduction.html#cb8-5"></a><span class="co">#&gt;  os       macOS Mojave 10.14.5        </span></span>
-<span id="cb8-6"><a href="introduction.html#cb8-6"></a><span class="co">#&gt;  system   x86_64, darwin15.6.0        </span></span>
-<span id="cb8-7"><a href="introduction.html#cb8-7"></a><span class="co">#&gt;  ui       X11                         </span></span>
-<span id="cb8-8"><a href="introduction.html#cb8-8"></a><span class="co">#&gt;  language (EN)                        </span></span>
-<span id="cb8-9"><a href="introduction.html#cb8-9"></a><span class="co">#&gt;  collate  en_US.UTF-8                 </span></span>
-<span id="cb8-10"><a href="introduction.html#cb8-10"></a><span class="co">#&gt;  ctype    en_US.UTF-8                 </span></span>
-<span id="cb8-11"><a href="introduction.html#cb8-11"></a><span class="co">#&gt;  tz       America/Chicago             </span></span>
-<span id="cb8-12"><a href="introduction.html#cb8-12"></a><span class="co">#&gt;  date     2019-10-02                  </span></span>
-<span id="cb8-13"><a href="introduction.html#cb8-13"></a><span class="co">#&gt; </span></span>
-<span id="cb8-14"><a href="introduction.html#cb8-14"></a><span class="co">#&gt; ─ Packages ──────────────────────────────────────────</span></span>
-<span id="cb8-15"><a href="introduction.html#cb8-15"></a><span class="co">#&gt;  package      * version    date       lib</span></span>
-<span id="cb8-16"><a href="introduction.html#cb8-16"></a><span class="co">#&gt;  askpass        1.1        2019-01-13 [1]</span></span>
-<span id="cb8-17"><a href="introduction.html#cb8-17"></a><span class="co">#&gt;  assertthat     0.2.1      2019-03-21 [1]</span></span>
-<span id="cb8-18"><a href="introduction.html#cb8-18"></a><span class="co">#&gt;  backports      1.1.4      2019-04-10 [1]</span></span>
-<span id="cb8-19"><a href="introduction.html#cb8-19"></a><span class="co">#&gt;  base64enc      0.1-3      2015-07-28 [1]</span></span>
-<span id="cb8-20"><a href="introduction.html#cb8-20"></a><span class="co">#&gt;  BH             1.69.0-1   2019-01-07 [1]</span></span>
-<span id="cb8-21"><a href="introduction.html#cb8-21"></a><span class="co">#&gt;  cli            1.1.0      2019-03-19 [1]</span></span>
-<span id="cb8-22"><a href="introduction.html#cb8-22"></a><span class="co">#&gt;  colorspace     1.4-1      2019-03-18 [1]</span></span>
-<span id="cb8-23"><a href="introduction.html#cb8-23"></a><span class="co">#&gt;  crayon         1.3.4      2017-09-16 [1]</span></span>
-<span id="cb8-24"><a href="introduction.html#cb8-24"></a><span class="co">#&gt;  crosstalk      1.0.0      2016-12-21 [1]</span></span>
-<span id="cb8-25"><a href="introduction.html#cb8-25"></a><span class="co">#&gt;  curl           4.2        2019-09-24 [1]</span></span>
-<span id="cb8-26"><a href="introduction.html#cb8-26"></a><span class="co">#&gt;  data.table     1.12.2     2019-04-07 [1]</span></span>
-<span id="cb8-27"><a href="introduction.html#cb8-27"></a><span class="co">#&gt;  digest         0.6.21     2019-09-20 [1]</span></span>
-<span id="cb8-28"><a href="introduction.html#cb8-28"></a><span class="co">#&gt;  dplyr          0.8.3      2019-07-04 [1]</span></span>
-<span id="cb8-29"><a href="introduction.html#cb8-29"></a><span class="co">#&gt;  ellipsis       0.3.0      2019-09-20 [1]</span></span>
-<span id="cb8-30"><a href="introduction.html#cb8-30"></a><span class="co">#&gt;  fansi          0.4.0      2018-10-05 [1]</span></span>
-<span id="cb8-31"><a href="introduction.html#cb8-31"></a><span class="co">#&gt;  fastmap        1.0.0      2019-08-02 [1]</span></span>
-<span id="cb8-32"><a href="introduction.html#cb8-32"></a><span class="co">#&gt;  ggplot2      * 3.2.1.9000 2019-10-01 [1]</span></span>
-<span id="cb8-33"><a href="introduction.html#cb8-33"></a><span class="co">#&gt;  glue           1.3.1      2019-03-12 [1]</span></span>
-<span id="cb8-34"><a href="introduction.html#cb8-34"></a><span class="co">#&gt;  gtable         0.3.0      2019-03-25 [1]</span></span>
-<span id="cb8-35"><a href="introduction.html#cb8-35"></a><span class="co">#&gt;  hexbin         1.27.3     2019-05-14 [1]</span></span>
-<span id="cb8-36"><a href="introduction.html#cb8-36"></a><span class="co">#&gt;  htmltools      0.4.0      2019-09-17 [1]</span></span>
-<span id="cb8-37"><a href="introduction.html#cb8-37"></a><span class="co">#&gt;  htmlwidgets    1.4.0.9000 2019-10-01 [1]</span></span>
-<span id="cb8-38"><a href="introduction.html#cb8-38"></a><span class="co">#&gt;  httpuv         1.5.2      2019-09-11 [1]</span></span>
-<span id="cb8-39"><a href="introduction.html#cb8-39"></a><span class="co">#&gt;  httr           1.4.1      2019-08-05 [1]</span></span>
-<span id="cb8-40"><a href="introduction.html#cb8-40"></a><span class="co">#&gt;  jsonlite       1.6        2018-12-07 [1]</span></span>
-<span id="cb8-41"><a href="introduction.html#cb8-41"></a><span class="co">#&gt;  labeling       0.3        2014-08-23 [1]</span></span>
-<span id="cb8-42"><a href="introduction.html#cb8-42"></a><span class="co">#&gt;  later          1.0.0      2019-09-17 [1]</span></span>
-<span id="cb8-43"><a href="introduction.html#cb8-43"></a><span class="co">#&gt;  lattice        0.20-38    2018-11-04 [1]</span></span>
-<span id="cb8-44"><a href="introduction.html#cb8-44"></a><span class="co">#&gt;  lazyeval       0.2.2      2019-03-15 [1]</span></span>
-<span id="cb8-45"><a href="introduction.html#cb8-45"></a><span class="co">#&gt;  lifecycle      0.1.0      2019-08-01 [1]</span></span>
-<span id="cb8-46"><a href="introduction.html#cb8-46"></a><span class="co">#&gt;  magrittr       1.5        2014-11-22 [1]</span></span>
-<span id="cb8-47"><a href="introduction.html#cb8-47"></a><span class="co">#&gt;  MASS           7.3-51.4   2019-03-31 [1]</span></span>
-<span id="cb8-48"><a href="introduction.html#cb8-48"></a><span class="co">#&gt;  Matrix         1.2-17     2019-03-22 [1]</span></span>
-<span id="cb8-49"><a href="introduction.html#cb8-49"></a><span class="co">#&gt;  mgcv           1.8-29     2019-09-20 [1]</span></span>
-<span id="cb8-50"><a href="introduction.html#cb8-50"></a><span class="co">#&gt;  mime           0.7        2019-06-11 [1]</span></span>
-<span id="cb8-51"><a href="introduction.html#cb8-51"></a><span class="co">#&gt;  munsell        0.5.0      2018-06-12 [1]</span></span>
-<span id="cb8-52"><a href="introduction.html#cb8-52"></a><span class="co">#&gt;  nlme           3.1-141    2019-08-01 [1]</span></span>
-<span id="cb8-53"><a href="introduction.html#cb8-53"></a><span class="co">#&gt;  openssl        1.4.1      2019-07-18 [1]</span></span>
-<span id="cb8-54"><a href="introduction.html#cb8-54"></a><span class="co">#&gt;  pillar         1.4.2      2019-06-29 [1]</span></span>
-<span id="cb8-55"><a href="introduction.html#cb8-55"></a><span class="co">#&gt;  pkgconfig      2.0.3      2019-09-22 [1]</span></span>
-<span id="cb8-56"><a href="introduction.html#cb8-56"></a><span class="co">#&gt;  plogr          0.2.0      2018-03-25 [1]</span></span>
-<span id="cb8-57"><a href="introduction.html#cb8-57"></a><span class="co">#&gt;  plotly         4.9.0      2019-04-10 [1]</span></span>
-<span id="cb8-58"><a href="introduction.html#cb8-58"></a><span class="co">#&gt;  plyr           1.8.4      2016-06-08 [1]</span></span>
-<span id="cb8-59"><a href="introduction.html#cb8-59"></a><span class="co">#&gt;  promises       1.1.0      2019-09-25 [1]</span></span>
-<span id="cb8-60"><a href="introduction.html#cb8-60"></a><span class="co">#&gt;  purrr          0.3.2.9000 2019-09-30 [1]</span></span>
-<span id="cb8-61"><a href="introduction.html#cb8-61"></a><span class="co">#&gt;  R6             2.4.0      2019-02-14 [1]</span></span>
-<span id="cb8-62"><a href="introduction.html#cb8-62"></a><span class="co">#&gt;  RColorBrewer   1.1-2      2014-12-07 [1]</span></span>
-<span id="cb8-63"><a href="introduction.html#cb8-63"></a><span class="co">#&gt;  Rcpp           1.0.2      2019-07-25 [1]</span></span>
-<span id="cb8-64"><a href="introduction.html#cb8-64"></a><span class="co">#&gt;  reshape2       1.4.3      2017-12-11 [1]</span></span>
-<span id="cb8-65"><a href="introduction.html#cb8-65"></a><span class="co">#&gt;  rlang          0.4.0.9002 2019-09-25 [1]</span></span>
-<span id="cb8-66"><a href="introduction.html#cb8-66"></a><span class="co">#&gt;  scales         1.0.0.9000 2019-07-19 [1]</span></span>
-<span id="cb8-67"><a href="introduction.html#cb8-67"></a><span class="co">#&gt;  shiny          1.4.0      2019-10-01 [1]</span></span>
-<span id="cb8-68"><a href="introduction.html#cb8-68"></a><span class="co">#&gt;  sourcetools    0.1.7      2018-04-25 [1]</span></span>
-<span id="cb8-69"><a href="introduction.html#cb8-69"></a><span class="co">#&gt;  stringi        1.4.3      2019-03-12 [1]</span></span>
-<span id="cb8-70"><a href="introduction.html#cb8-70"></a><span class="co">#&gt;  stringr        1.4.0      2019-02-10 [1]</span></span>
-<span id="cb8-71"><a href="introduction.html#cb8-71"></a><span class="co">#&gt;  sys            3.3        2019-08-21 [1]</span></span>
-<span id="cb8-72"><a href="introduction.html#cb8-72"></a><span class="co">#&gt;  tibble         2.1.3      2019-06-06 [1]</span></span>
-<span id="cb8-73"><a href="introduction.html#cb8-73"></a><span class="co">#&gt;  tidyr          1.0.0      2019-09-11 [1]</span></span>
-<span id="cb8-74"><a href="introduction.html#cb8-74"></a><span class="co">#&gt;  tidyselect     0.2.5      2018-10-11 [1]</span></span>
-<span id="cb8-75"><a href="introduction.html#cb8-75"></a><span class="co">#&gt;  utf8           1.1.4      2018-05-24 [1]</span></span>
-<span id="cb8-76"><a href="introduction.html#cb8-76"></a><span class="co">#&gt;  vctrs          0.2.0.9003 2019-10-01 [1]</span></span>
-<span id="cb8-77"><a href="introduction.html#cb8-77"></a><span class="co">#&gt;  viridisLite    0.3.0      2018-02-01 [1]</span></span>
-<span id="cb8-78"><a href="introduction.html#cb8-78"></a><span class="co">#&gt;  withr          2.1.2      2018-03-15 [1]</span></span>
-<span id="cb8-79"><a href="introduction.html#cb8-79"></a><span class="co">#&gt;  xtable         1.8-4      2019-04-21 [1]</span></span>
-<span id="cb8-80"><a href="introduction.html#cb8-80"></a><span class="co">#&gt;  yaml           2.2.0      2018-07-25 [1]</span></span>
-<span id="cb8-81"><a href="introduction.html#cb8-81"></a><span class="co">#&gt;  zeallot        0.1.0      2018-01-28 [1]</span></span>
-<span id="cb8-82"><a href="introduction.html#cb8-82"></a><span class="co">#&gt;  source                               </span></span>
-<span id="cb8-83"><a href="introduction.html#cb8-83"></a><span class="co">#&gt;  CRAN (R 3.6.0)                       </span></span>
-<span id="cb8-84"><a href="introduction.html#cb8-84"></a><span class="co">#&gt;  CRAN (R 3.6.0)                       </span></span>
-<span id="cb8-85"><a href="introduction.html#cb8-85"></a><span class="co">#&gt;  CRAN (R 3.6.0)                       </span></span>
-<span id="cb8-86"><a href="introduction.html#cb8-86"></a><span class="co">#&gt;  CRAN (R 3.6.0)                       </span></span>
-<span id="cb8-87"><a href="introduction.html#cb8-87"></a><span class="co">#&gt;  CRAN (R 3.6.0)                       </span></span>
-<span id="cb8-88"><a href="introduction.html#cb8-88"></a><span class="co">#&gt;  CRAN (R 3.6.0)                       </span></span>
-<span id="cb8-89"><a href="introduction.html#cb8-89"></a><span class="co">#&gt;  CRAN (R 3.6.0)                       </span></span>
-<span id="cb8-90"><a href="introduction.html#cb8-90"></a><span class="co">#&gt;  CRAN (R 3.6.0)                       </span></span>
-<span id="cb8-91"><a href="introduction.html#cb8-91"></a><span class="co">#&gt;  CRAN (R 3.6.0)                       </span></span>
-<span id="cb8-92"><a href="introduction.html#cb8-92"></a><span class="co">#&gt;  CRAN (R 3.6.1)                       </span></span>
-<span id="cb8-93"><a href="introduction.html#cb8-93"></a><span class="co">#&gt;  CRAN (R 3.6.0)                       </span></span>
-<span id="cb8-94"><a href="introduction.html#cb8-94"></a><span class="co">#&gt;  CRAN (R 3.6.1)                       </span></span>
-<span id="cb8-95"><a href="introduction.html#cb8-95"></a><span class="co">#&gt;  CRAN (R 3.6.0)                       </span></span>
-<span id="cb8-96"><a href="introduction.html#cb8-96"></a><span class="co">#&gt;  CRAN (R 3.6.1)                       </span></span>
-<span id="cb8-97"><a href="introduction.html#cb8-97"></a><span class="co">#&gt;  CRAN (R 3.6.0)                       </span></span>
-<span id="cb8-98"><a href="introduction.html#cb8-98"></a><span class="co">#&gt;  Github (r-lib/fastmap@b104c2c)       </span></span>
-<span id="cb8-99"><a href="introduction.html#cb8-99"></a><span class="co">#&gt;  local                                </span></span>
-<span id="cb8-100"><a href="introduction.html#cb8-100"></a><span class="co">#&gt;  CRAN (R 3.6.0)                       </span></span>
-<span id="cb8-101"><a href="introduction.html#cb8-101"></a><span class="co">#&gt;  CRAN (R 3.6.0)                       </span></span>
-<span id="cb8-102"><a href="introduction.html#cb8-102"></a><span class="co">#&gt;  CRAN (R 3.6.0)                       </span></span>
-<span id="cb8-103"><a href="introduction.html#cb8-103"></a><span class="co">#&gt;  Github (rstudio/htmltools@0366ff7)   </span></span>
-<span id="cb8-104"><a href="introduction.html#cb8-104"></a><span class="co">#&gt;  Github (ramnathv/htmlwidgets@0ef5dd5)</span></span>
-<span id="cb8-105"><a href="introduction.html#cb8-105"></a><span class="co">#&gt;  CRAN (R 3.6.1)                       </span></span>
-<span id="cb8-106"><a href="introduction.html#cb8-106"></a><span class="co">#&gt;  CRAN (R 3.6.1)                       </span></span>
-<span id="cb8-107"><a href="introduction.html#cb8-107"></a><span class="co">#&gt;  CRAN (R 3.6.0)                       </span></span>
-<span id="cb8-108"><a href="introduction.html#cb8-108"></a><span class="co">#&gt;  CRAN (R 3.6.0)                       </span></span>
-<span id="cb8-109"><a href="introduction.html#cb8-109"></a><span class="co">#&gt;  Github (r-lib/later@0364de9)         </span></span>
-<span id="cb8-110"><a href="introduction.html#cb8-110"></a><span class="co">#&gt;  CRAN (R 3.6.1)                       </span></span>
-<span id="cb8-111"><a href="introduction.html#cb8-111"></a><span class="co">#&gt;  CRAN (R 3.6.0)                       </span></span>
-<span id="cb8-112"><a href="introduction.html#cb8-112"></a><span class="co">#&gt;  CRAN (R 3.6.0)                       </span></span>
-<span id="cb8-113"><a href="introduction.html#cb8-113"></a><span class="co">#&gt;  CRAN (R 3.6.0)                       </span></span>
-<span id="cb8-114"><a href="introduction.html#cb8-114"></a><span class="co">#&gt;  CRAN (R 3.6.1)                       </span></span>
-<span id="cb8-115"><a href="introduction.html#cb8-115"></a><span class="co">#&gt;  CRAN (R 3.6.1)                       </span></span>
-<span id="cb8-116"><a href="introduction.html#cb8-116"></a><span class="co">#&gt;  CRAN (R 3.6.0)                       </span></span>
-<span id="cb8-117"><a href="introduction.html#cb8-117"></a><span class="co">#&gt;  CRAN (R 3.6.0)                       </span></span>
-<span id="cb8-118"><a href="introduction.html#cb8-118"></a><span class="co">#&gt;  CRAN (R 3.6.0)                       </span></span>
-<span id="cb8-119"><a href="introduction.html#cb8-119"></a><span class="co">#&gt;  CRAN (R 3.6.0)                       </span></span>
-<span id="cb8-120"><a href="introduction.html#cb8-120"></a><span class="co">#&gt;  CRAN (R 3.6.1)                       </span></span>
-<span id="cb8-121"><a href="introduction.html#cb8-121"></a><span class="co">#&gt;  CRAN (R 3.6.0)                       </span></span>
-<span id="cb8-122"><a href="introduction.html#cb8-122"></a><span class="co">#&gt;  CRAN (R 3.6.1)                       </span></span>
-<span id="cb8-123"><a href="introduction.html#cb8-123"></a><span class="co">#&gt;  CRAN (R 3.6.0)                       </span></span>
-<span id="cb8-124"><a href="introduction.html#cb8-124"></a><span class="co">#&gt;  CRAN (R 3.6.0)                       </span></span>
-<span id="cb8-125"><a href="introduction.html#cb8-125"></a><span class="co">#&gt;  CRAN (R 3.6.0)                       </span></span>
-<span id="cb8-126"><a href="introduction.html#cb8-126"></a><span class="co">#&gt;  Github (rstudio/promises@39faf86)    </span></span>
-<span id="cb8-127"><a href="introduction.html#cb8-127"></a><span class="co">#&gt;  Github (tidyverse/purrr@9edf0ca)     </span></span>
-<span id="cb8-128"><a href="introduction.html#cb8-128"></a><span class="co">#&gt;  CRAN (R 3.6.0)                       </span></span>
-<span id="cb8-129"><a href="introduction.html#cb8-129"></a><span class="co">#&gt;  CRAN (R 3.6.0)                       </span></span>
-<span id="cb8-130"><a href="introduction.html#cb8-130"></a><span class="co">#&gt;  CRAN (R 3.6.1)                       </span></span>
-<span id="cb8-131"><a href="introduction.html#cb8-131"></a><span class="co">#&gt;  CRAN (R 3.6.0)                       </span></span>
-<span id="cb8-132"><a href="introduction.html#cb8-132"></a><span class="co">#&gt;  Github (r-lib/rlang@03bc5ed)         </span></span>
-<span id="cb8-133"><a href="introduction.html#cb8-133"></a><span class="co">#&gt;  Github (r-lib/scales@7f6f4a5)        </span></span>
-<span id="cb8-134"><a href="introduction.html#cb8-134"></a><span class="co">#&gt;  Github (rstudio/shiny@c8daa17)       </span></span>
-<span id="cb8-135"><a href="introduction.html#cb8-135"></a><span class="co">#&gt;  CRAN (R 3.6.0)                       </span></span>
-<span id="cb8-136"><a href="introduction.html#cb8-136"></a><span class="co">#&gt;  CRAN (R 3.6.0)                       </span></span>
-<span id="cb8-137"><a href="introduction.html#cb8-137"></a><span class="co">#&gt;  CRAN (R 3.6.0)                       </span></span>
-<span id="cb8-138"><a href="introduction.html#cb8-138"></a><span class="co">#&gt;  CRAN (R 3.6.0)                       </span></span>
-<span id="cb8-139"><a href="introduction.html#cb8-139"></a><span class="co">#&gt;  CRAN (R 3.6.0)                       </span></span>
-<span id="cb8-140"><a href="introduction.html#cb8-140"></a><span class="co">#&gt;  CRAN (R 3.6.0)                       </span></span>
-<span id="cb8-141"><a href="introduction.html#cb8-141"></a><span class="co">#&gt;  CRAN (R 3.6.0)                       </span></span>
-<span id="cb8-142"><a href="introduction.html#cb8-142"></a><span class="co">#&gt;  CRAN (R 3.6.0)                       </span></span>
-<span id="cb8-143"><a href="introduction.html#cb8-143"></a><span class="co">#&gt;  Github (r-lib/vctrs@bc20422)         </span></span>
-<span id="cb8-144"><a href="introduction.html#cb8-144"></a><span class="co">#&gt;  CRAN (R 3.6.0)                       </span></span>
-<span id="cb8-145"><a href="introduction.html#cb8-145"></a><span class="co">#&gt;  CRAN (R 3.6.0)                       </span></span>
-<span id="cb8-146"><a href="introduction.html#cb8-146"></a><span class="co">#&gt;  CRAN (R 3.6.0)                       </span></span>
-<span id="cb8-147"><a href="introduction.html#cb8-147"></a><span class="co">#&gt;  CRAN (R 3.6.0)                       </span></span>
-<span id="cb8-148"><a href="introduction.html#cb8-148"></a><span class="co">#&gt;  CRAN (R 3.6.0)                       </span></span>
-<span id="cb8-149"><a href="introduction.html#cb8-149"></a><span class="co">#&gt; </span></span>
-<span id="cb8-150"><a href="introduction.html#cb8-150"></a><span class="co">#&gt; [1] /Library/Frameworks/R.framework/Versions/3.6/Resources/library</span></span></code></pre></div>
+<div class="sourceCode" id="cb7"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb7-1"><a href="introduction.html#cb7-1"></a>devtools<span class="op">::</span><span class="kw">session_info</span>(<span class="st">&quot;plotly&quot;</span>)</span>
+<span id="cb7-2"><a href="introduction.html#cb7-2"></a><span class="co">#&gt; ─ Session info ──────────────────────────────────────</span></span>
+<span id="cb7-3"><a href="introduction.html#cb7-3"></a><span class="co">#&gt;  setting  value                       </span></span>
+<span id="cb7-4"><a href="introduction.html#cb7-4"></a><span class="co">#&gt;  version  R version 3.6.1 (2019-07-05)</span></span>
+<span id="cb7-5"><a href="introduction.html#cb7-5"></a><span class="co">#&gt;  os       macOS Mojave 10.14.5        </span></span>
+<span id="cb7-6"><a href="introduction.html#cb7-6"></a><span class="co">#&gt;  system   x86_64, darwin15.6.0        </span></span>
+<span id="cb7-7"><a href="introduction.html#cb7-7"></a><span class="co">#&gt;  ui       X11                         </span></span>
+<span id="cb7-8"><a href="introduction.html#cb7-8"></a><span class="co">#&gt;  language (EN)                        </span></span>
+<span id="cb7-9"><a href="introduction.html#cb7-9"></a><span class="co">#&gt;  collate  en_US.UTF-8                 </span></span>
+<span id="cb7-10"><a href="introduction.html#cb7-10"></a><span class="co">#&gt;  ctype    en_US.UTF-8                 </span></span>
+<span id="cb7-11"><a href="introduction.html#cb7-11"></a><span class="co">#&gt;  tz       America/Chicago             </span></span>
+<span id="cb7-12"><a href="introduction.html#cb7-12"></a><span class="co">#&gt;  date     2019-10-04                  </span></span>
+<span id="cb7-13"><a href="introduction.html#cb7-13"></a><span class="co">#&gt; </span></span>
+<span id="cb7-14"><a href="introduction.html#cb7-14"></a><span class="co">#&gt; ─ Packages ──────────────────────────────────────────</span></span>
+<span id="cb7-15"><a href="introduction.html#cb7-15"></a><span class="co">#&gt;  package      * version    date       lib</span></span>
+<span id="cb7-16"><a href="introduction.html#cb7-16"></a><span class="co">#&gt;  askpass        1.1        2019-01-13 [1]</span></span>
+<span id="cb7-17"><a href="introduction.html#cb7-17"></a><span class="co">#&gt;  assertthat     0.2.1      2019-03-21 [1]</span></span>
+<span id="cb7-18"><a href="introduction.html#cb7-18"></a><span class="co">#&gt;  backports      1.1.5      2019-10-02 [1]</span></span>
+<span id="cb7-19"><a href="introduction.html#cb7-19"></a><span class="co">#&gt;  base64enc      0.1-3      2015-07-28 [1]</span></span>
+<span id="cb7-20"><a href="introduction.html#cb7-20"></a><span class="co">#&gt;  BH             1.69.0-1   2019-01-07 [1]</span></span>
+<span id="cb7-21"><a href="introduction.html#cb7-21"></a><span class="co">#&gt;  cli            1.1.0      2019-03-19 [1]</span></span>
+<span id="cb7-22"><a href="introduction.html#cb7-22"></a><span class="co">#&gt;  colorspace     1.4-1      2019-03-18 [1]</span></span>
+<span id="cb7-23"><a href="introduction.html#cb7-23"></a><span class="co">#&gt;  crayon         1.3.4      2017-09-16 [1]</span></span>
+<span id="cb7-24"><a href="introduction.html#cb7-24"></a><span class="co">#&gt;  crosstalk      1.0.0      2016-12-21 [1]</span></span>
+<span id="cb7-25"><a href="introduction.html#cb7-25"></a><span class="co">#&gt;  curl           4.2        2019-09-24 [1]</span></span>
+<span id="cb7-26"><a href="introduction.html#cb7-26"></a><span class="co">#&gt;  data.table     1.12.4     2019-10-03 [1]</span></span>
+<span id="cb7-27"><a href="introduction.html#cb7-27"></a><span class="co">#&gt;  digest         0.6.21     2019-09-20 [1]</span></span>
+<span id="cb7-28"><a href="introduction.html#cb7-28"></a><span class="co">#&gt;  dplyr          0.8.3      2019-07-04 [1]</span></span>
+<span id="cb7-29"><a href="introduction.html#cb7-29"></a><span class="co">#&gt;  ellipsis       0.3.0      2019-09-20 [1]</span></span>
+<span id="cb7-30"><a href="introduction.html#cb7-30"></a><span class="co">#&gt;  fansi          0.4.0      2018-10-05 [1]</span></span>
+<span id="cb7-31"><a href="introduction.html#cb7-31"></a><span class="co">#&gt;  fastmap        1.0.0      2019-08-02 [1]</span></span>
+<span id="cb7-32"><a href="introduction.html#cb7-32"></a><span class="co">#&gt;  ggplot2      * 3.2.1.9000 2019-10-01 [1]</span></span>
+<span id="cb7-33"><a href="introduction.html#cb7-33"></a><span class="co">#&gt;  glue           1.3.1      2019-03-12 [1]</span></span>
+<span id="cb7-34"><a href="introduction.html#cb7-34"></a><span class="co">#&gt;  gtable         0.3.0      2019-03-25 [1]</span></span>
+<span id="cb7-35"><a href="introduction.html#cb7-35"></a><span class="co">#&gt;  hexbin         1.27.3     2019-05-14 [1]</span></span>
+<span id="cb7-36"><a href="introduction.html#cb7-36"></a><span class="co">#&gt;  htmltools      0.4.0      2019-09-17 [1]</span></span>
+<span id="cb7-37"><a href="introduction.html#cb7-37"></a><span class="co">#&gt;  htmlwidgets    1.4.0.9000 2019-10-01 [1]</span></span>
+<span id="cb7-38"><a href="introduction.html#cb7-38"></a><span class="co">#&gt;  httpuv         1.5.2      2019-09-11 [1]</span></span>
+<span id="cb7-39"><a href="introduction.html#cb7-39"></a><span class="co">#&gt;  httr           1.4.1      2019-08-05 [1]</span></span>
+<span id="cb7-40"><a href="introduction.html#cb7-40"></a><span class="co">#&gt;  jsonlite       1.6        2018-12-07 [1]</span></span>
+<span id="cb7-41"><a href="introduction.html#cb7-41"></a><span class="co">#&gt;  labeling       0.3        2014-08-23 [1]</span></span>
+<span id="cb7-42"><a href="introduction.html#cb7-42"></a><span class="co">#&gt;  later          1.0.0      2019-09-17 [1]</span></span>
+<span id="cb7-43"><a href="introduction.html#cb7-43"></a><span class="co">#&gt;  lattice        0.20-38    2018-11-04 [1]</span></span>
+<span id="cb7-44"><a href="introduction.html#cb7-44"></a><span class="co">#&gt;  lazyeval       0.2.2      2019-03-15 [1]</span></span>
+<span id="cb7-45"><a href="introduction.html#cb7-45"></a><span class="co">#&gt;  lifecycle      0.1.0      2019-08-01 [1]</span></span>
+<span id="cb7-46"><a href="introduction.html#cb7-46"></a><span class="co">#&gt;  magrittr       1.5        2014-11-22 [1]</span></span>
+<span id="cb7-47"><a href="introduction.html#cb7-47"></a><span class="co">#&gt;  MASS           7.3-51.4   2019-03-31 [1]</span></span>
+<span id="cb7-48"><a href="introduction.html#cb7-48"></a><span class="co">#&gt;  Matrix         1.2-17     2019-03-22 [1]</span></span>
+<span id="cb7-49"><a href="introduction.html#cb7-49"></a><span class="co">#&gt;  mgcv           1.8-29     2019-09-20 [1]</span></span>
+<span id="cb7-50"><a href="introduction.html#cb7-50"></a><span class="co">#&gt;  mime           0.7        2019-06-11 [1]</span></span>
+<span id="cb7-51"><a href="introduction.html#cb7-51"></a><span class="co">#&gt;  munsell        0.5.0      2018-06-12 [1]</span></span>
+<span id="cb7-52"><a href="introduction.html#cb7-52"></a><span class="co">#&gt;  nlme           3.1-141    2019-08-01 [1]</span></span>
+<span id="cb7-53"><a href="introduction.html#cb7-53"></a><span class="co">#&gt;  openssl        1.4.1      2019-07-18 [1]</span></span>
+<span id="cb7-54"><a href="introduction.html#cb7-54"></a><span class="co">#&gt;  pillar         1.4.2      2019-06-29 [1]</span></span>
+<span id="cb7-55"><a href="introduction.html#cb7-55"></a><span class="co">#&gt;  pkgconfig      2.0.3      2019-09-22 [1]</span></span>
+<span id="cb7-56"><a href="introduction.html#cb7-56"></a><span class="co">#&gt;  plogr          0.2.0      2018-03-25 [1]</span></span>
+<span id="cb7-57"><a href="introduction.html#cb7-57"></a><span class="co">#&gt;  plotly         4.9.0      2019-04-10 [1]</span></span>
+<span id="cb7-58"><a href="introduction.html#cb7-58"></a><span class="co">#&gt;  plyr           1.8.4      2016-06-08 [1]</span></span>
+<span id="cb7-59"><a href="introduction.html#cb7-59"></a><span class="co">#&gt;  promises       1.1.0      2019-09-25 [1]</span></span>
+<span id="cb7-60"><a href="introduction.html#cb7-60"></a><span class="co">#&gt;  purrr          0.3.2.9000 2019-09-30 [1]</span></span>
+<span id="cb7-61"><a href="introduction.html#cb7-61"></a><span class="co">#&gt;  R6             2.4.0      2019-02-14 [1]</span></span>
+<span id="cb7-62"><a href="introduction.html#cb7-62"></a><span class="co">#&gt;  RColorBrewer   1.1-2      2014-12-07 [1]</span></span>
+<span id="cb7-63"><a href="introduction.html#cb7-63"></a><span class="co">#&gt;  Rcpp           1.0.2      2019-07-25 [1]</span></span>
+<span id="cb7-64"><a href="introduction.html#cb7-64"></a><span class="co">#&gt;  reshape2       1.4.3      2017-12-11 [1]</span></span>
+<span id="cb7-65"><a href="introduction.html#cb7-65"></a><span class="co">#&gt;  rlang          0.4.0.9002 2019-09-25 [1]</span></span>
+<span id="cb7-66"><a href="introduction.html#cb7-66"></a><span class="co">#&gt;  scales         1.0.0.9000 2019-07-19 [1]</span></span>
+<span id="cb7-67"><a href="introduction.html#cb7-67"></a><span class="co">#&gt;  shiny          1.4.0      2019-10-01 [1]</span></span>
+<span id="cb7-68"><a href="introduction.html#cb7-68"></a><span class="co">#&gt;  sourcetools    0.1.7      2018-04-25 [1]</span></span>
+<span id="cb7-69"><a href="introduction.html#cb7-69"></a><span class="co">#&gt;  stringi        1.4.3      2019-03-12 [1]</span></span>
+<span id="cb7-70"><a href="introduction.html#cb7-70"></a><span class="co">#&gt;  stringr        1.4.0      2019-02-10 [1]</span></span>
+<span id="cb7-71"><a href="introduction.html#cb7-71"></a><span class="co">#&gt;  sys            3.3        2019-08-21 [1]</span></span>
+<span id="cb7-72"><a href="introduction.html#cb7-72"></a><span class="co">#&gt;  tibble         2.1.3      2019-06-06 [1]</span></span>
+<span id="cb7-73"><a href="introduction.html#cb7-73"></a><span class="co">#&gt;  tidyr          1.0.0      2019-09-11 [1]</span></span>
+<span id="cb7-74"><a href="introduction.html#cb7-74"></a><span class="co">#&gt;  tidyselect     0.2.5      2018-10-11 [1]</span></span>
+<span id="cb7-75"><a href="introduction.html#cb7-75"></a><span class="co">#&gt;  utf8           1.1.4      2018-05-24 [1]</span></span>
+<span id="cb7-76"><a href="introduction.html#cb7-76"></a><span class="co">#&gt;  vctrs          0.2.0.9003 2019-10-01 [1]</span></span>
+<span id="cb7-77"><a href="introduction.html#cb7-77"></a><span class="co">#&gt;  viridisLite    0.3.0      2018-02-01 [1]</span></span>
+<span id="cb7-78"><a href="introduction.html#cb7-78"></a><span class="co">#&gt;  withr          2.1.2      2018-03-15 [1]</span></span>
+<span id="cb7-79"><a href="introduction.html#cb7-79"></a><span class="co">#&gt;  xtable         1.8-4      2019-04-21 [1]</span></span>
+<span id="cb7-80"><a href="introduction.html#cb7-80"></a><span class="co">#&gt;  yaml           2.2.0      2018-07-25 [1]</span></span>
+<span id="cb7-81"><a href="introduction.html#cb7-81"></a><span class="co">#&gt;  zeallot        0.1.0      2018-01-28 [1]</span></span>
+<span id="cb7-82"><a href="introduction.html#cb7-82"></a><span class="co">#&gt;  source                               </span></span>
+<span id="cb7-83"><a href="introduction.html#cb7-83"></a><span class="co">#&gt;  CRAN (R 3.6.0)                       </span></span>
+<span id="cb7-84"><a href="introduction.html#cb7-84"></a><span class="co">#&gt;  CRAN (R 3.6.0)                       </span></span>
+<span id="cb7-85"><a href="introduction.html#cb7-85"></a><span class="co">#&gt;  CRAN (R 3.6.0)                       </span></span>
+<span id="cb7-86"><a href="introduction.html#cb7-86"></a><span class="co">#&gt;  CRAN (R 3.6.0)                       </span></span>
+<span id="cb7-87"><a href="introduction.html#cb7-87"></a><span class="co">#&gt;  CRAN (R 3.6.0)                       </span></span>
+<span id="cb7-88"><a href="introduction.html#cb7-88"></a><span class="co">#&gt;  CRAN (R 3.6.0)                       </span></span>
+<span id="cb7-89"><a href="introduction.html#cb7-89"></a><span class="co">#&gt;  CRAN (R 3.6.0)                       </span></span>
+<span id="cb7-90"><a href="introduction.html#cb7-90"></a><span class="co">#&gt;  CRAN (R 3.6.0)                       </span></span>
+<span id="cb7-91"><a href="introduction.html#cb7-91"></a><span class="co">#&gt;  CRAN (R 3.6.0)                       </span></span>
+<span id="cb7-92"><a href="introduction.html#cb7-92"></a><span class="co">#&gt;  CRAN (R 3.6.1)                       </span></span>
+<span id="cb7-93"><a href="introduction.html#cb7-93"></a><span class="co">#&gt;  CRAN (R 3.6.1)                       </span></span>
+<span id="cb7-94"><a href="introduction.html#cb7-94"></a><span class="co">#&gt;  CRAN (R 3.6.1)                       </span></span>
+<span id="cb7-95"><a href="introduction.html#cb7-95"></a><span class="co">#&gt;  CRAN (R 3.6.0)                       </span></span>
+<span id="cb7-96"><a href="introduction.html#cb7-96"></a><span class="co">#&gt;  CRAN (R 3.6.1)                       </span></span>
+<span id="cb7-97"><a href="introduction.html#cb7-97"></a><span class="co">#&gt;  CRAN (R 3.6.0)                       </span></span>
+<span id="cb7-98"><a href="introduction.html#cb7-98"></a><span class="co">#&gt;  Github (r-lib/fastmap@b104c2c)       </span></span>
+<span id="cb7-99"><a href="introduction.html#cb7-99"></a><span class="co">#&gt;  local                                </span></span>
+<span id="cb7-100"><a href="introduction.html#cb7-100"></a><span class="co">#&gt;  CRAN (R 3.6.0)                       </span></span>
+<span id="cb7-101"><a href="introduction.html#cb7-101"></a><span class="co">#&gt;  CRAN (R 3.6.0)                       </span></span>
+<span id="cb7-102"><a href="introduction.html#cb7-102"></a><span class="co">#&gt;  CRAN (R 3.6.0)                       </span></span>
+<span id="cb7-103"><a href="introduction.html#cb7-103"></a><span class="co">#&gt;  Github (rstudio/htmltools@0366ff7)   </span></span>
+<span id="cb7-104"><a href="introduction.html#cb7-104"></a><span class="co">#&gt;  Github (ramnathv/htmlwidgets@0ef5dd5)</span></span>
+<span id="cb7-105"><a href="introduction.html#cb7-105"></a><span class="co">#&gt;  CRAN (R 3.6.1)                       </span></span>
+<span id="cb7-106"><a href="introduction.html#cb7-106"></a><span class="co">#&gt;  CRAN (R 3.6.1)                       </span></span>
+<span id="cb7-107"><a href="introduction.html#cb7-107"></a><span class="co">#&gt;  CRAN (R 3.6.0)                       </span></span>
+<span id="cb7-108"><a href="introduction.html#cb7-108"></a><span class="co">#&gt;  CRAN (R 3.6.0)                       </span></span>
+<span id="cb7-109"><a href="introduction.html#cb7-109"></a><span class="co">#&gt;  Github (r-lib/later@0364de9)         </span></span>
+<span id="cb7-110"><a href="introduction.html#cb7-110"></a><span class="co">#&gt;  CRAN (R 3.6.1)                       </span></span>
+<span id="cb7-111"><a href="introduction.html#cb7-111"></a><span class="co">#&gt;  CRAN (R 3.6.0)                       </span></span>
+<span id="cb7-112"><a href="introduction.html#cb7-112"></a><span class="co">#&gt;  CRAN (R 3.6.0)                       </span></span>
+<span id="cb7-113"><a href="introduction.html#cb7-113"></a><span class="co">#&gt;  CRAN (R 3.6.0)                       </span></span>
+<span id="cb7-114"><a href="introduction.html#cb7-114"></a><span class="co">#&gt;  CRAN (R 3.6.1)                       </span></span>
+<span id="cb7-115"><a href="introduction.html#cb7-115"></a><span class="co">#&gt;  CRAN (R 3.6.1)                       </span></span>
+<span id="cb7-116"><a href="introduction.html#cb7-116"></a><span class="co">#&gt;  CRAN (R 3.6.0)                       </span></span>
+<span id="cb7-117"><a href="introduction.html#cb7-117"></a><span class="co">#&gt;  CRAN (R 3.6.0)                       </span></span>
+<span id="cb7-118"><a href="introduction.html#cb7-118"></a><span class="co">#&gt;  CRAN (R 3.6.0)                       </span></span>
+<span id="cb7-119"><a href="introduction.html#cb7-119"></a><span class="co">#&gt;  CRAN (R 3.6.0)                       </span></span>
+<span id="cb7-120"><a href="introduction.html#cb7-120"></a><span class="co">#&gt;  CRAN (R 3.6.1)                       </span></span>
+<span id="cb7-121"><a href="introduction.html#cb7-121"></a><span class="co">#&gt;  CRAN (R 3.6.0)                       </span></span>
+<span id="cb7-122"><a href="introduction.html#cb7-122"></a><span class="co">#&gt;  CRAN (R 3.6.1)                       </span></span>
+<span id="cb7-123"><a href="introduction.html#cb7-123"></a><span class="co">#&gt;  CRAN (R 3.6.0)                       </span></span>
+<span id="cb7-124"><a href="introduction.html#cb7-124"></a><span class="co">#&gt;  CRAN (R 3.6.0)                       </span></span>
+<span id="cb7-125"><a href="introduction.html#cb7-125"></a><span class="co">#&gt;  CRAN (R 3.6.0)                       </span></span>
+<span id="cb7-126"><a href="introduction.html#cb7-126"></a><span class="co">#&gt;  Github (rstudio/promises@39faf86)    </span></span>
+<span id="cb7-127"><a href="introduction.html#cb7-127"></a><span class="co">#&gt;  Github (tidyverse/purrr@9edf0ca)     </span></span>
+<span id="cb7-128"><a href="introduction.html#cb7-128"></a><span class="co">#&gt;  CRAN (R 3.6.0)                       </span></span>
+<span id="cb7-129"><a href="introduction.html#cb7-129"></a><span class="co">#&gt;  CRAN (R 3.6.0)                       </span></span>
+<span id="cb7-130"><a href="introduction.html#cb7-130"></a><span class="co">#&gt;  CRAN (R 3.6.1)                       </span></span>
+<span id="cb7-131"><a href="introduction.html#cb7-131"></a><span class="co">#&gt;  CRAN (R 3.6.0)                       </span></span>
+<span id="cb7-132"><a href="introduction.html#cb7-132"></a><span class="co">#&gt;  Github (r-lib/rlang@03bc5ed)         </span></span>
+<span id="cb7-133"><a href="introduction.html#cb7-133"></a><span class="co">#&gt;  Github (r-lib/scales@7f6f4a5)        </span></span>
+<span id="cb7-134"><a href="introduction.html#cb7-134"></a><span class="co">#&gt;  Github (rstudio/shiny@c8daa17)       </span></span>
+<span id="cb7-135"><a href="introduction.html#cb7-135"></a><span class="co">#&gt;  CRAN (R 3.6.0)                       </span></span>
+<span id="cb7-136"><a href="introduction.html#cb7-136"></a><span class="co">#&gt;  CRAN (R 3.6.0)                       </span></span>
+<span id="cb7-137"><a href="introduction.html#cb7-137"></a><span class="co">#&gt;  CRAN (R 3.6.0)                       </span></span>
+<span id="cb7-138"><a href="introduction.html#cb7-138"></a><span class="co">#&gt;  CRAN (R 3.6.0)                       </span></span>
+<span id="cb7-139"><a href="introduction.html#cb7-139"></a><span class="co">#&gt;  CRAN (R 3.6.0)                       </span></span>
+<span id="cb7-140"><a href="introduction.html#cb7-140"></a><span class="co">#&gt;  CRAN (R 3.6.0)                       </span></span>
+<span id="cb7-141"><a href="introduction.html#cb7-141"></a><span class="co">#&gt;  CRAN (R 3.6.0)                       </span></span>
+<span id="cb7-142"><a href="introduction.html#cb7-142"></a><span class="co">#&gt;  CRAN (R 3.6.0)                       </span></span>
+<span id="cb7-143"><a href="introduction.html#cb7-143"></a><span class="co">#&gt;  Github (r-lib/vctrs@bc20422)         </span></span>
+<span id="cb7-144"><a href="introduction.html#cb7-144"></a><span class="co">#&gt;  CRAN (R 3.6.0)                       </span></span>
+<span id="cb7-145"><a href="introduction.html#cb7-145"></a><span class="co">#&gt;  CRAN (R 3.6.0)                       </span></span>
+<span id="cb7-146"><a href="introduction.html#cb7-146"></a><span class="co">#&gt;  CRAN (R 3.6.0)                       </span></span>
+<span id="cb7-147"><a href="introduction.html#cb7-147"></a><span class="co">#&gt;  CRAN (R 3.6.0)                       </span></span>
+<span id="cb7-148"><a href="introduction.html#cb7-148"></a><span class="co">#&gt;  CRAN (R 3.6.0)                       </span></span>
+<span id="cb7-149"><a href="introduction.html#cb7-149"></a><span class="co">#&gt; </span></span>
+<span id="cb7-150"><a href="introduction.html#cb7-150"></a><span class="co">#&gt; [1] /Library/Frameworks/R.framework/Versions/3.6/Resources/library</span></span></code></pre></div>
 <!--
 # Why interactive web graphics in R? {#why-web-graphics}
 

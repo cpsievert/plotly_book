@@ -5,6 +5,7 @@
 \index{add\_trace()@\texttt{add\_trace()}!add\_heatmap()@\texttt{add\_heatmap()}}
 \index{add\_trace()@\texttt{add\_trace()}!add\_histogram2d()@\texttt{add\_histogram2d()}}
 \index{add\_trace()@\texttt{add\_trace()}!add\_histogram2dcontour()@\texttt{add\_histogram2dcontour()}}
+\index{colorbar()@\texttt{colorbar()}!title@\texttt{title}}
 
 
 The **plotly** package provides two functions for displaying rectangular bins: `add_heatmap()` and `add_histogram2d()`. For numeric data, the `add_heatmap()` function is a 2D analog of `add_bars()` (bins must be pre-computed), and the `add_histogram2d()` function is a 2D analog of `add_histogram()` (bins can be computed in the browser). Thus, I recommend `add_histogram2d()` for exploratory purposes, since you don't have to think about how to perform binning. It also provides a useful [`zsmooth`](https://plot.ly/r/reference/#histogram2d-zsmooth) attribute for effectively increasing the number of bins (currently, "best" performs a [bi-linear interpolation](https://en.wikipedia.org/wiki/Bilinear_interpolation), a type of nearest neighbors algorithm), and [`nbinsx`](https://plot.ly/r/reference/#histogram2d-nbinsx)/[`nbinsy`](https://plot.ly/r/reference/#histogram2d-nbinsy) attributes to set the number of bins in the x and/or y directions. Figure \@ref(fig:histogram2d) compares three different uses of `add_histogram()`: (1) plotly.js' default binning algorithm, (2) the default plus smoothing, (3) setting the number of bins in the x and y directions. Its also worth noting that filled contours, instead of bins, can be used in any of these cases by using `add_histogram2dcontour()` instead of `add_histogram2d()`.
@@ -59,7 +60,7 @@ knitr::include_graphics("images/heatmap-corr-diamonds.svg")
 
 The functions `add_histogram2d()`, `add_histogram2dcontour()`, and `add_heatmap()` all support categorical axes. Thus, `add_histogram2d()` _can_ be used to easily display 2-way contingency tables, but since its easier to compare values along a common scale rather than compare colors [@graphical-perception], I recommend creating [grouped bar charts](#multiple-discrete-distributions) instead. The `add_heatmap()` function can still be useful for categorical axes, however, as it allows us to display whatever quantity we want along the z axis (color).
 
-\index{colorbar()@\texttt{colorbar()}!Limits}
+\index{colorbar()@\texttt{colorbar()}!limits@\texttt{limits}}
 
 Figure \@ref(fig:correlation) uses `add_heatmap()` to display a correlation matrix. Notice how the `limits` arguments in the `colorbar()` function can be used to expand the limits of the color scale to reflect the range of possible correlations (something that is not easily done in plotly.js).
 

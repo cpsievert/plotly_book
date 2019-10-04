@@ -24,7 +24,7 @@
 <meta name="author" content="Carson Sievert" />
 
 
-<meta name="date" content="2019-10-02" />
+<meta name="date" content="2019-10-04" />
 
   <meta name="viewport" content="width=device-width, initial-scale=1" />
   <meta name="apple-mobile-web-app-capable" content="yes" />
@@ -326,7 +326,6 @@ code span.wa { color: #60a0b0; font-weight: bold; font-style: italic; } /* Warni
 <li class="chapter" data-level="33.3" data-path="improving-ggplotly.html"><a href="improving-ggplotly.html#leveraging-statistical-output"><i class="fa fa-check"></i><b>33.3</b> Leveraging statistical output</a></li>
 </ul></li>
 <li class="chapter" data-level="34" data-path="custom-geoms.html"><a href="custom-geoms.html"><i class="fa fa-check"></i><b>34</b> Translating custom ggplot2 geoms</a></li>
-<li class="chapter" data-level="" data-path="references.html"><a href="references.html"><i class="fa fa-check"></i>References</a></li>
 </ul>
 
       </nav>
@@ -346,68 +345,70 @@ code span.wa { color: #60a0b0; font-weight: bold; font-style: italic; } /* Warni
             <section class="normal" id="section-">
 <div id="json" class="section level1">
 <h1><span class="header-section-number">19</span> Working with JSON</h1>
-<p>JavaScript and other web technologies are intimidating and time-consuming to learn, but by borrowing some knowledge of R’s data structures<a href="references.html#fn38" class="footnote-ref" id="fnref38"><sup>38</sup></a>, we can get up and running with useful examples fairly quickly. JavaScript Object Notation (JSON) is a popular data-interchange format that JavaScript uses to work with data. As turns out, working with JSON in JS is somewhat similar to working with <code>list()</code>s in R – both are recursive and heterogeneous data structures that have similar semantics for accessing values. In JSON, there are three basic building blocks: objects, arrays, and primitive data types (e.g., number, string, boolean, <code>null</code>, <code>undefined</code>).</p>
+<p>JavaScript and other web technologies are intimidating and time-consuming to learn, but by borrowing some knowledge of R’s data structures<a href="custom-geoms.html#fn38" class="footnote-ref" id="fnref38"><sup>38</sup></a>, we can get up and running with useful examples fairly quickly. JavaScript Object Notation (JSON) is a popular data-interchange format that JavaScript uses to work with data. As turns out, working with JSON in JS is somewhat similar to working with <code>list()</code>s in R – both are recursive and heterogeneous data structures that have similar semantics for accessing values. In JSON, there are three basic building blocks: objects, arrays, and primitive data types (e.g., number, string, boolean, <code>null</code>, <code>undefined</code>).</p>
 <p>Loosely speaking, a JSON array is similar to a un-named <code>list()</code> in R and a JSON object is similar to an un-named <code>list()</code>. In fact, if you’re already comfortable creating and subsetting named and un-named <code>list()</code>s in R, you can transfer some of that knowledge to JSON arrays and objects.</p>
 <div id="assignment-subsetting-and-iteration" class="section level2">
 <h2><span class="header-section-number">19.1</span> Assignment, subsetting, and iteration</h2>
 <p>In R, the <code>&lt;-</code> operator assigns a value to a name, and the <code>[[</code> operator extracts a list element by index:</p>
-<div class="sourceCode" id="cb182"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb182-1"><a href="json.html#cb182-1"></a>arr &lt;-<span class="st"> </span><span class="kw">list</span>(<span class="st">&quot;hello&quot;</span>, <span class="st">&quot;world&quot;</span>, <span class="dv">10</span>)</span>
-<span id="cb182-2"><a href="json.html#cb182-2"></a>arr[[<span class="dv">1</span>]]</span>
-<span id="cb182-3"><a href="json.html#cb182-3"></a><span class="co">#&gt; &quot;hello&quot;</span></span></code></pre></div>
+<div class="sourceCode" id="cb181"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb181-1"><a href="json.html#cb181-1"></a>arr &lt;-<span class="st"> </span><span class="kw">list</span>(<span class="st">&quot;hello&quot;</span>, <span class="st">&quot;world&quot;</span>, <span class="dv">10</span>)</span>
+<span id="cb181-2"><a href="json.html#cb181-2"></a>arr[[<span class="dv">1</span>]]</span>
+<span id="cb181-3"><a href="json.html#cb181-3"></a><span class="co">#&gt; &quot;hello&quot;</span></span></code></pre></div>
 <p>In JS, the <code>=</code> assigns a value to a name. When assigning a new name, you should include the <code>var</code> keyword (or similar) to avoid creation of a global variable. The <code>[</code> operator extracts list elements by index, but <strong>be careful, indexing in JS starts at 0 (not 1)!</strong></p>
-<div class="sourceCode" id="cb183"><pre class="sourceCode js"><code class="sourceCode javascript"><span id="cb183-1"><a href="json.html#cb183-1"></a><span class="kw">var</span> arr <span class="op">=</span> [<span class="st">&quot;hello&quot;</span><span class="op">,</span> <span class="st">&quot;world&quot;</span><span class="op">,</span> <span class="dv">10</span>]<span class="op">;</span></span>
-<span id="cb183-2"><a href="json.html#cb183-2"></a>arr[<span class="dv">0</span>]</span>
-<span id="cb183-3"><a href="json.html#cb183-3"></a><span class="co">// &quot;hello&quot;</span></span></code></pre></div>
+<div class="sourceCode" id="cb182"><pre class="sourceCode js"><code class="sourceCode javascript"><span id="cb182-1"><a href="json.html#cb182-1"></a><span class="kw">var</span> arr <span class="op">=</span> [<span class="st">&quot;hello&quot;</span><span class="op">,</span> <span class="st">&quot;world&quot;</span><span class="op">,</span> <span class="dv">10</span>]<span class="op">;</span></span>
+<span id="cb182-2"><a href="json.html#cb182-2"></a>arr[<span class="dv">0</span>]</span>
+<span id="cb182-3"><a href="json.html#cb182-3"></a><span class="co">// &quot;hello&quot;</span></span></code></pre></div>
 <p>In R, the <code>$</code> and <code>[[</code> operator can be used to extract list elements by name. The difference is that <code>$</code> does partial matching of names, while <code>[[</code> requires the exact name.</p>
-<div class="sourceCode" id="cb184"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb184-1"><a href="json.html#cb184-1"></a>obj &lt;-<span class="st"> </span><span class="kw">list</span>(<span class="dt">x =</span> <span class="kw">c</span>(<span class="st">&quot;hello&quot;</span>, <span class="st">&quot;world&quot;</span>), <span class="dt">zoo =</span> <span class="dv">10</span>)</span>
-<span id="cb184-2"><a href="json.html#cb184-2"></a>obj<span class="op">$</span>z</span>
-<span id="cb184-3"><a href="json.html#cb184-3"></a><span class="co">#&gt; 10</span></span>
-<span id="cb184-4"><a href="json.html#cb184-4"></a>obj[[<span class="st">&quot;zoo&quot;</span>]]</span>
-<span id="cb184-5"><a href="json.html#cb184-5"></a><span class="co">#&gt; 10</span></span></code></pre></div>
+<div class="sourceCode" id="cb183"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb183-1"><a href="json.html#cb183-1"></a>obj &lt;-<span class="st"> </span><span class="kw">list</span>(<span class="dt">x =</span> <span class="kw">c</span>(<span class="st">&quot;hello&quot;</span>, <span class="st">&quot;world&quot;</span>), <span class="dt">zoo =</span> <span class="dv">10</span>)</span>
+<span id="cb183-2"><a href="json.html#cb183-2"></a>obj<span class="op">$</span>z</span>
+<span id="cb183-3"><a href="json.html#cb183-3"></a><span class="co">#&gt; 10</span></span>
+<span id="cb183-4"><a href="json.html#cb183-4"></a>obj[[<span class="st">&quot;zoo&quot;</span>]]</span>
+<span id="cb183-5"><a href="json.html#cb183-5"></a><span class="co">#&gt; 10</span></span></code></pre></div>
 <p>In JS, the <code>.</code> and <code>[</code> operator can be used to extract list elements by name. In either case, the naming must be exact.</p>
-<div class="sourceCode" id="cb185"><pre class="sourceCode js"><code class="sourceCode javascript"><span id="cb185-1"><a href="json.html#cb185-1"></a><span class="kw">var</span> obj <span class="op">=</span> <span class="op">{</span></span>
-<span id="cb185-2"><a href="json.html#cb185-2"></a>  <span class="dt">x</span><span class="op">:</span> [<span class="st">&quot;hello&quot;</span><span class="op">,</span> <span class="st">&quot;world&quot;</span>]<span class="op">,</span></span>
-<span id="cb185-3"><a href="json.html#cb185-3"></a>  <span class="dt">zoo</span><span class="op">:</span> <span class="dv">10</span></span>
-<span id="cb185-4"><a href="json.html#cb185-4"></a><span class="op">}</span></span>
-<span id="cb185-5"><a href="json.html#cb185-5"></a><span class="va">obj</span>.<span class="at">zoo</span></span>
-<span id="cb185-6"><a href="json.html#cb185-6"></a><span class="co">// 10</span></span>
-<span id="cb185-7"><a href="json.html#cb185-7"></a>obj[<span class="st">&#39;zoo&#39;</span>]</span>
-<span id="cb185-8"><a href="json.html#cb185-8"></a><span class="co">// 10</span></span></code></pre></div>
+<div class="sourceCode" id="cb184"><pre class="sourceCode js"><code class="sourceCode javascript"><span id="cb184-1"><a href="json.html#cb184-1"></a><span class="kw">var</span> obj <span class="op">=</span> <span class="op">{</span></span>
+<span id="cb184-2"><a href="json.html#cb184-2"></a>  <span class="dt">x</span><span class="op">:</span> [<span class="st">&quot;hello&quot;</span><span class="op">,</span> <span class="st">&quot;world&quot;</span>]<span class="op">,</span></span>
+<span id="cb184-3"><a href="json.html#cb184-3"></a>  <span class="dt">zoo</span><span class="op">:</span> <span class="dv">10</span></span>
+<span id="cb184-4"><a href="json.html#cb184-4"></a><span class="op">}</span></span>
+<span id="cb184-5"><a href="json.html#cb184-5"></a><span class="va">obj</span>.<span class="at">zoo</span></span>
+<span id="cb184-6"><a href="json.html#cb184-6"></a><span class="co">// 10</span></span>
+<span id="cb184-7"><a href="json.html#cb184-7"></a>obj[<span class="st">&#39;zoo&#39;</span>]</span>
+<span id="cb184-8"><a href="json.html#cb184-8"></a><span class="co">// 10</span></span></code></pre></div>
 <p>Unlike R <code>list()</code>s, arrays and objects in JS come with properties and methods that can be accessed via the <code>.</code> operator. Arrays, in particular, have a <code>length</code> property and a <code>map()</code> method for applying a function to each array element:</p>
-<div class="sourceCode" id="cb186"><pre class="sourceCode js"><code class="sourceCode javascript"><span id="cb186-1"><a href="json.html#cb186-1"></a><span class="va">arr</span>.<span class="at">length</span></span>
-<span id="cb186-2"><a href="json.html#cb186-2"></a><span class="co">// 3</span></span>
-<span id="cb186-3"><a href="json.html#cb186-3"></a><span class="va">arr</span>.<span class="at">map</span>(<span class="kw">function</span>(item) <span class="op">{</span> <span class="cf">return</span> item <span class="op">+</span> <span class="dv">1</span><span class="op">;</span> <span class="op">}</span>)<span class="op">;</span></span>
-<span id="cb186-4"><a href="json.html#cb186-4"></a><span class="co">// [&quot;hello1&quot;, &quot;world1&quot;, 11]</span></span></code></pre></div>
+<div class="sourceCode" id="cb185"><pre class="sourceCode js"><code class="sourceCode javascript"><span id="cb185-1"><a href="json.html#cb185-1"></a><span class="va">arr</span>.<span class="at">length</span></span>
+<span id="cb185-2"><a href="json.html#cb185-2"></a><span class="co">// 3</span></span>
+<span id="cb185-3"><a href="json.html#cb185-3"></a><span class="va">arr</span>.<span class="at">map</span>(<span class="kw">function</span>(item) <span class="op">{</span> <span class="cf">return</span> item <span class="op">+</span> <span class="dv">1</span><span class="op">;</span> <span class="op">}</span>)<span class="op">;</span></span>
+<span id="cb185-4"><a href="json.html#cb185-4"></a><span class="co">// [&quot;hello1&quot;, &quot;world1&quot;, 11]</span></span></code></pre></div>
 <p>In R, both the <code>lapply()</code> and <code>purrr::map()</code> family of functions provide a similar functional interface. Also, note that operators like <code>+</code> in JS do even more type coercion than R, so although <code>item + 1</code> works for strings in JS, it would throw an error in R (an that’s ok, most times you probably don’t want to add a string to a number)! If instead, you wanted to only add 1 to numeric values, you could use <code>is.numeric()</code> in R within an if else statement.</p>
-<div class="sourceCode" id="cb187"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb187-1"><a href="json.html#cb187-1"></a>purrr<span class="op">::</span><span class="kw">map</span>(arr, <span class="cf">function</span>(item) {</span>
-<span id="cb187-2"><a href="json.html#cb187-2"></a>  <span class="cf">if</span> (<span class="kw">is.numeric</span>(item)) item <span class="op">+</span><span class="st"> </span><span class="dv">1</span> <span class="cf">else</span> item</span>
-<span id="cb187-3"><a href="json.html#cb187-3"></a>})</span>
-<span id="cb187-4"><a href="json.html#cb187-4"></a><span class="co">#&gt; [[1]]</span></span>
-<span id="cb187-5"><a href="json.html#cb187-5"></a><span class="co">#&gt; [1] &quot;hello&quot;</span></span>
-<span id="cb187-6"><a href="json.html#cb187-6"></a><span class="co">#&gt; </span></span>
-<span id="cb187-7"><a href="json.html#cb187-7"></a><span class="co">#&gt; [[2]]</span></span>
-<span id="cb187-8"><a href="json.html#cb187-8"></a><span class="co">#&gt; [1] &quot;world&quot;</span></span>
-<span id="cb187-9"><a href="json.html#cb187-9"></a><span class="co">#&gt; </span></span>
-<span id="cb187-10"><a href="json.html#cb187-10"></a><span class="co">#&gt; [[3]]</span></span>
-<span id="cb187-11"><a href="json.html#cb187-11"></a><span class="co">#&gt; [1] 11</span></span></code></pre></div>
+<div class="sourceCode" id="cb186"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb186-1"><a href="json.html#cb186-1"></a>purrr<span class="op">::</span><span class="kw">map</span>(arr, <span class="cf">function</span>(item) {</span>
+<span id="cb186-2"><a href="json.html#cb186-2"></a>  <span class="cf">if</span> (<span class="kw">is.numeric</span>(item)) item <span class="op">+</span><span class="st"> </span><span class="dv">1</span> <span class="cf">else</span> item</span>
+<span id="cb186-3"><a href="json.html#cb186-3"></a>})</span>
+<span id="cb186-4"><a href="json.html#cb186-4"></a><span class="co">#&gt; [[1]]</span></span>
+<span id="cb186-5"><a href="json.html#cb186-5"></a><span class="co">#&gt; [1] &quot;hello&quot;</span></span>
+<span id="cb186-6"><a href="json.html#cb186-6"></a><span class="co">#&gt; </span></span>
+<span id="cb186-7"><a href="json.html#cb186-7"></a><span class="co">#&gt; [[2]]</span></span>
+<span id="cb186-8"><a href="json.html#cb186-8"></a><span class="co">#&gt; [1] &quot;world&quot;</span></span>
+<span id="cb186-9"><a href="json.html#cb186-9"></a><span class="co">#&gt; </span></span>
+<span id="cb186-10"><a href="json.html#cb186-10"></a><span class="co">#&gt; [[3]]</span></span>
+<span id="cb186-11"><a href="json.html#cb186-11"></a><span class="co">#&gt; [1] 11</span></span></code></pre></div>
 <p>In JS, you can use the <code>typeof</code> keyword to get the data type as well as the conditional ternary operator (<code>condition ? exprT : exprF</code>) to achieve the same task.</p>
-<div class="sourceCode" id="cb188"><pre class="sourceCode js"><code class="sourceCode javascript"><span id="cb188-1"><a href="json.html#cb188-1"></a><span class="va">arr</span>.<span class="at">map</span>(<span class="kw">function</span>(item) <span class="op">{</span> </span>
-<span id="cb188-2"><a href="json.html#cb188-2"></a>  <span class="cf">return</span> <span class="kw">typeof</span> item <span class="op">==</span> <span class="st">&quot;number&quot;</span> <span class="op">?</span> item <span class="op">+</span> <span class="dv">1</span> : item<span class="op">;</span> </span>
-<span id="cb188-3"><a href="json.html#cb188-3"></a><span class="op">}</span>)<span class="op">;</span></span>
-<span id="cb188-4"><a href="json.html#cb188-4"></a><span class="co">// [&quot;hello&quot;, &quot;world&quot;, 11]</span></span></code></pre></div>
+<div class="sourceCode" id="cb187"><pre class="sourceCode js"><code class="sourceCode javascript"><span id="cb187-1"><a href="json.html#cb187-1"></a><span class="va">arr</span>.<span class="at">map</span>(<span class="kw">function</span>(item) <span class="op">{</span> </span>
+<span id="cb187-2"><a href="json.html#cb187-2"></a>  <span class="cf">return</span> <span class="kw">typeof</span> item <span class="op">==</span> <span class="st">&quot;number&quot;</span> <span class="op">?</span> item <span class="op">+</span> <span class="dv">1</span> : item<span class="op">;</span> </span>
+<span id="cb187-3"><a href="json.html#cb187-3"></a><span class="op">}</span>)<span class="op">;</span></span>
+<span id="cb187-4"><a href="json.html#cb187-4"></a><span class="co">// [&quot;hello&quot;, &quot;world&quot;, 11]</span></span></code></pre></div>
 <p>There are a handful of other useful <a href="https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/Array">array</a> and <a href="https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/Object">object</a> methods, but to keep things focused, we’ll only cover what’s required to comprehend Section <a href="js-event-handlers.html#js-event-handlers">20</a>. A couple examples in that section use the <code>filter()</code> method, which like <code>map()</code> applies a function to each array element, but expects a logical expression and returns only the elements that meet the condition.</p>
-<div class="sourceCode" id="cb189"><pre class="sourceCode js"><code class="sourceCode javascript"><span id="cb189-1"><a href="json.html#cb189-1"></a><span class="va">arr</span>.<span class="at">filter</span>(<span class="kw">function</span>(item) <span class="op">{</span> <span class="cf">return</span> <span class="kw">typeof</span> item <span class="op">==</span> <span class="st">&quot;string&quot;</span><span class="op">;</span> <span class="op">}</span>)<span class="op">;</span></span>
-<span id="cb189-2"><a href="json.html#cb189-2"></a><span class="co">// [&quot;hello&quot;, &quot;world&quot;]</span></span></code></pre></div>
+<div class="sourceCode" id="cb188"><pre class="sourceCode js"><code class="sourceCode javascript"><span id="cb188-1"><a href="json.html#cb188-1"></a><span class="va">arr</span>.<span class="at">filter</span>(<span class="kw">function</span>(item) <span class="op">{</span> <span class="cf">return</span> <span class="kw">typeof</span> item <span class="op">==</span> <span class="st">&quot;string&quot;</span><span class="op">;</span> <span class="op">}</span>)<span class="op">;</span></span>
+<span id="cb188-2"><a href="json.html#cb188-2"></a><span class="co">// [&quot;hello&quot;, &quot;world&quot;]</span></span></code></pre></div>
 </div>
 <div id="mapping-r-to-json" class="section level2">
 <h2><span class="header-section-number">19.2</span> Mapping R to JSON</h2>
+
 <p>In R, unlike JSON, there is no distinction between scalars and vectors of length 1. That means there is ambiguity as to what a vector of length 1 in R should map to in JSON. The <strong>jsonlite</strong> package defaults to an array of length 1, but this can be avoided by setting <code>auto_unbox = TRUE</code>.</p>
-<div class="sourceCode" id="cb190"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb190-1"><a href="json.html#cb190-1"></a>jsonlite<span class="op">::</span><span class="kw">toJSON</span>(<span class="st">&quot;A string in R&quot;</span>)</span>
-<span id="cb190-2"><a href="json.html#cb190-2"></a><span class="co">#&gt; [&quot;A string in R&quot;]</span></span>
-<span id="cb190-3"><a href="json.html#cb190-3"></a>jsonlite<span class="op">::</span><span class="kw">toJSON</span>(<span class="st">&quot;A string in R&quot;</span>, <span class="dt">auto_unbox =</span> <span class="ot">TRUE</span>)</span>
-<span id="cb190-4"><a href="json.html#cb190-4"></a><span class="co">#&gt; &quot;A string in R&quot;</span></span></code></pre></div>
+<div class="sourceCode" id="cb189"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb189-1"><a href="json.html#cb189-1"></a>jsonlite<span class="op">::</span><span class="kw">toJSON</span>(<span class="st">&quot;A string in R&quot;</span>)</span>
+<span id="cb189-2"><a href="json.html#cb189-2"></a><span class="co">#&gt; [&quot;A string in R&quot;]</span></span>
+<span id="cb189-3"><a href="json.html#cb189-3"></a>jsonlite<span class="op">::</span><span class="kw">toJSON</span>(<span class="st">&quot;A string in R&quot;</span>, <span class="dt">auto_unbox =</span> <span class="ot">TRUE</span>)</span>
+<span id="cb189-4"><a href="json.html#cb189-4"></a><span class="co">#&gt; &quot;A string in R&quot;</span></span></code></pre></div>
 <p>It’s worth noting that plotly.js, which consumes JSON objects, has specific expectations and rules about scalars versus arrays of length 1. If you’re calling the plotly.js library directly in JS, as we’ll see later in Section <a href="js-event-handlers.html#js-event-handlers">20</a>, you’ll need to be mindful of the difference between scalars and arrays of length 1. Some attributes, like <code>text</code> and <code>marker.size</code>, accept both scalars and arrays and apply different rules based on the difference. Some other attributes, like <code>x</code>, <code>y</code>, and <code>z</code> only accept arrays and will error out if given a scalar. To learn about these rules and expectations, you can use the <code>schema()</code> function from R to inspect plotly.js’ specification as shown in Figure <a href="json.html#fig:json-schema">19.1</a>. Note that attributes with a <code>val_type</code> of <code>'data_array'</code> require an array while attributes with an <code>arrayOk: true</code> field accept either scalars or arrays.</p>
-<div class="sourceCode" id="cb191"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb191-1"><a href="json.html#cb191-1"></a><span class="kw">schema</span>()</span></code></pre></div>
+
+<div class="sourceCode" id="cb190"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb190-1"><a href="json.html#cb190-1"></a><span class="kw">schema</span>()</span></code></pre></div>
 <div class="figure" style="text-align: center"><span id="fig:json-schema"></span>
 <iframe src="https://player.vimeo.com/video/307597826?title=0&amp;byline=0&amp;portrait=0" width="100%" height="400" frameborder="0" seamless="seamless" webkitAllowFullScreen mozallowfullscreen allowFullScreen></iframe>
 <p class="caption">
@@ -415,11 +416,11 @@ FIGURE 19.1: Using the plotly <code>schema()</code> to obtain more information a
 </p>
 </div>
 <p>In JSON, unlike R, there is no distinction between a heterogeneous and homogeneous collection of data types. In other words, in R, there is an important difference between <code>list(1, 2, 3)</code> and <code>c(1, 2, 3)</code> (the latter is an atomic vector and has a different set of rules). In JSON, there is no strict notion of a homogeneous collection, so working with JSON arrays is essentially like being forced to use <code>list()</code> in R. This subtle fact can lead to some surprising results when trying to serialize R vectors as JSON arrays. For instance, if you wanted to create a JSON array, say <code>[1,"a",true]</code> using R objects, you may be tempted to do the following:</p>
-<div class="sourceCode" id="cb192"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb192-1"><a href="json.html#cb192-1"></a>jsonlite<span class="op">::</span><span class="kw">toJSON</span>(<span class="kw">c</span>(<span class="dv">1</span>, <span class="st">&quot;a&quot;</span>, <span class="ot">TRUE</span>))</span>
-<span id="cb192-2"><a href="json.html#cb192-2"></a><span class="co">#&gt; [&quot;1&quot;,&quot;a&quot;,&quot;TRUE&quot;] </span></span></code></pre></div>
+<div class="sourceCode" id="cb191"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb191-1"><a href="json.html#cb191-1"></a>jsonlite<span class="op">::</span><span class="kw">toJSON</span>(<span class="kw">c</span>(<span class="dv">1</span>, <span class="st">&quot;a&quot;</span>, <span class="ot">TRUE</span>))</span>
+<span id="cb191-2"><a href="json.html#cb191-2"></a><span class="co">#&gt; [&quot;1&quot;,&quot;a&quot;,&quot;TRUE&quot;] </span></span></code></pre></div>
 <p>But this actually creates an array of strings instead of the array with a number, string, and boolean that we desire. The problems actually lies in the fact that <code>c()</code> coerces the collection of values into an atomic vector. Instead, you should use <code>list()</code> over <code>c()</code>:</p>
-<div class="sourceCode" id="cb193"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb193-1"><a href="json.html#cb193-1"></a>jsonlite<span class="op">::</span><span class="kw">toJSON</span>(<span class="kw">list</span>(<span class="dv">1</span>, <span class="st">&quot;a&quot;</span>, <span class="ot">TRUE</span>), <span class="dt">auto_unbox =</span> <span class="ot">TRUE</span>)</span>
-<span id="cb193-2"><a href="json.html#cb193-2"></a><span class="co">#&gt; [1,&quot;a&quot;,true]</span></span></code></pre></div>
+<div class="sourceCode" id="cb192"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb192-1"><a href="json.html#cb192-1"></a>jsonlite<span class="op">::</span><span class="kw">toJSON</span>(<span class="kw">list</span>(<span class="dv">1</span>, <span class="st">&quot;a&quot;</span>, <span class="ot">TRUE</span>), <span class="dt">auto_unbox =</span> <span class="ot">TRUE</span>)</span>
+<span id="cb192-2"><a href="json.html#cb192-2"></a><span class="co">#&gt; [1,&quot;a&quot;,true]</span></span></code></pre></div>
 </div>
 </div>
 <script>

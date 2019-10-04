@@ -24,7 +24,7 @@
 <meta name="author" content="Carson Sievert" />
 
 
-<meta name="date" content="2019-10-02" />
+<meta name="date" content="2019-10-04" />
 
   <meta name="viewport" content="width=device-width, initial-scale=1" />
   <meta name="apple-mobile-web-app-capable" content="yes" />
@@ -326,7 +326,6 @@ code span.wa { color: #60a0b0; font-weight: bold; font-style: italic; } /* Warni
 <li class="chapter" data-level="33.3" data-path="improving-ggplotly.html"><a href="improving-ggplotly.html#leveraging-statistical-output"><i class="fa fa-check"></i><b>33.3</b> Leveraging statistical output</a></li>
 </ul></li>
 <li class="chapter" data-level="34" data-path="custom-geoms.html"><a href="custom-geoms.html"><i class="fa fa-check"></i><b>34</b> Translating custom ggplot2 geoms</a></li>
-<li class="chapter" data-level="" data-path="references.html"><a href="references.html"><i class="fa fa-check"></i>References</a></li>
 </ul>
 
       </nav>
@@ -346,9 +345,11 @@ code span.wa { color: #60a0b0; font-weight: bold; font-style: italic; } /* Warni
             <section class="normal" id="section-">
 <div id="improving-ggplotly" class="section level1">
 <h1><span class="header-section-number">33</span> Improving <code>ggplotly()</code></h1>
-<p>Since the <code>ggplotly()</code> function returns a <strong>plotly</strong> object, we can use that object in the same way you can use any other <strong>plotly</strong> object. Modifying this object is <em>always</em> going to be useful when you want more control over certain (interactive) behavior that <strong>ggplot2</strong> doesn’t provide an API to describe<a href="references.html#fn46" class="footnote-ref" id="fnref46"><sup>46</sup></a>, for example:</p>
+<p></p>
+<p>Since the <code>ggplotly()</code> function returns a <strong>plotly</strong> object, we can use that object in the same way you can use any other <strong>plotly</strong> object. Modifying this object is <em>always</em> going to be useful when you want more control over certain (interactive) behavior that <strong>ggplot2</strong> doesn’t provide an API to describe<a href="custom-geoms.html#fn46" class="footnote-ref" id="fnref46"><sup>46</sup></a>, for example:</p>
+
 <ul>
-<li><code>layout()</code> for modifying aspects of the layout, which can be used to:
+<li><code>layout()</code> for modifying aspects of the layout, which can be used to do many things, for example:
 <ul>
 <li>Change default <a href="https://plot.ly/r/reference/#layout-hovermode"><code>hovermode</code></a> behavior (See Figure <a href="improving-ggplotly.html#fig:ggplotly-rangeslider">33.1</a>).</li>
 <li>Stylizing hover labels (<a href="https://plot.ly/r/reference/#layout-hoverlabel"><code>hoverlabel</code></a>).</li>
@@ -369,6 +370,8 @@ code span.wa { color: #60a0b0; font-weight: bold; font-style: italic; } /* Warni
 <li>Enable editable shapes (see Chapter <a href="editing-views.html#editing-views">12</a>).</li>
 </ul></li>
 </ul>
+<p>
+</p>
 <p>In addition to using the functions above to modify <code>ggplotly()</code>’s return value, the <code>ggplotly()</code> function itself provides some arguments for controlling that return value. In this chapter, we’ll see a couple of them:</p>
 <ul>
 <li><code>dynamicTicks</code>: should plotly.js dynamically generate axis tick labels? Dynamic ticks are useful for updating ticks in response to zoom/pan interactions; however, they can not always reproduce labels as they would appear in the static ggplot2 image (see Figure <a href="improving-ggplotly.html#fig:ggplotly-rangeslider">33.1</a>).</li>
@@ -376,15 +379,17 @@ code span.wa { color: #60a0b0; font-weight: bold; font-style: italic; } /* Warni
 </ul>
 <div id="modifying-layout" class="section level2">
 <h2><span class="header-section-number">33.1</span> Modifying layout</h2>
-<p>Any aspect of a <strong>plotly</strong> objects layout can be modified^[Or, in the case of cumulative attributes, like <code>shapes</code>, <code>images</code>, <code>annotations</code>, etc, these items will be added to the existing items) via the <code>layout()</code> function. By default, since it doesn’t always make sense to compare values, <code>ggplotly()</code> will usually set <code>layout.hovermode='closest'</code>. As shown in Figure <a href="improving-ggplotly.html#fig:ggplotly-rangeslider">33.1</a>, when we have multiple y-values of interest at a specific x-value, it can be helpful to set <code>layout.hovermode='x'</code>. Moreover, for a long time series graph like this, zooming in on the x-axis can be useful – <code>dynamicTicks</code> allows plotly.js to handle the generation of axis ticks and the <code>rangeslider()</code> allows us to zoom on the x-axis without losing the global context.</p>
-<div class="sourceCode" id="cb250"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb250-1"><a href="improving-ggplotly.html#cb250-1"></a><span class="kw">library</span>(babynames)</span>
-<span id="cb250-2"><a href="improving-ggplotly.html#cb250-2"></a>nms &lt;-<span class="st"> </span><span class="kw">filter</span>(babynames, name <span class="op">%in%</span><span class="st"> </span><span class="kw">c</span>(<span class="st">&quot;Sam&quot;</span>, <span class="st">&quot;Alex&quot;</span>))</span>
-<span id="cb250-3"><a href="improving-ggplotly.html#cb250-3"></a>p &lt;-<span class="st"> </span><span class="kw">ggplot</span>(nms) <span class="op">+</span><span class="st"> </span></span>
-<span id="cb250-4"><a href="improving-ggplotly.html#cb250-4"></a><span class="st">  </span><span class="kw">geom_line</span>(<span class="kw">aes</span>(year, prop, <span class="dt">color =</span> sex, <span class="dt">linetype =</span> name))</span>
-<span id="cb250-5"><a href="improving-ggplotly.html#cb250-5"></a>  </span>
-<span id="cb250-6"><a href="improving-ggplotly.html#cb250-6"></a><span class="kw">ggplotly</span>(p, <span class="dt">dynamicTicks =</span> <span class="ot">TRUE</span>) <span class="op">%&gt;%</span></span>
-<span id="cb250-7"><a href="improving-ggplotly.html#cb250-7"></a><span class="st">  </span><span class="kw">rangeslider</span>() <span class="op">%&gt;%</span></span>
-<span id="cb250-8"><a href="improving-ggplotly.html#cb250-8"></a><span class="st">  </span><span class="kw">layout</span>(<span class="dt">hovermode =</span> <span class="st">&quot;x&quot;</span>)</span></code></pre></div>
+<p>Any aspect of a <strong>plotly</strong> objects layout can be modified<a href="custom-geoms.html#fn47" class="footnote-ref" id="fnref47"><sup>47</sup></a> via the <code>layout()</code> function. By default, since it doesn’t always make sense to compare values, <code>ggplotly()</code> will usually set <code>layout.hovermode='closest'</code>. As shown in Figure <a href="improving-ggplotly.html#fig:ggplotly-rangeslider">33.1</a>, when we have multiple y-values of interest at a specific x-value, it can be helpful to set <code>layout.hovermode='x'</code>. Moreover, for a long time series graph like this, zooming in on the x-axis can be useful – <code>dynamicTicks</code> allows plotly.js to handle the generation of axis ticks and the <code>rangeslider()</code> allows us to zoom on the x-axis without losing the global context.</p>
+
+<p></p>
+<div class="sourceCode" id="cb249"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb249-1"><a href="improving-ggplotly.html#cb249-1"></a><span class="kw">library</span>(babynames)</span>
+<span id="cb249-2"><a href="improving-ggplotly.html#cb249-2"></a>nms &lt;-<span class="st"> </span><span class="kw">filter</span>(babynames, name <span class="op">%in%</span><span class="st"> </span><span class="kw">c</span>(<span class="st">&quot;Sam&quot;</span>, <span class="st">&quot;Alex&quot;</span>))</span>
+<span id="cb249-3"><a href="improving-ggplotly.html#cb249-3"></a>p &lt;-<span class="st"> </span><span class="kw">ggplot</span>(nms) <span class="op">+</span><span class="st"> </span></span>
+<span id="cb249-4"><a href="improving-ggplotly.html#cb249-4"></a><span class="st">  </span><span class="kw">geom_line</span>(<span class="kw">aes</span>(year, prop, <span class="dt">color =</span> sex, <span class="dt">linetype =</span> name))</span>
+<span id="cb249-5"><a href="improving-ggplotly.html#cb249-5"></a>  </span>
+<span id="cb249-6"><a href="improving-ggplotly.html#cb249-6"></a><span class="kw">ggplotly</span>(p, <span class="dt">dynamicTicks =</span> <span class="ot">TRUE</span>) <span class="op">%&gt;%</span></span>
+<span id="cb249-7"><a href="improving-ggplotly.html#cb249-7"></a><span class="st">  </span><span class="kw">rangeslider</span>() <span class="op">%&gt;%</span></span>
+<span id="cb249-8"><a href="improving-ggplotly.html#cb249-8"></a><span class="st">  </span><span class="kw">layout</span>(<span class="dt">hovermode =</span> <span class="st">&quot;x&quot;</span>)</span></code></pre></div>
 <div class="figure" style="text-align: center"><span id="fig:ggplotly-rangeslider"></span>
 <iframe src="https://player.vimeo.com/video/325298724?title=0&amp;byline=0&amp;portrait=0" width="100%" height="400" frameborder="0" seamless="seamless" webkitAllowFullScreen mozallowfullscreen allowFullScreen></iframe>
 <p class="caption">
@@ -396,9 +401,11 @@ FIGURE 33.1: Adding <code>dynamicTicks</code>, a <code>rangeslider()</code>, and
 <div id="modifying-data" class="section level2">
 <h2><span class="header-section-number">33.2</span> Modifying data</h2>
 <p>As mentioned previously, <code>ggplotly()</code> translates each ggplot2 layer into one or more plotly.js traces. In this translation, it is forced to make a number of assumptions about trace attribute values that may or may not be appropriate for the use case. To demonstrate, consider Figure <a href="improving-ggplotly.html#fig:simple-scatterplot">33.2</a>, which shows hover information for the points, the fitted line, and the confidence band. How could we make it so hover information is only displayed for the points and not for the fitted line and confidence band?</p>
-<div class="sourceCode" id="cb251"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb251-1"><a href="improving-ggplotly.html#cb251-1"></a>p &lt;-<span class="st"> </span><span class="kw">ggplot</span>(mtcars, <span class="kw">aes</span>(<span class="dt">x =</span> wt, <span class="dt">y =</span> mpg)) <span class="op">+</span></span>
-<span id="cb251-2"><a href="improving-ggplotly.html#cb251-2"></a><span class="st">   </span><span class="kw">geom_point</span>() <span class="op">+</span><span class="st"> </span><span class="kw">geom_smooth</span>()</span>
-<span id="cb251-3"><a href="improving-ggplotly.html#cb251-3"></a><span class="kw">ggplotly</span>(p)</span></code></pre></div>
+<p>
+</p>
+<div class="sourceCode" id="cb250"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb250-1"><a href="improving-ggplotly.html#cb250-1"></a>p &lt;-<span class="st"> </span><span class="kw">ggplot</span>(mtcars, <span class="kw">aes</span>(<span class="dt">x =</span> wt, <span class="dt">y =</span> mpg)) <span class="op">+</span></span>
+<span id="cb250-2"><a href="improving-ggplotly.html#cb250-2"></a><span class="st">   </span><span class="kw">geom_point</span>() <span class="op">+</span><span class="st"> </span><span class="kw">geom_smooth</span>()</span>
+<span id="cb250-3"><a href="improving-ggplotly.html#cb250-3"></a><span class="kw">ggplotly</span>(p)</span></code></pre></div>
 <div class="figure" style="text-align: center"><span id="fig:simple-scatterplot"></span>
 <img src="images/simple-scatterplot.png" alt="A scatterplot with a fitted line and confidence band." width="100%" data-url="/interactives/simple-scatterplot.html" />
 <p class="caption">
@@ -406,7 +413,7 @@ FIGURE 33.2: A scatterplot with a fitted line and confidence band.
 </p>
 </div>
 <p>The <strong>ggplot2</strong> package doesn’t provide an API for interactive features, but by changing the <a href="https://plot.ly/r/reference/#scatter-hoverinfo">hoverinfo</a> attribute to <code>"none"</code>, we can turn off hover for the relevant traces. This sort of task (i.e. modifying trace attribute values) is best achieved through the <code>style()</code> function. Before using it, you may want to study the underlying traces with <code>plotly_json()</code> which uses the <strong>listviewer</strong> package to display a convenient interactive view of the JSON object sent to plotly.js <span class="citation">(de Jong and Russell <a href="#ref-listviewer" role="doc-biblioref">2016</a>)</span>. By clicking on the arrow next to the data element, you can see the traces (data) behind the plot. As shown in Figure <a href="improving-ggplotly.html#fig:listviewer">33.3</a>, we have three traces: one for the <code>geom_point()</code> layer and two for the <code>geom_smooth()</code> layer.</p>
-<div class="sourceCode" id="cb252"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb252-1"><a href="improving-ggplotly.html#cb252-1"></a><span class="kw">plotly_json</span>(p)</span></code></pre></div>
+<div class="sourceCode" id="cb251"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb251-1"><a href="improving-ggplotly.html#cb251-1"></a><span class="kw">plotly_json</span>(p)</span></code></pre></div>
 <div class="figure" style="text-align: center"><span id="fig:listviewer"></span>
 <img src="images/listviewer.png" alt="Using listviewer to inspect the JSON representation of a plotly object." width="100%" data-url="/interactives/listviewer.html" />
 <p class="caption">
@@ -414,7 +421,8 @@ FIGURE 33.3: Using listviewer to inspect the JSON representation of a plotly obj
 </p>
 </div>
 <p>This output indicates that the fitted line and confidence band are implemented in the 2nd and 3rd trace of the plotly object, so to turn off the hover of those traces:</p>
-<div class="sourceCode" id="cb253"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb253-1"><a href="improving-ggplotly.html#cb253-1"></a><span class="kw">style</span>(p, <span class="dt">hoverinfo =</span> <span class="st">&quot;none&quot;</span>, <span class="dt">traces =</span> <span class="dv">2</span><span class="op">:</span><span class="dv">3</span>)</span></code></pre></div>
+
+<div class="sourceCode" id="cb252"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb252-1"><a href="improving-ggplotly.html#cb252-1"></a><span class="kw">style</span>(p, <span class="dt">hoverinfo =</span> <span class="st">&quot;none&quot;</span>, <span class="dt">traces =</span> <span class="dv">2</span><span class="op">:</span><span class="dv">3</span>)</span></code></pre></div>
 <div class="figure" style="text-align: center"><span id="fig:style-hoverinfo"></span>
 <img src="images/style-hoverinfo.png" alt="Using the style() function to modify hoverinfo attribute values of a plotly object created via ggplotly() (by default, ggplotly() displays hoverinfo for all traces). In this case, the hoverinfo for a fitted line and error bounds are hidden." width="100%" data-url="/interactives/style-hoverinfo.html" />
 <p class="caption">
@@ -425,36 +433,41 @@ FIGURE 33.4: Using the <code>style()</code> function to modify hoverinfo attribu
 <div id="leveraging-statistical-output" class="section level2">
 <h2><span class="header-section-number">33.3</span> Leveraging statistical output</h2>
 <p>Since <code>ggplotly()</code> returns a plotly object, and <strong>plotly</strong> objects can have data attached to them, it attaches data from <strong>ggplot2</strong> layer(s) (either before or after summary statistics have been applied). Furthermore, since each ggplot layer owns a data frame, it is useful to have some way to specify the particular layer of data of interest, which is done via the <code>layerData</code> argument in <code>ggplotly()</code>. Also, when a particular layer applies a summary statistic (e.g., <code>geom_bin()</code>), or applies a statistical model (e.g., <code>geom_smooth()</code>) to the data, it might be useful to access the output of that transformation, which is the point of the <code>originalData</code> argument in <code>ggplotly()</code>.</p>
-<div class="sourceCode" id="cb254"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb254-1"><a href="improving-ggplotly.html#cb254-1"></a>p &lt;-<span class="st"> </span><span class="kw">ggplot</span>(mtcars, <span class="kw">aes</span>(<span class="dt">x =</span> wt, <span class="dt">y =</span> mpg)) <span class="op">+</span></span>
-<span id="cb254-2"><a href="improving-ggplotly.html#cb254-2"></a><span class="st">   </span><span class="kw">geom_point</span>() <span class="op">+</span><span class="st"> </span><span class="kw">geom_smooth</span>()</span>
-<span id="cb254-3"><a href="improving-ggplotly.html#cb254-3"></a>p <span class="op">%&gt;%</span></span>
-<span id="cb254-4"><a href="improving-ggplotly.html#cb254-4"></a><span class="st">  </span><span class="kw">ggplotly</span>(<span class="dt">layerData =</span> <span class="dv">2</span>, <span class="dt">originalData =</span> <span class="ot">FALSE</span>) <span class="op">%&gt;%</span></span>
-<span id="cb254-5"><a href="improving-ggplotly.html#cb254-5"></a><span class="st">  </span><span class="kw">plotly_data</span>()</span>
-<span id="cb254-6"><a href="improving-ggplotly.html#cb254-6"></a><span class="co">#&gt; # A tibble: 80 x 13</span></span>
-<span id="cb254-7"><a href="improving-ggplotly.html#cb254-7"></a><span class="co">#&gt;       x     y  ymin  ymax    se PANEL group colour</span></span>
-<span id="cb254-8"><a href="improving-ggplotly.html#cb254-8"></a><span class="co">#&gt;   &lt;dbl&gt; &lt;dbl&gt; &lt;dbl&gt; &lt;dbl&gt; &lt;dbl&gt; &lt;fct&gt; &lt;int&gt; &lt;chr&gt; </span></span>
-<span id="cb254-9"><a href="improving-ggplotly.html#cb254-9"></a><span class="co">#&gt; 1  1.51  32.1  28.1  36.0  1.92 1        -1 #3366…</span></span>
-<span id="cb254-10"><a href="improving-ggplotly.html#cb254-10"></a><span class="co">#&gt; 2  1.56  31.7  28.2  35.2  1.72 1        -1 #3366…</span></span>
-<span id="cb254-11"><a href="improving-ggplotly.html#cb254-11"></a><span class="co">#&gt; 3  1.61  31.3  28.1  34.5  1.54 1        -1 #3366…</span></span>
-<span id="cb254-12"><a href="improving-ggplotly.html#cb254-12"></a><span class="co">#&gt; 4  1.66  30.9  28.0  33.7  1.39 1        -1 #3366…</span></span>
-<span id="cb254-13"><a href="improving-ggplotly.html#cb254-13"></a><span class="co">#&gt; 5  1.71  30.5  27.9  33.0  1.26 1        -1 #3366…</span></span>
-<span id="cb254-14"><a href="improving-ggplotly.html#cb254-14"></a><span class="co">#&gt; 6  1.76  30.0  27.7  32.4  1.16 1        -1 #3366…</span></span>
-<span id="cb254-15"><a href="improving-ggplotly.html#cb254-15"></a><span class="co">#&gt; # … with 74 more rows, and 5 more variables:</span></span>
-<span id="cb254-16"><a href="improving-ggplotly.html#cb254-16"></a><span class="co">#&gt; #   fill &lt;chr&gt;, size &lt;dbl&gt;, linetype &lt;dbl&gt;,</span></span>
-<span id="cb254-17"><a href="improving-ggplotly.html#cb254-17"></a><span class="co">#&gt; #   weight &lt;dbl&gt;, alpha &lt;dbl&gt;</span></span></code></pre></div>
-<p>The data shown above is the data ggplot2 uses to actually draw the fitted values (as a line) and standard error bounds (as a ribbon). Figure <a href="improving-ggplotly.html#fig:se-annotations">33.5</a> leverages this data to add additional information about the model fit; in particular, it adds a vertical lines and annotations at the x-values that are associated with the highest and lowest amount uncertainty in the fitted values. Producing a plot like this with <strong>ggplot2</strong> would be impossible using <code>geom_smooth()</code> alone.<a href="references.html#fn47" class="footnote-ref" id="fnref47"><sup>47</sup></a> Providing a simple visual clue like this can help combat visual misperceptions of uncertainty bands due to the sine illusion <span class="citation">(VanderPlas and Hofmann <a href="#ref-sine-illusion" role="doc-biblioref">2015</a>)</span>.</p>
-<div class="sourceCode" id="cb255"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb255-1"><a href="improving-ggplotly.html#cb255-1"></a>p <span class="op">%&gt;%</span></span>
-<span id="cb255-2"><a href="improving-ggplotly.html#cb255-2"></a><span class="st">  </span><span class="kw">ggplotly</span>(<span class="dt">layerData =</span> <span class="dv">2</span>, <span class="dt">originalData =</span> <span class="ot">FALSE</span>) <span class="op">%&gt;%</span></span>
-<span id="cb255-3"><a href="improving-ggplotly.html#cb255-3"></a><span class="st">  </span><span class="kw">add_fun</span>(<span class="cf">function</span>(p) {</span>
-<span id="cb255-4"><a href="improving-ggplotly.html#cb255-4"></a>    p <span class="op">%&gt;%</span><span class="st"> </span><span class="kw">slice</span>(<span class="kw">which.max</span>(se)) <span class="op">%&gt;%</span></span>
-<span id="cb255-5"><a href="improving-ggplotly.html#cb255-5"></a><span class="st">      </span><span class="kw">add_segments</span>(<span class="dt">x =</span> <span class="op">~</span>x, <span class="dt">xend =</span> <span class="op">~</span>x, <span class="dt">y =</span> <span class="op">~</span>ymin, <span class="dt">yend =</span> <span class="op">~</span>ymax) <span class="op">%&gt;%</span></span>
-<span id="cb255-6"><a href="improving-ggplotly.html#cb255-6"></a><span class="st">      </span><span class="kw">add_annotations</span>(<span class="st">&quot;Maximum uncertainty&quot;</span>, <span class="dt">ax =</span> <span class="dv">60</span>)</span>
-<span id="cb255-7"><a href="improving-ggplotly.html#cb255-7"></a>  }) <span class="op">%&gt;%</span></span>
-<span id="cb255-8"><a href="improving-ggplotly.html#cb255-8"></a><span class="st">  </span><span class="kw">add_fun</span>(<span class="cf">function</span>(p) {</span>
-<span id="cb255-9"><a href="improving-ggplotly.html#cb255-9"></a>    p <span class="op">%&gt;%</span><span class="st"> </span><span class="kw">slice</span>(<span class="kw">which.min</span>(se)) <span class="op">%&gt;%</span></span>
-<span id="cb255-10"><a href="improving-ggplotly.html#cb255-10"></a><span class="st">      </span><span class="kw">add_segments</span>(<span class="dt">x =</span> <span class="op">~</span>x, <span class="dt">xend =</span> <span class="op">~</span>x, <span class="dt">y =</span> <span class="op">~</span>ymin, <span class="dt">yend =</span> <span class="op">~</span>ymax) <span class="op">%&gt;%</span></span>
-<span id="cb255-11"><a href="improving-ggplotly.html#cb255-11"></a><span class="st">      </span><span class="kw">add_annotations</span>(<span class="st">&quot;Minimum uncertainty&quot;</span>)</span>
-<span id="cb255-12"><a href="improving-ggplotly.html#cb255-12"></a>  })</span></code></pre></div>
+<div class="sourceCode" id="cb253"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb253-1"><a href="improving-ggplotly.html#cb253-1"></a>p &lt;-<span class="st"> </span><span class="kw">ggplot</span>(mtcars, <span class="kw">aes</span>(<span class="dt">x =</span> wt, <span class="dt">y =</span> mpg)) <span class="op">+</span></span>
+<span id="cb253-2"><a href="improving-ggplotly.html#cb253-2"></a><span class="st">   </span><span class="kw">geom_point</span>() <span class="op">+</span><span class="st"> </span><span class="kw">geom_smooth</span>()</span>
+<span id="cb253-3"><a href="improving-ggplotly.html#cb253-3"></a>p <span class="op">%&gt;%</span></span>
+<span id="cb253-4"><a href="improving-ggplotly.html#cb253-4"></a><span class="st">  </span><span class="kw">ggplotly</span>(<span class="dt">layerData =</span> <span class="dv">2</span>, <span class="dt">originalData =</span> <span class="ot">FALSE</span>) <span class="op">%&gt;%</span></span>
+<span id="cb253-5"><a href="improving-ggplotly.html#cb253-5"></a><span class="st">  </span><span class="kw">plotly_data</span>()</span>
+<span id="cb253-6"><a href="improving-ggplotly.html#cb253-6"></a><span class="co">#&gt; # A tibble: 80 x 13</span></span>
+<span id="cb253-7"><a href="improving-ggplotly.html#cb253-7"></a><span class="co">#&gt;       x     y  ymin  ymax    se PANEL group colour</span></span>
+<span id="cb253-8"><a href="improving-ggplotly.html#cb253-8"></a><span class="co">#&gt;   &lt;dbl&gt; &lt;dbl&gt; &lt;dbl&gt; &lt;dbl&gt; &lt;dbl&gt; &lt;fct&gt; &lt;int&gt; &lt;chr&gt; </span></span>
+<span id="cb253-9"><a href="improving-ggplotly.html#cb253-9"></a><span class="co">#&gt; 1  1.51  32.1  28.1  36.0  1.92 1        -1 #3366…</span></span>
+<span id="cb253-10"><a href="improving-ggplotly.html#cb253-10"></a><span class="co">#&gt; 2  1.56  31.7  28.2  35.2  1.72 1        -1 #3366…</span></span>
+<span id="cb253-11"><a href="improving-ggplotly.html#cb253-11"></a><span class="co">#&gt; 3  1.61  31.3  28.1  34.5  1.54 1        -1 #3366…</span></span>
+<span id="cb253-12"><a href="improving-ggplotly.html#cb253-12"></a><span class="co">#&gt; 4  1.66  30.9  28.0  33.7  1.39 1        -1 #3366…</span></span>
+<span id="cb253-13"><a href="improving-ggplotly.html#cb253-13"></a><span class="co">#&gt; 5  1.71  30.5  27.9  33.0  1.26 1        -1 #3366…</span></span>
+<span id="cb253-14"><a href="improving-ggplotly.html#cb253-14"></a><span class="co">#&gt; 6  1.76  30.0  27.7  32.4  1.16 1        -1 #3366…</span></span>
+<span id="cb253-15"><a href="improving-ggplotly.html#cb253-15"></a><span class="co">#&gt; # … with 74 more rows, and 5 more variables:</span></span>
+<span id="cb253-16"><a href="improving-ggplotly.html#cb253-16"></a><span class="co">#&gt; #   fill &lt;chr&gt;, size &lt;dbl&gt;, linetype &lt;dbl&gt;,</span></span>
+<span id="cb253-17"><a href="improving-ggplotly.html#cb253-17"></a><span class="co">#&gt; #   weight &lt;dbl&gt;, alpha &lt;dbl&gt;</span></span></code></pre></div>
+<p>The data shown above is the data ggplot2 uses to actually draw the fitted values (as a line) and standard error bounds (as a ribbon). Figure <a href="improving-ggplotly.html#fig:se-annotations">33.5</a> leverages this data to add additional information about the model fit; in particular, it adds a vertical lines and annotations at the x-values that are associated with the highest and lowest amount uncertainty in the fitted values. Producing a plot like this with <strong>ggplot2</strong> would be impossible using <code>geom_smooth()</code> alone.<a href="custom-geoms.html#fn48" class="footnote-ref" id="fnref48"><sup>48</sup></a> Providing a simple visual clue like this can help combat visual misperceptions of uncertainty bands due to the sine illusion <span class="citation">(VanderPlas and Hofmann <a href="#ref-sine-illusion" role="doc-biblioref">2015</a>)</span>.</p>
+<p>
+
+
+
+</p>
+<div class="sourceCode" id="cb254"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb254-1"><a href="improving-ggplotly.html#cb254-1"></a>p <span class="op">%&gt;%</span></span>
+<span id="cb254-2"><a href="improving-ggplotly.html#cb254-2"></a><span class="st">  </span><span class="kw">ggplotly</span>(<span class="dt">layerData =</span> <span class="dv">2</span>, <span class="dt">originalData =</span> <span class="ot">FALSE</span>) <span class="op">%&gt;%</span></span>
+<span id="cb254-3"><a href="improving-ggplotly.html#cb254-3"></a><span class="st">  </span><span class="kw">add_fun</span>(<span class="cf">function</span>(p) {</span>
+<span id="cb254-4"><a href="improving-ggplotly.html#cb254-4"></a>    p <span class="op">%&gt;%</span><span class="st"> </span><span class="kw">slice</span>(<span class="kw">which.max</span>(se)) <span class="op">%&gt;%</span></span>
+<span id="cb254-5"><a href="improving-ggplotly.html#cb254-5"></a><span class="st">      </span><span class="kw">add_segments</span>(<span class="dt">x =</span> <span class="op">~</span>x, <span class="dt">xend =</span> <span class="op">~</span>x, <span class="dt">y =</span> <span class="op">~</span>ymin, <span class="dt">yend =</span> <span class="op">~</span>ymax) <span class="op">%&gt;%</span></span>
+<span id="cb254-6"><a href="improving-ggplotly.html#cb254-6"></a><span class="st">      </span><span class="kw">add_annotations</span>(<span class="st">&quot;Maximum uncertainty&quot;</span>, <span class="dt">ax =</span> <span class="dv">60</span>)</span>
+<span id="cb254-7"><a href="improving-ggplotly.html#cb254-7"></a>  }) <span class="op">%&gt;%</span></span>
+<span id="cb254-8"><a href="improving-ggplotly.html#cb254-8"></a><span class="st">  </span><span class="kw">add_fun</span>(<span class="cf">function</span>(p) {</span>
+<span id="cb254-9"><a href="improving-ggplotly.html#cb254-9"></a>    p <span class="op">%&gt;%</span><span class="st"> </span><span class="kw">slice</span>(<span class="kw">which.min</span>(se)) <span class="op">%&gt;%</span></span>
+<span id="cb254-10"><a href="improving-ggplotly.html#cb254-10"></a><span class="st">      </span><span class="kw">add_segments</span>(<span class="dt">x =</span> <span class="op">~</span>x, <span class="dt">xend =</span> <span class="op">~</span>x, <span class="dt">y =</span> <span class="op">~</span>ymin, <span class="dt">yend =</span> <span class="op">~</span>ymax) <span class="op">%&gt;%</span></span>
+<span id="cb254-11"><a href="improving-ggplotly.html#cb254-11"></a><span class="st">      </span><span class="kw">add_annotations</span>(<span class="st">&quot;Minimum uncertainty&quot;</span>)</span>
+<span id="cb254-12"><a href="improving-ggplotly.html#cb254-12"></a>  })</span></code></pre></div>
 <div class="figure" style="text-align: center"><span id="fig:se-annotations"></span>
 <img src="images/se-annotations.svg" alt="Leveraging data associated with a geom_smooth() layer to display additional information about the model fit." width="100%" data-url="/interactives/se-annotations.html" />
 <p class="caption">
@@ -462,17 +475,19 @@ FIGURE 33.5: Leveraging data associated with a <code>geom_smooth()</code> layer 
 </p>
 </div>
 <p>In addition to leveraging output from <code>StatSmooth</code>, it is sometimes useful to leverage output of other statistics, especially for annotation purposes. Figure <a href="improving-ggplotly.html#fig:StatBin">33.6</a> leverages the output of <code>StatBin</code> to add annotations to a stacked bar chart. Annotation is primarily helpful for displaying the heights of bars in a stacked bar chart, since decoding the heights of bars is a fairly difficult perceptual task <span class="citation">(Cleveland and McGill <a href="#ref-graphical-perception" role="doc-biblioref">1984</a>)</span>. As result, it is much easier to compare bar heights representing the proportion of diamonds with a given clarity across various diamond cuts.</p>
-<div class="sourceCode" id="cb256"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb256-1"><a href="improving-ggplotly.html#cb256-1"></a>p &lt;-<span class="st"> </span><span class="kw">ggplot</span>(diamonds, <span class="kw">aes</span>(cut, <span class="dt">fill =</span> clarity)) <span class="op">+</span></span>
-<span id="cb256-2"><a href="improving-ggplotly.html#cb256-2"></a><span class="st">  </span><span class="kw">geom_bar</span>(<span class="dt">position =</span> <span class="st">&quot;fill&quot;</span>)</span>
-<span id="cb256-3"><a href="improving-ggplotly.html#cb256-3"></a></span>
-<span id="cb256-4"><a href="improving-ggplotly.html#cb256-4"></a><span class="kw">ggplotly</span>(p, <span class="dt">originalData =</span> <span class="ot">FALSE</span>) <span class="op">%&gt;%</span></span>
-<span id="cb256-5"><a href="improving-ggplotly.html#cb256-5"></a><span class="st">  </span><span class="kw">mutate</span>(<span class="dt">ydiff =</span> ymax <span class="op">-</span><span class="st"> </span>ymin) <span class="op">%&gt;%</span><span class="st"> </span></span>
-<span id="cb256-6"><a href="improving-ggplotly.html#cb256-6"></a><span class="st">  </span><span class="kw">add_text</span>(</span>
-<span id="cb256-7"><a href="improving-ggplotly.html#cb256-7"></a>    <span class="dt">x =</span> <span class="op">~</span>x, <span class="dt">y =</span> <span class="op">~</span>(ymin <span class="op">+</span><span class="st"> </span>ymax) <span class="op">/</span><span class="st"> </span><span class="dv">2</span>,</span>
-<span id="cb256-8"><a href="improving-ggplotly.html#cb256-8"></a>    <span class="dt">text =</span> <span class="op">~</span><span class="kw">ifelse</span>(ydiff <span class="op">&gt;</span><span class="st"> </span><span class="fl">0.02</span>, <span class="kw">round</span>(ydiff, <span class="dv">2</span>), <span class="st">&quot;&quot;</span>),</span>
-<span id="cb256-9"><a href="improving-ggplotly.html#cb256-9"></a>    <span class="dt">showlegend =</span> <span class="ot">FALSE</span>, <span class="dt">hoverinfo =</span> <span class="st">&quot;none&quot;</span>,</span>
-<span id="cb256-10"><a href="improving-ggplotly.html#cb256-10"></a>    <span class="dt">color =</span> <span class="kw">I</span>(<span class="st">&quot;black&quot;</span>), <span class="dt">size =</span> <span class="kw">I</span>(<span class="dv">9</span>)</span>
-<span id="cb256-11"><a href="improving-ggplotly.html#cb256-11"></a>  )</span></code></pre></div>
+<p>
+</p>
+<div class="sourceCode" id="cb255"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb255-1"><a href="improving-ggplotly.html#cb255-1"></a>p &lt;-<span class="st"> </span><span class="kw">ggplot</span>(diamonds, <span class="kw">aes</span>(cut, <span class="dt">fill =</span> clarity)) <span class="op">+</span></span>
+<span id="cb255-2"><a href="improving-ggplotly.html#cb255-2"></a><span class="st">  </span><span class="kw">geom_bar</span>(<span class="dt">position =</span> <span class="st">&quot;fill&quot;</span>)</span>
+<span id="cb255-3"><a href="improving-ggplotly.html#cb255-3"></a></span>
+<span id="cb255-4"><a href="improving-ggplotly.html#cb255-4"></a><span class="kw">ggplotly</span>(p, <span class="dt">originalData =</span> <span class="ot">FALSE</span>) <span class="op">%&gt;%</span></span>
+<span id="cb255-5"><a href="improving-ggplotly.html#cb255-5"></a><span class="st">  </span><span class="kw">mutate</span>(<span class="dt">ydiff =</span> ymax <span class="op">-</span><span class="st"> </span>ymin) <span class="op">%&gt;%</span><span class="st"> </span></span>
+<span id="cb255-6"><a href="improving-ggplotly.html#cb255-6"></a><span class="st">  </span><span class="kw">add_text</span>(</span>
+<span id="cb255-7"><a href="improving-ggplotly.html#cb255-7"></a>    <span class="dt">x =</span> <span class="op">~</span>x, <span class="dt">y =</span> <span class="op">~</span>(ymin <span class="op">+</span><span class="st"> </span>ymax) <span class="op">/</span><span class="st"> </span><span class="dv">2</span>,</span>
+<span id="cb255-8"><a href="improving-ggplotly.html#cb255-8"></a>    <span class="dt">text =</span> <span class="op">~</span><span class="kw">ifelse</span>(ydiff <span class="op">&gt;</span><span class="st"> </span><span class="fl">0.02</span>, <span class="kw">round</span>(ydiff, <span class="dv">2</span>), <span class="st">&quot;&quot;</span>),</span>
+<span id="cb255-9"><a href="improving-ggplotly.html#cb255-9"></a>    <span class="dt">showlegend =</span> <span class="ot">FALSE</span>, <span class="dt">hoverinfo =</span> <span class="st">&quot;none&quot;</span>,</span>
+<span id="cb255-10"><a href="improving-ggplotly.html#cb255-10"></a>    <span class="dt">color =</span> <span class="kw">I</span>(<span class="st">&quot;white&quot;</span>), <span class="dt">size =</span> <span class="kw">I</span>(<span class="dv">9</span>)</span>
+<span id="cb255-11"><a href="improving-ggplotly.html#cb255-11"></a>  )</span></code></pre></div>
 <div class="figure" style="text-align: center"><span id="fig:StatBin"></span>
 <img src="images/StatBin.svg" alt="Leveraging output from StatBin to add annotations to a stacked bar chart (created via geom_bar()) which makes it easier to compare bar heights." width="100%" data-url="/interactives/StatBin.html" />
 <p class="caption">
@@ -480,15 +495,16 @@ FIGURE 33.6: Leveraging output from <code>StatBin</code> to add annotations to a
 </p>
 </div>
 <p>Another useful application is labelling the levels of each piece/polygon output by <code>StatDensity2d</code> as shown in Figure <a href="improving-ggplotly.html#fig:StatDensity2d">33.7</a>. Note that, in this example, the <code>add_text()</code> layer takes advantage of <code>ggplotly()</code>’s ability to inherit aesthetics from the global mapping. Furthermore, since <code>originalData</code> is <code>FALSE</code>, it attaches the “built” aesthetics (i.e., the <code>x</code>/<code>y</code> positions after <code>StatDensity2d</code> has been applied to the raw data).</p>
-<div class="sourceCode" id="cb257"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb257-1"><a href="improving-ggplotly.html#cb257-1"></a>p &lt;-<span class="st"> </span><span class="kw">ggplot</span>(MASS<span class="op">::</span>geyser, <span class="kw">aes</span>(<span class="dt">x =</span> waiting, <span class="dt">y =</span> duration)) <span class="op">+</span></span>
-<span id="cb257-2"><a href="improving-ggplotly.html#cb257-2"></a><span class="st">  </span><span class="kw">geom_density2d</span>()</span>
-<span id="cb257-3"><a href="improving-ggplotly.html#cb257-3"></a></span>
-<span id="cb257-4"><a href="improving-ggplotly.html#cb257-4"></a><span class="kw">ggplotly</span>(p, <span class="dt">originalData =</span> <span class="ot">FALSE</span>) <span class="op">%&gt;%</span><span class="st"> </span></span>
-<span id="cb257-5"><a href="improving-ggplotly.html#cb257-5"></a><span class="st">  </span><span class="kw">group_by</span>(piece) <span class="op">%&gt;%</span></span>
-<span id="cb257-6"><a href="improving-ggplotly.html#cb257-6"></a><span class="st">  </span><span class="kw">slice</span>(<span class="kw">which.min</span>(y)) <span class="op">%&gt;%</span><span class="st"> </span></span>
-<span id="cb257-7"><a href="improving-ggplotly.html#cb257-7"></a><span class="st">  </span><span class="kw">add_text</span>(</span>
-<span id="cb257-8"><a href="improving-ggplotly.html#cb257-8"></a>    <span class="dt">text =</span> <span class="op">~</span>level, <span class="dt">size =</span> <span class="kw">I</span>(<span class="dv">9</span>), <span class="dt">color =</span> <span class="kw">I</span>(<span class="st">&quot;black&quot;</span>), <span class="dt">hoverinfo=</span><span class="st">&quot;none&quot;</span></span>
-<span id="cb257-9"><a href="improving-ggplotly.html#cb257-9"></a>  )</span></code></pre></div>
+<p></p>
+<div class="sourceCode" id="cb256"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb256-1"><a href="improving-ggplotly.html#cb256-1"></a>p &lt;-<span class="st"> </span><span class="kw">ggplot</span>(MASS<span class="op">::</span>geyser, <span class="kw">aes</span>(<span class="dt">x =</span> waiting, <span class="dt">y =</span> duration)) <span class="op">+</span></span>
+<span id="cb256-2"><a href="improving-ggplotly.html#cb256-2"></a><span class="st">  </span><span class="kw">geom_density2d</span>()</span>
+<span id="cb256-3"><a href="improving-ggplotly.html#cb256-3"></a></span>
+<span id="cb256-4"><a href="improving-ggplotly.html#cb256-4"></a><span class="kw">ggplotly</span>(p, <span class="dt">originalData =</span> <span class="ot">FALSE</span>) <span class="op">%&gt;%</span><span class="st"> </span></span>
+<span id="cb256-5"><a href="improving-ggplotly.html#cb256-5"></a><span class="st">  </span><span class="kw">group_by</span>(piece) <span class="op">%&gt;%</span></span>
+<span id="cb256-6"><a href="improving-ggplotly.html#cb256-6"></a><span class="st">  </span><span class="kw">slice</span>(<span class="kw">which.min</span>(y)) <span class="op">%&gt;%</span><span class="st"> </span></span>
+<span id="cb256-7"><a href="improving-ggplotly.html#cb256-7"></a><span class="st">  </span><span class="kw">add_text</span>(</span>
+<span id="cb256-8"><a href="improving-ggplotly.html#cb256-8"></a>    <span class="dt">text =</span> <span class="op">~</span>level, <span class="dt">size =</span> <span class="kw">I</span>(<span class="dv">16</span>), <span class="dt">color =</span> <span class="kw">I</span>(<span class="st">&quot;black&quot;</span>), <span class="dt">hoverinfo=</span><span class="st">&quot;none&quot;</span></span>
+<span id="cb256-9"><a href="improving-ggplotly.html#cb256-9"></a>  )</span></code></pre></div>
 <div class="figure" style="text-align: center"><span id="fig:StatDensity2d"></span>
 <img src="images/StatDensity2d.svg" alt="Leveraging output from StatDensity2d to add annotations to contour levels." width="100%" data-url="/interactives/StatDensity2d.html" />
 <p class="caption">

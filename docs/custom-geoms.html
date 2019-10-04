@@ -24,7 +24,7 @@
 <meta name="author" content="Carson Sievert" />
 
 
-<meta name="date" content="2019-10-02" />
+<meta name="date" content="2019-10-04" />
 
   <meta name="viewport" content="width=device-width, initial-scale=1" />
   <meta name="apple-mobile-web-app-capable" content="yes" />
@@ -32,7 +32,7 @@
   
   
 <link rel="prev" href="improving-ggplotly.html"/>
-<link rel="next" href="references.html"/>
+
 <script src="libs/jquery/jquery.min.js"></script>
 <link href="libs/gitbook/css/style.css" rel="stylesheet" />
 <link href="libs/gitbook/css/plugin-table.css" rel="stylesheet" />
@@ -326,7 +326,6 @@ code span.wa { color: #60a0b0; font-weight: bold; font-style: italic; } /* Warni
 <li class="chapter" data-level="33.3" data-path="improving-ggplotly.html"><a href="improving-ggplotly.html#leveraging-statistical-output"><i class="fa fa-check"></i><b>33.3</b> Leveraging statistical output</a></li>
 </ul></li>
 <li class="chapter" data-level="34" data-path="custom-geoms.html"><a href="custom-geoms.html"><i class="fa fa-check"></i><b>34</b> Translating custom ggplot2 geoms</a></li>
-<li class="chapter" data-level="" data-path="references.html"><a href="references.html"><i class="fa fa-check"></i>References</a></li>
 </ul>
 
       </nav>
@@ -346,51 +345,791 @@ code span.wa { color: #60a0b0; font-weight: bold; font-style: italic; } /* Warni
             <section class="normal" id="section-">
 <div id="custom-geoms" class="section level1">
 <h1><span class="header-section-number">34</span> Translating custom ggplot2 geoms</h1>
-<p>Version 2.0.0 of <strong>ggplot2</strong> introduced a way for other R packages to implement custom geoms. Some great examples include: <strong>ggrepel</strong>, <strong>ggalt</strong>, <strong>ggraph</strong>, <strong>geomnet</strong>, <strong>ggmosaic</strong> and <strong>ggtern</strong> <span class="citation">(Rudis <a href="#ref-ggalt" role="doc-biblioref">2016</a>; Pedersen <a href="#ref-ggraph" role="doc-biblioref">2016</a>; Tyner and Hofmann <a href="#ref-geomnet" role="doc-biblioref">2016</a>; Jeppson, Hofmann, and Cook <a href="#ref-ggmosaic" role="doc-biblioref">2016</a>; Hamilton <a href="#ref-ggtern" role="doc-biblioref">2016</a>)</span>.<a href="references.html#fn48" class="footnote-ref" id="fnref48"><sup>48</sup></a> Although the <code>ggplotly()</code> function translates most of the geoms bundled with the <strong>ggplot2</strong> package, it has no way of knowing about the rendering rules for custom geoms. The <strong>plotly</strong> package does, however, provide 2 generic functions based on the S3 scheme that can leveraged to inform <code>ggplotly()</code> about these rules <span class="citation">(Chambers <a href="#ref-S3" role="doc-biblioref">1992</a>)</span>.<a href="references.html#fn49" class="footnote-ref" id="fnref49"><sup>49</sup></a> To date, the <strong>ggmosaic</strong> and <strong>ggalt</strong> packages have taken advantage of this infrastructure to provide translations of their custom geoms to plotly.</p>
+<p>Version 2.0.0 of <strong>ggplot2</strong> introduced a way for other R packages to implement custom geoms. Some great examples include: <strong>ggrepel</strong>, <strong>ggalt</strong>, <strong>ggraph</strong>, <strong>geomnet</strong>, <strong>ggmosaic</strong> and <strong>ggtern</strong> <span class="citation">(Rudis <a href="#ref-ggalt" role="doc-biblioref">2016</a>; Pedersen <a href="#ref-ggraph" role="doc-biblioref">2016</a>; Tyner and Hofmann <a href="#ref-geomnet" role="doc-biblioref">2016</a>; Jeppson, Hofmann, and Cook <a href="#ref-ggmosaic" role="doc-biblioref">2016</a>; Hamilton <a href="#ref-ggtern" role="doc-biblioref">2016</a>)</span>.<a href="custom-geoms.html#fn49" class="footnote-ref" id="fnref49"><sup>49</sup></a> Although the <code>ggplotly()</code> function translates most of the geoms bundled with the <strong>ggplot2</strong> package, it has no way of knowing about the rendering rules for custom geoms. The <strong>plotly</strong> package does, however, provide 2 generic functions based on the S3 scheme that can leveraged to inform <code>ggplotly()</code> about these rules <span class="citation">(Chambers <a href="#ref-S3" role="doc-biblioref">1992</a>)</span>.<a href="custom-geoms.html#fn50" class="footnote-ref" id="fnref50"><sup>50</sup></a> To date, the <strong>ggmosaic</strong> and <strong>ggalt</strong> packages have taken advantage of this infrastructure to provide translations of their custom geoms to plotly.</p>
 <p>In <strong>ggplot2</strong>, many geoms are special cases of other geoms. For example, <code>geom_line()</code> is equivalent to <code>geom_path()</code> once the data is sorted by the x variable. For cases like this, when a geom can be reduced to another lower-level (i.e., basic) geom, authors just have to write a method for the <code>to_basic()</code> generic function in <strong>plotly</strong>. In fact, within the package itself, the <code>to_basic()</code> function has a <code>GeomLine</code> method which simply sorts the data by the x variable then returns it with a class of <code>GeomPath</code> prefixed.</p>
-<div class="sourceCode" id="cb258"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb258-1"><a href="custom-geoms.html#cb258-1"></a><span class="kw">getS3method</span>(<span class="st">&quot;to_basic&quot;</span>, <span class="st">&quot;GeomLine&quot;</span>)</span>
-<span id="cb258-2"><a href="custom-geoms.html#cb258-2"></a><span class="co">#&gt; function (data, prestats_data, layout, params, p, ...) </span></span>
-<span id="cb258-3"><a href="custom-geoms.html#cb258-3"></a><span class="co">#&gt; {</span></span>
-<span id="cb258-4"><a href="custom-geoms.html#cb258-4"></a><span class="co">#&gt;     data &lt;- data[order(data[[&quot;x&quot;]]), ]</span></span>
-<span id="cb258-5"><a href="custom-geoms.html#cb258-5"></a><span class="co">#&gt;     prefix_class(data, &quot;GeomPath&quot;)</span></span>
-<span id="cb258-6"><a href="custom-geoms.html#cb258-6"></a><span class="co">#&gt; }</span></span>
-<span id="cb258-7"><a href="custom-geoms.html#cb258-7"></a><span class="co">#&gt; &lt;bytecode: 0x7ffcca6ab1f0&gt;</span></span>
-<span id="cb258-8"><a href="custom-geoms.html#cb258-8"></a><span class="co">#&gt; &lt;environment: namespace:plotly&gt;</span></span></code></pre></div>
+<div class="sourceCode" id="cb257"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb257-1"><a href="custom-geoms.html#cb257-1"></a><span class="kw">getS3method</span>(<span class="st">&quot;to_basic&quot;</span>, <span class="st">&quot;GeomLine&quot;</span>)</span>
+<span id="cb257-2"><a href="custom-geoms.html#cb257-2"></a><span class="co">#&gt; function (data, prestats_data, layout, params, p, ...) </span></span>
+<span id="cb257-3"><a href="custom-geoms.html#cb257-3"></a><span class="co">#&gt; {</span></span>
+<span id="cb257-4"><a href="custom-geoms.html#cb257-4"></a><span class="co">#&gt;     data &lt;- data[order(data[[&quot;x&quot;]]), ]</span></span>
+<span id="cb257-5"><a href="custom-geoms.html#cb257-5"></a><span class="co">#&gt;     prefix_class(data, &quot;GeomPath&quot;)</span></span>
+<span id="cb257-6"><a href="custom-geoms.html#cb257-6"></a><span class="co">#&gt; }</span></span>
+<span id="cb257-7"><a href="custom-geoms.html#cb257-7"></a><span class="co">#&gt; &lt;bytecode: 0x7f9562808600&gt;</span></span>
+<span id="cb257-8"><a href="custom-geoms.html#cb257-8"></a><span class="co">#&gt; &lt;environment: namespace:plotly&gt;</span></span></code></pre></div>
 <p>If you have implemented a custom geom, say <code>GeomCustom</code>, rest assured that the data passed to <code>to_basic()</code> will be of class <code>GeomCustom</code> when <code>ggplotly()</code> is called on a plot with your geom. And assuming <code>GeomCustom</code> may be reduced to another lower-level geom support by plotly, a <code>to_basic.GeomCustom()</code> method that transforms the data into a form suitable for that lower-level geom is sufficient for adding support. Moreover, note that the data passed to <code>to_basic()</code> is essentially the last form of the data <em>before</em> the render stage and <em>after</em> statistics have been performed. This makes it trivial to add support for geoms like <code>GeomXspline</code> from the <strong>ggalt</strong> package.</p>
-<div class="sourceCode" id="cb259"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb259-1"><a href="custom-geoms.html#cb259-1"></a><span class="kw">library</span>(ggalt)</span>
-<span id="cb259-2"><a href="custom-geoms.html#cb259-2"></a><span class="kw">getS3method</span>(<span class="st">&quot;to_basic&quot;</span>, <span class="st">&quot;GeomXspline&quot;</span>)</span></code></pre></div>
-<div class="sourceCode" id="cb260"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb260-1"><a href="custom-geoms.html#cb260-1"></a><span class="cf">function</span>(data, prestats_data, layout, params, p, ...) {</span>
-<span id="cb260-2"><a href="custom-geoms.html#cb260-2"></a>  data &lt;-<span class="st"> </span>data[<span class="kw">order</span>(data[[<span class="st">&quot;x&quot;</span>]]), ]</span>
-<span id="cb260-3"><a href="custom-geoms.html#cb260-3"></a>  <span class="kw">prefix_class</span>(data, <span class="st">&quot;GeomPath&quot;</span>)</span>
-<span id="cb260-4"><a href="custom-geoms.html#cb260-4"></a>}</span></code></pre></div>
-<p>As shown in Figure <a href="#fig:xspline"><strong>??</strong></a>, once the conversion has been provided. Users can call <code>ggplotly()</code> on the ggplot object containing the custom geom just like any other ggplot object.</p>
-<div class="sourceCode" id="cb261"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb261-1"><a href="custom-geoms.html#cb261-1"></a><span class="co"># example from `help(geom_xspline)`</span></span>
-<span id="cb261-2"><a href="custom-geoms.html#cb261-2"></a><span class="kw">set.seed</span>(<span class="dv">1492</span>)</span>
-<span id="cb261-3"><a href="custom-geoms.html#cb261-3"></a>dat &lt;-<span class="st"> </span><span class="kw">data.frame</span>(</span>
-<span id="cb261-4"><a href="custom-geoms.html#cb261-4"></a>  <span class="dt">x =</span> <span class="kw">c</span>(<span class="dv">1</span><span class="op">:</span><span class="dv">10</span>, <span class="dv">1</span><span class="op">:</span><span class="dv">10</span>, <span class="dv">1</span><span class="op">:</span><span class="dv">10</span>),</span>
-<span id="cb261-5"><a href="custom-geoms.html#cb261-5"></a>  <span class="dt">y =</span> <span class="kw">c</span>(</span>
-<span id="cb261-6"><a href="custom-geoms.html#cb261-6"></a>    <span class="kw">sample</span>(<span class="dv">15</span><span class="op">:</span><span class="dv">30</span>, <span class="dv">10</span>), </span>
-<span id="cb261-7"><a href="custom-geoms.html#cb261-7"></a>    <span class="dv">2</span> <span class="op">*</span><span class="st"> </span><span class="kw">sample</span>(<span class="dv">15</span><span class="op">:</span><span class="dv">30</span>, <span class="dv">10</span>), </span>
-<span id="cb261-8"><a href="custom-geoms.html#cb261-8"></a>    <span class="dv">3</span> <span class="op">*</span><span class="st"> </span><span class="kw">sample</span>(<span class="dv">15</span><span class="op">:</span><span class="dv">30</span>, <span class="dv">10</span>)</span>
-<span id="cb261-9"><a href="custom-geoms.html#cb261-9"></a>  ),</span>
-<span id="cb261-10"><a href="custom-geoms.html#cb261-10"></a>  <span class="dt">group =</span> <span class="kw">factor</span>(<span class="kw">c</span>(<span class="kw">rep</span>(<span class="dv">1</span>, <span class="dv">10</span>), <span class="kw">rep</span>(<span class="dv">2</span>, <span class="dv">10</span>), <span class="kw">rep</span>(<span class="dv">3</span>, <span class="dv">10</span>)))</span>
-<span id="cb261-11"><a href="custom-geoms.html#cb261-11"></a>)</span>
-<span id="cb261-12"><a href="custom-geoms.html#cb261-12"></a>p &lt;-<span class="st"> </span><span class="kw">ggplot</span>(dat, <span class="kw">aes</span>(x, y, <span class="dt">group =</span> group, <span class="dt">color =</span> <span class="kw">factor</span>(group))) <span class="op">+</span></span>
-<span id="cb261-13"><a href="custom-geoms.html#cb261-13"></a><span class="st">  </span><span class="kw">geom_point</span>(<span class="dt">color =</span> <span class="st">&quot;black&quot;</span>) <span class="op">+</span></span>
-<span id="cb261-14"><a href="custom-geoms.html#cb261-14"></a><span class="st">  </span><span class="kw">geom_smooth</span>(<span class="dt">se =</span> <span class="ot">FALSE</span>, <span class="dt">linetype =</span> <span class="st">&quot;dashed&quot;</span>, <span class="dt">size =</span> <span class="fl">0.5</span>) <span class="op">+</span></span>
-<span id="cb261-15"><a href="custom-geoms.html#cb261-15"></a><span class="st">  </span><span class="kw">geom_xspline</span>(<span class="dt">spline_shape =</span> <span class="dv">1</span>, <span class="dt">size =</span> <span class="fl">0.5</span>)</span>
-<span id="cb261-16"><a href="custom-geoms.html#cb261-16"></a><span class="kw">ggplotly</span>(p) <span class="op">%&gt;%</span><span class="st"> </span><span class="kw">hide_legend</span>()</span></code></pre></div>
-<p><code>{r xspline, echo = FALSE, fig.cap = "Converting GeomXspline from the <strong>ggalt</strong> package to plotly.js via <code>ggplotly()</code>.", out.extra = if (knitr::is_html_output()) 'data-url="/interactives/xspline.html"' knitr::include_graphics("images/xspline.svg")</code></p>
+<div class="sourceCode" id="cb258"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb258-1"><a href="custom-geoms.html#cb258-1"></a><span class="kw">library</span>(ggalt)</span>
+<span id="cb258-2"><a href="custom-geoms.html#cb258-2"></a><span class="kw">getS3method</span>(<span class="st">&quot;to_basic&quot;</span>, <span class="st">&quot;GeomXspline&quot;</span>)</span></code></pre></div>
+<div class="sourceCode" id="cb259"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb259-1"><a href="custom-geoms.html#cb259-1"></a><span class="cf">function</span>(data, prestats_data, layout, params, p, ...) {</span>
+<span id="cb259-2"><a href="custom-geoms.html#cb259-2"></a>  data &lt;-<span class="st"> </span>data[<span class="kw">order</span>(data[[<span class="st">&quot;x&quot;</span>]]), ]</span>
+<span id="cb259-3"><a href="custom-geoms.html#cb259-3"></a>  <span class="kw">prefix_class</span>(data, <span class="st">&quot;GeomPath&quot;</span>)</span>
+<span id="cb259-4"><a href="custom-geoms.html#cb259-4"></a>}</span></code></pre></div>
+<p>As shown in Figure <a href="custom-geoms.html#fig:xspline">34.1</a>, once the conversion has been provided. Users can call <code>ggplotly()</code> on the ggplot object containing the custom geom just like any other ggplot object.</p>
+<p></p>
+<div class="sourceCode" id="cb260"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb260-1"><a href="custom-geoms.html#cb260-1"></a><span class="co"># example from `help(geom_xspline)`</span></span>
+<span id="cb260-2"><a href="custom-geoms.html#cb260-2"></a><span class="kw">set.seed</span>(<span class="dv">1492</span>)</span>
+<span id="cb260-3"><a href="custom-geoms.html#cb260-3"></a>dat &lt;-<span class="st"> </span><span class="kw">data.frame</span>(</span>
+<span id="cb260-4"><a href="custom-geoms.html#cb260-4"></a>  <span class="dt">x =</span> <span class="kw">c</span>(<span class="dv">1</span><span class="op">:</span><span class="dv">10</span>, <span class="dv">1</span><span class="op">:</span><span class="dv">10</span>, <span class="dv">1</span><span class="op">:</span><span class="dv">10</span>),</span>
+<span id="cb260-5"><a href="custom-geoms.html#cb260-5"></a>  <span class="dt">y =</span> <span class="kw">c</span>(</span>
+<span id="cb260-6"><a href="custom-geoms.html#cb260-6"></a>    <span class="kw">sample</span>(<span class="dv">15</span><span class="op">:</span><span class="dv">30</span>, <span class="dv">10</span>), </span>
+<span id="cb260-7"><a href="custom-geoms.html#cb260-7"></a>    <span class="dv">2</span> <span class="op">*</span><span class="st"> </span><span class="kw">sample</span>(<span class="dv">15</span><span class="op">:</span><span class="dv">30</span>, <span class="dv">10</span>), </span>
+<span id="cb260-8"><a href="custom-geoms.html#cb260-8"></a>    <span class="dv">3</span> <span class="op">*</span><span class="st"> </span><span class="kw">sample</span>(<span class="dv">15</span><span class="op">:</span><span class="dv">30</span>, <span class="dv">10</span>)</span>
+<span id="cb260-9"><a href="custom-geoms.html#cb260-9"></a>  ),</span>
+<span id="cb260-10"><a href="custom-geoms.html#cb260-10"></a>  <span class="dt">group =</span> <span class="kw">factor</span>(<span class="kw">c</span>(<span class="kw">rep</span>(<span class="dv">1</span>, <span class="dv">10</span>), <span class="kw">rep</span>(<span class="dv">2</span>, <span class="dv">10</span>), <span class="kw">rep</span>(<span class="dv">3</span>, <span class="dv">10</span>)))</span>
+<span id="cb260-11"><a href="custom-geoms.html#cb260-11"></a>)</span>
+<span id="cb260-12"><a href="custom-geoms.html#cb260-12"></a>p &lt;-<span class="st"> </span><span class="kw">ggplot</span>(dat, <span class="kw">aes</span>(x, y, <span class="dt">group =</span> group, <span class="dt">color =</span> <span class="kw">factor</span>(group))) <span class="op">+</span></span>
+<span id="cb260-13"><a href="custom-geoms.html#cb260-13"></a><span class="st">  </span><span class="kw">geom_point</span>(<span class="dt">color =</span> <span class="st">&quot;black&quot;</span>) <span class="op">+</span></span>
+<span id="cb260-14"><a href="custom-geoms.html#cb260-14"></a><span class="st">  </span><span class="kw">geom_smooth</span>(<span class="dt">se =</span> <span class="ot">FALSE</span>, <span class="dt">linetype =</span> <span class="st">&quot;dashed&quot;</span>, <span class="dt">size =</span> <span class="fl">0.5</span>) <span class="op">+</span></span>
+<span id="cb260-15"><a href="custom-geoms.html#cb260-15"></a><span class="st">  </span><span class="kw">geom_xspline</span>(<span class="dt">spline_shape =</span> <span class="dv">1</span>, <span class="dt">size =</span> <span class="fl">0.5</span>)</span>
+<span id="cb260-16"><a href="custom-geoms.html#cb260-16"></a><span class="kw">ggplotly</span>(p) <span class="op">%&gt;%</span><span class="st"> </span><span class="kw">hide_legend</span>()</span></code></pre></div>
+<div class="figure" style="text-align: center"><span id="fig:xspline"></span>
+<img src="images/xspline.svg" alt="Converting GeomXspline from the ggalt package to plotly.js via ggplotly()." width="100%" data-url="/interactives/xspline.html" />
+<p class="caption">
+FIGURE 34.1: Converting GeomXspline from the <strong>ggalt</strong> package to plotly.js via <code>ggplotly()</code>.
+</p>
+</div>
 <p>In more complicated cases, where your custom geom can not be converted to a lower level geom, a custom method for the <code>geom2trace()</code> generic is required (<code>methods(geom2trace)</code> lists all the basic geoms that we natively support). This method should involve a conversion from a data frame to a list-like object conforming to the <a href="https://plot.ly/r/reference">plotly.js figure reference</a>.</p>
 
+<!--
+Use text references as workaround for fig.cap not correctly parsing markdown
+https://github.com/yihui/bookdown-crc/issues/3
+-->
+<!-- 
+  introduction.Rmd 
+-->
+
+
+
+
+
+
+
+<!-- 
+  creating-overview.Rmd 
+-->
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+<!-- 
+  creating-scatter.Rmd 
+-->
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+<!-- 
+  creating-maps.Rmd 
+-->
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+<!-- 
+  creating-bars.Rmd 
+-->
+
+
+
+
+
+
+
+
+
+<!-- 
+  creating-other.Rmd 
+-->
+
+
+
+
+
+
+
+
+
+<!-- 
+  publishing.Rmd 
+-->
+
+
+
+<!-- 
+  arranging.Rmd 
+-->
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+<!--
+  animation.Rmd
+-->
+
+
+
+
+
+
+<!-- 
+  linked-views.Rmd 
+-->
+
+
+
+
+
+
+
+
+
+
+
+
+
+<!-- 
+  linked-views-examples.Rmd 
+-->
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+<!-- 
+  linked-views-shiny.Rmd 
+-->
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+<!-- 
+  javascript.Rmd 
+-->
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+<!-- 
+  topics.Rmd 
+-->
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+<!-- 
+  develop.Rmd 
+-->
+
+
+<div id="refs" class="references">
+<div>
+<p>Ahlberg, Christopher, Christopher Williamson, and Ben Shneiderman. 1991. “Dynamic Queries for Information Exploration: An Implementation and Evaluation.” In <em>ACM Chi ’92 Conference Proceedings</em>, 21:619–26.</p>
+</div>
+<div>
+<p>Allaire, JJ. 2016. <em>Flexdashboard: R Markdown Format for Flexible Dashboards</em>. <a href="https://CRAN.R-project.org/package=flexdashboard">https://CRAN.R-project.org/package=flexdashboard</a>.</p>
+</div>
+<div>
+<p>Asimov, Daniel. 1985. “The Grand Tour: A Tool for Viewing Multidimensional Data.” <em>SIAM J. Sci. Stat. Comput.</em> 6 (1): 128–43. <a href="https://doi.org/10.1137/0906011">https://doi.org/10.1137/0906011</a>.</p>
+</div>
+<div>
+<p>Auguie, Baptiste. 2016. <em>GridExtra: Miscellaneous Functions for "Grid" Graphics</em>. <a href="https://CRAN.R-project.org/package=gridExtra">https://CRAN.R-project.org/package=gridExtra</a>.</p>
+</div>
+<div>
+<p>Bache, Stefan Milton, and Hadley Wickham. 2014. <em>Magrittr: A Forward-Pipe Operator for R</em>. <a href="https://CRAN.R-project.org/package=magrittr">https://CRAN.R-project.org/package=magrittr</a>.</p>
+</div>
+<div>
+<p>Berkeley Institute for Data Science. 2016. “Mpl Colormaps.” 2016. <a href="http://web.archive.org/web/20160601125258/http://bids.github.io/colormap/">http://web.archive.org/web/20160601125258/http://bids.github.io/colormap/</a>.</p>
+</div>
+<div>
+<p>Bostock, Jeffrey Heer AND Michael. 2010. “Crowdsourcing Graphical Perception: Using Mechanical Turk to Assess Visualization Design.” In <em>ACM Human Factors in Computing Systems (Chi)</em>, 203–12. <a href="http://vis.stanford.edu/papers/crowdsourcing-graphical-perception">http://vis.stanford.edu/papers/crowdsourcing-graphical-perception</a>.</p>
+</div>
+<div>
+<p>Bryan, Jennifer. 2015. <em>Gapminder: Data from Gapminder</em>. <a href="https://CRAN.R-project.org/package=gapminder">https://CRAN.R-project.org/package=gapminder</a>.</p>
+</div>
+<div>
+<p>Buja, Andreas, John Alan McDonald, John Michalak, and Werner Stuetzle. 1991. “Interactive data visualization using focusing and linking.” <em>IEEE Proceedings of Visualization</em>, February, 1–8.</p>
+</div>
+<div>
+<p>Chamberlain, Scott, and Andy Teucher. 2018. <em>Geojsonio: Convert Data from and to ’Geojson’ or ’Topojson’</em>. <a href="https://CRAN.R-project.org/package=geojsonio">https://CRAN.R-project.org/package=geojsonio</a>.</p>
+</div>
+<div>
+<p>Chambers, J. M. 1992. “Classes and Methods: Object-Oriented Programming in S.” In <em>Statistical Models in S</em>, edited by J. M. Chambers and T. J. Hastie. Wadsworth &amp; Brooks/Cole.</p>
+</div>
+<div>
+<p>Chang, Winston. 2016. <em>Webshot: Take Screenshots of Web Pages</em>. <a href="https://CRAN.R-project.org/package=webshot">https://CRAN.R-project.org/package=webshot</a>.</p>
+</div>
+<div>
+<p>———. 2017. “Interactive Plots (in Shiny).” Blog. <a href="http://shiny.rstudio.com/articles/plot-interaction.html">http://shiny.rstudio.com/articles/plot-interaction.html</a>.</p>
+</div>
+<div>
+<p>Chang, Winston, and Barbara Borges Ribeiro. 2018. <em>Shinydashboard: Create Dashboards with ’Shiny’</em>. <a href="https://CRAN.R-project.org/package=shinydashboard">https://CRAN.R-project.org/package=shinydashboard</a>.</p>
+</div>
+<div>
+<p>Chang, Winston, and Javier Luraschi. 2018. <em>Profvis: Interactive Visualizations for Profiling R Code</em>. <a href="https://CRAN.R-project.org/package=profvis">https://CRAN.R-project.org/package=profvis</a>.</p>
+</div>
+<div>
+<p>Cheng, Joe. 2018a. “Case Study: Converting a Shiny App to Async.” Blog. <a href="https://rstudio.github.io/promises/articles/casestudy.html">https://rstudio.github.io/promises/articles/casestudy.html</a>.</p>
+</div>
+<div>
+<p>———. 2018b. <em>Promises: Abstractions for Promise-Based Asynchronous Programming</em>. <a href="https://CRAN.R-project.org/package=promises">https://CRAN.R-project.org/package=promises</a>.</p>
+</div>
+<div>
+<p>———. 2018c. <em>Using Leaflet with Shiny</em>. Blog. <a href="https://rstudio.github.io/leaflet/shiny.html">https://rstudio.github.io/leaflet/shiny.html</a>.</p>
+</div>
+<div>
+<p>Cleveland, William S., and Ryan Hafen. 2014. “Divide and Recombine: Data Science for Large Complex Data.” <em>Statistical Analysis and Data Mining: The ASA Data Science Journal</em> 7 (6): 425–33.</p>
+</div>
+<div>
+<p>Cleveland, William S, and Robert McGill. 1984. “Graphical Perception: Theory, Experimentation, and Application to the Development of Graphical Methods.” <em>Journal of the American Statistical Association</em> 79 (September): 531–54.</p>
+</div>
+<div>
+<p>Cook, Dianne, Andreas Buja, and Deborah F Swayne. 2007. “Interactive High-Dimensional Data Visualization.” <em>Journal of Computational and Graphical Statistics</em>, December, 1–23.</p>
+</div>
+<div>
+<p>Cook, Dianne, and Deborah F. Swayne. 2007. <em>Interactive and Dynamic Graphics for Data Analysis : With R and Ggobi</em>. Use R ! New York: Springer. <a href="http://www.ggobi.org/book/">http://www.ggobi.org/book/</a>.</p>
+</div>
+<div>
+<p>Cook, Di, Anthony Ebert, Heike Hofmann, Rob Hyndman, Thomas Lumley, Ben Marwick, Carson Sievert, et al. 2017. <em>Eechidna: Exploring Election and Census Highly Informative Data Nationally for Australia</em>. <a href="https://CRAN.R-project.org/package=eechidna">https://CRAN.R-project.org/package=eechidna</a>.</p>
+</div>
+<div>
+<p>Curley, James. 2016. <em>Engsoccerdata: English and European Soccer Results 1871-2016</em>. <a href="https://CRAN.R-project.org/package=engsoccerdata">https://CRAN.R-project.org/package=engsoccerdata</a>.</p>
+</div>
+<div>
+<p>Dang, Tuan Nhon, and Leland Wilkinson. 2012. “Timeseer: Detecting interesting distributions in multiple time series data.” <em>VINCI</em>, October, 1–9.</p>
+</div>
+<div>
+<p>de Jong, Jos, and Kenton Russell. 2016. <em>Listviewer: ’Htmlwidget’ for Interactive Views of R Lists</em>. <a href="https://github.com/timelyportfolio/listviewer">https://github.com/timelyportfolio/listviewer</a>.</p>
+</div>
+<div>
+<p>Dipert, Alan, Barret Schloerke, and Barbara Borges. 2018. <em>Shinyloadtest: Load Test Shiny Applications</em>.</p>
+</div>
+<div>
+<p>Dorling, D. 1996. “Area Cartograms: Their Use and Creation.” <em>Concepts and Techniques in Modern Geography (CATMOG)</em>.</p>
+</div>
+<div>
+<p>Emerson, John W., Walton A. Green, Barret Schloerke, Jason Crowley, Dianne Cook, Heike Hofmann, and Hadley Wickham. 2013. “The Generalized Pairs Plot.” <em>Journal of Computational and Graphical Statistics</em> 22 (1): 79–91. <a href="https://doi.org/10.1080/10618600.2012.694762">https://doi.org/10.1080/10618600.2012.694762</a>.</p>
+</div>
+<div>
+<p>Few, Stephen. 2006. “Data Visualization: Rules for Encoding Values in Graph.” 2006. <a href="https://web.archive.org/web/20160404214629/http://www.perceptualedge.com/articles/b-eye/encoding_values_in_graph.pdf">https://web.archive.org/web/20160404214629/http://www.perceptualedge.com/articles/b-eye/encoding_values_in_graph.pdf</a>.</p>
+</div>
+<div>
+<p>Freedman, D., and P. Diaconis. 1981. “On the Histogram as a Density Estimator: L2 Theory.” <em>Zeitschrift Für Wahrscheinlichkeitstheorie Und Verwandte Gebiete</em> 57: 453–76.</p>
+</div>
+<div>
+<p>Galili, Tal. 2016. <em>Heatmaply: Interactive Heat Maps Using ’Plotly’</em>. <a href="https://CRAN.R-project.org/package=heatmaply">https://CRAN.R-project.org/package=heatmaply</a>.</p>
+</div>
+<div>
+<p>Guha, Saptarshi, Ryan Hafen, Jeremiah Rounds, Jin Xia, Jianfu Li, Bowei Xi, and William S. Cleveland. 2012. “Large Complex Data: Divide and Recombine with Rhipe.” <em>The ISI’s Journal for the Rapid Dissemination of Statistics Research</em>, August, 53–67.</p>
+</div>
+<div>
+<p>Hafen, R., L. Gosink, J. McDermott, K. Rodland, K. K. V. Dam, and W. S. Cleveland. 2013. “Trelliscope: A System for Detailed Visualization in the Deep Analysis of Large Complex Data.” In <em>Large-Scale Data Analysis and Visualization (Ldav), 2013 Ieee Symposium on</em>, 105–12. <a href="https://doi.org/10.1109/LDAV.2013.6675164">https://doi.org/10.1109/LDAV.2013.6675164</a>.</p>
+</div>
+<div>
+<p>Hafen, Ryan. 2016. <em>Trelliscope: Create and Navigate Large Multi-Panel Visual Displays</em>. <a href="https://CRAN.R-project.org/package=trelliscope">https://CRAN.R-project.org/package=trelliscope</a>.</p>
+</div>
+<div>
+<p>Hafen, Ryan, and Barret Schloerke. 2018. <em>Trelliscopejs: Create Interactive Trelliscope Displays</em>. <a href="https://github.com/hafen/trelliscopejs">https://github.com/hafen/trelliscopejs</a>.</p>
+</div>
+<div>
+<p>Hamilton, Nicholas. 2016. <em>Ggtern: An Extension to ’Ggplot2’, for the Creation of Ternary Diagrams</em>. <a href="https://CRAN.R-project.org/package=ggtern">https://CRAN.R-project.org/package=ggtern</a>.</p>
+</div>
+<div>
+<p>Harrell Jr, Frank E, with contributions from Charles Dupont, and many others. 2019. <em>Hmisc: Harrell Miscellaneous</em>. <a href="https://CRAN.R-project.org/package=Hmisc">https://CRAN.R-project.org/package=Hmisc</a>.</p>
+</div>
+<div>
+<p>Healey, Kieran. 2018. <em>Data Visualization: A Practical Introduction</em>. Princeton University Press. <a href="https://kieranhealy.org/publications/dataviz/">https://kieranhealy.org/publications/dataviz/</a>.</p>
+</div>
+<div>
+<p>Heer, Dominik Moritz AND Bill Howe AND Jeffrey. 2019. “Falcon: Balancing Interactive Latency and Resolution Sensitivity for Scalable Linked Visualizations.” In <em>ACM Human Factors in Computing Systems (Chi)</em>. <a href="http://idl.cs.washington.edu/papers/falcon">http://idl.cs.washington.edu/papers/falcon</a>.</p>
+</div>
+<div>
+<p>Heer, Jeffrey, Maneesh Agrawala, and Wesley Willett. 2008. “Generalized Selection via Interactive Query Relaxation.” In <em>Proceedings of the Sigchi Conference on Human Factors in Computing Systems</em>, 959–68. ACM.</p>
+</div>
+<div>
+<p>Heer, Michael Bostock AND Vadim Ogievetsky AND Jeffrey. 2011. “D3: Data-Driven Documents.” <em>IEEE Trans. Visualization &amp; Comp. Graphics (Proc. InfoVis)</em>. <a href="http://vis.stanford.edu/papers/d3">http://vis.stanford.edu/papers/d3</a>.</p>
+</div>
+<div>
+<p>Heer, Zhicheng Liu AND Biye Jiang AND Jeffrey. 2013. “ImMens: Real-Time Visual Querying of Big Data.” <em>Computer Graphics Forum (Proc. EuroVis)</em> 32 (3). <a href="http://idl.cs.washington.edu/papers/immens">http://idl.cs.washington.edu/papers/immens</a>.</p>
+</div>
+<div>
+<p>Heer, Zhicheng Liu AND Jeffrey. 2014. “The Effects of Interactive Latency on Exploratory Visual Analysis.” <em>IEEE Trans. Visualization &amp; Comp. Graphics (Proc. InfoVis)</em>. <a href="http://idl.cs.washington.edu/papers/latency">http://idl.cs.washington.edu/papers/latency</a>.</p>
+</div>
+<div>
+<p>Hester, Jim, Kirill Müller, Kevin Ushey, Hadley Wickham, and Winston Chang. 2018. <em>Withr: Run Code ’with’ Temporarily Modified Global State</em>. <a href="https://CRAN.R-project.org/package=withr">https://CRAN.R-project.org/package=withr</a>.</p>
+</div>
+<div>
+<p>Hijmans, Robert J. 2019. <em>Raster: Geographic Data Analysis and Modeling</em>. <a href="https://CRAN.R-project.org/package=raster">https://CRAN.R-project.org/package=raster</a>.</p>
+</div>
+<div>
+<p>Hyndman, Rob J. 2018. <em>Forecast: Forecasting Functions for Time Series and Linear Models</em>. <a href="http://github.com/robjhyndman/forecast">http://github.com/robjhyndman/forecast</a>.</p>
+</div>
+<div>
+<p>Ihaka, Ross, Paul Murrell, Kurt Hornik, Jason C. Fisher, Reto Stauffer, Claus O. Wilke, Claire D. McWhite, and Achim Zeileis. 2019. <em>colorspace: A Toolbox for Manipulating and Assessing Colors and Palettes</em>. <a href="https://CRAN.R-project.org/package=colorspace">https://CRAN.R-project.org/package=colorspace</a>.</p>
+</div>
+<div>
+<p>Inc, Facebook, Kent Russell, and Alan Dipert. 2019. <em>ReactR: React Helpers</em>. <a href="https://CRAN.R-project.org/package=reactR">https://CRAN.R-project.org/package=reactR</a>.</p>
+</div>
+<div>
+<p>James A. Dougenik, Nicholas R. Chrisman, Duane R. Niemeyer. 1985. “An Algorithm to Construct Continuous Area Cartograms.” <em>The Professional Geographer</em>.</p>
+</div>
+<div>
+<p>Jeppson, Haley, Heike Hofmann, and Di Cook. 2016. <em>Ggmosaic: Mosaic Plots in the ’Ggplot2’ Framework</em>. <a href="http://github.com/haleyjeppson/ggmosaic">http://github.com/haleyjeppson/ggmosaic</a>.</p>
+</div>
+<div>
+<p>Jeworutzki, Sebastian. 2018. <em>Cartogram: Create Cartograms with R</em>. <a href="https://CRAN.R-project.org/package=cartogram">https://CRAN.R-project.org/package=cartogram</a>.</p>
+</div>
+<div>
+<p>J. W. Tukey, J. H. Friedman, and M. A. Fisherkeller. 1973. “Stanford Linear Accelerator.” <a href="http://stat-graphics.org/movies/prim9.html">http://stat-graphics.org/movies/prim9.html</a>.</p>
+</div>
+<div>
+<p>Karambelkar, Bhaskar. 2017. <em>Widgetframe: ’Htmlwidgets’ in Responsive ’Iframes’</em>. <a href="https://CRAN.R-project.org/package=widgetframe">https://CRAN.R-project.org/package=widgetframe</a>.</p>
+</div>
+<div>
+<p>Lander, Jared P. 2016. <em>Coefplot: Plots Coefficients from Fitted Models</em>. <a href="https://CRAN.R-project.org/package=coefplot">https://CRAN.R-project.org/package=coefplot</a>.</p>
+</div>
+<div>
+<p>Leeper, Thomas J. 2017. <em>Slopegraph: Edward Tufte-Inspired Slopegraphs</em>.</p>
+</div>
+<div>
+<p>Lins, Lauro, James T. Klosowski, and and Carlos Scheidegger. 2013. “Nanocubes for Real-Time Exploration of Spatiotemporal Datasets.” <em>Visualization and Computer Graphics, IEEE Transactions</em>.</p>
+</div>
+<div>
+<p>Mastny, Timothy. 2018. <em>Sass: Syntactically Awesome Stylesheets (Sass) Compiler</em>. <a href="https://github.com/rstudio/sass">https://github.com/rstudio/sass</a>.</p>
+</div>
+<div>
+<p>Messing, Solomon. 2012. “Visualization Series: Insight from Cleveland and Tufte on Plotting Numeric Data by Groups.” 2012. <a href="http://web.archive.org/web/20160602202734/https://solomonmessing.wordpress.com/2012/03/04/visualization-series-insight-from-cleveland-and-tufte-on-plotting-numeric-data-by-groups/">http://web.archive.org/web/20160602202734/https://solomonmessing.wordpress.com/2012/03/04/visualization-series-insight-from-cleveland-and-tufte-on-plotting-numeric-data-by-groups/</a>.</p>
+</div>
+<div>
+<p>Mildenberger, Thoralf, Yves Rozenholc, and David Zasada. 2009. <em>Histogram: Construction of Regular and Irregular Histograms with Different Options for Automatic Choice of Bins</em>. <a href="https://CRAN.R-project.org/package=histogram">https://CRAN.R-project.org/package=histogram</a>.</p>
+</div>
+<div>
+<p>Mullen, Lincoln A., and Jordan Bratt. 2018. “USAboundaries: Historical and Contemporary Boundaries of the United States of America.” <em>Journal of Open Source Software</em> 3 (23): 314. <a href="https://doi.org/10.21105/joss.00314">https://doi.org/10.21105/joss.00314</a>.</p>
+</div>
+<div>
+<p>Murray, Scott. 2013. <em>Interactive Data Visualization for the Web: An Introduction to Designing with D3</em>. O’Reilly.</p>
+</div>
+<div>
+<p>———. 2017. <em>D3.js in Action</em>. Manning.</p>
+</div>
+<div>
+<p>Newman, Mark. 2016. “Maps of the 2016 Us Presidential Election Results.” Blog. <a href="http://www-personal.umich.edu/~mejn/election/2016/">http://www-personal.umich.edu/~mejn/election/2016/</a>.</p>
+</div>
+<div>
+<p>Nusrat S, Alam MJ, Kobourov S. 2018. “Evaluating Cartogram Effectiveness.” <em>IEEE Trans Vis Comput Graph</em>. <a href="https://doi.org/10.1109/TVCG.2016.2642109">https://doi.org/10.1109/TVCG.2016.2642109</a>.</p>
+</div>
+<div>
+<p>Olson, J. M. 1976. “Noncontiguous Area Cartograms.” <em>The Professional Geographer</em>.</p>
+</div>
+<div>
+<p>Ooms, Jeroen. 2014. “The Jsonlite Package: A Practical and Consistent Mapping Between Json Data and R Objects.” <em>arXiv:1403.2805 [stat.CO]</em>. <a href="http://arxiv.org/abs/1403.2805">http://arxiv.org/abs/1403.2805</a>.</p>
+</div>
+<div>
+<p>———. 2018. <em>Rsvg: Render Svg Images into Pdf, Png, Postscript, or Bitmap Arrays</em>. <a href="https://CRAN.R-project.org/package=rsvg">https://CRAN.R-project.org/package=rsvg</a>.</p>
+</div>
+<div>
+<p>———. 2019. <em>Magick: Advanced Graphics and Image-Processing in R</em>. <a href="https://github.com/ropensci/magick#readme">https://github.com/ropensci/magick#readme</a>.</p>
+</div>
+<div>
+<p>Pebesma, Edzer. 2018. <em>Sf: Simple Features for R</em>. <a href="https://CRAN.R-project.org/package=sf">https://CRAN.R-project.org/package=sf</a>.</p>
+</div>
+<div>
+<p>Pebesma, Edzer J., and Roger S. Bivand. 2005. “Classes and Methods for Spatial Data in R.” <em>R News</em> 5 (2): 9–13. <a href="https://CRAN.R-project.org/doc/Rnews/">https://CRAN.R-project.org/doc/Rnews/</a>.</p>
+</div>
+<div>
+<p>Pedersen, Thomas Lin. 2016. <em>Ggraph: An Implementation of Grammar of Graphics for Graphs and Networks</em>.</p>
+</div>
+<div>
+<p>———. 2019. <em>Ggforce: Accelerating ’Ggplot2’</em>. <a href="https://CRAN.R-project.org/package=ggforce">https://CRAN.R-project.org/package=ggforce</a>.</p>
+</div>
+<div>
+<p>PROJ contributors. 2018. <em>PROJ Coordinate Transformation Software Library</em>. Open Source Geospatial Foundation. <a href="https://proj4.org/">https://proj4.org/</a>.</p>
+</div>
+<div>
+<p>Quealy, Kevin. 2013. <em>19 Sketches of Quarterback Timelines</em>. <a href="https://web.archive.org/web/20180416011941/http://kpq.github.io/chartsnthings/2013/09/19-sketches-of-quarterback-timelines.html">https://web.archive.org/web/20180416011941/http://kpq.github.io/chartsnthings/2013/09/19-sketches-of-quarterback-timelines.html</a>.</p>
+</div>
+<div>
+<p>R Core Team. 2016. <em>R: A Language and Environment for Statistical Computing</em>. Vienna, Austria: R Foundation for Statistical Computing. <a href="https://www.R-project.org/">https://www.R-project.org/</a>.</p>
+</div>
+<div>
+<p>Richard A. Becker, Ming-Jen Shyu, William S. Cleveland. 1996. “The Visual Design and Control of Trellis Display.” <em>Journal of Computational and Graphical Statistics</em> 5 (2): 123–55. <a href="http://www.jstor.org/stable/1390777">http://www.jstor.org/stable/1390777</a>.</p>
+</div>
+<div>
+<p>Robin Lovelace, Jannes Muenchow, Jakub Nowosad. 2019. <em>Geocomputation with R</em>. Chapman and Hall/CRC.</p>
+</div>
+<div>
+<p>Robinson, David. 2016. <em>Broom: Convert Statistical Analysis Objects into Tidy Data Frames</em>. <a href="https://CRAN.R-project.org/package=broom">https://CRAN.R-project.org/package=broom</a>.</p>
+</div>
+<div>
+<p>RStudio. 2014a. “Build Custom Input Objects.” Blog. <a href="https://shiny.rstudio.com/articles/building-inputs.html">https://shiny.rstudio.com/articles/building-inputs.html</a>.</p>
+</div>
+<div>
+<p>———. 2014b. “Profvis — Interactive Visualizations for Profiling R Code.” Blog. <a href="https://rstudio.github.io/profvis/examples.html">https://rstudio.github.io/profvis/examples.html</a>.</p>
+</div>
+<div>
+<p>Rudis, Bob. 2016. <em>Ggalt: Extra Coordinate Systems, Geoms and Statistical Transformations for ’Ggplot2’</em>. <a href="https://CRAN.R-project.org/package=ggalt">https://CRAN.R-project.org/package=ggalt</a>.</p>
+</div>
+<div>
+<p>Ruiz, Edgar. 2018. <em>Dbplot: Simplifies Plotting Data Inside Databases</em>. <a href="https://CRAN.R-project.org/package=dbplot">https://CRAN.R-project.org/package=dbplot</a>.</p>
+</div>
+<div>
+<p>Ryan, Jeffrey A. 2016. <em>Quantmod: Quantitative Financial Modelling Framework</em>. <a href="https://CRAN.R-project.org/package=quantmod">https://CRAN.R-project.org/package=quantmod</a>.</p>
+</div>
+<div>
+<p>Sarkar, Deepayan. 2008. <em>Lattice: Multivariate Data Visualization with R</em>. New York: Springer. <a href="http://lmdvr.r-forge.r-project.org">http://lmdvr.r-forge.r-project.org</a>.</p>
+</div>
+<div>
+<p>Schloerke, Barret, Jason Crowley, Di Cook, Francois Briatte, Moritz Marbach, Edwin Thoen, Amos Elberg, and Joseph Larmarange. 2016. <em>GGally: Extension to ’Ggplot2’</em>.</p>
+</div>
+<div>
+<p>Scott, David W. 1979. “On Optimal and Data-Based Histograms.” <em>Biometrika</em> 66: 605–10.</p>
+</div>
+<div>
+<p>Scott, David W. 1992. <em>Multivariate Density Estimation: Theory, Practice, and Visualization</em>. Wiley &amp; Sons.</p>
+</div>
+<div>
+<p>Shneiderman, Ben. 1996. “The Eyes Have It:A Task by Data Type Taxonomy for Information Visualizations.” <em>VL Proceedings of the IEEE Symposium on Visual Languages</em>, January, 1–9.</p>
+</div>
+<div>
+<p>Sievert, Carson. 2018a. <em>Bcviz: A Shiny App for Exploring Bc Housing and Census Data</em>. <a href="https://github.com/cpsievert/bcviz">https://github.com/cpsievert/bcviz</a>.</p>
+</div>
+<div>
+<p>———. 2018b. “Learning from and Improving Upon Ggplotly Conversions.” Blog. <a href="https://blog.cpsievert.me/2018/01/30/learning-improving-ggplotly-geom-sf/">https://blog.cpsievert.me/2018/01/30/learning-improving-ggplotly-geom-sf/</a>.</p>
+</div>
+<div>
+<p>———. 2018c. “Visualizing Geo-Spatial Data with Sf and Plotly.” Blog. <a href="https://blog.cpsievert.me/2018/03/30/visualizing-geo-spatial-data-with-sf-and-plotly/">https://blog.cpsievert.me/2018/03/30/visualizing-geo-spatial-data-with-sf-and-plotly/</a>.</p>
+</div>
+<div>
+<p>———. 2018d. <em>Zikar: Tools for Exploring Publicly Available Zika Data</em>. <a href="https://github.com/cpsievert/zikar">https://github.com/cpsievert/zikar</a>.</p>
+</div>
+<div>
+<p>———. 2019a. <em>Pedestrians: Tools for Exploring Melbourne’s Pedestrian Data</em>. <a href="https://github.com/cpsievert/pedestrians">https://github.com/cpsievert/pedestrians</a>.</p>
+</div>
+<div>
+<p>———. 2019b. <em>Runpkg: Tools for Working with ’Unpkg’</em>. <a href="https://github.com/cpsievert/runpkg">https://github.com/cpsievert/runpkg</a>.</p>
+</div>
+<div>
+<p>South, Andy. 2017. <em>Rnaturalearth: World Map Data from Natural Earth</em>. <a href="https://CRAN.R-project.org/package=rnaturalearth">https://CRAN.R-project.org/package=rnaturalearth</a>.</p>
+</div>
+<div>
+<p>Sturges, Herbert A. 1926. “The Choice of a Class Interval.” <em>Journal of the American Statistical Association</em> 21 (153): 65–66. <a href="https://doi.org/10.1080/01621459.1926.10502161">https://doi.org/10.1080/01621459.1926.10502161</a>.</p>
+</div>
+<div>
+<p>Swayne, Deborah F, Dianne Cook, and Andreas Buja. 1998. “XGobi: Interactive Dynamic Data Visualization in the X Window System.” <em>Journal of Computational and Graphical Statistics</em> 7 (1): 113–30.</p>
+</div>
+<div>
+<p>Theus, Martin, and Simon Urbanek. 2008. <em>Interactive Graphics for Data Analysis: Principles and Examples</em>. Chapman; Hall / CRC.</p>
+</div>
+<div>
+<p>Tidyverse team. 2018. <em>Tidyverse Desing Principles</em>. <a href="https://principles.tidyverse.org">https://principles.tidyverse.org</a>.</p>
+</div>
+<div>
+<p>Tierney, Nicholas, Di Cook, Miles McBain, and Colin Fay. 2018. <em>Naniar: Data Structures, Summaries, and Visualisations for Missing Data</em>. <a href="https://github.com/njtierney/naniar">https://github.com/njtierney/naniar</a>.</p>
+</div>
+<div>
+<p>Tufte, Edward. 2001a. <em>The Visual Display of Quantitative Information</em>. Graphics Press.</p>
+</div>
+<div>
+<p>———. 2001b. <em>The Visual Display of Quantitative Information</em>. Cheshire, Conn: Graphics Press.</p>
+</div>
+<div>
+<p>Tukey, J. W., and P. A. Tukey. 1985. “Computer Graphics and Exploratory Data Analysis: An Introduction.” In <em>In Proceedings of the Sixth Annual Conference and Exposition: Computer Graphics85</em>.</p>
+</div>
+<div>
+<p>Tyner, Samantha, and Heike Hofmann. 2016. <em>Geomnet: Network Visualization in the ’Ggplot2’ Framework</em>. <a href="https://CRAN.R-project.org/package=geomnet">https://CRAN.R-project.org/package=geomnet</a>.</p>
+</div>
+<div>
+<p>Unwin, Antony. 2015. <em>Graphical Data Analysis with R</em>. CRC Press. <a href="http://www.gradaanwr.net">http://www.gradaanwr.net</a>.</p>
+</div>
+<div>
+<p>Unwin, A. R. 2016. “GDA of England (from Engsoccerdata).” Blog. <a href="http://www.gradaanwr.net/wp-content/uploads/2016/06/dataApr16.pdf">http://www.gradaanwr.net/wp-content/uploads/2016/06/dataApr16.pdf</a>.</p>
+</div>
+<div>
+<p>Unwin, A. R., and H. Hofmann. 1999. “GUI and Command-Line — Conflict or Synergy?” In <em>Computing Science and Statistics, Proceedings of the 31st Symposium on the Interface</em>, edited by K. Berk and M. Pourahmadi, 31:246–53. Chicago: Interface Foundation.</p>
+</div>
+<div>
+<p>Urbanek, Simon. 2013. <em>Png: Read and Write Png Images</em>. <a href="https://CRAN.R-project.org/package=png">https://CRAN.R-project.org/package=png</a>.</p>
+</div>
+<div>
+<p>———. 2015. <em>Base64enc: Tools for Base64 Encoding</em>. <a href="https://CRAN.R-project.org/package=base64enc">https://CRAN.R-project.org/package=base64enc</a>.</p>
+</div>
+<div>
+<p>Vaidyanathan, Ramnath, Yihui Xie, JJ Allaire, Joe Cheng, and Kenton Russell. 2016. <em>Htmlwidgets: HTML Widgets for R</em>. <a href="https://CRAN.R-project.org/package=htmlwidgets">https://CRAN.R-project.org/package=htmlwidgets</a>.</p>
+</div>
+<div>
+<p>VanderPlas, Susan, and Heike Hofmann. 2015. “Signs of the Sine Illusion—Why We Need to Care.” <em>Journal of Computational and Graphical Statistics</em> 24 (4): 1170–90. <a href="https://doi.org/10.1080/10618600.2014.951547">https://doi.org/10.1080/10618600.2014.951547</a>.</p>
+</div>
+<div>
+<p>Venables, W. N., and B. D. Ripley. 2002. <em>Modern Applied Statistics with S</em>. Fourth. New York: Springer. <a href="http://www.stats.ox.ac.uk/pub/MASS4">http://www.stats.ox.ac.uk/pub/MASS4</a>.</p>
+</div>
+<div>
+<p>Walker, Kyle. 2018. <em>Idbr: R Interface to the Us Census Bureau International Data Base Api</em>. <a href="https://CRAN.R-project.org/package=idbr">https://CRAN.R-project.org/package=idbr</a>.</p>
+</div>
+<div>
+<p>Wickham, Hadley. 2009. <em>Ggplot2: Elegant Graphics for Data Analysis</em>. Springer-Verlag New York. <a href="http://ggplot2.org">http://ggplot2.org</a>.</p>
+</div>
+<div>
+<p>———. 2010. “A Layered Grammar of Graphics.” <em>Journal of Computational and Graphical Statistics</em> 19 (1): 3–28.</p>
+</div>
+<div>
+<p>———. 2013. “Bin-Summarise-Smooth: A Framework for Visualising Large Data.” had.co.nz.</p>
+</div>
+<div>
+<p>———. 2014a. <em>Advanced R</em>. Chapman; Hall/CRC.</p>
+</div>
+<div>
+<p>———. 2014b. “Tidy Data.” <em>The Journal of Statistical Software</em> 59 (10). <a href="http://www.jstatsoft.org/v59/i10/">http://www.jstatsoft.org/v59/i10/</a>.</p>
+</div>
+<div>
+<p>———. 2016. <em>Ggstat: Statistical Computations for Visualisation</em>. <a href="https://github.com/hadley/ggstat">https://github.com/hadley/ggstat</a>.</p>
+</div>
+<div>
+<p>———. 2018a. <em>Nycflights13: Flights That Departed Nyc in 2013</em>. <a href="https://CRAN.R-project.org/package=nycflights13">https://CRAN.R-project.org/package=nycflights13</a>.</p>
+</div>
+<div>
+<p>———. 2018b. “You Can’t Do Data Science in a Gui.” <a href="https://www.youtube.com/watch?v=cpbtcsGE0OA">https://www.youtube.com/watch?v=cpbtcsGE0OA</a>.</p>
+</div>
+<div>
+<p>Wickham, Hadley, Dianne Cook, and Heike Hofmann. 2015. “Visualizing Statistical Models: Removing the Blindfold.” <em>Statistical Analysis and Data Mining: The ASA Data Science Journal</em> 8 (4): 203–25.</p>
+</div>
+<div>
+<p>Wickham, Hadley, Romain François, and Lucy D’Agostino McGowan. 2018. <em>Emo: Easily Insert ’Emoji’</em>. <a href="https://github.com/hadley/emo">https://github.com/hadley/emo</a>.</p>
+</div>
+<div>
+<p>Wickham, Hadley, and Garrett Grolemund. 2018. <em>R for Data Science</em>. O’Reilly.</p>
+</div>
+<div>
+<p>Wilke, Claus. 2018. <em>Fundamentals of Data Visualization</em>. O’Reilly. <a href="https://serialmentor.com/dataviz/">https://serialmentor.com/dataviz/</a>.</p>
+</div>
+<div>
+<p>Wilkinson, Leland. 2005. <em>The Grammar of Graphics (Statistics and Computing)</em>. Secaucus, NJ, USA: Springer-Verlag New York, Inc.</p>
+</div>
+<div>
+<p>Wilkinson, Leland, Anushka Anand, and Robert Grossman. 2005. “Graph-Theoretic Scagnostics.” In <em>Proceedings of the Proceedings of the 2005 Ieee Symposium on Information Visualization</em>, 21. INFOVIS ’05. Washington, DC, USA: IEEE Computer Society. <a href="https://doi.org/10.1109/INFOVIS.2005.14">https://doi.org/10.1109/INFOVIS.2005.14</a>.</p>
+</div>
+<div>
+<p>Wilkinson, Leland, and Graham Wills. 2008. “Scagnostics Distributions.” <em>Journal of Computational and Graphical Statistics</em> 17 (2): 473–91.</p>
+</div>
+<div>
+<p>Wills, Graham. 2008. “Linked Data Views.” In <em>Handbook of Data Visualization</em>, 217–41. Berlin, Heidelberg: Springer Berlin Heidelberg. <a href="https://doi.org/10.1007/978-3-540-33037-0_10">https://doi.org/10.1007/978-3-540-33037-0_10</a>.</p>
+</div>
+<div>
+<p>Xie, Yihui. 2016. <em>Servr: A Simple Http Server to Serve Static Files or Dynamic Documents</em>. <a href="https://CRAN.R-project.org/package=servr">https://CRAN.R-project.org/package=servr</a>.</p>
+</div>
+<div>
+<p>———. 2018. <em>Using Leaflet with Shiny</em>. Blog. <a href="https://rstudio.github.io/DT/shiny.html">https://rstudio.github.io/DT/shiny.html</a>.</p>
+</div>
+<div>
+<p>Yau, Nathan. 2011. <em>Visualize This: The FlowingData Guide to Design, Visualization, and Statistics</em>. Wiley.</p>
+</div>
+<div>
+<p>———. 2016. <em>What I Use to Visualize Data</em>. <a href="https://flowingdata.com/2016/03/08/what-i-use-to-visualize-data/">https://flowingdata.com/2016/03/08/what-i-use-to-visualize-data/</a>.</p>
+</div>
+</div>
+</div>
+<div class="footnotes">
+<hr />
+<ol>
+<li id="fn1"><p>For more on the benefits of using code over a GUI to perform data analysis, see <span class="citation">Wickham (<a href="#ref-data-science-gui" role="doc-biblioref">2018</a><a href="#ref-data-science-gui" role="doc-biblioref">b</a>)</span>.<a href="introduction.html#fnref1" class="footnote-back">↩︎</a></p></li>
+<li id="fn2"><p>If you aren’t already familiar with the grammar of graphics or <strong>ggplot2</strong>, we recommend reading the Data Visualization chapter from the <em>R for Data Science</em> book. <a href="https://r4ds.had.co.nz/data-visualisation.html" class="uri">https://r4ds.had.co.nz/data-visualisation.html</a><a href="overview.html#fnref2" class="footnote-back">↩︎</a></p></li>
+<li id="fn3"><p>Technically speaking, these <strong>dplyr</strong> verbs are S3 generic functions that <strong>plotly</strong> has a defined a custom method for. In nearly every case, that custom method simply queries the data underlying the <strong>plotly</strong> object, applies the <strong>dplyr</strong> function, then adds the transformed data back into the resulting <strong>plotly</strong> object<a href="overview.html#fnref3" class="footnote-back">↩︎</a></p></li>
+<li id="fn4"><p>A trace is similar in concept to a layer (as defined in Section <a href="overview.html#intro-plotly">2.1</a>, but it’s not quite the same. In many cases, like the bottom panel of Figure <a href="overview.html#fig:intro-defaults">2.1</a>, it makes sense to implement a single layer as multiple traces. This is due to the design of plotly.js and how traces are tied to legends and hover behavior.<a href="overview.html#fnref4" class="footnote-back">↩︎</a></p></li>
+<li id="fn5"><p>The <strong>htmlwidgets</strong> package provides a foundation for other packages to implement R bindings to JavaScript libraries so that those bindings work in various contexts (e.g. the R console, RStudio, inside <strong>rmarkdown</strong> documents, <strong>shiny</strong> apps, etc). For more info and examples, see the website <a href="http://www.htmlwidgets.org" class="uri">http://www.htmlwidgets.org</a>.<a href="overview.html#fnref5" class="footnote-back">↩︎</a></p></li>
+<li id="fn6"><p>Although the x-axis is discrete, plotly.js still considers this a histogram because it generates counts in the browser. Learn more about the difference between histograms and bar charts in Chapter <a href="bars-histograms.html#bars-histograms">5</a>.<a href="overview.html#fnref6" class="footnote-back">↩︎</a></p></li>
+<li id="fn7"><p>This section is not meant to teach you <strong>ggplot2</strong>, but rather to help point out when and why it might be preferable to <code>plot_ly()</code>. If you’re new to <strong>ggplot2</strong> and would like to learn it, see <a href="introduction.html#ggplot2">1.3.3</a>.<a href="overview.html#fnref7" class="footnote-back">↩︎</a></p></li>
+<li id="fn8"><p>See Section <a href="frequencies-2D.html#frequencies-2D">7</a> for approaches using <code>plot_ly()</code><a href="overview.html#fnref8" class="footnote-back">↩︎</a></p></li>
+<li id="fn9"><p>As discussed in <a href="custom-geoms.html#custom-geoms">34</a>, <code>ggplotly()</code> can actually convert custom geoms as well, but each one requires a custom hook, and many custom geoms are not yet supported.<a href="overview.html#fnref9" class="footnote-back">↩︎</a></p></li>
+<li id="fn10"><p>At the time of writing, the plotly.js attributes <a href="https://github.com/plotly/plotly.js/issues/147"><code>line.width</code> and <code>line.color</code></a> do not support multiple values, meaning a single line trace can only have one width/color in 2D line plot, and consequently numeric <code>color</code>/<code>size</code> mappings won’t work. This isn’t necessarily true for 3D paths/lines and there will likely be support these features for 2D paths/lines in WebGL in the near future.<a href="scatter-traces.html#fnref10" class="footnote-back">↩︎</a></p></li>
+<li id="fn11"><p>See <a href="https://plot.ly/r/parallel-coordinates-plot/" class="uri">https://plot.ly/r/parallel-coordinates-plot/</a> for some interactive examples<a href="scatter-traces.html#fnref11" class="footnote-back">↩︎</a></p></li>
+<li id="fn12"><p>Unfortunately, non-scatter traces currently don’t work with <code>plot_mapbox()</code>/ <code>plot_geo()</code> meaning that, for one, raster (i.e., heatmap) maps are not natively supported.<a href="maps.html#fnref12" class="footnote-back">↩︎</a></p></li>
+<li id="fn13"><p>To see more examples of creating and using plotly.js’ integrated dropdown functionality to modify graphs, see <a href="https://plot.ly/r/dropdowns/" class="uri">https://plot.ly/r/dropdowns/</a><a href="maps.html#fnref13" class="footnote-back">↩︎</a></p></li>
+<li id="fn14"><p>This is way more intuitive compared to older workflows based on, say using <code>ggplot2::fortify()</code> to obtain a data structure where a row to represents particular point along a feature and having another column track which point belongs to each feature (<a href="https://gis.stackexchange.com/questions/165974/r-fortify-causing-polygons-to-tear">for example</a>).<a href="maps.html#fnref14" class="footnote-back">↩︎</a></p></li>
+<li id="fn15"><p>As we’ll see in Section <a href="client-side-linking.html#graphical-queries">16.1</a>, and specifically Figure <a href="client-side-linking.html#fig:txhousing-aggregates">16.6</a>, using ‘statistical’ a trace type like <code>add_histogram()</code> enables statistical graphical queries.<a href="bars-histograms.html#fnref15" class="footnote-back">↩︎</a></p></li>
+<li id="fn16"><p>Optimal in this context is the number of bins which minimizes the distance between the empirical histogram and the underlying density.<a href="bars-histograms.html#fnref16" class="footnote-back">↩︎</a></p></li>
+<li id="fn17"><p>These tests were run on Google Chrome and loaded a page with a single bar chart. See <a href="https://www.webpagetest.org/result/160924_DP_JBX" class="uri">https://www.webpagetest.org/result/160924_DP_JBX</a> for <code>add_histogram()</code> and <a href="https://www.webpagetest.org/result/160924_QG_JA1" class="uri">https://www.webpagetest.org/result/160924_QG_JA1</a> for <code>add_bars()</code>.<a href="bars-histograms.html#fnref17" class="footnote-back">↩︎</a></p></li>
+<li id="fn18"><p>It’s much easier to visualize multiple numeric distributions on a single axis using <a href="scatter-traces.html#lines">lines</a><a href="bars-histograms.html#fnref18" class="footnote-back">↩︎</a></p></li>
+<li id="fn19"><p>Follow the issue here <a href="https://github.com/plotly/plotly.js/issues/1059" class="uri">https://github.com/plotly/plotly.js/issues/1059</a><a href="boxplots.html#fnref19" class="footnote-back">↩︎</a></p></li>
+<li id="fn20"><p>Yes, this is <a href="https://xkcd.com/1138/">essentially a population map</a>. A more informative visual would show income per person within a given county. I decided against showing the more informative version so the code would be more concise.<a href="editing-views.html#fnref20" class="footnote-back">↩︎</a></p></li>
+<li id="fn21"><p>Although HTML can not possibly render in a pdf or word document, <strong>knitr</strong> can automatically detect a non-HTML output format and embed a static image of the htmlwidget via the <strong>webshot</strong> package <span class="citation">(Chang <a href="#ref-webshot" role="doc-biblioref">2016</a>)</span>.<a href="arranging-views.html#fnref21" class="footnote-back">↩︎</a></p></li>
+<li id="fn22"><p>For a full reference of which browsers/versions support flexbox, see <a href="https://caniuse.com/#feat=flexbox" class="uri">https://caniuse.com/#feat=flexbox</a>.<a href="arranging-views.html#fnref22" class="footnote-back">↩︎</a></p></li>
+<li id="fn23"><p>This sort of idea relates closely to the notion of generalized selections as described in <span class="citation">Heer, Agrawala, and Willett (<a href="#ref-heer2008generalized" role="doc-biblioref">2008</a>)</span>.<a href="client-side-linking.html#fnref23" class="footnote-back">↩︎</a></p></li>
+<li id="fn24"><p>The title that appears in the dropdown can be controlled via the <code>group</code> argument in the <code>highlight_key()</code> function. The primary purpose of the <code>group</code> argument is to isolate one group of linked plots from others.<a href="client-side-linking.html#fnref24" class="footnote-back">↩︎</a></p></li>
+<li id="fn25"><p>When using <code>ggplotly()</code>, you need to specify <code>dynamicTicks = TRUE</code>.<a href="client-side-linking.html#fnref25" class="footnote-back">↩︎</a></p></li>
+<li id="fn26"><p>All R packages with <strong>crosstalk</strong> support are currently listed here – <a href="https://rstudio.github.io/crosstalk/widgets.html" class="uri">https://rstudio.github.io/crosstalk/widgets.html</a><a href="client-side-linking.html#fnref26" class="footnote-back">↩︎</a></p></li>
+<li id="fn27"><p><span class="citation">Sievert (<a href="#ref-sf-blog-post" role="doc-biblioref">2018</a><a href="#ref-sf-blog-post" role="doc-biblioref">c</a>)</span> outlines the relative strengths and weaknesses of each approach.<a href="client-side-linking.html#fnref27" class="footnote-back">↩︎</a></p></li>
+<li id="fn28"><p>Typically statistical models are diagnosed by visualizing data in the model space rather than model(s) in the data space. As <span class="citation">Wickham, Cook, and Hofmann (<a href="#ref-model-vis-paper" role="doc-biblioref">2015</a>)</span> points, the latter approach can be a very effective way to better understand and diagnosis statistical models.<a href="client-side-linking.html#fnref28" class="footnote-back">↩︎</a></p></li>
+<li id="fn29"><p>Read more about <strong>shiny</strong>’s responsive layout here <a href="https://shiny.rstudio.com/articles/layout-guide.html" class="uri">https://shiny.rstudio.com/articles/layout-guide.html</a><a href="linking-views-with-shiny.html#fnref29" class="footnote-back">↩︎</a></p></li>
+<li id="fn30"><p>Read more about using custom HTML templates here <a href="https://shiny.rstudio.com/articles/html-ui.html" class="uri">https://shiny.rstudio.com/articles/html-ui.html</a><a href="linking-views-with-shiny.html#fnref30" class="footnote-back">↩︎</a></p></li>
+<li id="fn31"><p>The <code>plotly_build()</code> function is an S3 generic, so you can list all relevant the methods with <code>methods(plotly_build)</code>, and write you’re own method to translate a custom object to <strong>plotly</strong>.<a href="linking-views-with-shiny.html#fnref31" class="footnote-back">↩︎</a></p></li>
+<li id="fn32"><p>In order to convert <strong>grid</strong> grobs that are relatively sized, the <code>ggplotly()</code> function uses the size of the current graphics device at print-time, meaning that resizing the browser window without a hook back to R can create wonky sizes.<a href="linking-views-with-shiny.html#fnref32" class="footnote-back">↩︎</a></p></li>
+<li id="fn33"><p>These events are documented at <a href="https://plot.ly/javascript/plotlyjs-events/" class="uri">https://plot.ly/javascript/plotlyjs-events/</a><a href="linking-views-with-shiny.html#fnref33" class="footnote-back">↩︎</a></p></li>
+<li id="fn34"><p>It’s possible to do this responsively with about 50,000 observations, but it won’t scale to anything much larger than that. Run <code>plotly_example("shiny", "crossfilter_scatter")</code> to see it action as well as a corresponding video at <a href="https://vimeo.com/318129005" class="uri">https://vimeo.com/318129005</a><a href="linking-views-with-shiny.html#fnref34" class="footnote-back">↩︎</a></p></li>
+<li id="fn35"><p>Comparatively speaking, client-server apps require way more runtime software dependencies. In the case of <strong>shiny</strong> apps, RStudio provides accessible resources for hosting shiny apps <a href="https://shiny.rstudio.com/articles/#deployment" class="uri">https://shiny.rstudio.com/articles/#deployment</a>, but using these services to host apps that encounters lots of traffic will either cost money and/or time for setting up the proper computational infrastructure.<a href="javascript.html#fnref35" class="footnote-back">↩︎</a></p></li>
+<li id="fn36"><p>Compared to JS, R has way more facilities for statistical computing.<a href="javascript.html#fnref36" class="footnote-back">↩︎</a></p></li>
+<li id="fn37"><p>In fact, converting some examples from that section from <strong>shiny</strong> to JavaScript/HTML would be a good exercise!<a href="javascript.html#fnref37" class="footnote-back">↩︎</a></p></li>
+<li id="fn38"><p>If you’d like a nice succinct overview on the topic, see <a href="http://adv-r.had.co.nz/Data-structures.html" class="uri">http://adv-r.had.co.nz/Data-structures.html</a><a href="json.html#fnref38" class="footnote-back">↩︎</a></p></li>
+<li id="fn39"><p>As long as your not allowing down-stream users to input paths to the input files (e.g., in a <strong>shiny</strong> app), you shouldn’t need to worry about the security of this example<a href="supplying-custom-data.html#fnref39" class="footnote-back">↩︎</a></p></li>
+<li id="fn40"><p>React is a modern JavaScript library, backed by Facebook, for building and distributing components of a website – <a href="https://reactjs.org/" class="uri">https://reactjs.org/</a><a href="client-side.html#fnref40" class="footnote-back">↩︎</a></p></li>
+<li id="fn41"><p>There are thousands of React components available. To get a sense what’s available, see this list <a href="https://github.com/brillout/awesome-react-components" class="uri">https://github.com/brillout/awesome-react-components</a>. <a href="client-side.html#fnref41" class="footnote-back">↩︎</a></p></li>
+<li id="fn42"><p>Large data means different things to different people at different time periods. At the time of writing, I’d consider hundreds of millions of observations with at least a handful of variables to be large data.<a href="performance.html#fnref42" class="footnote-back">↩︎</a></p></li>
+<li id="fn43"><p>If you find a tag or entity that you want isn’t supported, please request it to be added in the plotly.js repository <a href="https://github.com/plotly/plotly.js/issues/new" class="uri">https://github.com/plotly/plotly.js/issues/new</a><a href="controlling-tooltips.html#fnref43" class="footnote-back">↩︎</a></p></li>
+<li id="fn44"><p>Credit to Winston Chang and Hadley Wickham for this idea. The <code>add_fun()</code> is very much like <code>layer_f()</code> function in <strong>ggvis</strong>.<a href="the-data-plot-pipeline.html#fnref44" class="footnote-back">↩︎</a></p></li>
+<li id="fn45"><p>Also, effectively putting a <a href="http://www.memecreator.org/meme/yo-dawg-i-heard-u-like-pipelines-so-we-put-a-pipeline-in-your-pipeline">pipeline inside a pipeline</a><a href="the-data-plot-pipeline.html#fnref45" class="footnote-back">↩︎</a></p></li>
+<li id="fn46"><p>It can also be helpful for correcting translations that <code>ggplotly()</code> doesn’t get quite right.<a href="improving-ggplotly.html#fnref46" class="footnote-back">↩︎</a></p></li>
+<li id="fn47"><p>Or, in the case of cumulative attributes, like <code>shapes</code>, <code>images</code>, <code>annotations</code>, etc, these items will be added to the existing items<a href="improving-ggplotly.html#fnref47" class="footnote-back">↩︎</a></p></li>
+<li id="fn48"><p>It could be recreated by fitting the model via <code>loess()</code>, obtaining the fitted values and standard error with <code>predict()</code>, and feeding those results into <code>geom_line()</code>/<code>geom_ribbon()</code>/<code>geom_text()</code>/<code>geom_segment()</code>, but that process is much more onerous.<a href="improving-ggplotly.html#fnref48" class="footnote-back">↩︎</a></p></li>
+<li id="fn49"><p>There are many other useful extension packages that are listed on this website – <a href="https://www.ggplot2-exts.org" class="uri">https://www.ggplot2-exts.org</a><a href="custom-geoms.html#fnref49" class="footnote-back">↩︎</a></p></li>
+<li id="fn50"><p>For those new to S3, <a href="http://adv-r.had.co.nz/S3.html" class="uri">http://adv-r.had.co.nz/S3.html</a> provides an approachable introduction and overview <span class="citation">(Wickham <a href="#ref-adv-r" role="doc-biblioref">2014</a><a href="#ref-adv-r" role="doc-biblioref">a</a>)</span>.<a href="custom-geoms.html#fnref50" class="footnote-back">↩︎</a></p></li>
+</ol>
 </div>
 <h3>References</h3>
 <div id="refs" class="references">
 <div id="ref-S3">
 <p>Chambers, J. M. 1992. “Classes and Methods: Object-Oriented Programming in S.” In <em>Statistical Models in S</em>, edited by J. M. Chambers and T. J. Hastie. Wadsworth &amp; Brooks/Cole.</p>
 </div>
+<div id="ref-webshot">
+<p>Chang, Winston. 2016. <em>Webshot: Take Screenshots of Web Pages</em>. <a href="https://CRAN.R-project.org/package=webshot">https://CRAN.R-project.org/package=webshot</a>.</p>
+</div>
 <div id="ref-ggtern">
 <p>Hamilton, Nicholas. 2016. <em>Ggtern: An Extension to ’Ggplot2’, for the Creation of Ternary Diagrams</em>. <a href="https://CRAN.R-project.org/package=ggtern">https://CRAN.R-project.org/package=ggtern</a>.</p>
+</div>
+<div id="ref-heer2008generalized">
+<p>Heer, Jeffrey, Maneesh Agrawala, and Wesley Willett. 2008. “Generalized Selection via Interactive Query Relaxation.” In <em>Proceedings of the Sigchi Conference on Human Factors in Computing Systems</em>, 959–68. ACM.</p>
 </div>
 <div id="ref-ggmosaic">
 <p>Jeppson, Haley, Heike Hofmann, and Di Cook. 2016. <em>Ggmosaic: Mosaic Plots in the ’Ggplot2’ Framework</em>. <a href="http://github.com/haleyjeppson/ggmosaic">http://github.com/haleyjeppson/ggmosaic</a>.</p>
@@ -401,8 +1140,20 @@ code span.wa { color: #60a0b0; font-weight: bold; font-style: italic; } /* Warni
 <div id="ref-ggalt">
 <p>Rudis, Bob. 2016. <em>Ggalt: Extra Coordinate Systems, Geoms and Statistical Transformations for ’Ggplot2’</em>. <a href="https://CRAN.R-project.org/package=ggalt">https://CRAN.R-project.org/package=ggalt</a>.</p>
 </div>
+<div id="ref-sf-blog-post">
+<p>Sievert, Carson. 2018c. “Visualizing Geo-Spatial Data with Sf and Plotly.” Blog. <a href="https://blog.cpsievert.me/2018/03/30/visualizing-geo-spatial-data-with-sf-and-plotly/">https://blog.cpsievert.me/2018/03/30/visualizing-geo-spatial-data-with-sf-and-plotly/</a>.</p>
+</div>
 <div id="ref-geomnet">
 <p>Tyner, Samantha, and Heike Hofmann. 2016. <em>Geomnet: Network Visualization in the ’Ggplot2’ Framework</em>. <a href="https://CRAN.R-project.org/package=geomnet">https://CRAN.R-project.org/package=geomnet</a>.</p>
+</div>
+<div id="ref-adv-r">
+<p>Wickham, Hadley. 2014a. <em>Advanced R</em>. Chapman; Hall/CRC.</p>
+</div>
+<div id="ref-data-science-gui">
+<p>Wickham, Hadley. 2018b. “You Can’t Do Data Science in a Gui.” <a href="https://www.youtube.com/watch?v=cpbtcsGE0OA">https://www.youtube.com/watch?v=cpbtcsGE0OA</a>.</p>
+</div>
+<div id="ref-model-vis-paper">
+<p>Wickham, Hadley, Dianne Cook, and Heike Hofmann. 2015. “Visualizing Statistical Models: Removing the Blindfold.” <em>Statistical Analysis and Data Mining: The ASA Data Science Journal</em> 8 (4): 203–25.</p>
 </div>
 </div>
 <script>
@@ -466,8 +1217,8 @@ window.onload = function() {
           </div>
         </div>
       </div>
-<a href="improving-ggplotly.html" class="navigation navigation-prev " aria-label="Previous page"><i class="fa fa-angle-left"></i></a>
-<a href="references.html" class="navigation navigation-next " aria-label="Next page"><i class="fa fa-angle-right"></i></a>
+<a href="improving-ggplotly.html" class="navigation navigation-prev navigation-unique" aria-label="Previous page"><i class="fa fa-angle-left"></i></a>
+
     </div>
   </div>
 <script src="libs/gitbook/js/app.min.js"></script>

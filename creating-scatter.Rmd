@@ -44,8 +44,8 @@ plot_ly(econ, x = ~mnth, y = ~uempmed) %>%
   add_lines(color = ~ordered(yr))
   
 # The split argument guarantees one trace per group level (regardless 
-# of the variable type). This is useful if you want a consistent visual
-# property over multiple traces 
+# of the variable type). This is useful if you want a consistent
+# visual property over multiple traces 
 # plot_ly(econ, x = ~mnth, y = ~uempmed) %>%
 #   add_lines(split = ~yr, color = I("black"))
 ```
@@ -82,8 +82,8 @@ plot_ly() %>%
 knitr::include_graphics("images/tooltip-praise.png")
 ```
 
-\index{Plotly figure!Reference}
-\index{schema()@\texttt{schema()}|seealso {Reference}}
+\index{Plotly figure!Reference|seealso {schema()}}
+\indexc{schema()}
 
 If you are new to plotly.js, I recommend taking a bit of time to look through the plotly.js attributes that are available to the scatter trace type and think how you might be able to use them. Most of these attributes work for other trace types as well, so learning an attribute once for a specific plot can pay off in other contexts as well. The online plotly.js figure reference, <https://plot.ly/r/reference/#scatter>, is a decent place to search and learn about the attributes, but I recommend using the `schema()` function instead for a few reasons:
 
@@ -336,7 +336,7 @@ Many of the same principles we learned about aesthetic mappings with respect to 
 
 \index{plot\_ly()@\texttt{plot\_ly()}!Special attributes!linetype@\texttt{linetype} / \texttt{linetypes}}
 
-Generally speaking, it's hard to perceive more than 8 different colors/linetypes/symbols in a given plot, so sometimes we have to filter data to use these effectively. Here we use the **dplyr** package to find the top 5 cities in terms of average monthly sales (`top5`), then effectively filter the original data to contain just these cities via `semi_join()`. As Figure \@ref(fig:linetypes) demonstrates, once we have the data filtered, mapping city to `color` or `linetype` is trivial. The color palette can be altered via the `colors` argument, and follows the same rules as [scatterplots](#scatterplots). The linetype palette can be altered via the `linetypes` argument, and accepts R's [`lty` values](https://github.com/wch/r-source/blob/e5b21d0397c607883ff25cca379687b86933d730/src/library/graphics/man/par.Rd#L726-L743) or plotly.js [dash values](https://plot.ly/r/reference/#scatter-line-dash).
+Generally speaking, it's hard to perceive more than 8 different colors/linetypes/symbols in a given plot, so sometimes we have to filter data to use these effectively. Here we use the **dplyr** package to find the top 5 cities in terms of average monthly sales (`top5`), then effectively filter the original data to contain just these cities via `semi_join()`. As Figure \@ref(fig:linetypes) demonstrates, once we have the data filtered, mapping city to `color` or `linetype` is trivial. The color palette can be altered via the `colors` argument, and follows the same rules as [scatterplots](#scatterplots). The linetype palette can be altered via the `linetypes` argument, and accepts R's [`lty` values](https://github.com/wch/r-source/blob/e5b21d/src/library/graphics/man/par.Rd#L726-L743) or plotly.js [dash values](https://plot.ly/r/reference/#scatter-line-dash).
 
 ```r
 library(dplyr)
@@ -390,7 +390,7 @@ Segments can also provide a useful alternative to `add_bars()` (covered in Chapt
 \index{Chart types!Slopegraph}
 \index{Editable charts!Annotations}
 \index{add\_annotations()@\texttt{add\_annotations()}!Data coordinates}
-\index{layout()@\texttt{layout()}!2D Axes}!range@\texttt{range}
+\index{layout()@\texttt{layout()}!2D Axes}!range@\texttt{range}}
 
 \index{layout()@\texttt{layout()}!2D Axes!tickvals@\texttt{tickvals}}
 \index{layout()@\texttt{layout()}!2D
@@ -399,6 +399,7 @@ Axes!ticktext@\texttt{ticktext}}
 \index{layout()@\texttt{layout()}!2D Axes!showgrid@\texttt{showgrid}}
 \index{layout()@\texttt{layout()}!2D Axes!showticks@\texttt{showticks}}
 \index{layout()@\texttt{layout()}!2D Axes!showticklabels@\texttt{showticklabels}}
+
 The slope graph, made popular by @tufte2001, is a great way to compare the change in a measurement across numerous groups. This change could be along either a discrete or a continuous axis. For a continuous axis, the slopegraph could be thought of as a decomposition of a line graph into multiple segments. The **slopegraph** R package provides a succinct interface for creating slopegraphs with base or **ggplot2** graphics and also some convenient data sets which we'll make use of here [@slopegraph]. Figure \@ref(fig:slopegraph) recreates an example from @tufte2001, using the `gdp` data set from **slopegraph**, and demonstrates a common issue with labelling in slopegraphs -- it's easy to have overlapping labels when anchoring labels on data values. For that reason, this implementation leverages **plotly** ability to interactively edit annotation positions. See Chapter \@ref(editing-views) for similar examples of 'editing views'.
 
 ```{r, eval = FALSE, summary = "Click to show code"}
@@ -483,7 +484,7 @@ knitr::include_graphics("images/dumbell.svg")
 
 \index{Chart types!Candlestick}
 
-Figure \@ref(fig:candlestick) uses the **quantmod** package [@quantmod] to obtain stock price data for Microsoft and plots two segments for each day: one to encode the opening/closing values, and one to encode the daily high/low.
+Figure \@ref(fig:candlestick) uses the **quantmod** package [@quantmod] to obtain stock price data for Microsoft and plots two segments for each day: one to encode the opening/closing values, and one to encode the daily high/low. This implementation uses `add_segments()` to implement the candlestick chart, but more recent versions of plotly.js contain a [candlestick](https://plot.ly/r/reference/#candlestick) and [ohlc](https://plot.ly/r/reference/#ohlc) trace types, both of which are useful for visualizing financial data.
 
 ```r
 library(quantmod)

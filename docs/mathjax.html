@@ -24,7 +24,7 @@
 <meta name="author" content="Carson Sievert" />
 
 
-<meta name="date" content="2019-10-02" />
+<meta name="date" content="2019-10-04" />
 
   <meta name="viewport" content="width=device-width, initial-scale=1" />
   <meta name="apple-mobile-web-app-capable" content="yes" />
@@ -326,7 +326,6 @@ code span.wa { color: #60a0b0; font-weight: bold; font-style: italic; } /* Warni
 <li class="chapter" data-level="33.3" data-path="improving-ggplotly.html"><a href="improving-ggplotly.html#leveraging-statistical-output"><i class="fa fa-check"></i><b>33.3</b> Leveraging statistical output</a></li>
 </ul></li>
 <li class="chapter" data-level="34" data-path="custom-geoms.html"><a href="custom-geoms.html"><i class="fa fa-check"></i><b>34</b> Translating custom ggplot2 geoms</a></li>
-<li class="chapter" data-level="" data-path="references.html"><a href="references.html"><i class="fa fa-check"></i>References</a></li>
 </ul>
 
       </nav>
@@ -346,20 +345,23 @@ code span.wa { color: #60a0b0; font-weight: bold; font-style: italic; } /* Warni
             <section class="normal" id="section-">
 <div id="mathjax" class="section level1">
 <h1><span class="header-section-number">31</span> LaTeX rendering</h1>
+<p>
+
+</p>
 <p>LaTeX rendering via MathJax is possible via the <code>TeX()</code> function which flags a character vector as LaTeX. To load MathJaX externally (meaning an internet connection is needed for TeX rendering), set the new <code>mathjax</code> argument in <code>config()</code> to <code>"cdn"</code>. Figure <a href="mathjax.html#fig:mathjax">31.1</a> demonstrates how to render LaTeX in the plot and axis titles.</p>
-<div class="sourceCode" id="cb241"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb241-1"><a href="mathjax.html#cb241-1"></a><span class="kw">library</span>(plotly)</span>
-<span id="cb241-2"><a href="mathjax.html#cb241-2"></a><span class="kw">data</span>(co2, <span class="dt">package =</span> <span class="st">&quot;datasets&quot;</span>)</span>
-<span id="cb241-3"><a href="mathjax.html#cb241-3"></a></span>
-<span id="cb241-4"><a href="mathjax.html#cb241-4"></a><span class="kw">plot_ly</span>() <span class="op">%&gt;%</span></span>
-<span id="cb241-5"><a href="mathjax.html#cb241-5"></a><span class="st">  </span><span class="kw">add_lines</span>(<span class="dt">x =</span> zoo<span class="op">::</span><span class="kw">index</span>(co2), <span class="dt">y =</span> co2) <span class="op">%&gt;%</span></span>
-<span id="cb241-6"><a href="mathjax.html#cb241-6"></a><span class="st">  </span><span class="kw">layout</span>(</span>
-<span id="cb241-7"><a href="mathjax.html#cb241-7"></a>    <span class="dt">title =</span> <span class="kw">TeX</span>(<span class="st">&quot;CO_2 </span><span class="ch">\\</span><span class="st">text{measured in } </span><span class="ch">\\</span><span class="st">frac{parts}{million}&quot;</span>),</span>
-<span id="cb241-8"><a href="mathjax.html#cb241-8"></a>    <span class="dt">xaxis =</span> <span class="kw">list</span>(<span class="dt">title =</span> <span class="st">&quot;Time&quot;</span>),</span>
-<span id="cb241-9"><a href="mathjax.html#cb241-9"></a>    <span class="dt">yaxis =</span> <span class="kw">list</span>(</span>
-<span id="cb241-10"><a href="mathjax.html#cb241-10"></a>      <span class="dt">title =</span> <span class="kw">TeX</span>(<span class="st">&quot;</span><span class="ch">\\</span><span class="st">text{Atmospheric concentraion of CO}_2&quot;</span>)</span>
-<span id="cb241-11"><a href="mathjax.html#cb241-11"></a>    )</span>
-<span id="cb241-12"><a href="mathjax.html#cb241-12"></a>  ) <span class="op">%&gt;%</span></span>
-<span id="cb241-13"><a href="mathjax.html#cb241-13"></a><span class="st">  </span><span class="kw">config</span>(<span class="dt">mathjax =</span> <span class="st">&quot;cdn&quot;</span>)</span></code></pre></div>
+<div class="sourceCode" id="cb240"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb240-1"><a href="mathjax.html#cb240-1"></a><span class="kw">library</span>(plotly)</span>
+<span id="cb240-2"><a href="mathjax.html#cb240-2"></a><span class="kw">data</span>(co2, <span class="dt">package =</span> <span class="st">&quot;datasets&quot;</span>)</span>
+<span id="cb240-3"><a href="mathjax.html#cb240-3"></a></span>
+<span id="cb240-4"><a href="mathjax.html#cb240-4"></a><span class="kw">plot_ly</span>() <span class="op">%&gt;%</span></span>
+<span id="cb240-5"><a href="mathjax.html#cb240-5"></a><span class="st">  </span><span class="kw">add_lines</span>(<span class="dt">x =</span> zoo<span class="op">::</span><span class="kw">index</span>(co2), <span class="dt">y =</span> co2) <span class="op">%&gt;%</span></span>
+<span id="cb240-6"><a href="mathjax.html#cb240-6"></a><span class="st">  </span><span class="kw">layout</span>(</span>
+<span id="cb240-7"><a href="mathjax.html#cb240-7"></a>    <span class="dt">title =</span> <span class="kw">TeX</span>(<span class="st">&quot;CO_2 </span><span class="ch">\\</span><span class="st">text{measured in } </span><span class="ch">\\</span><span class="st">frac{parts}{million}&quot;</span>),</span>
+<span id="cb240-8"><a href="mathjax.html#cb240-8"></a>    <span class="dt">xaxis =</span> <span class="kw">list</span>(<span class="dt">title =</span> <span class="st">&quot;Time&quot;</span>),</span>
+<span id="cb240-9"><a href="mathjax.html#cb240-9"></a>    <span class="dt">yaxis =</span> <span class="kw">list</span>(</span>
+<span id="cb240-10"><a href="mathjax.html#cb240-10"></a>      <span class="dt">title =</span> <span class="kw">TeX</span>(<span class="st">&quot;</span><span class="ch">\\</span><span class="st">text{Atmospheric concentraion of CO}_2&quot;</span>)</span>
+<span id="cb240-11"><a href="mathjax.html#cb240-11"></a>    )</span>
+<span id="cb240-12"><a href="mathjax.html#cb240-12"></a>  ) <span class="op">%&gt;%</span></span>
+<span id="cb240-13"><a href="mathjax.html#cb240-13"></a><span class="st">  </span><span class="kw">config</span>(<span class="dt">mathjax =</span> <span class="st">&quot;cdn&quot;</span>)</span></code></pre></div>
 <div class="figure" style="text-align: center"><span id="fig:mathjax"></span>
 <img src="images/mathjax.psv" alt="Rendering LaTeX in the plot and axis titles." width="100%" data-url="/interactives/mathjax.html" />
 <p class="caption">
@@ -367,23 +369,25 @@ FIGURE 31.1: Rendering LaTeX in the plot and axis titles.
 </p>
 </div>
 <p>Figure <a href="mathjax.html#fig:mathjax2">31.2</a> demonstrates how to render LaTeX with on-graph text. There are two ways to draw on-graph text: <code>add_text()</code> which is a scatter trace with a mode of text and <code>add_annotations()</code> which is part of the graph’s layout. The main difference is that <code>add_text()</code> is able to display tooltips and <code>add_annotations()</code> is able to display arrows.</p>
-<div class="sourceCode" id="cb242"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb242-1"><a href="mathjax.html#cb242-1"></a><span class="kw">plotly_empty</span>(<span class="dt">showlegend =</span> <span class="ot">FALSE</span>, <span class="dt">hoverinfo =</span> <span class="st">&quot;x+y&quot;</span>) <span class="op">%&gt;%</span></span>
-<span id="cb242-2"><a href="mathjax.html#cb242-2"></a><span class="st">  </span><span class="kw">add_annotations</span>(</span>
-<span id="cb242-3"><a href="mathjax.html#cb242-3"></a>    <span class="dt">x =</span> <span class="dv">1</span>, <span class="dt">y =</span> <span class="dv">2</span>, </span>
-<span id="cb242-4"><a href="mathjax.html#cb242-4"></a>    <span class="dt">showarrow =</span> <span class="ot">FALSE</span>,</span>
-<span id="cb242-5"><a href="mathjax.html#cb242-5"></a>    <span class="dt">text =</span> <span class="kw">TeX</span>(</span>
-<span id="cb242-6"><a href="mathjax.html#cb242-6"></a>      <span class="st">&quot;</span><span class="ch">\\</span><span class="st">text{The sample mean:} </span><span class="ch">\\</span><span class="st">sum_{i=1}^n x_i </span><span class="ch">\\</span><span class="st">text{ where}&quot;</span></span>
-<span id="cb242-7"><a href="mathjax.html#cb242-7"></a>    )</span>
-<span id="cb242-8"><a href="mathjax.html#cb242-8"></a>  ) <span class="op">%&gt;%</span></span>
-<span id="cb242-9"><a href="mathjax.html#cb242-9"></a><span class="st">  </span><span class="kw">add_text</span>(</span>
-<span id="cb242-10"><a href="mathjax.html#cb242-10"></a>    <span class="dt">x =</span> <span class="dv">1</span>, <span class="dt">y =</span> <span class="dv">1</span>, <span class="dt">size =</span> <span class="kw">I</span>(<span class="dv">100</span>),</span>
-<span id="cb242-11"><a href="mathjax.html#cb242-11"></a>    <span class="dt">text =</span> <span class="kw">TeX</span>(<span class="st">&quot;x_i </span><span class="ch">\\</span><span class="st">sim N(</span><span class="ch">\\</span><span class="st">mu, </span><span class="ch">\\</span><span class="st">sigma)&quot;</span>)</span>
-<span id="cb242-12"><a href="mathjax.html#cb242-12"></a>  ) <span class="op">%&gt;%</span></span>
-<span id="cb242-13"><a href="mathjax.html#cb242-13"></a><span class="st">  </span><span class="kw">add_annotations</span>(<span class="dt">x =</span> <span class="dv">1</span>, <span class="dt">y =</span> <span class="dv">0</span>, <span class="dt">text =</span> <span class="kw">TeX</span>(<span class="st">&quot;E[x_i]&quot;</span>)) <span class="op">%&gt;%</span></span>
-<span id="cb242-14"><a href="mathjax.html#cb242-14"></a><span class="st">  </span><span class="kw">add_text</span>(</span>
-<span id="cb242-15"><a href="mathjax.html#cb242-15"></a>    <span class="dt">x =</span> <span class="dv">1</span>, <span class="dt">y =</span> <span class="dv">0</span>, <span class="dt">text =</span> <span class="kw">TeX</span>(<span class="st">&quot;</span><span class="ch">\\</span><span class="st">mu&quot;</span>), <span class="dt">textposition =</span> <span class="st">&quot;bottom&quot;</span></span>
-<span id="cb242-16"><a href="mathjax.html#cb242-16"></a>  ) <span class="op">%&gt;%</span></span>
-<span id="cb242-17"><a href="mathjax.html#cb242-17"></a><span class="st">  </span><span class="kw">config</span>(<span class="dt">mathjax =</span> <span class="st">&quot;cdn&quot;</span>)</span></code></pre></div>
+<p>
+</p>
+<div class="sourceCode" id="cb241"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb241-1"><a href="mathjax.html#cb241-1"></a><span class="kw">plotly_empty</span>(<span class="dt">showlegend =</span> <span class="ot">FALSE</span>, <span class="dt">hoverinfo =</span> <span class="st">&quot;x+y&quot;</span>) <span class="op">%&gt;%</span></span>
+<span id="cb241-2"><a href="mathjax.html#cb241-2"></a><span class="st">  </span><span class="kw">add_annotations</span>(</span>
+<span id="cb241-3"><a href="mathjax.html#cb241-3"></a>    <span class="dt">x =</span> <span class="dv">1</span>, <span class="dt">y =</span> <span class="dv">2</span>, </span>
+<span id="cb241-4"><a href="mathjax.html#cb241-4"></a>    <span class="dt">showarrow =</span> <span class="ot">FALSE</span>,</span>
+<span id="cb241-5"><a href="mathjax.html#cb241-5"></a>    <span class="dt">text =</span> <span class="kw">TeX</span>(</span>
+<span id="cb241-6"><a href="mathjax.html#cb241-6"></a>      <span class="st">&quot;</span><span class="ch">\\</span><span class="st">text{The sample mean:} </span><span class="ch">\\</span><span class="st">sum_{i=1}^n x_i </span><span class="ch">\\</span><span class="st">text{ where}&quot;</span></span>
+<span id="cb241-7"><a href="mathjax.html#cb241-7"></a>    )</span>
+<span id="cb241-8"><a href="mathjax.html#cb241-8"></a>  ) <span class="op">%&gt;%</span></span>
+<span id="cb241-9"><a href="mathjax.html#cb241-9"></a><span class="st">  </span><span class="kw">add_text</span>(</span>
+<span id="cb241-10"><a href="mathjax.html#cb241-10"></a>    <span class="dt">x =</span> <span class="dv">1</span>, <span class="dt">y =</span> <span class="dv">1</span>, <span class="dt">size =</span> <span class="kw">I</span>(<span class="dv">100</span>),</span>
+<span id="cb241-11"><a href="mathjax.html#cb241-11"></a>    <span class="dt">text =</span> <span class="kw">TeX</span>(<span class="st">&quot;x_i </span><span class="ch">\\</span><span class="st">sim N(</span><span class="ch">\\</span><span class="st">mu, </span><span class="ch">\\</span><span class="st">sigma)&quot;</span>)</span>
+<span id="cb241-12"><a href="mathjax.html#cb241-12"></a>  ) <span class="op">%&gt;%</span></span>
+<span id="cb241-13"><a href="mathjax.html#cb241-13"></a><span class="st">  </span><span class="kw">add_annotations</span>(<span class="dt">x =</span> <span class="dv">1</span>, <span class="dt">y =</span> <span class="dv">0</span>, <span class="dt">text =</span> <span class="kw">TeX</span>(<span class="st">&quot;E[x_i]&quot;</span>)) <span class="op">%&gt;%</span></span>
+<span id="cb241-14"><a href="mathjax.html#cb241-14"></a><span class="st">  </span><span class="kw">add_text</span>(</span>
+<span id="cb241-15"><a href="mathjax.html#cb241-15"></a>    <span class="dt">x =</span> <span class="dv">1</span>, <span class="dt">y =</span> <span class="dv">0</span>, <span class="dt">text =</span> <span class="kw">TeX</span>(<span class="st">&quot;</span><span class="ch">\\</span><span class="st">mu&quot;</span>), <span class="dt">textposition =</span> <span class="st">&quot;bottom&quot;</span></span>
+<span id="cb241-16"><a href="mathjax.html#cb241-16"></a>  ) <span class="op">%&gt;%</span></span>
+<span id="cb241-17"><a href="mathjax.html#cb241-17"></a><span class="st">  </span><span class="kw">config</span>(<span class="dt">mathjax =</span> <span class="st">&quot;cdn&quot;</span>)</span></code></pre></div>
 <div class="figure" style="text-align: center"><span id="fig:mathjax2"></span>
 <img src="images/mathjax2.png" alt="Rendering LaTeX using add_text() and add_annotations()." width="100%" data-url="/interactives/mathjax2.html" />
 <p class="caption">
@@ -398,7 +402,7 @@ $ cd MathJax</code></pre>
 $ echo &quot;Sys.setenv(&#39;PLOTLY_MATHJAX_PATH&#39; = &#39;$PLOTLY_MATHJAX_PATH&#39;)&quot; &gt;&gt; 
 +   ~/.Rprofile</code></pre>
 <p>Finally, once <code>PLOTLY_MATHJAX_PATH</code> is set, specify <code>mathjax="local"</code> in <code>config()</code>:</p>
-<div class="sourceCode" id="cb245"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb245-1"><a href="mathjax.html#cb245-1"></a><span class="kw">config</span>(<span class="kw">last_plot</span>(), <span class="dt">mathjax =</span> <span class="st">&quot;local&quot;</span>)</span></code></pre></div>
+<div class="sourceCode" id="cb244"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb244-1"><a href="mathjax.html#cb244-1"></a><span class="kw">config</span>(<span class="kw">last_plot</span>(), <span class="dt">mathjax =</span> <span class="st">&quot;local&quot;</span>)</span></code></pre></div>
 <div id="mathjax-caveats" class="section level2">
 <h2><span class="header-section-number">31.1</span> MathJax caveats</h2>
 <ol style="list-style-type: decimal">
