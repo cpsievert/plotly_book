@@ -4,6 +4,7 @@ gitbook:
 	mkdir -p docs/interactives && cp -r interactives/* docs/interactives
 	Rscript --quiet _render.R "bookdown::gitbook"
 	cp _redirects docs/
+	cp front_cover/crc-cover.png docs/
 
 pdf:
 	mkdir -p docs/images && cp images/* docs/images
