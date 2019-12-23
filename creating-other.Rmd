@@ -8,7 +8,7 @@
 \index{colorbar()@\texttt{colorbar()}!title@\texttt{title}}
 
 
-The **plotly** package provides two functions for displaying rectangular bins: `add_heatmap()` and `add_histogram2d()`. For numeric data, the `add_heatmap()` function is a 2D analog of `add_bars()` (bins must be pre-computed), and the `add_histogram2d()` function is a 2D analog of `add_histogram()` (bins can be computed in the browser). Thus, I recommend `add_histogram2d()` for exploratory purposes, since you don't have to think about how to perform binning. It also provides a useful [`zsmooth`](https://plot.ly/r/reference/#histogram2d-zsmooth) attribute for effectively increasing the number of bins (currently, "best" performs a [bi-linear interpolation](https://en.wikipedia.org/wiki/Bilinear_interpolation), a type of nearest neighbors algorithm), and [`nbinsx`](https://plot.ly/r/reference/#histogram2d-nbinsx)/[`nbinsy`](https://plot.ly/r/reference/#histogram2d-nbinsy) attributes to set the number of bins in the x and/or y directions. Figure \@ref(fig:histogram2d) compares three different uses of `add_histogram()`: (1) plotly.js' default binning algorithm, (2) the default plus smoothing, (3) setting the number of bins in the x and y directions. Its also worth noting that filled contours, instead of bins, can be used in any of these cases by using `add_histogram2dcontour()` instead of `add_histogram2d()`.
+The **plotly** package provides two functions for displaying rectangular bins: `add_heatmap()` and `add_histogram2d()`. For numeric data, the `add_heatmap()` function is a 2D analog of `add_bars()` (bins must be pre-computed), and the `add_histogram2d()` function is a 2D analog of `add_histogram()` (bins can be computed in the browser). Thus, I recommend `add_histogram2d()` for exploratory purposes, since you don't have to think about how to perform binning. It also provides a useful [`zsmooth`](https://plot.ly/r/reference/#histogram2d-zsmooth) attribute for effectively increasing the number of bins (currently, "best" performs a [bi-linear interpolation](https://en.wikipedia.org/wiki/Bilinear_interpolation), a type of nearest neighbors algorithm), and [`nbinsx`](https://plot.ly/r/reference/#histogram2d-nbinsx)/[`nbinsy`](https://plot.ly/r/reference/#histogram2d-nbinsy) attributes to set the number of bins in the x and/or y directions. Figure \@ref(fig:histogram2d) compares three different uses of `add_histogram()`: (1) plotly.js's default binning algorithm, (2) the default plus smoothing, (3) setting the number of bins in the x and y directions. It is also worth noting that filled contours, instead of bins, can be used in any of these cases by using `add_histogram2dcontour()` instead of `add_histogram2d()`.
 
 ```r
 p <- plot_ly(diamonds, x = ~log(carat), y = ~log(price))
@@ -32,7 +32,7 @@ knitr::include_graphics("images/histogram2d.svg")
 
 ## Rectangular binning in R {#rectangular-binning-in-r}
 
-In [Bars & histograms](#bars-histograms), we leveraged a number of algorithms in R for computing the "optimal" number of bins for a histogram, via `hist()`, and routing those results to `add_bars()`. There is a surprising lack of research and computational tools for the 2D analog, and among the research that does exist, solutions usually depend on characteristics of the unknown underlying distribution, so the typical approach is to assume a Gaussian form [@mde]. Practically speaking, that assumption is not very useful, but 2D kernel density estimation provides a useful alternative that tends to be more robust to changes in distributional form. Although kernel density estimation requires choice of kernel and a bandwidth parameter, the `kde2d()` function from the **MASS** package provides a well-supported rule-of-thumb for estimating the bandwidth of a Gaussian kernel density [@MASS]. Figure \@ref(fig:heatmap-corr-diamonds) uses `kde2d()` to estimate a 2D density, scales the relative frequency to an absolute frequency, then uses the `add_heatmap()` function to display the results as a heatmap.
+In Chapter \@ref(bars-histograms), we leveraged a number of algorithms in R for computing the "optimal" number of bins for a histogram, via `hist()`, and routing those results to `add_bars()`. There is a surprising lack of research and computational tools for the 2D analog, and among the research that does exist, solutions usually depend on characteristics of the unknown underlying distribution, so the typical approach is to assume a Gaussian form [@mde]. Practically speaking, that assumption is not very useful, but 2D kernel density estimation provides a useful alternative that tends to be more robust to changes in distributional form. Although kernel density estimation requires choice of kernel and a bandwidth parameter, the `kde2d()` function from the **MASS** package provides a well-supported rule-of-thumb for estimating the bandwidth of a Gaussian kernel density [@MASS]. Figure \@ref(fig:heatmap-corr-diamonds) uses `kde2d()` to estimate a 2D density, scales the relative frequency to an absolute frequency, then uses the `add_heatmap()` function to display the results as a heatmap.
 
 \index{Kernel density estimation!MASS::kde2d()@\texttt{MASS::kde2d()}}
 
@@ -58,7 +58,7 @@ knitr::include_graphics("images/heatmap-corr-diamonds.svg")
 
 ## Categorical axes
 
-The functions `add_histogram2d()`, `add_histogram2dcontour()`, and `add_heatmap()` all support categorical axes. Thus, `add_histogram2d()` _can_ be used to easily display 2-way contingency tables, but since its easier to compare values along a common scale rather than compare colors [@graphical-perception], I recommend creating [grouped bar charts](#multiple-discrete-distributions) instead. The `add_heatmap()` function can still be useful for categorical axes, however, as it allows us to display whatever quantity we want along the z axis (color).
+The functions `add_histogram2d()`, `add_histogram2dcontour()`, and `add_heatmap()` all support categorical axes. Thus, `add_histogram2d()` _can_ be used to easily display 2-way contingency tables, but since it is easier to compare values along a common scale rather than compare colors [@graphical-perception], I recommend creating [grouped bar charts](#multiple-discrete-distributions) instead. The `add_heatmap()` function can still be useful for categorical axes, however, as it allows us to display whatever quantity we want along the z axis (color).
 
 \index{colorbar()@\texttt{colorbar()}!limits@\texttt{limits}}
 
@@ -79,7 +79,7 @@ knitr::include_graphics("images/correlation.svg")
 
 ## Markers
 
-As it turns out, by simply adding a `z` attribute `plot_ly()` will know how to render markers, lines, and paths in three dimensions. That means, all the techniques we learned in Sections \@ref(markers) and \@ref(lines) can re-used for 3D charts:
+As it turns out, by simply adding a `z` attribute `plot_ly()` automatically renders markers, lines, and paths in three dimensions. That means, all the techniques we learned in Sections \@ref(markers) and \@ref(lines) can be re-used for 3D charts:
 
 ```r
 plot_ly(mpg, x = ~cty, y = ~hwy, z = ~cyl) %>%

@@ -44,7 +44,7 @@ base %>%
 knitr::include_graphics("images/animation-opts.png")
 ```
 
-If `frame` is a numeric variable (or a character string), frames are always ordered in increasing (alphabetical) order; but for factors, the ordering reflects the ordering of the levels. Consequently, factors provide the most control over the ordering of frames. In Figure \@ref(fig:animation-factors), the continents (i.e., frames) are ordered according their average life expectancy across countries within the continent. Furthermore, since there is no meaningful relationship between objects in different frames of Figure \@ref(fig:animation-factors), the smooth transition duration is set to 0. This helps avoid any confusion that there is a meaningful connection between the smooth transitions. Note that these options control both animations triggered by the play button or via the slider. 
+If `frame` is a numeric variable (or a character string), frames are always ordered in increasing (alphabetical) order; but for factors, the ordering reflects the ordering of the levels. Consequently, factors provide the most control over the ordering of frames. In Figure \@ref(fig:animation-factors), the continents (i.e., frames) are ordered according to their average life expectancy across countries within the continent. Furthermore, since there is no meaningful relationship between objects in different frames of Figure \@ref(fig:animation-factors), the smooth transition duration is set to 0. This helps avoid any confusion that there is a meaningful connection between the smooth transitions. Note that these options control both animations triggered by the play button or via the slider. 
 
 ```r
 meanLife <- with(gapminder, tapply(lifeExp, INDEX = continent, mean))
@@ -62,7 +62,7 @@ base %>%
 knitr::include_graphics("images/animation-factors.png")
 ```
 
-Both the `frame` and `ids` attributes operate on the trace level -- meaning that we can target specific layers of the graph to be animated. One obvious use case for this is to provide a background which displays every possible frame (which is not animated) and overlay the animated frames onto that background. Figure \@ref(fig:animation-targets) shows the same information as Figure \@ref(fig:animation-opts), but layers animated frames on top of a background of all the frames. As a result, it is easier to put a specific year into a global context.
+Both the `frame` and `ids` attributes operate on the trace level, meaning that we can target specific layers of the graph to be animated. One obvious use case for this is to provide a background which displays every possible frame (which is not animated) and overlay the animated frames onto that background. Figure \@ref(fig:animation-targets) shows the same information as Figure \@ref(fig:animation-opts), but layers animated frames on top of a background of all the frames. As a result, it is easier to put a specific year into a global context.
 
 ```r
 base %>%
@@ -80,7 +80,7 @@ knitr::include_graphics("images/animation-targets.png")
 
 ## Animation support {#animation-support}
 
-At the time of writing, the scatter plotly.js trace type is really the only trace type with full support for animation. That means, we need to get a little imaginative to animate certain things, like a population pyramid chart (essentially a bar chart) using `add_segments()` (a scatter-based layer) instead of `add_bars()` (a non-scatter layer). Figure \@ref(fig:profile-pyramid) shows projections for male & female population by age from 2018 to 2050 using data obtained via the **idbr** package [@idbr]. 
+At the time of writing, the scatter plotly.js trace type is really the only trace type with full support for animation. That means, we need to get a little imaginative to animate certain things, like a population pyramid chart (essentially a bar chart) using `add_segments()` (a scatter-based layer) instead of `add_bars()` (a non-scatter layer). Figure \@ref(fig:profile-pyramid) shows projections for male and female population by age from 2018 to 2050 using data obtained via the **idbr** package [@idbr]. 
 
 \index{Chart types!Population pyramid}
 \index{add\_trace()@\texttt{add\_trace()}!add\_segments()@\texttt{add\_segments()}}
@@ -125,7 +125,7 @@ include_vimeo("317101075")
 
 \index{add\_trace()@\texttt{add\_trace()}!Line simplification}
 
-Although population pyramids are quite popular, they aren't necessarily the best way to visualize this information, especially if the goal is to compare the population profiles over time. It's much easier to compare them along a common scale, as done in Figure \@ref(fig:profile-lines). Note that, when animating lines in this fashion, it can help to set [`line.simplify`](https://plot.ly/r/reference/#scatter-line-simplify) to `FALSE` so that the number of points along the path are left unaffected.
+Although population pyramids are quite popular, they aren't necessarily the best way to visualize this information, especially if the goal is to compare the population profiles over time. It's much easier to compare them along a common scale, as done in Figure \@ref(fig:profile-lines). Note that, when animating lines in this fashion, it can help to set [`line.simplify`](https://plot.ly/r/reference/#scatter-line-simplify) to `FALSE` so that the number of points along the path is left unaffected.
 
 ```r
 plot_ly(us, alpha  = 0.5) %>%

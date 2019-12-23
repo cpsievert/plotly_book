@@ -2,19 +2,20 @@
 
 # Introduction {#publish}
 
-This portion of the book, Publishing views, covers how to save **plotly** graphs as HTML, embed them within larger HTML documents, interactively edit (i.e., post-process) them, and export to static file formats -- all of which can be useful tools for creating 'publication-quality' graphics. Static images can be created either from the command line (via the `orca()` function) or from the interactive graphic itself. The former is great if you need to export many images at once and the latter is convenient if you need to export a manually edited version of the default view (e.g., Figure \@ref(fig:edit-county-labels)). All the R code in this chapter runs entirely locally using 100% free and open source software with no calls to external services.
+This portion of the book, Publishing Views, covers how to save **plotly** graphs as HTML, embed them within larger HTML documents, interactively edit (i.e., post-process) them, and export to static file formats --- all of which can be useful tools for creating 'publication-quality' graphics. Static images can be created either from the command line (via the `orca()` function) or from the interactive graphic itself. The former is great if you need to export many images at once, and the latter is convenient if you need to export a manually edited version of the default view (e.g., Figure \@ref(fig:edit-county-labels)). All the R code in this chapter runs entirely locally using 100% free and open source software with no calls to external services.
 
 ```{r publish-banner, echo = FALSE}
 knitr::include_graphics("images/publish.svg")
 ```
 
 # Saving and embedding HTML {#saving}
+\sectionmark{Introduction}
 
 \indexc{htmlwidgets::saveWidget()}
 \indexc{htmltools::save\_html()}
 \indexc{partial\_bundle()}
 
-Any widget made from any **htmlwidgets** package (e.g., **plotly**, **leaflet**, **DT**, etc) can be saved as a standalone HTML file via the `htmlwidgets::saveWidget()` function. By default, it produces a completely self-contained HTML file, meaning that all the necessary JavaScript and CSS dependency files are bundled inside the HTML file. This makes it very easy to share a widget as a single HTML file. In this case, consider using the `partial_bundle()` function to reduce the size of the bundled files. By default, it automatically determines a reduced version of plotly.js that is sufficient for rendering your graphic. This can lead to a substantial reduction in the overall file size, especially if you're using basic chart types:
+Any widget made from any **htmlwidgets** package (e.g., **plotly**, **leaflet**, **DT**, etc.) can be saved as a standalone HTML file via the `htmlwidgets::saveWidget()` function. By default, it produces a completely self-contained HTML file, meaning that all the necessary JavaScript and CSS dependency files are bundled inside the HTML file. This makes it very easy to share a widget as a single HTML file. In this case, consider using the `partial_bundle()` function to reduce the size of the bundled files. By default, it automatically determines a reduced version of plotly.js that is sufficient for rendering your graphic. This can lead to a substantial reduction in the overall file size, especially if you're using basic chart types:
 
 ```{r, message = TRUE}
 p <- plot_ly(x = 1:10, y = 1:10) %>% add_markers()
@@ -68,7 +69,7 @@ browseVignettes("widgetframe")
 
 \indexc{orca()}
 
-Any **plotly** object can be saved as a static image via the `orca()` function. To use it, you'll need the `orca` command-line utility (CLI). This CLI can be installed via node.js, conda, or a standalone binary from <https://github.com/plotly/orca/releases>. Figure \@ref(fig:orca) demonstrates how `orca()` can generate a svg (or pdf) that can then be imported into Adobe Illustrator for post-processing. Although it's a nice option to have, importing into Adobe Illustrator might not enable as nice of a workflow as using **plotly**'s native support for editable layout components in the browser, then exporting to svg/pdf (as shown in Figure \@ref(fig:edit-county-labels)). 
+Any **plotly** object can be saved as a static image via the `orca()` function. To use it, you'll need the `orca` command-line utility (CLI). This CLI can be installed via node.js, conda, or a standalone binary from <https://github.com/plotly/orca/releases>. Figure \@ref(fig:orca) demonstrates how `orca()` can generate a SVG (or PDF) that can then be imported into Adobe Illustrator for post-processing. Although it's a nice option to have, importing into Adobe Illustrator might not enable as nice of a workflow as using **plotly**'s native support for editable layout components in the browser, then exporting to SVG/PDF (as shown in Figure \@ref(fig:edit-county-labels)). 
 
 ```{r orca, echo = FALSE, fig.cap="(ref:orca)"}
 include_vimeo(307598492)
@@ -78,7 +79,7 @@ include_vimeo(307598492)
 
 \index{config()@\texttt{config()}!toImageButtonOptions@\texttt{toImageButtonOptions}}
 
-Exporting an image from a browser is a nice option if you need to perform edits before exporting or if you'd like others to share your work. By default, the 'download plot' icon in the modebar will download to png and use the `height` and `width` of the plot, but these defaults can be altered via the plot's configuration:
+Exporting an image from a browser is a nice option if you need to perform edits before exporting or if you'd like others to share your work. By default, the 'download plot' icon in the modebar will download to PNG and use the `height` and `width` of the plot, but these defaults can be altered via the plot's configuration, as done in Figure \@ref(fig:toImageSVG):
 
 ```r
 plot_ly() %>%
@@ -98,7 +99,7 @@ knitr::include_graphics("images/toImageSVG.png")
 
 ## Sizing exports
 
-It's worth noting that the height and width of a static image must be specified in pixels, which is intuitive for most file formats (png, jpeg, svg, etc) but when exporting to pdf, you might want to specify the size in inches. If you multiply the DPI of your machine's display by the number of inches you want, you'll get the desired result. So, if you want a 8x11 pdf, and are on a typical 96 DPI display, you can do:
+It's worth noting that the height and width of a static image must be specified in pixels, which is intuitive for most file formats (PNG, JPG, SVG, etc.) but when exporting to PDF, you might want to specify the size in inches. If you multiply the DPI of your machine's display by the number of inches you want, you'll get the desired result. So, if you want a 8x11 PDF, and are on a typical 96 DPI display, you can do:
 
 ```r
 orca(plot_ly(), width = 8 * 96, height = 11 * 96)
@@ -112,12 +113,13 @@ plot_ly(width = 8 * 96, height = 11 * 96) %>%
 ```
 
 # Editing views for publishing {#editing-views}
+\sectionmark{Introduction}
 
 \index{Editable charts!Annotations}
 
-Numerous layout components of a **plotly** graph can be directly manipulated, including annotation text and placement (more on this in Section \@ref(edit-events)). In addition, the download (aka, toImage) button can be customized to export a static version to different file types including: svg, png, jpeg, and webp. Since svg can be easily converted to pdf, this effectively means we can edit a graph in a browser to perform touch-ups, then export to a high-quality pdf. At least currently, this workflow is recommended over first exporting to pdf (via `orca()`) then using Adobe Illustrator to manipulate the vectors, especially for adjusting the placement of annotations. 
+Numerous layout components of a **plotly** graph can be directly manipulated, including annotation text and placement (more on this in Section \@ref(edit-events)). In addition, the download (aka, toImage) button can be customized to export a static version to different file types including: SVG, PNG, JPG, and WebP. Since SVG can be easily converted to PDF, this effectively means we can edit a graph in a browser to perform touch-ups, then export to a high-quality PDF. At least currently, this workflow is recommended over first exporting to PDF (via `orca()`) then using Adobe Illustrator to manipulate the vectors, especially for adjusting the placement of annotations. 
 
-Figure \@ref(fig:edit-county-labels) demonstrates this workflow on a choropleth map of estimated income in Minnesota by county where the top 10 counties by total income are labeled.^[Yes, this is [essentially a population map](https://xkcd.com/1138/). A more informative visual would show income per person within a given county. I decided against showing the more informative version so the code would be more concise.] For visuals like this, automated algorithms for placing the labels may not yield polished results, so it can be nice to have the option to adjust the placement manually. Although pressing 'download plot' exports a static version of the current state of the plot, there currently isn't an official way to save the state of these manual edits in the HTML version. You could, however, create a shiny app that listens to the `'plotly_relayout'` event to obtain the new annotation positions (see, for example, Figure \@ref(fig:shiny-edit-annotations)) and translate that information into code. 
+Figure \@ref(fig:edit-county-labels) demonstrates this workflow on a choropleth map of estimated income in Minnesota by county where the top 10 counties by total income are labeled.^[For perceptual reasons, you may want to consider using cartogram for this kind of map (see Section \@ref(cartograms))]. For visuals like this, automated algorithms for placing the labels may not yield polished results, so it can be nice to have the option to adjust the placement manually. Although pressing 'download plot' exports a static version of the current state of the plot, there currently isn't an official way to save the state of these manual edits in the HTML version. You could, however, create a shiny app that listens to the `'plotly_relayout'` event to obtain the new annotation positions (see, for example, Figure \@ref(fig:shiny-edit-annotations)) and translate that information into code. 
 
 ```{r, eval=FALSE, summary="Click to show code"}
 library(dplyr)
@@ -171,7 +173,7 @@ bars <- ggplot(mn_income, aes(x = estimate, y = county)) +
   scale_color_identity()
 
 # make manual edits in the browser, then click the 
-# 'toImage' button to export an svg file
+# 'toImage' button to export an SVG file
 ggplotly(
   bars, dynamicTicks = TRUE, tooltip = "y", 
   height = 8 * 96, width = 11 * 96
@@ -192,7 +194,7 @@ ggplotly(
 include_vimeo(309371928)
 ```
 
-After pressing the "download plot" button to export svg, then the **rsvg** package can be used to convert the svg to pdf [@rsvg].
+After pressing the "download plot" button to export SVG, then the **rsvg** package can be used to convert the SVG to PDF [@rsvg].
 
 ```r
 # This is the directory that my browser places downloads...

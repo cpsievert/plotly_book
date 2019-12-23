@@ -1,8 +1,8 @@
 # Maps {#maps}
 
-There are numerous ways to make a map with **plotly** -- each with it's own strengths and weaknesses. Generally speaking the approaches fall under two categories: integrated or custom. Integrated maps leverage plotly.js' built-in support for rendering a basemap layer. Currently there are two supported ways of making integrated maps: either via [Mapbox](https://www.mapbox.com/) or via an integrated d3.js powered basemap. The integrated approach is convenient if you need a quick map and don't necessarily need sophisticated representations of geo-spatial objects. On the other hand, the custom mapping approach offers complete control since you're providing all the information necessary to render the geo-spatial object(s). Section \@ref(maps-custom) covers making sophisticated maps (e.g., cartograms) using the **sf** R package, but it's also possible to make custom **plotly** maps via other tools for geo-computing (e.g., **sp**, **ggmap**, etc). 
+There are numerous ways to make a map with **plotly**; each with its own strengths and weaknesses. Generally speaking, the approaches fall under two categories: integrated or custom. Integrated maps leverage plotly.js's built-in support for rendering a basemap layer. Currently there are two supported ways of making integrated maps: either via [Mapbox](https://www.mapbox.com/) or via an integrated d3.js powered basemap. The integrated approach is convenient if you need a quick map and don't necessarily need sophisticated representations of geo-spatial objects. On the other hand, the custom mapping approach offers complete control since you're providing all the information necessary to render the geo-spatial object(s). Section \@ref(maps-custom) covers making sophisticated maps (e.g., cartograms) using the **sf** R package, but it's also possible to make custom **plotly** maps via other tools for geo-computing (e.g., **sp**, **ggmap**, etc.). 
 
-It's worth noting that **plotly** aims to be a general purpose visualization library, and thus, doesn't aim to be the most fully featured geo-spatial visualization toolkit. That said, there are benefits to using **plotly**-based maps since the mapping APIs are very similar to the rest of plotly, and you can leverage larger **plotly** ecosystem (e.g., linking views client side like Figure \@ref(fig:mapbox-bars)). However, if you run into limitations with **plotly**'s mapping functionality, there is a very rich set of tools for [interactive geospatial visualization in R](https://geocompr.robinlovelace.net/adv-map.html#interactive-maps), including but not limited to: **leaflet**, **mapview**, **mapedit**, **tmap**, and **mapdeck** [@geocomputation].
+It's worth noting that **plotly** aims to be a general purpose visualization library, and thus, doesn't aim to be the most fully featured geo-spatial visualization toolkit. That said, there are benefits to using **plotly**-based maps since the mapping APIs are very similar to the rest of plotly, and you can leverage the larger **plotly** ecosystem (e.g., linking views client-side like Figure \@ref(fig:mapbox-bars)). However, if you run into limitations with **plotly**'s mapping functionality, there is a very rich set of tools for [interactive geospatial visualization in R](https://geocompr.robinlovelace.net/adv-map.html#interactive-maps), including but not limited to: **leaflet**, **mapview**, **mapedit**, **tmap**, and **mapdeck** [@geocomputation].
 
 ## Integrated maps {#maps-integrated}
 
@@ -51,7 +51,7 @@ layout(
 include_vimeo("326683897")
 ```
 
-Figure \@ref(fig:mapbox-style-dropdown) demonstrates how to create an integrated plotly.js dropdown menu to control the basemap style via the [`layout.updatemenus`](https://plot.ly/r/reference/#layout-updatemenus-items-updatemenu-buttons) attribute. The idea behind an integrated plotly.js dropdown is to supply a list of buttons (i.e., menu items) where each button invokes a plotly.js method with some arguments. In this case, each button uses the [relayout](https://plot.ly/javascript/plotlyjs-function-reference/) method to modify the `layout.mapbox.style` attribute.^[To see more examples of creating and using plotly.js' integrated dropdown functionality to modify graphs, see <https://plot.ly/r/dropdowns/>]
+Figure \@ref(fig:mapbox-style-dropdown) demonstrates how to create an integrated plotly.js dropdown menu to control the basemap style via the [`layout.updatemenus`](https://plot.ly/r/reference/#layout-updatemenus-items-updatemenu-buttons) attribute. The idea behind an integrated plotly.js dropdown is to supply a list of buttons (i.e., menu items) where each button invokes a plotly.js method with some arguments. In this case, each button uses the [relayout](https://plot.ly/javascript/plotlyjs-function-reference/) method to modify the `layout.mapbox.style` attribute.^[To see more examples of creating and using plotly.js's integrated dropdown functionality to modify graphs, see <https://plot.ly/r/dropdowns/>]
 
 \index{layout()@\texttt{layout()}!updatemenus@\texttt{updatemenus}}
 
@@ -78,7 +78,7 @@ include_vimeo("326684625")
 
 \index{plot\_geo()@\texttt{plot\_geo()}}
 
-The other integrated mapping solution in **plotly** is `plot_geo()`. Compared to `plot_mapbox()`, this approach has support for different mapping projections, but styling the basemap is limited and can be more cumbersome. Figure \@ref(fig:geo-flights) demonstrates using `plot_geo()` in conjunction with `add_markers()` and `add_segments()` to visualize flight paths within the United States. Whereas `plot_mapbox()` is fixed to a mercator projection, the `plot_geo()` constructor has a handful of different projection available to it, including the orthographic projection which gives the illusion of the 3D globe.
+The other integrated mapping solution in **plotly** is `plot_geo()`. Compared to `plot_mapbox()`, this approach has support for different mapping projections, but styling the basemap is limited and can be more cumbersome. Figure \@ref(fig:geo-flights) demonstrates using `plot_geo()` in conjunction with `add_markers()` and `add_segments()` to visualize flight paths within the United States. Whereas `plot_mapbox()` is fixed to a mercator projection, the `plot_geo()` constructor has a handful of different projections available to it, including the orthographic projection which gives the illusion of the 3D globe.
 
 \index{plot\_geo()@\texttt{plot\_geo()}!layout.geo@\texttt{layout(geo = ...)}}
 
@@ -124,7 +124,7 @@ plot_geo(color = I("red")) %>%
 include_vimeo("317358033")
 ```
 
-One nice thing about `plot_geo()` is that it automatically projects geometries into the proper coordinate system defined by the map projection. For example, in Figure \@ref(fig:maps) the simple line segment is straight when using `plot_mapbox()` yet curved when using `plot_geo()`. It's possible to achieve the same effect using `plot_ly()` or `plot_mapbox()`, but the relevant marker/line/polygon data has to be put into an **sf** data structure before rendering (see Section \@ref(sf) for more details).
+One nice thing about `plot_geo()` is that it automatically projects geometries into the proper coordinate system defined by the map projection. For example, in Figure \@ref(fig:maps) the simple line segment is straight when using `plot_mapbox()`, yet curved when using `plot_geo()`. It's possible to achieve the same effect using `plot_ly()` or `plot_mapbox()`, but the relevant marker/line/polygon data has to be put into an **sf** data structure before rendering (see Section \@ref(sf) for more details).
 
 \index{add\_trace()@\texttt{add\_trace()}!add\_segments()@\texttt{add\_segments()}}
 \indexc{htmltools::tagList()}
@@ -157,7 +157,7 @@ knitr::include_graphics("images/maps.png")
 
 In addition to scatter traces, both of the integrated mapping  solutions (i.e., `plot_mapbox()` and `plot_geo()`) have an optimized choropleth trace type (i.e.,  the [choroplethmapbox](https://plot.ly/r/reference/#choroplethmapbox) and [choropleth](https://plot.ly/r/reference/#choropleth) trace types). Comparatively speaking, choroplethmapbox is more powerful because you can fully specify the feature collection using GeoJSON, but the choropleth trace can be a bit easier to use if it fits your use case.
 
-Figure \@ref(fig:us-density) shows the population density of the U.S. via the choropleth trace using the U.S. state data from the **datasets** package [@RCore]. By simply providing a [`z`](https://plot.ly/r/reference/#choropleth-z) attribute, `plotly_geo()` objects will try to create a choropleth, but you'll also need to provide [`locations`](https://plot.ly/r/reference/#choropleth-locations) and a [`locationmode`](https://plot.ly/r/reference/#choropleth-locationmode). It's worth noting that the `locationmode` is currently limited to countries and US states, so if you need to a different geo-unit (e.g., counties, municipalities, etc), you should use the choroplethmapbox trace type and/or use a "custom" mapping approach as discussed in Section \@ref(maps-custom).
+Figure \@ref(fig:us-density) shows the population density of the U.S. via the choropleth trace using the U.S. state data from the **datasets** package [@RCore]. By simply providing a [`z`](https://plot.ly/r/reference/#choropleth-z) attribute, `plotly_geo()` objects will try to create a choropleth, but you'll also need to provide [`locations`](https://plot.ly/r/reference/#choropleth-locations) and a [`locationmode`](https://plot.ly/r/reference/#choropleth-locationmode). It's worth noting that the `locationmode` is currently limited to countries and US states, so if you need to plot a different geo-unit (e.g., counties, municipalities, etc.), you should use the choroplethmapbox trace type and/or use a "custom" mapping approach as discussed in Section \@ref(maps-custom).
 
 \index{plot\_geo()@\texttt{plot\_geo()}!Choropleth}
 
@@ -225,18 +225,17 @@ plot_ly() %>%
 knitr::include_graphics("images/us-density-geojson.svg")
 ```
 
-Figures \@ref(fig:us-density) and \@ref(fig:us-density-geojson) aren't an ideal way to visualize state population a graphical perception point of view. We typically use the color in choropleths to encode a numeric variable (e.g., GDP, net exports, average SAT score, etc) and the eye naturally perceives the area that a particular color covers as proportional to its overall effect. This ends up being misleading since the area the color covers typically has no sensible relationship with the data encoded by the color. A classic example of this misleading effect in action is in US election maps -- the proportion of red to blue coloring is not representative of the overall popular vote [@election-maps]. 
+Figures \@ref(fig:us-density) and \@ref(fig:us-density-geojson) aren't an ideal way to visualize state population a graphical perception point of view. We typically use the color in choropleths to encode a numeric variable (e.g., GDP, net exports, average SAT score, etc.) and the eye naturally perceives the area that a particular color covers as proportional to its overall effect. This ends up being misleading since the area the color covers typically has no sensible relationship with the data encoded by the color. A classic example of this misleading effect in action is in US election maps -- the proportion of red to blue coloring is not representative of the overall popular vote [@election-maps]. 
 
-Cartograms are an approach to reducing this misleading effect and grants another dimension to encode data through the size of geo-spatial features. Section \@ref(cartograms) covers how to render cartograms in **plotly** using **sf** and **cartogram**.
+Cartograms are an approach to reducing this misleading effect and grant another dimension to encode data through the size of geo-spatial features. Section \@ref(cartograms) covers how to render cartograms in **plotly** using **sf** and **cartogram**.
 
 ## Custom maps {#maps-custom}
 
 ### Simple features (sf) {#sf}
 
-The **sf** R package is a modern approach to working with geo-spatial data structures based on tidy data principles [@sf; @tidy-data]. The key idea behind **sf** is that it stores geo-spatial geometries in a [list-column](https://jennybc.github.io/purrr-tutorial/ls13_list-columns.html) of a data frame. This allows each row to represent the real unit of observation/interest -- whether it's a polygon, multi-polygon, point, line, or even a collection of these features -- and as a result, works seamlessly inside larger tidy workflows.^[This is way more intuitive compared to older workflows based on, say using `ggplot2::fortify()` to obtain a data structure where a row to represents particular point along a feature and having another column track which point belongs to each feature ([for example](https://gis.stackexchange.com/questions/165974/r-fortify-causing-polygons-to-tear)).
-] The **sf** package itself does not really provide geo-spatial data -- it provides the framework and utilities for storing and computing on geo-spatial data structures in an opinionated way.
+The **sf** R package is a modern approach to working with geo-spatial data structures based on tidy data principles [@sf; @tidy-data]. The key idea behind **sf** is that it stores geo-spatial geometries in a [list-column](https://jennybc.github.io/purrr-tutorial/ls13_list-columns.html) of a data frame. This allows each row to represent the real unit of observation/interest --- whether it's a polygon, multi-polygon, point, line, or even a collection of these features --- and as a result, works seamlessly inside larger tidy workflows.^[This is way more intuitive compared to older workflows based on, say using `ggplot2::fortify()` to obtain a data structure where a row represents a particular point along a feature and having another column track which point belongs to each feature.] The **sf** package itself does not really provide geo-spatial data; it provides the framework and utilities for storing and computing on geo-spatial data structures in an opinionated way.
 
-There are numerous packages for accessing geo-spatial data as simple features data structures. A couple notable examples include **rnaturalearth** and **USAboundaries**. The **rnaturalearth** package is better for obtaining any map data in the world via an API provided by <https://www.naturalearthdata.com/> [@rnaturalearth]. The **USAboundaries** package is great for obtaining map data for the United States at any point in history [@USAboundaries]. It doesn't really matter what tool you use to obtain or create an **sf** object -- once you have one, `plot_ly()` knows how to render it:
+There are numerous packages for accessing geo-spatial data as simple features data structures. A couple of notable examples include **rnaturalearth** and **USAboundaries**. The **rnaturalearth** package is better for obtaining any map data in the world via an API provided by <https://www.naturalearthdata.com/> [@rnaturalearth]. The **USAboundaries** package is great for obtaining map data for the United States at any point in history [@USAboundaries]. It doesn't really matter what tool you use to obtain or create an **sf** object; once you have one, `plot_ly()` knows how to render it:
 
 
 ```r
@@ -251,7 +250,7 @@ plot_ly(world, color = I("gray90"), stroke = I("black"), span = I(1))
 knitr::include_graphics("images/world.svg")
 ```
 
-How does `plot_ly()` know how to render the countries? It's because the geo-spatial features are encoded in special (geometry) list-column. Also, meta-data about the geo-spatial structure are retained as special attributes of the data. Figure \@ref(fig:view-sf) augments the print method for **sf** to data frames to demonstrate that all the information needed to render the countries (i.e., polygons) in Figure \@ref(fig:world) is contained within the `world` data frame. Note also, that **sf** provides special **dplyr** methods for this special class of data frame so that you can treat data manipulations as if it were a 'tidy' data structure. One thing about this method is that the special 'geometry' column is always retained -- if we try to just select the `name` column, then we get both the name and the geometry.
+How does `plot_ly()` know how to render the countries? It's because the geo-spatial features are encoded in special (geometry) list-column. Also, meta-data about the geo-spatial structure are retained as special attributes of the data. Figure \@ref(fig:view-sf) augments the print method for **sf** to data frames to demonstrate that all the information needed to render the countries (i.e., polygons) in Figure \@ref(fig:world) is contained within the `world` data frame. Note also that **sf** provides special **dplyr** methods for this special class of data frame so that you can treat data manipulation as if it were a 'tidy' data structure. One thing about this method is that the special 'geometry' column is always retained; if we try to just select the `name` column, then we get both the name and the geometry.
 
 ```r
 library(sf)
@@ -264,7 +263,7 @@ world %>%
 knitr::include_graphics("images/view-sf.svg")
 ```
 
-There are actually 4 different ways to render **sf** objects with **plotly**: `plot_ly()`, `plot_mapbox()`, `plot_geo()`, and via **ggplot2**'s `geom_sf()`. These functions render multiple polygons using a *single* trace by default, which is fast, but you may want to leverage the added flexibility of multiple traces. For example, a given trace can only have one `fillcolor`, so it's impossible to render multiple polygons with different colors using a single trace. For this reason, if you want to vary the color of multiple polygons, make sure the `split` by a unique identifier (e.g. `name`), as done in Figure \@ref(fig:split-color). Note that, as discussed for line charts in Figure \@ref(fig:scatter-lines), using multiple traces automatically adds the ability to filter `name` via legend entries.
+There are actually 4 different ways to render **sf** objects with **plotly**: `plot_ly()`, `plot_mapbox()`, `plot_geo()`, and via **ggplot2**'s `geom_sf()`. These functions render multiple polygons using a *single* trace by default, which is fast, but you may want to leverage the added flexibility of multiple traces. For example, a given trace can only have one `fillcolor`, so it's impossible to render multiple polygons with different colors using a single trace. For this reason, if you want to vary the color of multiple polygons, make sure the `split` by a unique identifier (e.g., `name`), as done in Figure \@ref(fig:split-color). Note that, as discussed for line charts in Figure \@ref(fig:scatter-lines), using multiple traces automatically adds the ability to filter `name` via legend entries.
 
 ```r
 canada <- ne_states(country = "Canada", returnclass = "sf")
@@ -275,7 +274,7 @@ plot_ly(canada, split = ~name, color = ~provnum_ne)
 knitr::include_graphics("images/split-color.svg")
 ```
 
-Another important feature for maps that may require you to `split` multiple polygons into multiple traces is the ability to display a different hover-on-fill for each polygon. By providing `text` that is unique within each polygon and specifying `hoveron='fills'`, the tooltip behavior is tied to the trace's fill (instead of displayed at each point along the polygon).
+Another important feature for maps that may require you to `split` multiple polygons into multiple traces is the ability to display a different hover-on-fill for each polygon. By providing `text` that is unique within each polygon and specifying `hoveron='fills'`, as in Figure \@ref(fig:split-text), the tooltip behavior is tied to the trace's fill (instead of being displayed at each point along the polygon).
 
 ```r
 plot_ly(
@@ -293,7 +292,7 @@ plot_ly(
 knitr::include_graphics("images/split-text.png")
 ```
 
-Although the integrated mapping approaches (`plot_mapbox()` and `plot_geo()`) can render **sf** objects, the custom mapping approaches (`plot_ly()` and `geom_sf()`) are more flexible because they allow for any well-defined mapping projection. Working with and understanding map projections can be intimidating for a causal map maker. Thankfully, there are nice resources for searching map projections in a human-friendly interface, like <http://spatialreference.org/>. Through this website, one can search desirable projections for a given portion of the globe and extract commands for projecting their geo-spatial objects into that projection. One way to perform the projection is to supply the relevant PROJ4 command to the `st_transform()` function in **sf** [@PROJ].
+Although the integrated mapping approaches (`plot_mapbox()` and `plot_geo()`) can render **sf** objects, the custom mapping approaches (`plot_ly()` and `geom_sf()`) are more flexible because they allow for any well-defined mapping projection. Working with and understanding map projections can be intimidating for a causal map maker. Thankfully, there are nice resources for searching map projections in a human-friendly interface, like <http://spatialreference.org/>. Through this website, one can search desirable projections for a given portion of the globe and extract commands for projecting their geo-spatial objects into that projection. As shown in Figure \@ref(fig:canada-ggplotly), one way to perform the projection is to supply the relevant PROJ4 command to the `st_transform()` function in **sf** [@PROJ].
 
 ```r
 # filter the world sf object down to canada
@@ -326,7 +325,7 @@ ggplotly(p)
 knitr::include_graphics("images/canada-ggplotly.svg")
 ```
 
-Some geo-spatial objects have an unnecessarily high resolution for a given visualization. In these cases, you may want to consider simplifying the geo-spatial object to improve the speed of the R code and responsiveness of the visualization. For example, we could recreate Figure \@ref(fig:world) with a much higher resolution by specifying `scale = "large"` in `ne_countries()` this gives us a **sf** object with over 50 times more spatial coordinates than the default scale. The higher resolution allows us to zoom in better on more complex geo-spatial regions, but it allow leads to slower R code, larger HTML files, and slower responsiveness. @ggplotly-blog-post explores this issue in more depth and demonstrates how to use the `st_simplify()` function from **sf** to simplify features before plotting them.
+Some geo-spatial objects have an unnecessarily high resolution for a given visualization. In these cases, you may want to consider simplifying the geo-spatial object to improve the speed of the R code and responsiveness of the visualization. For example, we could recreate Figure \@ref(fig:world) with a much higher resolution by specifying `scale = "large"` in `ne_countries()`; this gives us a **sf** object with over 50 times more spatial coordinates than the default scale. The higher resolution allows us to zoom in better on more complex geo-spatial regions, but it allow leads to slower R code, larger HTML files, and slower responsiveness. @ggplotly-blog-post explores this issue in more depth and demonstrates how to use the `st_simplify()` function from **sf** to simplify features before plotting them.
 
 ```r
 sum(rapply(world$geometry, nrow))
@@ -337,7 +336,7 @@ sum(rapply(world_large$geometry, nrow))
 #> [1] 548121
 ```
 
-Analogous to the discussion surrounding \@ref(fig:scatter-lines), it pays to be aware of the tradeoffs involved with rendering **plotly** graphics using one or many traces, and knowledgeable about how to leverage either approach. Specifically, by default, **plotly** attempts to render all simple features in a single trace, which is performant, but doesn't have a lot of interactivity.  
+Analogous to the discussion surrounding \@ref(fig:scatter-lines), it pays to be aware of the tradeoffs involved with rendering **plotly** graphics using one or many traces, and to be knowledgeable about how to leverage either approach. Specifically, by default, **plotly** attempts to render all simple features in a single trace, which is performant, but doesn't have a lot of interactivity.  
 
 ```r
 plot_mapbox(
@@ -348,14 +347,14 @@ plot_mapbox(
 )
 ```
 
-For those interested in learning more about geocomputation in R with **sf** and other great R packages like **sp** and **raster**, @geocomputation provides lots of nice and freely available learning resources [@sp; @raster].
+For those interested in learning more about geocomputation in R with **sf** and other great R packages like **sp** and **raster**, @geocomputation provide lots of nice and freely available learning resources [@sp; @raster].
 
 
 ### Cartograms {#cartograms}
 
 \index{Chart types!Cartogram}
 
-Cartograms distort the size of geo-spatial polygons to encode a numeric variable other than the land size. There are numerous types of cartograms and they are typically categorized by their ability to preserve shape and maintain contiguous regions. Cartograms has been shown to be an effective approach to both encode and teach about geo-spatial data, though the effects certainly vary by cartogram type [@cartogram-vis]. 
+Cartograms distort the size of geo-spatial polygons to encode a numeric variable other than the land size. There are numerous types of cartograms and they are typically categorized by their ability to preserve shape and maintain contiguous regions. Cartograms have been shown to be an effective approach to both encode and teach about geo-spatial data, though the effects certainly vary by cartogram type [@cartogram-vis]. 
 The R package **cartogram** provides an interface to several popular cartogram algorithms [@cartogram]. A number of other R packages provide cartogram algorithms, but the great thing about **cartogram** is that all the functions can take an **sf** (or **sp**) object as input and return an **sf** object. This makes it incredibly easy to go from raw spatial objects, to transformed objects, to visual. Figure \@ref(fig:cartogram) demonstrates a continuous area cartogram of US population in 2014 using a rubber sheet distortion algorithm from @Dougenik.
 
 \index{add\_trace()@\texttt{add\_trace()}!add\_sf()@\texttt{add\_sf()}}
@@ -383,7 +382,7 @@ plot_ly(us_cont) %>%
 knitr::include_graphics("images/cartogram.png")
 ```
 
-Figure \@ref(fig:cartogram-dorling) demonstrates a non-continuous Dorling cartogram of US population in 2014 from @Dorling. This cartogram does not try to preserve the shape of polygons (i.e., states), but instead uses circles instead to represent each geo-spatial object, then encodes the variable of interest (i.e., population) using the area of the circle. 
+Figure \@ref(fig:cartogram-dorling) demonstrates a non-continuous Dorling cartogram of US population in 2014 from @Dorling. This cartogram does not try to preserve the shape of polygons (i.e., states), but instead uses circles to represent each geo-spatial object, then encodes the variable of interest (i.e., population) using the area of the circle. 
 
 ```r
 us <- usa_sf("laea")
@@ -410,7 +409,7 @@ plot_ly(stroke = I("black"), span = I(1)) %>%
 knitr::include_graphics("images/cartogram-dorling.svg")
 ```
 
-Figure \@ref(fig:cartogram-ncont) demonstrates a non-continuous cartogram of US population in 2014 from @Olson. In contrast to the Dorling cartogram, this approach does preserve the shape of polygons. The implementation behind Figure \@ref(fig:cartogram-ncont) is to simply take the implementation of Figure \@ref(fig:cartogram-dorling) and change `cartogram_dorling()` to `cartogram_ncont()`.
+Figure \@ref(fig:cartogram-ncont) demonstrates a non-continuous cartogram of the U.S. population in 2014 from @Olson. In contrast to the Dorling cartogram, this approach does preserve the shape of polygons. The implementation behind Figure \@ref(fig:cartogram-ncont) is to simply take the implementation of Figure \@ref(fig:cartogram-dorling) and change `cartogram_dorling()` to `cartogram_ncont()`.
 
 ```{r cartogram-ncont, echo = FALSE, fig.cap = "(ref:cartogram-ncont)", out.extra = if (knitr::is_html_output()) 'data-url="/interactives/cartogram-ncont.html"'}
 knitr::include_graphics("images/cartogram-ncont.svg")
@@ -422,9 +421,12 @@ A popular class of contiguous cartograms that do not preserve shape are sometime
 library(geojsonio)
 tiles <- geojson_read("~/Downloads/tiles.topo.json", what = "sp")
 tiles_sf <- st_as_sf(tiles)
-plot_ly(tiles_sf, split = ~name)
+plot_ly(
+  tiles_sf, color = ~name, 
+  colors = "Paired", stroke = I("transparent")
+)
 ```
 
 ```{r cartogram-tiles, echo = FALSE, fig.cap = "(ref:cartogram-tiles)", out.extra = if (knitr::is_html_output()) 'data-url="/interactives/cartogram-tiles.html"'}
-knitr::include_graphics("images/cartogram-tiles.svg")
+knitr::include_graphics("images/cartogram-tiles.png")
 ```

@@ -9,6 +9,8 @@ gitbook:
 pdf:
 	mkdir -p docs/images && cp images/* docs/images
 	Rscript --quiet _render.R "bookdown::pdf_book"
+	mv docs/plotly_book.pdf crc/plotly_book.pdf
+	mv docs/plotly_book.tex crc/plotly_book.tex
 
 dashboard:
 	Rscript -e "rmarkdown::render('flexdashboard/index.Rmd')"

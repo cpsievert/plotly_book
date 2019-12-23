@@ -2,7 +2,7 @@
 
 ## A case study of housing sales in Texas {#txhousing-case-study}
 
-The **plotly** package depends on **ggplot2** which bundles a data set on monthly housing sales in Texan cities acquired from the [TAMU real estate center](http://recenter.tamu.edu/). After the loading the package, the data is "lazily loaded" into your session, so you may reference it by name:
+The **plotly** package depends on **ggplot2** which bundles a dataset on monthly housing sales in Texan cities acquired from the [TAMU real estate center](http://recenter.tamu.edu/). After the loading the package, the data is "lazily loaded" into your session, so you may reference it by name:
 
 ```{r}
 library(plotly)
@@ -18,7 +18,7 @@ p <- ggplot(txhousing, aes(date, median)) +
 
 ### The `ggplotly()` function {#ggplotly}
 
-Now that we have a valid **ggplot2** object, `p`, the **plotly** package provides the `ggplotly()` function which converts a ggplot object to a plotly object. By default, it supplies the entire aesthetic mapping to the tooltip, but the `tooltip` argument provides a way to restrict tooltip info to a subset of that mapping. Furthermore, in cases where the statistic of a layer is something other than the identity function (e.g., `geom_bin2d()` and `geom_hex()`), relevant calculated values are also supplied to the tooltip. This provides a nice mechanism for decoding visual aesthetics (e.g., color) used to represent a measure of interest (e.g, count/value). Figure \@ref(fig:ggsubplot) demonstrates tooltip functionality for a number of scenarios, and uses `subplot()` function from the **plotly** package (discussed in more detail in [Arranging multiple views](#arranging-multiple-views)) to concisely display numerous interactive versions of ggplot objects.
+Now that we have a valid **ggplot2** object, `p`, the **plotly** package provides the `ggplotly()` function which converts a ggplot object to a plotly object. By default, it supplies the entire aesthetic mapping to the tooltip, but the `tooltip` argument provides a way to restrict tooltip info to a subset of that mapping. Furthermore, in cases where the statistic of a layer is something other than the identity function (e.g., `geom_bin2d()` and `geom_hex()`), relevant calculated values are also supplied to the tooltip. This provides a nice mechanism for decoding visual aesthetics (e.g., color) used to represent a measure of interest (e.g., count/value). Figure \@ref(fig:ggsubplot) demonstrates tooltip functionality for a number of scenarios, and uses `subplot()` function from the **plotly** package (discussed in more detail in [Arranging multiple views](#arranging-multiple-views)) to concisely display numerous interactive versions of ggplot objects.
 
 ```{r ggsubplot, fig.width = 8, fig.cap = "Monthly median house price in the state of Texas. The top row displays the raw data (by city) and the bottom row shows 2D binning on the raw data. The binning is helpful for showing the overall trend, but hovering on the lines in the top row helps reveal more detailed information about each city.", screenshot.alt = "screenshots/ggsubplot"}
 subplot(

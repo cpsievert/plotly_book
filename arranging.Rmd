@@ -3,7 +3,7 @@
 # Arranging views
 
 One technique essential to high-dimensional data visualization is the ability to arrange multiple views. By arranging multiple low-dimensional graphics of the same (or similar) high-dimensional data, one can put 
-local summaries and patterns into a global context. When arranging multiple **plotly** objects, you have some flexibility in terms of how you arrange them: you could use `subplot()` to merge multiple **plotly** object into a single object (useful for synchronizing zoom&pan events across multiple axes), place them in separate HTML tags (Section \@ref(arranging-htmlwidgets)), or embedded in a larger system for intelligently managing many views (Section \@ref(navigating-many-views)).
+local summaries and patterns into a global context. When arranging multiple **plotly** objects, you have some flexibility in terms of how you arrange them: you could use `subplot()` to merge multiple **plotly** objects into a single object (useful for synchronizing zoom/pan events across multiple axes), place them in separate HTML tags (Section \@ref(arranging-htmlwidgets)), or embedded in a larger system for intelligently managing many views (Section \@ref(navigating-many-views)).
 
 Ideally, when displaying multiple related data views, they are linked through an underlying data source to foster comparisons and enable posing of data queries [@Cook:2007uk]. Chapter \@ref(graphical-queries) shows how to build upon these methods for arranging views to link them (client-side) as well.
 
@@ -28,7 +28,7 @@ knitr::include_graphics("images/subplot-simple.svg")
 
 \index{subplot()@\texttt{subplot()}!Shared axes}
 
-Although `subplot()` accepts an arbitrary number of plot objects, passing a _list_ of plots can save typing and redundant code when dealing with a large number of plots. Figure \@ref(fig:economics) shows one time series for each variable in the `economics` dataset and share the x-axis so that zoom/pan events are synchronized across each series:
+Although `subplot()` accepts an arbitrary number of plot objects, passing a _list_ of plots can save typing and redundant code when dealing with a large number of plots. Figure \@ref(fig:economics) shows one time series for each variable in the `economics` dataset and shares the x-axis so that zoom/pan events are synchronized across each series:
 
 ```r
 vars <- setdiff(names(economics), "date")
@@ -43,13 +43,13 @@ subplot(plots, nrows = length(plots), shareX = TRUE, titleX = FALSE)
 knitr::include_graphics("images/economics.svg")
 ```
 
-Conceptually, `subplot()` provides a way to place a collection of plots into a table with a given number of rows and columns. The number of rows (and, by consequence, the number of columns) is specified via the `nrows` argument. By default each row/column shares an equal proportion of the overall height/width, but as shown in Figure \@ref(fig:proportions) the default can be changed via the `heights` and `widths` arguments.
+Conceptually, `subplot()` provides a way to place a collection of plots into a table with a given number of rows and columns. The number of rows (and, by consequence, the number of columns) is specified via the `nrows` argument. By default, each row/column shares an equal proportion of the overall height/width, but as shown in Figure \@ref(fig:proportions), the default can be changed via the `heights` and `widths` arguments.
 
 ```{r proportions, echo = FALSE, fig.cap = "(ref:proportions)", out.width="50%"}
 knitr::include_graphics("images/proportions.svg")
 ```
 
-This flexibility is quite useful for a number of visualizations, for example, as shown in Figure \@ref(fig:joint), a joint density plot is really of subplot of joint and marginal densities. The **heatmaply** package is great example of leveraging `subplot()` in a similar way to create interactive dendrograms [@heatmaply].
+This flexibility is quite useful for a number of visualizations, for example, as shown in Figure \@ref(fig:joint), a joint density plot is really a subplot of joint and marginal densities. The **heatmaply** package is a great example of leveraging `subplot()` in a similar way to create interactive dendrograms [@heatmaply].
 
 \indexc{plotly\_empty()}
 \index{add\_trace()@\texttt{add\_trace()}!add\_histogram2dcontour()@\texttt{add\_histogram2dcontour()}}
@@ -80,7 +80,7 @@ knitr::include_graphics("images/joint.svg")
 
 \index{subplot()@\texttt{subplot()}!Recursive grid layouts}
 
-The `subplot()` function returns a plotly object so it can be modified like any other plotly object. This effectively means that subplots work recursively (i.e., you can have subplots within subplots). This idea is useful when your desired layout doesn't conform to the table structure described in the previous section. In fact, you can think of a subplot of subplots like a spreadsheet with merged cells. Figure \@ref(fig:recursive) gives a basic example where each row of the outer-most subplot contains a different number of columns.
+The `subplot()` function returns a plotly object so it can be modified like any other plotly object. This effectively means that subplots work recursively (i.e., you can have subplots within subplots). This idea is useful when your desired layout doesn't conform to the table structure described in the previous section. In fact, you can think of a subplot of subplots like a spreadsheet with merged cells. Figure \@ref(fig:recursive) gives a basic example where each row of the outermost subplot contains a different number of columns.
 
 ```{r, eval = FALSE, summary = "Click to show code"}
 plotList <- function(nplots) {
@@ -134,7 +134,7 @@ subplot(barcharts, margin = 0.01) %>%
 knitr::include_graphics("images/map-subplot.svg")
 ```
 
-### Other approaches & applications
+### Other approaches and applications
 
 Using `subplot()` directly is not the _only_ way to create multiple views of a dataset with **plotly**. In some special cases, like scatterplot matrices and generalized pair plots, we can take advantage of some special methods designed specifically for these use cases.
 
@@ -177,7 +177,7 @@ ggplotly(pm)
 knitr::include_graphics("images/ggpairs.svg")
 ```
 
-As it turns out, **GGally** use `ggmatrix()` as a building block for other visualizations, like model diagnostic plots (`ggnostic()`). Sections \@ref(ggally-ggpairs) and \@ref(ggally-ggnostic) demonstrates how to leverage linked brushing in the `ggplotly()` versions of these plots.
+As it turns out, **GGally** use `ggmatrix()` as a building block for other visualizations, like model diagnostic plots (`ggnostic()`). Sections \@ref(ggally-ggpairs) and \@ref(ggally-ggnostic) demonstrate how to leverage linked brushing in the `ggplotly()` versions of these plots.
 
 #### Trellis displays with `subplot()` {#trellis-displays-subplot}
 
@@ -234,7 +234,7 @@ knitr::include_graphics("images/subplot-trellis.svg")
 
 #### ggplot2 subplots
 
-It's possible to combine the convenience of **ggplot2**'s `facet_wrap()`/`facet_grid()` with the more flexible arrangement capabilities of `subplot()`. Figure \@ref(fig:ggplot2-subplots) does this to show two different views of the `economics_long` data: the left-hand column displays each variable along time while the right-hand column shows violin plots of each variable. For the implementation, each column is created through `ggplot2::facet_wrap()`, but then the trellis displays are combined with `subplot()`. In this case, **ggplot2** objects are passed directly to `subplot()`, but you can also use `ggplotly()` for finer control over the conversion of **ggplot2** to **plotly** (see also Chapter \@ref(improving-ggplotly)) before supplying that result to `subplot()`.
+It's possible to combine the convenience of **ggplot2**'s `facet_wrap()`/`facet_grid()` with the more flexible arrangement capabilities of `subplot()`. Figure \@ref(fig:ggplot2-subplots) does this to show two different views of the `economics_long` data: the left-hand column displays each variable along time, while the right-hand column shows violin plots of each variable. For the implementation, each column is created through `ggplot2::facet_wrap()`, but then the trellis displays are combined with `subplot()`. In this case, **ggplot2** objects are passed directly to `subplot()`, but you can also use `ggplotly()` for finer control over the conversion of **ggplot2** to **plotly** (see also Chapter \@ref(improving-ggplotly)) before supplying that result to `subplot()`.
 
 \index{ggplotly()@\texttt{ggplotly()}!ggplot2!geom\_violin()@\texttt{geom\_violin()}}
 
@@ -255,17 +255,17 @@ knitr::include_graphics("images/ggplot2-subplots.svg")
 
 ## Arranging htmlwidgets
 
-Since **plotly** objects are also **htmlwidgets**, any method that works for arranging **htmlwidgets** also works for **plotly** objects. Moreover, since **htmlwidgets** are also **htmltools** tags, any method that works for arranging **htmltools** tags also works for **htmlwidgets**. Here are three common ways to arrange components (e.g., **htmlwidgets**, **htmltools** tags, etc) in a single web-page:
+Since **plotly** objects are also **htmlwidgets**, any method that works for arranging **htmlwidgets** also works for **plotly** objects. Moreover, since **htmlwidgets** are also **htmltools** tags, any method that works for arranging **htmltools** tags also works for **htmlwidgets**. Here are three common ways to arrange components (e.g., **htmlwidgets**, **htmltools** tags, etc.) in a single webpage:
 
 1. __flexdashboard__: An R package for arranging components into an opinionated dashboard layout. This package is essentially a special **rmarkdown** template that uses a simple markup syntax to define the layout.
 2. Bootstrap's grid layout: Both the **crosstalk** and **shiny** packages provide ways to arrange numerous components via Bootstrap's (a popular HTML/CSS framework) [grid layout system](https://getbootstrap.com/docs/4.1/layout/grid/).
 3. CSS flexbox: If you know some HTML and CSS, you can leverage [CSS flexbox](https://css-tricks.com/snippets/css/a-guide-to-flexbox/) to arrange components via the **htmltools** package.
 
-Although **flexdashboard** is a really excellent way to arrange web-based content generated from R, it can pay-off to know the other two approaches as their arrangement techniques are agnostic to an **rmarkdown** output format. In other words, approaches 2-3 can be used with any **rmarkdown** template^[Although HTML can not possibly render in a pdf or word document, **knitr** can automatically detect a non-HTML output format and embed a static image of the htmlwidget via the **webshot** package [@webshot].] or really _any_ framework for website generation. Although Bootstrap grid layout system (2) is expressive and intuitive, using it in a larger website that also uses a different HTML/CSS framework (e.g. Bulma, Skeleton, etc) can cause issues. In that case, CSS flexbox (3) is a light-weight (i.e., no external CSS/JS dependencies) alternative that is less likely to introduce undesirable side-effects.
+Although **flexdashboard** is a really excellent way to arrange web-based content generated from R, it can payoff to know the other two approaches as their arrangement techniques are agnostic to an **rmarkdown** output format. In other words, approaches 2-3 can be used with any **rmarkdown** template^[Although HTML cannot possibly render in a PDF or Word document, **knitr** can automatically detect a non-HTML output format and embed a static image of the htmlwidget via the **webshot** package [@webshot].] or really _any_ framework for website generation. Although Bootstrap grid layout system (2) is expressive and intuitive, using it in a larger website that also uses a different HTML/CSS framework (e.g., Bulma, Skeleton, etc.) can cause issues. In that case, CSS flexbox (3) is a lightweight (i.e., no external CSS/JS dependencies) alternative that is less likely to introduce undesirable side effects.
 
-### Flexdashboard
+### flexdashboard
 
-Figure \@ref(fig:flexdashboard-ggplotly) provides an example of embedding `ggplotly()` inside **flexdashboard** [@flexdashboard]. Since **flexdashboard** is an **rmarkdown** template, it automatically comes with many of things that make **rmarkdown** great: ability to produce standalone HTML, integration with other languages, and thoughtful integration with RStudio products like Connect. There are many other things to like about **flexdashboard**, including lots of easy-to-use theming options, multiple pages, storyboards, and even **shiny** integration. Explaining how the **flexdashboard** package actually works is beyond the scope of this book, but you can visit the website for documentation and more examples <https://rmarkdown.rstudio.com/flexdashboard/>.
+Figure \@ref(fig:flexdashboard-ggplotly) provides an example of embedding `ggplotly()` inside **flexdashboard** [@flexdashboard]. Since **flexdashboard** is an **rmarkdown** template, it automatically comes with many things that make **rmarkdown** great: ability to produce standalone HTML, integration with other languages, and thoughtful integration with RStudio products like Connect. There are many other things to like about **flexdashboard**, including lots of easy-to-use theming options, multiple pages, storyboards, and even **shiny** integration. Explaining how the **flexdashboard** package actually works is beyond the scope of this book, but you can visit the website for documentation and more examples <https://rmarkdown.rstudio.com/flexdashboard/>.
 
 ```{r flexdashboard-ggplotly, echo = FALSE, fig.link="https://plotly-r.com/flexdashboard.html", fig.cap = "(ref:flexdashboard-ggplotly)"}
 knitr::include_graphics("images/flexdashboard.png")
@@ -273,7 +273,7 @@ knitr::include_graphics("images/flexdashboard.png")
 
 ### Bootstrap grid layout
 
-If you're already familiar with **shiny**, you may already be familiar with functions like `fluidPage()`, `fluidRow()`, and `column()`. These R functions provide an interface from R to bootstrap's grid layout system. That layout system is based on the notion of rows and columns where each row spans a width of 12 columns. Figure \@ref(fig:fluid) demonstrates how one can use these functions to produce a standalone HTML page with three **plotly** graphs -- with the first plot in the first row spanning the full width and the other 2 plots in the second row of equal width. To learn more about this `fluidPage()` approach to layouts, see <https://shiny.rstudio.com/articles/layout-guide.html>.
+If you're already familiar with **shiny**, you may already be familiar with functions like `fluidPage()`, `fluidRow()`, and `column()`. These R functions provide an interface from R to Bootstrap's grid layout system. That layout system is based on the notion of rows and columns where each row spans a width of 12 columns. Figure \@ref(fig:fluid) demonstrates how one can use these functions to produce a standalone HTML page with three **plotly** graphs --- with the first plot in the first row spanning the full width and the other 2 plots in the second row of equal width. To learn more about this `fluidPage()` approach to layouts, see <https://shiny.rstudio.com/articles/layout-guide.html>.
 
 ```{r, echo = FALSE}
 set.seed(100)
@@ -294,21 +294,21 @@ fluidPage(
 knitr::include_graphics("images/fluid.png")
 ```
 
-It's also worth noting another, somewhat similar, yet more succinct, interface to grid's layout system provided by the `bscols()` function from the **crosstalk** package. You can think of it in a similar way to `fluidRow()`, but instead of defining `column()` width for each component individually, you can specify the width of several components at once through the `widths` argument. Also, importantly, this functions works recursively -- it returns a collection of **htmltools** tags and accepts them as input as well. The code below produces the same result as above, but is a much more succinct way of doing so.
+It's also worth noting another, somewhat similar, yet more succinct, interface to grid's layout system provided by the `bscols()` function from the **crosstalk** package. You can think of it in a similar way to `fluidRow()`, but instead of defining `column()` width for each component individually, you can specify the width of several components at once through the `widths` argument. Also, importantly, this function works recursively; it returns a collection of **htmltools** tags and accepts them as input as well. The code below produces the same result as above, but is a much more succinct way of doing so.
 
 ```r
 bscols(p, bscols(p, p), widths = 12)
 ```
 
-Bootstrap is much more than just its grid layout system, so beware -- using either of these approaches will impose Bootstrap's styling rules on other content in your webpage. If you are using another CSS framework for styling or just want to reduce the size of dependencies in your webpage, consider working with CSS flexbox instead of Bootstrap.
+Bootstrap is much more than just its grid layout system, so beware; using either of these approaches will impose Bootstrap's styling rules on other content in your webpage. If you are using another Cascading Style Sheet (CSS) framework for styling or just want to reduce the size of dependencies in your webpage, consider working with CSS flexbox instead of Bootstrap.
 
 ### CSS flexbox
 
 \index{HTML in R}
 
-Cascading Style Sheet (CSS) flexbox is a relatively new CSS feature that most modern web browsers natively support.^[For a full reference of which browsers/versions support flexbox, see <https://caniuse.com/#feat=flexbox>.] It aims to provide a general system for distributing space among multiple components in a container. Instead of covering this entire system, we'll cover it's basic functionality, which is fairly similar to Bootstrap's grid layout system. 
+Cascading Style Sheet (CSS) flexbox is a relatively new CSS feature that most modern web browsers natively support.^[For a full reference of which browsers/versions support flexbox, see <https://caniuse.com/#feat=flexbox>.] It aims to provide a general system for distributing space among multiple components in a container. Instead of covering this entire system, we'll cover its basic functionality, which is fairly similar to Bootstrap's grid layout system. 
 
-Creating a flexbox requires a flexbox container -- in HTML speak, that means a `<div>` tag with a CSS style property of `display: flex`. By default, in this display setting, all the components inside that container will try fit in a single row. To allow 'overflowing' components the freedom to 'wrap' into new row(s), set the CSS property of `flex-wrap: wrap` in the parent container. Another useful CSS property to know about for the 'parent' container is `justify-content`: in the case of Figure \@ref(fig:flexbox), I'm using it to horizontally `center` the components. Moreover, since I've imposed a width of 40% for the first two plots, the net effect is that we have 2 plots in the first two (spanning 80% of the page width), then the third plot wraps onto a new line.
+Creating a flexbox requires a flexbox container; in HTML speak, that means a `<div>` tag with a CSS style property of `display: flex`. By default, in this display setting, all the components inside that container will try fitting in a single row. To allow 'overflowing' components the freedom to 'wrap' into new row(s), set the CSS property of `flex-wrap: wrap` in the parent container. Another useful CSS property to know about for the 'parent' container is `justify-content`: in the case of Figure \@ref(fig:flexbox), I'm using it to horizontally `center` the components. Moreover, since I've imposed a width of 40% for the first two plots, the net effect is that we have 2 plots in the first two (spanning 80% of the page width), then the third plot wraps onto a new line.
 
 ```r
 library(htmltools)
@@ -327,19 +327,19 @@ browsable(div(
 knitr::include_graphics("images/flexbox.png")
 ```
 
-From the code example in Figure \@ref(fig:flexbox), you might notice that `display: flex; flex-wrap: wrap` is quite similar to Bootstrap grid layout system. The main difference is that, instead of specifying widths in terms of 12 columns, you have more flexibility with how to size things, as well as how you handle extra space. Here, in Figure \@ref(fig:flexbox) I've used widths that are relative to the page width, but you could also use fixed widths (using fixed widths, however, is generally frowned upon). For those that would like to learn about more details about CSS flexbox, see <https://css-tricks.com/snippets/css/a-guide-to-flexbox/>.
+From the code example in Figure \@ref(fig:flexbox), you might notice that `display: flex; flex-wrap: wrap` is quite similar to Bootstrap grid layout system. The main difference is that, instead of specifying widths in terms of 12 columns, you have more flexibility with how to size things, as well as how you handle extra space. Here, in Figure \@ref(fig:flexbox) I've used widths that are relative to the page width, but you could also use fixed widths (using fixed widths, however, is generally frowned upon). For those who would like to learn about more details about CSS flexbox, see <https://css-tricks.com/snippets/css/a-guide-to-flexbox/>.
 
 ## Arranging many views {#navigating-many-views}
 
 \index{ggplotly()@\texttt{ggplotly()}!facet\_trelliscope()@\texttt{facet\_trelliscope()}}
 
-As we've already seen in Figures \@ref(fig:freqpoly-facet), \@ref(fig:trellis-txhousing), & \@ref(fig:subplot-trellis), the trellis (aka small multiple) display is an effective way to see how a conditional distribution behaves under different conditions. In other words, the trellis display helps us understand how patterns or structure in the data changes across groups. However, trellis displays do have a limitation: they don't scale very well to a large number of groups. 
+As we've already seen in Figures \@ref(fig:freqpoly-facet), \@ref(fig:trellis-txhousing), and \@ref(fig:subplot-trellis), the trellis (aka small multiple) display is an effective way to see how a conditional distribution behaves under different conditions. In other words, the trellis display helps us understand how patterns or structure in the data changes across groups. However, trellis displays do have a limitation: they don't scale very well to a large number of groups. 
 
-Before trellis displays were formally introduced, @scagnostics-tukey proposed a solution to the problem of scatterplots not being able to scale to a large number of variables (i.e., it's time consuming to visualize 1000 scatterplots!). The proposed solution involved using quantitative measurements of various scatterplot characteristics (e.g. correlation, clumpiness, etc) to help summarise and guide attention towards 'interesting' scatterplots. This idea, coined scagnostics (short for scatterplot diagnostics), has since been made explicit, and many other similar applications have been explored, even techniques for time-series [@Wilkinson:2005b; @Wilkinson:2008; @Wilkinson:2012]. The idea of associating quantitative measures with a graphical display of data can be generalized to include more that just scatterplots, and in this more general case, these measures are sometimes referred to as cognostics.
+Before trellis displays were formally introduced, @scagnostics-tukey proposed a solution to the problem of scatterplots not being able to scale to a large number of variables (i.e., it's time consuming to visualize 1000 scatterplots!). The proposed solution involved using quantitative measurements of various scatterplot characteristics (e.g., correlation, clumpiness, etc.) to help summarise and guide attention towards 'interesting' scatterplots. This idea, coined scagnostics (short for scatterplot diagnostics), has since been made explicit, and many other similar applications have been explored, even techniques for time-series [@Wilkinson:2005b; @Wilkinson:2008; @Wilkinson:2012]. The idea of associating quantitative measures with a graphical display of data can be generalized to include more than just scatterplots, and in this more general case, these measures are sometimes referred to as cognostics.
 
-In addition to being useful for navigating exploration of many variables, cognostics can also be useful for exploring many subsets of data. This idea has inspired work on more general divide & recombine technique(s) for working with navigating through many statistical artifacts [@divide-recombine; @RHIPE], including visualizations [@trelliscope]. The **trelliscope** package provides a system for computing arbitrary cognostics on each panel of a trellis display as well as an interactive graphical user interface for defining (and navigating through) interesting panels based on those cognostics [@trelliscope-pkg]. This system also allows users to define the graphical method for displaying each panel, so **plotly** graphs can easily be embedded. The **trelliscope** package is currently built upon **shiny**, but as Figure \@ref(fig:trelliscope) demonstrates, the **trelliscopejs** package provides lower-level tools that allow one to create trelliscope displays without **shiny** [@trelliscopejs].
+In addition to being useful for navigating exploration of many variables, cognostics can also be useful for exploring many subsets of data. This idea has inspired work on more general divide and recombine technique(s) for working with navigating through many statistical artifacts [@divide-recombine; @RHIPE], including visualizations [@trelliscope]. The **trelliscope** package provides a system for computing arbitrary cognostics on each panel of a trellis display as well as an interactive graphical user interface for defining (and navigating through) interesting panels based on those cognostics [@trelliscope-pkg]. This system also allows users to define the graphical method for displaying each panel, so **plotly** graphs can easily be embedded. The **trelliscope** package is currently built upon **shiny**, but as Figure \@ref(fig:trelliscope) demonstrates, the **trelliscopejs** package provides lower-level tools that allow one to create trelliscope displays without **shiny** [@trelliscopejs].
 
-As the video behind Figure \@ref(fig:trelliscope) demonstrates, **trelliscopejs** provides two very powerful interactive techniques for surfacing 'interesting' panels: sorting and filtering. In this toy example, each panel represents a different country, and the life expectancy is plotted as a function of time. By default, **trelliscopejs** sorts panels by group alphabetically, which is why, on page load we see the first 12 countries (Afghanistan, Albania, Algeria, etc). By opening the sort menu, we can pick and sort by any cognostic for any variable in the dataset. If no cognostics are supplied (as it the case here), some sensible ones are computed and supplied for us (e.g., mean, median, var, max, min). In this case, since we are primarily interested in life expectancy, we sort by life expectancy. This simple task allows us to quickly see the countries with the best and worst average life expectancy, as well as how it has evolved over time. By combining sort with filter, we can surface countries that perform well/poorly under certain conditions. For example, Cuba, Uruguay, Taiwan have great life expectancy considering their GDP per capita. Also, within the Americas, Haiti, Bolivia, and Guatemala have the poorest life expectancy.
+As the video behind Figure \@ref(fig:trelliscope) demonstrates, **trelliscopejs** provides two very powerful interactive techniques for surfacing 'interesting' panels: sorting and filtering. In this toy example, each panel represents a different country, and the life expectancy is plotted as a function of time. By default, **trelliscopejs** sorts panels by group alphabetically, which is why, on page load we see the first 12 countries (Afghanistan, Albania, Algeria, etc.). By opening the sort menu, we can pick and sort by any cognostic for any variable in the dataset. If no cognostics are supplied (as it the case here), some sensible ones are computed and supplied for us (e.g., mean, median, var, max, min). In this case, since we are primarily interested in life expectancy, we sort by life expectancy. This simple task allows us to quickly see the countries with the best and worst average life expectancy, as well as how it has evolved over time. By combining sort with filter, we can surface countries that perform well/poorly under certain conditions. For example, Cuba, Uruguay, Taiwan have great life expectancy considering their GDP per capita. Also, within the Americas, Haiti, Bolivia, and Guatemala have the poorest life expectancy.
 
 ```r
 library(trelliscopejs)

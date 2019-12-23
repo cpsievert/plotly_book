@@ -4,9 +4,9 @@
 
 Scaling visualization to large amounts of data requires a combination of computer engineering, statistical summaries, and creativity. 
 
-Part \@ref(scaling) covered linked views and demonstrated some techniques which can help put the famous infovis mantra into practice: "Overview first, then zoom and filter, then details on demand". In other words, don't try to show all the raw data in a single -- show interesting summaries, then provide interactive tools to extract more information. From a statistical perspective, this mantra tends to work well, because, as Hadley Wickham says: "Visualization surprise, but don't scale well. Models (i.e. summaries) scale well, but don't surprise". In other words, a model helps to reduce the amount of information to display, but it can not point out what important information it does not capture. By providing interactive tools that can reveal detailed information behind a particular summary, you provide a better framework for questioning the assumption(s) inherent in your summarized overview of the data.  
+Part \@ref(scaling) covered linked views and demonstrated some techniques which can help put the famous infovis mantra into practice: "Overview first, then zoom and filter, then details on demand". In other words, don't try to show all the raw data in a single -- show interesting summaries, then provide interactive tools to extract more information. From a statistical perspective, this mantra tends to work well, because, as Hadley Wickham says: "Visualization surprise, but don't scale well. Models (i.e., summaries) scale well, but don't surprise". In other words, a model helps to reduce the amount of information to display, but it cannot point out what important information it does not capture. By providing interactive tools that can reveal detailed information behind a particular summary, you provide a better framework for questioning the assumption(s) inherent in your summarized overview of the data.  
 
-Of course, when dealing with non-trivial models (i.e. summaries), it can be quite useful to leverage a statistical computing environment. 
+Of course, when dealing with non-trivial models (i.e., summaries), it can be quite useful to leverage a statistical computing environment. 
 
 <!--
 Especially with interactive graphics (that allow for zoom+pan), it's tempting to avoid summaries and simply plot all the raw data. This can lead to interesting engineering problems,  that ultimately misses the larger picture. That being said, even if you've thought carefully about leveraging summaries, having a good sense of the technical capabilities 
@@ -18,7 +18,7 @@ These are helpful concepts to keep in mind when designing an exploratory interfa
 
 Roughly speaking, the bulk of the time  translates R code to an R list. 
 
-That list is then serialized as JSON (via `jsonlite::toJSON()`) and should match a JSON specification (i.e. schema) defined by the JavaScript library (which uses the JSON to render the widget). 
+That list is then serialized as JSON (via `jsonlite::toJSON()`) and should match a JSON specification (i.e., schema) defined by the JavaScript library (which uses the JSON to render the widget). 
 
 
 # Scaling across views 
@@ -28,10 +28,10 @@ That list is then serialized as JSON (via `jsonlite::toJSON()`) and should match
 # Scaling within views 
 
 
-## Build vs run time
+## Build vs. run time
 
 
-The concept of build vs run performance is an important topic related to scaling in interactive data visualization. Since latency in interactive graphics is known to make exploratory data analysis a more challenging task [@2014-latency], systems that optimize run over build performance are typically preferrable. This is especially true for visualizations that *others* are consuming, but in a typical EDA context, where the person creating the visualization is main consumer, build time performance is also important because it also presents a hurdle to a productive analysis. 
+The concept of build vs. run performance is an important topic related to scaling in interactive data visualization. Since latency in interactive graphics is known to make exploratory data analysis a more challenging task [@2014-latency], systems that optimize run over build performance are typically preferrable. This is especially true for visualizations that *others* are consuming, but in a typical EDA context, where the person creating the visualization is main consumer, build time performance is also important because it also presents a hurdle to a productive analysis. 
 
 Recall the diagram of what happens when you print a **plotly** object in Figure \@ref(fig:intro-printing). 
 
@@ -42,11 +42,11 @@ Especially for crossfilter-esque applications (see Section \@ref(crossfilter)), 
 
  
 
-* SVG vs Web-GL
+* SVG vs. Web-GL
   * Draw comparison to pdf/png
   * Borrow examples from workshop
 
-A quick and easy way to try and improve render performance is to use canvas-based rendering (instead of vector-based SVG) with `toWebGL(p)`. Switching from vector to canvas is generally a good idea when dealing with >30,000 vectors, but in this case, we’re only dealing with a couple hundred vector paths, so switching from vector to canvas for our map won’t significantly improve rendering performance, and in fact, we’ll lose some nice SVG exclusive features (the plotly.js team is getting close to eliminating these limitations!). Instead, what we could (and should!) do is reduce the amount of points along to each path (technically speaking, we’ll reduce the complexity of the SVG d attribute).
+A quick and easy way to try and improve render performance is to use Canvas-based rendering (instead of vector-based SVG) with `toWebGL(p)`. Switching from vector to Canvas is generally a good idea when dealing with >30,000 vectors, but in this case, we’re only dealing with a couple hundred vector paths, so switching from vector to Canvas for our map won’t significantly improve rendering performance, and in fact, we’ll lose some nice SVG exclusive features (the plotly.js team is getting close to eliminating these limitations!). Instead, what we could (and should!) do is reduce the amount of points along to each path (technically speaking, we’ll reduce the complexity of the SVG d attribute).
 
 
 
@@ -57,20 +57,20 @@ A quick and easy way to try and improve render performance is to use canvas-base
 * Build time
 * profvis
 * Render time
-* SVG vs Web-GL rendering
+* SVG vs. Web-GL rendering
 * Data summary/simplification
 
 If you’ve ever found `ggplotly()` slow to print, chances are, the bulk of the time is spent building the R list and sending the JSON to plotly.js. For many htmlwidgets, the build time is negligible, but for more complex widgets like plotly, a lot of things need to happen, especially for `ggplotly()` since we call `ggplot2::ggplot_build()`, then crawl and map that data structure to plotly.js. In a **shiny** app, both the build and render stages are required on initial load, but the new `plotlyProxy()` interface provides a way to ‘cache’ expensive build (and render!) operation and update a graph by modifying just specific components of the figure (via plotly.js functions). Outside of a ‘reactive context’ like shiny, you could use `htmlwidgets::saveWidget()` to ‘cache’ the results of the build step to disk, send the file to someone else (or host it online somewhere), then only the render step is required to view the graph.
 
 # Benchmarks
 
-This Chapter provides some general performance benchmarks for **plotly** as of version `r packageVersion('plotly')`. The intention is to provide some intuition as to what is a reasonable threshold/expectation for working with common trace types. Recall, in general, we care more about run-time performance, especially for visualizations that you share with others.
+This Chapter provides some general performance benchmarks for **plotly** as of version `r packageVersion('plotly')`. The intention is to provide some intuition as to what is a reasonable threshold/expectation for working with common trace types. Recall, in general, we care more about runtime performance, especially for visualizations that you share with others.
 
 ## Build-time
 
 For build-time performance, we 
 
-## Run-time
+## runtime
 
 
 
@@ -88,7 +88,7 @@ plot_ly(x = rnorm(1e4), y = rnorm(1e4), alpha = 0.1)
 
 ### WebGL
 
-Switching from SVG to a WebGL can result in _huge_ improvements in responsiveness (i.e. run-time efficiency) for scatterplots. By simply switching from `scatter`  `scattergl`
+Switching from SVG to a WebGL can result in _huge_ improvements in responsiveness (i.e., runtime efficiency) for scatterplots. By simply switching from `scatter`  `scattergl`
 
 ```r
 plot_ly(x = rnorm(1e6), y = rnorm(1e6), alpha = 0.1, type = "scattergl")
@@ -140,7 +140,7 @@ Sometimes you have to consider way more views than you can possibly digest visua
 
 > "Overview first, zoom and filter, then details-on-demand."
 
-In fact, Figure \@ref(fig:shiny-corrplot) from Section \@ref(scoping-events) provides an example of this mantra put into practice. The correlation matrix provides an overview of the correlation structure between all the variables, and by clicking a cell, it populates a scatterplot between those two specific variables. This works fine with tens or hundreds or variables, but once you have thousands or tens-of-thousands of variables, this technique begins to fall apart. At that point, you may be better off defining a range of correlations that you're interested in exploring, or better yet, incorporating another measure (e.g., a test statistic), then focusing on views that match a certain criteria.
+In fact, Figure \@ref(fig:shiny-corrplot) from Section \@ref(scoping-events) provides an example of this mantra put into practice. The correlation matrix provides an overview of the correlation structure between all the variables, and by clicking a cell, it populates a scatterplot between those two specific variables. This works fine with tens or hundreds or variables, but once you have thousands or tens-of-thousands of variables, this technique begins to fall apart. At that point, you may be better off defining a range of correlations that you're interested in exploring, or better yet, incorporating another measure (e.g., a test statistic), then focussing on views that match a certain criteria.
 -->
 
 
