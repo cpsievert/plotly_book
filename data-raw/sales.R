@@ -1,3 +1,5 @@
+library(dplyr)
+
 sales <- readxl::read_excel(
   #"https://community.tableau.com/servlet/JiveServlet/downloadBody/1236-102-2-15278/Sample%20-%20Superstore.xls"
   "~/Downloads/Sample - Superstore.xls"
@@ -10,4 +12,4 @@ sales <- readxl::read_excel(
     sales = Sales
   )
 
-usethis::use_data(sales)
+readr::write_csv(sales, "data-raw/sales.csv")
