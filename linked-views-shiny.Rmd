@@ -80,6 +80,7 @@ The `renderPlotly()` function renders anything that the `plotly_build()` functio
 
 ```{r eval = FALSE, summary = "Click to show/hide the code"}
 library(shiny)
+library(plotly)
 
 cities <- unique(txhousing$city)
 
@@ -177,6 +178,7 @@ A little known fact about **plotly** is that you can directly manipulate annotat
 
 ```{r eval = FALSE, summary = "Click to show/hide the code"}
 library(shiny)
+library(plotly)
 
 ui <- fluidPage(
   plotlyOutput("p"),
@@ -229,6 +231,7 @@ Figure \@ref(fig:shiny-drag-circle) demonstrates directly manipulating a circle 
 
 ```{r eval = FALSE, summary = "Click to show/hide the code"}
 library(shiny)
+library(plotly)
 
 ui <- fluidPage(
   plotlyOutput("p"),
@@ -302,6 +305,7 @@ Remember every **graph** has two critical components: data (i.e., traces) and la
 
 ```{r eval = FALSE, summary = "Click to show/hide the code"}
 library(shiny)
+library(plotly)
 
 ui <- fluidPage(
   plotlyOutput("parcoords"),
@@ -364,6 +368,7 @@ Figure \@ref(fig:shiny-corrplot) allows one to click on a cell of correlation he
 
 ```{r eval = FALSE, summary = "Click to show/hide the code"}
 library(shiny)
+library(plotly)
 
 # cache computation of the correlation matrix
 correlation <- round(cor(mtcars), 3)
@@ -422,6 +427,7 @@ By default, `event_data()` only invalidates a reactive expression when the value
 
 ```{r eval = FALSE, summary = "Click to show/hide the code"}
 library(shiny)
+library(plotly)
 
 ui <- fluidPage(
   plotlyOutput("p"),
@@ -741,6 +747,7 @@ library(shiny)
 library(dplyr)
 library(readr)
 library(purrr) # just for `%||%`
+library(plotly)
 
 sales <- read_csv("https://plotly-r.com/data-raw/sales.csv")
 categories <- unique(sales$category)
@@ -804,6 +811,7 @@ A basic drill-down like Figure \@ref(fig:shiny-drill-down-pie) is somewhat usefu
 ```{r eval = FALSE, summary = "Click to show/hide the code"}
 library(shiny)
 library(dplyr)
+library(plotly)
 library(readr)
 
 sales <- read_csv("https://plotly-r.com/data-raw/sales.csv")
@@ -1162,6 +1170,7 @@ Figure \@ref(fig:shiny-crossfilter-naive) demonstrates the simplest way to imple
 library(shiny)
 library(dplyr)
 library(nycflights13)
+library(plotly)
 
 ui <- fluidPage(
   plotlyOutput("arr_time"),
@@ -1216,6 +1225,7 @@ library(shiny)
 library(dplyr)
 library(nycflights13)
 library(ggstat)
+library(plotly)
 
 arr_time <- flights$arr_time
 dep_time <- flights$dep_time
